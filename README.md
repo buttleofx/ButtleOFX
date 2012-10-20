@@ -4,6 +4,20 @@
 
 ButtleOFX project is a set of GUI tools built around the TuttleOFX framework.
 
+___
+License
+-------
+Follows the TuttleOFX license.
+>see [**TuttleOFX/COPYING.md**](http://github.com/tuttleofx/TuttleOFX/blob/master/COPYING.md)
+
+___
+Compilation
+-----------
+
+- Getting the source  
+`git clone git://github.com/buttleofx/ButtleOFX.git`  
+`cd ButtleOFX`  
+`git submodule update -i --recursive`  
 
 
 More information 

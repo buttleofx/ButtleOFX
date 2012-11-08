@@ -35,8 +35,9 @@ Rectangle {
         anchors.horizontalCenter: parent.left
         anchors.top: parent.verticalCenter
         spacing: 2
+        property int nbInputs: model.element.nodeNbInput
         Repeater {
-            model: 2
+            model: nodeInputs.nbInputs
             Rectangle {
                 height: 5
                 width: 5
@@ -72,8 +73,8 @@ Rectangle {
             parent.opacity = 1;
             console.log(parent.x)
             console.log(parent.y)
-            model.element.nodeXCoord(parent.x)
-            model.element.nodeYCoord(parent.y)
+            model.element.nodeXCoord = parent.x
+            model.element.nodeYCoord = parent.y
         }
         onClicked: {
             console.log(model.element.nodeName)

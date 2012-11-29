@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*-coding:utf-8-*
 
-from core.undo_redo.tests.Vec2d.Vec2d import Vec2d
+from core.undo_redo.tests.Vec2d.vec2d import Vec2d
 
 
 class CmdAdditionVec2d():

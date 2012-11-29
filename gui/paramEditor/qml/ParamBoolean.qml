@@ -1,9 +1,5 @@
 import QtQuick 1.1
 
-/*ParamBoolean is a radio button*/
-
-/*Container of the radio button*/
-
 Item{
     width: 30
     height: 20
@@ -17,31 +13,43 @@ Item{
         font.pointSize: 8
     }
 
-    /*Black circle where we can click*/
+    /*Black square we can check*/
     Rectangle {
+        /*anchors.horizontalCenter: parent.horizontalCenter
+        anchors.verticalCenter: parent.verticalCenter*/
+        id: box
+        width: 15
+        height: 15
+        radius : 1
+        color: "black"
         anchors.left: paramTitle.right
         anchors.leftMargin: 5
-        id: circle
-        width: 15
-        height: width
-        radius : width * 0.5
-        color: "#999999"
 
-        /*Little white circle which appears in white inside the circle when we click*/
+        /*When we check, an other white square appears in the black one*/
         Rectangle{
-            id: interiorCircle
+            id: interiorBox
             anchors.horizontalCenter: parent.horizontalCenter
             anchors.verticalCenter: parent.verticalCenter
-            width: circle.width - circle.width/2
+            width: box.width - box.width/2
             height: width
-            radius: width * 0.5
-            color : focus ? "white" : "black"
-            focus: true
+            radius: 1
+            state: "FOCUS_OFF"
+
+            states: [
+                State {
+                    name: "FOCUS_OFF"
+                    PropertyChanges { target: interiorBox; color: "black" }
+                },
+                State {
+                    name: "FOCUS_ON"
+                    PropertyChanges { target: interiorBox; color: "white" }
+                }
+            ]
         }
 
         MouseArea{
-            onPressed: interiorCircle.focus = true
             anchors.fill: parent
+            onPressed: interiorBox.state = (interiorBox.state == "FOCUS_ON") ? "FOCUS_OFF" : "FOCUS_ON"
         }
     }
 }

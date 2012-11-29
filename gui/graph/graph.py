@@ -16,6 +16,8 @@ def createNode(view, view_root, nodeItemMap):
 
     nodeItemMap.append(nodeItem)
 
+    print "len:" + str(len(nodeItemMap))
+
 
 #def createConnection(view, view_root):
  #   nodeComponentFactory = QtDeclarative.QDeclarativeComponent(view.engine(), 'qml/Connection.qml')
@@ -25,8 +27,10 @@ def createNode(view, view_root, nodeItemMap):
    # connectionItem = wrapInstanceAs(nodeComponent, QtDeclarative.QDeclarativeItem)
     #connectionItem.setParentItem(view_root)
 
-def deleteNode(nodeItem):
+def deleteNode(nodeItemMap, nodeItem):
     nodeItem.deleteLater()
+    nodeItemMap.remove(nodeItem)
+    print "len:" + str(len(nodeItemMap))
 
 
 if __name__ == '__main__':
@@ -46,7 +50,7 @@ if __name__ == '__main__':
     nodeItemMap = []
 
     rootItem.addNode.connect(lambda: createNode(view, rootItem, nodeItemMap))
-    rootItem.deleteNode.connect(lambda: deleteNode(rootItem))
+    rootItem.deleteNode.connect(lambda: deleteNode(nodeItemMap, nodeItemMap[-1]))
     #createNode(view, rootItem)
     #createNode(view, rootItem)
 

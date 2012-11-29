@@ -1,4 +1,6 @@
 import sys
+sys.path.append("../..")
+
 from PySide import QtCore, QtGui, QtDeclarative
 from qobjectlistmodel import QObjectListModel
 
@@ -40,7 +42,7 @@ def main():
 
     mw = MainWrapper(view)
     view.rootContext().setContextProperty("_mainWrapper", mw)
-    view.setSource("qml/listModel.qml")
+    view.setSource("listModel.qml")
     view.setResizeMode(QtDeclarative.QDeclarativeView.SizeRootObjectToView)
 
     view.show()

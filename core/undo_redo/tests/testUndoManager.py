@@ -1,19 +1,12 @@
 #!/usr/bin/env python
 # -*-coding:utf-8-*
 
-
 from Vec2d import Vec2d
 from Vec2d.commands import CmdAdditionVec2d
 from Vec2d.commands import CmdChangeVec2d
 
-import sys
-sys.path.append('..')
-#import ManageTools
-
-from ManageTools import CommandManager
-from ManageTools import GroupUndoableCommands
-# from ..ManageTools.CommandManager import CommandManager
-# from ..ManageTools.GroupUndoableCommands import GroupUndoableCommands
+from core.undo_redo.ManageTools import CommandManager
+from core.undo_redo.ManageTools import GroupUndoableCommands
 
 
 def testVec2DCmds():

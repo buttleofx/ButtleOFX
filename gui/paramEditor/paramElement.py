@@ -3,7 +3,7 @@ import sys
 from PySide import QtGui, QtDeclarative
 from paramInt import ParamInt
 from paramString import ParamString
-from mainWrapper import MainWrapper
+from wrappers.mainWrapper import MainWrapper
 from wrappers.intWrapper import IntWrapper
 from wrappers.stringWrapper import StringWrapper
 

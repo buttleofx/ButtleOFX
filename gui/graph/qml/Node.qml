@@ -2,6 +2,7 @@ import Qt 4.7
 
 Rectangle {
     id: node
+    property int number
     height: 40
     width: 110
     x: 10
@@ -98,7 +99,9 @@ Rectangle {
             parent.opacity = 1
         }
         onClicked: {
-            node.focus = true
+            //node.focus = true
+            nodeSelected = parent.number
+            console.log(parent.number)
         }
     }
     

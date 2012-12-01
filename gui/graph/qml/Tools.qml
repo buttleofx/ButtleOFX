@@ -21,7 +21,7 @@ Rectangle {
         MouseArea {
             anchors.fill: parent
             onClicked: {
-                console.log("Add Node")
+                console.log("Add Node");
                 addNode();
             }
         }
@@ -42,8 +42,8 @@ Rectangle {
         MouseArea {
             anchors.fill: parent
             onClicked: {
-                console.log("Delete Node")
-                deleteNode();
+                console.log("Delete Node");
+                deleteNode(nodeSelected);
             }
         }
     }

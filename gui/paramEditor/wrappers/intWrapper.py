@@ -19,7 +19,7 @@ class IntWrapper(QtCore.QObject):
         return self._maximum
 
     def getMinimum(self):
-        return self._.minimum
+        return self._minimum
 
     textChanged = QtCore.Signal()
     defaultValueChanged = QtCore.Signal()

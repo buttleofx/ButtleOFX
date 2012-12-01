@@ -3,21 +3,18 @@ import Qt 4.7
 Rectangle {
     id: node
     property int number
+    signal deleteNode (int index)
     height: 40
     width: 110
     x: 10
     y: 40
     color: "transparent"
-    signal deleteNode
-    signal addNode
 
     Keys.onPressed: {
             if (event.key==Qt.Key_Delete) {
-                if (node.focus = true){
-                    console.log("Suppression noeud")
-                    node.deleteNode()
-                    addNode()
-
+                if (node.focus == true){
+                    console.log("Suppression noeud " + number);
+                    deleteNode(number);
                 }
             }
         }
@@ -94,6 +91,7 @@ Rectangle {
         onPressed: {
             node.focus = true
             parent.opacity = 0.5
+            nodeSelected = number
         }
         onReleased: {
             parent.opacity = 1

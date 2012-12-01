@@ -12,7 +12,7 @@ Rectangle {
     Keys.onPressed: {
         if (event.key==Qt.Key_Delete) {
             console.log("DeleteNode")
-            if (node.focus = true){
+            if (node.focus == true){
                 deleteNode()
 
             }

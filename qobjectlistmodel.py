@@ -74,7 +74,7 @@ class QObjectListModel(QtCore.QAbstractListModel):
         """
         if not isinstance(toAppend, list):
             toAppend = [toAppend]
-        self.beginInsertRows(QtCore.QModelIndex(), self.size(), self.size() + len(toAppend))
+        self.beginInsertRows(QtCore.QModelIndex(), self.size(), self.size() + len(toAppend) - 1)
         self._objects.extend(toAppend)
         self.endInsertRows()
         self.countChanged.emit()
@@ -87,7 +87,7 @@ class QObjectListModel(QtCore.QAbstractListModel):
         """
         if not isinstance(toInsert, list):
             toInsert = [toInsert]
-        self.beginInsertRows(QtCore.QModelIndex(), i, i + len(toInsert))
+        self.beginInsertRows(QtCore.QModelIndex(), i, i + len(toInsert) - 1)
         for obj in reversed(toInsert):
             self._objects.insert(i, obj)
         self.endInsertRows()
@@ -122,9 +122,9 @@ class QObjectListModel(QtCore.QAbstractListModel):
     def removeAt(self, i, count=1):
         """  Removes count number of items from index position i and notifies any views.
         i must be a valid index position in the model (i.e., 0 <= i < size()), as
-        must \c{i + count - 1}.
+        must as i + count - 1.
         """
-        self.beginRemoveRows(QtCore.QModelIndex(), i, i + count)
+        self.beginRemoveRows(QtCore.QModelIndex(), i, i + count - 1)
         for cpt in range(count):
             self._objects.pop(i)
         self.endRemoveRows()
@@ -142,7 +142,7 @@ class QObjectListModel(QtCore.QAbstractListModel):
 
     def clear(self):
         """ Removes all items from the model and notifies any views. """
-        self.beginRemoveRows(QtCore.QModelIndex(), 0, self.size())
+        self.beginRemoveRows(QtCore.QModelIndex(), 0, self.size() - 1)
         self._objects = []
         self.endRemoveRows()
         self.countChanged.emit()

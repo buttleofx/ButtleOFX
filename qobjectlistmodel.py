@@ -131,6 +131,7 @@ class QObjectListModel(QtCore.QAbstractListModel):
         self.countChanged.emit()
 
     def remove(self, obj):
+        """ Removes the first occurrence of the given object. Raises a ValueError if not in list. """
         if not self.contains(obj):
             raise ValueError("QObjectListModel.remove(obj) : obj not in list")
         self.removeAt(self.indexOf(obj))

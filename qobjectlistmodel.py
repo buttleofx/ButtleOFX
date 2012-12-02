@@ -11,7 +11,7 @@ class QObjectListModel(QtCore.QAbstractListModel):
 
     This class is the Python port of the C++ QObjectListModel class.
     """
-    def __init__(self, parent):
+    def __init__(self, parent=None):
         """ Constructs an object list model with the given parent. """
         super(QObjectListModel, self).__init__(parent)
 
@@ -129,6 +129,11 @@ class QObjectListModel(QtCore.QAbstractListModel):
             self._objects.pop(i)
         self.endRemoveRows()
         self.countChanged.emit()
+
+    def remove(self, obj):
+        if not self.contains(obj):
+            raise ValueError("QObjectListModel.remove(obj) : obj not in list")
+        self.removeAt(self.indexOf(obj))
 
     def takeAt(self, i):
         """  Removes the item at index position i (notifying any views) and returns it.

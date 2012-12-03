@@ -31,6 +31,10 @@ class QObjectListModel(QtCore.QAbstractListModel):
     def __nonzero__(self):
         return self.size() > 0
 
+    def __getitem__(self, index):
+        """ Enables the [] operator """
+        return self._objects[index]
+
     def data(self, index, role):
         """ Returns data for the specified role, from the item with the
         given index. The only valid role is ObjectRole.
@@ -60,10 +64,13 @@ class QObjectListModel(QtCore.QAbstractListModel):
         """ Sets the model's internal objects list to objects. The model will
         notify any attached views that its underlying data has changed.
         """
+        oldSize = self.size()
         self.beginResetModel()
         self._objects = objects
         self.endResetModel()
-        self.dataChanged.emit(self.index(0), self.index(self.size()))
+        self.dataChanged.emit(self.index(0), self.index(self.size() - 1))
+        if self.size() != oldSize:
+            self.countChanged.emit()
 
     ############
     # List API #
@@ -94,6 +101,7 @@ class QObjectListModel(QtCore.QAbstractListModel):
         self.countChanged.emit()
 
     def at(self, i):
+        """ Use [] instead - Return the object at index i. """
         return self._objects[i]
 
     def replace(self, i, obj):
@@ -102,7 +110,7 @@ class QObjectListModel(QtCore.QAbstractListModel):
         (i.e., 0 <= i < size()).
         """
         self._objects[i] = obj
-        self.countChanged.emit()
+        self.dataChanged.emit(self.index(i), self.index(i))
 
     def move(self, fromIndex, toIndex):
         """ Moves the item at index position from to index position to
@@ -148,6 +156,8 @@ class QObjectListModel(QtCore.QAbstractListModel):
 
     def clear(self):
         """ Removes all items from the model and notifies any views. """
+        if not self._objects:
+            return
         self.beginRemoveRows(QtCore.QModelIndex(), 0, self.size() - 1)
         self._objects = []
         self.endRemoveRows()
@@ -159,20 +169,28 @@ class QObjectListModel(QtCore.QAbstractListModel):
         """
         return obj in self._objects
 
-    def indexOf(self, matchObj, fromIndex=0):
+    def indexOf(self, matchObj, fromIndex=0, positive=True):
         """ Returns the index position of the first occurrence of object in
         the model, searching forward from index position from.
+        If positive is True, will always return a positive index.
         """
-        return self._objects[fromIndex:].index(matchObj) + fromIndex
+        index = self._objects[fromIndex:].index(matchObj) + fromIndex
+        if positive and index < 0:
+            index += self.size()
+        return index
 
-    def lastIndexOf(self, matchObj, fromIndex=-1):
+    def lastIndexOf(self, matchObj, fromIndex=-1, positive=True):
         """    Returns the index position of the last occurrence of object in
         the list, searching backward from index position from. If
         from is -1 (the default), the search starts at the last item.
+        If positive is True, will always return a positive index.
         """
         r = list(self._objects)
         r.reverse()
-        return - r[-fromIndex - 1:].index(matchObj) + fromIndex
+        index = - r[-fromIndex - 1:].index(matchObj) + fromIndex
+        if positive and index < 0:
+            index += self.size()
+        return index
 
     def size(self):
         """ Returns the number of items in the model. """

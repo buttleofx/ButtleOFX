@@ -1,20 +1,18 @@
-import QtQuick 1.0
+import QtQuick 1.1
 
 Rectangle {
     width: 850
     height: 350 - 30
     y: 30
     gradient: Gradient {
-        GradientStop { position: 0.0; color: "black" }
-        GradientStop { position: 0.1; color: "#212121" }
+        GradientStop { position: 0.0; color: "#111111" }
+        GradientStop { position: 0.015; color: "#212121" }
     }
 
     Keys.onPressed: {
         if (event.key==Qt.Key_Delete) {
-            console.log("DeleteNode")
             if (node.focus == true){
                 deleteNode()
-
             }
         }
     }
@@ -23,29 +21,21 @@ Rectangle {
              acceptedButtons: Qt.LeftButton | Qt.RightButton
              onPressed: {
                  if (mouse.button == Qt.RightButton) {
-                     rightMenu.state = "opened"
-                     rightMenu.x = mouseX
-                     rightMenu.y = mouseY
+                     nodeMenu.state = "opened"
+                     nodeMenu.x = mouseX
+                     nodeMenu.y = mouseY
                  }
              }
          }
 
     Item {
-            id: rightMenu
+            id: nodeMenu
             state: "closed"
             Rectangle {
                 id: createButton
                 width: 100
                 height: 20
                 color: "#141414"
-
-                MouseArea {
-                    anchors.fill: parent
-                    onClicked: {
-                        addNode()
-                        rightMenu.state = "closed"
-                    }
-                }
 
                 Text {
                     id: createButtonText
@@ -55,13 +45,21 @@ Rectangle {
                     color: "white"
 
                 }
+
+                MouseArea {
+                    anchors.fill: parent
+                    onClicked: {
+                        _nodeManager.createNode();
+                        nodeMenu.state = "closed"
+                    }
+                }
             }
 
             states: [
             State {
                 name: "closed";
                 PropertyChanges {
-                    target: rightMenu
+                    target: nodeMenu
                     opacity: 0.0
 
                 }
@@ -69,7 +67,7 @@ Rectangle {
             State {
                  name: "opened";
                  PropertyChanges {
-                     target: rightMenu
+                     target: nodeMenu
                      opacity: 1.0
                  }
             } ]

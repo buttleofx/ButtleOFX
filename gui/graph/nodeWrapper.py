@@ -25,7 +25,7 @@ class NodeWrapper(QtCore.QObject):
     # @QtCore.Slot()
 
     def getName(self):
-        return str(self.element.name)
+        return str(self.element.id)
 
     def setName(self, name):
         self.element.name = name

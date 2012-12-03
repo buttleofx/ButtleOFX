@@ -1,20 +1,21 @@
-import Qt 4.7
+import QtQuick 1.1
 
-Rectangle {
+Item {
     id: node
     property int number
     signal deleteNode (int index)
     height: 40
     width: 110
-    x: 10
-    y: 40
-    color: "transparent"
+    x: _nodeManager.getWrapper(node).nodeXCoord
+    y: _nodeManager.getWrapper(node).nodeYCoord
+    focus: _nodeManager.currentNode == node
 
     Keys.onPressed: {
             if (event.key==Qt.Key_Delete) {
                 if (node.focus == true){
                     console.log("Suppression noeud " + number);
-                    deleteNode(number);
+                    //deleteNode(number);
+                    _nodeManager.deleteNode(node)
                 }
             }
         }
@@ -37,7 +38,7 @@ Rectangle {
         radius: 8
         Text {
             anchors.centerIn: parent
-            text: "Node"
+            text: _nodeManager.getWrapper(node).nodeName
             font.pointSize: 10
             color: "black"
         }
@@ -91,15 +92,17 @@ Rectangle {
         onPressed: {
             node.focus = true
             parent.opacity = 0.5
-            nodeSelected = number
+//            nodeSelected = number
+            _nodeManager.currentNode = node;
         }
         onReleased: {
             parent.opacity = 1
         }
         onClicked: {
             //node.focus = true
-            nodeSelected = parent.number
-            console.log(parent.number)
+//            _nodeManager.currentNode = node;
+//            nodeSelected = parent.number
+//            console.log(parent.number)
         }
     }
     

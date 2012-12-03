@@ -1,5 +1,3 @@
-
-
 class Node(object):
 
     """
@@ -19,7 +17,7 @@ class Node(object):
 
     def __init__(self, id, xCoord, yCoord, r, g, b, nbInput):
         super(Node, self).__init__()
-        self.id = Node.count
+        self.id = id
         self.xCoord = xCoord
         self.yCoord = yCoord
         self.r = r

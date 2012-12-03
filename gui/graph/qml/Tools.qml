@@ -1,4 +1,4 @@
-import Qt 4.7
+import QtQuick 1.1
 
 Rectangle {
     id: tools
@@ -21,8 +21,7 @@ Rectangle {
         MouseArea {
             anchors.fill: parent
             onClicked: {
-                console.log("Add Node");
-                addNode();
+                _nodeManager.createNode();
             }
         }
     }
@@ -42,8 +41,7 @@ Rectangle {
         MouseArea {
             anchors.fill: parent
             onClicked: {
-                console.log("Delete Node");
-                deleteNode(nodeSelected);
+                _nodeManager.deleteCurrentNode();
             }
         }
     }

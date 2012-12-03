@@ -182,7 +182,7 @@ class QObjectListModel(QtCore.QAbstractListModel):
         """ Returns true if the model contains no items; otherwise returns false. """
         return len(self._objects) == 0
 
-    @QtCore.Slot(int, return="QVariant")
+    @QtCore.Slot(int, result="QVariant")
     def get(self, i):
         """ For usage from QML.
         Note: return param is mandatory to mimic Q_INVOKABLE C++ method behavior

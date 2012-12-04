@@ -12,17 +12,17 @@ class QmlInstantCoding(QtCore.QObject):
     """
     def __init__(self, attachedView, watching=True, watchSource=False, verbose=False):
         """
-        Build a QmlFileWatcher instance.
+        Build a QmlInstantCoding instance.
 
-        attachedView -- the QDeclarativeView on which this QmlFileWatcher is applied
+        attachedView -- the QDeclarativeView on which this QmlInstantCoding is applied
         watching -- if True, file watching is enable (default: True)
         watchSource -- watch the attached QDeclarativeView source file if it already has one (default: False)
         verbose -- if True, output log infos (default: False)
         """
-        super(QmlFileWatcher, self).__init__()
+        super(QmlInstantCoding, self).__init__()
 
         if not isinstance(attachedView, QtDeclarative.QDeclarativeView):
-            raise TypeError("QmlFileWatcher: attachedView must be a QDeclarativeView.")
+            raise TypeError("QmlInstantCoding: attachedView must be a QDeclarativeView.")
 
         self._fileWatcher = QtCore.QFileSystemWatcher()     # Internal Qt File Watcher
         self._attachedView = attachedView                   # Declarative view attached to our watcher

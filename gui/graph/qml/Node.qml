@@ -2,19 +2,15 @@ import QtQuick 1.1
 
 Item {
     id: node
-    property int number
-    signal deleteNode (int index)
-    height: 40
+    height: 35 + 7*_nodeManager.getWrapper(node).nbInput
     width: 110
-    x: _nodeManager.getWrapper(node).nodeXCoord
-    y: _nodeManager.getWrapper(node).nodeYCoord
+    x: _nodeManager.getWrapper(node).x
+    y: _nodeManager.getWrapper(node).y
     focus: _nodeManager.currentNode == node
 
     Keys.onPressed: {
             if (event.key==Qt.Key_Delete) {
                 if (node.focus == true){
-                    console.log("Suppression noeud " + number);
-                    //deleteNode(number);
                     _nodeManager.deleteNode(node)
                 }
             }
@@ -25,7 +21,7 @@ Item {
         height: node.height
         width: node.width
         anchors.centerIn: parent
-        color: "#aaaaaa"
+        color: _nodeManager.getWrapper(node).color
         opacity: 0.5
         radius: 10
     }
@@ -38,7 +34,7 @@ Item {
         radius: 8
         Text {
             anchors.centerIn: parent
-            text: _nodeManager.getWrapper(node).nodeName
+            text: _nodeManager.getWrapper(node).name
             font.pointSize: 10
             color: "black"
         }
@@ -46,11 +42,10 @@ Item {
     Column {
         id: nodeInputs
         anchors.horizontalCenter: parent.left
-        anchors.top: parent.verticalCenter
+        anchors.verticalCenter: parent.verticalCenter
         spacing: 2
-        property int nbInputs: 2
         Repeater {
-            model: nodeInputs.nbInputs
+            model: _nodeManager.getWrapper(node).nbInput
             Rectangle {
                 height: 5
                 width: 5
@@ -62,7 +57,7 @@ Item {
     Column {
         id: nodeOutputs
         anchors.horizontalCenter: parent.right
-        anchors.top: parent.verticalCenter
+        anchors.verticalCenter: parent.verticalCenter
         spacing: 2
         Repeater {
             model: 1
@@ -92,18 +87,10 @@ Item {
         onPressed: {
             node.focus = true
             parent.opacity = 0.5
-//            nodeSelected = number
             _nodeManager.currentNode = node;
         }
         onReleased: {
             parent.opacity = 1
         }
-        onClicked: {
-            //node.focus = true
-//            _nodeManager.currentNode = node;
-//            nodeSelected = parent.number
-//            console.log(parent.number)
-        }
-    }
-    
+    }   
 }

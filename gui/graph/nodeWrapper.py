@@ -25,7 +25,7 @@ class NodeWrapper(QtCore.QObject):
     # @QtCore.Slot()
 
     def getName(self):
-        return str(self.element.id)
+        return str(self.element.name)
 
     def setName(self, name):
         self.element.name = name
@@ -39,16 +39,16 @@ class NodeWrapper(QtCore.QObject):
         self.element.b = b
 
     def getXCoord(self):
-        return self.element.xCoord
+        return self.element.x
 
     def setXCoord(self, x):
-        self.element.xCoord = x
+        self.element.x = x
 
     def getYCoord(self):
-        return self.element.yCoord
+        return self.element.y
 
     def setYCoord(self, y):
-        self.element.yCoord = y
+        self.element.y = y
 
     def nbInput(self):
         return self.element.nbInput
@@ -57,8 +57,8 @@ class NodeWrapper(QtCore.QObject):
         self.element.nbInput = nbInput
         self.changed()
 
-    nodeName = QtCore.Property(unicode, getName, setName, notify=changed)
-    nodeColor = QtCore.Property(QtGui.QColor, getColor, setColor, notify=changed)
-    nodeXCoord = QtCore.Property(float, getXCoord, setXCoord, notify=changed)
-    nodeYCoord = QtCore.Property(float, getYCoord, setYCoord, notify=changed)
-    nodeNbInput = QtCore.Property(int, nbInput, setNbInput, notify=changed)
+    name = QtCore.Property(unicode, getName, setName, notify=changed)
+    color = QtCore.Property(QtGui.QColor, getColor, setColor, notify=changed)
+    x = QtCore.Property(float, getXCoord, setXCoord, notify=changed)
+    y = QtCore.Property(float, getYCoord, setYCoord, notify=changed)
+    nbInput = QtCore.Property(int, nbInput, setNbInput, notify=changed)

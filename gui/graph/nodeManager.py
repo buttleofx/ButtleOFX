@@ -39,15 +39,37 @@ class NodeManager(QtCore.QObject):
         self.itemToWrapper = {}
         self.itemToNode = {}
 
-    @QtCore.Slot()
-    def createNode(self):
+    def createNode(self, nodeType):
+        if str(nodeType) == "Blur":
+            r = 58
+            g = 174
+            b = 206
+            nbInput = 1
+        elif str(nodeType) == "Gamma":
+            r = 221
+            g = 54
+            b = 138
+            nbInput = 2
+        elif str(nodeType) == "Invert":
+            r = 90
+            g = 205
+            b = 45
+            nbInput = 3
+        else:
+            r = 187
+            g = 187
+            b = 187
+            nbInput = 1
+        return Node(str(nodeType) + str(len(self.coreNodes)), (len(self.coreNodes) + 1) * 30, (len(self.coreNodes) + 5) * 10, r, g, b, nbInput)
+
+    @QtCore.Slot(str)
+    def addNode(self, nodeType):
         if not self.nodeItemFactory:
             self.nodeItemFactory = QtDeclarative.QDeclarativeComponent(self.engine, 'qml/Node.qml')
         if not self.rootItem:
             self.rootItem = wrapInstanceAs(self.rootObject, QtDeclarative.QDeclarativeItem)
-        nodeName = "Node" + str(len(self.coreNodes))
         # Create coreNode
-        n = Node(nodeName, (len(self.coreNodes) + 1) * 30, (len(self.coreNodes) + 5) * 10, 20, 200, 120, 3)
+        n = self.createNode(nodeType)
         # Create nodeWrapper
         nw = NodeWrapper(n)
         # Append to respective lists

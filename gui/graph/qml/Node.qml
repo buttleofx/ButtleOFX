@@ -6,6 +6,7 @@ Item {
     width: 110
     x: _nodeManager.getWrapper(node).x
     y: _nodeManager.getWrapper(node).y
+    z: _nodeManager.getZMax()
     focus: _nodeManager.currentNode == node
 
     Keys.onPressed: {
@@ -84,7 +85,13 @@ Item {
         onPressed: {
             node.focus = true
             parent.opacity = 0.5
-            _nodeManager.currentNode = node;
+            if(_nodeManager.currentNode != node) {
+                _nodeManager.currentNode = node
+                _nodeManager.setZMax()
+                parent.z = _nodeManager.getZMax()
+                console.log(parent.z)
+            }
+            
         }
         onReleased: {
             parent.opacity = 1

@@ -21,7 +21,7 @@ Rectangle {
         MouseArea {
             anchors.fill: parent
             onClicked: {
-                nodeMenuView.state == "hidden" ? nodeMenuView.state="shown" : nodeMenuView.state="hidden"
+                nodeMenuView.state = (nodeMenuView.state == "hidden") ? "shown" : "hidden"
             }
         }
     }
@@ -131,8 +131,8 @@ Rectangle {
         ]
         transitions: [
             Transition {
-                NumberAnimation { target: nodeMenuView; property: "height"; duration: 400 }
-                NumberAnimation { target: nodeMenuView; property: "opacity"; duration: 400 }
+                NumberAnimation { target: nodeMenuView; property: "height"; duration: 200 }
+                NumberAnimation { target: nodeMenuView; property: "opacity"; duration: 200 }
             }
         ]
     }

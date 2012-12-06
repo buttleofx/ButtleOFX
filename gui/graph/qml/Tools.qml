@@ -4,6 +4,7 @@ Rectangle {
     id: tools
     width: parent.width
     height: 30
+    z: 2000
     anchors.top: parent.top
     color: "#212121"
     Rectangle {

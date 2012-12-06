@@ -57,31 +57,11 @@ class NodeManager(QtCore.QObject):
         self._zMax += 1
 
     def createNode(self, nodeType):
-
         """
             Create and return a core Node from a type of node.
         """
-        if str(nodeType) == "Blur":
-            r = 58
-            g = 174
-            b = 206
-            nbInput = 1
-        elif str(nodeType) == "Gamma":
-            r = 221
-            g = 54
-            b = 138
-            nbInput = 2
-        elif str(nodeType) == "Invert":
-            r = 90
-            g = 205
-            b = 45
-            nbInput = 3
-        else:
-            r = 187
-            g = 187
-            b = 187
-            nbInput = 1
-        return Node(str(nodeType) + str(len(self.coreNodes)), (len(self.coreNodes) + 1) * 30, (len(self.coreNodes) + 5) * 10, r, g, b, nbInput)
+        nbNodes = len(self.coreNodes)
+        return Node(str(nodeType), nbNodes, ((nbNodes + 1) * 30, (nbNodes + 5) * 10))
 
     @QtCore.Slot(str)
     def addNode(self, nodeType):

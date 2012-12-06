@@ -31,24 +31,22 @@ class NodeWrapper(QtCore.QObject):
         self._element._name = name
 
     def getColor(self):
-        return QtGui.QColor(self._element._r, self._element._g, self._element._b)
+        return QtGui.QColor( *self._element._color )
 
     def setColor(self, r, g, b):
-        self._element._r = r
-        self._element._g = g
-        self._element._b = b
+        self._element._color = (r, g, b)
 
     def getXCoord(self):
-        return self._element._x
+        return self._element._coord[0]
 
     def setXCoord(self, x):
-        self._element._x = x
+        self._element._coord[0] = x
 
     def getYCoord(self):
-        return self._element._y
+        return self._element._coord[1]
 
     def setYCoord(self, y):
-        self._element._y = y
+        self._element._coord[1] = y
 
     def getNbInput(self):
         return self._element._nbInput

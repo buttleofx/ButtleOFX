@@ -2,6 +2,7 @@ import QtQuick 1.1
 
 Item {
     id: node
+    
     height: 35 + 7*_nodeManager.getWrapper(node).nbInput
     width: 110
     x: _nodeManager.getWrapper(node).x

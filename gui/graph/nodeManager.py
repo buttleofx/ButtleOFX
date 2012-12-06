@@ -34,6 +34,7 @@ class NodeManager(QtCore.QObject):
         self.rootItem = None
 
         self._currentNode = None
+        self._zMax = 2
 
         # A : coreNode list
         self.coreNodes = []
@@ -45,12 +46,19 @@ class NodeManager(QtCore.QObject):
         self.itemToWrapper = {}
         self.itemToNode = {}
 
+    @QtCore.Slot(result="double")
+    def getZMax(self):
+        return self._zMax
+
+    @QtCore.Slot()
+    def setZMax(self):
+        self._zMax += 1
+
     def createNode(self, nodeType):
 
         """
             Create and return a core Node from a type of node.
         """
-
         if str(nodeType) == "Blur":
             r = 58
             g = 174
@@ -77,8 +85,8 @@ class NodeManager(QtCore.QObject):
     def addNode(self, nodeType):
 
         """
-            Create all needed instances of a node from the type of node : the core node, the wrapped node and the node item (QML object).
-            The function doesn't return anything but change the current selected node as the new node.
+            Create all needed instances of a node from the type of node : the core node, the wrapped node and the QML node.
+            The function doesn't return anything but changes the current selected node as the new node.
         """
 
         if not self.nodeItemFactory:

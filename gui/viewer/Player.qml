@@ -4,7 +4,7 @@ import Qt 4.7
 
 Rectangle {
     id: container
-    width: 800
+    width: 850
     height: 400
     color: "#212121"
     property url imageFile

@@ -22,7 +22,7 @@ def main():
     mw = MainWrapper(view, paramList)
     view.rootContext().setContextProperty('_paramListModel', mw)
 
-    view.setSource('qml/paramElement.qml')
+    view.setSource('qml/ParamElement.qml')
     view.setResizeMode(QtDeclarative.QDeclarativeView.SizeRootObjectToView)
 
     view.show()

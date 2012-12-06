@@ -1,9 +1,11 @@
-from PySide import QtDeclarative, QtCore
 from node import Node
 from nodeWrapper import NodeWrapper
 from QuickMamba.qobjectlistmodel import QObjectListModel
 
+from PySide import QtDeclarative, QtCore
 import shiboken
+
+import os
 
 
 def wrapInstanceAs(instance, target_class):
@@ -90,7 +92,7 @@ class NodeManager(QtCore.QObject):
         """
 
         if not self.nodeItemFactory:
-            self.nodeItemFactory = QtDeclarative.QDeclarativeComponent(self.engine, 'qml/Node.qml')
+            self.nodeItemFactory = QtDeclarative.QDeclarativeComponent(self.engine, os.path.join(os.path.dirname(os.path.abspath(__file__)), 'qml/Node.qml'))
         if not self.rootItem:
             self.rootItem = wrapInstanceAs(self.rootObject, QtDeclarative.QDeclarativeItem)
 

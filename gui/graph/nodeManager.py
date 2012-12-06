@@ -7,9 +7,6 @@ import shiboken
 
 
 def wrapInstanceAs(instance, target_class):
-    """
-        Cast the instance as a shiboken object.
-    """
     return shiboken.wrapInstance(shiboken.getCppPointer(instance)[0], target_class)
 
 
@@ -77,7 +74,7 @@ class NodeManager(QtCore.QObject):
     def addNode(self, nodeType):
 
         """
-            Create all needed instances of a node from the type of node : the core node, the wrapped node and the node item (QML object).
+            Create all needed instances of a node from the type of node : the core node, the wrapped node and the QML node.
             The function doesn't return anything but change the current selected node as the new node.
         """
 
@@ -117,7 +114,7 @@ class NodeManager(QtCore.QObject):
     @QtCore.Slot(QtDeclarative.QDeclarativeItem, result="QVariant")
     def getWrapper(self, item):
         """
-            Return the right wrapped node from the node item.
+            Return the right wrapped node from the node's item.
         """
         return self.itemToWrapper[item]
 
@@ -125,7 +122,7 @@ class NodeManager(QtCore.QObject):
     def deleteNode(self, item):
 
         """
-            Delete all the corresponding instances of the node item.
+            Delete all the corresponding instances of the QML node.
 
         """
 

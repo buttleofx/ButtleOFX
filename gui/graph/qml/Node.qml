@@ -9,12 +9,12 @@ Item {
     focus: _nodeManager.currentNode == node
 
     Keys.onPressed: {
-            if (event.key==Qt.Key_Delete) {
-                if (node.focus == true){
-                    _nodeManager.deleteNode(node)
-                }
+        if (event.key==Qt.Key_Delete) {
+            if (node.focus == true){
+                _nodeManager.deleteNode(node)
             }
         }
+    }
 
     Rectangle {
         id: nodeBorder
@@ -55,20 +55,17 @@ Item {
         }
     }
     Column {
-        id: nodeOutputs
+        id: nodeOutput
         anchors.horizontalCenter: parent.right
         anchors.verticalCenter: parent.verticalCenter
         spacing: 2
-        Repeater {
-            model: 1
-            Rectangle {
-                height: 5
-                width: 5
-                color: "#bbbbbb"
-                radius: 2
-                MouseArea {
-                    anchors.fill: parent
-                }
+        Rectangle {
+            height: 5
+            width: 5
+            color: "#bbbbbb"
+            radius: 2
+            MouseArea {
+                anchors.fill: parent
             }
         }
     }

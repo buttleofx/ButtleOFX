@@ -8,20 +8,20 @@ class Node(object):
         - r : Value for the red color
         - g : Value for the green color
         - b : Value for the blue color
-        - nbInput
+        - nbInput : Number of inputs fot the node
 
         Creates a python object Node.
     """
 
     def __init__(self, name, x, y, r, g, b, nbInput):
         super(Node, self).__init__()
-        self.name = name
-        self.x = x
-        self.y = y
-        self.r = r
-        self.g = g
-        self.b = b
-        self.nbInput = nbInput
+        self._name = name
+        self._x = x
+        self._y = y
+        self._r = r
+        self._g = g
+        self._b = b
+        self._nbInput = nbInput
 
     def __str__(self):
-        return 'Node "%s"' % (self.name)
+        return 'Node "%s"' % (self._name)

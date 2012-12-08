@@ -25,4 +25,4 @@ class StringWrapper(QtCore.QObject):
 
     paramType = QtCore.Property(unicode, getParamType, notify=changed)
     defaultValue = QtCore.Property(unicode, getDefaultValue, notify=defaultValueChanged)
-    stringType = QtCore.Property(float, getStringType, notify=stringTypeChanged)
+    stringType = QtCore.Property(unicode, getStringType, notify=stringTypeChanged)

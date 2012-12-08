@@ -14,7 +14,7 @@ Rectangle {
         delegate: Component {
                 Loader {
                     id: param
-                    source : model.object.paramType
+                    source : model.object.paramType + ".qml"
                     height: 50
                 }
 

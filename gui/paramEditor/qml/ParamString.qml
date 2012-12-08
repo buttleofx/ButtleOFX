@@ -5,13 +5,13 @@ import QtQuick 1.1
 Item {
     id: containerParamString
     width: parent.width
-    height: 20
+    height: parent.height
 
     /*Title of the paramInt */
     Text {
         id: paramStringTitle
-        width: 60
-        text: model.object.stringType
+        width: 80
+        text: model.object.stringType + " : "
         color: "white"
         //font.pointSize: 8
         anchors.top: parent.top
@@ -22,7 +22,7 @@ Item {
     Rectangle{
         id: paramStringInputContainer
         width: 100
-        color: "#212121"
+
         border.width: 1
         border.color: "#111111"
         radius: 4
@@ -34,7 +34,6 @@ Item {
         TextInput{
             id: paramStringInput
             text: model.object.defaultValue
-            anchors.verticalCenter: parent.verticalCenter
             anchors.left: parent.left
             anchors.leftMargin: 5
             maximumLength: 50

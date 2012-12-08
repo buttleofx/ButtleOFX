@@ -6,15 +6,15 @@ import QtQuick 1.1
 Item {
     id: containerParamInt
     width: parent.width
-    height: 20
+    height:parent.height
 
     /*Title of the paramInt */
     Text {
         id: paramIntTitle
-        width: 60
-        text: model.object.text
+        width: 80
+        text: model.object.text + " : "
         color: "white"
-        font.pointSize: 8
+       // font.pointSize: 8
         anchors.top: parent.top
         anchors.verticalCenter: parent.verticalCenter
     }
@@ -31,16 +31,19 @@ Item {
         anchors.left: paramIntTitle.right
         anchors.leftMargin: 5
 
+
         /*Input field accepting only number between 0 and 255*/
         TextInput{
             id: paramIntInput
             text: model.object.defaultValue
-            anchors.verticalCenter: parent.verticalCenter
-            //anchors.left: parent.left
+            anchors.left: parent.left
             anchors.leftMargin: 5
             maximumLength: 3
             color: focus ? "white" : "grey"
-            validator: IntValidator{bottom: 0; top: 255}
+            validator: IntValidator{
+                bottom: model.object.minimum
+                top:  model.object.maximum
+            }
         }
         MouseArea{
             anchors.fill: parent

@@ -9,7 +9,7 @@ Rectangle {
     clip: true
     color: "#212121"
     property url imageFile
-    imageFile: "img/licorne.jpg"
+    imageFile: _nodeManager.getWrapper(_nodeManager.currentNode).url
 
     property color backColor: "#212121"
     property color toolbarColor: "#141414"

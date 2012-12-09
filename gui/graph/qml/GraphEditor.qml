@@ -6,7 +6,7 @@ Rectangle {
     height: 350
     z: 0
     clip: true
-    
+
 
     Graph {}
     Tools {}

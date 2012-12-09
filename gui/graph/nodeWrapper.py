@@ -55,8 +55,15 @@ class NodeWrapper(QtCore.QObject):
         self._element._nbInput = nbInput
         self.changed()
 
+    def getUrl(self):
+        return self._element._url
+
+    def setUrl(self, url):
+        self._element._url = url
+
     name = QtCore.Property(unicode, getName, setName, notify=changed)
     color = QtCore.Property(QtGui.QColor, getColor, setColor, notify=changed)
     x = QtCore.Property(float, getXCoord, setXCoord, notify=changed)
     y = QtCore.Property(float, getYCoord, setYCoord, notify=changed)
     nbInput = QtCore.Property(int, getNbInput, setNbInput, notify=changed)
+    url = QtCore.Property(unicode, getUrl, setUrl, notify=changed)

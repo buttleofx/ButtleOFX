@@ -31,7 +31,7 @@ class NodeWrapper(QtCore.QObject):
         self._element._name = name
 
     def getColor(self):
-        return QtGui.QColor( *self._element._color )
+        return QtGui.QColor(*self._element._color)
 
     def setColor(self, r, g, b):
         self._element._color = (r, g, b)

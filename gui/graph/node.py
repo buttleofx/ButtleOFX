@@ -3,21 +3,26 @@ nodeDescriptors = {
     "Blur": {
         "color": (58, 174, 206),
         "nbInput": 1,
+        "url": "img/brazil.jpg"
     },
     "Gamma": {
         "color": (221, 54, 138),
-        "nbInput": 2
+        "nbInput": 2,
+        "url": "img/brazil2.jpg"
     },
     "Invert": {
         "color": (90, 205, 45),
         "nbInput": 3,
+        "url": "img/brazil3.jpg"
     }
 }
 
 defaultNodeDesc = {
     "color": (187, 187, 187),
     "nbInput": 1,
+    "url": "img/brazil.jpg"
 }
+
 
 class Node(object):
 
@@ -41,6 +46,7 @@ class Node(object):
 
         self._color = nodeDesc["color"]
         self._nbInput = nodeDesc["nbInput"]
+        self._url = nodeDesc["url"]
 
     def __str__(self):
         return 'Node "%s"' % (self._name)

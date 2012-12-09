@@ -10,11 +10,4 @@ Rectangle {
         GradientStop { position: 0.015; color: "#212121" }
     }
 
-    Keys.onPressed: {
-        if (event.key==Qt.Key_Delete) {
-            if (node.focus == true){
-                deleteNode()
-            }
-        }
-    }
 }

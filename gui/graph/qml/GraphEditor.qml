@@ -5,6 +5,8 @@ Rectangle {
     width: 850
     height: 350
     z: 0
+    clip: true
+    
 
     Graph {}
     Tools {}

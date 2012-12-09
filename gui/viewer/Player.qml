@@ -6,6 +6,7 @@ Rectangle {
     id: container
     width: 850
     height: 400
+    clip: true
     color: "#212121"
     property url imageFile
     imageFile: "img/licorne.jpg"

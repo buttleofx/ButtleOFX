@@ -14,6 +14,7 @@ def main():
     nodeManager = NodeManager(view)
     rc.setContextProperty('_nodeManager', nodeManager)
 
+    view.setResizeMode(QtDeclarative.QDeclarativeView.SizeRootObjectToView)
     view.show()
     QApplication.exec_()
 

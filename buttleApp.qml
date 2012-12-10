@@ -13,23 +13,31 @@ Rectangle
 
     color: "#252525"
 
-    Column
-    {
-        anchors.fill: parent
+    Column {
         spacing: 10
         Text
         {
             color: "#fff"
             text: "Menu of ButtleOFX"
         }
-        Column
-        {
-            x: 10; y: 10
-            spacing: 10
-            Player
+        Row {
+            spacing: 100
+            Column
             {
+                spacing: 10
+                Column
+                {
+                    x: 10; y: 10
+                    spacing: 10
+                    Player
+                    {
+                    }
+                    GraphEditor
+                    {
+                    }
+                }
             }
-            GraphEditor
+            ParamEditor
             {
             }
         }

@@ -1,9 +1,9 @@
 from PySide import QtCore
 from QuickMamba import qobjectlistmodel
-from paramInt import ParamInt
-from paramString import ParamString
-from wrappers.intWrapper import IntWrapper
-from wrappers.stringWrapper import StringWrapper
+from gui.paramEditor.paramInt import ParamInt
+from gui.paramEditor.paramString import ParamString
+from intWrapper import IntWrapper
+from stringWrapper import StringWrapper
 
 
 class MainWrapper(QtCore.QObject):

@@ -3,7 +3,7 @@ import Qt 4.7
 Rectangle {
     id: paramEditor
     width: 300
-    height: 700
+    height: 750
     color: "#212121"
 
     ListView {

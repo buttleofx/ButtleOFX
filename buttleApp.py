@@ -2,6 +2,8 @@ import sys
 from PySide import QtGui, QtDeclarative
 from gui.graph.graph import *
 from gui.paramEditor.paramEditor import *
+from gui.graph.connexionManager import *
+
 
 def main():
     QApplication = QtGui.QApplication(sys.argv)
@@ -14,6 +16,10 @@ def main():
     nodeManager = NodeManager(view)
     rc.setContextProperty('_nodeManager', nodeManager)
 
+     #connexionList = []
+    connexionManager = ConnexionManager()
+    rc.setContextProperty('_connexionManager', connexionManager)
+
     # for the ParamEditor
     paramList = [
             ParamInt(20, 5, 128),
@@ -25,7 +31,6 @@ def main():
     ]
     mainWrapper = MainWrapper(view, paramList)
     rc.setContextProperty('_paramListModel', mainWrapper)
-
 
     view.setResizeMode(QtDeclarative.QDeclarativeView.SizeRootObjectToView)
     view.show()

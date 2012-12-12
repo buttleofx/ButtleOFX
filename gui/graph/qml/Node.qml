@@ -33,6 +33,7 @@ Item {
         color: "#bbbbbb"
         radius: 8
         Text {
+            id: nodeName
             anchors.centerIn: parent
             text: _nodeManager.getWrapper(node).name
             font.pointSize: 10
@@ -47,10 +48,22 @@ Item {
         Repeater {
             model: _nodeManager.getWrapper(node).nbInput
             Rectangle {
+                id: nodeInput
                 height: 5
                 width: 5
                 color: "#bbbbbb"
                 radius: 2
+                MouseArea {
+                    anchors.fill: parent
+                    onPressed: {
+                        color = "red"
+                        console.log("Input clicked");
+                        _connexionManager.inputClicked(nodeName.text)
+                    }
+                    onReleased: {
+                        color = "#bbbbbb"
+                    }
+                }
             }
         }
     }
@@ -62,12 +75,21 @@ Item {
         Repeater {
             model: 1
             Rectangle {
+                id: nodeOutput
                 height: 5
                 width: 5
                 color: "#bbbbbb"
                 radius: 2
                 MouseArea {
                     anchors.fill: parent
+                    onPressed: {
+                        color = "red"
+                        console.log("Output clicked");
+                        _connexionManager.outputClicked(nodeName.text)
+                    }
+                    onReleased: {
+                        color = "#bbbbbb"
+                    }
                 }
             }
         }

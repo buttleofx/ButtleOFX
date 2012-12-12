@@ -58,7 +58,7 @@ Item {
                     onPressed: {
                         color = "red"
                         console.log("Input clicked");
-                        _connexionManager.inputClicked(nodeName.text)
+                        _connectionManager.inputClicked(nodeName.text)
                     }
                     onReleased: {
                         color = "#bbbbbb"
@@ -85,7 +85,7 @@ Item {
                     onPressed: {
                         color = "red"
                         console.log("Output clicked");
-                        _connexionManager.outputClicked(nodeName.text)
+                        _connectionManager.outputClicked(nodeName.text)
                     }
                     onReleased: {
                         color = "#bbbbbb"

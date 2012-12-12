@@ -2,7 +2,7 @@ import sys
 from PySide import QtGui, QtDeclarative
 from gui.graph.graph import *
 from gui.paramEditor.paramEditor import *
-from gui.graph.connexionManager import *
+from gui.graph.connectionManager import *
 
 
 def main():
@@ -17,8 +17,8 @@ def main():
     rc.setContextProperty('_nodeManager', nodeManager)
 
      #connexionList = []
-    connexionManager = ConnexionManager()
-    rc.setContextProperty('_connexionManager', connexionManager)
+    connectionManager = ConnectionManager()
+    rc.setContextProperty('_connectionManager', connectionManager)
 
     # for the ParamEditor
     paramList = [

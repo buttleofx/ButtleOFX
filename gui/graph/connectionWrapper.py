@@ -1,14 +1,14 @@
 from PySide import QtCore
 
 
-class ConnexionWrapper(QtCore.QObject):
+class ConnectionWrapper(QtCore.QObject):
 
     """
-        Class ConnexionWrapper
+        Class ConnectionWrapper
     """
 
     def __init__(self, nodeOut, nodeIn):
-        super(ConnexionWrapper, self).__init__()
+        super(ConnectionWrapper, self).__init__()
         self._nodeOut = nodeOut
         self._nodeIn = nodeIn
 

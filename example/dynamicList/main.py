@@ -2,7 +2,7 @@ import sys
 sys.path.append("../..")
 
 from PySide import QtCore, QtGui, QtDeclarative
-from qobjectlistmodel import QObjectListModel
+from quickmamba.models import QObjectListModel
 
 
 class ClipWrapper(QtCore.QObject):
@@ -42,7 +42,7 @@ def main():
 
     mw = MainWrapper(view)
     view.rootContext().setContextProperty("_mainWrapper", mw)
-    view.setSource("listModel.qml")
+    view.setSource("source.qml")
     view.setResizeMode(QtDeclarative.QDeclarativeView.SizeRootObjectToView)
 
     view.show()

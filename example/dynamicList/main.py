@@ -6,8 +6,8 @@ from quickmamba.models import QObjectListModel
 
 
 class ClipWrapper(QtCore.QObject):
-    def __init__(self, name, duration):
-        super(ClipWrapper, self).__init__()
+    def __init__(self, parent, name, duration):
+        super(ClipWrapper, self).__init__(parent)
         self._name = name
         self._duration = duration
 
@@ -27,7 +27,7 @@ class MainWrapper(QtCore.QObject):
     def __init__(self, parent):
         super(MainWrapper, self).__init__(parent)
         self._clips = QObjectListModel(self)
-        self._clips.setObjectList([ClipWrapper("Clip0", 2.2), ClipWrapper("Clip1", 10.0)])
+        self._clips.setObjectList([ClipWrapper(parent, "Clip0", 2.2), ClipWrapper(parent, "Clip1", 10.0)])
 
     def getClips(self):
         return self._clips

@@ -6,8 +6,8 @@ from quickmamba.models import QObjectListModel
 
 
 class ClipWrapper(QtCore.QObject):
-    def __init__(self, name, duration):
-        super(ClipWrapper, self).__init__()
+    def __init__(self, parent, name, duration):
+        super(ClipWrapper, self).__init__(parent)
         self._name = name
         self._duration = duration
 
@@ -26,17 +26,36 @@ class ClipWrapper(QtCore.QObject):
 class MainWrapper(QtCore.QObject):
     def __init__(self, parent):
         super(MainWrapper, self).__init__(parent)
+        self._qtParent = parent
         self._clips = QObjectListModel(self)
-        self._clips.setObjectList([ClipWrapper("Clip0", 2.2), ClipWrapper("Clip1", 10.0)])
+        self._clips.setObjectList(
+                [ClipWrapper(self._qtParent, "Clip0", 2.2),
+                ClipWrapper(self._qtParent, "Clip1", 10.0),
+                ClipWrapper(self._qtParent, "Clip1", 10.0),
+                ClipWrapper(self._qtParent, "Clip1", 10.0),
+                ClipWrapper(self._qtParent, "Clip1", 10.0)]
+            )
 
     def getClips(self):
         return self._clips
 
     @QtCore.Slot(int)
-    def clicked(self, index):
+    def remove(self, index):
         print "Python : start removing element at index %s" % index
         self._clips.removeAt(index)
         print "Python : end removing element at index %s" % index
+
+    @QtCore.Slot()
+    def add(self):
+        print "Python : start adding element"
+        self._clips.append(ClipWrapper(self._qtParent, "ClipDynamic", 2.2) )
+        print "Python : end adding element"
+
+    @QtCore.Slot(int)
+    def insertAt(self, index):
+        print "Python : start insertAt %s element" % index
+        self._clips.insert(index, ClipWrapper(self._qtParent, "ClipDynamic", 2.2) )
+        print "Python : end insertAt element"
 
     modelChanged = QtCore.Signal()
     clips = QtCore.Property("QVariant", getClips, notify=modelChanged)

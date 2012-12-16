@@ -1,16 +1,32 @@
 import QtQuick 1.1
  
-Column {
+Rectangle {
+    width: 400
+    height: 200
+
+    MouseArea {
+        anchors.fill: parent
+        acceptedButtons: Qt.LeftButton | Qt.RightButton
+
+        onClicked: {
+            if( mouse.button == Qt.LeftButton )
+            {
+                _mainWrapper.add()
+            }
+        }
+    }
     Repeater {
         id: pythonList
-        width: 400
-        height: 200
      
         model: _mainWrapper.clips  // Use the QObjectListModel defined in Python as our ListView model
      
         delegate: Component {
             Rectangle {
-                width: pythonList.width; height: 40
+                width: 400
+                height: 10 + 30 * Math.random()
+                x: 100 * Math.random()
+                y: 150 * Math.random()
+
                 color: ((index % 2 == 0)?"#222":"#111")
                 
                 Text {
@@ -35,12 +51,23 @@ Column {
                 }
                 MouseArea {
                     anchors.fill: parent
-                    onClicked: { _mainWrapper.clicked(index) }
+                    acceptedButtons: Qt.LeftButton | Qt.RightButton
+                    onClicked: {
+                        if( mouse.button == Qt.LeftButton )
+                        {
+                            _mainWrapper.insertAt(index)
+                        }
+                        else
+                        {
+                            console.log("remove at " + index)
+                            _mainWrapper.remove(index)
+                        }
+                    }
                 }
             }
         }
-        onItemRemoved:{
-            console.log("QML : onItemRemoved")
+        onItemRemoved: {
+            console.log("QML : onItemRemoved " + item)
         }
     }
 }

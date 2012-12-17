@@ -74,7 +74,7 @@ class ConnectionManager(QtCore.QObject):
     @QtCore.Slot(str, str)
     def inputReleased(self, node, clip):
         #if there is a tmpNodeOut we can connect the nodes
-        if (self._tmpClipOut != None):
+        if (self._tmpClipOut != None and self._tmpClipOut._node != node):
             idClip = IdClip(node, clip)
             self.addConnection(self._tmpClipOut, idClip)
             self._tmpClipIn = None
@@ -89,13 +89,11 @@ class ConnectionManager(QtCore.QObject):
     @QtCore.Slot(str, str)
     def outputReleased(self, node, clip):
         #if there is a tmpClipOut we can connect the nodes
-        if (self._tmpClipIn != None):
+        if (self._tmpClipIn != None and self._tmpClipIn._node != node):
             idClip = IdClip(node, clip)
             self.addConnection(idClip, self._tmpClipIn)
             self._tmpClipIn = None
             self._tmpClipOut = None
-        else:
-            print "espece de nul !"
 
     #connectionsChanged = QtCore.Signal()
     #tmpNodeChanged = QtCore.Signal()

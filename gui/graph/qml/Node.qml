@@ -33,6 +33,7 @@ Item {
         color: "#bbbbbb"
         radius: 8
         Text {
+            id: nodeName
             anchors.centerIn: parent
             text: _nodeManager.getWrapper(node).name
             font.pointSize: 10
@@ -47,10 +48,30 @@ Item {
         Repeater {
             model: _nodeManager.getWrapper(node).nbInput
             Rectangle {
+                id: nodeInput
                 height: 5
                 width: 5
                 color: "#bbbbbb"
                 radius: 2
+                MouseArea {
+                    anchors.fill: parent
+                    hoverEnabled: true
+                    onPressed: {
+                        color = "red"
+                        console.log("Input clicked");
+                        _connectionManager.inputPressed(nodeName.text, "in" + index) // we spent the node name and the id of the input
+                    }
+                    onReleased: {
+                        color = "#bbbbbb"
+                        _connectionManager.inputReleased(nodeName.text, "in" + index)
+                    }
+                    onEntered: {
+                        color = "blue"
+                    }
+                    onExited: {
+                        color = "#bbbbbb"
+                    }
+                }
             }
         }
     }
@@ -59,13 +80,34 @@ Item {
         anchors.horizontalCenter: parent.right
         anchors.verticalCenter: parent.verticalCenter
         spacing: 2
-        Rectangle {
-            height: 5
-            width: 5
-            color: "#bbbbbb"
-            radius: 2
-            MouseArea {
-                anchors.fill: parent
+
+        Repeater {
+            model: 1
+            Rectangle {
+                id: nodeOutput
+                height: 5
+                width: 5
+                color: "#bbbbbb"
+                radius: 2
+                MouseArea {
+                    anchors.fill: parent
+                    hoverEnabled: true
+                    onPressed: {
+                        color = "red"
+                        console.log("Output clicked");
+                        _connectionManager.outputPressed(nodeName.text, "out" + index)
+                    }
+                    onReleased: {
+                        color = "#bbbbbb"
+                        _connectionManager.outputReleased(nodeName.text, "out" + index)
+                    }
+                    onEntered: {
+                        color = "blue"
+                    }
+                    onExited: {
+                        color = "#bbbbbb"
+                    }
+                }
             }
         }
     }

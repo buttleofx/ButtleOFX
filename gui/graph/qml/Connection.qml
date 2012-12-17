@@ -4,8 +4,8 @@ Rectangle {
     id: connection
     implicitWidth: 100
     implicitHeight: 2
-    nodeIn: nodeIn
-    nodeOut: nodeOut
+    property variant nodeIn: nodeIn
+    property variant nodeOut: nodeOut
 
     MouseArea {
         anchors.fill: parent

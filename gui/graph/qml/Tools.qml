@@ -2,15 +2,22 @@ import QtQuick 1.1
 
 Rectangle {
     id: tools
+    implicitWidth: 850
+    implicitHeight: 30
+
+    //should not be present here, but is for not loose him
     width: parent.width
-    height: 30
+    height: 9/100 * parent.height;
+
     z: 2000
     anchors.top: parent.top
     color: "#212121"
     Rectangle {
         id: addNodeButton
-        width: 20
-        height: 20
+        implicitWidth: 20
+        implicitHeight: 20
+        width: 7/100 * parent.height
+        height: width
         anchors.verticalCenter: parent.verticalCenter
         color: "#212121"
         Text {
@@ -28,8 +35,10 @@ Rectangle {
     }
     Rectangle {
         id: delNodeButton
-        width: 20
-        height: 20
+        implicitWidth: 20
+        implicitHeight: 20
+        width: 7/100 * parent.height
+        height: width
         x: 30
         y: 6
         color: "#212121"

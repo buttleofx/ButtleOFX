@@ -1,11 +1,14 @@
-import QtQuick 1.0
+import QtQuick 1.1
 
 // Tabs' bar
 Rectangle {
     id: tabBar
+    implicitWidth: 850
+    implicitHeight: 20
     width: parent.width
-    height: 20
-    anchors.top:  parent.top
+    //height of the tab bar is 5% of the Player's height
+    height: 5/100 * parent.height;
+    anchors.top: parent.top
     color: toolbarColor
 
     Rectangle {

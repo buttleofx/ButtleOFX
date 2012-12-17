@@ -1,7 +1,12 @@
-import QtQuick 1.0
+import QtQuick 1.1
 
 Rectangle {
     id: player
+    //It's bad here, a propriety of a module should not depend of an other module
+    property int toolHeight : parent.toolHeight
+    implicitWidth: 850
+    implicitHeight: 400 - toolHeight
+    //To adapt to the Player size
     width: parent.width
     height: parent.height - toolHeight
     x: 0

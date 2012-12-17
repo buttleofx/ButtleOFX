@@ -1,14 +1,15 @@
 import QtQuick 1.1
-import Qt 4.7
+//import Qt 4.7 //useless?
 //import QtMultimediaKit 1.1
 
 Rectangle {
     id: container
-    width: 800
-    height: 400
+    implicitWidth: 850
+    implicitHeight: 400
+    clip: true
     color: "#212121"
     property url imageFile
-    imageFile: "img/licorne.jpg"
+    imageFile: _nodeManager.getWrapper(_nodeManager.currentNode).url
 
     property color backColor: "#212121"
     property color toolbarColor: "#141414"
@@ -18,7 +19,8 @@ Rectangle {
     property int sizeDragEvent: 5
     property double sizeScaleFirstImage: 0.95
 
-    property int toolHeight: 20
+    //y of the toolBar of the bottom is 5% of the player, PROBLEM HERE
+    property int toolHeight: 2
 
     TabBar{}
 
@@ -28,7 +30,8 @@ Rectangle {
     Rectangle {
             id: tools
             width: parent.width
-            height: 20
+            //before height: 20
+            height: 5/100 * parent.height 
             anchors.bottom: parent.bottom
             color: toolbarColor
 
@@ -79,7 +82,7 @@ Rectangle {
                 id: magGlassOut
                 width: parent.height
                 height: parent.height
-                x: parent.height + 2
+                x: parent.height + parent.height/2
                 color: "transparent"
 
                 Image {

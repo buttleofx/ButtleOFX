@@ -2,8 +2,8 @@ import QtQuick 1.1
 
 Rectangle {
     id: connection
-    width: 100
-    height: 2
+    implicitWidth: 100
+    implicitHeight: 2
     nodeIn: nodeIn
     nodeOut: nodeOut
 

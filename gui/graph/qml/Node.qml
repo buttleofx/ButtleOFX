@@ -2,19 +2,18 @@ import QtQuick 1.1
 
 Item {
     id: node
+    
     height: 35 + 7*_nodeManager.getWrapper(node).nbInput
     width: 110
     x: _nodeManager.getWrapper(node).x
     y: _nodeManager.getWrapper(node).y
     z: _nodeManager.getZMax()
-    focus: _nodeManager.currentNode == node
+    focus: true
 
     Keys.onPressed: {
-        if (event.key==Qt.Key_Delete) {
-            if (node.focus == true){
-                _nodeManager.deleteNode(node)
+            if (event.key == Qt.Key_Delete) {
+                    _nodeManager.deleteCurrentNode()
             }
-        }
     }
 
     Rectangle {
@@ -72,7 +71,7 @@ Item {
     }
     states: State {
         name: "selected";
-        when: node.focus
+        when: _nodeManager.currentNode == node
         PropertyChanges {
             target: nodeRectangle
             color: "#d9d9d9"
@@ -83,10 +82,9 @@ Item {
         drag.target: parent
         drag.axis: Drag.XandYAxis
         onPressed: {
-            node.focus = true
+            _nodeManager.currentNode = node
             parent.opacity = 0.5
             if(_nodeManager.currentNode != node) {
-                _nodeManager.currentNode = node
                 _nodeManager.setZMax()
                 parent.z = _nodeManager.getZMax()
                 console.log(parent.z)

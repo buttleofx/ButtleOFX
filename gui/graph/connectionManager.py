@@ -2,6 +2,7 @@ from PySide import QtCore
 from QuickMamba.qobjectlistmodel import QObjectListModel
 from connection import Connection
 from connectionWrapper import ConnectionWrapper
+from idClip import IdClip
 
 
 class ConnectionManager(QtCore.QObject):
@@ -17,8 +18,8 @@ class ConnectionManager(QtCore.QObject):
         self._connectionWrappers = QObjectListModel(self)
         self._connectionsItem = None
 
-        self._tmpNodeIn = None
-        self._tmpNodeOut = None
+        self._tmpClipIn = None
+        self._tmpClipOut = None
 
     def getConnections(self):
         """
@@ -26,54 +27,75 @@ class ConnectionManager(QtCore.QObject):
         """
         return self._connectionWrappers
 
-    def getTmpNode(self):
+    def getTmpClipIn(self):
         """
-            Return the future first connected node when a connection is beeing created.
-            It correspounds of the node which was beeing clicked and not connected for the moment.
+            Return the future first connected input clip when a connection is beeing created.
+            It correspounds of the input clip which was beeing clicked and not connected for the moment.
         """
-        return self._tmpNode
+        return self._tmpClipIn
 
-    def setTmpNode(self, tmpNode):
+    def setTmpClipIn(self, tmpClip):
         """
-            Set the temporary node.
+            Set the temporary clipIn with an IdClip
         """
-        self._tmpNode = tmpNode
+        self._tmpClipIn = tmpClip
+
+    def getTmpClipOut(self):
+        """
+            Return the future first connected input clip when a connection is beeing created.
+            It correspounds of the input clip which was beeing clicked and not connected for the moment.
+        """
+        return self._tmpClipOut
+
+    def setTmpClipOut(self, tmpClip):
+        """
+            Set the temporary clipIn with an IdClip
+        """
+        self._tmpClipOut = tmpClip
 
     @QtCore.Slot(str, str)
-    def addConnection(self, nodeOut, nodeIn):
+    def addConnection(self, clipOut, clipIn):
         """
             Add a connection between the 2 nodes.
         """
-        self._coreConnections.append(Connection(nodeOut, nodeIn))
-        self._connectionWrappers.append(ConnectionWrapper(nodeOut, nodeIn))
+        self._coreConnections.append(Connection(clipOut, clipIn))
+        self._connectionWrappers.append(ConnectionWrapper(clipOut, clipIn))
 
         print "List of connections :"
         for con in self._coreConnections:
             con.__str__()
 
-    @QtCore.Slot(str)
-    def inputClicked(self, node):
-        #if there isn't any tmpNodeOut to be connected, we update the tmpNodeIn
-        if (self._tmpNodeOut == None or self._tmpNodeOut == node):
-            self._tmpNodeIn = node
-            print "Add tmpNodeIn: " + node
-        # else we can connect the nodes
-        else:
-            self.addConnection(self._tmpNodeOut, node)
-            self._tmpNodeIn = None
-            self._tmpNodeOut = None
+    @QtCore.Slot(str, str)
+    def inputPressed(self, node, clip):
+        idClip = IdClip(node, clip)
+        self._tmpClipIn = idClip
+        print "Add tmpNodeIn: " + node + " " + clip
 
-    @QtCore.Slot(str)
-    def outputClicked(self, node):
-        #if there isn't any tmpNodeIn to be connected, we update the tmpNodeOut
-        if (self._tmpNodeIn == None or self._tmpNodeIn == node):
-            self._tmpNodeOut = node
-            print "Add tmpNodeOut: " + node
-        # else we can connect the nodes
+    @QtCore.Slot(str, str)
+    def inputReleased(self, node, clip):
+        #if there is a tmpNodeOut we can connect the nodes
+        if (self._tmpClipOut != None):
+            idClip = IdClip(node, clip)
+            self.addConnection(self._tmpClipOut, idClip)
+            self._tmpClipIn = None
+            self._tmpClipOut = None
+
+    @QtCore.Slot(str, str)
+    def outputPressed(self, node, clip):
+        idClip = IdClip(node, clip)
+        self._tmpClipOut = idClip
+        print "Add tmpNodeOut: " + node + " " + clip
+
+    @QtCore.Slot(str, str)
+    def outputReleased(self, node, clip):
+        #if there is a tmpClipOut we can connect the nodes
+        if (self._tmpClipIn != None):
+            idClip = IdClip(node, clip)
+            self.addConnection(idClip, self._tmpClipIn)
+            self._tmpClipIn = None
+            self._tmpClipOut = None
         else:
-            self.addConnection(node, self._tmpNodeIn)
-            self._tmpNodeIn = None
-            self._tmpNodeOut = None
+            print "espece de nul !"
 
     #connectionsChanged = QtCore.Signal()
     #tmpNodeChanged = QtCore.Signal()

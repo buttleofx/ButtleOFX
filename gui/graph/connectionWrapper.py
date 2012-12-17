@@ -7,10 +7,10 @@ class ConnectionWrapper(QtCore.QObject):
         Class ConnectionWrapper
     """
 
-    def __init__(self, nodeOut, nodeIn):
+    def __init__(self, clipOut, clipIn):
         super(ConnectionWrapper, self).__init__()
-        self._nodeOut = nodeOut
-        self._nodeIn = nodeIn
+        self._clipOut = clipOut
+        self._clipIn = clipIn
 
     @QtCore.Signal
     def changed(self):
@@ -19,19 +19,19 @@ class ConnectionWrapper(QtCore.QObject):
     # invokable
     # @QtCore.Slot()
 
-    def getNodeOut(self):
-        return self._nodeOut
+    def getClipOut(self):
+        return self._clipOut
 
-    def setNodeOut(self, nodeOut):
-        self._nodeOut = nodeOut
+    def setClipOut(self, clipOut):
+        self._clipOut = clipOut
 
-    def getNodeIn(self):
-        return self._nodeOut
+    def getClipIn(self):
+        return self._clipOut
 
-    def setNodeIn(self, nodeIn):
-        self._nodeIn = nodeIn
+    def setClipIn(self, clipIn):
+        self._clipIn = clipIn
 
     #nodeOut = QtCore.Property(QtCore.QObject, getNodeOut, setNodeOut, notify=changed)
     #nodeIn = QtCore.Property(QtCore.QObject, getNodeIn, setNodeIn, notify=changed)
-    nodeOut = QtCore.Property(unicode, getNodeOut, setNodeOut, notify=changed)
-    nodeIn = QtCore.Property(unicode, getNodeIn, setNodeIn, notify=changed)
+    clipOut = QtCore.Property(unicode, getClipOut, setClipOut, notify=changed)
+    clipIn = QtCore.Property(unicode, getClipIn, setClipIn, notify=changed)

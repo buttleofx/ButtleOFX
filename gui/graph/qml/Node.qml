@@ -55,12 +55,20 @@ Item {
                 radius: 2
                 MouseArea {
                     anchors.fill: parent
+                    hoverEnabled: true
                     onPressed: {
                         color = "red"
                         console.log("Input clicked");
-                        _connectionManager.inputClicked(nodeName.text)
+                        _connectionManager.inputPressed(nodeName.text, "in" + index) // we spent the node name and the id of the input
                     }
                     onReleased: {
+                        color = "#bbbbbb"
+                        _connectionManager.inputReleased(nodeName.text, "in" + index)
+                    }
+                    onEntered: {
+                        color = "blue"
+                    }
+                    onExited: {
                         color = "#bbbbbb"
                     }
                 }
@@ -82,12 +90,20 @@ Item {
                 radius: 2
                 MouseArea {
                     anchors.fill: parent
+                    hoverEnabled: true
                     onPressed: {
                         color = "red"
                         console.log("Output clicked");
-                        _connectionManager.outputClicked(nodeName.text)
+                        _connectionManager.outputPressed(nodeName.text, "out" + index)
                     }
                     onReleased: {
+                        color = "#bbbbbb"
+                        _connectionManager.outputReleased(nodeName.text, "out" + index)
+                    }
+                    onEntered: {
+                        color = "blue"
+                    }
+                    onExited: {
                         color = "#bbbbbb"
                     }
                 }

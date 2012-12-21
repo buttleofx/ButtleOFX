@@ -23,11 +23,9 @@ defaultNodeDesc = {
     "url": "img/uglycorn.jpg"
 }
 
-from gui.graph.node.idNode import IdNode
 from QuickMamba.quickmamba.patterns.signalEvent import Signal
 
 class Node(object):
-
     """
         Class Node defined by:
         - _id
@@ -37,15 +35,21 @@ class Node(object):
         - _color
         - _nbInput
         - _url
-        - changed : the signal emited to the wrapper layer
+        - idChanged : a signal emited to the wrapper layer
+        - nameChanged : a signal emited to the wrapper layer
+        - typeChanged : a signal emited to the wrapper layer
+        - xChanged : a signal emited to the wrapper layer
+        - yChanged : a signal emited to the wrapper layer
+        - colorChanged : a signal emited to the wrapper layer
+        - nbInputChanged : a signal emited to the wrapper layer
+        - imageChanged : a signal emited to the wrapper layer
 
         Creates a python object Node.
     """
 
     def __init__(self, nodeId, nodeName, nodeType, nodeCoord):
-        # super(Node, self).__init__()
         self._id = nodeId
-        self._name = ("%s_%d") % (nodeType, nodeId)
+        self._name = nodeName
         self._type = nodeType
         self._coord = nodeCoord
 
@@ -88,13 +92,19 @@ class Node(object):
         self._type = nodeType
         self.tyepChanged(nodeType)
 
-    def getCoord(self):
-        return self._coord
+    def getXCoord(self):
+        return self._coord[0]
 
-    def setCoord(self, coord):
-        self._coord = coord
-        self.xChanged(coord)
-        self.yChanged(coord)
+    def setXCoord(self, x):
+        self._coord[0] = x
+        self.xChanged(x)
+
+    def getYCoord(self):
+        return self._coord[1]
+
+    def setXCoord(self, y):
+        self._coord[1] = y
+        self.yChanged(y)
 
     def getColor(self):
         return QtGui.QColor(*self._color)

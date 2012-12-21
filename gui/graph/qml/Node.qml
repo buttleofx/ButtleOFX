@@ -38,7 +38,7 @@ Rectangle {
         anchors.horizontalCenter: parent.left
         anchors.top: parent.verticalCenter
         spacing: 2
-        property int nbInput: model.object.nbInput
+        property int nbInput: nodeModel.nbInput
         Repeater {
             model: nodeInputs.nbInput
             Rectangle {
@@ -81,6 +81,7 @@ Rectangle {
         }
         onClicked: {
             console.log(model.object.name)
+            _graphWrapper.setCurrentNode(nodeModel.id)
         }
     }
 }

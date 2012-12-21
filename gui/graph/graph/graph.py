@@ -1,13 +1,15 @@
-from gui.graph.node.node import Node
 from QuickMamba.quickmamba.patterns.signalEvent import Signal
 
-class Graph:
+from gui.graph.node.node import Node
+from gui.graph.node.idNode import IdNode
 
+class Graph:
     """
         Class Graph contains
         - _nodes : list of nodes (python objects, the core nodes)
         - _connections : list of connections (python objects, the core connections)
-        - changed : the signal emited to the wrapper layer
+        - nodeCreated : the signal emited to the wrapper layer when a node is created
+        - nodeDeleted : the signal emited to the wrapper layer when a node is deleted
     """
 
     def __init__(self):
@@ -18,33 +20,33 @@ class Graph:
         self.nodeDeleted = Signal()
 
     def getNodes(self):
-
         """
             Returns the node List.
         """
         return self._nodes
 
     def getConnexions(self):
-
         """
             Returns the connection List.
         """
         return self._connections
 
     def createNode(self, nodeType):
-
         """
             Adds a node from the node list when a node is created.
         """
         #
         print "createNode"
-        nodeId = len(self._nodes) # need idNode module
-        self._nodes.append(Node(nodeId, "Noeud n : " + str(nodeId) + " - " + str(nodeType), str(nodeType), ((nodeId + 1) * 30, (nodeId + 5) * 10)))
+        nodeName = "Name = type : " + str(nodeType)
+        nodeCoord = (30, 50)
+        nodeId = IdNode(nodeName, nodeType, nodeCoord[0], nodeCoord[1])
+
+        self._nodes.append(Node(nodeId, nodeName, nodeType, nodeCoord))
+
         self.nodeCreated(nodeId)
         # commandManager.doCmd( CmdCreateNode(nodeType) )
 
     def deleteNode(self, nodeId):
-
         """
             Removes a node from the node list when a node is deleted.
         """

@@ -52,7 +52,7 @@ Rectangle {
             anchors.fill: parent
             onClicked: {
                 //_graphWrapper.deleteCurrentNode();
-                _graphWrapper.destruction(0)
+                _graphWrapper.destructionProcess()
             }
         }
     }
@@ -111,7 +111,7 @@ Rectangle {
                     onExited: parent.color = "#343434"
                     onClicked: {
                         if(nodeMenuView.state == "shown"){
-                            _graphWrapper.creation(cat2)
+                            _graphWrapper.creationProcess(cat2)
                             nodeMenuView.state = "hidden"
                         }
                     }

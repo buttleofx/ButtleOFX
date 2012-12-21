@@ -1,8 +1,8 @@
 from PySide import QtCore, QtGui
+
 from QuickMamba.quickmamba.patterns.signalEvent import Signal
 
 class NodeWrapper(QtCore.QObject):
-
     """
         Class NodeWrapper defined by:
         - _id
@@ -21,6 +21,15 @@ class NodeWrapper(QtCore.QObject):
         super(NodeWrapper, self).__init__()
 
         self._node = node
+
+        self._id = node._id
+        self._name = node._name
+        self._type = node._type
+        self._coord = node._coord
+        self._color = node._color
+        self._nbInput = node._nbInput
+        self._image = node._image
+
         # the links between the nodeWrapper and his node
         self._node.idChanged.connect(self.setId)
         self._node.nameChanged.connect(self.setName)
@@ -31,34 +40,23 @@ class NodeWrapper(QtCore.QObject):
         self._node.nbInputChanged.connect(self.setNbInput)
         self._node.imageChanged.connect(self.setImage)
 
-        self._id = node._id
-        self._name = node._name
-        self._type = node._type
-        self._coord = node._coord
-        self._color = node._color
-        self._nbInput = node._nbInput
-        self._image = node._image
-
     @QtCore.Signal
     def changed(self):
         pass
 
-    # invokable
     @QtCore.Slot()
     def getId(self):
         return self._id
 
-    @QtCore.Slot(unicode)
+    @QtCore.Slot(object)
     def setId(self, idNode):
-        print("id")
         self._id = idNode
 
     @QtCore.Slot()
     def getName(self):
-        print("name")
         return str(self._name)
 
-    @QtCore.Slot()
+    @QtCore.Slot(str)
     def setName(self, name):
         self._name = name
 
@@ -66,7 +64,7 @@ class NodeWrapper(QtCore.QObject):
     def getType(self):
         return str(self._type)
 
-    @QtCore.Slot()
+    @QtCore.Slot(str)
     def setType(self, nodeType):
         self._type = nodeType
 
@@ -111,11 +109,11 @@ class NodeWrapper(QtCore.QObject):
     def setImage(self, image):
         self._image = image
 
-    nodeId = QtCore.Property(unicode, getId, setId, notify=changed)
-    name = QtCore.Property(unicode, getName, setName, notify=changed)
-    nodeType = QtCore.Property(unicode, getType, setType, notify=changed)
-    x = QtCore.Property(float, getXCoord, setXCoord, notify=changed)
-    y = QtCore.Property(float, getYCoord, setYCoord, notify=changed)
+    nodeId = QtCore.Property(object, getId, setId, notify=changed)
+    name = QtCore.Property(str, getName, setName, notify=changed)
+    nodeType = QtCore.Property(str, getType, setType, notify=changed)
+    x = QtCore.Property(int, getXCoord, setXCoord, notify=changed)
+    y = QtCore.Property(int, getYCoord, setYCoord, notify=changed)
     color = QtCore.Property(QtGui.QColor, getColor, setColor, notify=changed)
     nbInput = QtCore.Property(int, getNbInput, setNbInput, notify=changed)
-    image = QtCore.Property(unicode, getImage, setImage, notify=changed)
+    image = QtCore.Property(str, getImage, setImage, notify=changed)

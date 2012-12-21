@@ -90,7 +90,7 @@ Rectangle {
 
 /*Item {
     id: node
-    
+
     height: 35 + 7*_graphWrapper.getWrappers(node).nbInput
     width: 110
     x: _graphWrapper.getWrappers(node).x
@@ -219,10 +219,10 @@ Rectangle {
                 parent.z = _graphWrapper.getZMax()
                 console.log(parent.z)
             }
-            
+
         }
         onReleased: {
             parent.opacity = 1
         }
-    }   
+    }
 }*/

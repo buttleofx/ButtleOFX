@@ -72,8 +72,8 @@ class GraphWrapper(QtCore.QObject):
         return self._nodeWrappers[nodeWrapper.getId()]
 
     @QtCore.Slot(str)
-    def creation(self, nodeId):
-        self._graph.createNode(nodeId)
+    def creation(self, nodeType):
+        self._graph.createNode(nodeType)
         # debug
         self.__str__()
 
@@ -83,6 +83,12 @@ class GraphWrapper(QtCore.QObject):
         self._nodeWrappers.append(wrapper)
         self._currentNode = wrapper
         # commandManager.doCmd( CmdCreateNodeWrapper(nodeId) )
+
+    @QtCore.Slot(str)
+    def destruction(self, nodeId):
+        self._graph.deleteNode(nodeId)
+        # debug
+        self.__str__()
 
     @QtCore.Slot(str)
     def deleteNodeWrapper(self, nodeId):
@@ -102,10 +108,8 @@ class GraphWrapper(QtCore.QObject):
             Delete the current selected node by calling the deleteNode() function.
         """
         nodeId = self._currentNode.getId()
-        print "---- " + str(nodeId) + " ----"
         self.deleteNodeWrapper(nodeId)
         self._graph.deleteNode(nodeId)
-        self.__str__()
 
     def setCurrentNode(self, nodeWrapper):
         """

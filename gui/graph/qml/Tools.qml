@@ -51,7 +51,8 @@ Rectangle {
         MouseArea {
             anchors.fill: parent
             onClicked: {
-                _graphWrapper.deleteCurrentNode();
+                //_graphWrapper.deleteCurrentNode();
+                _graphWrapper.destruction(0)
             }
         }
     }

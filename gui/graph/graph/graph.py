@@ -1,5 +1,3 @@
-from PySide import QtDeclarative, QtCore
-
 from gui.graph.node.node import Node
 from QuickMamba.quickmamba.patterns.signalEvent import Signal
 
@@ -13,8 +11,6 @@ class Graph:
     """
 
     def __init__(self):
-        #super(Graph, self).__init__()
-
         self._nodes = []
         self._connections = []
 
@@ -35,7 +31,6 @@ class Graph:
         """
         return self._connections
 
-    #@QtCore.Slot(str)
     def createNode(self, nodeType):
 
         """
@@ -48,7 +43,6 @@ class Graph:
         self.nodeCreated(nodeId)
         # commandManager.doCmd( CmdCreateNode(nodeType) )
 
-    #@QtCore.Slot(QtDeclarative.QDeclarativeItem)
     def deleteNode(self, nodeId):
 
         """
@@ -56,6 +50,10 @@ class Graph:
         """
         print "deleteNode"
         #
-        self._nodes.remove(self._nodes[nodeId])
+        # we search the right node to delete
+        for node in self._nodes:
+            if node.getId() == nodeId:
+                self._nodes.remove(node)
+                break
         self.nodeDeleted(nodeId)
         # commandManager.doCmd( CmddeleteNode(nodeid) )

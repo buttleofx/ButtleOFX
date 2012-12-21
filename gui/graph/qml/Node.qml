@@ -1,18 +1,106 @@
 import QtQuick 1.1
 
-Item {
+import Qt 4.7
+
+Rectangle {
+    id: node
+    height: 35 + 7*model.object.nbInput
+    width: 110
+    x: model.object.x
+    y: model.object.y
+    color: "transparent"
+    property variant nodeModel : model.object
+    Rectangle {
+        id: nodeBorder
+        height: 40
+        width: 110
+        anchors.centerIn: parent
+        color: model.object.color
+        opacity: 0.5
+        radius: 10
+    }
+    Rectangle {
+        id: nodeRectangle
+        anchors.centerIn: parent
+        height: 32
+        width: 102
+        color: "#bbbbbb"
+        radius: 8
+        Text {
+            anchors.centerIn: parent
+            text: nodeModel.name
+            font.pointSize: 10
+            color: "black"
+        }
+    }
+    Column {
+        id: nodeInputs
+        anchors.horizontalCenter: parent.left
+        anchors.top: parent.verticalCenter
+        spacing: 2
+        property int nbInput: model.object.nbInput
+        Repeater {
+            model: nodeInputs.nbInput
+            Rectangle {
+                height: 5
+                width: 5
+                color: "#bbbbbb"
+                radius: 2
+            }
+        }
+    }
+    Column {
+        id: nodeOutputs
+        anchors.horizontalCenter: parent.right
+        anchors.top: parent.verticalCenter
+        spacing: 2
+        Repeater {
+            model: 1
+            Rectangle {
+                height: 5
+                width: 5
+                color: "#bbbbbb"
+                radius: 2
+                MouseArea {
+                    anchors.fill: parent
+                }
+            }
+        }
+    }
+    MouseArea {
+        anchors.fill: parent
+        drag.target: parent
+        drag.axis: Drag.XandYAxis
+        onPressed: parent.opacity = 0.5
+        onReleased: {
+            parent.opacity = 1;
+            console.log(parent.x)
+            console.log(parent.y)
+            model.object.getXCoord(parent.x)
+            model.object.getYCoord(parent.y)
+        }
+        onClicked: {
+            console.log(model.object.name)
+        }
+    }
+}
+
+
+
+
+/*Item {
     id: node
     
-    height: 35 + 7*_nodeManager.getWrapper(node).nbInput
+    height: 35 + 7*_graphWrapper.getWrappers(node).nbInput
     width: 110
-    x: _nodeManager.getWrapper(node).x
-    y: _nodeManager.getWrapper(node).y
-    z: _nodeManager.getZMax()
+    x: _graphWrapper.getWrappers(node).x
+    y: _graphWrapper.getWrappers(node).y
+    z: _graphWrapper.getZMax()
     focus: true
 
     Keys.onPressed: {
             if (event.key == Qt.Key_Delete) {
-                    _nodeManager.deleteCurrentNode()
+                    _graphWrapper.deleteCurrentNode()
             }
     }
 
@@ -21,7 +109,7 @@ Item {
         height: node.height
         width: node.width
         anchors.centerIn: parent
-        color: _nodeManager.getWrapper(node).color
+        color: _graphWrapper.getWrappers(node).color
         opacity: 0.5
         radius: 10
     }
@@ -35,7 +123,7 @@ Item {
         Text {
             id: nodeName
             anchors.centerIn: parent
-            text: _nodeManager.getWrapper(node).name
+            text: _graphWrapper.getWrappers(node).name
             font.pointSize: 10
             color: "black"
         }
@@ -46,7 +134,7 @@ Item {
         anchors.verticalCenter: parent.verticalCenter
         spacing: 2
         Repeater {
-            model: _nodeManager.getWrapper(node).nbInput
+            model: _graphWrapper.getWrappers(node).nbInput
             Rectangle {
                 id: nodeInput
                 height: 5
@@ -113,7 +201,7 @@ Item {
     }
     states: State {
         name: "selected";
-        when: _nodeManager.currentNode == node
+        when: _graphWrapper.currentNode == node
         PropertyChanges {
             target: nodeRectangle
             color: "#d9d9d9"
@@ -124,11 +212,11 @@ Item {
         drag.target: parent
         drag.axis: Drag.XandYAxis
         onPressed: {
-            _nodeManager.currentNode = node
+            _graphWrapper.currentNode = node
             parent.opacity = 0.5
-            if(_nodeManager.currentNode != node) {
-                _nodeManager.setZMax()
-                parent.z = _nodeManager.getZMax()
+            if(_graphWrapper.currentNode != node) {
+                _graphWrapper.setZMax()
+                parent.z = _graphWrapper.getZMax()
                 console.log(parent.z)
             }
             
@@ -137,4 +225,4 @@ Item {
             parent.opacity = 1
         }
     }   
-}
+}*/

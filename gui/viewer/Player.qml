@@ -8,8 +8,7 @@ Rectangle {
     implicitHeight: 400
     clip: true
     color: "#212121"
-    property url imageFile
-    imageFile: _nodeManager.getWrapper(_nodeManager.currentNode).url
+    property url imageFile: _nodeManager.getWrapper(_nodeManager.currentNode).url
 
     property color backColor: "#212121"
     property color toolbarColor: "#141414"

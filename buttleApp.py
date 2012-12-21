@@ -1,9 +1,12 @@
 import sys
 from PySide import QtGui, QtDeclarative
-from gui.graph.graph import *
-from gui.paramEditor.paramEditor import *
-from gui.graph.connectionManager import *
 
+# graph
+from gui.graph.nodeManager import NodeManager
+# paramEditor
+from gui.paramEditor.paramInt import ParamInt
+from gui.paramEditor.paramString import ParamString
+from gui.paramEditor.wrappers.mainWrapper import MainWrapper
 
 def main():
     QApplication = QtGui.QApplication(sys.argv)

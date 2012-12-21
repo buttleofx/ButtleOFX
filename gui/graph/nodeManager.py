@@ -9,6 +9,10 @@ import os
 
 
 def wrapInstanceAs(instance, target_class):
+
+    """
+        Cast the instance as the given class
+    """
     return shiboken.wrapInstance(shiboken.getCppPointer(instance)[0], target_class)
 
 
@@ -95,11 +99,23 @@ class NodeManager(QtCore.QObject):
         self.setCurrentNode(nodeItem)
         self.currentNodeChanged.emit()
 
-    def getNodes(self):
+    def getWrapper(self):
         """
             Return the nodeWrapper ListModel
         """
         return self.nodeWrappers
+
+    def getCoreNodes(self):
+        """
+            Return the coreNodes list
+        """
+        return self.coreNodes
+
+    def getNodeItems(self):
+        """
+            Return the nodeItems list
+        """
+        return self.nodeItems
 
     @QtCore.Slot(QtDeclarative.QDeclarativeItem, result="QVariant")
     def getWrapper(self, item):
@@ -158,6 +174,6 @@ class NodeManager(QtCore.QObject):
         self.currentNodeChanged.emit()
 
     nodesChanged = QtCore.Signal()
-    nodes = QtCore.Property("QVariant", getNodes, notify=nodesChanged)
+    nodes = QtCore.Property("QVariant", getWrapper, notify=nodesChanged)
     currentNodeChanged = QtCore.Signal()
     currentNode = QtCore.Property("QVariant", getCurrentNode, setCurrentNode, notify=currentNodeChanged)

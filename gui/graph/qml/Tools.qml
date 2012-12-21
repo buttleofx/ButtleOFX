@@ -51,7 +51,7 @@ Rectangle {
         MouseArea {
             anchors.fill: parent
             onClicked: {
-                _nodeManager.deleteCurrentNode();
+                _graphWrapper.deleteCurrentNode();
             }
         }
     }
@@ -110,7 +110,7 @@ Rectangle {
                     onExited: parent.color = "#343434"
                     onClicked: {
                         if(nodeMenuView.state == "shown"){
-                            _nodeManager.addNode(cat2)
+                            _graphWrapper.creation(cat2)
                             nodeMenuView.state = "hidden"
                         }
                     }

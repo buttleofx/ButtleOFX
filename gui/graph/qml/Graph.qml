@@ -9,5 +9,10 @@ Rectangle {
         GradientStop { position: 0.0; color: "#111111" }
         GradientStop { position: 0.015; color: "#212121" }
     }
-
+    Item {
+        Repeater {
+            model : _wrappers
+            Node {}
+        }
+    }
 }

@@ -13,6 +13,8 @@ if __name__ == '__main__':
     graphWrapper = GraphWrapper(graph, view)
     graph.createNode("test")
     graph.createNode("test3")
+    graphWrapper.__str__()
+
     view.rootContext().setContextProperty("_graphWrapper", graphWrapper)
     view.rootContext().setContextProperty("_wrappers", graphWrapper.getWrappers())
     view.setWindowTitle("Graph editor")

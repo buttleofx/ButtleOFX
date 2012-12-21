@@ -2,11 +2,12 @@ from PySide import QtDeclarative, QtCore
 
 from QuickMamba.qobjectlistmodel import QObjectListModel
 from QuickMamba.quickmamba.patterns.signalEvent import Signal
+from QuickMamba.quickmamba.patterns.singleton import Singleton
 
 from gui.graph.graph.graph import Graph
 from gui.graph.node.nodeWrapper import NodeWrapper
 
-class GraphWrapper(QtCore.QObject):
+class GraphWrapper(QtCore.QObject, Singleton):
     """
         Class GraphWrapper defined by:
         - _engine : to have the view engine
@@ -45,11 +46,11 @@ class GraphWrapper(QtCore.QObject):
             Display on terminal the nodeWrapper list and the node list.
             Usefull to debug the class.
         """
-        print("The id of all nodeWrappers : ")
+        print("---- The id of all nodeWrappers ----")
         for wrapper in self._nodeWrappers:
             print  wrapper._id
 
-        print("The id of all nodes : ")
+        print("---- The id of all nodes ----")
         for node in self._graph._nodes:
             print node._id
 

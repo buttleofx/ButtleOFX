@@ -1,4 +1,4 @@
-class IdNode:
+class IdNode(object):
     """
         Class usefull to identify a node with the nodeName, the nodeType, and the nodeCoord (x, y).
     """

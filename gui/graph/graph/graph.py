@@ -1,9 +1,10 @@
 from QuickMamba.quickmamba.patterns.signalEvent import Signal
+from QuickMamba.quickmamba.patterns.singleton import Singleton
 
 from gui.graph.node.node import Node
 from gui.graph.node.idNode import IdNode
 
-class Graph:
+class Graph(Singleton):
     """
         Class Graph contains
         - _nodes : list of nodes (python objects, the core nodes)

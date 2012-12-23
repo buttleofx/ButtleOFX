@@ -1,8 +1,10 @@
-import sys
-from PySide import QtGui, QtDeclarative
 from gui.graph.graph.graph import Graph
 from gui.graph.graph.graphWrapper import GraphWrapper
-from QuickMamba.quickmamba.patterns.signalEvent import Signal
+from quickmamba.patterns import Signal
+
+from PySide import QtGui, QtDeclarative
+
+import sys
 
 if __name__ == '__main__':
 

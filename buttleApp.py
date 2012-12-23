@@ -1,12 +1,20 @@
-import sys
-from PySide import QtGui, QtDeclarative
-
 # graph
 from gui.graph.nodeManager import NodeManager
 # paramEditor
 from gui.paramEditor.paramInt import ParamInt
 from gui.paramEditor.paramString import ParamString
 from gui.paramEditor.wrappers.mainWrapper import MainWrapper
+
+
+from PySide import QtGui, QtDeclarative
+
+import sys
+import os
+
+buttleDir = os.path.dirname(os.path.abspath(__file__))
+sys.path.append(buttleDir)
+sys.path.append(os.path.join(buttleDir,'QuickMamba'))
+
 
 def main():
     QApplication = QtGui.QApplication(sys.argv)

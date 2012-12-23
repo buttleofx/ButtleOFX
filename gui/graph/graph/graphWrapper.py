@@ -1,11 +1,11 @@
-from PySide import QtDeclarative, QtCore
-
-from QuickMamba.qobjectlistmodel import QObjectListModel
-from QuickMamba.quickmamba.patterns.signalEvent import Signal
-from QuickMamba.quickmamba.patterns.singleton import Singleton
-
 from gui.graph.graph.graph import Graph
 from gui.graph.node.nodeWrapper import NodeWrapper
+
+from quickmamba.models import QObjectListModel
+from quickmamba.patterns import Signal
+from quickmamba.patterns import Singleton
+
+from PySide import QtDeclarative, QtCore
 
 class GraphWrapper(QtCore.QObject, Singleton):
     """

@@ -1,8 +1,9 @@
-from QuickMamba.quickmamba.patterns.signalEvent import Signal
-from QuickMamba.quickmamba.patterns.singleton import Singleton
-
 from gui.graph.node.node import Node
 from gui.graph.node.idNode import IdNode
+
+from quickmamba.patterns import Signal
+from quickmamba.patterns import Singleton
+
 
 class Graph(Singleton):
     """

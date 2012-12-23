@@ -23,7 +23,7 @@ defaultNodeDesc = {
     "url": "img/uglycorn.jpg"
 }
 
-from QuickMamba.quickmamba.patterns.signalEvent import Signal
+from quickmamba.patterns import Signal
 
 class Node(object):
     """

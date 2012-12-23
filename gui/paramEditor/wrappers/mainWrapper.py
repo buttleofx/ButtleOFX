@@ -1,16 +1,17 @@
-from PySide import QtCore
-from QuickMamba import qobjectlistmodel
 from gui.paramEditor.paramInt import ParamInt
 from gui.paramEditor.paramString import ParamString
 from intWrapper import IntWrapper
 from stringWrapper import StringWrapper
 
+from quickmamba.models import QObjectListModel
+
+from PySide import QtCore
 
 class MainWrapper(QtCore.QObject):
     def __init__(self, parent, paramList):
         super(MainWrapper, self).__init__(parent)
         #QtCore.QObject.__init__(self)
-        self._paramElmts = qobjectlistmodel.QObjectListModel(self)
+        self._paramElmts = QObjectListModel(self)
 
         mapTypeToWrapper = {
             ParamInt: IntWrapper,

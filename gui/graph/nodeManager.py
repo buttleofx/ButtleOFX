@@ -1,6 +1,6 @@
 from node import Node
-from nodeWrapper import NodeWrapper
-from QuickMamba.qobjectlistmodel import QObjectListModel
+from node import NodeWrapper
+from quickmamba.models import QObjectListModel
 
 from PySide import QtDeclarative, QtCore
 import shiboken

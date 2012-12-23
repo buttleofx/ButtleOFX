@@ -1,6 +1,7 @@
+from quickmamba.patterns import Signal
+
 from PySide import QtCore, QtGui
 
-from QuickMamba.quickmamba.patterns.signalEvent import Signal
 
 class NodeWrapper(QtCore.QObject):
     """

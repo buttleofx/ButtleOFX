@@ -1,9 +1,10 @@
-from PySide import QtCore
-from QuickMamba.qobjectlistmodel import QObjectListModel
 from connection import Connection
 from connectionWrapper import ConnectionWrapper
 from idClip import IdClip
 
+from quickmamba.models import QObjectListModel
+
+from PySide import QtCore
 
 class ConnectionManager(QtCore.QObject):
 

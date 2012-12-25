@@ -1,9 +1,12 @@
-import sys
-
 from PySide import QtGui, QtDeclarative
 from gui.paramEditor.paramInt import ParamInt
 from gui.paramEditor.paramString import ParamString
 from gui.paramEditor.wrappers.mainWrapper import MainWrapper
+
+import sys
+import os
+
+currentFilePath = os.path.dirname(os.path.abspath(__file__))
 
 
 def main():
@@ -22,7 +25,7 @@ def main():
     mw = MainWrapper(view, paramList)
     view.rootContext().setContextProperty('_paramListModel', mw)
 
-    view.setSource('qml/ParamEditor.qml')
+    view.setSource(os.path.join(currentFilePath, 'qml/ParamEditor.qml'))
     view.setResizeMode(QtDeclarative.QDeclarativeView.SizeRootObjectToView)
 
     view.show()

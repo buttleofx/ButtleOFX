@@ -1,5 +1,5 @@
-from gui.graph.node.node import Node
-from gui.graph.node.idNode import IdNode
+from buttleofx.gui.graph.node.node import Node
+from buttleofx.gui.graph.node.idNode import IdNode
 
 from quickmamba.patterns import Signal
 

@@ -1,5 +1,5 @@
-from gui.paramEditor.paramInt import ParamInt
-from gui.paramEditor.paramString import ParamString
+from buttleofx.gui.paramEditor.paramInt import ParamInt
+from buttleofx.gui.paramEditor.paramString import ParamString
 from intWrapper import IntWrapper
 from stringWrapper import StringWrapper
 

@@ -9,19 +9,16 @@ from gui.paramEditor.wrappers.mainWrapper import MainWrapper
 
 from PySide import QtGui, QtDeclarative
 
-import sys
 import os
 
-buttleDir = os.path.dirname(os.path.abspath(__file__))
-sys.path.append(buttleDir)
-sys.path.append(os.path.join(buttleDir,'QuickMamba'))
+currentFilePath = os.path.dirname(os.path.abspath(__file__))
 
 
-def main():
-    QApplication = QtGui.QApplication(sys.argv)
+def main(argv):
+    QApplication = QtGui.QApplication(argv)
     view = QtDeclarative.QDeclarativeView()
     view.setWindowTitle("ButtleOFX")
-    view.setSource("buttleApp.qml")
+    view.setSource(os.path.join(currentFilePath, "MainWindow.qml"))
     rc = view.rootContext()
 
     # for the GraphEditor
@@ -50,6 +47,3 @@ def main():
     view.show()
     QApplication.exec_()
 
-
-if __name__ == '__main__':
-    main()

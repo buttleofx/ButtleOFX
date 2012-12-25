@@ -1,5 +1,5 @@
-from PySide import QtGui, QtDeclarative, QtCore, QtOpenGL
-from OpenGL import GL, GLU
+from PySide import QtGui, QtDeclarative, QtCore
+from OpenGL import GL
 
 def loadTextureFromImage(img, img_data):
     texture = GL.glGenTextures(1)
@@ -17,23 +17,25 @@ def loadTextureFromImage(img, img_data):
 
 class GLViewport(QtDeclarative.QDeclarativeItem):
     def __init__(self, parent=None):
-        QtDeclarative.QDeclarativeItem.__init__(self, parent)
-        self.initGL()
+        super(GLViewport, self).__init__(parent)
         
         # Enable paint method calls
         self.setFlag(QtGui.QGraphicsItem.ItemHasNoContents, False)
         self.loadImageFile("input.jpg")
         self.tex = None
         
-    def initGL(self):
+    def initializeGL(self):
+        GL.glClearColor(0.0,0.0,0.0,0.0) # We assign a black background
+        GL.glShadeModel(GL.GL_FLAT) # We applied a flat shading mode
         GL.glEnable(GL.GL_LINE_SMOOTH)
-        
+    
     def loadImageFile(self, filename):
         print "loadImageFile: ", filename
         import Image
         import numpy
         self.img = Image.open(filename)
         self.img_data = numpy.array(self.img.getdata(), numpy.uint8)
+        self.setImageSize( QtCore.QSize(self.img.size[0], self.img.size[1]) )
         print "image size: ", self.img.size[0], "x", self.img.size[1]
 
     def updateTextureFromImage(self):
@@ -41,26 +43,33 @@ class GLViewport(QtDeclarative.QDeclarativeItem):
         self.tex = loadTextureFromImage( self.img, self.img_data )
         print "updateTextureFromImage end"
         
-    def paint(self, painter, option, widget):
-        print "GLViewport.paint"
-        print "width:", self.width()
-        print "height:", self.height()
-        
-        painter.beginNativePainting();
-        
-        if self.tex is None:
-            self.updateTextureFromImage()
+    def fitImage(self):
+        self.setScale( min( self.width()/float(self.getImageSize().x()), self.height()/float(self.getImageSize().y()) ) )
+
+    def prepareGL(self):
         
         GL.glViewport(0, 0, int(self.width()), int(self.height()))
         GL.glClearDepth(1) # just for completeness
         GL.glClearColor( self._bgColorValue.red(), self._bgColorValue.green(), self._bgColorValue.blue(), self._bgColorValue.alpha() )
         print "clearColor:", self._bgColorValue.red(), self._bgColorValue.green(), self._bgColorValue.blue(), self._bgColorValue.alpha()
-        GL.glClear(GL.GL_COLOR_BUFFER_BIT)
+        GL.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT)
         GL.glMatrixMode(GL.GL_PROJECTION)
         GL.glLoadIdentity()
+        # glOrtho( left, right, bottom, top, near, far )
         #GL.glOrtho(0, 1, 0, 1, -1, 1)
+        #GL.glOrtho(0, self.width(), 0, self.height(), -1, 1)
         GL.glMatrixMode(GL.GL_MODELVIEW);
         GL.glLoadIdentity()
+        
+        GL.glColor3f(1.0, 1.0, 1.0)
+        
+    def drawImage(self):
+        print "GLViewport.drawImage"
+        print "widget size:", self.width(), "x", self.height()
+        print "image size:", self.getImageSize().width(), "x", self.getImageSize().height()
+        
+        if self.tex is None:
+            self.updateTextureFromImage()
         
         GL.glEnable(GL.GL_TEXTURE_2D)
         GL.glBindTexture(GL.GL_TEXTURE_2D, self.tex)
@@ -72,44 +81,54 @@ class GLViewport(QtDeclarative.QDeclarativeItem):
         print "imgRatio:", imgRatio
         
         v = winRatio / imgRatio
-        scale = 1.
+        scale = self._scaleValue
         if v >= 1.:
             scale = 1. / v
-        posX = [-scale, scale]
-        posY = [-scale*v, scale*v]
+        
+        tl = QtCore.QPointF(-scale, -scale*v)
+        br = QtCore.QPointF(scale, scale*v)
         
         GL.glColor3f( 1.0, 1.0, 1.0 )
         GL.glBegin(GL.GL_QUADS)
-        GL.glTexCoord2f(0.0,0.0)
-        GL.glVertex2d(posX[0],posY[1])
-        GL.glTexCoord2f(0.0, 1.0)
-        GL.glVertex2d(posX[0],posY[0])
-        GL.glTexCoord2f(1.0,1.0)
-        GL.glVertex2d(posX[1],posY[0])
-        GL.glTexCoord2f(1.0, 0.0)
-        GL.glVertex2d(posX[1],posY[1])
+        GL.glTexCoord2f(0.0, 1.0); GL.glVertex2d(tl.x(), tl.y())
+        GL.glTexCoord2f(1.0, 1.0); GL.glVertex2d(br.x(), tl.y())
+        GL.glTexCoord2f(1.0, 0.0); GL.glVertex2d(br.x(), br.y())
+        GL.glTexCoord2f(0.0, 0.0); GL.glVertex2d(tl.x(), br.y())
         GL.glEnd()
         
+    def drawRegions(self):
         GL.glLineWidth(3);
-        GL.glColor3f( 1., 1., 1. )
-        
         GL.glEnable(GL.GL_LINE_STIPPLE)
-        #GL.glLineStipple(3, 0x00FF)
         GL.glLineStipple(1, 0xAAAA)
         
-        rodTL = self._rodValue.topLeft()
-        rodBR = self._rodValue.bottomRight()
+        GL.glColor3f( 1., 0., 0. )
+        self.drawRect( self._rodValue ) # RoD
         
-        GL.glBegin(GL.GL_LINE_LOOP)
-        GL.glColor3f( 1., 1., 1. )
-        GL.glVertex2d(rodTL.x(), rodTL.y())
-        GL.glVertex2d(rodBR.x(), rodTL.y())
-        GL.glVertex2d(rodBR.x(), rodBR.y())
-        GL.glVertex2d(rodTL.x(), rodBR.y())
-        GL.glEnd()
+        GL.glColor3f( 0., 1., 0. )
+        self.drawRect( self._rowValue ) # RoW
+        
         GL.glDisable(GL.GL_LINE_STIPPLE)
         
+    def internPaintGL(self):
+        self.prepareGL()
+        self.drawImage()
+        self.drawRegions()
+    
+    def paint(self, painter, option, widget):
+        painter.beginNativePainting();
+        self.internPaintGL()
         painter.endNativePainting()
+
+    def drawRect(self, rect):
+        tl = rect.topLeft()
+        br = rect.bottomRight()
+        
+        GL.glBegin(GL.GL_LINE_LOOP)
+        GL.glVertex2d(tl.x(), tl.y())
+        GL.glVertex2d(br.x(), tl.y())
+        GL.glVertex2d(br.x(), br.y())
+        GL.glVertex2d(tl.x(), br.y())
+        GL.glEnd()
 
     def geometryChanged(self, new, old):
         print "GLViewport.geometryChanged"
@@ -123,17 +142,49 @@ class GLViewport(QtDeclarative.QDeclarativeItem):
         return self._bgColorValue
     def setBgColor(self, color):
         self._bgColorValue = color
+        self.bgColorChanged.emit()
     bgColorChanged = QtCore.Signal()
     _bgColorValue = QtGui.QColor(0, 0, 0)
     bgColor = QtCore.Property(QtGui.QColor, getBgColor, setBgColor, notify=bgColorChanged)
+
+
+    def getImageSize(self):
+        return self._imageSizeValue
+    def setImageSize(self, imgSize):
+        self._imageSizeValue = imgSize
+        self.imageSizeChanged.emit()
+    imageSizeChanged = QtCore.Signal()
+    _imageSizeValue = QtCore.QSize(800, 600)
+    imageSize = QtCore.Property(QtCore.QSize, getImageSize, setImageSize, notify=imageSizeChanged)
 
 
     def getRegionOfDefinition(self):
         return self._rodValue
     def setRegionOfDefinition(self, rod):
         self._rodValue = rod
+        self.rodChanged.emit()
     rodChanged = QtCore.Signal()
-    _rodValue = QtCore.QRectF(-.5, -.3, .5, .3)
+    _rodValue = QtCore.QRectF(-50., -100., 900., 500.)
     rod = QtCore.Property(QtCore.QRectF, getRegionOfDefinition, setRegionOfDefinition, notify=rodChanged)
+
+
+    def getRegionOfWork(self):
+        return self._rowValue
+    def setRegionOfWork(self, row):
+        self._rowValue = row
+        self.rowChanged.emit()
+    rowChanged = QtCore.Signal()
+    _rowValue = QtCore.QRectF(0., 0., 720., 576.)
+    row = QtCore.Property(QtCore.QRectF, getRegionOfWork, setRegionOfWork, notify=rowChanged)
+
+
+    def getScale(self):
+        return self._scaleValue
+    def setScale(self, scale):
+        self._scaleValue = scale
+        self.scaleChanged.emit()
+    scaleChanged = QtCore.Signal()
+    _scaleValue = 1.
+    scale = QtCore.Property(float, getScale, setScale, notify=scaleChanged)
 
 

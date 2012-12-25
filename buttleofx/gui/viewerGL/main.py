@@ -1,6 +1,6 @@
 from glviewport import GLViewport
 
-from PySide import QtGui, QtDeclarative, QtCore, QtOpenGL
+from PySide import QtGui, QtDeclarative, QtOpenGL
 
 
 def main():

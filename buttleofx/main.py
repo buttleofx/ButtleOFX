@@ -18,7 +18,6 @@ def main(argv):
     QApplication = QtGui.QApplication(argv)
     view = QtDeclarative.QDeclarativeView()
     view.setWindowTitle("ButtleOFX")
-    view.setSource(os.path.join(currentFilePath, "MainWindow.qml"))
     rc = view.rootContext()
 
     # for the GraphEditor
@@ -43,6 +42,7 @@ def main(argv):
     mainWrapper = MainWrapper(view, paramList)
     rc.setContextProperty('_paramListModel', mainWrapper)
 
+    view.setSource(os.path.join(currentFilePath, "MainWindow.qml"))
     view.setResizeMode(QtDeclarative.QDeclarativeView.SizeRootObjectToView)
     view.show()
     QApplication.exec_()

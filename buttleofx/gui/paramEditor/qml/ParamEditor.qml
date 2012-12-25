@@ -19,38 +19,36 @@ Rectangle {
         model: _paramListModel.paramElmts
 
         delegate: Component {
-                Loader {
-                    id: param
-                    source : model.object.paramType + ".qml"
-                    height: 50
-                }
-
+            Loader {
+                id: param
+                source : model.object.paramType + ".qml"
+                height: 50
+            }
         }
-
     }
 }
 
-
-        /*
-        Rectangle {
-            width: parent.width
-            height: 40
-            color: ((index % 2 === 0)?"#222":"#111")
-            
-            Loader {
-                id: param
-               source: ((index % 2 === 0)? "ParamInt.qml":"ParamString.qml")
-            }*/
 /*
-            Text {
-                text: model.object.defaultValue
-                anchors {
-                    left: parent.left; leftMargin: 10
-                    verticalCenter: parent.verticalCenter
-                }
-                color: "white"
-                font.bold: true
-                elide: Text.ElideRight
-            }*/
-//}
+Rectangle {
+    width: parent.width
+    height: 40
+    color: ((index % 2 === 0)?"#222":"#111")
+    
+    Loader {
+        id: param
+       source: ((index % 2 === 0)? "ParamInt.qml":"ParamString.qml")
+    }*/
+
+    /*
+    Text {
+        text: model.object.defaultValue
+        anchors {
+            left: parent.left; leftMargin: 10
+            verticalCenter: parent.verticalCenter
+        }
+        color: "white"
+        font.bold: true
+        elide: Text.ElideRight
+    }
+}*/
 

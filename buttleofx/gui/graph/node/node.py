@@ -34,7 +34,7 @@ class Node(object):
         - _coord
         - _color
         - _nbInput
-        - _url
+        - _image
         - idChanged : a signal emited to the wrapper layer
         - nameChanged : a signal emited to the wrapper layer
         - typeChanged : a signal emited to the wrapper layer

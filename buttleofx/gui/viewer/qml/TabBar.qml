@@ -53,7 +53,7 @@ Rectangle {
 
         Image {
             id: addButton
-            source: "img/plus.png"
+            source: "../img/plus.png"
             anchors.centerIn: parent
         }
     }

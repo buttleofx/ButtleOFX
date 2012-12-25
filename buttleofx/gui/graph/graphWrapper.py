@@ -1,5 +1,5 @@
-from buttleofx.gui.graph.graph.graph import Graph
-from buttleofx.gui.graph.node.nodeWrapper import NodeWrapper
+from buttleofx.gui.graph import Graph
+from buttleofx.gui.graph.node import NodeWrapper
 
 from quickmamba.models import QObjectListModel
 from quickmamba.patterns import Signal

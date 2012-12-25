@@ -1,10 +1,10 @@
 # graph
-from gui.graph.graph.graph import Graph
-from gui.graph.graph.graphWrapper import GraphWrapper
+from buttleofx.gui.graph import Graph
+from buttleofx.gui.graph import GraphWrapper
 # paramEditor
-from gui.paramEditor.paramInt import ParamInt
-from gui.paramEditor.paramString import ParamString
-from gui.paramEditor.wrappers.mainWrapper import MainWrapper
+from buttleofx.gui.paramEditor.params import ParamInt
+from buttleofx.gui.paramEditor.params import ParamString
+from buttleofx.gui.paramEditor.wrappers import MainWrapper
 
 
 from PySide import QtGui, QtDeclarative

@@ -1,5 +1,5 @@
-from gui.graph.graph.graph import Graph
-from gui.graph.graph.graphWrapper import GraphWrapper
+from buttleofx.gui.graph import Graph
+from buttleofx.gui.graph import GraphWrapper
 from quickmamba.patterns import Signal
 
 from PySide import QtGui, QtDeclarative

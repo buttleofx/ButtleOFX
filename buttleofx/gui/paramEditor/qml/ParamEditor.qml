@@ -1,11 +1,16 @@
-import Qt 4.7
+//import Qt 4.7
+import QtQuick 1.1
 
 Rectangle {
     id: paramEditor
     //parent of the ParamEditor is the Row of the ButtleAp
     //width is 30% of the row
-    width: 30/100 * parent.width
-    height: parent.height
+    //width: 30/100 * parent.width
+    //height: parent.height
+
+    implicitWidth: 300
+    implicitHeight: 500
+
     color: "#212121"
 
     ListView {

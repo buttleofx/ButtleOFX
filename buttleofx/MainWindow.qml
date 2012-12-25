@@ -1,6 +1,6 @@
 import QtQuick 1.1
 import "gui/graph/qml"
-import "gui/viewer"
+import "gui/viewer/qml"
 import "gui/paramEditor/qml"
 
 Rectangle

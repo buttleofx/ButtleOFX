@@ -1,6 +1,6 @@
-from connection import Connection
-from connectionWrapper import ConnectionWrapper
-from idClip import IdClip
+from buttleofx.gui.graph.connection import IdClip
+from buttleofx.gui.graph.connection import Connection
+from buttleofx.gui.graph.connection import ConnectionWrapper
 
 from quickmamba.models import QObjectListModel
 

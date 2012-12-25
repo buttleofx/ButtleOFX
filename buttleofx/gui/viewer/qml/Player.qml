@@ -8,7 +8,7 @@ Rectangle {
     implicitHeight: 400
     clip: true
     color: "#212121"
-    property url imageFile: _nodeManager.getWrapper(_nodeManager.currentNode).url
+    property url imageFile: _graphWrapper.getWrapper(_graphWrapper.getCurrentNode()).getImage()
 
     property color backColor: "#212121"
     property color toolbarColor: "#141414"
@@ -42,7 +42,7 @@ Rectangle {
 
                 Image {
                     id: magGlassInButton
-                    source: "img/zoom_plus.png"
+                    source: "../img/zoom_plus.png"
                     anchors.centerIn: parent
                 }
 
@@ -86,7 +86,7 @@ Rectangle {
 
                 Image {
                     id: magGlassOutButton
-                    source: "img/zoom_moins.png"
+                    source: "../img/zoom_moins.png"
                     anchors.centerIn: parent
                 }
 

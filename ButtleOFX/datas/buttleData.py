@@ -1,6 +1,7 @@
 from datas.graphData import GraphData
+from quickmamba.patterns import Singleton
 
-class ButtleData(QtCore.QObject) :
+class ButtleData(Singleton) :
 
 	"""
         Class ButtleData defined by:
@@ -9,8 +10,6 @@ class ButtleData(QtCore.QObject) :
         - nodeItem List (QML object)
 
         Emit signal when modifications happen
-
-        One object of this class => singleton
     """
 
     def __init__(self, graph, nodeWrappers, nodeItems):

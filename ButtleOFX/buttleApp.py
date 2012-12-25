@@ -1,5 +1,6 @@
 # graph
-from gui.graph.nodeManager import NodeManager
+from gui.graph.graph.graph import Graph
+from gui.graph.graph.graphWrapper import GraphWrapper
 # paramEditor
 from gui.paramEditor.paramInt import ParamInt
 from gui.paramEditor.paramString import ParamString
@@ -24,12 +25,14 @@ def main():
     rc = view.rootContext()
 
     # for the GraphEditor
-    nodeManager = NodeManager(view)
-    rc.setContextProperty('_nodeManager', nodeManager)
+    graph = Graph()
+    graphWrapper = GraphWrapper(graph, view)
+    rc.setContextProperty("_graphWrapper", graphWrapper)
+    rc.setContextProperty("_wrappers", graphWrapper.getWrappers())
 
-     #connexionList = []
-    connectionManager = ConnectionManager()
-    rc.setContextProperty('_connectionManager', connectionManager)
+    #connexionList = []
+    #connectionManager = ConnectionManager()
+    #rc.setContextProperty('_connectionManager', connectionManager)
 
     # for the ParamEditor
     paramList = [

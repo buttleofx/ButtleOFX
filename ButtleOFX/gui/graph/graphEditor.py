@@ -13,8 +13,8 @@ if __name__ == '__main__':
 
     graph = Graph()
     graphWrapper = GraphWrapper(graph, view)
+
     graph.createNode("test")
-    graph.createNode("test3")
     graphWrapper.__str__()
 
     view.rootContext().setContextProperty("_graphWrapper", graphWrapper)

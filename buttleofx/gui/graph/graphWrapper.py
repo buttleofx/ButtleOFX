@@ -28,8 +28,9 @@ class GraphWrapper(QtCore.QObject, Singleton):
     """
 
     def __init__(self, graph, view):
-        super(GraphWrapper, self).__init__()
+        super(GraphWrapper, self).__init__(view)
 
+        self._view = view
         self._engine = view.engine()
         self._rootObject = view.rootObject()
 
@@ -72,13 +73,14 @@ class GraphWrapper(QtCore.QObject, Singleton):
         for con in self._graph._connections:
             con.__str__()
 
+    @QtCore.Slot(result="QVariant")
     def getGraph(self):
         """
             Return the graph (the node list and the connection list).
         """
         return self._graph
 
-    @QtCore.Slot()
+    @QtCore.Slot(result="QVariant")
     def getWrappers(self):
         """
             Return the nodeWrapper list.
@@ -142,7 +144,7 @@ class GraphWrapper(QtCore.QObject, Singleton):
         # search the right node in the node list
         for node in self._graph._nodes:
             if node.getId() == nodeId:
-                wrapper = NodeWrapper(node)
+                wrapper = NodeWrapper(node, self._view)
                 self._nodeWrappers.append(wrapper)
         # commandManager.doCmd( CmdCreateNodeWrapper(nodeId) )
 
@@ -174,13 +176,21 @@ class GraphWrapper(QtCore.QObject, Singleton):
         self._nodeWrappers.removeAt(indiceW)
         # commandManager.doCmd( CmdDeleteNodeWrapper(indiceW) )
 
+    @QtCore.Slot(result="QVariant")
     def getCurrentNode(self):
         """
             Return the item of the current selected node (in QML).
         """
         return self._currentNode
 
-    @QtCore.Slot()
+    @QtCore.Slot(result="QVariant")
+    def getNodeWrapper(self, node):
+        """
+            Return the item of the current selected node (in QML).
+        """
+        return self._nodeWrappers(node)
+
+    @QtCore.Slot(result="str")
     def getImageCurrentNode(self):
         for wrapper in self._nodeWrappers:
             if wrapper.getId() == self._currentNode:

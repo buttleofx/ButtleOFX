@@ -10,7 +10,7 @@ Rectangle {
         GradientStop { position: 0.015; color: "#212121" }
     }
     Repeater {
-        model : _wrappers
+        model : _graphWrapper.getWrappers()
         Node {}
     }
 }

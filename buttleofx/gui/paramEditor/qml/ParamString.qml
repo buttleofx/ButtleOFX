@@ -42,6 +42,7 @@ Item {
         MouseArea{
             anchors.fill: parent
             onPressed: input.focus = true
+            onReleased: input.focus = false
         }
     }
 

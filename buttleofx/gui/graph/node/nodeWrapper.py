@@ -18,8 +18,8 @@ class NodeWrapper(QtCore.QObject):
         Creates a QObject from a given python object Node.
     """
 
-    def __init__(self, node):
-        super(NodeWrapper, self).__init__()
+    def __init__(self, node, view):
+        super(NodeWrapper, self).__init__(view)
 
         self._node = node
 
@@ -53,7 +53,7 @@ class NodeWrapper(QtCore.QObject):
     def setId(self, idNode):
         self._id = idNode
 
-    @QtCore.Slot()
+    @QtCore.Slot(result="str")
     def getName(self):
         return str(self._name)
 
@@ -61,7 +61,7 @@ class NodeWrapper(QtCore.QObject):
     def setName(self, name):
         self._name = name
 
-    @QtCore.Slot()
+    @QtCore.Slot(result="str")
     def getType(self):
         return str(self._type)
 
@@ -69,7 +69,7 @@ class NodeWrapper(QtCore.QObject):
     def setType(self, nodeType):
         self._type = nodeType
 
-    @QtCore.Slot()
+    @QtCore.Slot(result="int")
     def getXCoord(self):
         return self._coord[0]
 
@@ -77,7 +77,7 @@ class NodeWrapper(QtCore.QObject):
     def setXCoord(self, x):
         self._coord[0] = x
 
-    @QtCore.Slot()
+    @QtCore.Slot(result="int")
     def getYCoord(self):
         return self._coord[1]
 
@@ -85,7 +85,7 @@ class NodeWrapper(QtCore.QObject):
     def setYCoord(self, y):
         self._coord[1] = y
 
-    @QtCore.Slot()
+    @QtCore.Slot(result="QVariant")
     def getColor(self):
         return QtGui.QColor(*self._color)
 
@@ -93,7 +93,7 @@ class NodeWrapper(QtCore.QObject):
     def setColor(self, r, g, b):
         self._color = (r, g, b)
 
-    @QtCore.Slot()
+    @QtCore.Slot(result="int")
     def getNbInput(self):
         return self._nbInput
 
@@ -102,7 +102,7 @@ class NodeWrapper(QtCore.QObject):
         self._nbInput = nbInput
         # self.changed()
 
-    @QtCore.Slot()
+    @QtCore.Slot(result="str")
     def getImage(self):
         return self._image
 

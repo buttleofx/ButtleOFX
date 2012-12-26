@@ -5,7 +5,7 @@ import Qt 4.7
 Rectangle {
     id: node
     property variant nodeModel : model.object
-    height: 35 + 7*model.object.nbInput
+    height: 35 + 7*nodeModel.nbInput
     width: 110
     x: nodeModel.coord[0]
     y: nodeModel.coord[1]
@@ -30,7 +30,7 @@ Rectangle {
             anchors.centerIn: parent
             text: nodeModel.name
             font.pointSize: 10
-            color: "black"
+            color: (nodeModel.name === _graphWrapper.currentNode) ? "#00b2a1" : "black"
         }
     }
     Column {

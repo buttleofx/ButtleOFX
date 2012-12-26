@@ -25,6 +25,7 @@ defaultNodeDesc = {
 
 from quickmamba.patterns import Signal
 
+
 class Node(object):
     """
         Class Node defined by:
@@ -53,7 +54,7 @@ class Node(object):
         self._type = nodeType
         self._coord = nodeCoord
 
-        # soon form Tuttle
+        # soon from Tuttle
         nodeDesc = nodeDescriptors[nodeType] if nodeType in nodeDescriptors else defaultNodeDesc
         self._color = nodeDesc["color"]
         self._nbInput = nodeDesc["nbInput"]
@@ -103,7 +104,7 @@ class Node(object):
     def getYCoord(self):
         return self._coord[1]
 
-    def setXCoord(self, y):
+    def setYCoord(self, y):
         self._coord[1] = y
         self.yChanged(y)
 

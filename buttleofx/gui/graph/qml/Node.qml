@@ -39,14 +39,10 @@ Rectangle {
         anchors.top: parent.verticalCenter
         spacing: 2
         property int nbInput: nodeModel.nbInput
+        property string port : "input"
         Repeater {
             model: nodeInputs.nbInput
-            Rectangle {
-                height: 5
-                width: 5
-                color: "#bbbbbb"
-                radius: 2
-            }
+            Clip {}
         }
     }
     Column {
@@ -54,17 +50,10 @@ Rectangle {
         anchors.horizontalCenter: parent.right
         anchors.top: parent.verticalCenter
         spacing: 2
+        property string port : "output"
         Repeater {
             model: 1
-            Rectangle {
-                height: 5
-                width: 5
-                color: "#bbbbbb"
-                radius: 2
-                MouseArea {
-                    anchors.fill: parent
-                }
-            }
+            Clip {}
         }
     }
     MouseArea {
@@ -148,7 +137,7 @@ Rectangle {
                     onPressed: {
                         color = "red"
                         console.log("Input clicked");
-                        _connectionManager.inputPressed(nodeName.text, "in" + index) // we spent the node name and the id of the input
+                        _connectionManager.inputPressed(nodeName.text, "in" + index) // we send the node name and the id of the input
                     }
                     onReleased: {
                         color = "#bbbbbb"

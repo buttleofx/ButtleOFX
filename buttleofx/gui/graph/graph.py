@@ -1,5 +1,5 @@
-from buttleofx.gui.graph.node import Node
-from buttleofx.gui.graph.node import IdNode
+from buttleofx.gui.graph.node import Node, IdNode
+from buttleofx.gui.graph.connection import Connection
 
 from quickmamba.patterns import Signal
 
@@ -20,6 +20,9 @@ class Graph:
         self.nodeCreated = Signal()
         self.nodeDeleted = Signal()
 
+        self.connectionCreated = Signal()
+        self.connectionDeleted = Signal()
+
     def getNodes(self):
         """
             Returns the node List.
@@ -36,7 +39,7 @@ class Graph:
         """
             Adds a node from the node list when a node is created.
         """
-        #
+
         print "createNode"
         nodeName = "Name = type : " + str(nodeType)
         nodeCoord = (30, 50)
@@ -52,7 +55,7 @@ class Graph:
             Removes a node from the node list when a node is deleted.
         """
         print "deleteNode"
-        #
+
         # we search the right node to delete
         indiceWrapper = 0
         for node in self._nodes:
@@ -62,3 +65,12 @@ class Graph:
             indiceWrapper += 1
         self.nodeDeleted(indiceWrapper)
         # commandManager.doCmd( CmddeleteNode(nodeid) )
+
+    def createConnection(self, clipOut, clipIn):
+        """
+            Adds a node from the node list when a node is created.
+        """
+
+        print "createConnection"
+        self._connections.append(Connection(clipOut, clipIn))
+        self.connectionCreated(clipOut, clipIn)

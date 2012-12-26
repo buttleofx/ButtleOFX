@@ -64,8 +64,6 @@ class Node(object):
         self.nameChanged = Signal()
         self.typeChanged = Signal()
         self.coordChanged = Signal()
-        #self.xChanged = Signal()
-        #self.yChanged = Signal()
         self.colorChanged = Signal()
         self.nbInputChanged = Signal()
         self.imageChanged = Signal()

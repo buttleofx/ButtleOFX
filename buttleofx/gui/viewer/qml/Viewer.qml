@@ -6,10 +6,12 @@ Rectangle {
     implicitHeight: 350
     x: 10
     y: 10
+    color: "transparent"
 
+    property url imageFile: parent.imageFile
     property double sizeScaleFirstImage: 0.95
 
-    /*Image  {
+    Image  {
         id: imageViewed
         source: imageFile
         fillMode: Image.PreserveAspectFit
@@ -18,26 +20,7 @@ Rectangle {
         x: (parent.width - width) / 2
         y: (parent.height - height) / 2
         scale: 1
-    }*/
-
-    /*Video {
-        id: video
-        width : 800
-        height : 600
-        source: "video/camera.mp4"
-
-        MouseArea {
-            anchors.fill: parent
-            onClicked: {
-                video.play()
-            }
-        }
-
-        focus: true
-        Keys.onSpacePressed: video.paused = !video.paused
-        Keys.onLeftPressed: video.position -= 5000
-        Keys.onRightPressed: video.position += 5000
-    }*/
+    }
 
     MouseArea {
         //drag.target: imageViewed
@@ -46,7 +29,8 @@ Rectangle {
         anchors.fill: parent
 
         onClicked:{
-            if((mouse.button === Qt.LeftButton)) {
+            console.log("image : " + imageFile)
+           /* if((mouse.button === Qt.LeftButton)) {
                 // Lorsque l'outil Loupe + est activé
                 if(magGlassIn.state == "clicked") {
                     imageViewed.x -= (mouseX - player.width/2)
@@ -68,7 +52,7 @@ Rectangle {
                 else {
                     imageViewed.scale += sizeScaleEvent
                 }
-            }
+            }*/
         }
 
         Item {

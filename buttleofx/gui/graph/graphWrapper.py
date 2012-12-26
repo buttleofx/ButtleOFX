@@ -35,6 +35,7 @@ class GraphWrapper(QtCore.QObject, Singleton):
         self._connectionWrappers = QObjectListModel(self)
 
         self._currentNode = None
+        self._currentImage = ""
         self._tmpClipIn = None
         self._tmpClipOut = None
 
@@ -44,7 +45,7 @@ class GraphWrapper(QtCore.QObject, Singleton):
 
         # the links between the graph and this graphWrapper
         graph.nodeCreated.connect(self.createNodeWrapper)
-        graph.nodeCreated.connect(self.setCurrentNode)
+        #graph.nodeCreated.connect(self.setCurrentNode)
         graph.nodeDeleted.connect(self.deleteNodeWrapper)
         graph.nodeDeleted.connect(self.deleteCurrentNode)
         graph.connectionCreated.connect(self.createConnectionWrapper)
@@ -100,29 +101,29 @@ class GraphWrapper(QtCore.QObject, Singleton):
         self.__str__()
 
     @QtCore.Slot(str, str, int)
-    def clipPressed(self, node, port, clip):
+    def clipPressed(self, nodeName, port, clip):
         """
             Function called when a clip is pressed (but not released yet).
             The function replace the tmpClipIn or tmpClipOut.
         """
-        idClip = IdClip(node, port, clip)
+        idClip = IdClip(nodeName, port, clip)
         if (port == "input"):
             print "inputPressed"
             self._tmpClipIn = idClip
-            print "Add tmpNodeIn: " + node + " " + port + " " + str(clip)
+            print "Add tmpNodeIn: " + nodeName + " " + port + " " + str(clip)
         elif (port == "output"):
             print "outputPressed"
             self._tmpClipOut = idClip
-            print "Add tmpNodeOut: " + node + " " + port + " " + str(clip)
+            print "Add tmpNodeOut: " + nodeName + " " + port + " " + str(clip)
 
     @QtCore.Slot(str, str, int)
-    def clipReleased(self, node, port, clip):
+    def clipReleased(self, nodeName, port, clip):
 
         if (port == "input"):
             #if there is a tmpNodeOut we can connect the nodes
             print "inputReleased"
-            if (self._tmpClipOut != None and self._tmpClipOut._node != node):
-                idClip = IdClip(node, port, clip)
+            if (self._tmpClipOut != None and self._tmpClipOut._nodeName != nodeName):
+                idClip = IdClip(nodeName, port, clip)
                 self._graph.createConnection(self._tmpClipOut, idClip)
                 self._tmpClipIn = None
                 self._tmpClipOut = None
@@ -131,8 +132,8 @@ class GraphWrapper(QtCore.QObject, Singleton):
         elif (port == "output"):
             #if there is a tmpNodeIn we can connect the nodes
             print "inputReleased"
-            if (self._tmpClipIn != None and self._tmpClipIn._node != node):
-                idClip = IdClip(node, port, clip)
+            if (self._tmpClipIn != None and self._tmpClipIn._nodeName != nodeName):
+                idClip = IdClip(nodeName, port, clip)
                 self._graph.createConnection(idClip, self._tmpClipIn)
                 self._tmpClipIn = None
                 self._tmpClipOut = None
@@ -148,8 +149,10 @@ class GraphWrapper(QtCore.QObject, Singleton):
         # search the right node in the node list
         for node in self._graph._nodes:
             if node.getName() == nodeName:
-                wrapper = NodeWrapper(node)
-                self._nodeWrappers.append(wrapper)
+                nodeWrapper = NodeWrapper(node)
+                self._nodeWrappers.append(nodeWrapper)
+                #self.setCurrentNode(nodeWrapper.getName())
+
         # commandManager.doCmd( CmdCreateNodeWrapper(nodeId) )
 
     def createConnectionWrapper(self, clipOut, clipIn):
@@ -186,22 +189,37 @@ class GraphWrapper(QtCore.QObject, Singleton):
         """
         return self._currentNode
 
-    @QtCore.Slot()
-    def getImageCurrentNode(self):
-        for wrapper in self._nodeWrappers:
-            if wrapper.getName() == self._currentNode:
-                return wrapper.getImage()
-
     @QtCore.Slot(str)
     def setCurrentNode(self, nodeName):
         """
             Change the current selected node and emit the change.
         """
         print "setCurrentNode : " + str(nodeName)
+
         if self._currentNode == nodeName:
             return
+
+        #we search the image of the selected node
+        for nodeWrapper in self._nodeWrappers:
+            if nodeWrapper.getName() == self._currentNode:
+                self.setCurrentImage(nodeWrapper.getImage())
+                self.currentImageChanged.emit()
+                print(self._currentImage)
+
         self._currentNode = nodeName
         self.currentNodeChanged.emit()
+
+    def getCurrentImage(self):
+        """
+            Return the url of the current image
+        """
+        return self._currentImage
+
+    def setCurrentImage(self, urlImage):
+        """
+            Change the currentImage, displayed in the viewer
+        """
+        self._currentImage = urlImage
 
     def deleteCurrentNode(self, indiceW):
         """
@@ -224,3 +242,5 @@ class GraphWrapper(QtCore.QObject, Singleton):
     connections = QtCore.Property("QVariant", getConnectionWrappers, notify=connectionsChanged)
     currentNodeChanged = QtCore.Signal()
     currentNode = QtCore.Property(str, getCurrentNode, setCurrentNode, notify=currentNodeChanged)
+    currentImageChanged = QtCore.Signal()
+    currentImage = QtCore.Property(str, getCurrentImage, setCurrentImage, notify=currentImageChanged)

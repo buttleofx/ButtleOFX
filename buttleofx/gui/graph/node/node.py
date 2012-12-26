@@ -3,24 +3,24 @@ nodeDescriptors = {
     "Blur": {
         "color": (58, 174, 206),
         "nbInput": 1,
-        "url": "img/brazil.jpg"
+        "url": "../img/brazil.jpg"
     },
     "Gamma": {
         "color": (221, 54, 138),
         "nbInput": 2,
-        "url": "img/brazil2.jpg"
+        "url": "../img/brazil2.jpg"
     },
     "Invert": {
         "color": (90, 205, 45),
         "nbInput": 3,
-        "url": "img/brazil3.jpg"
+        "url": "../img/brazil3.jpg"
     }
 }
 
 defaultNodeDesc = {
     "color": (187, 187, 187),
     "nbInput": 1,
-    "url": "img/uglycorn.jpg"
+    "url": "../img/uglycorn.jpg"
 }
 
 from quickmamba.patterns import Signal
@@ -53,12 +53,13 @@ class Node(object):
         self._type = nodeType
         self._coord = nodeCoord
 
+        # soon form Tuttle
         nodeDesc = nodeDescriptors[nodeType] if nodeType in nodeDescriptors else defaultNodeDesc
-
         self._color = nodeDesc["color"]
         self._nbInput = nodeDesc["nbInput"]
         self._image = nodeDesc["url"]
-        
+        # ###
+
         self.idChanged = Signal()
         self.nameChanged = Signal()
         self.typeChanged = Signal()

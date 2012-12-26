@@ -8,7 +8,7 @@ Rectangle {
     implicitHeight: 400
     clip: true
     color: "#212121"
-    property url imageFile: _graphWrapper.getWrapper(_graphWrapper.getCurrentNode).getImage
+    property url imageFile: _graphWrapper.getImageCurrentNode()
 
     property color backColor: "#212121"
     property color toolbarColor: "#141414"

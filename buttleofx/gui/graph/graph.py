@@ -54,9 +54,11 @@ class Graph:
         print "deleteNode"
         #
         # we search the right node to delete
+        indiceWrapper = 0
         for node in self._nodes:
             if node.getId() == nodeId:
                 self._nodes.remove(node)
                 break
-        self.nodeDeleted(nodeId)
+            indiceWrapper += 1
+        self.nodeDeleted(indiceWrapper)
         # commandManager.doCmd( CmddeleteNode(nodeid) )

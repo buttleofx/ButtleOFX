@@ -81,7 +81,7 @@ Rectangle {
         }
         onClicked: {
             console.log(model.object.name)
-            _graphWrapper.setCurrentNode(nodeModel.id)
+            _graphWrapper.setCurrentNode(nodeModel.nodeId)
         }
     }
 }

@@ -1,3 +1,5 @@
+from buttleofx.gui.graph.node import idNode
+
 from buttleofx.gui.graph import Graph
 from buttleofx.gui.graph.node import NodeWrapper
 
@@ -67,13 +69,6 @@ class GraphWrapper(QtCore.QObject, Singleton):
         """
         return self._nodeWrappers
 
-    @QtCore.Slot(QtCore.QObject)
-    def getWrapper(self, nodeWrapper):
-        """
-            Return a nodeWrapper of the list.
-        """
-        return self._nodeWrappers[nodeWrapper.getId()]
-
     @QtCore.Slot(str)
     def creationProcess(self, nodeType):
         """
@@ -94,7 +89,6 @@ class GraphWrapper(QtCore.QObject, Singleton):
             if node.getId() == nodeId:
                 wrapper = NodeWrapper(node)
                 self._nodeWrappers.append(wrapper)
-        #self._currentNode = wrapper
         # commandManager.doCmd( CmdCreateNodeWrapper(nodeId) )
 
     @QtCore.Slot()
@@ -104,14 +98,16 @@ class GraphWrapper(QtCore.QObject, Singleton):
         """
         # if at least one node in the graph
         if len(self._nodeWrappers) > 0 and len(self._graph._nodes) > 0:
-            self._graph.deleteNode(self._currentNode)
+            # if a node is selected
+            if self._currentNode != None:
+                self._graph.deleteNode(self._currentNode)
         # debug
         self.__str__()
 
-    def deleteNodeWrapper(self, nodeId):
+    def deleteNodeWrapper(self, indiceW):
         print "deleteNodeWrapper"
-        self._nodeWrappers.removeAt(0)
-        # commandManager.doCmd( CmdDeleteNodeWrapper(nodeId) )
+        self._nodeWrappers.removeAt(indiceW)
+        # commandManager.doCmd( CmdDeleteNodeWrapper(indiceW) )
 
     def getCurrentNode(self):
         """
@@ -119,7 +115,13 @@ class GraphWrapper(QtCore.QObject, Singleton):
         """
         return self._currentNode
 
-    @QtCore.Slot(int)
+    @QtCore.Slot()
+    def getImageCurrentNode(self):
+        for wrapper in self._nodeWrappers:
+            if wrapper.getId() == self._currentNode:
+                return wrapper.getImage()
+
+    @QtCore.Slot(object)
     def setCurrentNode(self, nodeId):
         """
             Change the current selected node and emit the change.
@@ -130,7 +132,7 @@ class GraphWrapper(QtCore.QObject, Singleton):
         self._currentNode = nodeId
         self.currentNodeChanged.emit()
 
-    def deleteCurrentNode(self, nodeId):
+    def deleteCurrentNode(self, indiceW):
         """
             Delete the current selected node by calling the deleteNode() function.
         """

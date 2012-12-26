@@ -16,7 +16,7 @@ Rectangle {
         id: addNodeButton
         implicitWidth: 20
         implicitHeight: 20
-        width: 7/100 * parent.height
+        width: 7/10 * parent.height
         height: width
         anchors.verticalCenter: parent.verticalCenter
         color: "#212121"
@@ -37,7 +37,7 @@ Rectangle {
         id: delNodeButton
         implicitWidth: 20
         implicitHeight: 20
-        width: 7/100 * parent.height
+        width: 7/10 * parent.height
         height: width
         x: 30
         y: 6

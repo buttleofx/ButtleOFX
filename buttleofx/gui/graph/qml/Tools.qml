@@ -2,12 +2,8 @@ import QtQuick 1.1
 
 Rectangle {
     id: tools
-    implicitWidth: 850
-    implicitHeight: 30
-
-    //should not be present here, but is for not loose him
-    width: parent.width
-    height: 9/100 * parent.height;
+    width: 850
+    height: 30
 
     z: 2000
     anchors.top: parent.top

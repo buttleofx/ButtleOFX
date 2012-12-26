@@ -8,21 +8,42 @@ Rectangle {
     //width: 30/100 * parent.width
     //height: parent.height
 
-    implicitWidth: 300
-    implicitHeight: 500
+    width: 300
+    height: 500
 
-    color: "#212121"
+    gradient: Gradient {
+        GradientStop { position: 0.05; color: "#111111" }
+        GradientStop { position: 0.1; color: "#141414" }
+    }
+
+    Rectangle{
+        id:mainMenu
+        width: parent.width
+        height: 30
+        color: "#141414"
+
+        Text {
+            anchors.verticalCenter: parent.verticalCenter
+            anchors.left: parent.left
+            anchors.leftMargin: 10
+            color: "white"
+            text: "Parameters"
+            font.pointSize: 11
+        }
+    }
 
     ListView {
         id: paramElementList
         anchors.fill: parent
+        anchors.margins: 20
+        anchors.topMargin: 50
         model: _paramListModel.paramElmts
 
         delegate: Component {
             Loader {
                 id: param
                 source : model.object.paramType + ".qml"
-                height: 50
+                height: 30
             }
         }
     }

@@ -1,60 +1,56 @@
 import QtQuick 1.1
 
-// Tabs' bar
+/* Tabs bar */
+
 Rectangle {
     id: tabBar
     implicitWidth: 850
-    implicitHeight: 20
     width: parent.width
-    //height of the tab bar is 5% of the Player's height
-    height: 5/100 * parent.height;
-    anchors.top: parent.top
-    color: toolbarColor
+    height: 30
+    color: "transparent"
 
-    Rectangle {
-        id: tabBack
-        width: 80
-        height: parent.height - tabBack.y
-        y: 7
-        color: backColor
-    }
-    Rectangle {
-        id: tab
-        width: 80
-        height: parent.height
-        anchors.top:  parent.top
-        color: backColor
-        radius: 7
+    property color tabColor: "#141414"
 
-        Text {
-            id: tabFigure
-            anchors.centerIn: parent
-            text: "Viewer 1"
-            font.pointSize: 8
-            color: textColor
+    Item {
+        id: tab1
+        width: 75
+        height: 30
+        clip: true
+        Rectangle {
+            anchors {
+                fill: parent;
+                bottomMargin: -radius
+            }
+            Text {
+                id: tabLabel
+                anchors.centerIn: parent
+                text: "Viewer 1"
+                font.pointSize: 8
+                color: "white"
+            }
+            radius: 10
+            color: tabColor
         }
     }
-    Rectangle {
-        id: addBack
-        width: 30
-        height: parent.height -addBack.y
-        y: 7
-        x: tab.width + 2
-        color: backColor
-    }
-    Rectangle {
-        id: add
-        width: 30
-        height: parent.height
-        x: tab.width + 2
-        anchors.top:  parent.top
-        color: backColor
-        radius: 7
 
-        Image {
-            id: addButton
-            source: "../img/plus.png"
-            anchors.centerIn: parent
+    Item {
+        id: tab2
+        width: 30
+        height: 30
+        x: 76
+        clip: true
+        Rectangle {
+            anchors {
+                fill: parent;
+                bottomMargin: -radius
+            }
+            Image {
+                id: addButton
+                source: "../img/plus.png"
+                anchors.centerIn: parent
+            }
+            radius: 10
+            color: tabColor
         }
     }
 }

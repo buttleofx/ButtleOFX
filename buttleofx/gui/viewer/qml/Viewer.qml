@@ -2,81 +2,74 @@ import QtQuick 1.1
 
 Rectangle {
     id: player
-    //It's bad here, a propriety of a module should not depend of an other module
-    property int toolHeight : parent.toolHeight
     implicitWidth: 850
-    implicitHeight: 400 - toolHeight
-    //To adapt to the Player size
-    width: parent.width
-    height: parent.height - toolHeight
-    x: 0
-    y: toolHeight
-    color: backColor
+    implicitHeight: 350
+    x: 10
+    y: 10
+
+    property double sizeScaleFirstImage: 0.95
+
+    /*Image  {
+        id: imageViewed
+        source: imageFile
+        fillMode: Image.PreserveAspectFit
+        height: (parent.height - 30) * sizeScaleFirstImage
+        width: parent.width * sizeScaleFirstImage
+        x: (parent.width - width) / 2
+        y: (parent.height - height) / 2
+        scale: 1
+    }*/
+
+    /*Video {
+        id: video
+        width : 800
+        height : 600
+        source: "video/camera.mp4"
+
+        MouseArea {
+            anchors.fill: parent
+            onClicked: {
+                video.play()
+            }
+        }
+
+        focus: true
+        Keys.onSpacePressed: video.paused = !video.paused
+        Keys.onLeftPressed: video.position -= 5000
+        Keys.onRightPressed: video.position += 5000
+    }*/
 
     MouseArea {
-        drag.target:  imageViewed
-        drag.axis:  Drag.XandYAxis
+        //drag.target: imageViewed
+        drag.target: player
+        drag.axis: Drag.XandYAxis
         anchors.fill: parent
 
-        Image  {
-            id: imageViewed
-            source: imageFile
-            fillMode: Image.PreserveAspectFit
-            height: (parent.height - toolHeight) * sizeScaleFirstImage
-            width: parent.width * sizeScaleFirstImage
-            x: (parent.width - width) / 2
-            y: (parent.height - height) / 2
-            scale: 1
-        }
-
-
-        /*Video {
-             id: video
-             width : 800
-             height : 600
-             source: "video/camera.mp4"
-
-             MouseArea {
-                 anchors.fill: parent
-                 onClicked: {
-                     video.play()
-                 }
-             }
-
-             focus: true
-             Keys.onSpacePressed: video.paused = !video.paused
-             Keys.onLeftPressed: video.position -= 5000
-             Keys.onRightPressed: video.position += 5000
-         }
-        */
-
         onClicked:{
-         if((mouse.button === Qt.LeftButton)) {
-             // Lorsque l'outil Loupe + est activé
-             if(magGlassIn.state == "clicked") {
-                imageViewed.x -= (mouseX - player.width/2)
-                imageViewed.y -= (mouseY - player.height/2)
-                imageViewed.scale += sizeScaleEvent
+            if((mouse.button === Qt.LeftButton)) {
+                // Lorsque l'outil Loupe + est activé
+                if(magGlassIn.state == "clicked") {
+                    imageViewed.x -= (mouseX - player.width/2)
+                    imageViewed.y -= (mouseY - player.height/2)
+                    imageViewed.scale += sizeScaleEvent
                 }
-             // Lorsque l'outil Loupe - est activé
-             if(magGlassOut.state == "clicked") {
-                imageViewed.x -= (mouseX - player.width/2)
-                imageViewed.y -= (mouseY - player.height/2)
-                  imageViewed.scale -= sizeScaleEvent
-              }
-              //Zoom simple
-              if(mouse.modifiers & Qt.ShiftModifier){
-                  if (imageViewed.scale-sizeScaleEvent > 0) {
+                // Lorsque l'outil Loupe - est activé
+                if(magGlassOut.state == "clicked") {
+                    imageViewed.x -= (mouseX - player.width/2)
+                    imageViewed.y -= (mouseY - player.height/2)
                     imageViewed.scale -= sizeScaleEvent
-                  }
-              }
-              else {
-                  imageViewed.scale += sizeScaleEvent
-              }
-          }
-
+                }
+                //Zoom simple
+                if(mouse.modifiers & Qt.ShiftModifier){
+                    if (imageViewed.scale-sizeScaleEvent > 0) {
+                        imageViewed.scale -= sizeScaleEvent
+                    }
+                }
+                else {
+                    imageViewed.scale += sizeScaleEvent
+                }
+            }
         }
-
 
         Item {
             focus: true

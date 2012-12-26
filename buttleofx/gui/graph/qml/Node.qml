@@ -4,18 +4,18 @@ import Qt 4.7
 
 Rectangle {
     id: node
+    property variant nodeModel : model.object
     height: 35 + 7*model.object.nbInput
     width: 110
-    x: model.object.x
-    y: model.object.y
+    x: nodeModel.coord[0]
+    y: nodeModel.coord[1]
     color: "transparent"
-    property variant nodeModel : model.object
     Rectangle {
         id: nodeBorder
         height: 40
         width: 110
         anchors.centerIn: parent
-        color: model.object.color
+        color: nodeModel.color
         opacity: 0.5
         radius: 10
     }
@@ -63,14 +63,11 @@ Rectangle {
         onPressed: parent.opacity = 0.5
         onReleased: {
             parent.opacity = 1;
-            console.log(parent.x)
-            console.log(parent.y)
-            model.object.getXCoord(parent.x)
-            model.object.getYCoord(parent.y)
+            nodeModel.nodeMoved(parent.x, parent.y)
         }
         onClicked: {
-            console.log(model.object.name)
-            _graphWrapper.setCurrentNode(nodeModel.nodeId)
+            console.log(nodeModel.name)
+            _graphWrapper.setCurrentNode(nodeModel.name)
         }
     }
 }

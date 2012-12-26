@@ -10,4 +10,4 @@ class IdNode(object):
         self._nodeYCoord = y
 
     def __str__(self):
-    	return "Id du noeud : " + str(self._nodeName) + " - " + str(self._nodeType) + " - " + str(self._nodeXCoord) + "," + str(self._nodeYCoord)
+        return "Id du noeud : " + str(self._nodeName) + " - " + str(self._nodeType) + " - " + str(self._nodeXCoord) + "," + str(self._nodeYCoord)

@@ -22,7 +22,7 @@ if __name__ == '__main__':
     graphWrapper.__str__()
 
     view.rootContext().setContextProperty("_graphWrapper", graphWrapper)
-    view.rootContext().setContextProperty("_wrappers", graphWrapper.getWrappers())
+    view.rootContext().setContextProperty("_nodeWrappers", graphWrapper.getNodeWrappers())
     view.setWindowTitle("Graph editor")
     view.setSource(os.path.join(currentFilePath, "qml/GraphEditor.qml"))
     view.setSource("qml/GraphEditor.qml")

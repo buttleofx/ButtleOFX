@@ -24,19 +24,20 @@ defaultNodeDesc = {
 }
 
 from quickmamba.patterns import Signal
+from PySide import QtGui
 
 
 class Node(object):
     """
         Class Node defined by:
-        - _id
         - _name
         - _type
         - _coord
         - _color
         - _nbInput
         - _image
-        - idChanged : a signal emited to the wrapper layer
+
+        Signals :
         - nameChanged : a signal emited to the wrapper layer
         - typeChanged : a signal emited to the wrapper layer
         - xChanged : a signal emited to the wrapper layer
@@ -48,8 +49,7 @@ class Node(object):
         Creates a python object Node.
     """
 
-    def __init__(self, nodeId, nodeName, nodeType, nodeCoord):
-        self._id = nodeId
+    def __init__(self, nodeName, nodeType, nodeCoord):
         self._name = nodeName
         self._type = nodeType
         self._coord = nodeCoord
@@ -61,24 +61,17 @@ class Node(object):
         self._image = nodeDesc["url"]
         # ###
 
-        self.idChanged = Signal()
         self.nameChanged = Signal()
         self.typeChanged = Signal()
-        self.xChanged = Signal()
-        self.yChanged = Signal()
+        self.coordChanged = Signal()
+        #self.xChanged = Signal()
+        #self.yChanged = Signal()
         self.colorChanged = Signal()
         self.nbInputChanged = Signal()
         self.imageChanged = Signal()
 
     def __str__(self):
         return 'Node "%s"' % (self._name)
-
-    def getId(self):
-        return self._id
-
-    def setId(self, idNode):
-        self._id = idNode
-        self.idChanged(idNode)
 
     def getName(self):
         return str(self._name)
@@ -94,19 +87,12 @@ class Node(object):
         self._type = nodeType
         self.tyepChanged(nodeType)
 
-    def getXCoord(self):
-        return self._coord[0]
+    def getCoord(self):
+        return self._coord
 
-    def setXCoord(self, x):
-        self._coord[0] = x
-        self.xChanged(x)
-
-    def getYCoord(self):
-        return self._coord[1]
-
-    def setYCoord(self, y):
-        self._coord[1] = y
-        self.yChanged(y)
+    def setCoord(self, x, y):
+        self._coord = (x, y)
+        self.coordChanged(x, y)
 
     def getColor(self):
         return QtGui.QColor(*self._color)

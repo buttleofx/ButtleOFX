@@ -1,5 +1,3 @@
-from buttleofx.gui.graph.node import idNode
-
 from buttleofx.gui.graph import Graph
 from buttleofx.gui.graph.node import NodeWrapper
 from buttleofx.gui.graph.connection import ConnectionWrapper, IdClip
@@ -18,7 +16,7 @@ class GraphWrapper(QtCore.QObject, Singleton):
         - _rootObject : to have the root object
         - _nodeWrappers : list of node wrappers (the python objects we use to communicate with the QML)
         - _connectionWrappers : list of connections wrappers (the python objects we use to communicate with the QML)
-        - _currentNode : the current selected node (in QML). This is just the nodeId.
+        - _currentNode : the current selected node (in QML). This is just the nodeName.
         - _tmpClipOut : the future connected output clip when a connection is beeing created. It correspounds of the output clip which was beeing clicked and not connected for the moment.
         - _tmpClipIn : the future connected input clip when a connection is beeing created. It correspounds of the input clip which was beeing clicked and not connected for the moment.
         - _zMax : to manage the depth of the graph (in QML)
@@ -56,13 +54,13 @@ class GraphWrapper(QtCore.QObject, Singleton):
             Display on terminal the nodeWrapper list and the node list.
             Usefull to debug the class.
         """
-        print("---- The id of all nodeWrappers ----")
-        for wrapper in self._nodeWrappers:
-            print wrapper._id
+        print("---- all nodeWrappers ----")
+        for nodeWrapper in self._nodeWrappers:
+            print nodeWrapper.getName() + " " + str(nodeWrapper.getCoord())
 
-        print("---- The id of all nodes ----")
+        print("---- all nodes ----")
         for node in self._graph._nodes:
-            print node._id
+            print node._name + " " + str(node.getCoord())
 
         print("---- all connectionWrappers ----")
         for con in self._connectionWrappers:
@@ -79,11 +77,18 @@ class GraphWrapper(QtCore.QObject, Singleton):
         return self._graph
 
     @QtCore.Slot()
-    def getWrappers(self):
+    def getNodeWrappers(self):
         """
             Return the nodeWrapper list.
         """
         return self._nodeWrappers
+
+    @QtCore.Slot()
+    def getConnectionWrappers(self):
+        """
+            Return the connectionWrapper list.
+        """
+        return self._connectionWrappers
 
     @QtCore.Slot(str)
     def creationProcess(self, nodeType):
@@ -133,15 +138,16 @@ class GraphWrapper(QtCore.QObject, Singleton):
                 self._tmpClipOut = None
                 self.__str__()
 
-    def createNodeWrapper(self, nodeId):
+    def createNodeWrapper(self, nodeName):
         """
             Create a node wrapper and add it to the nodeWrapper list.
         """
         print "createNodeWrapper"
         #wrapper = NodeWrapper(self._graph._nodes[nodeId])
+
         # search the right node in the node list
         for node in self._graph._nodes:
-            if node.getId() == nodeId:
+            if node.getName() == nodeName:
                 wrapper = NodeWrapper(node)
                 self._nodeWrappers.append(wrapper)
         # commandManager.doCmd( CmdCreateNodeWrapper(nodeId) )
@@ -176,25 +182,25 @@ class GraphWrapper(QtCore.QObject, Singleton):
 
     def getCurrentNode(self):
         """
-            Return the item of the current selected node (in QML).
+            Return the name of the current selected node.
         """
         return self._currentNode
 
     @QtCore.Slot()
     def getImageCurrentNode(self):
         for wrapper in self._nodeWrappers:
-            if wrapper.getId() == self._currentNode:
+            if wrapper.getName() == self._currentNode:
                 return wrapper.getImage()
 
-    @QtCore.Slot(object)
-    def setCurrentNode(self, nodeId):
+    @QtCore.Slot(str)
+    def setCurrentNode(self, nodeName):
         """
             Change the current selected node and emit the change.
         """
-        print "setCurrentNode"
-        if self._currentNode == nodeId:
+        print "setCurrentNode : " + str(nodeName)
+        if self._currentNode == nodeName:
             return
-        self._currentNode = nodeId
+        self._currentNode = nodeName
         self.currentNodeChanged.emit()
 
     def deleteCurrentNode(self, indiceW):
@@ -213,6 +219,8 @@ class GraphWrapper(QtCore.QObject, Singleton):
         self._zMax += 1
 
     nodesChanged = QtCore.Signal()
-    nodes = QtCore.Property("QVariant", getWrappers, notify=nodesChanged)
+    nodes = QtCore.Property("QVariant", getNodeWrappers, notify=nodesChanged)
+    connectionsChanged = QtCore.Signal()
+    connections = QtCore.Property("QVariant", getConnectionWrappers, notify=connectionsChanged)
     currentNodeChanged = QtCore.Signal()
-    currentNode = QtCore.Property("QVariant", getCurrentNode, setCurrentNode, notify=currentNodeChanged)
+    currentNode = QtCore.Property(str, getCurrentNode, setCurrentNode, notify=currentNodeChanged)

@@ -22,6 +22,8 @@ Item {
             GradientStop { position: 1; color: "#111111" }
         }
 
+        property url imageFile: _graphWrapper.currentImage
+
         property double sizeScaleEvent: 0.1
         property int sizeDragEvent: 5
 

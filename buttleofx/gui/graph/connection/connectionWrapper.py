@@ -37,4 +37,4 @@ class ConnectionWrapper(QtCore.QObject):
     clipIn = QtCore.Property(QtCore.QObject, getClipIn, setClipIn, notify=changed)
 
     def __str__(self):
-        print 'Connection between the clip "%s (%s %d)" and the clip "%s (%s %d)' % (self._clipOut._node, self._clipOut._port, self._clipOut._clipNumber, self._clipIn._node, self._clipIn._port, self._clipIn._clipNumber)
+        print 'Connection between the clip "%s (%s %d)" and the clip "%s (%s %d)' % (self._clipOut._nodeName, self._clipOut._port, self._clipOut._clipNumber, self._clipIn._nodeName, self._clipIn._port, self._clipIn._clipNumber)

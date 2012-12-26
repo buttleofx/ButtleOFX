@@ -14,4 +14,4 @@ class Connection(object):
 
     def __str__(self):
         #print 'Connection between the node "%s" and the node "%s' % (self._nodeOut._name, self._nodeIn._name)
-        print 'Connection between the clip "%s (%s %d)" and the clip "%s (%s %d)' % (self._clipOut._node, self._clipOut._port, self._clipOut._clipNumber, self._clipIn._node, self._clipIn._port, self._clipIn._clipNumber)
+        print 'Connection between the clip "%s (%s %d)" and the clip "%s (%s %d)' % (self._clipOut._nodeName, self._clipOut._port, self._clipOut._clipNumber, self._clipIn._nodeName, self._clipIn._port, self._clipIn._clipNumber)

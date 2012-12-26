@@ -24,7 +24,7 @@ def main(argv):
     graph = Graph()
     graphWrapper = GraphWrapper(graph, view)
     rc.setContextProperty("_graphWrapper", graphWrapper)
-    rc.setContextProperty("_wrappers", graphWrapper.getWrappers())
+    rc.setContextProperty("_nodeWrappers", graphWrapper.getNodeWrappers())
 
     #connexionList = []
     #connectionManager = ConnectionManager()

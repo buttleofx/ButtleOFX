@@ -1,4 +1,4 @@
-from buttleofx.gui.graph.node import Node, IdNode
+from buttleofx.gui.graph.node import Node
 from buttleofx.gui.graph.connection import Connection
 
 from quickmamba.patterns import Signal
@@ -16,10 +16,10 @@ class Graph:
     def __init__(self):
         self._nodes = []
         self._connections = []
+        self._nbNodesCreated = 0
 
         self.nodeCreated = Signal()
         self.nodeDeleted = Signal()
-
         self.connectionCreated = Signal()
         self.connectionDeleted = Signal()
 
@@ -41,34 +41,35 @@ class Graph:
         """
 
         print "createNode"
-        nodeName = "Name = type : " + str(nodeType)
-        nodeCoord = (30, 50)
-        nodeId = IdNode(nodeName, nodeType, nodeCoord[0], nodeCoord[1])
+        self._nbNodesCreated += 1
+        nodeName = str(nodeType) + "_" + str(self._nbNodesCreated)
+        nodeCoord = (50, 20)
+        #nodeId = IdNode(nodeName, nodeType, nodeCoord[0], nodeCoord[1])
 
-        self._nodes.append(Node(nodeId, nodeName, nodeType, nodeCoord))
+        self._nodes.append(Node(nodeName, nodeType, nodeCoord))
 
-        self.nodeCreated(nodeId)
+        self.nodeCreated(nodeName)
         # commandManager.doCmd( CmdCreateNode(nodeType) )
 
-    def deleteNode(self, nodeId):
+    def deleteNode(self, nodeName):
         """
-            Removes a node from the node list when a node is deleted.
+            Removes a node in the node list when a node is deleted.
         """
         print "deleteNode"
 
         # we search the right node to delete
-        indiceWrapper = 0
+        indexWrapper = 0
         for node in self._nodes:
-            if node.getId() == nodeId:
+            if node.getName() == nodeName:
                 self._nodes.remove(node)
                 break
-            indiceWrapper += 1
-        self.nodeDeleted(indiceWrapper)
+            indexWrapper += 1
+        self.nodeDeleted(indexWrapper)
         # commandManager.doCmd( CmddeleteNode(nodeid) )
 
     def createConnection(self, clipOut, clipIn):
         """
-            Adds a node from the node list when a node is created.
+            Adds a connection in the connection list when a connection is created.
         """
 
         print "createConnection"

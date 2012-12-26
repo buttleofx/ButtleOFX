@@ -10,6 +10,15 @@ Rectangle {
     x: nodeModel.coord[0]
     y: nodeModel.coord[1]
     color: "transparent"
+    focus: true
+
+    Keys.onPressed: {
+        if (event.key == Qt.Key_Delete) {
+            console.log("destruction");
+            _graphWrapper.destructionProcess();
+        }
+    }
+
     Rectangle {
         id: nodeBorder
         height: 40

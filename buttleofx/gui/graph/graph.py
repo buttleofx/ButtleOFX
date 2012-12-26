@@ -51,20 +51,20 @@ class Graph:
         self.nodeCreated(nodeName)
         # commandManager.doCmd( CmdCreateNode(nodeType) )
 
-    def deleteNode(self, nodeId):
+    def deleteNode(self, nodeName):
         """
             Removes a node in the node list when a node is deleted.
         """
         print "deleteNode"
 
         # we search the right node to delete
-        indiceWrapper = 0
+        indexWrapper = 0
         for node in self._nodes:
-            if node.getId() == nodeId:
+            if node.getName() == nodeName:
                 self._nodes.remove(node)
                 break
-            indiceWrapper += 1
-        self.nodeDeleted(indiceWrapper)
+            indexWrapper += 1
+        self.nodeDeleted(indexWrapper)
         # commandManager.doCmd( CmddeleteNode(nodeid) )
 
     def createConnection(self, clipOut, clipIn):

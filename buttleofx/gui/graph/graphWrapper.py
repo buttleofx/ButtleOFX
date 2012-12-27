@@ -53,7 +53,7 @@ class GraphWrapper(QtCore.QObject, Singleton):
 
     def __str__(self):
         """
-            Display on terminal the nodeWrapper list and the node list.
+            Display on terminal some data.
             Usefull to debug the class.
         """
         print("---- all nodeWrappers ----")

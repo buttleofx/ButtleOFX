@@ -1,6 +1,7 @@
 # graph
 from buttleofx.gui.graph import Graph
 from buttleofx.gui.graph import GraphWrapper
+from buttleofx.datas import ButtleData
 # paramEditor
 from buttleofx.gui.paramEditor.params import ParamInt
 from buttleofx.gui.paramEditor.params import ParamString
@@ -15,6 +16,10 @@ currentFilePath = os.path.dirname(os.path.abspath(__file__))
 
 
 def main(argv):
+    # data
+    buttleData = ButtleData()
+    
+    # create application
     QApplication = QtGui.QApplication(argv)
     view = QtDeclarative.QDeclarativeView()
     view.setWindowTitle("ButtleOFX")
@@ -23,12 +28,11 @@ def main(argv):
     # for the GraphEditor
     graph = Graph()
     graphWrapper = GraphWrapper(graph, view)
-    rc.setContextProperty("_graphWrapper", graphWrapper)
-    rc.setContextProperty("_nodeWrappers", graphWrapper.getNodeWrappers())
+    buttleData.setGraph(graph)
+    buttleData.setGraphWrapper(graphWrapper)
 
-    #connexionList = []
-    #connectionManager = ConnectionManager()
-    #rc.setContextProperty('_connectionManager', connectionManager)
+    rc.setContextProperty("_graphWrapper", buttleData.getGraphWrapper())
+    rc.setContextProperty("_nodeWrappers", buttleData.getGraphWrapper().getNodeWrappers())
 
     # for the ParamEditor
     paramList = [
@@ -42,8 +46,8 @@ def main(argv):
     mainWrapper = MainWrapper(view, paramList)
     rc.setContextProperty('_paramListModel', mainWrapper)
 
+    # launch QML
     view.setSource(os.path.join(currentFilePath, "MainWindow.qml"))
     view.setResizeMode(QtDeclarative.QDeclarativeView.SizeRootObjectToView)
     view.show()
     QApplication.exec_()
-

@@ -1,18 +1,26 @@
-from datas.graphData import GraphData
+from buttleofx.gui.graph import Graph
+from buttleofx.gui.graph import GraphWrapper
+
 from quickmamba.patterns import Singleton
 
-class ButtleData(Singleton) :
-
-	"""
+class ButtleData(Singleton):
+    """
         Class ButtleData defined by:
-        - graph
-        - nodeWrapper List
-        - nodeItem List (QML object)
+        - _graph
+        - _graphWrapper
 
+        Thos class containts all data we need to manage the application.
         Emit signal when modifications happen
     """
+    
+    def getGraph(self):
+        return self._graph
 
-    def __init__(self, graph, nodeWrappers, nodeItems):
-        self.graph = graph
-        self.nodeWrappers = nodeWrappers
-        self.nodeItems = nodeItems
+    def setGraph(self, graph):
+        self._graph = graph
+
+    def getGraphWrapper(self):
+        return self._graphWrapper
+
+    def setGraphWrapper(self, graphWrapper):
+        self._graphWrapper = graphWrapper

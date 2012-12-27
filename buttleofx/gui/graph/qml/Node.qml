@@ -9,6 +9,7 @@ Rectangle {
     width: 110
     x: nodeModel.coord[0]
     y: nodeModel.coord[1]
+    z: _graphWrapper.getZMax()
     color: "transparent"
     focus: true
 
@@ -76,7 +77,13 @@ Rectangle {
         }
         onClicked: {
             console.log(nodeModel.name)
-            _graphWrapper.setCurrentNode(nodeModel.name)
+            
+            if(_graphWrapper.getCurrentNode() != nodeModel.name) {
+                _graphWrapper.setCurrentNode(nodeModel.name)
+                _graphWrapper.setZMax()
+                parent.z = _graphWrapper.getZMax()
+                console.log(parent.z)
+            }
         }
     }
 }

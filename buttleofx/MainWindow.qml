@@ -4,14 +4,13 @@ import "gui/graph/qml"
 import "gui/viewer/qml"
 import "gui/paramEditor/qml"
 
-Rectangle
-{
+ApplicationWindow {
     id: buttleWindow
-
-    anchors.fill: parent
+    title: "ButtleOFX"
     width: 1280
     height: 800
-    color: "#252525"
+    minimumWidth: 100
+    minimumHeight: 50
 
     Rectangle{
         id:mainMenu
@@ -29,27 +28,27 @@ Rectangle
         }
     }
 
-    Column {
-
+    Rectangle{//this rectangle represents the zone under the menu, it allows to define the anchors.fill and margins for the SplitterRow
+        id: modulsContainer
+        y: mainMenu.height
         width: parent.width
-        height: parent.height
-        x: 10
-        y: 45
+        height: parent.height - y
+        color: "#353535"
 
         SplitterRow {
-
             anchors.fill: parent
+            anchors.margins: 5
+            /*handleWidth changes the size of the separation between the row, column.*/
+            handleWidth: 3
 
             SplitterColumn {
-
-                width: 0.8*parent.width
+                width: 0.7*parent.width
                 height: parent.height
-                Splitter.expanding: true
+                handleWidth: 3
 
                 Player {
                     width: parent.width
                     height: 0.5*parent.height
-                    y: 30
                 }
 
                 GraphEditor {
@@ -59,7 +58,7 @@ Rectangle
             }
 
             ParamEditor {
-                    Splitter.expanding: true
+                width: 0.3*parent.width
             }
         }
     }

@@ -2,6 +2,8 @@
 # -*-coding:utf-8-*
 
 from quickmamba.patterns import Signal
+from buttleofx.core.undo_redo.ManageTools import CommandManager
+from buttleofx.core.undo_redo.tests.commands import CmdSetCoord
 
 from PySide import QtCore, QtGui
 

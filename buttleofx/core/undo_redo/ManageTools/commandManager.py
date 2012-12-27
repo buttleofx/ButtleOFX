@@ -4,8 +4,10 @@
 # http://publib.boulder.ibm.com/infocenter/rsmhelp/v7r0m0/index.jsp?topic=/com.ibm.xtools.comparemerge.core.doc.isv/reference/api/comparemergecore/com/ibm/xtools/comparemerge/core/command/CommandManager.html
 # http://www.codeproject.com/Articles/2500/A-Basic-Undo-Redo-Framework-For-C
 
+from PySide import QtCore, QtGui
 
-class CommandManager:
+
+class CommandManager(object):
     """
     Manage a list of commands.
     """
@@ -107,6 +109,8 @@ class CommandManager:
         """
         Executes a new undoable command (add command to the stack ?)
         """
+
+        print "Push function "
         # clear the redoable part of commands
         for command in self.commands[self.index:]:
             self.commands.pop(self.commands.index(command))
@@ -122,6 +126,7 @@ class CommandManager:
         """
         Undoes the last command.
         """
+        print "Undo function ! "
         if self.canUndo():
             self.index -= 1
             self.commands[self.index].undoCmd()

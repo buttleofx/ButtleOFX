@@ -16,8 +16,11 @@ Rectangle {
     Keys.onPressed: {
         if (event.key == Qt.Key_Delete) {
             console.log("destruction");
-            _graphWrapper.destructionProcess();
+            //_graphWrapper.destructionProcess();
+            _cmdManager.undo()
+            //console.log(_cmdManager)
         }
+
     }
 
     Rectangle {
@@ -73,7 +76,7 @@ Rectangle {
         onPressed: parent.opacity = 0.5
         onReleased: {
             parent.opacity = 1;
-            nodeModel.nodeMoved(parent.x, parent.y)
+            nodeModel.nodeMoved(parent.x, parent.y, _cmdManager);
         }
         onClicked: {
             console.log(nodeModel.name)

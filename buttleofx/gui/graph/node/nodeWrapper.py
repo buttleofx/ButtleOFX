@@ -122,13 +122,15 @@ class NodeWrapper(QtCore.QObject):
 
     @QtCore.Slot(int, int, CommandManager)
     def nodeMoved(self, x, y, cmdManager):
+        print "Coordinates before movement"
         print self._node._coord
-        self._node.setCoord(x, y)
+        #self._node.setCoord(x, y)
+
+        cmdMoved = CmdSetCoord(self._node, (x, y))
+        cmdManager.push(cmdMoved)
+        print "Coordinates after movement"
         print self._node._coord
-        #print self._node._coord
-        #cmdMoved = CmdSetCoord(self, (x, y))
-        #print self._node._coord
-        #cmdManager.push(cmdMoved)
+        #cmdManager.undo()
 
     name = QtCore.Property(str, getName, setName, notify=changed)
     nodeType = QtCore.Property(str, getType, setType, notify=changed)

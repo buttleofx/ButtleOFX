@@ -6,6 +6,8 @@ from buttleofx.datas import ButtleData
 from buttleofx.gui.paramEditor.params import ParamInt
 from buttleofx.gui.paramEditor.params import ParamString
 from buttleofx.gui.paramEditor.wrappers import MainWrapper
+#undo_redo
+from buttleofx.core.undo_redo.ManageTools import CommandManager
 
 
 from PySide import QtGui, QtDeclarative
@@ -18,7 +20,12 @@ currentFilePath = os.path.dirname(os.path.abspath(__file__))
 def main(argv):
     # data
     buttleData = ButtleData()
-    
+
+    # create undo-redo context
+    cmdManager = CommandManager()
+    cmdManager.setActive()
+    cmdManager.clean()
+
     # create application
     QApplication = QtGui.QApplication(argv)
     view = QtDeclarative.QDeclarativeView()
@@ -33,6 +40,7 @@ def main(argv):
 
     rc.setContextProperty("_graphWrapper", buttleData.getGraphWrapper())
     rc.setContextProperty("_nodeWrappers", buttleData.getGraphWrapper().getNodeWrappers())
+    rc.setContextProperty("_cmdManager", cmdManager)
 
     # for the ParamEditor
     paramList = [

@@ -1,2 +1,1 @@
 from cmdSetCoord import CmdSetCoord
-from cmdNodeMoved import CmdNodeMoved

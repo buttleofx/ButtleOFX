@@ -61,12 +61,12 @@ class Node(object):
         self._image = nodeDesc["url"]
         # ###
 
-        self.nameChanged = Signal()
-        self.typeChanged = Signal()
-        self.coordChanged = Signal()
-        self.colorChanged = Signal()
-        self.nbInputChanged = Signal()
-        self.imageChanged = Signal()
+        self.NodeNameChanged = Signal()
+        self.NodeTypeChanged = Signal()
+        self.NodeCoordChanged = Signal()
+        self.NodeColorChanged = Signal()
+        self.NodeNbInputChanged = Signal()
+        self.NodeImageChanged = Signal()
 
     def __str__(self):
         return 'Node "%s"' % (self._name)
@@ -76,39 +76,40 @@ class Node(object):
 
     def setName(self, name):
         self._name = name
-        self.nameChanged(name)
+        self.NodeNameChanged()
 
     def getType(self):
         return str(self._type)
 
     def setType(self, nodeType):
         self._type = nodeType
-        self.tyepChanged(nodeType)
+        self.NodeTypeChanged()
 
     def getCoord(self):
         return self._coord
 
     def setCoord(self, x, y):
         self._coord = (x, y)
-        self.coordChanged(x, y)
+        self.NodeCoordChanged()
+        print "Coords have changed"
 
     def getColor(self):
         return QtGui.QColor(*self._color)
 
     def setColor(self, r, g, b):
         self._color = (r, g, b)
-        self.colorChanged(self._color)
+        self.NodeColorChanged()
 
     def getNbInput(self):
         return self._nbInput
 
     def setNbInput(self, nbInput):
         self._nbInput = nbInput
-        self.nbInputChanged(nbInput)
+        self.NodeNbInputChanged()
 
     def getImage(self):
         return self._image
 
     def setImage(self, image):
         self._image = image
-        self.imageChanged(image)
+        self.NodeImageChanged()

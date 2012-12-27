@@ -1,4 +1,9 @@
+#!/usr/bin/env python
+# -*-coding:utf-8-*
+
 from quickmamba.patterns import Signal
+from buttleofx.core.undo_redo.tests.commands import CmdSetCoord
+from buttleofx.core.undo_redo.ManageTools import CommandManager
 
 from PySide import QtCore, QtGui
 
@@ -31,12 +36,12 @@ class NodeWrapper(QtCore.QObject):
         self._image = node._image
 
         # the links between the nodeWrapper and his node
-        self._node.nameChanged.connect(self.setName)
-        self._node.typeChanged.connect(self.setType)
-        self._node.coordChanged.connect(self.setCoord)
-        self._node.colorChanged.connect(self.setColor)
-        self._node.nbInputChanged.connect(self.setNbInput)
-        self._node.imageChanged.connect(self.setImage)
+        self._node.NodeNameChanged.connect(self.nodeNameChanged)
+        self._node.NodeTypeChanged.connect(self.nodeTypeChanged)
+        self._node.NodeCoordChanged.connect(self.nodeCoordChanged)
+        self._node.NodeColorChanged.connect(self.nodeColorChanged)
+        self._node.NodeNbInputChanged.connect(self.nodeNbInputChanged)
+        self._node.NodeImageChanged.connect(self.nodeImageChanged)
 
     @QtCore.Signal
     def changed(self):
@@ -50,6 +55,10 @@ class NodeWrapper(QtCore.QObject):
     def setName(self, name):
         self._name = name
 
+    @QtCore.Slot()
+    def nodeNameChanged(self):
+        self._node.getName()
+
     @QtCore.Slot(result="str")
     def getType(self):
         return str(self._type)
@@ -59,12 +68,20 @@ class NodeWrapper(QtCore.QObject):
         self._type = nodeType
 
     @QtCore.Slot()
+    def nodeTypeChanged(self):
+        self._node.getType()
+
+    @QtCore.Slot()
     def getCoord(self):
         return self._coord
 
     @QtCore.Slot(int, int)
     def setCoord(self, x, y):
         self._coord = (x, y)
+
+    @QtCore.Slot()
+    def nodeCoordChanged(self):
+        self._node.getCoord()
 
     @QtCore.Slot(result="QVariant")
     def getColor(self):
@@ -74,6 +91,10 @@ class NodeWrapper(QtCore.QObject):
     def setColor(self, r, g, b):
         self._color = (r, g, b)
 
+    @QtCore.Slot()
+    def nodeColorChanged(self):
+        self._node.getColor()
+
     @QtCore.Slot(result="int")
     def getNbInput(self):
         return self._nbInput
@@ -81,7 +102,11 @@ class NodeWrapper(QtCore.QObject):
     @QtCore.Slot(int)
     def setNbInput(self, nbInput):
         self._nbInput = nbInput
-        # self.changed()
+        # self.changed
+
+    @QtCore.Slot()
+    def nodeNbInputChanged(self):
+        self._node.getNbInput()
 
     @QtCore.Slot(result="str")
     def getImage(self):
@@ -91,9 +116,19 @@ class NodeWrapper(QtCore.QObject):
     def setImage(self, image):
         self._image = image
 
-    @QtCore.Slot(int, int)
-    def nodeMoved(self, x, y):
+    @QtCore.Slot()
+    def nodeImageChanged(self):
+        self._node.getImage()
+
+    @QtCore.Slot(int, int, CommandManager)
+    def nodeMoved(self, x, y, cmdManager):
+        print self._node._coord
         self._node.setCoord(x, y)
+        print self._node._coord
+        #print self._node._coord
+        #cmdMoved = CmdSetCoord(self, (x, y))
+        #print self._node._coord
+        #cmdManager.push(cmdMoved)
 
     name = QtCore.Property(str, getName, setName, notify=changed)
     nodeType = QtCore.Property(str, getType, setType, notify=changed)

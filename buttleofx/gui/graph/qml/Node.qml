@@ -4,18 +4,28 @@ import Qt 4.7
 
 Rectangle {
     id: node
-    height: 35 + 7*model.object.nbInput
-    width: 110
-    x: model.object.x
-    y: model.object.y
-    color: "transparent"
     property variant nodeModel : model.object
+    height: 35 + 7*nodeModel.nbInput
+    width: 110
+    x: nodeModel.coord[0]
+    y: nodeModel.coord[1]
+    z: _graphWrapper.getZMax()
+    color: "transparent"
+    focus: true
+
+    Keys.onPressed: {
+        if (event.key == Qt.Key_Delete) {
+            console.log("destruction");
+            _graphWrapper.destructionProcess();
+        }
+    }
+
     Rectangle {
         id: nodeBorder
         height: 40
         width: 110
         anchors.centerIn: parent
-        color: model.object.color
+        color: nodeModel.color
         opacity: 0.5
         radius: 10
     }
@@ -30,7 +40,7 @@ Rectangle {
             anchors.centerIn: parent
             text: nodeModel.name
             font.pointSize: 10
-            color: "black"
+            color: (nodeModel.name === _graphWrapper.currentNode) ? "#00b2a1" : "black"
         }
     }
     Column {
@@ -39,14 +49,10 @@ Rectangle {
         anchors.top: parent.verticalCenter
         spacing: 2
         property int nbInput: nodeModel.nbInput
+        property string port : "input"
         Repeater {
             model: nodeInputs.nbInput
-            Rectangle {
-                height: 5
-                width: 5
-                color: "#bbbbbb"
-                radius: 2
-            }
+            Clip {}
         }
     }
     Column {
@@ -54,17 +60,10 @@ Rectangle {
         anchors.horizontalCenter: parent.right
         anchors.top: parent.verticalCenter
         spacing: 2
+        property string port : "output"
         Repeater {
             model: 1
-            Rectangle {
-                height: 5
-                width: 5
-                color: "#bbbbbb"
-                radius: 2
-                MouseArea {
-                    anchors.fill: parent
-                }
-            }
+            Clip {}
         }
     }
     MouseArea {
@@ -74,14 +73,17 @@ Rectangle {
         onPressed: parent.opacity = 0.5
         onReleased: {
             parent.opacity = 1;
-            console.log(parent.x)
-            console.log(parent.y)
-            model.object.getXCoord(parent.x)
-            model.object.getYCoord(parent.y)
+            nodeModel.nodeMoved(parent.x, parent.y, _cmdManager);
         }
         onClicked: {
-            console.log(model.object.name)
-            _graphWrapper.setCurrentNode(nodeModel.id)
+            console.log(nodeModel.name)
+            
+            if(_graphWrapper.getCurrentNode() != nodeModel.name) {
+                _graphWrapper.setCurrentNode(nodeModel.name)
+                _graphWrapper.setZMax()
+                parent.z = _graphWrapper.getZMax()
+                console.log(parent.z)
+            }
         }
     }
 }
@@ -148,7 +150,7 @@ Rectangle {
                     onPressed: {
                         color = "red"
                         console.log("Input clicked");
-                        _connectionManager.inputPressed(nodeName.text, "in" + index) // we spent the node name and the id of the input
+                        _connectionManager.inputPressed(nodeName.text, "in" + index) // we send the node name and the id of the input
                     }
                     onReleased: {
                         color = "#bbbbbb"

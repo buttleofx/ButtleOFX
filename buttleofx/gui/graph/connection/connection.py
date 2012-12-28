@@ -1,9 +1,9 @@
 class Connection(object):
 
     """
-        Class Connection defined by:
-        - nodeOut : The node where the connection comes from
-        - nodeIn : The node to where the connection go
+        Class Connection usefull to identify a connection between 2 clips :
+        - clipOut : the IdClip of the first clip
+        - clipIn : the IdClip of the second clip
     """
 
     def __init__(self, clipOut, clipIn):
@@ -14,4 +14,4 @@ class Connection(object):
 
     def __str__(self):
         #print 'Connection between the node "%s" and the node "%s' % (self._nodeOut._name, self._nodeIn._name)
-        print 'Connection between the clip "%s (%s)" and the clip "%s (%s)' % (self._clipOut._node, self._clipOut._clip, self._clipIn._node, self._clipIn._clip)
+        print 'Connection between the clip "%s (%s %d)" and the clip "%s (%s %d)' % (self._clipOut._nodeName, self._clipOut._port, self._clipOut._clipNumber, self._clipIn._nodeName, self._clipIn._port, self._clipIn._clipNumber)

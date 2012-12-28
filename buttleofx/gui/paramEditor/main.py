@@ -1,7 +1,8 @@
 from PySide import QtGui, QtDeclarative
-from gui.paramEditor.paramInt import ParamInt
-from gui.paramEditor.paramString import ParamString
-from gui.paramEditor.wrappers.mainWrapper import MainWrapper
+
+from buttleofx.gui.paramEditor.params import ParamInt
+from buttleofx.gui.paramEditor.params import ParamString
+from buttleofx.gui.paramEditor.wrappers import MainWrapper
 
 import sys
 import os

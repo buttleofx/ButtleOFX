@@ -1,70 +1,73 @@
 import QtQuick 1.1
+import QtDesktop 0.1
 import "gui/graph/qml"
-import "gui/viewer"
+import "gui/viewer/qml"
 import "gui/paramEditor/qml"
 
-Rectangle
-{
+ApplicationWindow {
     id: buttleWindow
+    title: "ButtleOFX"
+    width: 1280
+    height: 800
+    minimumWidth: 100
+    minimumHeight: 50
 
-    anchors.fill: parent
-    implicitWidth: 1280
-    implicitHeight: 800
-
-    color: "#252525"
-
-    Column {
-        //width of the column (contains vertical elements Text and Row ) is the same as the window
-        width: parent.width
-        height: parent.height
-        spacing: 0
-        Text
-        {
-            /*height of text is 2% of window's height*/
-            width: parent.width
-            height: 2/100 * parent.height
-            color: "#fff"
-            text: "Menu of ButtleOFX"
-            font.pointSize: 2/100 * parent.height;
+    Keys.onPressed: {
+        if (event.key == Qt.Key_U) {
+            _cmdManager.undo();
         }
-        Row {
-            //width of the row is the same as the window (i.e the column here)
-            width: parent.width
-            //height of the row is 98% of the window (10% for the menu)
-            height: 98/100 * parent.height
-            spacing: 0
+        else if (event.key == Qt.Key_R) {
+            _cmdManager.redo();
+        }
+    }
 
-            Column
-            {
-                //width of the column is 70% of the window (other 30% for the paramEditor)
-                width: 70/100 * parent.width
+    Rectangle{
+        id:mainMenu
+        width: parent.width
+        height: 30
+        color: "#141414"
+
+        Text {
+            anchors.verticalCenter: parent.verticalCenter
+            anchors.left: parent.left
+            anchors.leftMargin: 10
+            color: "#00b2a1"
+            text: "ButtleOFX"
+            font.pointSize: 14
+        }
+    }
+
+    Rectangle{//this rectangle represents the zone under the menu, it allows to define the anchors.fill and margins for the SplitterRow
+        id: modulsContainer
+        y: mainMenu.height
+        width: parent.width
+        height: parent.height - y
+        color: "#353535"
+
+        SplitterRow {
+            anchors.fill: parent
+            anchors.margins: 5
+            /*handleWidth changes the size of the separation between the row, column.*/
+            handleWidth: 3
+
+            SplitterColumn {
+                width: 0.7*parent.width
                 height: parent.height
-                x: 10; y: 10
-                spacing: 0
-                Player
-                {
-                    //parent of the player is the column which is already at 70% of window's width so it has the same width
-                    width: parent.width;
-                    //player's height is 50% of the column's height
-                    height: 50/100 * parent.height;
-                    //y of the toolBar of the bottom is 5% of the player
-                    toolHeight: 5/100 + parent.height
+                handleWidth: 3
+
+                Player {
+                    width: parent.width
+                    height: 0.5*parent.height
                 }
-                GraphEditor
-                {
-                    //same width as the column
-                    width: parent.width;
-                    //graphEditor's height is 50% of the column's height
-                    height: 50/100 * parent.height
+
+                GraphEditor {
+                    width: parent.width
+                    height:0.5*parent.height
                 }
             }
 
-            ParamEditor
-            {
-                    //width is 30% of the row
-                    width: 30/100 * parent.width
-                    //height is the same as the window
-                    height: parent.height
+            ParamEditor {
+                width: 0.3*parent.width
             }
         }
     }

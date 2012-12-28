@@ -1,7 +1,7 @@
-from buttleofx.gui.paramEditor.paramInt import ParamInt
-from buttleofx.gui.paramEditor.paramString import ParamString
-from intWrapper import IntWrapper
-from stringWrapper import StringWrapper
+from buttleofx.gui.paramEditor.params import ParamInt
+from buttleofx.gui.paramEditor.params import ParamString
+from buttleofx.gui.paramEditor.wrappers import IntWrapper
+from buttleofx.gui.paramEditor.wrappers import StringWrapper
 
 from quickmamba.models import QObjectListModel
 

@@ -1,4 +1,9 @@
+#!/usr/bin/env python
+# -*-coding:utf-8-*
+
 from quickmamba.patterns import Signal
+from buttleofx.core.undo_redo.manageTools import CommandManager
+from buttleofx.core.undo_redo.commands import CmdSetCoord
 
 from PySide import QtCore, QtGui
 
@@ -6,24 +11,24 @@ from PySide import QtCore, QtGui
 class NodeWrapper(QtCore.QObject):
     """
         Class NodeWrapper defined by:
-        - _id
-        - _name
-        - _type
-        - _coord
-        - _color
-        - _nbInput
-        - _image
-        - _node : his related node
+        - _node : the node data
+
+        - The nodeWrapper data :
+            - _name
+            - _type
+            - _coord
+            - _color
+            - _nbInput
+            - _image
 
         Creates a QObject from a given python object Node.
     """
 
-    def __init__(self, node):
-        super(NodeWrapper, self).__init__()
+    def __init__(self, node, view):
+        super(NodeWrapper, self).__init__(view)
 
         self._node = node
 
-        self._id = node._id
         self._name = node._name
         self._type = node._type
         self._coord = node._coord
@@ -32,89 +37,108 @@ class NodeWrapper(QtCore.QObject):
         self._image = node._image
 
         # the links between the nodeWrapper and his node
-        self._node.idChanged.connect(self.setId)
-        self._node.nameChanged.connect(self.setName)
-        self._node.typeChanged.connect(self.setType)
-        self._node.xChanged.connect(self.setXCoord)
-        self._node.yChanged.connect(self.setYCoord)
-        self._node.colorChanged.connect(self.setColor)
-        self._node.nbInputChanged.connect(self.setNbInput)
-        self._node.imageChanged.connect(self.setImage)
+        #self._node.NodeNameChanged.connect(self.nodeNameChanged)
+        #self._node.NodeTypeChanged.connect(self.nodeTypeChanged)
+        #self._node.NodeCoordChanged.connect(self.nodeCoordChanged)
+        #self._node.NodeColorChanged.connect(self.nodeColorChanged)
+        #self._node.NodeNbInputChanged.connect(self.nodeNbInputChanged)
+        #self._node.NodeImageChanged.connect(self.nodeImageChanged)
+
+        self._node.NodeNameChanged.connect(self.setName)
+        self._node.NodeTypeChanged.connect(self.setType)
+        self._node.NodeCoordChanged.connect(self.setCoord)
+        self._node.NodeColorChanged.connect(self.setColor)
+        self._node.NodeNbInputChanged.connect(self.setNbInput)
+        self._node.NodeImageChanged.connect(self.setImage)
 
     @QtCore.Signal
     def changed(self):
         pass
 
-    @QtCore.Slot()
-    def getId(self):
-        return self._id
+    ######## getters ########
 
-    @QtCore.Slot(object)
-    def setId(self, idNode):
-        self._id = idNode
-
-    @QtCore.Slot()
     def getName(self):
         return str(self._name)
 
-    @QtCore.Slot(str)
-    def setName(self, name):
-        self._name = name
-
-    @QtCore.Slot()
     def getType(self):
         return str(self._type)
 
-    @QtCore.Slot(str)
-    def setType(self, nodeType):
-        self._type = nodeType
+    def getCoord(self):
+        return self._coord
 
-    @QtCore.Slot()
-    def getXCoord(self):
-        return self._coord[0]
-
-    @QtCore.Slot(int)
-    def setXCoord(self, x):
-        self._coord[0] = x
-
-    @QtCore.Slot()
-    def getYCoord(self):
-        return self._coord[1]
-
-    @QtCore.Slot(int)
-    def setYCoord(self, y):
-        self._coord[1] = y
-
-    @QtCore.Slot()
     def getColor(self):
         return QtGui.QColor(*self._color)
 
-    @QtCore.Slot(QtGui.QColor)
-    def setColor(self, r, g, b):
-        self._color = (r, g, b)
-
-    @QtCore.Slot()
     def getNbInput(self):
         return self._nbInput
 
-    @QtCore.Slot(int)
-    def setNbInput(self, nbInput):
-        self._nbInput = nbInput
-        # self.changed()
-
-    @QtCore.Slot()
     def getImage(self):
         return self._image
 
-    @QtCore.Slot(str)
+    ######## setters ########
+
+    def setName(self, name):
+        self._name = name
+
+    def setType(self, nodeType):
+        self._type = nodeType
+
+    def setCoord(self, x, y):
+        print "nodeWrapper.setCoord"
+        self._coord = (x, y)
+        print "nodeWrapper Coords have changed : " + str(self._coord)
+
+    def setColor(self, r, g, b):
+        self._color = (r, g, b)
+
+    def setNbInput(self, nbInput):
+        self._nbInput = nbInput
+
     def setImage(self, image):
         self._image = image
 
-    nodeId = QtCore.Property(object, getId, setId, notify=changed)
+    ######## Slots ########
+
+    @QtCore.Slot(int, int, CommandManager)
+    def nodeMoved(self, x, y, cmdManager):
+        print "Coordinates before movement :"
+        print self._coord
+        #self._node.setCoord(x, y)
+
+        cmdMoved = CmdSetCoord(self._node, (x, y))
+        cmdManager.push(cmdMoved)
+        print "Coordinates after movement :"
+        print self._coord
+
     name = QtCore.Property(str, getName, setName, notify=changed)
     nodeType = QtCore.Property(str, getType, setType, notify=changed)
-    x = QtCore.Property(int, getXCoord, setXCoord, notify=changed)
-    y = QtCore.Property(int, getYCoord, setYCoord, notify=changed)
+    coord = QtCore.Property("QVariant", getCoord, setCoord, notify=changed)
     color = QtCore.Property(QtGui.QColor, getColor, setColor, notify=changed)
     nbInput = QtCore.Property(int, getNbInput, setNbInput, notify=changed)
     image = QtCore.Property(str, getImage, setImage, notify=changed)
+
+"""
+Obsolete fonctions I haven't yet deleted on the safe side because it's late and maybe I'm making a big mistake.
+And if I'm making a big mistake, I apologize in advance Elisa.
+
+    @QtCore.Slot()
+    def nodeColorChanged(self):
+        self._node.getColor()
+
+    @QtCore.Slot()
+    def nodeNbInputChanged(self):
+        self._node.getNbInput()
+
+    @QtCore.Slot()
+    def nodeNameChanged(self):
+        self._node.getName()
+    
+    @QtCore.Slot()
+    def nodeTypeChanged(self):
+        self._node.getType()
+
+    @QtCore.Slot()
+    def nodeImageChanged(self):
+        self._node.getImage()
+
+"""

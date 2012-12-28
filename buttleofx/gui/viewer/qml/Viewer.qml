@@ -4,7 +4,6 @@ Item {
     id: player
     anchors.fill: parent
 
-
     property url imageFile: parent.imageFile
     property double sizeScaleFirstImage: 0.95
 
@@ -81,9 +80,7 @@ Item {
                         imageViewed.y += sizeDragEvent;
                     }
                 }
-
             }
         } // Item (for the key events)
-
     } // player MouseArea
 } // player

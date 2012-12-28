@@ -7,10 +7,10 @@ sys.path.append(os.path.join(currentFilePath,'QuickMamba'))
 
 #----------------------------------------
 
-import buttleofx
+import buttleofx.gui.viewerGL
 import quickmamba
 
 if __name__ == '__main__':
     quickmamba.qmlRegister()
-    buttleofx.main(sys.argv)
+    buttleofx.gui.viewerGL.main(sys.argv)
 

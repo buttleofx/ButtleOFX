@@ -16,11 +16,8 @@ Rectangle {
     Keys.onPressed: {
         if (event.key == Qt.Key_Delete) {
             console.log("destruction");
-            //_graphWrapper.destructionProcess();
-            _cmdManager.undo()
-            //console.log(_cmdManager)
+            _graphWrapper.destructionProcess();
         }
-
     }
 
     Rectangle {

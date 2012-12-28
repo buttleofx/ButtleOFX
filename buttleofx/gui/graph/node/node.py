@@ -71,45 +71,55 @@ class Node(object):
     def __str__(self):
         return 'Node "%s"' % (self._name)
 
+    ######## getters ########
+
     def getName(self):
         return str(self._name)
-
-    def setName(self, name):
-        self._name = name
-        self.NodeNameChanged()
 
     def getType(self):
         return str(self._type)
 
-    def setType(self, nodeType):
-        self._type = nodeType
-        self.NodeTypeChanged()
-
     def getCoord(self):
         return self._coord
-
-    def setCoord(self, x, y):
-        self._coord = (x, y)
-        self.NodeCoordChanged()
-        print "Coords have changed"
 
     def getColor(self):
         return QtGui.QColor(*self._color)
 
-    def setColor(self, r, g, b):
-        self._color = (r, g, b)
-        self.NodeColorChanged()
-
     def getNbInput(self):
         return self._nbInput
-
-    def setNbInput(self, nbInput):
-        self._nbInput = nbInput
-        self.NodeNbInputChanged()
 
     def getImage(self):
         return self._image
 
+    ######## setters ########
+
+    def setName(self, name):
+        self._name = name
+        #self.NodeNameChanged()
+        self.NodeNameChanged(name)
+
+    def setType(self, nodeType):
+        self._type = nodeType
+        #self.NodeTypeChanged()
+        self.NodeTypeChanged(nodeType)
+
+    def setCoord(self, x, y):
+        print "node.setCoord"
+        self._coord = (x, y)
+        print "Node Coords have changed : " + str(self._coord)
+        self.NodeCoordChanged(x, y)
+
+    def setColor(self, r, g, b):
+        self._color = (r, g, b)
+        #self.NodeColorChanged()
+        self.NodeColorChanged(r, g, b)
+
+    def setNbInput(self, nbInput):
+        self._nbInput = nbInput
+        #self.NodeNbInputChanged()
+        self.NodeNbInputChanged(nbInput)
+
     def setImage(self, image):
         self._image = image
-        self.NodeImageChanged()
+        #self.NodeImageChanged()
+        self.NodeImageChanged(image)

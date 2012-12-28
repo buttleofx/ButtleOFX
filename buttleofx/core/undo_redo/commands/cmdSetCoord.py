@@ -2,9 +2,9 @@
 # -*-coding:utf-8-*
 
 #from buttleofx.gui.graph.node import nodeWrapper
+from buttleofx.core.undo_redo.manageTools import UndoableCommand
 
-
-class CmdSetCoord:
+class CmdSetCoord(UndoableCommand):
     """
         Command that moves a node
     """
@@ -19,9 +19,7 @@ class CmdSetCoord:
         """
         self.nodeTarget = nodeTarget
         self.coordOld = self.nodeTarget.getCoord()
-        #self.coordYOld = self.getYCoord()
         self.newCoord = newCoord
-        #self.coordYAdd = newCoordY
 
     def undoCmd(self):
         """
@@ -41,9 +39,9 @@ class CmdSetCoord:
         """
             Executes the movement of the node.
         """
-        
+
         self.nodeTarget.setCoord(self.newCoord[0], self.newCoord[1])
         return self.nodeTarget
 
     # Attention, il faut utiliser le nom du noeud pour l'identifer dans le ButtleData.
-    # Comme ça, lorsqu'on déplace un noeud, puis qu'on le modifie, on est capable de faire deux fois redo.
+    # Comme ça, lorsqu'on déplace un noeud, puisqu'on le modifie, on est capable de faire deux fois redo.

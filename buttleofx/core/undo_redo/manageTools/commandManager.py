@@ -7,7 +7,7 @@
 from PySide import QtCore, QtGui
 
 
-class CommandManager(object):
+class CommandManager(QtCore.QObject):
     """
     Manage a list of commands.
     """
@@ -122,22 +122,30 @@ class CommandManager(object):
         newCommand.doCmd()
         self.index += 1
 
+    @QtCore.Slot()
     def undo(self):
         """
         Undoes the last command.
         """
         print "Undo function ! "
         if self.canUndo():
+            print "can undo."
             self.index -= 1
             self.commands[self.index].undoCmd()
+        else:
+            print "can't undo."
 
+    @QtCore.Slot()
     def redo(self):
         """
         Redoes the last undone command.
         """
         if self.canRedo():
+            print "can redo."
             self.commands[self.index].redoCmd()
             self.index += 1
+        else:
+            print "can't redo."
 
     def getIndex(self):
         """

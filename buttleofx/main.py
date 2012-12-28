@@ -7,7 +7,7 @@ from buttleofx.gui.paramEditor.params import ParamInt
 from buttleofx.gui.paramEditor.params import ParamString
 from buttleofx.gui.paramEditor.wrappers import MainWrapper
 #undo_redo
-from buttleofx.core.undo_redo.ManageTools import CommandManager
+from buttleofx.core.undo_redo.manageTools import CommandManager
 
 
 from PySide import QtGui, QtDeclarative

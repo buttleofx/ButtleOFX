@@ -1,12 +1,9 @@
 import QtQuick 1.1
 
-Rectangle {
+Item {
     id: player
-    implicitWidth: 850
-    implicitHeight: 350
-    x: 10
-    y: 10
-    color: "transparent"
+    anchors.fill: parent
+
 
     property url imageFile: parent.imageFile
     property double sizeScaleFirstImage: 0.95
@@ -23,8 +20,7 @@ Rectangle {
     }
 
     MouseArea {
-        //drag.target: imageViewed
-        drag.target: player
+        drag.target: imageViewed
         drag.axis: Drag.XandYAxis
         anchors.fill: parent
 

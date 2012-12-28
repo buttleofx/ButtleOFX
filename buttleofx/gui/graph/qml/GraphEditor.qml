@@ -2,8 +2,8 @@ import QtQuick 1.1
 
 Rectangle {
     id: graphEditor
-    implicitWidth: 850
-    implicitHeight: 350
+    width: 850
+    height: 350
     z: 0
     clip: true
 

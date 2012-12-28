@@ -21,10 +21,12 @@ class GLViewport(QtDeclarative.QDeclarativeItem):
     def __init__(self, parent=None):
         super(GLViewport, self).__init__(parent)
         
+        self.img_data = None
+        self.tex = None
+        
         # Enable paint method calls
         self.setFlag(QtGui.QGraphicsItem.ItemHasNoContents, False)
         self.loadImageFile("input.jpg")
-        self.tex = None
         
     def initializeGL(self):
         GL.glClearColor(0.0,0.0,0.0,0.0) # We assign a black background
@@ -35,22 +37,30 @@ class GLViewport(QtDeclarative.QDeclarativeItem):
         print "loadImageFile: ", filename
         import Image
         import numpy
-        img = Image.open(filename)
-        self.img_data = numpy.array(img.getdata(), numpy.uint8)
-        self.setImageSize( QtCore.QSize(img.size[0], img.size[1]) )
-        print "image size: ", self._imageSizeValue.width(), "x", self._imageSizeValue.height()
-        if self._fittedModeValue:
-            self.fitImage()
+        try:
+            img = Image.open(filename)
+            self.img_data = numpy.array(img.getdata(), numpy.uint8)
+            self.tex = None
+            self.setImageSize( QtCore.QSize(img.size[0], img.size[1]) )
+            print "image size: ", self._imageSizeValue.width(), "x", self._imageSizeValue.height()
+            if self._fittedModeValue:
+                self.fitImage()
+        except Exception:
+            self.img_data = None
+            self.setImageSize( QtCore.QSize(0, 0) )
 
     def updateTextureFromImage(self):
         print "updateTextureFromImage begin"
-        self.tex = loadTextureFromImage( self._imageSizeValue, self.img_data )
+        if self.img_data:
+            self.tex = loadTextureFromImage( self._imageSizeValue, self.img_data )
+        else:
+            self.tex = None
         print "updateTextureFromImage end"
     
     @QtCore.Slot()
     def fitImage(self):
-        widthRatio = self.width()/float(self.getImageSize().width())
-        heightRatio = self.height()/float(self.getImageSize().height())
+        widthRatio = self.width()/float(self.getImageSize().width()) if self.getImageSize().width() else 1.0
+        heightRatio = self.height()/float(self.getImageSize().height()) if self.getImageSize().height() else 1.0
         self.setScale( min(widthRatio, heightRatio) )
         
         self.setOffset_xy(
@@ -84,8 +94,11 @@ class GLViewport(QtDeclarative.QDeclarativeItem):
         #print "widget size:", self.width(), "x", self.height()
         #print "image size:", self.getImageSize().width(), "x", self.getImageSize().height()
         
-        if self.tex is None:
+        if self.img_data and self.tex is None:
             self.updateTextureFromImage()
+        
+        if self.tex is None:
+            return
         
         GL.glEnable(GL.GL_TEXTURE_2D)
         GL.glBindTexture(GL.GL_TEXTURE_2D, self.tex)

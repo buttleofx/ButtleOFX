@@ -16,6 +16,7 @@ Rectangle {
         offset.x: 0.0
         offset.y: 0.0
         fittedMode: true
+        imageFilepath: "input.jpg"
 
         property real inWidth: 16
         property real inHeight: 9
@@ -64,6 +65,16 @@ Rectangle {
                 var newScale = viewport.imgScale * (1.0 + deltaF)
                 viewport.setScaleAtPos_viewportCoord( newScale, pos.x, (height-pos.y) )
                 viewport.fittedMode = false
+            }
+        }
+        DropArea {
+            anchors.fill: parent
+            
+            onDrop: {
+                if( hasUrls )
+                {
+                    viewport.imageFilepath = firstUrl
+                }
             }
         }
     }

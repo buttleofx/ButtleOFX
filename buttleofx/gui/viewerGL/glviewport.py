@@ -1,6 +1,9 @@
 from PySide import QtGui, QtDeclarative, QtCore
 from OpenGL import GL
 
+import os
+
+
 def loadTextureFromImage(imgSize, img_data):
     texture = GL.glGenTextures(1)
     GL.glPixelStorei(GL.GL_UNPACK_ALIGNMENT,1)
@@ -26,7 +29,6 @@ class GLViewport(QtDeclarative.QDeclarativeItem):
         
         # Enable paint method calls
         self.setFlag(QtGui.QGraphicsItem.ItemHasNoContents, False)
-        self.loadImageFile("input.jpg")
         
     def initializeGL(self):
         GL.glClearColor(0.0,0.0,0.0,0.0) # We assign a black background
@@ -35,23 +37,27 @@ class GLViewport(QtDeclarative.QDeclarativeItem):
     
     def loadImageFile(self, filename):
         print "loadImageFile: ", filename
+        self.img_data = None
+        self.tex = None
+        
         import Image
         import numpy
         try:
             img = Image.open(filename)
             self.img_data = numpy.array(img.getdata(), numpy.uint8)
-            self.tex = None
             self.setImageSize( QtCore.QSize(img.size[0], img.size[1]) )
             print "image size: ", self._imageSizeValue.width(), "x", self._imageSizeValue.height()
-            if self._fittedModeValue:
-                self.fitImage()
-        except Exception:
+        except Exception as e:
+            print 'Error while loading image file "%s".\nError: "%s"' % (filename, str(e))
             self.img_data = None
             self.setImageSize( QtCore.QSize(0, 0) )
+        
+        if self._fittedModeValue:
+            self.fitImage()
 
     def updateTextureFromImage(self):
         print "updateTextureFromImage begin"
-        if self.img_data:
+        if self.img_data is not None:
             self.tex = loadTextureFromImage( self._imageSizeValue, self.img_data )
         else:
             self.tex = None
@@ -94,7 +100,7 @@ class GLViewport(QtDeclarative.QDeclarativeItem):
         #print "widget size:", self.width(), "x", self.height()
         #print "image size:", self.getImageSize().width(), "x", self.getImageSize().height()
         
-        if self.img_data and self.tex is None:
+        if self.img_data is not None and self.tex is None:
             self.updateTextureFromImage()
         
         if self.tex is None:
@@ -153,6 +159,23 @@ class GLViewport(QtDeclarative.QDeclarativeItem):
     def mousePressEvent(self, event):
         #print "GLViewport.mousePressEvent"
         QtDeclarative.QDeclarativeItem.mousePressEvent(self, event)
+
+
+    def getImageFilepath(self):
+        return self._imageFilepathValue
+    def setImageFilepath(self, imageFilepath):
+        print 'setImageFilepath:', imageFilepath
+        self._imageFilepathValue = imageFilepath
+        if self._imageFilepathValue.startswith("file://"):
+            self.loadImageFile(imageFilepath[len("file://"):])
+        elif os.path.isfile(imageFilepath):
+            self.loadImageFile(imageFilepath)
+            
+        self.update()
+        self.imageFilepathChanged.emit()
+    imageFilepathChanged = QtCore.Signal()
+    _imageFilepathValue = str
+    imageFilepath = QtCore.Property(str, getImageFilepath, setImageFilepath, notify=imageFilepathChanged)
 
 
     def getBgColor(self):

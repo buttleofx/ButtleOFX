@@ -1,6 +1,7 @@
 from buttleofx.gui.graph.node import Node
-from buttleofx.gui.graph.connection import Connection
+from buttleofx.gui.graph.connection import Connection, LineWidget
 
+from PySide import QtGui
 from quickmamba.patterns import Signal
 
 
@@ -16,6 +17,7 @@ class Graph:
     def __init__(self):
         self._nodes = []
         self._connections = []
+        self._testDisplayConnections = [LineWidget(500, 150, 300, 100), LineWidget(10, 10, 500, 250)]
         self._nbNodesCreated = 0
 
         self.nodeCreated = Signal()
@@ -29,7 +31,7 @@ class Graph:
         """
         return self._nodes
 
-    def getConnexions(self):
+    def getConnections(self):
         """
             Returns the connection List.
         """
@@ -75,3 +77,10 @@ class Graph:
         print "createConnection"
         self._connections.append(Connection(clipOut, clipIn))
         self.connectionCreated(clipOut, clipIn)
+
+    def drawConnections(self, view):
+        #QHBoxLayout isn't suitable, no more than QFormLayout, QGridLayout.
+        layout = QtGui.QHBoxLayout()
+        for connection in self._testDisplayConnections:
+            layout.addWidget(connection)
+        view.setLayout(layout)

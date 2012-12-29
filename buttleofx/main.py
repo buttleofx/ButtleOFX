@@ -9,7 +9,6 @@ from buttleofx.gui.paramEditor.wrappers import MainWrapper
 #undo_redo
 from buttleofx.core.undo_redo.manageTools import CommandManager
 
-
 from PySide import QtGui, QtDeclarative
 
 import os
@@ -37,6 +36,7 @@ def main(argv):
     graphWrapper = GraphWrapper(graph, view)
     buttleData.setGraph(graph)
     buttleData.setGraphWrapper(graphWrapper)
+    graph.drawConnections(view)
 
     rc.setContextProperty("_graphWrapper", buttleData.getGraphWrapper())
     rc.setContextProperty("_nodeWrappers", buttleData.getGraphWrapper().getNodeWrappers())

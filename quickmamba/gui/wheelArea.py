@@ -6,9 +6,9 @@ class WheelArea(QtDeclarative.QDeclarativeItem):
     internVerticalWheel = QtCore.Signal(QtCore.QPointF, int, QtCore.Qt.MouseButtons, QtCore.Qt.KeyboardModifiers)
     internHorizontalWheel = QtCore.Signal(QtCore.QPointF, int, QtCore.Qt.MouseButtons, QtCore.Qt.KeyboardModifiers)
   
-    def __init__(self, parent = None):  
-        QtDeclarative.QDeclarativeItem.__init__(self, parent)  
-  
+    def __init__(self, parent = None):
+        QtDeclarative.QDeclarativeItem.__init__(self, parent)
+
     def wheelEvent(self, event):
         if event.orientation() == QtCore.Qt.Horizontal:
             self.internHorizontalWheel.emit(event.pos(), event.delta(), event.buttons(), event.modifiers())

@@ -1,3 +1,4 @@
- FocusHandler FocusHandler.qml
- TopFocusHandler TopFocusHandler.qml
- WheelArea WheelArea.qml
+FocusHandler FocusHandler.qml
+TopFocusHandler TopFocusHandler.qml
+WheelArea WheelArea.qml
+DropArea DropArea.qml

@@ -3,6 +3,12 @@ from buttleofx.gui.graph.connection import Connection
 
 from quickmamba.patterns import Signal
 
+from PySide import QtCore, QtGui
+
+#undo_redo
+from buttleofx.core.undo_redo.manageTools import CommandManager
+from buttleofx.core.undo_redo.commands import CmdCreateNode
+
 
 class Graph:
     """
@@ -35,21 +41,24 @@ class Graph:
         """
         return self._connections
 
-    def createNode(self, nodeType):
+    @QtCore.Slot(str, CommandManager)
+    def createNode(self, nodeType, cmdManager):
         """
             Adds a node from the node list when a node is created.
         """
 
         print "createNode"
-        self._nbNodesCreated += 1
-        nodeName = str(nodeType) + "_" + str(self._nbNodesCreated)
-        nodeCoord = (50, 20)
+        #self._nbNodesCreated += 1
+        #nodeName = str(nodeType) + "_" + str(self._nbNodesCreated)
+        #nodeCoord = (50, 20)
         #nodeId = IdNode(nodeName, nodeType, nodeCoord[0], nodeCoord[1])
 
-        self._nodes.append(Node(nodeName, nodeType, nodeCoord))
+        #self._nodes.append(Node(nodeName, nodeType, nodeCoord))
 
-        self.nodeCreated(nodeName)
-        # commandManager.doCmd( CmdCreateNode(nodeType) )
+        #self.nodeCreated(nodeName)
+        cmdCreateNode = CmdCreateNode(self, nodeType)
+        cmdManager.push(cmdCreateNode)
+        #CommandManager.doCmd(CmdCreateNode(nodeType))
 
     def deleteNode(self, nodeName):
         """

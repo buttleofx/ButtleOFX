@@ -13,25 +13,6 @@ Rectangle {
     color: "transparent"
     focus: true
 
-    Keys.onPressed: {
-        if (event.key == Qt.Key_Delete) {
-            console.log("destruction");
-            _graphWrapper.destructionProcess();
-        }
-
-        if (event.key == Qt.Key_U) {
-            _cmdManager.undo();
-            x = nodeModel.coord[0]
-            y = nodeModel.coord[1]
-        }
-        if (event.key == Qt.Key_R) {
-            _cmdManager.redo();
-            x = nodeModel.coord[0]
-            y = nodeModel.coord[1]
-        }
-    }
-
-
     Rectangle {
         id: nodeBorder
         height: 40

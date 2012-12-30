@@ -12,14 +12,7 @@ ApplicationWindow {
     minimumWidth: 100
     minimumHeight: 50
 
-    Keys.onPressed: {
-        if (event.key == Qt.Key_U) {
-            _cmdManager.undo();
-        }
-        else if (event.key == Qt.Key_R) {
-            _cmdManager.redo();
-        }
-    }
+    
 
     Rectangle{
         id:mainMenu

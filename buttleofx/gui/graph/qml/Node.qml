@@ -18,7 +18,19 @@ Rectangle {
             console.log("destruction");
             _graphWrapper.destructionProcess();
         }
+
+        if (event.key == Qt.Key_U) {
+            _cmdManager.undo();
+            x = nodeModel.coord[0]
+            y = nodeModel.coord[1]
+        }
+        if (event.key == Qt.Key_R) {
+            _cmdManager.redo();
+            x = nodeModel.coord[0]
+            y = nodeModel.coord[1]
+        }
     }
+
 
     Rectangle {
         id: nodeBorder
@@ -74,6 +86,8 @@ Rectangle {
         onReleased: {
             parent.opacity = 1;
             nodeModel.nodeMoved(parent.x, parent.y, _cmdManager);
+            parent.x = nodeModel.coord[0];
+            parent.y = nodeModel.coord[1];
         }
         onClicked: {
             console.log(nodeModel.name)

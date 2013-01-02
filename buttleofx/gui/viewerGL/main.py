@@ -1,4 +1,4 @@
-from glviewport import GLViewport
+from buttleGLViewport import ButtleGLViewport
 
 from PySide import QtGui, QtDeclarative, QtOpenGL
 
@@ -13,7 +13,7 @@ def main(argv):
 
     decView = QtDeclarative.QDeclarativeView()
     decView.setViewport( QtOpenGL.QGLWidget() )
-    QtDeclarative.qmlRegisterType(GLViewport, "Viewport", 1, 0, "GLViewport")
+    QtDeclarative.qmlRegisterType(ButtleGLViewport, "Viewport", 1, 0, "GLViewport")
     
     decView.setSource(os.path.join(currentFilePath, "Viewer.qml"))
     decView.setResizeMode(QtDeclarative.QDeclarativeView.SizeRootObjectToView)

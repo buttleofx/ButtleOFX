@@ -5,13 +5,6 @@ import numpy
 
 import os
 
-tuttleofx_installed = False
-try:
-    import pyTuttle
-    tuttleofx_installed = True
-    print('Use TuttleOFX.')
-except:
-    print('TuttleFX not installed.')
 
 def nbChannelsToGlPixelType(nbChannels):
     if nbChannels == 1:
@@ -21,7 +14,7 @@ def nbChannelsToGlPixelType(nbChannels):
     elif nbChannels == 4:
         return GL.GL_RGBA
     else:
-        raise "load_texture: Unsupported pixel type, nb channels is " + str(nbChannels) + "."
+        raise NotImplementedError("load_texture: Unsupported pixel type, nb channels is " + str(nbChannels) + ".")
 
 def numpyValueTypeToGlType(valueType):
     if valueType == numpy.uint8:
@@ -31,7 +24,7 @@ def numpyValueTypeToGlType(valueType):
     elif valueType == numpy.float32:
         return GL.GL_FLOAT
     else:
-        raise "load_texture: Unsupported image value type: " + str(valueType)
+        raise NotImplementedError("load_texture: Unsupported image value type: " + str(valueType))
 
 
 def load_texture(array, width, height):
@@ -56,7 +49,7 @@ def load_texture(array, width, height):
         return GL.glTexImage2D(GL.GL_TEXTURE_2D, 0, GL.GL_RGBA, array_width, array_height, 0, array_channelGL, array_type, array)
     
     # if you get here, it means a case was missed
-    raise "load_texture: Unsupported image type, ndim is " + str(array.ndim) + "."
+    raise NotImplementedError("load_texture: Unsupported image type, ndim is " + str(array.ndim) + ".")
 
 def loadTextureFromImage(imgBounds, img_data):
     texture = GL.glGenTextures(1)
@@ -86,65 +79,14 @@ class GLViewport(QtDeclarative.QDeclarativeItem):
         # Enable paint method calls
         self.setFlag(QtGui.QGraphicsItem.ItemHasNoContents, False)
         
+    def loadImageFile(self, filename):
+        raise NotImplementedError("Load image not implemented")
+    
     def initializeGL(self):
         GL.glClearColor(0.0,0.0,0.0,0.0) # We assign a black background
         GL.glShadeModel(GL.GL_FLAT) # We applied a flat shading mode
         GL.glEnable(GL.GL_LINE_SMOOTH)
     
-    def loadImageFile_tuttle(self, filename):
-        from pyTuttle import tuttle
-        tuttle.core().preload()
-        outputCache = tuttle.MemoryCache()
-        tuttle.compute(
-            outputCache,
-            [
-                tuttle.NodeInit( "tuttle.jpegreader", filename=str(filename) ), #channel="rgba" ),
-                #tuttle.NodeInit( "tuttle.blur", size=50. ),
-                #tuttle.NodeInit( "tuttle.invert" ),
-            ] )
-        imgRes = outputCache.get(0);
-        print 'type imgRes:', type( imgRes )
-        print 'imgRes:', dir( imgRes )
-        print 'FullName:', imgRes.getFullName()
-        print 'MemorySize:', imgRes.getMemorySize()
-        #print 'Bounds:', imgRes.getBounds()
-        
-        self.img_data = imgRes.getNumpyArray()
-        
-        bounds = imgRes.getBounds()
-        #self.getVoidPixelData()
-        width = bounds.x2 - bounds.x1
-        height = bounds.y2 - bounds.y1
-        
-        self.setImageBounds( QtCore.QRect(bounds.x1, bounds.y1, width, height) )
-    
-    def loadImageFile_pil(self, filename):
-        import Image
-        self.img = Image.open(filename)
-        self.img_data = numpy.array(self.img.getdata(), numpy.uint8)
-        self.setImageBounds( QtCore.QRect(0, 0, self.img.size[0], self.img.size[1]) )
-        print "image size: ", self._imageBoundsValue.width(), "x", self._imageBoundsValue.height()
-        
-    def loadImageFile(self, filename):
-        print "loadImageFile: ", filename
-        self.img_data = None
-        self.tex = None
-        
-        try:
-            if tuttleofx_installed:
-                self.loadImageFile_tuttle(filename)
-                print('Tuttle img_data:', self.img_data)
-            else:
-                self.loadImageFile_pil(filename)
-                print('PIL img_data:', self.img_data)
-        except Exception as e:
-            print 'Error while loading image file "%s".\nError: "%s"' % (filename, str(e))
-            self.img_data = None
-            self.setImageBounds( QtCore.QRect() )
-        
-        if self._fittedModeValue:
-            self.fitImage()
-
     def updateTextureFromImage(self):
         print "updateTextureFromImage begin"
         if self.img_data is not None:
@@ -222,6 +164,8 @@ class GLViewport(QtDeclarative.QDeclarativeItem):
         self.drawRect( self._rowValue ) # RoW
         
         GL.glDisable(GL.GL_LINE_STIPPLE)
+        
+        #self.tuttleReaderNode
         
     def internPaintGL(self):
         self.prepareGL()

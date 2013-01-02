@@ -1,13 +1,67 @@
 from PySide import QtGui, QtDeclarative, QtCore
 from OpenGL import GL
 
+import numpy
+
 import os
 
+tuttleofx_installed = False
+try:
+    import pyTuttle
+    tuttleofx_installed = True
+    print('Use TuttleOFX.')
+except:
+    print('TuttleFX not installed.')
 
-def loadTextureFromImage(imgSize, img_data):
+def nbChannelsToGlPixelType(nbChannels):
+    if nbChannels == 1:
+        return GL.GL_LUMINANCE
+    elif nbChannels == 3:
+        return GL.GL_RGB
+    elif nbChannels == 4:
+        return GL.GL_RGBA
+    else:
+        raise "load_texture: Unsupported pixel type, nb channels is " + str(nbChannels) + "."
+
+def numpyValueTypeToGlType(valueType):
+    if valueType == numpy.uint8:
+        return GL.GL_UNSIGNED_BYTE
+    elif valueType == numpy.uint16:
+        return GL.GL_UNSIGNED_SHORT
+    elif valueType == numpy.float32:
+        return GL.GL_FLOAT
+    else:
+        raise "load_texture: Unsupported image value type: " + str(valueType)
+
+
+def load_texture(array, width, height):
+    print('loading texture')
+    print('shape:', array.shape)
+    print('array.ndim', array.ndim)
+    print('array.dtype', array.dtype)
+    
+    array_type = numpyValueTypeToGlType(array.dtype)
+    
+    if array.ndim == 2:
+        # linear array of pixels
+        size, channels = array.shape
+        print('size:%d, channels:%d' % (size, channels))
+        array_channelGL = nbChannelsToGlPixelType(channels)
+        return GL.glTexImage2D(GL.GL_TEXTURE_2D, 0, GL.GL_RGBA, width, height, 0, array_channelGL, array_type, array)
+    elif array.ndim == 3:
+        # 2D array of pixels
+        array_height, array_width, channels = array.shape
+        print('width:%d, height:%d, channels:%d' % (width, height, channels))
+        array_channelGL = nbChannelsToGlPixelType(channels)
+        return GL.glTexImage2D(GL.GL_TEXTURE_2D, 0, GL.GL_RGBA, array_width, array_height, 0, array_channelGL, array_type, array)
+    
+    # if you get here, it means a case was missed
+    raise "load_texture: Unsupported image type, ndim is " + str(array.ndim) + "."
+
+def loadTextureFromImage(imgBounds, img_data):
     texture = GL.glGenTextures(1)
-    GL.glPixelStorei(GL.GL_UNPACK_ALIGNMENT,1)
     GL.glBindTexture(GL.GL_TEXTURE_2D, texture)
+    GL.glPixelStorei(GL.GL_UNPACK_ALIGNMENT,1)
 
     # Texture parameters are part of the texture object, so you need to 
     # specify them only once for a given texture object.
@@ -17,7 +71,9 @@ def loadTextureFromImage(imgSize, img_data):
     GL.glTexParameterf(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_MAG_FILTER, GL.GL_NEAREST)
     # GL_TEXTURE_MIN_FILTER: a surface is rendered with smaller dimensions than its corresponding texture bitmap (far away objects)
     GL.glTexParameterf(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_MIN_FILTER, GL.GL_LINEAR) #GL.GL_LINEAR_MIPMAP_LINEAR) #GL.GL_NEAREST)
-    GL.glTexImage2D(GL.GL_TEXTURE_2D, 0, GL.GL_RGB, imgSize.width(), imgSize.height(), 0, GL.GL_RGB, GL.GL_UNSIGNED_BYTE, img_data)
+    #GL.glTexImage2D(GL.GL_TEXTURE_2D, 0, GL.GL_RGB, imgBounds.width(), imgBounds.height(), 0, GL.GL_RGB, GL.GL_UNSIGNED_BYTE, img_data)
+    
+    load_texture(img_data, imgBounds.width(), imgBounds.height())
     return texture
 
 class GLViewport(QtDeclarative.QDeclarativeItem):
@@ -35,22 +91,56 @@ class GLViewport(QtDeclarative.QDeclarativeItem):
         GL.glShadeModel(GL.GL_FLAT) # We applied a flat shading mode
         GL.glEnable(GL.GL_LINE_SMOOTH)
     
+    def loadImageFile_tuttle(self, filename):
+        from pyTuttle import tuttle
+        tuttle.core().preload()
+        outputCache = tuttle.MemoryCache()
+        tuttle.compute(
+            outputCache,
+            [
+                tuttle.NodeInit( "tuttle.jpegreader", filename=str(filename) ), #channel="rgba" ),
+                #tuttle.NodeInit( "tuttle.blur", size=50. ),
+                #tuttle.NodeInit( "tuttle.invert" ),
+            ] )
+        imgRes = outputCache.get(0);
+        print 'type imgRes:', type( imgRes )
+        print 'imgRes:', dir( imgRes )
+        print 'FullName:', imgRes.getFullName()
+        print 'MemorySize:', imgRes.getMemorySize()
+        #print 'Bounds:', imgRes.getBounds()
+        
+        self.img_data = imgRes.getNumpyArray()
+        
+        bounds = imgRes.getBounds()
+        #self.getVoidPixelData()
+        width = bounds.x2 - bounds.x1
+        height = bounds.y2 - bounds.y1
+        
+        self.setImageBounds( QtCore.QRect(bounds.x1, bounds.y1, width, height) )
+    
+    def loadImageFile_pil(self, filename):
+        import Image
+        self.img = Image.open(filename)
+        self.img_data = numpy.array(self.img.getdata(), numpy.uint8)
+        self.setImageBounds( QtCore.QRect(0, 0, self.img.size[0], self.img.size[1]) )
+        print "image size: ", self._imageBoundsValue.width(), "x", self._imageBoundsValue.height()
+        
     def loadImageFile(self, filename):
         print "loadImageFile: ", filename
         self.img_data = None
         self.tex = None
         
-        import Image
-        import numpy
         try:
-            img = Image.open(filename)
-            self.img_data = numpy.array(img.getdata(), numpy.uint8)
-            self.setImageSize( QtCore.QSize(img.size[0], img.size[1]) )
-            print "image size: ", self._imageSizeValue.width(), "x", self._imageSizeValue.height()
+            if tuttleofx_installed:
+                self.loadImageFile_tuttle(filename)
+                print('Tuttle img_data:', self.img_data)
+            else:
+                self.loadImageFile_pil(filename)
+                print('PIL img_data:', self.img_data)
         except Exception as e:
             print 'Error while loading image file "%s".\nError: "%s"' % (filename, str(e))
             self.img_data = None
-            self.setImageSize( QtCore.QSize(0, 0) )
+            self.setImageBounds( QtCore.QRect() )
         
         if self._fittedModeValue:
             self.fitImage()
@@ -58,27 +148,28 @@ class GLViewport(QtDeclarative.QDeclarativeItem):
     def updateTextureFromImage(self):
         print "updateTextureFromImage begin"
         if self.img_data is not None:
-            self.tex = loadTextureFromImage( self._imageSizeValue, self.img_data )
+            self.tex = loadTextureFromImage( self._imageBoundsValue, self.img_data )
         else:
             self.tex = None
         print "updateTextureFromImage end"
     
     @QtCore.Slot()
     def fitImage(self):
-        widthRatio = self.width()/float(self.getImageSize().width()) if self.getImageSize().width() else 1.0
-        heightRatio = self.height()/float(self.getImageSize().height()) if self.getImageSize().height() else 1.0
+        widthRatio = self.width()/float(self.getImageBounds().width()) if self.getImageBounds().width() else 1.0
+        heightRatio = self.height()/float(self.getImageBounds().height()) if self.getImageBounds().height() else 1.0
         self.setScale( min(widthRatio, heightRatio) )
         
+        imgCenter = self.getImageBounds().center()
         self.setOffset_xy(
-            -(self.width()/self._scaleValue - self.getImageSize().width())*.5,
-            -(self.height()/self._scaleValue - self.getImageSize().height())*.5 )
+            -(self.width()*.5/self._scaleValue - imgCenter.x()),
+            -(self.height()*.5/self._scaleValue - imgCenter.y()) )
 
     def prepareGL(self):
         GL.glViewport(0, 0, int(self.width()), int(self.height()))
         
         GL.glClearDepth(1) # just for completeness
         GL.glClearColor( self._bgColorValue.red(), self._bgColorValue.green(), self._bgColorValue.blue(), self._bgColorValue.alpha() )
-        GL.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT)
+        #GL.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT)
         
         GL.glMatrixMode(GL.GL_PROJECTION)
         GL.glLoadIdentity()
@@ -98,7 +189,7 @@ class GLViewport(QtDeclarative.QDeclarativeItem):
     def drawImage(self):
         #print "GLViewport.drawImage"
         #print "widget size:", self.width(), "x", self.height()
-        #print "image size:", self.getImageSize().width(), "x", self.getImageSize().height()
+        #print "image size:", self.getImageBounds().width(), "x", self.getImageBounds().height()
         
         if self.img_data is not None and self.tex is None:
             self.updateTextureFromImage()
@@ -109,7 +200,7 @@ class GLViewport(QtDeclarative.QDeclarativeItem):
         GL.glEnable(GL.GL_TEXTURE_2D)
         GL.glBindTexture(GL.GL_TEXTURE_2D, self.tex)
         
-        imgRect = QtCore.QRectF(0., 0., self.getImageSize().width(), self.getImageSize().height())
+        imgRect = QtCore.QRectF(self.getImageBounds())
         
         GL.glColor3d( 1.0, 1.0, 1.0 )
         GL.glBegin(GL.GL_QUADS)
@@ -189,15 +280,15 @@ class GLViewport(QtDeclarative.QDeclarativeItem):
     bgColor = QtCore.Property(QtGui.QColor, getBgColor, setBgColor, notify=bgColorChanged)
 
 
-    def getImageSize(self):
-        return self._imageSizeValue
-    def setImageSize(self, imgSize):
-        self._imageSizeValue = imgSize
+    def getImageBounds(self):
+        return self._imageBoundsValue
+    def setImageBounds(self, imgSize):
+        self._imageBoundsValue = imgSize
         self.update()
-        self.imageSizeChanged.emit()
-    imageSizeChanged = QtCore.Signal()
-    _imageSizeValue = QtCore.QSize(800, 600)
-    imageSize = QtCore.Property(QtCore.QSize, getImageSize, setImageSize, notify=imageSizeChanged)
+        self.imageBoundsChanged.emit()
+    imageBoundsChanged = QtCore.Signal()
+    _imageBoundsValue = QtCore.QRect(0, 0, 800, 600)
+    imageSize = QtCore.Property(QtCore.QSize, getImageBounds, setImageBounds, notify=imageBoundsChanged)
 
 
     def getRegionOfDefinition(self):

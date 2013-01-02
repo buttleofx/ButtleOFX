@@ -7,7 +7,7 @@ Rectangle {
     anchors.fill: parent
     implicitWidth: 500
     implicitHeight: 500
-    color:"lightblue"
+    color:"#1e1e1e"
 
     GLViewport {
         id: viewport

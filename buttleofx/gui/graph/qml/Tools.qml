@@ -107,7 +107,7 @@ Rectangle {
                     onExited: parent.color = "#343434"
                     onClicked: {
                         if(nodeMenuView.state == "shown"){
-                            _graphWrapper.creationProcess(cat2)
+                            _graphWrapper.creationProcess(cat2, _cmdManager)
                             nodeMenuView.state = "hidden"
                         }
                     }

@@ -13,13 +13,6 @@ Rectangle {
     color: "transparent"
     focus: true
 
-    Keys.onPressed: {
-        if (event.key == Qt.Key_Delete) {
-            console.log("destruction");
-            _graphWrapper.destructionProcess();
-        }
-    }
-
     Rectangle {
         id: nodeBorder
         height: 40
@@ -74,6 +67,8 @@ Rectangle {
         onReleased: {
             parent.opacity = 1;
             nodeModel.nodeMoved(parent.x, parent.y, _cmdManager);
+            parent.x = nodeModel.coord[0];
+            parent.y = nodeModel.coord[1];
         }
         onClicked: {
             console.log(nodeModel.name)

@@ -1,4 +1,5 @@
 from PySide import QtGui, QtDeclarative, QtCore
+
 from OpenGL import GL
 
 import numpy

@@ -26,7 +26,7 @@ class GLViewport_tuttleofx(GLViewport):
                     coef1=.5, #outOfImage='transparency',
                     gridOverlay=True, gridCenterOverlay=True) #, debugDisplayRoi=True)
         self.tuttleGraph.connect(self.tuttleReaderNode, self.tuttleLensNode)
-        self.tuttleOverlay = TuttleOverlayInteract(self, self.tuttleLensNode)
+        self.tuttleOverlay = TuttleOverlayInteract(self, self.tuttleGraph, self.tuttleLensNode)
         #self.tuttleOverlay.createInstanceAction()
         #self.tuttleOverlay.initOverlayDescriptor(8, True)
         
@@ -51,6 +51,8 @@ class GLViewport_tuttleofx(GLViewport):
         height = bounds.y2 - bounds.y1
         
         self.setImageBounds( QtCore.QRect(bounds.x1, bounds.y1, width, height) )
+        
+        self.tuttleOverlay.setupGraph()
         
 #        self.recomputeOverlay = False
 #        if self.recomputeOverlay:
@@ -91,6 +93,6 @@ class GLViewport_tuttleofx(GLViewport):
         pixelScale = tuttle.OfxPointD()
         pixelScale.x = self.getScale()
         pixelScale.y = pixelScale.x
-        #if self.img_data is not None and self.tuttleOverlay:
-        #    self.tuttleOverlay.draw(0, pixelScale)
+        if self.img_data is not None and self.tuttleOverlay:
+            self.tuttleOverlay.draw(pixelScale)
 

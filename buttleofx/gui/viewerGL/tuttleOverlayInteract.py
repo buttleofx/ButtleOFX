@@ -1,10 +1,10 @@
 from pyTuttle import tuttle
 
 class TuttleOverlayInteract(tuttle.OverlayInteract):
-    def __init__(self, glviewport, node):
+    def __init__(self, glviewport, graph, node):
         print("TuttleOverlayInteract.__init__")
         print("TuttleOverlayInteract node:", node.asImageEffectNode())
-        super(TuttleOverlayInteract, self).__init__(node.asImageEffectNode())
+        super(TuttleOverlayInteract, self).__init__(graph, node.asImageEffectNode())
         self.glviewport = glviewport
     
     def getViewportSize( self, outWidth, outHeight ):

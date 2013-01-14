@@ -48,7 +48,7 @@ Rectangle {
             anchors.fill: parent
             onClicked: {
                 //_graphWrapper.deleteCurrentNode();
-                _graphWrapper.destructionProcess()
+                _graphWrapper.destructionProcess(_cmdManager)
             }
         }
     }

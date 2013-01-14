@@ -6,7 +6,7 @@ from buttleofx.datas import ButtleData
 from buttleofx.gui.paramEditor.params import ParamInt
 from buttleofx.gui.paramEditor.params import ParamString
 from buttleofx.gui.paramEditor.wrappers import MainWrapper
-#undo_redo
+# undo_redo
 from buttleofx.core.undo_redo.manageTools import CommandManager
 
 

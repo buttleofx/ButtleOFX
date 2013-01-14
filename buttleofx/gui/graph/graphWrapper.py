@@ -167,8 +167,8 @@ class GraphWrapper(QtCore.QObject, Singleton):
         self._connectionWrappers.append(conWrapper)
         # commandManager.doCmd( CmdCreateConnectionWrapper(clipOut, clipIn) )
 
-    @QtCore.Slot()
-    def destructionProcess(self):
+    @QtCore.Slot(CommandManager)
+    def destructionProcess(self, cmdManager):
         """
             Function called when we want to delete a node from the QML.
         """
@@ -176,7 +176,7 @@ class GraphWrapper(QtCore.QObject, Singleton):
         if len(self._nodeWrappers) > 0 and len(self._graph._nodes) > 0:
             # if a node is selected
             if self._currentNode != None:
-                self._graph.deleteNode(self._currentNode)
+                self._graph.deleteNode(self._currentNode, cmdManager)
         # debug
         self.__str__()
 

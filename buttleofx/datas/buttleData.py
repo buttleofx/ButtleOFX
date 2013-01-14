@@ -9,7 +9,7 @@ class ButtleData(Singleton):
         - _graph
         - _graphWrapper
 
-        Thos class containts all data we need to manage the application.
+        This class containts all data we need to manage the application.
         Emit signal when modifications happen
     """
     

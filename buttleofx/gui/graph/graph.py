@@ -8,6 +8,7 @@ from PySide import QtCore, QtGui
 #undo_redo
 from buttleofx.core.undo_redo.manageTools import CommandManager
 from buttleofx.core.undo_redo.commands import CmdCreateNode
+from buttleofx.core.undo_redo.commands import CmdDeleteNode
 
 
 class Graph:
@@ -41,46 +42,26 @@ class Graph:
         """
         return self._connections
 
-    @QtCore.Slot(str, CommandManager)
     def createNode(self, nodeType, cmdManager):
         """
             Adds a node from the node list when a node is created.
         """
-
         print "createNode"
-        #self._nbNodesCreated += 1
-        #nodeName = str(nodeType) + "_" + str(self._nbNodesCreated)
-        #nodeCoord = (50, 20)
-        #nodeId = IdNode(nodeName, nodeType, nodeCoord[0], nodeCoord[1])
-
-        #self._nodes.append(Node(nodeName, nodeType, nodeCoord))
-
-        #self.nodeCreated(nodeName)
-        cmdCreateNode = CmdCreateNode(self, nodeType)
+        cmdCreateNode = CmdCreateNode(self, nodeType, cmdManager)
         cmdManager.push(cmdCreateNode)
-        #CommandManager.doCmd(CmdCreateNode(nodeType))
 
-    def deleteNode(self, nodeName):
+    def deleteNode(self, nodeName, cmdManager):
         """
             Removes a node in the node list when a node is deleted.
         """
         print "deleteNode"
-
-        # we search the right node to delete
-        indexWrapper = 0
-        for node in self._nodes:
-            if node.getName() == nodeName:
-                self._nodes.remove(node)
-                break
-            indexWrapper += 1
-        self.nodeDeleted(indexWrapper)
-        # commandManager.doCmd( CmddeleteNode(nodeid) )
+        cmdDeleteNode = CmdDeleteNode(self, nodeName, cmdManager)
+        cmdManager.push(cmdDeleteNode)
 
     def createConnection(self, clipOut, clipIn):
         """
             Adds a connection in the connection list when a connection is created.
         """
-
         print "createConnection"
         self._connections.append(Connection(clipOut, clipIn))
         self.connectionCreated(clipOut, clipIn)

@@ -1,6 +1,3 @@
-#!/usr/bin/env python
-# -*-coding:utf-8-*
-
 #from buttleofx.gui.graph.node import nodeWrapper
 from buttleofx.core.undo_redo.manageTools import UndoableCommand
 
@@ -44,4 +41,4 @@ class CmdSetCoord(UndoableCommand):
         return self.nodeTarget
 
     # Attention, il faut utiliser le nom du noeud pour l'identifer dans le ButtleData.
-    # Comme ça, lorsqu'on déplace un noeud, puisqu'on le modifie, on est capable de faire deux fois redo.
+    # Comme ca, lorsqu'on deplace un noeud, puisqu'on le modifie, on est capable de faire deux fois redo.

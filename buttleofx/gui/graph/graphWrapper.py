@@ -86,6 +86,12 @@ class GraphWrapper(QtCore.QObject, Singleton):
         """
         return self._nodeWrappers
 
+    @QtCore.Slot(result="QVariant")
+    def getNode(self, nodeName):
+        for node in self._nodeWrappers:
+            if node.getName() == nodeName:
+                return node
+
     @QtCore.Slot()
     def getConnectionWrappers(self):
         """
@@ -108,6 +114,9 @@ class GraphWrapper(QtCore.QObject, Singleton):
             Function called when a clip is pressed (but not released yet).
             The function replace the tmpClipIn or tmpClipOut.
         """
+
+        # To define with the IdClip info !
+        #position = _graph.getNode(nodeName).getCoord[]
         idClip = IdClip(nodeName, port, clip)
         if (port == "input"):
             print "inputPressed"
@@ -143,7 +152,7 @@ class GraphWrapper(QtCore.QObject, Singleton):
 
     def createNodeWrapper(self, nodeName):
         """
-            Create a node wrapper and add it to the nodeWrapper list.
+            Create a node wrapper and add it to the nodeWrappers list.
         """
         print "createNodeWrapper"
         #wrapper = NodeWrapper(self._graph._nodes[nodeId])
@@ -158,12 +167,14 @@ class GraphWrapper(QtCore.QObject, Singleton):
 
     def createConnectionWrapper(self, clipOut, clipIn):
         """
-            Create a connection wrapper and add it to the connectionWrapper list.
+            Create a connection wrapper and add it to the connectionWrappers list.
         """
         print "createConnectionWrapper"
 
         conWrapper = ConnectionWrapper(clipOut, clipIn)
+        print "truc"
         self._connectionWrappers.append(conWrapper)
+        print "trac"
         # commandManager.doCmd( CmdCreateConnectionWrapper(clipOut, clipIn) )
 
     @QtCore.Slot()

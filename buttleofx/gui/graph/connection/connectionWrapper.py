@@ -31,8 +31,11 @@ class ConnectionWrapper(QtCore.QObject):
     def setClipIn(self, clipIn):
         self._clipIn = clipIn
 
-    #nodeOut = QtCore.Property(QtCore.QObject, getNodeOut, setNodeOut, notify=changed)
-    #nodeIn = QtCore.Property(QtCore.QObject, getNodeIn, setNodeIn, notify=changed)
+    #def getPosition(self):
+
+
+     #   _graphWrapper.getNode(model.object.clipOut._nodeName).coord[0]
+
     clipOut = QtCore.Property(QtCore.QObject, getClipOut, setClipOut, notify=changed)
     clipIn = QtCore.Property(QtCore.QObject, getClipIn, setClipIn, notify=changed)
 

@@ -2,6 +2,10 @@
 from buttleofx.gui.graph import Graph
 from buttleofx.gui.graph import GraphWrapper
 from buttleofx.datas import ButtleData
+
+#connections
+from buttleofx.gui.graph.connection import LineItem
+
 # paramEditor
 from buttleofx.gui.paramEditor.params import ParamInt
 from buttleofx.gui.paramEditor.params import ParamString
@@ -17,6 +21,8 @@ currentFilePath = os.path.dirname(os.path.abspath(__file__))
 
 
 def main(argv):
+    QtDeclarative.qmlRegisterType(LineItem, "ConnectionLineItem", 1, 0, "ConnectionLine")
+
     # data
     buttleData = ButtleData()
 
@@ -36,10 +42,10 @@ def main(argv):
     graphWrapper = GraphWrapper(graph, view)
     buttleData.setGraph(graph)
     buttleData.setGraphWrapper(graphWrapper)
-    graph.drawConnections(view)
 
     rc.setContextProperty("_graphWrapper", buttleData.getGraphWrapper())
     rc.setContextProperty("_nodeWrappers", buttleData.getGraphWrapper().getNodeWrappers())
+    rc.setContextProperty("_connectionWrappers", buttleData.getGraphWrapper().getConnectionWrappers())
     rc.setContextProperty("_cmdManager", cmdManager)
 
     # for the ParamEditor

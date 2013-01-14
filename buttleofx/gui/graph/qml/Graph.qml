@@ -1,4 +1,5 @@
 import QtQuick 1.1
+import ConnectionLineItem 1.0
 
 Rectangle {
     id:graphArea
@@ -22,6 +23,41 @@ Rectangle {
         }
     }
 
+
+    Item{
+    id: connections
+    width: parent.width
+    height: parent.height
+        Repeater {
+            model : _connectionWrappers
+            ConnectionLine {
+                id: connectionLine
+                x1: _graphWrapper.getNode(model.object.clipOut._nodeName).coord[0]
+                y1: _graphWrapper.getNode(model.object.clipOut._nodeName).coord[1]
+                x2: _graphWrapper.getNode(model.object.clipIn._nodeName).coord[0]
+                y2: _graphWrapper.getNode(model.object.clipIn._nodeName).coord[1]
+                /*x1: 50
+                y1: 50
+                x2: 200
+                y2: 200*/
+            }
+        }
+    }
+
+/*
+    ConnectionLine {
+        x1: 50
+        y1: 50
+        x2: 200
+        y2: 200
+    }
+    ConnectionLine {
+        x1: 80
+        y1: 50
+        x2: 150
+        y2: 30
+    }
+*/
     MouseArea{
         anchors.fill: parent
         acceptedButtons: Qt.MiddleButton

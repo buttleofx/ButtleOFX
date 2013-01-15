@@ -137,8 +137,6 @@ Rectangle {
             //m.modelPosY = nodeModel.coord[1]
             console.log(m.nodeModel.coord[0])
             console.log(m.nodeModel.coord[1])
-
-            
         }
     }
 }

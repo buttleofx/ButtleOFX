@@ -50,7 +50,8 @@ class GraphWrapper(QtCore.QObject, Singleton):
         #graph.nodeCreated.connect(self.setCurrentNode)
         graph.nodeDeleted.connect(self.deleteNodeWrapper)
         graph.nodeDeleted.connect(self.deleteCurrentNode)
-        graph.connectionsChanged.connect(self.updateConnections)
+        #graph.connectionsChanged.connect(self.updateConnections)
+        graph.connectionCreated.connect(self.createConnectionWrapper)
 
         #self.connectionWrappersChanged = QtCore.Signal()
 
@@ -117,9 +118,8 @@ class GraphWrapper(QtCore.QObject, Singleton):
             The function replace the tmpClipIn or tmpClipOut.
         """
 
-        # To define with the IdClip info !
-        #position = _graph.getNode(nodeName).getCoord[]
-        idClip = IdClip(nodeName, port, clip)
+        position = self._graph.getNode(nodeName).getCoord()
+        idClip = IdClip(nodeName, port, clip, position)
         if (port == "input"):
             print "inputPressed"
             self._tmpClipIn = idClip
@@ -136,7 +136,8 @@ class GraphWrapper(QtCore.QObject, Singleton):
             #if there is a tmpNodeOut we can connect the nodes
             print "inputReleased"
             if (self._tmpClipOut != None and self._tmpClipOut._nodeName != nodeName):
-                idClip = IdClip(nodeName, port, clip)
+                position = self._graph.getNode(nodeName).getCoord()
+                idClip = IdClip(nodeName, port, clip, position)
                 self._graph.createConnection(self._tmpClipOut, idClip)
                 self._tmpClipIn = None
                 self._tmpClipOut = None
@@ -146,7 +147,8 @@ class GraphWrapper(QtCore.QObject, Singleton):
             #if there is a tmpNodeIn we can connect the nodes
             print "inputReleased"
             if (self._tmpClipIn != None and self._tmpClipIn._nodeName != nodeName):
-                idClip = IdClip(nodeName, port, clip)
+                position = self._graph.getNode(nodeName).getCoord()
+                idClip = IdClip(nodeName, port, clip, position)
                 self._graph.createConnection(idClip, self._tmpClipIn)
                 self._tmpClipIn = None
                 self._tmpClipOut = None
@@ -194,12 +196,7 @@ class GraphWrapper(QtCore.QObject, Singleton):
             print "jai trouve une connection"
             self.createConnectionWrapper(connection)
             print "jai recree cette connection"
-        self.connectionWrappersChanged.emit()
-
-    @QtCore.Slot("QVariant", result="QVariant")
-    def getPositionClip(self, clip):
-        # Returns the position of the node => function to improve.
-        return self.getNode(clip._nodeName).coord
+        #self.connectionWrappersChanged.emit()
 
     @QtCore.Slot()
     def destructionProcess(self):
@@ -273,11 +270,6 @@ class GraphWrapper(QtCore.QObject, Singleton):
     def setZMax(self):
         self._zMax += 1
 
-    """
-        @QtCore.Signal
-        def connectionWrappersChanged(self):
-            pass
-    """
     nodesChanged = QtCore.Signal()
     nodes = QtCore.Property("QVariant", getNodeWrappers, notify=nodesChanged)
     connectionWrappersChanged = QtCore.Signal()

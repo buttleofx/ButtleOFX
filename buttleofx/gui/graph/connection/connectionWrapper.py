@@ -23,22 +23,36 @@ class ConnectionWrapper(QtCore.QObject):
         print "ConnectionWrapper : emitChanged"
         self.changed.emit()
 
-    def getClipOut(self):
-        return self._connection._clipOut
+    def getClipOutPosX(self):
+        return self._connection._clipOut._coord[0]
 
-    def getClipIn(self):
-        return self._connection._clipOut
+    def getClipOutPosY(self):
+        return self._connection._clipOut._coord[1]
 
-    def setClipOut(self, clipOut):
-        self._connection._clipOut = clipOut
-        self.changed()
+    def getClipInPosX(self):
+        return self._connection._clipIn._coord[0]
 
-    def setClipIn(self, clipIn):
-        self._connection._clipIn = clipIn
-        self.changed()
+    def getClipInPosY(self):
+        return self._connection._clipIn._coord[1]
 
-    clipOut = QtCore.Property(QtCore.QObject, getClipOut, setClipOut, notify=changed)
-    clipIn = QtCore.Property(QtCore.QObject, getClipIn, setClipIn, notify=changed)
+    def setClipOutPosX(self, posX):
+        self._connection._clipOut._coord[0] = posX
+
+    def setClipOutPosY(self, posY):
+        self._connection._clipOut._coord[1] = posY
+
+    def setClipInPosX(self, posX):
+        self._connection._clipIn._coord[0] = posX
+
+    def setClipInPosY(self, posY):
+        self._connection._clipIn._coord[1] = posY
+
+    changed = QtCore.Signal()
+
+    clipOutPosX = QtCore.Property(int, getClipOutPosX, getClipOutPosX, notify=changed)
+    clipOutPosY = QtCore.Property(int, getClipOutPosY, setClipOutPosX, notify=changed)
+    clipInPosX = QtCore.Property(int, getClipInPosX, getClipInPosX, notify=changed)
+    clipInPosY = QtCore.Property(int, getClipInPosY, setClipInPosX, notify=changed)
 
     def __str__(self):
         print 'Connection between the clip "%s (%s %d)" and the clip "%s (%s %d)' % (self._connection._clipOut._nodeName, self._connection._clipOut._port, self._connection._clipOut._clipNumber, self._connection._clipIn._nodeName, self._connection._clipIn._port, self._connection._clipIn._clipNumber)

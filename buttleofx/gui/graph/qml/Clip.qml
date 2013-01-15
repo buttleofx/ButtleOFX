@@ -12,11 +12,11 @@ Rectangle {
         hoverEnabled: true
         onPressed: {
             color = "red"
-            _graphWrapper.clipPressed(nodeModel.name, port, index) // we send all information needed to identify the clip : nodename, port and clip number
+            _graphWrapper.clipPressed(m.nodeModel.name, port, index) // we send all information needed to identify the clip : nodename, port and clip number
         }
         onReleased: {
             color = "#bbbbbb"
-             _graphWrapper.clipReleased(nodeModel.name, port, index)
+             _graphWrapper.clipReleased(m.nodeModel.name, port, index)
         }
         onEntered: {
             color = "blue"

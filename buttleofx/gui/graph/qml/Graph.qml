@@ -31,16 +31,19 @@ Rectangle {
         Repeater {
             model : _connectionWrappers
             ConnectionLine {
-                id: connectionLine
-                x1: 50
-                y1: 50
-                x2: 200
-                y2: 200
 
-                /* x1: _graphWrapper.getPositionCLip(model.object.clipOut)[0]
-                 y1: _graphWrapper.getPositionCLip(model.object.clipOut)[1]
-                 x2: _graphWrapper.getPositionCLip(model.object.clipIn)[0]
-                 y2: _graphWrapper.getPositionCLip(model.object.clipIn)[0]*/
+                x1: model.object.clipOutPosX
+                y1: model.object.clipOutPosY
+                x2: model.object.clipInPosX
+                y2: model.object.clipInPosY
+
+                 Component.onCompleted: {
+                     console.log("coordinates new connection :");
+                     console.log(model.object.clipOutPosX);
+                     console.log(model.object.clipOutPosY);
+                     console.log(model.object.clipInPosX);
+                     console.log(model.object.clipInPosY);
+                 }
             }
         }
     }

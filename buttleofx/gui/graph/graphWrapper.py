@@ -50,10 +50,7 @@ class GraphWrapper(QtCore.QObject, Singleton):
         #graph.nodeCreated.connect(self.setCurrentNode)
         graph.nodeDeleted.connect(self.deleteNodeWrapper)
         graph.nodeDeleted.connect(self.deleteCurrentNode)
-        #graph.connectionsChanged.connect(self.updateConnections)
-        graph.connectionCreated.connect(self.createConnectionWrapper)
-
-        #self.connectionWrappersChanged = QtCore.Signal()
+        graph.connectionsChanged.connect(self.updateConnections)
 
     def __str__(self):
         """
@@ -175,28 +172,26 @@ class GraphWrapper(QtCore.QObject, Singleton):
         """
             Creates a connection wrapper and add it to the connectionWrappers list.
         """
-        print "createConnectionWrapper"
-
+        print "begin creation of new ConnectionWrapper. (coordinates of corresponding Line should be displayed here in QML before end of the creation :"
         conWrapper = ConnectionWrapper(connection)
-        print "truc"
         self._connectionWrappers.append(conWrapper)
-        print "trac"
+        print "end creation of new ConnectionWrapper.\n"
         # commandManager.doCmd( CmdCreateConnectionWrapper(clipOut, clipIn) )
 
     def updateConnections(self):
         """
             Updates the connectionWrappers when the signal connectionsChanged has been emited.
         """
-        print "update connections"
+        print "Begin update connectionWrappers."
         # we clear the list
-        self._connectionWrappers = []
+        self._connectionWrappers.clear()
         # and we fill with the new data
-        print "jai vide _connectionWrappers"
+        print " _connectionWrappers now empty. Begin of loop."
         for connection in self._graph.getConnections():
-            print "jai trouve une connection"
+            print "Connection found."
             self.createConnectionWrapper(connection)
-            print "jai recree cette connection"
-        #self.connectionWrappersChanged.emit()
+            print "ConnectionWrapper created."
+        print "End update connectionWrappers.\n"
 
     @QtCore.Slot()
     def destructionProcess(self):

@@ -26,8 +26,7 @@ class Graph(object):
 
         self.nodeCreated = Signal()
         self.nodeDeleted = Signal()
-        #self.connectionsChanged = Signal()
-        self.connectionCreated = Signal()
+        self.connectionsChanged = Signal()
 
         self.connectionDeleted = Signal()
 
@@ -91,5 +90,4 @@ class Graph(object):
         print "createConnection"
         newConnection = Connection(clipOut, clipIn)
         self._connections.append(newConnection)
-        #self.connectionsChanged()
-        self.connectionCreated(newConnection)
+        self.connectionsChanged()

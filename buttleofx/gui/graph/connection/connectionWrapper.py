@@ -47,8 +47,6 @@ class ConnectionWrapper(QtCore.QObject):
     def setClipInPosY(self, posY):
         self._connection._clipIn._coord[1] = posY
 
-    changed = QtCore.Signal()
-
     clipOutPosX = QtCore.Property(int, getClipOutPosX, getClipOutPosX, notify=changed)
     clipOutPosY = QtCore.Property(int, getClipOutPosY, setClipOutPosX, notify=changed)
     clipInPosX = QtCore.Property(int, getClipInPosX, getClipInPosX, notify=changed)

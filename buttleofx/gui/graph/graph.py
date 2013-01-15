@@ -4,7 +4,7 @@ from buttleofx.gui.graph.connection import Connection
 from quickmamba.patterns import Signal
 
 
-class Graph:
+class Graph(object):
     """
         Class Graph contains
         - _nodes : list of nodes (python objects, the core nodes)
@@ -20,7 +20,7 @@ class Graph:
 
         self.nodeCreated = Signal()
         self.nodeDeleted = Signal()
-        self.connectionCreated = Signal()
+        self.connectionsChanged = Signal()
         self.connectionDeleted = Signal()
 
     def getNodes(self):
@@ -79,4 +79,4 @@ class Graph:
 
         print "createConnection"
         self._connections.append(Connection(clipOut, clipIn))
-        self.connectionCreated(clipOut, clipIn)
+        self.connectionsChanged()

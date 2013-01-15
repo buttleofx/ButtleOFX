@@ -32,32 +32,19 @@ Rectangle {
             model : _connectionWrappers
             ConnectionLine {
                 id: connectionLine
-                x1: _graphWrapper.getNode(model.object.clipOut._nodeName).coord[0]
-                y1: _graphWrapper.getNode(model.object.clipOut._nodeName).coord[1]
-                x2: _graphWrapper.getNode(model.object.clipIn._nodeName).coord[0]
-                y2: _graphWrapper.getNode(model.object.clipIn._nodeName).coord[1]
-                /*x1: 50
+                x1: 50
                 y1: 50
                 x2: 200
-                y2: 200*/
+                y2: 200
+
+                /* x1: _graphWrapper.getPositionCLip(model.object.clipOut)[0]
+                 y1: _graphWrapper.getPositionCLip(model.object.clipOut)[1]
+                 x2: _graphWrapper.getPositionCLip(model.object.clipIn)[0]
+                 y2: _graphWrapper.getPositionCLip(model.object.clipIn)[0]*/
             }
         }
     }
 
-/*
-    ConnectionLine {
-        x1: 50
-        y1: 50
-        x2: 200
-        y2: 200
-    }
-    ConnectionLine {
-        x1: 80
-        y1: 50
-        x2: 150
-        y2: 30
-    }
-*/
     MouseArea{
         anchors.fill: parent
         acceptedButtons: Qt.MiddleButton

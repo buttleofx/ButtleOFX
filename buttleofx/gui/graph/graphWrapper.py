@@ -49,11 +49,13 @@ class GraphWrapper(QtCore.QObject, Singleton):
         #graph.nodeCreated.connect(self.setCurrentNode)
         graph.nodeDeleted.connect(self.deleteNodeWrapper)
         graph.nodeDeleted.connect(self.deleteCurrentNode)
-        graph.connectionCreated.connect(self.createConnectionWrapper)
+        graph.connectionsChanged.connect(self.updateConnections)
+
+        #self.connectionWrappersChanged = QtCore.Signal()
 
     def __str__(self):
         """
-            Display on terminal some data.
+            Displays on terminal some data.
             Usefull to debug the class.
         """
         print("---- all nodeWrappers ----")
@@ -75,18 +77,17 @@ class GraphWrapper(QtCore.QObject, Singleton):
     @QtCore.Slot(result="QVariant")
     def getGraph(self):
         """
-            Return the graph (the node list and the connection list).
+            Returns the graph (the node list and the connection list).
         """
         return self._graph
 
     @QtCore.Slot(result="QVariant")
     def getNodeWrappers(self):
         """
-            Return the nodeWrapper list.
+            Returns the nodeWrapper list.
         """
         return self._nodeWrappers
 
-    @QtCore.Slot(result="QVariant")
     def getNode(self, nodeName):
         for node in self._nodeWrappers:
             if node.getName() == nodeName:
@@ -152,7 +153,7 @@ class GraphWrapper(QtCore.QObject, Singleton):
 
     def createNodeWrapper(self, nodeName):
         """
-            Create a node wrapper and add it to the nodeWrappers list.
+            Creates a node wrapper and add it to the nodeWrappers list.
         """
         print "createNodeWrapper"
         #wrapper = NodeWrapper(self._graph._nodes[nodeId])
@@ -165,17 +166,39 @@ class GraphWrapper(QtCore.QObject, Singleton):
                 #self.setCurrentNode(nodeWrapper.getName())
         # commandManager.doCmd( CmdCreateNodeWrapper(nodeId) )
 
-    def createConnectionWrapper(self, clipOut, clipIn):
+    ############# CONNECTIONS #############
+
+    def createConnectionWrapper(self, connection):
         """
-            Create a connection wrapper and add it to the connectionWrappers list.
+            Creates a connection wrapper and add it to the connectionWrappers list.
         """
         print "createConnectionWrapper"
 
-        conWrapper = ConnectionWrapper(clipOut, clipIn)
+        conWrapper = ConnectionWrapper(connection)
         print "truc"
         self._connectionWrappers.append(conWrapper)
         print "trac"
         # commandManager.doCmd( CmdCreateConnectionWrapper(clipOut, clipIn) )
+
+    def updateConnections(self):
+        """
+            Updates the connectionWrappers when the signal connectionsChanged has been emited.
+        """
+        print "update connections"
+        # we clear the list
+        self._connectionWrappers = []
+        # and we fill with the new data
+        print "jai vide _connectionWrappers"
+        for connection in self._graph.getConnections():
+            print "jai trouve une connection"
+            self.createConnectionWrapper(connection)
+            print "jai recree cette connection"
+        self.connectionWrappersChanged.emit()
+
+    @QtCore.Slot("QVariant", result="QVariant")
+    def getPositionClip(self, clip):
+        # Returns the position of the node => function to improve.
+        return self.getNode(clip._nodeName).coord
 
     @QtCore.Slot()
     def destructionProcess(self):
@@ -249,10 +272,15 @@ class GraphWrapper(QtCore.QObject, Singleton):
     def setZMax(self):
         self._zMax += 1
 
+    """
+        @QtCore.Signal
+        def connectionWrappersChanged(self):
+            pass
+    """
     nodesChanged = QtCore.Signal()
     nodes = QtCore.Property("QVariant", getNodeWrappers, notify=nodesChanged)
-    connectionsChanged = QtCore.Signal()
-    connections = QtCore.Property("QVariant", getConnectionWrappers, notify=connectionsChanged)
+    connectionWrappersChanged = QtCore.Signal()
+    connections = QtCore.Property("QVariant", getConnectionWrappers, notify=connectionWrappersChanged)
     currentNodeChanged = QtCore.Signal()
     currentNode = QtCore.Property(str, getCurrentNode, setCurrentNode, notify=currentNodeChanged)
     currentImageChanged = QtCore.Signal()

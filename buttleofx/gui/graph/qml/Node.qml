@@ -4,28 +4,26 @@ import Qt 4.7
 
 Rectangle {
     id: node
-    property variant nodeModel : model.object
-    height: 35 + 7*nodeModel.nbInput
+
+    QtObject {
+        id: m
+        property variant nodeModel: model.object
+    }
+
+    height: 35 + 7*m.nodeModel.nbInput
     width: 110
-    x: nodeModel.coord[0]
-    y: nodeModel.coord[1]
+   // x: m.modelPosX
+   // y: m.modelPosY
     z: _graphWrapper.getZMax()
     color: "transparent"
     focus: true
-
-    Keys.onPressed: {
-        if (event.key == Qt.Key_Delete) {
-            console.log("destruction");
-            _graphWrapper.destructionProcess();
-        }
-    }
 
     Rectangle {
         id: nodeBorder
         height: 40
         width: 110
         anchors.centerIn: parent
-        color: nodeModel.color
+        color: m.nodeModel.color
         opacity: 0.5
         radius: 10
     }
@@ -38,9 +36,9 @@ Rectangle {
         radius: 8
         Text {
             anchors.centerIn: parent
-            text: nodeModel.name
+            text: m.nodeModel.name
             font.pointSize: 10
-            color: (nodeModel.name === _graphWrapper.currentNode) ? "#00b2a1" : "black"
+            color: (m.nodeModel.name === _graphWrapper.currentNode) ? "#00b2a1" : "black"
         }
     }
     Column {
@@ -48,7 +46,7 @@ Rectangle {
         anchors.horizontalCenter: parent.left
         anchors.top: parent.verticalCenter
         spacing: 2
-        property int nbInput: nodeModel.nbInput
+        property int nbInput: m.nodeModel.nbInput
         property string port : "input"
         Repeater {
             model: nodeInputs.nbInput
@@ -66,7 +64,8 @@ Rectangle {
             Clip {}
         }
     }
-    MouseArea {
+
+    /* MouseArea {
         anchors.fill: parent
         drag.target: parent
         drag.axis: Drag.XandYAxis
@@ -74,6 +73,8 @@ Rectangle {
         onReleased: {
             parent.opacity = 1;
             nodeModel.nodeMoved(parent.x, parent.y, _cmdManager);
+            parent.x = nodeModel.coord[0];
+            parent.y = nodeModel.coord[1];
         }
         onClicked: {
             console.log(nodeModel.name)
@@ -84,6 +85,60 @@ Rectangle {
                 parent.z = _graphWrapper.getZMax()
                 console.log(parent.z)
             }
+        }
+    }*/
+
+    StateGroup {
+        id: stateMoving
+        state: "normal"
+        states: [
+            State {
+                name: "normal"
+                PropertyChanges { target: node; x: m.nodeModel.coord[0]; y: m.nodeModel.coord[1] }
+            },
+            State {
+                name: "moving"
+                PropertyChanges { target: node; x: m.nodeModel.coord[0] ; y: m.nodeModel.coord[1] }
+            }
+        ]
+    }
+
+    StateGroup {
+        id: statePressed
+        states: [
+            State {
+            name: "pressed"
+            when: nodeMouseArea.pressed
+            PropertyChanges { target: node; opacity: .5 }
+            }
+        ]
+    }
+
+    MouseArea {
+        id: nodeMouseArea
+        anchors.fill: parent
+        drag.target: parent
+        drag.axis: Drag.XandYAxis
+        onPressed: {
+            console.log("node onPressed")
+            if(_graphWrapper.getCurrentNode() != m.nodeModel.name) {
+                _graphWrapper.setCurrentNode(m.nodeModel.name)
+                _graphWrapper.setZMax()
+                parent.z = _graphWrapper.getZMax()
+                console.log(parent.z)
+            }
+            stateMoving.state = "moving"
+        }
+        onReleased: {
+            console.log("node onReleased")
+            m.nodeModel.nodeMoved(parent.x, parent.y, _cmdManager)
+            stateMoving.state = "normal"
+            //m.modelPosX = nodeModel.coord[0]
+            //m.modelPosY = nodeModel.coord[1]
+            console.log(m.nodeModel.coord[0])
+            console.log(m.nodeModel.coord[1])
+
+            
         }
     }
 }

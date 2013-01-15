@@ -1,6 +1,7 @@
 from buttleofx.gui.graph import Graph
 from buttleofx.gui.graph.node import NodeWrapper
 from buttleofx.gui.graph.connection import ConnectionWrapper, IdClip
+from buttleofx.core.undo_redo.manageTools import CommandManager
 
 from quickmamba.models import QObjectListModel
 from quickmamba.patterns import Signal
@@ -100,12 +101,12 @@ class GraphWrapper(QtCore.QObject, Singleton):
         """
         return self._connectionWrappers
 
-    @QtCore.Slot(str)
-    def creationProcess(self, nodeType):
+    @QtCore.Slot(str, CommandManager)
+    def creationProcess(self, nodeType, cmdManager):
         """
             Function called when we want to create a node from the QML.
         """
-        self._graph.createNode(nodeType)
+        self._graph.createNode(nodeType, cmdManager)
         # debug
         self.__str__()
 

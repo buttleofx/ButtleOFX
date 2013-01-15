@@ -13,12 +13,17 @@ ApplicationWindow {
     minimumHeight: 50
 
     Keys.onPressed: {
+        if (event.key == Qt.Key_Delete) {
+            console.log("destruction");
+            _graphWrapper.destructionProcess();
+        }
         if (event.key == Qt.Key_U) {
-            _cmdManager.undo();
-        }
-        else if (event.key == Qt.Key_R) {
-            _cmdManager.redo();
-        }
+                _cmdManager.undo();
+            }
+            if (event.key == Qt.Key_R) {
+                console.log("R");
+                _cmdManager.redo();
+            }
     }
 
     Rectangle {

@@ -1,11 +1,12 @@
 import QtQuick 1.1
 
 Rectangle {
-    height: 5
-    width: 5
-    color: "#bbbbbb"
-    radius: 2
     property string port : parent.port
+
+    height: clipSize
+    width: clipSize
+    color: "#bbbbbb"
+    radius: 4
 
     MouseArea {
         anchors.fill: parent

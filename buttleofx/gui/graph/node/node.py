@@ -29,6 +29,8 @@ from PySide import QtGui
 
 class Node(object):
     """
+        Creates a python object Node.
+
         Class Node defined by:
         - _name
         - _type
@@ -37,16 +39,8 @@ class Node(object):
         - _nbInput
         - _image
 
-        Signals :
-        - nameChanged : a signal emited to the wrapper layer
-        - typeChanged : a signal emited to the wrapper layer
-        - xChanged : a signal emited to the wrapper layer
-        - yChanged : a signal emited to the wrapper layer
-        - colorChanged : a signal emited to the wrapper layer
-        - nbInputChanged : a signal emited to the wrapper layer
-        - imageChanged : a signal emited to the wrapper layer
-
-        Creates a python object Node.
+        Signal :
+        - changed : a signal emited to the wrapper layer
     """
 
     def __init__(self, nodeName, nodeType, nodeCoord):

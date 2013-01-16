@@ -24,10 +24,6 @@ class Graph(object):
         self._connections = []
         self._nbNodesCreated = 0
 
-        self.nodeCreated = Signal()
-        self.nodeDeleted = Signal()
-        self.connectionDeleted = Signal()
-
         self.nodesChanged = Signal()
         self.connectionsChanged = Signal()
 
@@ -56,14 +52,6 @@ class Graph(object):
         """
 
         print "createNode"
-        #self._nbNodesCreated += 1
-        #nodeName = str(nodeType) + "_" + str(self._nbNodesCreated)
-        #nodeCoord = (50, 20)
-        #nodeId = IdNode(nodeName, nodeType, nodeCoord[0], nodeCoord[1])
-
-        #self._nodes.append(Node(nodeName, nodeType, nodeCoord))
-
-        #self.nodeCreated(nodeName)
         cmdCreateNode = CmdCreateNode(self, nodeType)
         cmdManager.push(cmdCreateNode)
         #CommandManager.doCmd(CmdCreateNode(nodeType))

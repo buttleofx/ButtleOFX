@@ -46,8 +46,8 @@ class GraphWrapper(QtCore.QObject, Singleton):
         self._graph = graph
 
         # the links between the graph and this graphWrapper
-        graph.nodeDeleted.connect(self.deleteNodeWrapper)
-        graph.nodeDeleted.connect(self.deleteCurrentNode)
+        #graph.nodeDeleted.connect(self.deleteNodeWrapper)
+        #graph.nodeDeleted.connect(self.deleteCurrentNode)
 
         graph.nodesChanged.connect(self.updateNodes)
         graph.connectionsChanged.connect(self.updateConnections)
@@ -91,6 +91,7 @@ class GraphWrapper(QtCore.QObject, Singleton):
         for node in self._nodeWrappers:
             if node.getName() == nodeName:
                 return node
+        return None
 
     @QtCore.Slot()
     def getConnectionWrappers(self):
@@ -100,7 +101,7 @@ class GraphWrapper(QtCore.QObject, Singleton):
         return self._connectionWrappers
 
     @QtCore.Slot(str, CommandManager)
-    def creationProcess(self, nodeType, cmdManager):
+    def creationNode(self, nodeType, cmdManager):
         """
             Function called when we want to create a node from the QML.
         """
@@ -181,15 +182,12 @@ class GraphWrapper(QtCore.QObject, Singleton):
             Creates a node wrapper and add it to the nodeWrappers list.
         """
         print "createNodeWrapper"
-        #wrapper = NodeWrapper(self._graph._nodes[nodeId])
 
         # search the right node in the node list
-        for node in self._graph._nodes:
-            if node.getName() == nodeName:
-                nodeWrapper = NodeWrapper(node, self._view)
-                self._nodeWrappers.append(nodeWrapper)
-                #self.setCurrentNode(nodeWrapper.getName())
-        # commandManager.doCmd( CmdCreateNodeWrapper(nodeId) )
+        node = self._graph.getNode(nodeName)
+        if (node != None):
+            nodeWrapper = NodeWrapper(node, self._view)
+            self._nodeWrappers.append(nodeWrapper)
 
     ############# CONNECTIONS #############
 
@@ -197,26 +195,19 @@ class GraphWrapper(QtCore.QObject, Singleton):
         """
             Creates a connection wrapper and add it to the connectionWrappers list.
         """
-        print "begin creation of new ConnectionWrapper. (coordinates of corresponding Line should be displayed here in QML before end of the creation :"
         conWrapper = ConnectionWrapper(connection)
         self._connectionWrappers.append(conWrapper)
-        print "end creation of new ConnectionWrapper.\n"
         # commandManager.doCmd( CmdCreateConnectionWrapper(clipOut, clipIn) )
 
     def updateConnections(self):
         """
             Updates the connectionWrappers when the signal connectionsChanged has been emited.
         """
-        print "Begin update connectionWrappers."
         # we clear the list
         self._connectionWrappers.clear()
         # and we fill with the new data
-        print " _connectionWrappers now empty. Begin of loop."
         for connection in self._graph.getConnections():
-            print "Connection found."
             self.createConnectionWrapper(connection)
-            print "ConnectionWrapper created."
-        print "End update connectionWrappers.\n"
 
     def updateNodes(self):
         """
@@ -229,7 +220,7 @@ class GraphWrapper(QtCore.QObject, Singleton):
             self.createNodeWrapper(node.getName())
 
     @QtCore.Slot()
-    def destructionProcess(self):
+    def destructionNode(self):
         """
             Function called when we want to delete a node from the QML.
         """
@@ -238,6 +229,7 @@ class GraphWrapper(QtCore.QObject, Singleton):
             # if a node is selected
             if self._currentNode != None:
                 self._graph.deleteNode(self._currentNode)
+        self._currentNode = None
         # debug
         self.__str__()
 

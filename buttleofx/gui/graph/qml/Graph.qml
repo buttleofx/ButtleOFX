@@ -37,13 +37,6 @@ Rectangle {
                 x2: model.object.clipInPosX
                 y2: model.object.clipInPosY
 
-                 Component.onCompleted: {
-                     console.log("coordinates new connection :");
-                     console.log(model.object.clipOutPosX);
-                     console.log(model.object.clipOutPosY);
-                     console.log(model.object.clipInPosX);
-                     console.log(model.object.clipInPosY);
-                 }
             }
         }
     }

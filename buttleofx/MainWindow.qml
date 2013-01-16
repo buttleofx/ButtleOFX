@@ -15,7 +15,7 @@ ApplicationWindow {
     Keys.onPressed: {
         if (event.key == Qt.Key_Delete) {
             console.log("destruction");
-            _graphWrapper.destructionProcess();
+            _graphWrapper.destructionNode();
         }
         if (event.key == Qt.Key_U) {
                 _cmdManager.undo();

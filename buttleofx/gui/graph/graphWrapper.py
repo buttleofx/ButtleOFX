@@ -46,8 +46,8 @@ class GraphWrapper(QtCore.QObject, Singleton):
         self._graph = graph
 
         # the links between the graph and this graphWrapper
-        graph.nodesChanged.connect(self.updateNodes)
-        graph.connectionsChanged.connect(self.updateConnections)
+        graph.nodesChanged.connect(self.updateNodeWrappers)
+        graph.connectionsChanged.connect(self.updateConnectionWrappers)
 
     def __str__(self):
         """
@@ -221,8 +221,8 @@ class GraphWrapper(QtCore.QObject, Singleton):
         # if the clips are from the same node : False
         if (clipOut.getNodeName() == clipIn.getNodeName()):
             return False
-        # if one of the clip is already taken : False
-        if (self._graph.contains(clipOut) or self._graph.contains(clipIn)):
+        # if the input clip is already taken : False
+        if (self._graph.contains(clipIn)):
             return False
         # if the nodes containing the clips are already connected : False
         if(self._graph.nodesConnected(clipOut, clipIn)):
@@ -294,7 +294,7 @@ class GraphWrapper(QtCore.QObject, Singleton):
 
     ################################################## UPDATE ##################################################
 
-    def updateNodes(self):
+    def updateNodeWrappers(self):
         """
             Updates the nodeWrappers when the signal nodesChanged has been emited.
         """
@@ -304,15 +304,26 @@ class GraphWrapper(QtCore.QObject, Singleton):
         for node in self._graph.getNodes():
             self.createNodeWrapper(node.getName())
 
-    def updateConnections(self):
+    def updateConnectionWrappers(self):
         """
             Updates the connectionWrappers when the signal connectionsChanged has been emited.
         """
+        print "UPDATE CONNECTIONS WRAPPERS"
         # we clear the list
         self._connectionWrappers.clear()
         # and we fill with the new data
         for connection in self._graph.getConnections():
             self.createConnectionWrapper(connection)
+
+    @QtCore.Slot()
+    def updateConnectionsCoord(self):
+        print "UPDATE CONNECTIONS COORDS"
+        for connection in self._graph.getConnections():
+            clipOut = connection.getClipOut()
+            clipIn = connection.getClipIn()
+            clipOut.setCoord(self.getPositionClip(clipOut.getNodeName(), clipOut.getPort(), clipOut.getClipNumber()))
+            clipIn.setCoord(self.getPositionClip(clipIn.getNodeName(), clipIn.getPort(), clipIn.getClipNumber()))
+        self.updateConnectionWrappers()
 
     ################################################## DATA EXPOSED TO QML ##################################################
 

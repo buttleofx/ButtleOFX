@@ -126,9 +126,9 @@ class GraphWrapper(QtCore.QObject, Singleton):
 
         #we search the image of the selected node
         for nodeWrapper in self._nodeWrappers:
-            if nodeWrapper.getName() == self._currentNode:
+            if nodeWrapper.getName() == nodeName:
                 self.setCurrentImage(nodeWrapper.getImage())
-                self.currentImageChanged.emit()
+                print(nodeWrapper.getImage())
                 print(self._currentImage)
 
         self._currentNode = nodeName
@@ -139,6 +139,7 @@ class GraphWrapper(QtCore.QObject, Singleton):
             Change the currentImage, displayed in the viewer
         """
         self._currentImage = urlImage
+        self.currentImageChanged.emit()
 
     @QtCore.Slot(result="double")
     def getZMax(self):

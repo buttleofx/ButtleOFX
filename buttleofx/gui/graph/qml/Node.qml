@@ -111,7 +111,6 @@ Rectangle {
                 _graphWrapper.setCurrentNode(m.nodeModel.name)
                 _graphWrapper.setZMax()
                 parent.z = _graphWrapper.getZMax()
-                console.log(parent.z)
             }
             stateMoving.state = "moving"
             _graphWrapper.updateConnectionsCoord()

@@ -1,2 +1,3 @@
 from cmdSetCoord import CmdSetCoord
 from cmdCreateNode import CmdCreateNode
+from cmdCreateConnection import CmdCreateConnection

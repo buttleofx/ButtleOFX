@@ -1,13 +1,11 @@
-from buttleofx.gui.graph import Graph
 from buttleofx.gui.graph.node import NodeWrapper
 from buttleofx.gui.graph.connection import ConnectionWrapper, IdClip
 from buttleofx.core.undo_redo.manageTools import CommandManager
 
 from quickmamba.models import QObjectListModel
-from quickmamba.patterns import Signal
 from quickmamba.patterns import Singleton
 
-from PySide import QtDeclarative, QtCore
+from PySide import QtCore
 
 
 class GraphWrapper(QtCore.QObject, Singleton):
@@ -229,11 +227,11 @@ class GraphWrapper(QtCore.QObject, Singleton):
 
         return True
 
-    def connect(self, clipOut, clipIn):
+    def connect(self, clipOut, clipIn, cmdManager):
         """
             Add a connection between 2 clips.
         """
-        self._graph.createConnection(clipOut, clipIn)
+        self._graph.createConnection(clipOut, clipIn, cmdManager)
         self._tmpClipIn = None
         self._tmpClipOut = None
         self.__str__()
@@ -248,38 +246,30 @@ class GraphWrapper(QtCore.QObject, Singleton):
         #position = self._graph.getNode(nodeName).getCoord()
         idClip = IdClip(nodeName, port, clipNumber, position)
         if (port == "input"):
-            print "inputPressed"
             self._tmpClipIn = idClip
-            print "Add tmpNodeIn: " + nodeName + " " + port + " " + str(clipNumber)
         elif (port == "output"):
-            print "outputPressed"
             self._tmpClipOut = idClip
-            print "Add tmpNodeOut: " + nodeName + " " + port + " " + str(clipNumber)
 
-    @QtCore.Slot(str, str, int)
-    def clipReleased(self, nodeName, port, clipNumber):
+    @QtCore.Slot(str, str, int, CommandManager)
+    def clipReleased(self, nodeName, port, clipNumber, cmdManager):
 
         if (port == "input"):
             #if there is a tmpNodeOut we can connect the nodes
-            print "inputReleased"
             if (self._tmpClipOut != None and self._tmpClipOut._nodeName != nodeName):
                 position = self.getPositionClip(nodeName, port, clipNumber)
-                #position = self._graph.getNode(nodeName).getCoord()
                 idClip = IdClip(nodeName, port, clipNumber, position)
                 if self.canConnect(self._tmpClipOut, idClip):
-                    self.connect(self._tmpClipOut, idClip)
+                    self.connect(self._tmpClipOut, idClip, cmdManager)
                 else:
                     print "Unable to connect the nodes."
 
         elif (port == "output"):
             #if there is a tmpNodeIn we can connect the nodes
-            print "inputReleased"
             if (self._tmpClipIn != None and self._tmpClipIn._nodeName != nodeName):
                 position = self.getPositionClip(nodeName, port, clipNumber)
-                #position = self._graph.getNode(nodeName).getCoord()
                 idClip = IdClip(nodeName, port, clipNumber, position)
                 if self.canConnect(idClip, self._tmpClipIn):
-                    self.connect(idClip, self._tmpClipIn)
+                    self.connect(idClip, self._tmpClipIn, cmdManager)
                 else:
                     print "Unable to connect the nodes."
 
@@ -289,7 +279,6 @@ class GraphWrapper(QtCore.QObject, Singleton):
         """
         conWrapper = ConnectionWrapper(connection)
         self._connectionWrappers.append(conWrapper)
-        # commandManager.doCmd( CmdCreateConnectionWrapper(clipOut, clipIn) )
 
     ################################################## UPDATE ##################################################
 

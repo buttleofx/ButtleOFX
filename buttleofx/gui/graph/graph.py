@@ -1,12 +1,10 @@
-from buttleofx.gui.graph.connection import Connection
-
 from quickmamba.patterns import Signal
 
 from PySide import QtCore
 
 #undo_redo
 from buttleofx.core.undo_redo.manageTools import CommandManager
-from buttleofx.core.undo_redo.commands import CmdCreateNode
+from buttleofx.core.undo_redo.commands import CmdCreateNode, CmdCreateConnection
 
 
 class Graph(object):
@@ -69,23 +67,29 @@ class Graph(object):
         self.nodesChanged()
         # commandManager.doCmd( CmddeleteNode(nodeid) )
 
+    def createConnection(self, clipOut, clipIn, cmdManager):
+        """
+            Adds a connection in the connection list when a connection is created.
+        """
+        print "createConnection"
+        cmdCreateConnection = CmdCreateConnection(self, clipOut, clipIn)
+        cmdManager.push(cmdCreateConnection)
+        self.connectionsChanged()
+
+    def deleteConnection(self, connection):
+        """
+            Delete a connection.
+        """
+        self._connections.remove(connection)
+        self.connectionsChanged()
+
     def deleteNodeConnections(self, nodeName):
         """
             Delete all the connections of the node.
         """
         for connection in self._connections:
             if connection.getClipOut().getNodeName() == nodeName or connection.getClipIn().getNodeName() == nodeName:
-                self._connections.remove(connection)
-        self.connectionsChanged()
-
-    def createConnection(self, clipOut, clipIn):
-        """
-            Adds a connection in the connection list when a connection is created.
-        """
-
-        print "createConnection"
-        newConnection = Connection(clipOut, clipIn)
-        self._connections.append(newConnection)
+                self.deleteConnection(connection)
         self.connectionsChanged()
 
     def contains(self, clip):

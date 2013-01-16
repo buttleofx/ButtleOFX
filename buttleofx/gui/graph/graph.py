@@ -10,7 +10,7 @@ from buttleofx.core.undo_redo.manageTools import CommandManager
 from buttleofx.core.undo_redo.commands import CmdCreateNode
 
 
-class Graph:
+class Graph(object):
     """
         Class Graph contains
         - _nodes : list of nodes (python objects, the core nodes)
@@ -24,10 +24,8 @@ class Graph:
         self._connections = []
         self._nbNodesCreated = 0
 
-        self.nodeCreated = Signal()
-        self.nodeDeleted = Signal()
-        self.connectionCreated = Signal()
-        self.connectionDeleted = Signal()
+        self.nodesChanged = Signal()
+        self.connectionsChanged = Signal()
 
     def getNodes(self):
         """
@@ -35,7 +33,13 @@ class Graph:
         """
         return self._nodes
 
-    def getConnexions(self):
+    def getNode(self, nodeName):
+        for node in self._nodes:
+            if node.getName() == nodeName:
+                return node
+        return None
+
+    def getConnections(self):
         """
             Returns the connection List.
         """
@@ -48,14 +52,6 @@ class Graph:
         """
 
         print "createNode"
-        #self._nbNodesCreated += 1
-        #nodeName = str(nodeType) + "_" + str(self._nbNodesCreated)
-        #nodeCoord = (50, 20)
-        #nodeId = IdNode(nodeName, nodeType, nodeCoord[0], nodeCoord[1])
-
-        #self._nodes.append(Node(nodeName, nodeType, nodeCoord))
-
-        #self.nodeCreated(nodeName)
         cmdCreateNode = CmdCreateNode(self, nodeType)
         cmdManager.push(cmdCreateNode)
         #CommandManager.doCmd(CmdCreateNode(nodeType))
@@ -67,14 +63,21 @@ class Graph:
         print "deleteNode"
 
         # we search the right node to delete
-        indexWrapper = 0
-        for node in self._nodes:
-            if node.getName() == nodeName:
-                self._nodes.remove(node)
-                break
-            indexWrapper += 1
-        self.nodeDeleted(indexWrapper)
+        node = self.getNode(nodeName)
+        if (node != None):
+            self.deleteNodeConnections(nodeName)
+            self._nodes.remove(node)
+        self.nodesChanged()
         # commandManager.doCmd( CmddeleteNode(nodeid) )
+
+    def deleteNodeConnections(self, nodeName):
+        """
+            Delete all the connections of the node.
+        """
+        for connection in self._connections:
+            if connection.getClipOut().getNodeName() == nodeName or connection.getClipIn().getNodeName() == nodeName:
+                self._connections.remove(connection)
+        self.connectionsChanged()
 
     def createConnection(self, clipOut, clipIn):
         """
@@ -82,5 +85,24 @@ class Graph:
         """
 
         print "createConnection"
-        self._connections.append(Connection(clipOut, clipIn))
-        self.connectionCreated(clipOut, clipIn)
+        newConnection = Connection(clipOut, clipIn)
+        self._connections.append(newConnection)
+        self.connectionsChanged()
+
+    def contains(self, clip):
+        """
+            Returns True if the clip is already connected, else False.
+        """
+        for connection in self._connections:
+            if (clip == connection.getClipOut() or clip == connection.getClipIn()):
+                return True
+        return False
+
+    def nodesConnected(self, clipOut, clipIn):
+        """
+            Returns True if the nodes containing the clips are already connected (in the other direction).
+        """
+        for connection in self._connections:
+            if (clipOut.getNodeName() == connection.getClipIn().getNodeName() and clipIn.getNodeName() == connection.getClipOut().getNodeName()):
+                return True
+        return False

@@ -1,4 +1,5 @@
 import QtQuick 1.1
+import ConnectionLineItem 1.0
 
 Rectangle {
     id:graphArea
@@ -22,6 +23,24 @@ Rectangle {
                 Component.onDestruction: {
                     nodes.forceActiveFocus()
                 }
+            }
+        }
+    }
+
+
+    Item{
+    id: connections
+    width: parent.width
+    height: parent.height
+        Repeater {
+            model : _connectionWrappers
+            ConnectionLine {
+
+                x1: model.object.clipOutPosX
+                y1: model.object.clipOutPosY
+                x2: model.object.clipInPosX
+                y2: model.object.clipInPosY
+
             }
         }
     }

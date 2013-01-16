@@ -45,4 +45,4 @@ class CmdCreateNode(UndoableCommand):
         self.nodeName = str(self.nodeType) + "_" + str(self.graphTarget._nbNodesCreated)
 
         self.graphTarget._nodes.append(Node(self.nodeName, self.nodeType, self.nodeCoord))
-        self.graphTarget.nodeCreated(self.nodeName)
+        self.graphTarget.nodesChanged()

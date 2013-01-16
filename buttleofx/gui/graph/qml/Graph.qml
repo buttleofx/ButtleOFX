@@ -14,12 +14,16 @@ Rectangle {
     }
 
     Item{
-    id: nodes
-    width: parent.width
-    height: parent.height
+        id: nodes
+        width: parent.width
+        height: parent.height
         Repeater {
             model : _nodeWrappers
-            Node {}
+            Node {
+                Component.onDestruction: {
+                    nodes.forceActiveFocus()
+                }
+            }
         }
     }
 

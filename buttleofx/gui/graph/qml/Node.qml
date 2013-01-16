@@ -114,6 +114,7 @@ Rectangle {
                 console.log(parent.z)
             }
             stateMoving.state = "moving"
+            _graphWrapper.updateConnectionsCoord()
         }
         onReleased: {
             console.log("node onReleased")
@@ -123,6 +124,7 @@ Rectangle {
             //m.modelPosY = nodeModel.coord[1]
             console.log(m.nodeModel.coord[0])
             console.log(m.nodeModel.coord[1])
+            _graphWrapper.updateConnectionsCoord()
         }
     }
 }

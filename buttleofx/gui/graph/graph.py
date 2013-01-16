@@ -1,9 +1,8 @@
-from buttleofx.gui.graph.node import Node
 from buttleofx.gui.graph.connection import Connection
 
 from quickmamba.patterns import Signal
 
-from PySide import QtCore, QtGui
+from PySide import QtCore
 
 #undo_redo
 from buttleofx.core.undo_redo.manageTools import CommandManager

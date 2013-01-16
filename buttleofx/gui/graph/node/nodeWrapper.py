@@ -109,29 +109,3 @@ class NodeWrapper(QtCore.QObject):
     color = QtCore.Property(QtGui.QColor, getColor, setColor, notify=changed)
     nbInput = QtCore.Property(int, getNbInput, setNbInput, notify=changed)
     image = QtCore.Property(str, getImage, setImage, notify=changed)
-
-"""
-Obsolete fonctions I haven't yet deleted on the safe side because it's late and maybe I'm making a big mistake.
-And if I'm making a big mistake, I apologize in advance Elisa.
-
-    @QtCore.Slot()
-    def nodeColorChanged(self):
-        self._node.getColor()
-
-    @QtCore.Slot()
-    def nodeNbInputChanged(self):
-        self._node.getNbInput()
-
-    @QtCore.Slot()
-    def nodeNameChanged(self):
-        self._node.getName()
-
-    @QtCore.Slot()
-    def nodeTypeChanged(self):
-        self._node.getType()
-
-    @QtCore.Slot()
-    def nodeImageChanged(self):
-        self._node.getImage()
-
-"""

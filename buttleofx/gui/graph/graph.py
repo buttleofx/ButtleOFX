@@ -63,15 +63,21 @@ class Graph(object):
         print "deleteNode"
 
         # we search the right node to delete
-        for node in self._nodes:
-            if node.getName() == nodeName:
-                self._nodes.remove(node)
-                break
         node = self.getNode(nodeName)
         if (node != None):
+            self.deleteNodeConnections(nodeName)
             self._nodes.remove(node)
         self.nodesChanged()
         # commandManager.doCmd( CmddeleteNode(nodeid) )
+
+    def deleteNodeConnections(self, nodeName):
+        """
+            Delete all the connections of the node.
+        """
+        for connection in self._connections:
+            if connection.getClipOut().getNodeName() == nodeName or connection.getClipIn().getNodeName() == nodeName:
+                self._connections.remove(connection)
+        self.connectionsChanged()
 
     def createConnection(self, clipOut, clipIn):
         """

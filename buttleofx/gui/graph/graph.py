@@ -26,9 +26,10 @@ class Graph(object):
 
         self.nodeCreated = Signal()
         self.nodeDeleted = Signal()
-        self.connectionsChanged = Signal()
-
         self.connectionDeleted = Signal()
+
+        self.nodesChanged = Signal()
+        self.connectionsChanged = Signal()
 
     def getNodes(self):
         """
@@ -40,6 +41,7 @@ class Graph(object):
         for node in self._nodes:
             if node.getName() == nodeName:
                 return node
+        return None
 
     def getConnections(self):
         """
@@ -73,13 +75,14 @@ class Graph(object):
         print "deleteNode"
 
         # we search the right node to delete
-        indexWrapper = 0
         for node in self._nodes:
             if node.getName() == nodeName:
                 self._nodes.remove(node)
                 break
-            indexWrapper += 1
-        self.nodeDeleted(indexWrapper)
+        node = self.getNode(nodeName)
+        if (node != None):
+            self._nodes.remove(node)
+        self.nodesChanged()
         # commandManager.doCmd( CmddeleteNode(nodeid) )
 
     def createConnection(self, clipOut, clipIn):

@@ -46,10 +46,10 @@ class GraphWrapper(QtCore.QObject, Singleton):
         self._graph = graph
 
         # the links between the graph and this graphWrapper
-        graph.nodeCreated.connect(self.createNodeWrapper)
-        #graph.nodeCreated.connect(self.setCurrentNode)
         graph.nodeDeleted.connect(self.deleteNodeWrapper)
         graph.nodeDeleted.connect(self.deleteCurrentNode)
+
+        graph.nodesChanged.connect(self.updateNodes)
         graph.connectionsChanged.connect(self.updateConnections)
 
     def __str__(self):
@@ -217,6 +217,16 @@ class GraphWrapper(QtCore.QObject, Singleton):
             self.createConnectionWrapper(connection)
             print "ConnectionWrapper created."
         print "End update connectionWrappers.\n"
+
+    def updateNodes(self):
+        """
+            Updates the nodeWrappers when the signal nodesChanged has been emited.
+        """
+        # we clear the list
+        self._nodeWrappers.clear()
+        # and we fill with the new data
+        for node in self._graph.getNodes():
+            self.createNodeWrapper(node.getName())
 
     @QtCore.Slot()
     def destructionProcess(self):

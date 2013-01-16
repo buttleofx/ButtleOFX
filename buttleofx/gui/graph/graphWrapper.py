@@ -46,9 +46,6 @@ class GraphWrapper(QtCore.QObject, Singleton):
         self._graph = graph
 
         # the links between the graph and this graphWrapper
-        #graph.nodeDeleted.connect(self.deleteNodeWrapper)
-        #graph.nodeDeleted.connect(self.deleteCurrentNode)
-
         graph.nodesChanged.connect(self.updateNodes)
         graph.connectionsChanged.connect(self.updateConnections)
 
@@ -132,6 +129,23 @@ class GraphWrapper(QtCore.QObject, Singleton):
             yClip = nodeCoord[1] + heightNode / 2 + clipSize / 2
         return (xClip, yClip)
 
+    def canConnect(self, clipOut, clipIn):
+        """
+            Returns True if the connection between the nodes is possible, else False.
+            A connection is possible if the clip isn't already taken, and if the clips are from 2 different nodes, not already connected.
+        """
+        # if the clips are from the same node : False
+        if (clipOut.getNodeName() == clipIn.getNodeName()):
+            return False
+        # if one of the clip is already taken : False
+        if (self._graph.contains(clipOut) or self._graph.contains(clipIn)):
+            return False
+        # if the nodes containing the clips are already connected : False
+        if(self._graph.nodesConnected(clipOut, clipIn)):
+            return False
+
+        return True
+
     @QtCore.Slot(str, str, int)
     def clipPressed(self, nodeName, port, clipNumber):
         """
@@ -160,10 +174,13 @@ class GraphWrapper(QtCore.QObject, Singleton):
                 position = self.getPositionClip(nodeName, port, clipNumber)
                 #position = self._graph.getNode(nodeName).getCoord()
                 idClip = IdClip(nodeName, port, clipNumber, position)
-                self._graph.createConnection(self._tmpClipOut, idClip)
-                self._tmpClipIn = None
-                self._tmpClipOut = None
-                self.__str__()
+                if self.canConnect(self._tmpClipOut, idClip):
+                    self._graph.createConnection(self._tmpClipOut, idClip)
+                    self._tmpClipIn = None
+                    self._tmpClipOut = None
+                    self.__str__()
+                else:
+                    print "Unable to connect the nodes."
 
         elif (port == "output"):
             #if there is a tmpNodeIn we can connect the nodes
@@ -172,10 +189,13 @@ class GraphWrapper(QtCore.QObject, Singleton):
                 position = self.getPositionClip(nodeName, port, clipNumber)
                 #position = self._graph.getNode(nodeName).getCoord()
                 idClip = IdClip(nodeName, port, clipNumber, position)
-                self._graph.createConnection(idClip, self._tmpClipIn)
-                self._tmpClipIn = None
-                self._tmpClipOut = None
-                self.__str__()
+                if self.canConnect(idClip, self._tmpClipIn):
+                    self._graph.createConnection(idClip, self._tmpClipIn)
+                    self._tmpClipIn = None
+                    self._tmpClipOut = None
+                    self.__str__()
+                else:
+                    print "Unable to connect the nodes."
 
     def createNodeWrapper(self, nodeName):
         """

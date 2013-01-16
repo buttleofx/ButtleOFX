@@ -82,3 +82,21 @@ class Graph(object):
         newConnection = Connection(clipOut, clipIn)
         self._connections.append(newConnection)
         self.connectionsChanged()
+
+    def contains(self, clip):
+        """
+            Returns True if the clip is already connected, else False.
+        """
+        for connection in self._connections:
+            if (clip == connection.getClipOut() or clip == connection.getClipIn()):
+                return True
+        return False
+
+    def nodesConnected(self, clipOut, clipIn):
+        """
+            Returns True if the nodes containing the clips are already connected (in the other direction).
+        """
+        for connection in self._connections:
+            if (clipOut.getNodeName() == connection.getClipIn().getNodeName() and clipIn.getNodeName() == connection.getClipOut().getNodeName()):
+                return True
+        return False

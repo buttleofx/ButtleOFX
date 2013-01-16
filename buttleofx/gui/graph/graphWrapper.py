@@ -87,7 +87,7 @@ class GraphWrapper(QtCore.QObject, Singleton):
         """
         return self._nodeWrappers
 
-    def getNode(self, nodeName):
+    def getNodeWrapper(self, nodeName):
         for node in self._nodeWrappers:
             if node.getName() == nodeName:
                 return node
@@ -108,33 +108,57 @@ class GraphWrapper(QtCore.QObject, Singleton):
         # debug
         self.__str__()
 
+    def getPositionClip(self, nodeName, port, clipNumber):
+        """
+            Function called when a new idClip is created.
+            Returns the position of the clip.
+            The calculation is the same as in the QML file (Node.qml).
+        """
+        nodeCoord = self._graph.getNode(nodeName).getCoord()
+        widthNode = 110
+        heightEmptyNode = 35
+        clipSpacing = 7
+        clipSize = 8
+        nbInput = self._graph.getNode(nodeName).getNbInput()
+        heightNode = heightEmptyNode + clipSpacing * nbInput
+        inputTopMargin = (heightNode - clipSize * nbInput - clipSpacing * (nbInput - 1)) / 2
+
+        if (port == "input"):
+            xClip = nodeCoord[0] - clipSize / 2
+            yClip = nodeCoord[1] + inputTopMargin + (clipNumber) * (clipSpacing + clipSize) + clipSize / 2
+        elif (port == "output"):
+            xClip = nodeCoord[0] + widthNode + clipSize / 2
+            yClip = nodeCoord[1] + heightNode / 2 + clipSize / 2
+        return (xClip, yClip)
+
     @QtCore.Slot(str, str, int)
-    def clipPressed(self, nodeName, port, clip):
+    def clipPressed(self, nodeName, port, clipNumber):
         """
             Function called when a clip is pressed (but not released yet).
             The function replace the tmpClipIn or tmpClipOut.
         """
-
-        position = self._graph.getNode(nodeName).getCoord()
-        idClip = IdClip(nodeName, port, clip, position)
+        position = self.getPositionClip(nodeName, port, clipNumber)
+        #position = self._graph.getNode(nodeName).getCoord()
+        idClip = IdClip(nodeName, port, clipNumber, position)
         if (port == "input"):
             print "inputPressed"
             self._tmpClipIn = idClip
-            print "Add tmpNodeIn: " + nodeName + " " + port + " " + str(clip)
+            print "Add tmpNodeIn: " + nodeName + " " + port + " " + str(clipNumber)
         elif (port == "output"):
             print "outputPressed"
             self._tmpClipOut = idClip
-            print "Add tmpNodeOut: " + nodeName + " " + port + " " + str(clip)
+            print "Add tmpNodeOut: " + nodeName + " " + port + " " + str(clipNumber)
 
     @QtCore.Slot(str, str, int)
-    def clipReleased(self, nodeName, port, clip):
+    def clipReleased(self, nodeName, port, clipNumber):
 
         if (port == "input"):
             #if there is a tmpNodeOut we can connect the nodes
             print "inputReleased"
             if (self._tmpClipOut != None and self._tmpClipOut._nodeName != nodeName):
-                position = self._graph.getNode(nodeName).getCoord()
-                idClip = IdClip(nodeName, port, clip, position)
+                position = self.getPositionClip(nodeName, port, clipNumber)
+                #position = self._graph.getNode(nodeName).getCoord()
+                idClip = IdClip(nodeName, port, clipNumber, position)
                 self._graph.createConnection(self._tmpClipOut, idClip)
                 self._tmpClipIn = None
                 self._tmpClipOut = None
@@ -144,8 +168,9 @@ class GraphWrapper(QtCore.QObject, Singleton):
             #if there is a tmpNodeIn we can connect the nodes
             print "inputReleased"
             if (self._tmpClipIn != None and self._tmpClipIn._nodeName != nodeName):
-                position = self._graph.getNode(nodeName).getCoord()
-                idClip = IdClip(nodeName, port, clip, position)
+                position = self.getPositionClip(nodeName, port, clipNumber)
+                #position = self._graph.getNode(nodeName).getCoord()
+                idClip = IdClip(nodeName, port, clipNumber, position)
                 self._graph.createConnection(idClip, self._tmpClipIn)
                 self._tmpClipIn = None
                 self._tmpClipOut = None

@@ -18,6 +18,7 @@ Rectangle {
     property int inputSpacing : 7
     property int clipSize: 8
     property int inputTopMargin: (node.height- node.clipSize*node.nbInput - node.inputSpacing * (node.nbInput-1)) / 2
+    property int inputSideMargin: 6
 
     z: _graphWrapper.getZMax()
     color: "transparent"
@@ -49,7 +50,7 @@ Rectangle {
     Column {
         id: nodeInputs
         anchors.left: parent.left
-        anchors.leftMargin: -6
+        anchors.leftMargin: -node.inputSideMargin
         anchors.top: parent.top
         anchors.topMargin: node.inputTopMargin
         spacing: node.inputSpacing
@@ -62,7 +63,7 @@ Rectangle {
     Column {
         id: nodeOutputs
         anchors.right: parent.right
-        anchors.rightMargin: -6
+        anchors.rightMargin: -node.inputSideMargin
         anchors.top: parent.verticalCenter
         spacing: 2
         property string port : "output"

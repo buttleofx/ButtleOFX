@@ -29,6 +29,7 @@ class CmdCreateNode(UndoableCommand):
         """
         print "Undo creation "
         self.graphTarget.deleteNode(self.nodeName)
+        self.graphTarget._nbNodesCreated -= 1
 
     def redoCmd(self):
         """

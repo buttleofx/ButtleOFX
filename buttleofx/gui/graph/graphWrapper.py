@@ -146,6 +146,15 @@ class GraphWrapper(QtCore.QObject, Singleton):
 
         return True
 
+    def connect(self, clipOut, clipIn):
+        """
+            Add a connection between 2 clips.
+        """
+        self._graph.createConnection(clipOut, clipIn)
+        self._tmpClipIn = None
+        self._tmpClipOut = None
+        self.__str__()
+
     @QtCore.Slot(str, str, int)
     def clipPressed(self, nodeName, port, clipNumber):
         """
@@ -175,10 +184,7 @@ class GraphWrapper(QtCore.QObject, Singleton):
                 #position = self._graph.getNode(nodeName).getCoord()
                 idClip = IdClip(nodeName, port, clipNumber, position)
                 if self.canConnect(self._tmpClipOut, idClip):
-                    self._graph.createConnection(self._tmpClipOut, idClip)
-                    self._tmpClipIn = None
-                    self._tmpClipOut = None
-                    self.__str__()
+                    self.connect(self._tmpClipOut, idClip)
                 else:
                     print "Unable to connect the nodes."
 
@@ -190,10 +196,7 @@ class GraphWrapper(QtCore.QObject, Singleton):
                 #position = self._graph.getNode(nodeName).getCoord()
                 idClip = IdClip(nodeName, port, clipNumber, position)
                 if self.canConnect(idClip, self._tmpClipIn):
-                    self._graph.createConnection(idClip, self._tmpClipIn)
-                    self._tmpClipIn = None
-                    self._tmpClipOut = None
-                    self.__str__()
+                    self.connect(idClip, self._tmpClipIn)
                 else:
                     print "Unable to connect the nodes."
 

@@ -7,8 +7,8 @@ class ConnectionWrapper(QtCore.QObject):
         Class ConnectionWrapper
     """
 
-    def __init__(self, connection):
-        super(ConnectionWrapper, self).__init__()
+    def __init__(self, connection, view):
+        super(ConnectionWrapper, self).__init__(view)
         self._connection = connection
         self._connection.changed.connect(self.emitChanged)
 

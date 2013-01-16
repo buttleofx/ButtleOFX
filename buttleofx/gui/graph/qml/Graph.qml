@@ -34,14 +34,13 @@ Rectangle {
     height: parent.height
         Repeater {
             model : _connectionWrappers
-            ConnectionLine {
+                ConnectionLine {
+                    x1: model.object.clipOutPosX
+                    y1: model.object.clipOutPosY
+                    x2: model.object.clipInPosX
+                    y2: model.object.clipInPosY
+                }
 
-                x1: model.object.clipOutPosX
-                y1: model.object.clipOutPosY
-                x2: model.object.clipInPosX
-                y2: model.object.clipInPosY
-
-            }
         }
     }
 

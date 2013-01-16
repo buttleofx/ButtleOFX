@@ -277,7 +277,7 @@ class GraphWrapper(QtCore.QObject, Singleton):
         """
             Creates a connection wrapper and add it to the connectionWrappers list.
         """
-        conWrapper = ConnectionWrapper(connection)
+        conWrapper = ConnectionWrapper(connection, self._view)
         self._connectionWrappers.append(conWrapper)
 
     ################################################## UPDATE ##################################################

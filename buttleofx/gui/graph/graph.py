@@ -74,14 +74,12 @@ class Graph(object):
         print "createConnection"
         cmdCreateConnection = CmdCreateConnection(self, clipOut, clipIn)
         cmdManager.push(cmdCreateConnection)
-        self.connectionsChanged()
 
     def deleteConnection(self, connection):
         """
             Delete a connection.
         """
         self._connections.remove(connection)
-        self.connectionsChanged()
 
     def deleteNodeConnections(self, nodeName):
         """

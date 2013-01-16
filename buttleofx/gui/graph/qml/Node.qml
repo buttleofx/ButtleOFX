@@ -38,7 +38,7 @@ Rectangle {
             anchors.centerIn: parent
             text: m.nodeModel.name
             font.pointSize: 10
-            color: (m.nodeModel.name === _graphWrapper.currentNode) ? "#00b2a1" : "black"
+            color: (m.nodeModel.name == _graphWrapper.currentNode) ? "#00b2a1" : "black"
         }
     }
     Column {

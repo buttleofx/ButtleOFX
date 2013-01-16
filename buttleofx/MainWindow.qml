@@ -13,6 +13,7 @@ ApplicationWindow {
     minimumHeight: 50
 
     Keys.onPressed: {
+        console.log("ApplicationWindow Keys.onPressed");
         if (event.key == Qt.Key_Delete) {
             console.log("destruction");
             _graphWrapper.destructionProcess();

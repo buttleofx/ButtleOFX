@@ -13,14 +13,6 @@ class NodeWrapper(QtCore.QObject):
         Class NodeWrapper defined by:
         - _node : the node data
 
-        - The nodeWrapper data :
-            - _name
-            - _type
-            - _coord
-            - _color
-            - _nbInput
-            - _image
-
         Creates a QObject from a given python object Node.
     """
 

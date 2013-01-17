@@ -72,15 +72,18 @@ class Graph(object):
         """
             Delete a connection.
         """
+        print "DELETE CONNECTION."
         self._connections.remove(connection)
 
     def deleteNodeConnections(self, nodeName):
         """
             Delete all the connections of the node.
         """
+        print "begin suppression connections :"
         for connection in self._connections:
             if connection.getClipOut().getNodeName() == nodeName or connection.getClipIn().getNodeName() == nodeName:
                 self.deleteConnection(connection)
+        print "end suppression connections :"
         self.connectionsChanged()
 
     def contains(self, clip):

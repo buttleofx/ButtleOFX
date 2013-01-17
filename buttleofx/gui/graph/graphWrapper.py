@@ -12,7 +12,6 @@ from quickmamba.models import QObjectListModel
 from quickmamba.patterns import Signal
 
 
-
 class GraphWrapper(QtCore.QObject):
     """
         Class GraphWrapper defined by:
@@ -109,7 +108,7 @@ class GraphWrapper(QtCore.QObject):
         """
         return self._connectionWrappers
 
-    @QtCore.Slot(result="QVariant")
+    @QtCore.Slot(result=str)
     def getCurrentNode(self):
         """
             Return the name of the current selected node.
@@ -130,11 +129,34 @@ class GraphWrapper(QtCore.QObject):
         """
         return self._currentParams
 
+    @QtCore.Slot(result=IdClip)
+    def getTmpClipOut(self):
+        return self._tmpClipOut
+
+    @QtCore.Slot(result=IdClip)
+    def getTmpClipIn(self):
+        return self._tmpClipIn
+
     def getCurrentImage(self):
         """
             Return the url of the current image
         """
         return self._currentImage
+
+    def getWidthNode(self):
+        return NodeWrapper.widthNode
+
+    def getHeightEmptyNode(self):
+        return NodeWrapper.heightEmptyNode
+
+    def getClipSpacing(self):
+        return NodeWrapper.clipSpacing
+
+    def getClipSize(self):
+        return NodeWrapper.clipSize
+
+    def getNodeInputSideMargin(self):
+        return NodeWrapper.inputSideMargin
 
     #################### setters ####################
 
@@ -319,7 +341,7 @@ class GraphWrapper(QtCore.QObject):
 
     def updateNodeWrappers(self):
         """
-            Updates the nodeWrappers when the signal nodesChanged has been emited.
+            Updates the nodeWrappers when the signal nodesChanged has been emitted.
         """
         # we clear the list
         self._nodeWrappers.clear()
@@ -329,7 +351,7 @@ class GraphWrapper(QtCore.QObject):
 
     def updateConnectionWrappers(self):
         """
-            Updates the connectionWrappers when the signal connectionsChanged has been emited.
+            Updates the connectionWrappers when the signal connectionsChanged has been emitted.
         """
         print "UPDATE CONNECTIONS WRAPPERS"
         # we clear the list
@@ -349,21 +371,6 @@ class GraphWrapper(QtCore.QObject):
         self.updateConnectionWrappers()
 
     ################################################## DATA EXPOSED TO QML ##################################################
-
-    def getWidthNode(self):
-        return NodeWrapper.widthNode
-
-    def getHeightEmptyNode(self):
-        return NodeWrapper.heightEmptyNode
-
-    def getClipSpacing(self):
-        return NodeWrapper.clipSpacing
-
-    def getClipSize(self):
-        return NodeWrapper.clipSize
-
-    def getNodeInputSideMargin(self):
-        return NodeWrapper.inputSideMargin
 
     @QtCore.Signal
     def changed(self):
@@ -385,4 +392,3 @@ class GraphWrapper(QtCore.QObject):
     clipSpacing = QtCore.Property(int, getClipSpacing, notify=changed)
     clipSize = QtCore.Property(int, getClipSize, notify=changed)
     nodeInputSideMargin = QtCore.Property(int, getNodeInputSideMargin, notify=changed)
-

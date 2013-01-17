@@ -4,19 +4,15 @@ import "gui/graph/qml"
 import "gui/viewer/qml"
 import "gui/paramEditor/qml"
 
-ApplicationWindow {
-    id: buttleWindow
-    title: "ButtleOFX"
+Rectangle {
     width: 1280
     height: 800
-    minimumWidth: 100
-    minimumHeight: 50
 
     Keys.onPressed: {
         console.log("ApplicationWindow Keys.onPressed");
         if (event.key == Qt.Key_Delete) {
             console.log("destruction");
-            _graphWrapper.destructionNode();
+            _buttleData.getGraphWrapper().destructionNode();
         }
         if (event.key == Qt.Key_U) {
                 console.log("Undo");
@@ -56,25 +52,33 @@ ApplicationWindow {
             anchors.fill: parent
             anchors.margins: 5
             //handleWidth changes the size of the separation between the row, column.
-            //handleWidth: 3
+            handleWidth: 4
 
+            /*There is a bug with splitter column, the draggable splitter doesn't moove as it should, this bug has been solved in qtcomponents for qt5, 
+            but for the moment we are using qt 4*/
             SplitterColumn {
                 width: 0.7*parent.width
                 height: parent.height
-                //handleWidth: 3
+                handleWidth: 4
+                Splitter.minimumWidth : 5
+                Splitter.expanding: true // obligatory to allow to have the minimumWidth
 
                 Player {
+                    Splitter.minimumHeight: 10
+                    //Splitter.expanding: true
                     width: parent.width
                     height: 0.5*parent.height
                 }
 
                 GraphEditor {
+                    Splitter.minimumHeight: 10
                     width: parent.width
                     height:0.5*parent.height
                 }
             }
 
             ParamEditor {
+                Splitter.minimumWidth: 5
                 width: 0.3*parent.width
             }
         }

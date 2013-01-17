@@ -33,15 +33,33 @@ Rectangle {
     width: parent.width
     height: parent.height
         Repeater {
+
             model : _buttleData.getGraphWrapper().getConnectionWrappers()
-            ConnectionLine {
-                x1: model.object.clipOutPosX
-                y1: model.object.clipOutPosY
-                x2: model.object.clipInPosX
-                y2: model.object.clipInPosY
-            }
+
+                Item {
+                    id: truc
+                    property int coordX1 : model.object.clipOutPosX
+                    property int coordY1 : model.object.clipOutPosY
+                    property int coordX2 : model.object.clipInPosX
+                    property int coordY2 : model.object.clipInPosY
+                    width: (coordX2 - coordX1) > 0 ? (coordX2 - coordX1) : (coordX1 - coordX2)
+                    height: (coordY2 - coordY1) > 0 ? (coordY2 - coordY1) : (coordY1 - coordY2)
+
+                    ConnectionLine {
+                        anchors.fill: parent
+                        x1: coordX1
+                        y1: coordY1
+                        x2: coordX2
+                        y2: coordY2
+                    }
+                    Component.onCompleted: {
+                        console.log(truc.width);
+                        console.log(truc.height);
+                    }
+               }
         }
     }
+
 
     MouseArea{
         anchors.fill: parent

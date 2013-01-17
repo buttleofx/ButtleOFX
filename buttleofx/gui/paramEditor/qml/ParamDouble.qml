@@ -41,6 +41,7 @@ Item {
                 bottom: model.object.minimum
                 top:  model.object.maximum
             }
+            onAccepted: model.object.setDefaultValue(parent.text)
         }
         MouseArea{
             anchors.fill: parent

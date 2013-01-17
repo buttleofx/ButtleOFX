@@ -123,7 +123,6 @@ class GraphWrapper(QtCore.QObject):
         """
         return self.getNodeWrapper(self._currentNode)
 
-    @QtCore.Slot(result="QVariant")
     def getCurrentParams(self):
         """
             Return the params of the current node.
@@ -158,12 +157,10 @@ class GraphWrapper(QtCore.QObject):
 
         self.currentNodeChanged.emit()
 
-    @QtCore.Slot(str)
     def setCurrentParams(self, nodeName):
         """
             Change the current params and emit the change.
         """
-        print "setCurrentParams"
         self._currentParams = self.getNodeWrapper(nodeName).getParams().getParamElts()
         self.currentParamsChanged.emit()
 

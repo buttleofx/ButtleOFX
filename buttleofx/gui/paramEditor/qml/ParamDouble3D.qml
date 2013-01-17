@@ -41,6 +41,7 @@ Item {
                 bottom: model.object.minimum
                 top:  model.object.maximum
             }
+            onAccepted: model.object.setDefaultValue1(parent.text)
         }
         MouseArea{
             anchors.fill: parent
@@ -59,6 +60,7 @@ Item {
                 bottom: model.object.minimum
                 top:  model.object.maximum
             }
+            onAccepted: model.object.setDefaultValue2(parent.text)
         }
         MouseArea{
             anchors.fill: parent
@@ -77,6 +79,7 @@ Item {
                 bottom: model.object.minimum
                 top:  model.object.maximum
             }
+            onAccepted: model.object.setDefaultValue3(parent.text)
         }
         MouseArea{
             anchors.fill: parent

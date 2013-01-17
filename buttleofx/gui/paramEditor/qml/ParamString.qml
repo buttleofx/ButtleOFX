@@ -38,6 +38,7 @@ Item {
             anchors.leftMargin: 5
             maximumLength: 50
             color: focus ? "white" : "grey"
+            onAccepted: model.object.setDefaultValue(parent.text)
         }
         MouseArea{
             anchors.fill: parent

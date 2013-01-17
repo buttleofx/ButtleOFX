@@ -8,6 +8,8 @@ class StringWrapper(QtCore.QObject):
         self._defaultValue = paramElmt.defaultValue
         self._stringType = paramElmt.stringType
 
+    #################### getters ####################
+
     def getParamType(self):
         return self._paramType
 
@@ -17,8 +19,20 @@ class StringWrapper(QtCore.QObject):
     def getStringType(self):
         return self._stringType
 
+    #################### setters ####################
+
+    def setParamType(self, paramType):
+        self._paramType = paramType
+
+    @QtCore.Slot(str)
+    def setDefaultValue(self, defaultValue):
+        self._defaultValue = defaultValue
+
+    def setStringType(self, stringType):
+        self._stringType = stringType
+
     changed = QtCore.Signal()
 
-    paramType = QtCore.Property(unicode, getParamType, notify=changed)
-    defaultValue = QtCore.Property(unicode, getDefaultValue, notify=changed)
-    stringType = QtCore.Property(unicode, getStringType, notify=changed)
+    paramType = QtCore.Property(str, getParamType, setParamType, notify=changed)
+    defaultValue = QtCore.Property(str, getDefaultValue, setDefaultValue, notify=changed)
+    stringType = QtCore.Property(str, getStringType, setStringType, notify=changed)

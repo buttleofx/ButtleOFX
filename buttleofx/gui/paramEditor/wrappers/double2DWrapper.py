@@ -39,25 +39,27 @@ class Double2DWrapper(QtCore.QObject):
     def setText(self, text):
         self._text = text
 
-    @QtCore.Slot(float)
+    @QtCore.Slot(int)
     def setDefaultValue1(self, value1):
-        self._defaultValue1
+        self._defaultValue1 = value1
+        self.changed.emit()
 
-    @QtCore.Slot(float)
+    @QtCore.Slot(int)
     def setDefaultValue2(self, value2):
-        self._defaultValue2
+        self._defaultValue2 = value2
+        self.changed.emit()
 
     def setMaximum(self, maximum):
-        self._maximum
+        self._maximum = maximum
 
     def setMinimum(self, minimum):
-        self._minimum
+        self._minimum = minimum
 
     changed = QtCore.Signal()
 
     paramType = QtCore.Property(unicode, getParamType, setParamType, notify=changed)
     text = QtCore.Property(unicode, getText, setText, notify=changed)
-    defaultValue1 = QtCore.Property(float, getDefaultValue1, setDefaultValue1, notify=changed)
-    defaultValue2 = QtCore.Property(float, getDefaultValue2, setDefaultValue2, notify=changed)
+    defaultValue1 = QtCore.Property(int, getDefaultValue1, setDefaultValue1, notify=changed)
+    defaultValue2 = QtCore.Property(int, getDefaultValue2, setDefaultValue2, notify=changed)
     maximum = QtCore.Property(float, getMaximum, setMaximum, notify=changed)
     minimum = QtCore.Property(float, getMinimum, setMinimum, notify=changed)

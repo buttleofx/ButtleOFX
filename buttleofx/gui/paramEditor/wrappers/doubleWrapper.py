@@ -38,6 +38,7 @@ class DoubleWrapper(QtCore.QObject):
     @QtCore.Slot(float)
     def setDefaultValue(self, defaultValue):
         self._defaultValue = defaultValue
+        self.changed.emit()
 
     def setMaximum(self, maximum):
         self._maximum = maximum

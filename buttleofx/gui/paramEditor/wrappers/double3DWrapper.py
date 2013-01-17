@@ -46,14 +46,17 @@ class Double3DWrapper(QtCore.QObject):
     @QtCore.Slot(float)
     def setDefaultValue1(self, defaultValue1):
         self._defaultValue1 = defaultValue1
+        self.changed.emit()
 
     @QtCore.Slot(float)
     def setDefaultValue2(self, defaultValue2):
         self._defaultValue2 = defaultValue2
+        self.changed.emit()
 
     @QtCore.Slot(float)
     def setDefaultValue3(self, defaultValue3):
         self._defaultValue3 = defaultValue3
+        self.changed.emit()
 
     def setMaximum(self, maximum):
         self._maximum = maximum

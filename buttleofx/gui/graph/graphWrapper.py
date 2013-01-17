@@ -391,10 +391,10 @@ class GraphWrapper(QtCore.QObject):
 
     nodesChanged = QtCore.Signal()
     nodes = QtCore.Property("QVariant", getNodeWrappers, notify=nodesChanged)
-    
+
     connectionWrappersChanged = QtCore.Signal()
     connections = QtCore.Property("QVariant", getConnectionWrappers, notify=connectionWrappersChanged)
-    
+
     currentNodeChanged = QtCore.Signal()
     currentNode = QtCore.Property(str, getCurrentNode, setCurrentNode, notify=currentNodeChanged)
 

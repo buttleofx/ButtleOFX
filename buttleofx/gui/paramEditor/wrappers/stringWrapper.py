@@ -27,6 +27,7 @@ class StringWrapper(QtCore.QObject):
     @QtCore.Slot(str)
     def setDefaultValue(self, defaultValue):
         self._defaultValue = defaultValue
+        self.changed.emit()
 
     def setStringType(self, stringType):
         self._stringType = stringType

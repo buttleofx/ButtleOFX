@@ -6,7 +6,7 @@ from buttleofx.core.graph.connection import Connection
 
 class CmdCreateConnection(UndoableCommand):
     """
-        Command that moves a node
+        Command that create a connection between 2 clips.
     """
 
     def __init__(self, graph, clipOut, clipIn):

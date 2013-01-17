@@ -53,6 +53,7 @@ class GraphWrapper(QtCore.QObject):
         # the links between the graph and this graphWrapper
         graph.nodesChanged.connect(self.updateNodeWrappers)
         graph.connectionsChanged.connect(self.updateConnectionWrappers)
+        graph.connectionsCoordChanged.connect(self.updateConnectionsCoord)
 
     def __str__(self):
         """

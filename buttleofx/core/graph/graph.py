@@ -1,10 +1,12 @@
-from quickmamba.patterns import Signal
-
 from PySide import QtCore
-
+# core
+from buttleofx.core.graph.node import Node
+from buttleofx.core.graph.connection import Connection
 #undo_redo
 from buttleofx.core.undo_redo.manageTools import CommandManager
-from buttleofx.core.undo_redo.commands import CmdCreateNode, CmdCreateConnection
+from buttleofx.core.undo_redo.commands import CmdCreateNode, CmdDeleteNode, CmdCreateConnection
+# quickmamba
+from quickmamba.patterns import Signal
 
 
 class Graph(object):
@@ -42,30 +44,21 @@ class Graph(object):
         """
         return self._connections
 
-    @QtCore.Slot(str, CommandManager)
     def createNode(self, nodeType, cmdManager):
         """
             Adds a node from the node list when a node is created.
         """
-
         print "createNode"
-        cmdCreateNode = CmdCreateNode(self, nodeType)
+        cmdCreateNode = CmdCreateNode(self, nodeType, cmdManager)
         cmdManager.push(cmdCreateNode)
-        #CommandManager.doCmd(CmdCreateNode(nodeType))
 
-    def deleteNode(self, nodeName):
+    def deleteNode(self, nodeName, cmdManager):
         """
             Removes a node in the node list when a node is deleted.
         """
         print "deleteNode"
-
-        # we search the right node to delete
-        node = self.getNode(nodeName)
-        if (node != None):
-            self.deleteNodeConnections(nodeName)
-            self._nodes.remove(node)
-        self.nodesChanged()
-        # commandManager.doCmd( CmddeleteNode(nodeid) )
+        cmdDeleteNode = CmdDeleteNode(self, nodeName, cmdManager)
+        cmdManager.push(cmdDeleteNode)
 
     def createConnection(self, clipOut, clipIn, cmdManager):
         """

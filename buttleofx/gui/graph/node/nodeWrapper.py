@@ -1,11 +1,9 @@
-#!/usr/bin/env python
-# -*-coding:utf-8-*
-
-from quickmamba.patterns import Signal
+from PySide import QtCore, QtGui
+# core
 from buttleofx.core.undo_redo.manageTools import CommandManager
 from buttleofx.core.undo_redo.commands import CmdSetCoord
-
-from PySide import QtCore, QtGui
+# quickmamba
+from quickmamba.patterns import Signal
 
 
 class NodeWrapper(QtCore.QObject):

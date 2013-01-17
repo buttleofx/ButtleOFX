@@ -3,14 +3,17 @@ import QtQuick 1.1
 Item{
     width: 30
     height: 20
-    property alias title: paramTitle.text
+    property alias title: paramBooleanTitle.text
 
     /*Title of the param*/
     Text {
-        id: paramTitle
-        text: "undefined"
+        id: paramBooleanTitle
+        width: 80
+        text: model.object.text + " : "
         color: "white"
-        font.pointSize: 8
+       // font.pointSize: 8
+        anchors.top: parent.top
+        anchors.verticalCenter: parent.verticalCenter
     }
 
     /*Black square we can check*/
@@ -22,7 +25,7 @@ Item{
         height: 15
         radius : 1
         color: "black"
-        anchors.left: paramTitle.right
+        anchors.left: paramBooleanTitle.right
         anchors.leftMargin: 5
 
         /*When we check, an other white square appears in the black one*/

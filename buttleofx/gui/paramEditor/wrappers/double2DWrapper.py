@@ -1,12 +1,13 @@
 from PySide import QtCore
 
 
-class IntWrapper(QtCore.QObject):
+class Double2DWrapper(QtCore.QObject):
     def __init__(self, paramElmt):
         QtCore.QObject.__init__(self)
         self._paramType = paramElmt.paramType
         self._text = paramElmt.text
-        self._defaultValue = paramElmt.defaultValue
+        self._defaultValue1 = paramElmt.defaultValue1
+        self._defaultValue2 = paramElmt.defaultValue2
         self._maximum = paramElmt.maximum
         self._minimum = paramElmt.minimum
 
@@ -16,8 +17,11 @@ class IntWrapper(QtCore.QObject):
     def getText(self):
         return self._text
 
-    def getDefaultValue(self):
-        return self._defaultValue
+    def getDefaultValue1(self):
+        return self._defaultValue1
+
+    def getDefaultValue2(self):
+        return self._defaultValue2
 
     def getMaximum(self):
         return self._maximum
@@ -29,6 +33,7 @@ class IntWrapper(QtCore.QObject):
 
     paramType = QtCore.Property(unicode, getParamType, notify=changed)
     text = QtCore.Property(unicode, getText, notify=changed)
-    defaultValue = QtCore.Property(float, getDefaultValue, notify=changed)
+    defaultValue1 = QtCore.Property(float, getDefaultValue1, notify=changed)
+    defaultValue2 = QtCore.Property(float, getDefaultValue2, notify=changed)
     maximum = QtCore.Property(float, getMaximum, notify=changed)
     minimum = QtCore.Property(float, getMinimum, notify=changed)

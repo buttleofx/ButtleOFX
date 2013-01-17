@@ -3,7 +3,7 @@
 
 #from buttleofx.gui.graph.node import nodeWrapper
 from buttleofx.core.undo_redo.manageTools import UndoableCommand
-from buttleofx.gui.graph.connection import Connection
+from buttleofx.core.graph.connection import Connection
 
 
 class CmdCreateConnection(UndoableCommand):

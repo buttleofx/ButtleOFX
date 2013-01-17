@@ -18,7 +18,7 @@ Rectangle {
         width: parent.width
         height: parent.height
         Repeater {
-            model : _nodeWrappers
+            model : _buttleData.getGraphWrapper().getNodeWrappers()
             Node {
                 Component.onDestruction: {
                     nodes.forceActiveFocus()
@@ -33,7 +33,8 @@ Rectangle {
     width: parent.width
     height: parent.height
         Repeater {
-            model : _connectionWrappers
+
+            model : _buttleData.getGraphWrapper().getConnectionWrappers()
 
                 Item {
                     id: truc
@@ -56,7 +57,6 @@ Rectangle {
                         console.log(truc.height);
                     }
                }
-
         }
     }
 

@@ -43,22 +43,22 @@ def main(argv):
     rc.setContextProperty("_cmdManager", cmdManager)
 
     # for the ParamEditor
-    paramList = [
-            ParamInt(20, 5, 128),
-            ParamInt(defaultValue=11, minimum=5, maximum=500, text="something"),
-            ParamInt(defaultValue=50, minimum=1, maximum=52, text="truc"),
-            ParamString(defaultValue="something.jpg", stringType="filename"),
-            ParamInt(defaultValue=7, minimum=5, maximum=12),
-            ParamString(defaultValue="somethingelse.jpg", stringType="type2"),
-            ParamString(defaultValue="somethingelse.jpg", stringType="type2"),
-            ParamDouble(defaultValue=50, minimum=1, maximum=52, text="lol"),
-            ParamBoolean(defaultValue="true", text="boolean"),
-            ParamDouble2D(defaultValue=50, minimum=1, maximum=52, text="lol2D"),
-            ParamDouble3D(defaultValue=50, minimum=1, maximum=52, text="lol3D")
-    ]
+    #paramList = [
+    #        ParamInt(20, 5, 128),
+    #        ParamInt(defaultValue=11, minimum=5, maximum=500, text="something"),
+    #        ParamInt(defaultValue=50, minimum=1, maximum=52, text="truc"),
+    #        ParamString(defaultValue="something.jpg", stringType="filename"),
+    #        ParamInt(defaultValue=7, minimum=5, maximum=12),
+    #        ParamString(defaultValue="somethingelse.jpg", stringType="type2"),
+    #        ParamString(defaultValue="somethingelse.jpg", stringType="type2"),
+    #        ParamDouble(defaultValue=50, minimum=1, maximum=52, text="lol"),
+    #        ParamBoolean(defaultValue="true", text="boolean"),
+    #        ParamDouble2D(defaultValue=50, minimum=1, maximum=52, text="lol2D"),
+    #        ParamDouble3D(defaultValue=50, minimum=1, maximum=52, text="lol3D")
+    #]
 
-    paramsW = ParamEditorWrapper(view, paramList)
-    rc.setContextProperty('_paramList', paramsW)
+    #paramsW = ParamEditorWrapper(view, paramList)
+    #rc.setContextProperty('_paramList', paramsW)
 
     # launch QML
     view.setSource(os.path.join(currentFilePath, "MainWindow.qml"))

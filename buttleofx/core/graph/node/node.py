@@ -1,8 +1,8 @@
 from quickmamba.patterns import Signal
 from PySide import QtGui
 # paramEditor
-from buttleofx.gui.paramEditor.params import ParamInt
-from buttleofx.gui.paramEditor.params import ParamString
+from buttleofx.core.params import ParamInt
+from buttleofx.core.params import ParamString
 
 nodeDescriptors = {
     "Blur": {

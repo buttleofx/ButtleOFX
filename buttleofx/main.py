@@ -5,12 +5,12 @@ from buttleofx.datas import ButtleData
 #connections
 from buttleofx.gui.graph.connection import LineItem
 # paramEditor
-from buttleofx.gui.paramEditor.params import ParamInt
-from buttleofx.gui.paramEditor.params import ParamString
-from buttleofx.gui.paramEditor.params import ParamBoolean
-from buttleofx.gui.paramEditor.params import ParamDouble
-from buttleofx.gui.paramEditor.params import ParamDouble2D
-from buttleofx.gui.paramEditor.params import ParamDouble3D
+from buttleofx.core.params import ParamInt
+from buttleofx.core.params import ParamString
+from buttleofx.core.params import ParamBoolean
+from buttleofx.core.params import ParamDouble
+from buttleofx.core.params import ParamDouble2D
+from buttleofx.core.params import ParamDouble3D
 from buttleofx.gui.paramEditor.wrappers import ParamEditorWrapper
 
 # undo_redo

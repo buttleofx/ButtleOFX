@@ -48,7 +48,8 @@ Rectangle {
             anchors.fill: parent
             onClicked: {
                 //_graphWrapper.deleteCurrentNode();
-                _buttleData.getGraphWrapper().destructionProcess(_cmdManager)
+                _buttleData.getGraphWrapper().destructionNode(_cmdManager)
+
             }
         }
     }
@@ -107,7 +108,7 @@ Rectangle {
                     onExited: parent.color = "#343434"
                     onClicked: {
                         if(nodeMenuView.state == "shown"){
-                            _buttleData.getGraphWrapper().creationProcess(cat2, _cmdManager)
+                            _buttleData.getGraphWrapper().creationNode(cat2, _cmdManager)
                             nodeMenuView.state = "hidden"
                         }
                     }

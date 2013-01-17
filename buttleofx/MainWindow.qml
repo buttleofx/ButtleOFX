@@ -13,20 +13,22 @@ ApplicationWindow {
     minimumHeight: 50
 
     Keys.onPressed: {
+        console.log("ApplicationWindow Keys.onPressed");
         if (event.key == Qt.Key_Delete) {
             console.log("destruction");
-            _graphWrapper.destructionProcess();
+            _graphWrapper.destructionNode();
         }
         if (event.key == Qt.Key_U) {
+                console.log("Undo");
                 _cmdManager.undo();
             }
             if (event.key == Qt.Key_R) {
-                console.log("R");
+                console.log("Redo");
                 _cmdManager.redo();
             }
     }
 
-    Rectangle{
+    Rectangle {
         id:mainMenu
         width: parent.width
         height: 30
@@ -42,7 +44,8 @@ ApplicationWindow {
         }
     }
 
-    Rectangle{//this rectangle represents the zone under the menu, it allows to define the anchors.fill and margins for the SplitterRow
+    //this rectangle represents the zone under the menu, it allows to define the anchors.fill and margins for the SplitterRow
+    Rectangle {
         id: modulsContainer
         y: mainMenu.height
         width: parent.width
@@ -52,13 +55,13 @@ ApplicationWindow {
         SplitterRow {
             anchors.fill: parent
             anchors.margins: 5
-            /*handleWidth changes the size of the separation between the row, column.*/
-            handleWidth: 3
+            //handleWidth changes the size of the separation between the row, column.
+            //handleWidth: 3
 
             SplitterColumn {
                 width: 0.7*parent.width
                 height: parent.height
-                handleWidth: 3
+                //handleWidth: 3
 
                 Player {
                     width: parent.width

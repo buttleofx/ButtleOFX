@@ -4,224 +4,129 @@ import Qt 4.7
 
 Rectangle {
     id: node
-    property variant nodeModel : model.object
-    height: 35 + 7*nodeModel.nbInput
+
+    QtObject {
+        id: m
+        property variant nodeModel: model.object
+    }
+    property int heightEmptyNode : 35
+    property int nbInput: m.nodeModel.nbInput
+
+    height: node.heightEmptyNode + node.inputSpacing * node.nbInput
     width: 110
-    x: nodeModel.coord[0]
-    y: nodeModel.coord[1]
+
+    x: m.nodeModel.coord[0]
+    y: m.nodeModel.coord[1]
     z: _buttleData.getGraphWrapper().getZMax()
+
+    property int inputSpacing : 7
+    property int clipSize: 8
+    property int inputTopMargin: (node.height- node.clipSize*node.nbInput - node.inputSpacing * (node.nbInput-1)) / 2
+    property int inputSideMargin: 6
+
     color: "transparent"
     focus: true
 
     Rectangle {
         id: nodeBorder
-        height: 40
+        height: parent.height
         width: 110
         anchors.centerIn: parent
-        color: nodeModel.color
+        color: m.nodeModel.color
         opacity: 0.5
         radius: 10
     }
     Rectangle {
         id: nodeRectangle
         anchors.centerIn: parent
-        height: 32
+        height: parent.height - 8
         width: 102
         color: "#bbbbbb"
         radius: 8
         Text {
             anchors.centerIn: parent
-            text: nodeModel.name
+            text: m.nodeModel.name
             font.pointSize: 10
-            color: (nodeModel.name === _buttleData.getGraphWrapper().currentNode) ? "#00b2a1" : "black"
+            color: (m.nodeModel.name === _buttleData.getGraphWrapper().currentNode) ? "#00b2a1" : "black"
         }
     }
     Column {
         id: nodeInputs
-        anchors.horizontalCenter: parent.left
-        anchors.top: parent.verticalCenter
-        spacing: 2
-        property int nbInput: nodeModel.nbInput
+        anchors.left: parent.left
+        anchors.leftMargin: -node.inputSideMargin
+        anchors.top: parent.top
+        anchors.topMargin: node.inputTopMargin
+        spacing: node.inputSpacing
         property string port : "input"
         Repeater {
-            model: nodeInputs.nbInput
+            model: node.nbInput
             Clip {}
         }
     }
     Column {
         id: nodeOutputs
-        anchors.horizontalCenter: parent.right
+        anchors.right: parent.right
+        anchors.rightMargin: -node.inputSideMargin
         anchors.top: parent.verticalCenter
         spacing: 2
         property string port : "output"
         Repeater {
             model: 1
-            Clip {}
+            Clip {
+            }
         }
     }
+
+    StateGroup {
+        id: stateMoving
+        state: "normal"
+        states: [
+            State {
+                name: "normal"
+                PropertyChanges { target: node; x: m.nodeModel.coord[0]; y: m.nodeModel.coord[1] }
+            },
+            State {
+                name: "moving"
+                PropertyChanges { target: node; x: m.nodeModel.coord[0] ; y: m.nodeModel.coord[1] }
+            }
+        ]
+    }
+
+    StateGroup {
+        id: statePressed
+        states: [
+            State {
+            name: "pressed"
+            when: nodeMouseArea.pressed
+            PropertyChanges { target: node; opacity: .5 }
+            }
+        ]
+    }
+
     MouseArea {
-        anchors.fill: parent
-        drag.target: parent
-        drag.axis: Drag.XandYAxis
-        onPressed: parent.opacity = 0.5
-        onReleased: {
-            parent.opacity = 1;
-            nodeModel.nodeMoved(parent.x, parent.y, _cmdManager);
-            parent.x = nodeModel.coord[0];
-            parent.y = nodeModel.coord[1];
-        }
-        onClicked: {
-            console.log(nodeModel.name)
-            
-            if(_buttleData.getGraphWrapper().getCurrentNode() != nodeModel.name) {
-                _buttleData.getGraphWrapper().setCurrentNode(nodeModel.name)
-                //_paramList.setNodeForParam(nodeModel) il faut que ça vienne de buttleData !
-                _buttleData.getGraphWrapper().setZMax()
-                parent.z = _buttleData.getGraphWrapper().getZMax()
-                console.log(parent.z)
-            }
-        }
-    }
-}
-
-
-
-
-/*Item {
-    id: node
-
-    height: 35 + 7*_graphWrapper.getWrappers(node).nbInput
-    width: 110
-    x: _graphWrapper.getWrappers(node).x
-    y: _graphWrapper.getWrappers(node).y
-    z: _graphWrapper.getZMax()
-    focus: true
-
-    Keys.onPressed: {
-            if (event.key == Qt.Key_Delete) {
-                    _graphWrapper.deleteCurrentNode()
-            }
-    }
-
-    Rectangle {
-        id: nodeBorder
-        height: node.height
-        width: node.width
-        anchors.centerIn: parent
-        color: _graphWrapper.getWrappers(node).color
-        opacity: 0.5
-        radius: 10
-    }
-    Rectangle {
-        id: nodeRectangle
-        anchors.centerIn: parent
-        height: node.height - 8
-        width: node.width - 8
-        color: "#bbbbbb"
-        radius: 8
-        Text {
-            id: nodeName
-            anchors.centerIn: parent
-            text: _graphWrapper.getWrappers(node).name
-            font.pointSize: 10
-            color: "black"
-        }
-    }
-    Column {
-        id: nodeInputs
-        anchors.horizontalCenter: parent.left
-        anchors.verticalCenter: parent.verticalCenter
-        spacing: 2
-        Repeater {
-            model: _graphWrapper.getWrappers(node).nbInput
-            Rectangle {
-                id: nodeInput
-                height: 5
-                width: 5
-                color: "#bbbbbb"
-                radius: 2
-                MouseArea {
-                    anchors.fill: parent
-                    hoverEnabled: true
-                    onPressed: {
-                        color = "red"
-                        console.log("Input clicked");
-                        _connectionManager.inputPressed(nodeName.text, "in" + index) // we send the node name and the id of the input
-                    }
-                    onReleased: {
-                        color = "#bbbbbb"
-                        _connectionManager.inputReleased(nodeName.text, "in" + index)
-                    }
-                    onEntered: {
-                        color = "blue"
-                    }
-                    onExited: {
-                        color = "#bbbbbb"
-                    }
-                }
-            }
-        }
-    }
-    Column {
-        id: nodeOutput
-        anchors.horizontalCenter: parent.right
-        anchors.verticalCenter: parent.verticalCenter
-        spacing: 2
-
-        Repeater {
-            model: 1
-            Rectangle {
-                id: nodeOutput
-                height: 5
-                width: 5
-                color: "#bbbbbb"
-                radius: 2
-                MouseArea {
-                    anchors.fill: parent
-                    hoverEnabled: true
-                    onPressed: {
-                        color = "red"
-                        console.log("Output clicked");
-                        _connectionManager.outputPressed(nodeName.text, "out" + index)
-                    }
-                    onReleased: {
-                        color = "#bbbbbb"
-                        _connectionManager.outputReleased(nodeName.text, "out" + index)
-                    }
-                    onEntered: {
-                        color = "blue"
-                    }
-                    onExited: {
-                        color = "#bbbbbb"
-                    }
-                }
-            }
-        }
-    }
-    states: State {
-        name: "selected";
-        when: _graphWrapper.currentNode == node
-        PropertyChanges {
-            target: nodeRectangle
-            color: "#d9d9d9"
-        }
-    }
-    MouseArea {
+        id: nodeMouseArea
         anchors.fill: parent
         drag.target: parent
         drag.axis: Drag.XandYAxis
         onPressed: {
-            _graphWrapper.currentNode = node
-            parent.opacity = 0.5
-            if(_graphWrapper.currentNode != node) {
-                _graphWrapper.setZMax()
-                parent.z = _graphWrapper.getZMax()
-                console.log(parent.z)
+            console.log("node onPressed")
+            if(_buttleData.getGraphWrapper().getCurrentNode() != m.nodeModel.name) {
+                _buttleData.getGraphWrapper().setCurrentNode(m.nodeModel.name)
+                _buttleData.getGraphWrapper().setZMax()
+                parent.z = _buttleData.getGraphWrapper().getZMax()
             }
-
+            stateMoving.state = "moving"
+            _buttleData.getGraphWrapper().updateConnectionsCoord()
         }
         onReleased: {
-            parent.opacity = 1
+            console.log("node onReleased")
+            m.nodeModel.nodeMoved(parent.x, parent.y, _cmdManager)
+            stateMoving.state = "normal"
+            //m.modelPosX = nodeModel.coord[0]
+            //m.modelPosY = nodeModel.coord[1]
+            console.log(m.nodeModel.coord[0])
+            console.log(m.nodeModel.coord[1])
+            _buttleData.getGraphWrapper().updateConnectionsCoord()
         }
     }
-}*/
+}

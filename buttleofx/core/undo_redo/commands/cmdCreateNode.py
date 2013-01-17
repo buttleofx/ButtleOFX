@@ -1,4 +1,3 @@
-#from buttleofx.gui.graph.node import nodeWrapper
 from buttleofx.core.undo_redo.manageTools import UndoableCommand
 from buttleofx.core.undo_redo.manageTools import CommandManager
 from buttleofx.core.graph.node import Node
@@ -24,8 +23,9 @@ class CmdCreateNode(UndoableCommand):
         """
             Undo the creation of the node.
         """
-        print "Undo creation"
+        print "Undo creation "
         self.graphTarget.deleteNode(self.nodeName, self.cmdManager)
+        self.graphTarget._nbNodesCreated -= 1
 
     def redoCmd(self):
         """
@@ -42,4 +42,4 @@ class CmdCreateNode(UndoableCommand):
         self.nodeName = str(self.nodeType) + "_" + str(self.graphTarget._nbNodesCreated)
         # nodeId = IdNode(nodeName, nodeType, nodeCoord[0], nodeCoord[1])
         self.graphTarget._nodes.append(Node(self.nodeName, self.nodeType, self.nodeCoord))
-        self.graphTarget.nodeCreated(self.nodeName)
+        self.graphTarget.nodesChanged()

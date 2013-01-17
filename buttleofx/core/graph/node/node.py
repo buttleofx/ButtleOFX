@@ -62,6 +62,8 @@ defaultNodeDesc = {
 
 class Node(object):
     """
+        Creates a python object Node.
+
         Class Node defined by:
         - _name
         - _type
@@ -70,16 +72,8 @@ class Node(object):
         - _nbInput
         - _image
 
-        Signals :
-        - nameChanged : a signal emited to the wrapper layer
-        - typeChanged : a signal emited to the wrapper layer
-        - xChanged : a signal emited to the wrapper layer
-        - yChanged : a signal emited to the wrapper layer
-        - colorChanged : a signal emited to the wrapper layer
-        - nbInputChanged : a signal emited to the wrapper layer
-        - imageChanged : a signal emited to the wrapper layer
-
-        Creates a python object Node.
+        Signal :
+        - changed : a signal emited to the wrapper layer
     """
 
     def __init__(self, nodeName, nodeType, nodeCoord):
@@ -95,12 +89,7 @@ class Node(object):
         self._params = nodeDesc["params"]
         # ###
 
-        self.NodeNameChanged = Signal()
-        self.NodeTypeChanged = Signal()
-        self.NodeCoordChanged = Signal()
-        self.NodeColorChanged = Signal()
-        self.NodeNbInputChanged = Signal()
-        self.NodeImageChanged = Signal()
+        self.changed = Signal()
 
     def __str__(self):
         return 'Node "%s"' % (self._name)
@@ -133,30 +122,30 @@ class Node(object):
     def setName(self, name):
         self._name = name
         #self.NodeNameChanged()
-        self.NodeNameChanged(name)
+        self.changed()
 
     def setType(self, nodeType):
         self._type = nodeType
         #self.NodeTypeChanged()
-        self.NodeTypeChanged(nodeType)
+        self.changed()
 
     def setCoord(self, x, y):
         print "node.setCoord"
         self._coord = (x, y)
         print "Node Coords have changed : " + str(self._coord)
-        self.NodeCoordChanged(x, y)
+        self.changed()
 
     def setColor(self, r, g, b):
         self._color = (r, g, b)
         #self.NodeColorChanged()
-        self.NodeColorChanged(r, g, b)
+        self.changed()
 
     def setNbInput(self, nbInput):
         self._nbInput = nbInput
         #self.NodeNbInputChanged()
-        self.NodeNbInputChanged(nbInput)
+        self.changed()
 
     def setImage(self, image):
         self._image = image
         #self.NodeImageChanged()
-        self.NodeImageChanged(image)
+        self.changed()

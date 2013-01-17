@@ -1,5 +1,9 @@
+from PySide import QtGui, QtDeclarative
+import os
 # data
 from buttleofx.datas import ButtleData
+#connections
+from buttleofx.gui.graph.connection import LineItem
 # paramEditor
 from buttleofx.gui.paramEditor.params import ParamInt
 from buttleofx.gui.paramEditor.params import ParamString
@@ -7,15 +11,14 @@ from buttleofx.gui.paramEditor.wrappers import ParamEditorWrapper
 # undo_redo
 from buttleofx.core.undo_redo.manageTools import CommandManager
 
-
-from PySide import QtGui, QtDeclarative
-
-import os
-
 currentFilePath = os.path.dirname(os.path.abspath(__file__))
 
 
 def main(argv):
+    QtDeclarative.qmlRegisterType(LineItem, "ConnectionLineItem", 1, 0, "ConnectionLine")
+
+    # data
+    buttleData = ButtleData()
 
     # create undo-redo context
     cmdManager = CommandManager()

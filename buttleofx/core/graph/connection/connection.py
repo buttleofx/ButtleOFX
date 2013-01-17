@@ -1,3 +1,6 @@
+from quickmamba.patterns import Signal
+
+
 class Connection(object):
 
     """
@@ -12,6 +15,23 @@ class Connection(object):
         self._clipOut = clipOut
         self._clipIn = clipIn
 
+        self.changed = Signal()
+        self.changed()
+
     def __str__(self):
-        #print 'Connection between the node "%s" and the node "%s' % (self._nodeOut._name, self._nodeIn._name)
         print 'Connection between the clip "%s (%s %d)" and the clip "%s (%s %d)' % (self._clipOut._nodeName, self._clipOut._port, self._clipOut._clipNumber, self._clipIn._nodeName, self._clipIn._port, self._clipIn._clipNumber)
+
+    def getClipOut(self):
+        return self._clipOut
+
+    def getClipIn(self):
+        return self._clipIn
+
+    def setClipOut(self, clipOut):
+        self._clipOut = clipOut
+        self.changed()
+
+    def setClipIn(self, clipIn):
+        self._clipIn = clipIn
+        self.changed()
+

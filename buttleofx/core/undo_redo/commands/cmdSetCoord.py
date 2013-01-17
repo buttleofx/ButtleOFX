@@ -1,5 +1,6 @@
 from buttleofx.core.undo_redo.manageTools import UndoableCommand
 
+
 class CmdSetCoord(UndoableCommand):
     """
         Command that moves a node

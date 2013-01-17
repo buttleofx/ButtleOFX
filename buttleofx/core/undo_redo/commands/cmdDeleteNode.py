@@ -1,4 +1,3 @@
-#from buttleofx.gui.graph.node import nodeWrapper
 from buttleofx.core.undo_redo.manageTools import UndoableCommand
 from buttleofx.core.graph.node import Node
 
@@ -43,7 +42,13 @@ class CmdDeleteNode(UndoableCommand):
         for node in self.graphTarget._nodes:
             if node.getName() == self.nodeName:
                 self.nodeType = node.getType()
+                # delete his connections
+                for connection in self.graphTarget._connections:
+                    if connection.getClipOut().getNodeName() == self.nodeName or connection.getClipIn().getNodeName() == self.nodeName:
+                        self.graphTarget.deleteConnection(connection)
+                # delete the node
                 self.graphTarget._nodes.remove(node)
                 break
             indexWrapper += 1
-        self.graphTarget.nodeDeleted(indexWrapper)
+        self.graphTarget.nodesChanged()
+        self.graphTarget.connectionsChanged()

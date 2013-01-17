@@ -81,6 +81,7 @@ class NodeWrapper(QtCore.QObject):
         print "nodeWrapper Coords have changed : " + str(self._node._coord)
         self.changed()
 
+    @QtCore.Slot(int, int, int)
     def setColor(self, r, g, b):
         self._node._color = (r, g, b)
         self.changed()

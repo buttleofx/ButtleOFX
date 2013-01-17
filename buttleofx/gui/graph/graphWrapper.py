@@ -91,7 +91,7 @@ class GraphWrapper(QtCore.QObject):
         """
         return self._nodeWrappers
 
-    @QtCore.Slot(result="QtCore.QObject")
+    @QtCore.Slot(str, result="QtCore.QObject")
     def getNodeWrapper(self, nodeName):
         """
             Returns the right nodeWrapper, identified with its nodeName.
@@ -118,7 +118,7 @@ class GraphWrapper(QtCore.QObject):
     @QtCore.Slot(result="QtCore.QObject")
     def getCurrentNodeWrapper(self):
         """
-            Return the name of the current selected node.
+            Return the current nodeWrapper.
         """
         return self.getNodeWrapper(self._currentNode)
 

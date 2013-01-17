@@ -7,44 +7,42 @@ Item {
     width: parent.width
     height: parent.height
 
-    /*Title of the paramInt */
-    Text {
-        id: paramStringTitle
-        width: 80
-        text: model.object.stringType + " : "
-        color: "white"
-        //font.pointSize: 8
-        anchors.top: parent.top
-        anchors.verticalCenter: parent.verticalCenter
-    }
 
     /*Container of the textInput*/
-    Rectangle{
+    Row{
         id: paramStringInputContainer
-        width: 100
+        spacing: 10
 
-        border.width: 1
-        border.color: "#111111"
-        radius: 4
-
-        anchors.left: paramStringTitle.right
-        anchors.leftMargin: 5
+        /*Title of the paramInt */
+        Text {
+            id: paramStringTitle
+            width: 80
+            text: model.object.stringType + " : "
+            color: "white"
+            //font.pointSize: 8
+            anchors.top: parent.top
+            anchors.verticalCenter: parent.verticalCenter
+        }
 
         /*Input field limited to 50 characters*/
-        TextInput{
-            id: paramStringInput
-            text: model.object.defaultValue
-            anchors.left: parent.left
-            anchors.leftMargin: 5
-            maximumLength: 50
-            color: focus ? "white" : "grey"
-            onAccepted: model.object.setDefaultValue(parent.text)
-        }
-        MouseArea{
-            anchors.fill: parent
-            onPressed: input.focus = true
-            onReleased: input.focus = false
+        Rectangle{
+            height: 20
+            width:200
+            color: "#212121"
+            border.width: 1
+            border.color: "#333"
+            radius: 3
+            TextInput{
+                id: paramStringInput
+                text: model.object.defaultValue
+                anchors.left: parent.left
+                anchors.leftMargin: 5
+                maximumLength: 100
+                activeFocusOnPress : true
+                selectByMouse : true
+                color: focus ? "white" : "grey"
+                onAccepted: model.object.setDefaultValue(parent.text)
+            }
         }
     }
-
 }

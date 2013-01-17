@@ -16,11 +16,11 @@ Rectangle {
         }
         if (event.key == Qt.Key_U) {
                 console.log("Undo");
-                _cmdManager.undo();
+                _buttleData.undo();
             }
             if (event.key == Qt.Key_R) {
                 console.log("Redo");
-                _cmdManager.redo();
+                _buttleData.redo();
             }
     }
 

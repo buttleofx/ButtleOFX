@@ -121,7 +121,16 @@ Rectangle {
         }
         onReleased: {
             console.log("node onReleased")
-            m.nodeModel.nodeMoved(parent.x, parent.y)
+
+           // m.nodeModel.nodeMoved(parent.x, parent.y) // (obsolete)
+            _buttleData.getGraphWrapper().nodeMoved(m.nodeModel.name, parent.x, parent.y)
+            /*
+                => Why not managed by the nodeWrapped anymore ? Because we can't store the node in the cmdManager, we need to store the node name.
+                If we store the node and the node is deleted, we won't be able to apply undo/redo on it because the recreated node won't be the same.
+                But the node name will be the same. So we need the node name.
+                The fonction is managed by the graphWrapper because in order to find the right node, we need to give the graph to the cmdManager.
+            */
+
             stateMoving.state = "normal"
             //m.modelPosX = nodeModel.coord[0]
             //m.modelPosY = nodeModel.coord[1]

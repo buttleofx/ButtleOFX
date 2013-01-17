@@ -1,8 +1,5 @@
-from quickmamba.patterns import Signal
-from PySide import QtGui
-# paramEditor
 from buttleofx.gui.paramEditor.params import ParamInt
-from buttleofx.gui.paramEditor.params import ParamString
+
 
 nodeDescriptors = {
     "Blur": {
@@ -10,15 +7,8 @@ nodeDescriptors = {
         "nbInput": 1,
         "url": "../img/brazil.jpg",
         "params": [
-            ParamString(defaultValue="node.getName()", stringType="Name"),
-            ParamString(defaultValue="node.getType()", stringType="Type"),
-            ParamInt(defaultValue="node.getCoord()[0]", minimum=0, maximum=1000, text="Coord x"),
-            ParamInt(defaultValue="node.getCoord()[1]", minimum=0, maximum=1000, text="Coord y"),
-            ParamInt(defaultValue="node.getColor().red()", minimum=0, maximum=255, text="Color red"),
-            ParamInt(defaultValue="node.getColor().green()", minimum=0, maximum=255, text="Color green"),
-            ParamInt(defaultValue="node.getColor().blue()", minimum=0, maximum=255, text="Color blue"),
-            ParamInt(defaultValue="node.getNbInput()", minimum=1, maximum=15, text="Nb input"),
-            ParamString(defaultValue="node.getImage()", stringType="Image file"),
+            ParamInt(defaultValue=20, minimum=0, maximum=100, text="opacity"),
+            ParamInt(defaultValue=10, minimum=0, maximum=500, text="intensity")
         ],
     },
     "Gamma": {
@@ -26,12 +16,8 @@ nodeDescriptors = {
         "nbInput": 2,
         "url": "../img/brazil2.jpg",
         "params": [
-            ParamString(defaultValue="node.getName()", stringType="Name"),
-            ParamString(defaultValue="node.getType()", stringType="Type"),
-            ParamInt(defaultValue="node.getCoord()[0]", minimum=0, maximum=1000, text="Coord x"),
-            ParamInt(defaultValue="node.getCoord()[1]", minimum=0, maximum=1000, text="Coord y"),
-            ParamInt(defaultValue="node.getNbInput()", minimum=1, maximum=15, text="Nb input"),
-            ParamString(defaultValue="node.getImage()", stringType="Image file"),
+            ParamInt(defaultValue=50, minimum=0, maximum=100, text="opacity"),
+            ParamInt(defaultValue=20, minimum=0, maximum=500, text="intensity")
         ],
     },
     "Invert": {
@@ -39,26 +25,27 @@ nodeDescriptors = {
         "nbInput": 3,
         "url": "../img/brazil3.jpg",
         "params": [
-            ParamString(defaultValue="node.getName()", stringType="Name"),
-            ParamString(defaultValue="node.getType()", stringType="Type"),
-            ParamInt(defaultValue="node.getColor().red()", minimum=0, maximum=255, text="Color red"),
-            ParamInt(defaultValue="node.getColor().green()", minimum=0, maximum=255, text="Color green"),
-            ParamInt(defaultValue="node.getColor().blue()", minimum=0, maximum=255, text="Color blue"),
-            ParamInt(defaultValue="node.getNbInput()", minimum=1, maximum=15, text="Nb input"),
-            ParamString(defaultValue="node.getImage()", stringType="Image file"),
-        ],
+            ParamInt(defaultValue=80, minimum=0, maximum=100, text="opacity"),
+            ParamInt(defaultValue=30, minimum=0, maximum=500, text="intensity")
+        ]
     }
 }
+
 
 defaultNodeDesc = {
     "color": (187, 187, 187),
     "nbInput": 1,
     "url": "../img/uglycorn.jpg",
     "params": [
-        ParamString(defaultValue="node.getName()", stringType="Name"),
-        ParamString(defaultValue="node.getType()", stringType="Type"),
-    ],
+        ParamInt(defaultValue=100, minimum=0, maximum=100, text="opacity"),
+        ParamInt(defaultValue=100, minimum=0, maximum=500, text="intensity")
+    ]
 }
+
+
+from quickmamba.patterns import Signal
+from PySide import QtGui
+
 
 class Node(object):
     """
@@ -71,6 +58,7 @@ class Node(object):
         - _color
         - _nbInput
         - _image
+        - _paramList
 
         Signal :
         - changed : a signal emited to the wrapper layer
@@ -86,7 +74,7 @@ class Node(object):
         self._color = nodeDesc["color"]
         self._nbInput = nodeDesc["nbInput"]
         self._image = nodeDesc["url"]
-        self._params = nodeDesc["params"]
+        self._paramList = nodeDesc["params"]
         # ###
 
         self.changed = Signal()
@@ -105,9 +93,6 @@ class Node(object):
     def getCoord(self):
         return self._coord
 
-    def getDesc(self):
-        return self._desc
-
     def getColor(self):
         return QtGui.QColor(*self._color)
 
@@ -117,8 +102,8 @@ class Node(object):
     def getImage(self):
         return self._image
 
-    def getParams(self):
-        return self._params
+    def getParamList(self):
+        return self._paramList
 
     ######## setters ########
 

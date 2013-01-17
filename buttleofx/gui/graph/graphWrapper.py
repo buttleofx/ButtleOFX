@@ -40,6 +40,7 @@ class GraphWrapper(QtCore.QObject):
         self._connectionWrappers = QObjectListModel(self)
 
         self._currentNode = None
+        self._currentParams = None
         self._currentImage = ""
         self._tmpClipIn = None
         self._tmpClipOut = None
@@ -90,7 +91,7 @@ class GraphWrapper(QtCore.QObject):
         """
         return self._nodeWrappers
 
-    @QtCore.Slot(result=NodeWrapper)
+    @QtCore.Slot(result="QtCore.QObject")
     def getNodeWrapper(self, nodeName):
         """
             Returns the right nodeWrapper, identified with its nodeName.
@@ -114,6 +115,20 @@ class GraphWrapper(QtCore.QObject):
         """
         return self._currentNode
 
+    @QtCore.Slot(result="QtCore.QObject")
+    def getCurrentNodeWrapper(self):
+        """
+            Return the name of the current selected node.
+        """
+        return self.getNodeWrapper(self._currentNode)
+
+    @QtCore.Slot(result="QVariant")
+    def getCurrentParams(self):
+        """
+            Return the params of the current node.
+        """
+        return self._currentParams
+
     def getCurrentImage(self):
         """
             Return the url of the current image
@@ -136,11 +151,20 @@ class GraphWrapper(QtCore.QObject):
         for nodeWrapper in self._nodeWrappers:
             if nodeWrapper.getName() == nodeName:
                 self.setCurrentImage(nodeWrapper.getImage())
-                print(nodeWrapper.getImage())
-                print(self._currentImage)
+                self.setCurrentParams(nodeName)
 
         self._currentNode = nodeName
+
         self.currentNodeChanged.emit()
+
+    @QtCore.Slot(str)
+    def setCurrentParams(self, nodeName):
+        """
+            Change the current params and emit the change.
+        """
+        print "setCurrentParams"
+        self._currentParams = self.getNodeWrapper(nodeName).getParams().getParamElts()
+        self.currentParamsChanged.emit()
 
     def setCurrentImage(self, urlImage):
         """
@@ -330,5 +354,7 @@ class GraphWrapper(QtCore.QObject):
     connections = QtCore.Property("QVariant", getConnectionWrappers, notify=connectionWrappersChanged)
     currentNodeChanged = QtCore.Signal()
     currentNode = QtCore.Property(str, getCurrentNode, setCurrentNode, notify=currentNodeChanged)
+    currentParamsChanged = QtCore.Signal()
+    currentParams = QtCore.Property("QVariant", getCurrentParams, setCurrentParams, notify=currentParamsChanged)
     currentImageChanged = QtCore.Signal()
     currentImage = QtCore.Property(str, getCurrentImage, setCurrentImage, notify=currentImageChanged)

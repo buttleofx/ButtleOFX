@@ -2,6 +2,8 @@ from PySide import QtCore, QtGui
 # core
 from buttleofx.core.undo_redo.manageTools import CommandManager
 from buttleofx.core.undo_redo.commands import CmdSetCoord
+# wrappers
+from buttleofx.gui.paramEditor.wrappers import ParamEditorWrapper
 # quickmamba
 from quickmamba.patterns import Signal
 
@@ -18,6 +20,7 @@ class NodeWrapper(QtCore.QObject):
         super(NodeWrapper, self).__init__(view)
 
         self._node = node
+        self._view = view
 
         self._node.changed.connect(self.emitChanged)
 
@@ -51,6 +54,9 @@ class NodeWrapper(QtCore.QObject):
 
     def getImage(self):
         return self._node._image
+
+    def getParams(self):
+        return ParamEditorWrapper(self._view, self._node.getParams())
 
     ######## setters ########
 

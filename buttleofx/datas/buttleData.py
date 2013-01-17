@@ -11,19 +11,17 @@ from quickmamba.patterns import Singleton
 class ButtleData(QtCore.QObject, Singleton):
     """
         Class ButtleData defined by:
-        - _graph
         - _graphWrapper
+        - soon _currentNodeViewer
+        - soon _currentNodeParam
 
-        This class containts all data we need to manage the application.
-        Emit signal when modifications happen
+        This class :
+            - containts all data we need to manage the application.
+            - receives the undo and redo from QML, and call the cmdManager to do this.
     """
     def init(self, view):
-        self._graph = Graph()
-        self._graphWrapper = GraphWrapper(self._graph, view)
+        self._graphWrapper = GraphWrapper(Graph(), view)
         return self
-
-    def getGraph(self):
-        return self._graph
 
     @QtCore.Slot(result=GraphWrapper)
     def getGraphWrapper(self):
@@ -31,11 +29,16 @@ class ButtleData(QtCore.QObject, Singleton):
 
     @QtCore.Slot()
     def undo(self):
+        """
+            Call the cmdManager to undo the last command.
+        """
         cmdManager = CommandManager()
         cmdManager.undo()
 
     @QtCore.Slot()
     def redo(self):
+        """
+            Call the cmdManager to redo the last command.
+        """
         cmdManager = CommandManager()
         cmdManager.redo()
-

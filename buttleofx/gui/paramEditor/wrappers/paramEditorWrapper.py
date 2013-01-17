@@ -1,12 +1,11 @@
-from buttleofx.core.params import ParamInt, ParamString, ParamBoolean, ParamDouble, ParamDouble2D, ParamDouble3D
-
-from buttleofx.gui.paramEditor.wrappers import IntWrapper, StringWrapper, BooleanWrapper, DoubleWrapper, Double2DWrapper, Double3DWrapper
-
-from buttleofx.core.graph.node import Node
-
-from quickmamba.models import QObjectListModel
-
 from PySide import QtCore
+# core
+from buttleofx.core.graph.node import Node
+from buttleofx.core.params import ParamInt, ParamString, ParamBoolean, ParamDouble, ParamDouble2D, ParamDouble3D
+# gui
+from buttleofx.gui.paramEditor.wrappers import IntWrapper, StringWrapper, BooleanWrapper, DoubleWrapper, Double2DWrapper, Double3DWrapper
+#quickmamba
+from quickmamba.models import QObjectListModel
 
 
 class ParamEditorWrapper(QtCore.QObject):

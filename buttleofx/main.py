@@ -4,6 +4,10 @@ import os
 from buttleofx.datas import ButtleData
 #connections
 from buttleofx.gui.graph.connection import LineItem
+# paramEditor
+from buttleofx.core.params import ParamInt, ParamString, ParamBoolean, ParamDouble, ParamDouble2D, ParamDouble3D
+from buttleofx.gui.paramEditor.wrappers import ParamEditorWrapper
+
 # undo_redo
 from buttleofx.core.undo_redo.manageTools import CommandManager
 

@@ -12,13 +12,14 @@ Rectangle {
         console.log("ApplicationWindow Keys.onPressed");
         if (event.key == Qt.Key_Delete) {
             console.log("destruction");
-            _graphWrapper.destructionNode();
+            _buttleData.getGraphWrapper().destructionNode();
         }
         if (event.key == Qt.Key_U) {
+                console.log("Undo");
                 _cmdManager.undo();
             }
             if (event.key == Qt.Key_R) {
-                console.log("R");
+                console.log("Redo");
                 _cmdManager.redo();
             }
     }

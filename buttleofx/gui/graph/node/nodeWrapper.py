@@ -1,11 +1,9 @@
-#!/usr/bin/env python
-# -*-coding:utf-8-*
-
-from quickmamba.patterns import Signal
+from PySide import QtCore, QtGui
+# core
 from buttleofx.core.undo_redo.manageTools import CommandManager
 from buttleofx.core.undo_redo.commands import CmdSetCoord
-
-from PySide import QtCore, QtGui
+# quickmamba
+from quickmamba.patterns import Signal
 
 
 class NodeWrapper(QtCore.QObject):
@@ -15,6 +13,13 @@ class NodeWrapper(QtCore.QObject):
 
         Creates a QObject from a given python object Node.
     """
+
+    # static variables usefull to display nodes & clips :
+    widthNode = 110
+    heightEmptyNode = 35
+    clipSpacing = 7
+    clipSize = 8
+    inputSideMargin = 6
 
     def __init__(self, node, view):
         super(NodeWrapper, self).__init__(view)

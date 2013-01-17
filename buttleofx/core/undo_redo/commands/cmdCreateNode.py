@@ -24,8 +24,6 @@ class CmdCreateNode(UndoableCommand):
             Undo the creation of the node.
         """
         print "Undo creation "
-        #self.graphTarget.deleteNode(self.nodeName)
-
         node = self.graphTarget.getNode(self.nodeName)
         self.nodeCoord = node.getCoord()
         self.graphTarget.deleteNodeConnections(self.nodeName)
@@ -39,7 +37,8 @@ class CmdCreateNode(UndoableCommand):
         print "Redo creation"
         self.graphTarget.getNodes().append(Node(self.nodeName, self.nodeType, self.nodeCoord))
         self.graphTarget.nodesChanged()
-        # THINK TO RECREATE CONNECTIONS TOO !!!!!!!!!
+        # We don't have to recreate the connections because when a node is created, it can't have connections !
+        # But maybe we should delete the (hypothetical) connections anyway ??
 
     def doCmd(self):
         """

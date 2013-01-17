@@ -1,14 +1,19 @@
-from buttleofx.gui.graph.node import NodeWrapper
-from buttleofx.gui.graph.connection import ConnectionWrapper, IdClip
+from PySide import QtDeclarative, QtCore
+# core
+from buttleofx.core.graph import Graph
+from buttleofx.core.graph.connection import IdClip
+# undo redo
 from buttleofx.core.undo_redo.manageTools import CommandManager
-
+# gui
+from buttleofx.gui.graph.node import NodeWrapper
+from buttleofx.gui.graph.connection import ConnectionWrapper
+# quickmamba
 from quickmamba.models import QObjectListModel
-from quickmamba.patterns import Singleton
-
-from PySide import QtCore
+from quickmamba.patterns import Signal
 
 
-class GraphWrapper(QtCore.QObject, Singleton):
+
+class GraphWrapper(QtCore.QObject):
     """
         Class GraphWrapper defined by:
         - _engine : to have the view engine
@@ -78,12 +83,14 @@ class GraphWrapper(QtCore.QObject, Singleton):
         """
         return self._graph
 
+    @QtCore.Slot(result="QVariant")
     def getNodeWrappers(self):
         """
             Returns the nodeWrapper list.
         """
         return self._nodeWrappers
 
+    @QtCore.Slot(result=NodeWrapper)
     def getNodeWrapper(self, nodeName):
         """
             Returns the right nodeWrapper, identified with its nodeName.
@@ -93,6 +100,7 @@ class GraphWrapper(QtCore.QObject, Singleton):
                 return node
         return None
 
+    @QtCore.Slot(result="QVariant")
     def getConnectionWrappers(self):
         """
             Return the connectionWrapper list.
@@ -172,8 +180,8 @@ class GraphWrapper(QtCore.QObject, Singleton):
             nodeWrapper = NodeWrapper(node, self._view)
             self._nodeWrappers.append(nodeWrapper)
 
-    @QtCore.Slot()
-    def destructionNode(self):
+    @QtCore.Slot(CommandManager)
+    def destructionNode(self, cmdManager):
         """
             Function called when we want to delete a node from the QML.
         """
@@ -181,7 +189,7 @@ class GraphWrapper(QtCore.QObject, Singleton):
         if len(self._nodeWrappers) > 0 and len(self._graph._nodes) > 0:
             # if a node is selected
             if self._currentNode != None:
-                self._graph.deleteNode(self._currentNode)
+                self._graph.deleteNode(self._currentNode, cmdManager)
         self._currentNode = None
         # debug
         self.__str__()

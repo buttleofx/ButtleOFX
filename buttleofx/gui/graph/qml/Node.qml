@@ -15,12 +15,15 @@ Rectangle {
     height: node.heightEmptyNode + node.inputSpacing * node.nbInput
     width: 110
 
+    x: m.nodeModel.coord[0]
+    y: m.nodeModel.coord[1]
+    z: _buttleData.getGraphWrapper().getZMax()
+
     property int inputSpacing : 7
     property int clipSize: 8
     property int inputTopMargin: (node.height- node.clipSize*node.nbInput - node.inputSpacing * (node.nbInput-1)) / 2
     property int inputSideMargin: 6
 
-    z: _graphWrapper.getZMax()
     color: "transparent"
     focus: true
 
@@ -44,7 +47,7 @@ Rectangle {
             anchors.centerIn: parent
             text: m.nodeModel.name
             font.pointSize: 10
-            color: (m.nodeModel.name == _graphWrapper.currentNode) ? "#00b2a1" : "black"
+            color: (m.nodeModel.name === _buttleData.getGraphWrapper().currentNode) ? "#00b2a1" : "black"
         }
     }
     Column {
@@ -107,13 +110,13 @@ Rectangle {
         drag.axis: Drag.XandYAxis
         onPressed: {
             console.log("node onPressed")
-            if(_graphWrapper.getCurrentNode() != m.nodeModel.name) {
-                _graphWrapper.setCurrentNode(m.nodeModel.name)
-                _graphWrapper.setZMax()
-                parent.z = _graphWrapper.getZMax()
+            if(_buttleData.getGraphWrapper().getCurrentNode() != m.nodeModel.name) {
+                _buttleData.getGraphWrapper().setCurrentNode(m.nodeModel.name)
+                _buttleData.getGraphWrapper().setZMax()
+                parent.z = _buttleData.getGraphWrapper().getZMax()
             }
             stateMoving.state = "moving"
-            _graphWrapper.updateConnectionsCoord()
+            _buttleData.getGraphWrapper().updateConnectionsCoord()
         }
         onReleased: {
             console.log("node onReleased")
@@ -123,7 +126,7 @@ Rectangle {
             //m.modelPosY = nodeModel.coord[1]
             console.log(m.nodeModel.coord[0])
             console.log(m.nodeModel.coord[1])
-            _graphWrapper.updateConnectionsCoord()
+            _buttleData.getGraphWrapper().updateConnectionsCoord()
         }
     }
 }

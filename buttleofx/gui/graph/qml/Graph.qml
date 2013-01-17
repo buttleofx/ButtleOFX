@@ -18,7 +18,7 @@ Rectangle {
         width: parent.width
         height: parent.height
         Repeater {
-            model : _nodeWrappers
+            model : _buttleData.getGraphWrapper().getNodeWrappers()
             Node {
                 Component.onDestruction: {
                     nodes.forceActiveFocus()
@@ -33,14 +33,13 @@ Rectangle {
     width: parent.width
     height: parent.height
         Repeater {
-            model : _connectionWrappers
-                ConnectionLine {
-                    x1: model.object.clipOutPosX
-                    y1: model.object.clipOutPosY
-                    x2: model.object.clipInPosX
-                    y2: model.object.clipInPosY
-                }
-
+            model : _buttleData.getGraphWrapper().getConnectionWrappers()
+            ConnectionLine {
+                x1: model.object.clipOutPosX
+                y1: model.object.clipOutPosY
+                x2: model.object.clipInPosX
+                y2: model.object.clipInPosY
+            }
         }
     }
 

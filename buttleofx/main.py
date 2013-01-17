@@ -1,11 +1,9 @@
-# graph
-from buttleofx.gui.graph import Graph
-from buttleofx.gui.graph import GraphWrapper
+from PySide import QtGui, QtDeclarative
+import os
+# data
 from buttleofx.datas import ButtleData
-
 #connections
 from buttleofx.gui.graph.connection import LineItem
-
 # paramEditor
 from buttleofx.gui.paramEditor.params import ParamInt
 from buttleofx.gui.paramEditor.params import ParamString
@@ -13,13 +11,10 @@ from buttleofx.gui.paramEditor.params import ParamBoolean
 from buttleofx.gui.paramEditor.params import ParamDouble
 from buttleofx.gui.paramEditor.params import ParamDouble2D
 from buttleofx.gui.paramEditor.params import ParamDouble3D
-from buttleofx.gui.paramEditor.wrappers import MainWrapper
-#undo_redo
+from buttleofx.gui.paramEditor.wrappers import ParamEditorWrapper
+
+# undo_redo
 from buttleofx.core.undo_redo.manageTools import CommandManager
-
-from PySide import QtGui, QtDeclarative
-
-import os
 
 currentFilePath = os.path.dirname(os.path.abspath(__file__))
 
@@ -41,17 +36,13 @@ def main(argv):
     view.setWindowTitle("ButtleOFX")
     rc = view.rootContext()
 
-    # for the GraphEditor
-    graph = Graph()
-    graphWrapper = GraphWrapper(graph, view)
-    buttleData.setGraph(graph)
-    buttleData.setGraphWrapper(graphWrapper)
-
-    rc.setContextProperty("_graphWrapper", buttleData.getGraphWrapper())
-    rc.setContextProperty("_nodeWrappers", buttleData.getGraphWrapper().getNodeWrappers())
-    rc.setContextProperty("_connectionWrappers", buttleData.getGraphWrapper().getConnectionWrappers())
+    # data
+    buttleData = ButtleData().init(view)
+    #graph.createNode("Blur", cmdManager)
+    rc.setContextProperty("_buttleData", buttleData)
     rc.setContextProperty("_cmdManager", cmdManager)
 
+<<<<<<< HEAD
     # for the ParamEditor
     paramList = [
             ParamInt(20, 5, 128),
@@ -68,6 +59,11 @@ def main(argv):
     ]
     mainWrapper = MainWrapper(view, paramList)
     rc.setContextProperty('_paramListModel', mainWrapper)
+=======
+    paramList = []
+    paramsW = ParamEditorWrapper(view, paramList)
+    rc.setContextProperty('_paramList', paramsW)
+>>>>>>> 5904bca7b34417910a290af6e7dff73266da816f
 
     # launch QML
     view.setSource(os.path.join(currentFilePath, "MainWindow.qml"))

@@ -87,11 +87,7 @@ class Graph(object):
         """
             Removes all the connections of the node.
         """
-        print "begin suppression connections :"
-        for connection in self._connections:
-            if connection.getClipOut().getNodeName() == nodeName or connection.getClipIn().getNodeName() == nodeName:
-                self.deleteConnection(connection)
-        print "end suppression connections :"
+        self._connections = [connection for connection in self._connections if not (connection.getClipOut().getNodeName() == nodeName or connection.getClipIn().getNodeName() == nodeName)]
         self.connectionsChanged()
 
     ################################################## FLAGS ##################################################

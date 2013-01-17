@@ -25,6 +25,7 @@ class Graph(object):
 
         self.nodesChanged = Signal()
         self.connectionsChanged = Signal()
+        self.connectionsCoordChanged = Signal()
 
     ################################################## ACCESSORS ##################################################
 

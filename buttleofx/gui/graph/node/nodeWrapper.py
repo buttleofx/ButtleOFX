@@ -1,7 +1,5 @@
 from PySide import QtCore, QtGui
-# undo_redo
-from buttleofx.core.undo_redo.manageTools import CommandManager
-from buttleofx.core.undo_redo.commands import CmdSetCoord
+
 # wrappers
 from buttleofx.gui.paramEditor.wrappers import ParamEditorWrapper
 # quickmamba
@@ -95,18 +93,6 @@ class NodeWrapper(QtCore.QObject):
         self.changed()
 
     ######## Slots ########
-
-    @QtCore.Slot(int, int)
-    def nodeMoved(self, x, y):
-        print "Coordinates before movement :"
-        print self._node._coord
-        #self._node.setCoord(x, y)
-
-        cmdMoved = CmdSetCoord(self._node, (x, y))
-        cmdManager = CommandManager()
-        cmdManager.push(cmdMoved)
-        print "Coordinates after movement :"
-        print self._node._coord
 
     name = QtCore.Property(str, getName, setName, notify=changed)
     nodeType = QtCore.Property(str, getType, setType, notify=changed)

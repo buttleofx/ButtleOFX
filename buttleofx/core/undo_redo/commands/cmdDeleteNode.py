@@ -7,48 +7,45 @@ from buttleofx.core.graph.node import Node
 class CmdDeleteNode(UndoableCommand):
     """
         Command that delete a node.
+        Attributes :
+        - graphTarget : the graph in which the node will be deleted.
+        - nodeName
+        - nodeCoord
+        - nodeType
     """
 
     def __init__(self, graphTarget, nodeName):
-        """
-            Initializes the member variables :
-            graphTarget  is the graph in which the node will be deleted.
-            nodeName is the name of the node we want to create.
-       """
         self.graphTarget = graphTarget
         self.nodeName = nodeName
         self.nodeCoord = (50, 20)
 
     def undoCmd(self):
         """
-            Undo the delete of the node.
+            Undo the suppression of the node <=> recreate the node.
         """
         print "Undo delete"
-        self.graphTarget.createNode(self.nodeType)
+        self.graphTarget.getNodes().append(Node(self.nodeName, self.nodeType, self.nodeCoord))
+        self.graphTarget.nodesChanged()
+        # THINK TO RECREATE CONNECTIONS TOO !!!!!!!!!
 
     def redoCmd(self):
         """
-            Redo the delete of the node.
+            Redo the suppression of the node.
         """
-        print "Redo creation"
+        print "Redo delete"
         self.doCmd()
 
     def doCmd(self):
         """
             Delete a node.
         """
-        # we search the right node to delete
-        indexWrapper = 0
-        for node in self.graphTarget._nodes:
-            if node.getName() == self.nodeName:
-                self.nodeType = node.getType()
-                # delete his connections
-                for connection in self.graphTarget._connections:
-                    if connection.getClipOut().getNodeName() == self.nodeName or connection.getClipIn().getNodeName() == self.nodeName:
-                        self.graphTarget.deleteConnection(connection)
-                # delete the node
-                self.graphTarget._nodes.remove(node)
-                break
-            indexWrapper += 1
+        node = self.graphTarget.getNode(self.nodeName)
+        # we store the node type in order to be able to recreate it
+        self.nodeType = node.getType()
+        # we delete its connections
+        self.graphTarget.deleteNodeConnections(self.nodeName)
+        # and then we delete the node
+        self.graphTarget.getNodes().remove(node)
+
         self.graphTarget.nodesChanged()
         self.graphTarget.connectionsChanged()

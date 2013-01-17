@@ -4,6 +4,7 @@ from buttleofx.core.graph import Graph
 from buttleofx.core.graph.connection import IdClip
 # undo redo
 from buttleofx.core.undo_redo.manageTools import CommandManager
+from buttleofx.core.undo_redo.commands import CmdSetCoord
 # gui
 from buttleofx.gui.graph.node import NodeWrapper
 from buttleofx.gui.graph.connection import ConnectionWrapper
@@ -52,6 +53,7 @@ class GraphWrapper(QtCore.QObject):
         # the links between the graph and this graphWrapper
         graph.nodesChanged.connect(self.updateNodeWrappers)
         graph.connectionsChanged.connect(self.updateConnectionWrappers)
+        graph.connectionsCoordChanged.connect(self.updateConnectionsCoord)
 
     def __str__(self):
         """
@@ -237,6 +239,19 @@ class GraphWrapper(QtCore.QObject):
         if (node != None):
             nodeWrapper = NodeWrapper(node, self._view)
             self._nodeWrappers.append(nodeWrapper)
+
+    ################################################## INTERACTIONS ##################################################
+
+    @QtCore.Slot(str, int, int)
+    def nodeMoved(self, nodeName, x, y):
+        print "Coordinates before movement :"
+        print self._graph.getNode(nodeName).getCoord()
+
+        cmdMoved = CmdSetCoord(self._graph, nodeName, (x, y))
+        cmdManager = CommandManager()
+        cmdManager.push(cmdMoved)
+        print "Coordinates after movement :"
+        print self._graph.getNode(nodeName).getCoord()
 
     ################################################## CONNECTIONS MANAGEMENT ##################################################
 

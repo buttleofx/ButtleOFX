@@ -3,19 +3,18 @@ from buttleofx.core.undo_redo.manageTools import UndoableCommand
 
 class CmdSetCoord(UndoableCommand):
     """
-        Command that moves a node
+        Command that moves a node.
+        Attributes :
+        - graphTarget
+        - nodeTargetName : the name of the target node wich will be changed by the movement
+        - newCoord : the coordinate wich will be mofidy in the target
+        - coordOld : the old coordinate of the target node, wich will be used for reset the target in case of undo command
     """
 
-    def __init__(self, nodeTarget, newCoord):
-        """
-            Initializes the member variables :
-            nodeTarget is the target node wich will be changed by the movement
-            newCoord are the coordinate wich will be mofidy in the target
-            coordOld are the old coordinate of the target node, wich will be used for reset the target in case of undo command
-
-        """
-        self.nodeTarget = nodeTarget
-        self.coordOld = self.nodeTarget.getCoord()
+    def __init__(self, graphTarget, nodeTargetName, newCoord):
+        self.graphTarget = graphTarget
+        self.nodeTargetName = nodeTargetName
+        self.coordOld = graphTarget.getNode(nodeTargetName).getCoord()
         self.newCoord = newCoord
 
     def undoCmd(self):
@@ -23,8 +22,9 @@ class CmdSetCoord(UndoableCommand):
             Undoes the movement of the node.
             The target node is reset with the old coordinates.
         """
-        self.nodeTarget.setCoord(self.coordOld[0], self.coordOld[1])
-        return self.nodeTarget
+        self.graphTarget.getNode(self.nodeTargetName).setCoord(self.coordOld[0], self.coordOld[1])
+        self.graphTarget.connectionsCoordChanged()
+        #return self.nodeTargetName
 
     def redoCmd(self):
         """
@@ -37,8 +37,6 @@ class CmdSetCoord(UndoableCommand):
             Executes the movement of the node.
         """
 
-        self.nodeTarget.setCoord(self.newCoord[0], self.newCoord[1])
-        return self.nodeTarget
-
-    # Attention, il faut utiliser le nom du noeud pour l'identifer dans le ButtleData.
-    # Comme ca, lorsqu'on deplace un noeud, puisqu'on le modifie, on est capable de faire deux fois redo.
+        self.graphTarget.getNode(self.nodeTargetName).setCoord(self.newCoord[0], self.newCoord[1])
+        self.graphTarget.connectionsCoordChanged()
+        #return self.nodeTargetName

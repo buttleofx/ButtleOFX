@@ -39,7 +39,9 @@ class GraphWrapper(QtCore.QObject):
         self._connectionWrappers = QObjectListModel(self)
 
         self._currentNode = None
+        self._currentParams = None
         self._currentImage = ""
+
         self._tmpClipIn = None
         self._tmpClipOut = None
 
@@ -89,7 +91,7 @@ class GraphWrapper(QtCore.QObject):
         """
         return self._nodeWrappers
 
-    @QtCore.Slot(result=NodeWrapper)
+    @QtCore.Slot(result="QtCore.QObject")
     def getNodeWrapper(self, nodeName):
         """
             Returns the right nodeWrapper, identified with its nodeName.
@@ -113,6 +115,20 @@ class GraphWrapper(QtCore.QObject):
         """
         return self._currentNode
 
+    @QtCore.Slot(result="QtCore.QObject")
+    def getCurrentNodeWrapper(self):
+        """
+            Return the name of the current selected node.
+        """
+        return self.getNodeWrapper(self._currentNode)
+
+    @QtCore.Slot(result="QVariant")
+    def getCurrentParams(self):
+        """
+            Return the params of the current node.
+        """
+        return self._currentParams
+
     def getCurrentImage(self):
         """
             Return the url of the current image
@@ -135,11 +151,20 @@ class GraphWrapper(QtCore.QObject):
         for nodeWrapper in self._nodeWrappers:
             if nodeWrapper.getName() == nodeName:
                 self.setCurrentImage(nodeWrapper.getImage())
-                print(nodeWrapper.getImage())
-                print(self._currentImage)
+                self.setCurrentParams(nodeName)
 
         self._currentNode = nodeName
+
         self.currentNodeChanged.emit()
+
+    @QtCore.Slot(str)
+    def setCurrentParams(self, nodeName):
+        """
+            Change the current params and emit the change.
+        """
+        print "setCurrentParams"
+        self._currentParams = self.getNodeWrapper(nodeName).getParams().getParamElts()
+        self.currentParamsChanged.emit()
 
     def setCurrentImage(self, urlImage):
         """
@@ -202,10 +227,10 @@ class GraphWrapper(QtCore.QObject):
             The calculation is the same as in the QML file (Node.qml).
         """
         nodeCoord = self._graph.getNode(nodeName).getCoord()
-        widthNode = 110
-        heightEmptyNode = 35
-        clipSpacing = 7
-        clipSize = 8
+        widthNode = self.getWidthNode()
+        heightEmptyNode = self.getHeightEmptyNode()
+        clipSpacing = self.getClipSpacing()
+        clipSize = self.getClipSize()
         nbInput = self._graph.getNode(nodeName).getNbInput()
         heightNode = heightEmptyNode + clipSpacing * nbInput
         inputTopMargin = (heightNode - clipSize * nbInput - clipSpacing * (nbInput - 1)) / 2
@@ -250,6 +275,7 @@ class GraphWrapper(QtCore.QObject):
             Function called when a clip is pressed (but not released yet).
             The function replace the tmpClipIn or tmpClipOut.
         """
+        print "clip pressed"
         position = self.getPositionClip(nodeName, port, clipNumber)
         #position = self._graph.getNode(nodeName).getCoord()
         idClip = IdClip(nodeName, port, clipNumber, position)
@@ -324,6 +350,25 @@ class GraphWrapper(QtCore.QObject):
 
     ################################################## DATA EXPOSED TO QML ##################################################
 
+    def getWidthNode(self):
+        return NodeWrapper.widthNode
+
+    def getHeightEmptyNode(self):
+        return NodeWrapper.heightEmptyNode
+
+    def getClipSpacing(self):
+        return NodeWrapper.clipSpacing
+
+    def getClipSize(self):
+        return NodeWrapper.clipSize
+
+    def getNodeInputSideMargin(self):
+        return NodeWrapper.inputSideMargin
+
+    @QtCore.Signal
+    def changed(self):
+        pass
+
     nodesChanged = QtCore.Signal()
     nodes = QtCore.Property("QVariant", getNodeWrappers, notify=nodesChanged)
     
@@ -332,6 +377,14 @@ class GraphWrapper(QtCore.QObject):
     
     currentNodeChanged = QtCore.Signal()
     currentNode = QtCore.Property(str, getCurrentNode, setCurrentNode, notify=currentNodeChanged)
-    
+
+    currentParamsChanged = QtCore.Signal()
+    currentParams = QtCore.Property("QVariant", getCurrentParams, setCurrentParams, notify=currentParamsChanged)
     currentImageChanged = QtCore.Signal()
     currentImage = QtCore.Property(str, getCurrentImage, setCurrentImage, notify=currentImageChanged)
+
+    widthNode = QtCore.Property(int, getWidthNode, notify=changed)
+    heightEmptyNode = QtCore.Property(int, getHeightEmptyNode, notify=changed)
+    clipSpacing = QtCore.Property(int, getClipSpacing, notify=changed)
+    clipSize = QtCore.Property(int, getClipSize, notify=changed)
+    nodeInputSideMargin = QtCore.Property(int, getNodeInputSideMargin, notify=changed)

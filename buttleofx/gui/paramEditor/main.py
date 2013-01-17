@@ -19,6 +19,15 @@ if __name__ == '__main__':
     app = QtGui.QApplication(sys.argv)
     view = QtDeclarative.QDeclarativeView()
 
+    paramList = [
+            ParamInt(20, 5, 128),
+            ParamInt(defaultValue=11, minimum=5, maximum=500, text="something"),
+            ParamInt(defaultValue=50, minimum=1, maximum=52, text="truc"),
+            ParamString(defaultValue="something.jpg", stringType="filename"),
+            ParamInt(defaultValue=7, minimum=5, maximum=12),
+            ParamString(defaultValue="somethingelse.jpg", stringType="type2")
+    ]
+
     # create undo-redo context
     cmdManager = CommandManager()
     cmdManager.setActive()
@@ -40,7 +49,7 @@ if __name__ == '__main__':
         nodeType = ParamString(defaultValue=node.getType(), stringType="Type")
         nodeCoord_x = ParamInt(defaultValue=node.getCoord()[0], minimum=0, maximum=1000, text="Coord x")
         nodeCoord_y = ParamInt(defaultValue=node.getCoord()[1], minimum=0, maximum=1000, text="Coord y")
-        
+
         nodeColor_r = ParamInt(defaultValue=node.getColor().red(), minimum=0, maximum=255, text="Color red")
         nodeColor_g = ParamInt(defaultValue=node.getColor().green(), minimum=0, maximum=255, text="Color green")
         nodeColor_b = ParamInt(defaultValue=node.getColor().blue(), minimum=0, maximum=255, text="Color blue")

@@ -1,3 +1,9 @@
 from intWrapper import IntWrapper
 from stringWrapper import StringWrapper
+from booleanWrapper import BooleanWrapper
+from doubleWrapper import DoubleWrapper
+from double2DWrapper import Double2DWrapper
+from double3DWrapper import Double3DWrapper
+from mainWrapper import MainWrapper
+
 from paramEditorWrapper import ParamEditorWrapper

@@ -4,8 +4,6 @@ import os
 from buttleofx.datas import ButtleData
 #connections
 from buttleofx.gui.graph.connection import LineItem
-# paramEditor
-from buttleofx.gui.paramEditor.wrappers import ParamEditorWrapper
 # undo_redo
 from buttleofx.core.undo_redo.manageTools import CommandManager
 
@@ -28,13 +26,10 @@ def main(argv):
 
     # data
     buttleData = ButtleData().init(view)
-    paramList = []
-    paramsW = ParamEditorWrapper(view, paramList)
 
     # expose data to QML
     rc = view.rootContext()
     rc.setContextProperty("_buttleData", buttleData)
-    rc.setContextProperty('_paramList', paramsW)
 
     # launch QApplication
     view.setSource(os.path.join(currentFilePath, "MainWindow.qml"))

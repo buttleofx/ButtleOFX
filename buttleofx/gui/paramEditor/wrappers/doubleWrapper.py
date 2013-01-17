@@ -1,7 +1,7 @@
 from PySide import QtCore
 
 
-class IntWrapper(QtCore.QObject):
+class DoubleWrapper(QtCore.QObject):
     def __init__(self, paramElmt):
         QtCore.QObject.__init__(self)
         self._paramType = paramElmt.paramType

@@ -3,6 +3,8 @@ from PySide import QtDeclarative, QtCore
 from buttleofx.core.graph import Graph
 # gui : graphWrapper
 from buttleofx.gui.graph import GraphWrapper
+# undo redo
+from buttleofx.core.undo_redo.manageTools import CommandManager
 #quickmamba
 from quickmamba.patterns import Singleton
 
@@ -26,4 +28,14 @@ class ButtleData(QtCore.QObject, Singleton):
     @QtCore.Slot(result=GraphWrapper)
     def getGraphWrapper(self):
         return self._graphWrapper
+
+    @QtCore.Slot()
+    def undo(self):
+        cmdManager = CommandManager()
+        cmdManager.undo()
+
+    @QtCore.Slot()
+    def redo(self):
+        cmdManager = CommandManager()
+        cmdManager.redo()
 

@@ -26,11 +26,9 @@ if __name__ == '__main__':
 
     # data
     buttleData = ButtleData().init(view)
-    #buttleData.getGraph().createNode("Blur", cmdManager)
 
     # expose to QML
     rc.setContextProperty("_buttleData", buttleData)
-    rc.setContextProperty("_cmdManager", cmdManager)
 
     view.setWindowTitle("Graph editor")
     view.setSource(os.path.join(currentFilePath, "qml/GraphEditor.qml"))

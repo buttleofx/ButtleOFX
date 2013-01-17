@@ -206,12 +206,26 @@ class GraphWrapper(QtCore.QObject):
 
     ################################################## CREATION & DESTRUCTION ##################################################
 
-    @QtCore.Slot(str, CommandManager)
-    def creationNode(self, nodeType, cmdManager):
+    @QtCore.Slot(str)
+    def creationNode(self, nodeType):
         """
             Function called when we want to create a node from the QML.
         """
-        self._graph.createNode(nodeType, cmdManager)
+        self._graph.createNode(nodeType)
+        # debug
+        self.__str__()
+
+    @QtCore.Slot()
+    def destructionNode(self):
+        """
+            Function called when we want to delete a node from the QML.
+        """
+        # if at least one node in the graph
+        if len(self._nodeWrappers) > 0 and len(self._graph._nodes) > 0:
+            # if a node is selected
+            if self._currentNode != None:
+                self._graph.deleteNode(self._currentNode)
+        self._currentNode = None
         # debug
         self.__str__()
 
@@ -226,20 +240,6 @@ class GraphWrapper(QtCore.QObject):
         if (node != None):
             nodeWrapper = NodeWrapper(node, self._view)
             self._nodeWrappers.append(nodeWrapper)
-
-    @QtCore.Slot(CommandManager)
-    def destructionNode(self, cmdManager):
-        """
-            Function called when we want to delete a node from the QML.
-        """
-        # if at least one node in the graph
-        if len(self._nodeWrappers) > 0 and len(self._graph._nodes) > 0:
-            # if a node is selected
-            if self._currentNode != None:
-                self._graph.deleteNode(self._currentNode, cmdManager)
-        self._currentNode = None
-        # debug
-        self.__str__()
 
     ################################################## CONNECTIONS MANAGEMENT ##################################################
 
@@ -283,11 +283,11 @@ class GraphWrapper(QtCore.QObject):
 
         return True
 
-    def connect(self, clipOut, clipIn, cmdManager):
+    def connect(self, clipOut, clipIn):
         """
             Add a connection between 2 clips.
         """
-        self._graph.createConnection(clipOut, clipIn, cmdManager)
+        self._graph.createConnection(clipOut, clipIn)
         self._tmpClipIn = None
         self._tmpClipOut = None
         self.__str__()
@@ -307,8 +307,8 @@ class GraphWrapper(QtCore.QObject):
         elif (port == "output"):
             self._tmpClipOut = idClip
 
-    @QtCore.Slot(str, str, int, CommandManager)
-    def clipReleased(self, nodeName, port, clipNumber, cmdManager):
+    @QtCore.Slot(str, str, int)
+    def clipReleased(self, nodeName, port, clipNumber):
 
         if (port == "input"):
             #if there is a tmpNodeOut we can connect the nodes
@@ -316,7 +316,7 @@ class GraphWrapper(QtCore.QObject):
                 position = self.getPositionClip(nodeName, port, clipNumber)
                 idClip = IdClip(nodeName, port, clipNumber, position)
                 if self.canConnect(self._tmpClipOut, idClip):
-                    self.connect(self._tmpClipOut, idClip, cmdManager)
+                    self.connect(self._tmpClipOut, idClip)
                 else:
                     print "Unable to connect the nodes."
 
@@ -326,7 +326,7 @@ class GraphWrapper(QtCore.QObject):
                 position = self.getPositionClip(nodeName, port, clipNumber)
                 idClip = IdClip(nodeName, port, clipNumber, position)
                 if self.canConnect(idClip, self._tmpClipIn):
-                    self.connect(idClip, self._tmpClipIn, cmdManager)
+                    self.connect(idClip, self._tmpClipIn)
                 else:
                     print "Unable to connect the nodes."
 
@@ -343,6 +343,7 @@ class GraphWrapper(QtCore.QObject):
         """
             Updates the nodeWrappers when the signal nodesChanged has been emitted.
         """
+        print "UPDATE NODE WRAPPERS"
         # we clear the list
         self._nodeWrappers.clear()
         # and we fill with the new data
@@ -353,7 +354,7 @@ class GraphWrapper(QtCore.QObject):
         """
             Updates the connectionWrappers when the signal connectionsChanged has been emitted.
         """
-        print "UPDATE CONNECTIONS WRAPPERS"
+        print "UPDATE CONNECTION WRAPPERS"
         # we clear the list
         self._connectionWrappers.clear()
         # and we fill with the new data
@@ -362,7 +363,7 @@ class GraphWrapper(QtCore.QObject):
 
     @QtCore.Slot()
     def updateConnectionsCoord(self):
-        print "UPDATE CONNECTIONS COORDS"
+        print "UPDATE CONNECTION COORDS"
         for connection in self._graph.getConnections():
             clipOut = connection.getClipOut()
             clipIn = connection.getClipIn()
@@ -378,10 +379,13 @@ class GraphWrapper(QtCore.QObject):
 
     nodesChanged = QtCore.Signal()
     nodes = QtCore.Property("QVariant", getNodeWrappers, notify=nodesChanged)
+    
     connectionWrappersChanged = QtCore.Signal()
     connections = QtCore.Property("QVariant", getConnectionWrappers, notify=connectionWrappersChanged)
+    
     currentNodeChanged = QtCore.Signal()
     currentNode = QtCore.Property(str, getCurrentNode, setCurrentNode, notify=currentNodeChanged)
+
     currentParamsChanged = QtCore.Signal()
     currentParams = QtCore.Property("QVariant", getCurrentParams, setCurrentParams, notify=currentParamsChanged)
     currentImageChanged = QtCore.Signal()

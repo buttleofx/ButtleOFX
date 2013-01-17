@@ -10,7 +10,7 @@ Rectangle {
     Keys.onPressed: {
         if (event.key == Qt.Key_Delete) {
             console.log("destruction");
-            _graphWrapper.destructionProcess();
+            _buttleData.getGraphWrapper().destructionProcess();
         }
         if (event.key == Qt.Key_U) {
                 console.log("U");

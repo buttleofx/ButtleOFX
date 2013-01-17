@@ -1,4 +1,3 @@
-#from buttleofx.gui.graph.node import nodeWrapper
 from buttleofx.core.undo_redo.manageTools import UndoableCommand
 
 class CmdSetCoord(UndoableCommand):

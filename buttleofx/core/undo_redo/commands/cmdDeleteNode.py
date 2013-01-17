@@ -1,6 +1,6 @@
 #from buttleofx.gui.graph.node import nodeWrapper
 from buttleofx.core.undo_redo.manageTools import UndoableCommand
-from buttleofx.gui.graph.node import Node
+from buttleofx.core.graph.node import Node
 
 
 class CmdDeleteNode(UndoableCommand):

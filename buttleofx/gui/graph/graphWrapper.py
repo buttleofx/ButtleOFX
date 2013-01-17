@@ -1,16 +1,16 @@
-from buttleofx.gui.graph import Graph
-from buttleofx.gui.graph.node import NodeWrapper
-from buttleofx.gui.graph.connection import ConnectionWrapper, IdClip
+from PySide import QtDeclarative, QtCore
+# core
+from buttleofx.core.graph import Graph
 from buttleofx.core.undo_redo.manageTools import CommandManager
-
+# gui
+from buttleofx.gui.graph.node import NodeWrapper
+from buttleofx.gui.graph.connection import ConnectionWrapper
+# quickmamba
 from quickmamba.models import QObjectListModel
 from quickmamba.patterns import Signal
-from quickmamba.patterns import Singleton
-
-from PySide import QtDeclarative, QtCore
 
 
-class GraphWrapper(QtCore.QObject, Singleton):
+class GraphWrapper(QtCore.QObject):
     """
         Class GraphWrapper defined by:
         - _engine : to have the view engine
@@ -47,7 +47,7 @@ class GraphWrapper(QtCore.QObject, Singleton):
 
         # the links between the graph and this graphWrapper
         graph.nodeCreated.connect(self.createNodeWrapper)
-        #graph.nodeCreated.connect(self.setCurrentNode)
+        graph.nodeCreated.connect(self.setCurrentNode)
         graph.nodeDeleted.connect(self.deleteNodeWrapper)
         graph.nodeDeleted.connect(self.deleteCurrentNode)
         graph.connectionCreated.connect(self.createConnectionWrapper)

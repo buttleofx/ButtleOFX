@@ -3,13 +3,15 @@ from buttleofx.gui.paramEditor.params import ParamString
 from buttleofx.gui.paramEditor.wrappers import IntWrapper
 from buttleofx.gui.paramEditor.wrappers import StringWrapper
 
+from buttleofx.core.graph.node import Node
+
 from quickmamba.models import QObjectListModel
 
 from PySide import QtCore
 
-class MainWrapper(QtCore.QObject):
+class ParamEditorWrapper(QtCore.QObject):
     def __init__(self, parent, paramList):
-        super(MainWrapper, self).__init__(parent)
+        super(ParamEditorWrapper, self).__init__(parent)
         #QtCore.QObject.__init__(self)
         self._paramElmts = QObjectListModel(self)
 
@@ -23,6 +25,11 @@ class MainWrapper(QtCore.QObject):
 
     def getParamElts(self):
         return self._paramElmts
+
+    # @QtCore.Slot(Node)
+    def setNodeForParam(self, node):
+        self._paramElmts = node._params
+        self.modelChanged.emit()
 
     modelChanged = QtCore.Signal()
     paramElmts = QtCore.Property("QVariant", getParamElts, notify=modelChanged)

@@ -17,7 +17,7 @@ Rectangle {
     width: parent.width
     height: parent.height
         Repeater {
-            model : _nodeWrappers
+            model : _buttleData.getGraphWrapper().getNodeWrappers()
             Node {}
         }
     }

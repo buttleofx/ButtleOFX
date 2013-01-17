@@ -1,5 +1,5 @@
-from buttleofx.gui.graph.node import Node
-from buttleofx.gui.graph.connection import Connection
+from buttleofx.core.graph.node import Node
+from buttleofx.core.graph.connection import Connection
 
 from quickmamba.patterns import Signal
 
@@ -11,7 +11,7 @@ from buttleofx.core.undo_redo.commands import CmdCreateNode
 from buttleofx.core.undo_redo.commands import CmdDeleteNode
 
 
-class Graph:
+class Graph(object):
     """
         Class Graph contains
         - _nodes : list of nodes (python objects, the core nodes)

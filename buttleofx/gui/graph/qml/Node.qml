@@ -9,7 +9,7 @@ Rectangle {
     width: 110
     x: nodeModel.coord[0]
     y: nodeModel.coord[1]
-    z: _graphWrapper.getZMax()
+    z: _buttleData.getGraphWrapper().getZMax()
     color: "transparent"
     focus: true
 
@@ -33,7 +33,7 @@ Rectangle {
             anchors.centerIn: parent
             text: nodeModel.name
             font.pointSize: 10
-            color: (nodeModel.name === _graphWrapper.currentNode) ? "#00b2a1" : "black"
+            color: (nodeModel.name === _buttleData.getGraphWrapper().currentNode) ? "#00b2a1" : "black"
         }
     }
     Column {
@@ -73,10 +73,11 @@ Rectangle {
         onClicked: {
             console.log(nodeModel.name)
             
-            if(_graphWrapper.getCurrentNode() != nodeModel.name) {
-                _graphWrapper.setCurrentNode(nodeModel.name)
-                _graphWrapper.setZMax()
-                parent.z = _graphWrapper.getZMax()
+            if(_buttleData.getGraphWrapper().getCurrentNode() != nodeModel.name) {
+                _buttleData.getGraphWrapper().setCurrentNode(nodeModel.name)
+                //_paramList.setNodeForParam(nodeModel) il faut que ça vienne de buttleData !
+                _buttleData.getGraphWrapper().setZMax()
+                parent.z = _buttleData.getGraphWrapper().getZMax()
                 console.log(parent.z)
             }
         }

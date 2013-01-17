@@ -1,13 +1,9 @@
-#!/usr/bin/env python
-# -*-coding:utf-8-*
-
-# http://publib.boulder.ibm.com/infocenter/rsmhelp/v7r0m0/index.jsp?topic=/com.ibm.xtools.comparemerge.core.doc.isv/reference/api/comparemergecore/com/ibm/xtools/comparemerge/core/command/CommandManager.html
-# http://www.codeproject.com/Articles/2500/A-Basic-Undo-Redo-Framework-For-C
+from quickmamba.patterns import Singleton
 
 from PySide import QtCore, QtGui
 
-
-class CommandManager(QtCore.QObject):
+#class CommandManager(QtCore.QObject):
+class CommandManager(Singleton):
     """
     Manage a list of commands.
     """

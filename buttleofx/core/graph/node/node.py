@@ -1,31 +1,64 @@
+from quickmamba.patterns import Signal
+from PySide import QtGui
+# paramEditor
+from buttleofx.gui.paramEditor.params import ParamInt
+from buttleofx.gui.paramEditor.params import ParamString
 
 nodeDescriptors = {
     "Blur": {
         "color": (58, 174, 206),
         "nbInput": 1,
-        "url": "../img/brazil.jpg"
+        "url": "../img/brazil.jpg",
+        "params": [
+            ParamString(defaultValue="node.getName()", stringType="Name"),
+            ParamString(defaultValue="node.getType()", stringType="Type"),
+            ParamInt(defaultValue="node.getCoord()[0]", minimum=0, maximum=1000, text="Coord x"),
+            ParamInt(defaultValue="node.getCoord()[1]", minimum=0, maximum=1000, text="Coord y"),
+            ParamInt(defaultValue="node.getColor().red()", minimum=0, maximum=255, text="Color red"),
+            ParamInt(defaultValue="node.getColor().green()", minimum=0, maximum=255, text="Color green"),
+            ParamInt(defaultValue="node.getColor().blue()", minimum=0, maximum=255, text="Color blue"),
+            ParamInt(defaultValue="node.getNbInput()", minimum=1, maximum=15, text="Nb input"),
+            ParamString(defaultValue="node.getImage()", stringType="Image file"),
+        ],
     },
     "Gamma": {
         "color": (221, 54, 138),
         "nbInput": 2,
-        "url": "../img/brazil2.jpg"
+        "url": "../img/brazil2.jpg",
+        "params": [
+            ParamString(defaultValue="node.getName()", stringType="Name"),
+            ParamString(defaultValue="node.getType()", stringType="Type"),
+            ParamInt(defaultValue="node.getCoord()[0]", minimum=0, maximum=1000, text="Coord x"),
+            ParamInt(defaultValue="node.getCoord()[1]", minimum=0, maximum=1000, text="Coord y"),
+            ParamInt(defaultValue="node.getNbInput()", minimum=1, maximum=15, text="Nb input"),
+            ParamString(defaultValue="node.getImage()", stringType="Image file"),
+        ],
     },
     "Invert": {
         "color": (90, 205, 45),
         "nbInput": 3,
-        "url": "../img/brazil3.jpg"
+        "url": "../img/brazil3.jpg",
+        "params": [
+            ParamString(defaultValue="node.getName()", stringType="Name"),
+            ParamString(defaultValue="node.getType()", stringType="Type"),
+            ParamInt(defaultValue="node.getColor().red()", minimum=0, maximum=255, text="Color red"),
+            ParamInt(defaultValue="node.getColor().green()", minimum=0, maximum=255, text="Color green"),
+            ParamInt(defaultValue="node.getColor().blue()", minimum=0, maximum=255, text="Color blue"),
+            ParamInt(defaultValue="node.getNbInput()", minimum=1, maximum=15, text="Nb input"),
+            ParamString(defaultValue="node.getImage()", stringType="Image file"),
+        ],
     }
 }
 
 defaultNodeDesc = {
     "color": (187, 187, 187),
     "nbInput": 1,
-    "url": "../img/uglycorn.jpg"
+    "url": "../img/uglycorn.jpg",
+    "params": [
+        ParamString(defaultValue="node.getName()", stringType="Name"),
+        ParamString(defaultValue="node.getType()", stringType="Type"),
+    ],
 }
-
-from quickmamba.patterns import Signal
-from PySide import QtGui
-
 
 class Node(object):
     """
@@ -59,6 +92,7 @@ class Node(object):
         self._color = nodeDesc["color"]
         self._nbInput = nodeDesc["nbInput"]
         self._image = nodeDesc["url"]
+        self._params = nodeDesc["params"]
         # ###
 
         self.NodeNameChanged = Signal()
@@ -81,6 +115,9 @@ class Node(object):
 
     def getCoord(self):
         return self._coord
+
+    def getDesc(self):
+        return self._desc
 
     def getColor(self):
         return QtGui.QColor(*self._color)

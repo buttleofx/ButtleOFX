@@ -42,7 +42,6 @@ def main(argv):
     rc.setContextProperty("_buttleData", buttleData)
     rc.setContextProperty("_cmdManager", cmdManager)
 
-<<<<<<< HEAD
     # for the ParamEditor
     paramList = [
             ParamInt(20, 5, 128),
@@ -57,13 +56,9 @@ def main(argv):
             ParamDouble2D(defaultValue=50, minimum=1, maximum=52, text="lol2D"),
             ParamDouble3D(defaultValue=50, minimum=1, maximum=52, text="lol3D")
     ]
-    mainWrapper = MainWrapper(view, paramList)
-    rc.setContextProperty('_paramListModel', mainWrapper)
-=======
-    paramList = []
+
     paramsW = ParamEditorWrapper(view, paramList)
     rc.setContextProperty('_paramList', paramsW)
->>>>>>> 5904bca7b34417910a290af6e7dff73266da816f
 
     # launch QML
     view.setSource(os.path.join(currentFilePath, "MainWindow.qml"))

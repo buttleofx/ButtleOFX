@@ -120,7 +120,7 @@ Rectangle {
         }
         onReleased: {
             console.log("node onReleased")
-            m.nodeModel.nodeMoved(parent.x, parent.y, _cmdManager)
+            m.nodeModel.nodeMoved(parent.x, parent.y)
             stateMoving.state = "normal"
             //m.modelPosX = nodeModel.coord[0]
             //m.modelPosY = nodeModel.coord[1]

@@ -1,8 +1,6 @@
-#!/usr/bin/env python
-# -*-coding:utf-8-*
-
-#from buttleofx.gui.graph.node import nodeWrapper
+# undo_redo
 from buttleofx.core.undo_redo.manageTools import UndoableCommand
+# core
 from buttleofx.core.graph.connection import Connection
 
 

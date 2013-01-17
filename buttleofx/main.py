@@ -9,6 +9,10 @@ from buttleofx.gui.graph.connection import LineItem
 # paramEditor
 from buttleofx.gui.paramEditor.params import ParamInt
 from buttleofx.gui.paramEditor.params import ParamString
+from buttleofx.gui.paramEditor.params import ParamBoolean
+from buttleofx.gui.paramEditor.params import ParamDouble
+from buttleofx.gui.paramEditor.params import ParamDouble2D
+from buttleofx.gui.paramEditor.params import ParamDouble3D
 from buttleofx.gui.paramEditor.wrappers import MainWrapper
 #undo_redo
 from buttleofx.core.undo_redo.manageTools import CommandManager
@@ -55,7 +59,12 @@ def main(argv):
             ParamInt(defaultValue=50, minimum=1, maximum=52, text="truc"),
             ParamString(defaultValue="something.jpg", stringType="filename"),
             ParamInt(defaultValue=7, minimum=5, maximum=12),
-            ParamString(defaultValue="somethingelse.jpg", stringType="type2")
+            ParamString(defaultValue="somethingelse.jpg", stringType="type2"),
+            ParamString(defaultValue="somethingelse.jpg", stringType="type2"),
+            ParamDouble(defaultValue=50, minimum=1, maximum=52, text="lol"),
+            ParamBoolean(defaultValue="true", text="boolean"),
+            ParamDouble2D(defaultValue=50, minimum=1, maximum=52, text="lol2D"),
+            ParamDouble3D(defaultValue=50, minimum=1, maximum=52, text="lol3D")
     ]
     mainWrapper = MainWrapper(view, paramList)
     rc.setContextProperty('_paramListModel', mainWrapper)

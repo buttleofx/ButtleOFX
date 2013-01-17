@@ -2,6 +2,7 @@ from PySide import QtGui, QtDeclarative
 
 from buttleofx.gui.paramEditor.params import ParamInt
 from buttleofx.gui.paramEditor.params import ParamString
+from buttleofx.gui.paramEditor.params import ParamBoolean
 from buttleofx.gui.paramEditor.wrappers import MainWrapper
 
 import sys
@@ -20,7 +21,8 @@ def main():
             ParamInt(defaultValue=50, minimum=1, maximum=52, text="truc"),
             ParamString(defaultValue="something.jpg", stringType="filename"),
             ParamInt(defaultValue=7, minimum=5, maximum=12),
-            ParamString(defaultValue="somethingelse.jpg", stringType="type2")
+            ParamString(defaultValue="somethingelse.jpg", stringType="type2"),
+            ParamBoolean(defaultValue="true", text="lol")
     ]
 
     mw = MainWrapper(view, paramList)

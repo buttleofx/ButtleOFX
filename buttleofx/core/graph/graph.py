@@ -87,6 +87,7 @@ class Graph(object):
         """
             Removes all the connections of the node.
         """
+        # We can't use a for loop. We have to rebuild the list, based on the current values.
         self._connections = [connection for connection in self._connections if not (connection.getClipOut().getNodeName() == nodeName or connection.getClipIn().getNodeName() == nodeName)]
         self.connectionsChanged()
 

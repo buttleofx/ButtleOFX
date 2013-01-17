@@ -36,6 +36,7 @@ class GraphWrapper(QtCore.QObject, Singleton):
 
         self._currentNode = None
         self._currentImage = ""
+
         self._tmpClipIn = None
         self._tmpClipOut = None
 
@@ -195,10 +196,10 @@ class GraphWrapper(QtCore.QObject, Singleton):
             The calculation is the same as in the QML file (Node.qml).
         """
         nodeCoord = self._graph.getNode(nodeName).getCoord()
-        widthNode = 110
-        heightEmptyNode = 35
-        clipSpacing = 7
-        clipSize = 8
+        widthNode = self.getWidthNode()
+        heightEmptyNode = self.getHeightEmptyNode()
+        clipSpacing = self.getClipSpacing()
+        clipSize = self.getClipSize()
         nbInput = self._graph.getNode(nodeName).getNbInput()
         heightNode = heightEmptyNode + clipSpacing * nbInput
         inputTopMargin = (heightNode - clipSize * nbInput - clipSpacing * (nbInput - 1)) / 2
@@ -243,6 +244,7 @@ class GraphWrapper(QtCore.QObject, Singleton):
             Function called when a clip is pressed (but not released yet).
             The function replace the tmpClipIn or tmpClipOut.
         """
+        print "clip pressed"
         position = self.getPositionClip(nodeName, port, clipNumber)
         #position = self._graph.getNode(nodeName).getCoord()
         idClip = IdClip(nodeName, port, clipNumber, position)
@@ -316,6 +318,25 @@ class GraphWrapper(QtCore.QObject, Singleton):
 
     ################################################## DATA EXPOSED TO QML ##################################################
 
+    def getWidthNode(self):
+        return NodeWrapper.widthNode
+
+    def getHeightEmptyNode(self):
+        return NodeWrapper.heightEmptyNode
+
+    def getClipSpacing(self):
+        return NodeWrapper.clipSpacing
+
+    def getClipSize(self):
+        return NodeWrapper.clipSize
+
+    def getNodeInputSideMargin(self):
+        return NodeWrapper.inputSideMargin
+
+    @QtCore.Signal
+    def changed(self):
+        pass
+
     nodesChanged = QtCore.Signal()
     nodes = QtCore.Property("QVariant", getNodeWrappers, notify=nodesChanged)
     connectionWrappersChanged = QtCore.Signal()
@@ -324,3 +345,10 @@ class GraphWrapper(QtCore.QObject, Singleton):
     currentNode = QtCore.Property(str, getCurrentNode, setCurrentNode, notify=currentNodeChanged)
     currentImageChanged = QtCore.Signal()
     currentImage = QtCore.Property(str, getCurrentImage, setCurrentImage, notify=currentImageChanged)
+
+    widthNode = QtCore.Property(int, getWidthNode, notify=changed)
+    heightEmptyNode = QtCore.Property(int, getHeightEmptyNode, notify=changed)
+    clipSpacing = QtCore.Property(int, getClipSpacing, notify=changed)
+    clipSize = QtCore.Property(int, getClipSize, notify=changed)
+    nodeInputSideMargin = QtCore.Property(int, getNodeInputSideMargin, notify=changed)
+

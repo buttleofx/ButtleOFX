@@ -9,16 +9,16 @@ Rectangle {
         id: m
         property variant nodeModel: model.object
     }
-    property int heightEmptyNode : 35
+    property int heightEmptyNode : _graphWrapper.heightEmptyNode
     property int nbInput: m.nodeModel.nbInput
 
     height: node.heightEmptyNode + node.inputSpacing * node.nbInput
     width: 110
 
-    property int inputSpacing : 7
-    property int clipSize: 8
+    property int inputSpacing : _graphWrapper.clipSpacing
+    property int clipSize: _graphWrapper.clipSize
     property int inputTopMargin: (node.height- node.clipSize*node.nbInput - node.inputSpacing * (node.nbInput-1)) / 2
-    property int inputSideMargin: 6
+    property int inputSideMargin: _graphWrapper.nodeInputSideMargin
 
     z: _graphWrapper.getZMax()
     color: "transparent"
@@ -27,7 +27,7 @@ Rectangle {
     Rectangle {
         id: nodeBorder
         height: parent.height
-        width: 110
+        width: _graphWrapper.widthNode
         anchors.centerIn: parent
         color: m.nodeModel.color
         opacity: 0.5
@@ -37,7 +37,7 @@ Rectangle {
         id: nodeRectangle
         anchors.centerIn: parent
         height: parent.height - 8
-        width: 102
+        width: _graphWrapper.widthNode -10
         color: "#bbbbbb"
         radius: 8
         Text {

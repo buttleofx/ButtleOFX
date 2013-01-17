@@ -27,6 +27,7 @@ class CmdCreateNode(UndoableCommand):
         #self.graphTarget.deleteNode(self.nodeName)
 
         node = self.graphTarget.getNode(self.nodeName)
+        self.nodeCoord = node.getCoord()
         self.graphTarget.deleteNodeConnections(self.nodeName)
         self.graphTarget.getNodes().remove(node)
         self.graphTarget.nodesChanged()

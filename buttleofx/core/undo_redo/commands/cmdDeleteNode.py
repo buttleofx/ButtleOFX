@@ -12,27 +12,34 @@ class CmdDeleteNode(UndoableCommand):
         - nodeName
         - nodeCoord
         - nodeType
+        - connections : list of the connections of the node, based on all the connections. We just keep the connections concerning our node.
     """
 
     def __init__(self, graphTarget, nodeName):
         self.graphTarget = graphTarget
         self.nodeName = nodeName
         self.nodeCoord = (50, 20)
+        self.connections = [connection for connection in self.graphTarget.getConnections() if (connection.getClipOut().getNodeName() == nodeName or connection.getClipIn().getNodeName() == nodeName)]
 
     def undoCmd(self):
         """
             Undo the suppression of the node <=> recreate the node.
         """
-        print "Undo delete"
+        print "Undo delete node"
+        # we recreate the node
         self.graphTarget.getNodes().append(Node(self.nodeName, self.nodeType, self.nodeCoord))
+        # we recreate all the connections
+        for connection in self.connections:
+            self.graphTarget.getConnections().append(connection)
+
         self.graphTarget.nodesChanged()
-        # THINK TO RECREATE CONNECTIONS TOO !!!!!!!!!
+        self.graphTarget.connectionsChanged()
 
     def redoCmd(self):
         """
             Redo the suppression of the node.
         """
-        print "Redo delete"
+        print "Redo delete node"
         self.doCmd()
 
     def doCmd(self):
@@ -40,8 +47,9 @@ class CmdDeleteNode(UndoableCommand):
             Delete a node.
         """
         node = self.graphTarget.getNode(self.nodeName)
-        # we store the node type in order to be able to recreate it
+        # we store the node type and its coordinates in order to be able to recreate it
         self.nodeType = node.getType()
+        self.nodeCoord = node.getCoord()
         # we delete its connections
         self.graphTarget.deleteNodeConnections(self.nodeName)
         # and then we delete the node

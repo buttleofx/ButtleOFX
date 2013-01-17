@@ -13,32 +13,36 @@ Rectangle {
         GradientStop { position: 0.015; color: "#212121" }
     }
 
-    Item{
-        id: nodes
-        width: parent.width
-        height: parent.height
-        Repeater {
-            model : _buttleData.getGraphWrapper().getNodeWrappers()
-            Node {
-                Component.onDestruction: {
-                    nodes.forceActiveFocus()
+    Item {
+        id: connectnode
+
+        Item {
+            id: nodes
+            width: graphArea.width
+            height: graphArea.height
+            Repeater {
+                model : _buttleData.getGraphWrapper().getNodeWrappers()
+                Node {
+                    Component.onDestruction: {
+                        nodes.forceActiveFocus()
+                    }
                 }
             }
         }
-    }
 
 
-    Item{
-    id: connections
-    width: parent.width
-    height: parent.height
-        Repeater {
-            model : _buttleData.getGraphWrapper().getConnectionWrappers()
-            ConnectionLine {
-                x1: model.object.clipOutPosX
-                y1: model.object.clipOutPosY
-                x2: model.object.clipInPosX
-                y2: model.object.clipInPosY
+        Item{
+        id: connections
+        width: graphArea.width
+        height: graphArea.height
+            Repeater {
+                model : _buttleData.getGraphWrapper().getConnectionWrappers()
+                ConnectionLine {
+                    x1: model.object.clipOutPosX
+                    y1: model.object.clipOutPosY
+                    x2: model.object.clipInPosX
+                    y2: model.object.clipInPosY
+                }
             }
         }
     }
@@ -46,8 +50,7 @@ Rectangle {
     MouseArea{
         anchors.fill: parent
         acceptedButtons: Qt.MiddleButton
-        //drag.target: rect
-        drag.target: nodes
+        drag.target: connectnode
         drag.axis: Drag.XandYAxis
     } 
 }

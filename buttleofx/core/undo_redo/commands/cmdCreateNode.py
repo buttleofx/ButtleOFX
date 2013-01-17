@@ -17,7 +17,7 @@ class CmdCreateNode(UndoableCommand):
         self.graphTarget = graphTarget
         self.cmdManager = cmdManager
         self.nodeType = nodeType
-        self.nodeCoord = (50, 20)
+        self.nodeCoord = (20, 20)
 
     def undoCmd(self):
         """

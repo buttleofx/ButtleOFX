@@ -12,15 +12,15 @@ Rectangle {
         console.log("ApplicationWindow Keys.onPressed");
         if (event.key == Qt.Key_Delete) {
             console.log("destruction");
-            _buttleData.getGraphWrapper().destructionNode();
+            _buttleData.getGraphWrapper().destructionNode(_cmdManager);
         }
         if (event.key == Qt.Key_U) {
                 console.log("Undo");
-                _cmdManager.undo();
+                _buttleData.undo();
             }
             if (event.key == Qt.Key_R) {
                 console.log("Redo");
-                _cmdManager.redo();
+                _buttleData.redo();
             }
     }
 

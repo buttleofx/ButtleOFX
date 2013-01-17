@@ -7,21 +7,6 @@ Rectangle {
     z: 0
     clip: true
 
-    Keys.onPressed: {
-        if (event.key == Qt.Key_Delete) {
-            console.log("destruction");
-            _buttleData.getGraphWrapper().destructionProcess();
-        }
-        if (event.key == Qt.Key_U) {
-                console.log("U");
-                _cmdManager.undo();
-            }
-            if (event.key == Qt.Key_R) {
-                console.log("R");
-                _cmdManager.redo();
-            }
-    }
-
     Graph {
         y: 30
         width : parent.width

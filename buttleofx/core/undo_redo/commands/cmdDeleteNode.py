@@ -1,4 +1,6 @@
+# undo_redo
 from buttleofx.core.undo_redo.manageTools import UndoableCommand
+# core
 from buttleofx.core.graph.node import Node
 
 
@@ -7,14 +9,13 @@ class CmdDeleteNode(UndoableCommand):
         Command that delete a node.
     """
 
-    def __init__(self, graphTarget, nodeName, cmdManager):
+    def __init__(self, graphTarget, nodeName):
         """
             Initializes the member variables :
             graphTarget  is the graph in which the node will be deleted.
             nodeName is the name of the node we want to create.
        """
         self.graphTarget = graphTarget
-        self.cmdManager = cmdManager
         self.nodeName = nodeName
         self.nodeCoord = (50, 20)
 
@@ -23,7 +24,7 @@ class CmdDeleteNode(UndoableCommand):
             Undo the delete of the node.
         """
         print "Undo delete"
-        self.graphTarget.createNode(self.nodeType, self.cmdManager)
+        self.graphTarget.createNode(self.nodeType)
 
     def redoCmd(self):
         """
@@ -36,7 +37,6 @@ class CmdDeleteNode(UndoableCommand):
         """
             Delete a node.
         """
-        self.graphTarget._nbNodesCreated -= 1
         # we search the right node to delete
         indexWrapper = 0
         for node in self.graphTarget._nodes:

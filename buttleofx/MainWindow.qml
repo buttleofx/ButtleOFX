@@ -5,7 +5,7 @@ import "gui/viewer/qml"
 import "gui/paramEditor/qml"
 
 Rectangle {
-    width: 1280
+    width: 1200
     height: 800
 
     Keys.onPressed: {
@@ -50,21 +50,20 @@ Rectangle {
 
         SplitterRow {
             anchors.fill: parent
-            anchors.margins: 5
+            anchors.margins: 3
             //handleWidth changes the size of the separation between the row, column.
-            handleWidth: 4
+            handleWidth: 3
 
             /*There is a bug with splitter column, the draggable splitter doesn't moove as it should, this bug has been solved in qtcomponents for qt5, 
             but for the moment we are using qt 4*/
             SplitterColumn {
                 width: 0.7*parent.width
                 height: parent.height
-                handleWidth: 4
-                Splitter.minimumWidth : 5
-                Splitter.expanding: true // obligatory to allow to have the minimumWidth
+                handleWidth: 3
+                //Splitter.expanding: true // obligatory to allow to have the minimumWidth
 
                 Player {
-                    Splitter.minimumHeight: 10
+                    //Splitter.minimumHeight: 0
                     //Splitter.expanding: true
                     width: parent.width
                     height: 0.5*parent.height
@@ -72,15 +71,15 @@ Rectangle {
                 }
 
                 GraphEditor {
-                    Splitter.minimumHeight: 10
+                    //Splitter.minimumHeight: 0
                     width: parent.width
-                    height:0.5*parent.height
+                    height: 0.5*parent.height
                 }
             }
 
             ParamEditor {
-                Splitter.minimumWidth: 5
-                width: 0.3*parent.width
+                //Splitter.minimumWidth: 0 
+                width: 0.30*parent.width
                 params: _buttleData.graphWrapper.currentNodeWrapper ? _buttleData.graphWrapper.currentNodeWrapper.params : null
             }
         }

@@ -4,20 +4,12 @@ import QtQuick 1.1
 
 Item {
     id: containerParamDouble3D
-    width: parent.width
-    height: parent.height
-
+    implicitWidth: 300
+    implicitHeight: 30
 
     /*Container of the two input field*/
      Row{
         id: paramDouble3DInputContainer
-        //color: "#212121"
-        //border.width: 1
-        //border.color: "#111111"
-        //radius: 4
-
-        //anchors.left: paramDouble3DTitle.right
-        //anchors.leftMargin: 5
         spacing: 10
 
         // Title of the paramDouble
@@ -45,11 +37,10 @@ Item {
                 anchors.left: parent.left
                 anchors.leftMargin: 5
                 maximumLength: 5
-                color: focus ? "white" : "grey"
+                color: activeFocus ? "white" : "grey"
                 width: 40
-                activeFocusOnPress : true
                 selectByMouse : true
-                onAccepted: model.object.setDefaultValue1(parent.text)
+                onAccepted: model.object.value1 = paramDouble3Dinput1.text
                 validator: DoubleValidator{
                     bottom: model.object.minimum
                     top:  model.object.maximum
@@ -71,11 +62,11 @@ Item {
                 anchors.left: parent.left
                 anchors.leftMargin: 5
                 maximumLength: 5
-                color: focus ? "white" : "grey"
+                color: activeFocus ? "white" : "grey"
                 width: 40
                 activeFocusOnPress : true
                 selectByMouse : true
-                onAccepted: model.object.setDefaultValue2(parent.text)
+                onAccepted: model.object.value2 = paramDouble3Dinput2.text
                 validator: DoubleValidator{
                     bottom: model.object.minimum
                     top:  model.object.maximum
@@ -97,11 +88,11 @@ Item {
                 anchors.left: parent.left
                 anchors.leftMargin: 5
                 maximumLength: 5
-                color: focus ? "white" : "grey"
+                color: activeFocus ? "white" : "grey"
                 width: 40
                 activeFocusOnPress : true
                 selectByMouse : true
-                onAccepted: model.object.setDefaultValue3(parent.text)
+                onAccepted: model.object.value3 = paramDouble3Dinput3.text
                 validator: DoubleValidator{
                     bottom: model.object.minimum
                     top:  model.object.maximum

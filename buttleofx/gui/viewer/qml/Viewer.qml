@@ -1,12 +1,18 @@
 import QtQuick 1.1
 
-Item {
-    id: player
 
-    implicitWidth: 300
-    implicitHeight: 300
+Rectangle {
+    id: viewer
+
     property url imageFile
     property double sizeScaleFirstImage: 0.95
+    property double sizeScaleEvent: 0.1
+    property int sizeDragEvent: 5
+
+    implicitHeight: 300
+    implicitWidth: 800
+
+    color: "#141414"
 
     Image  {
         id: imageViewed
@@ -29,14 +35,14 @@ Item {
            /* if((mouse.button === Qt.LeftButton)) {
                 // Lorsque l'outil Loupe + est activé
                 if(magGlassIn.state == "clicked") {
-                    imageViewed.x -= (mouseX - player.width/2)
-                    imageViewed.y -= (mouseY - player.height/2)
+                    imageViewed.x -= (mouseX - viewer.width/2)
+                    imageViewed.y -= (mouseY - viewer.height/2)
                     imageViewed.scale += sizeScaleEvent
                 }
                 // Lorsque l'outil Loupe - est activé
                 if(magGlassOut.state == "clicked") {
-                    imageViewed.x -= (mouseX - player.width/2)
-                    imageViewed.y -= (mouseY - player.height/2)
+                    imageViewed.x -= (mouseX - viewer.width/2)
+                    imageViewed.y -= (mouseY - viewer.height/2)
                     imageViewed.scale -= sizeScaleEvent
                 }
                 //Zoom simple
@@ -83,5 +89,5 @@ Item {
                 }
             }
         } // Item (for the key events)
-    } // player MouseArea
-} // player
+    } // viewer MouseArea
+} // viewer

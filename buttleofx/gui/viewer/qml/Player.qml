@@ -1,10 +1,8 @@
 import QtQuick 1.1
-//import Qt 4.7 //useless?
 //import QtMultimediaKit 1.1
 
 Item {
     id: player
-
     property variant node
     implicitWidth: 850
     implicitHeight: 400
@@ -12,24 +10,23 @@ Item {
     onNodeChanged: {
         console.log("Node Changed : ", node)
     }
-
-    TabBar{}
-
-    Rectangle {
-        id: container
+    
+    TabBar{
+        id: tabBar
         width: parent.width
-        height: parent.height-30
-        clip: true
-        y: 30
+        height: 25
+    }
 
+    //presence of the rectangle just avoid a little bug of display
+    Rectangle{
+        height: parent.height - tabBar.height
+        width: parent.width
+        y: tabBar.height
         color: "#141414"
-        gradient: Gradient {
-            GradientStop { position: 0.085; color: "#141414" }
-            GradientStop { position: 1; color: "#111111" }
-        }
-
-        property double sizeScaleEvent: 0.1
-        property int sizeDragEvent: 5
+    gradient: Gradient {
+        GradientStop { position: 0.085; color: "#141414" }
+        GradientStop { position: 1; color: "#111111" }
+    }
 
         Loader {
             sourceComponent: node ? viewer_component : undefined
@@ -40,11 +37,14 @@ Item {
                     id: viewer
                     anchors.fill: parent
                     imageFile: node.image
+                    clip: true
                 }
             }
         }
 
-        ToolBar{}
+        ToolBar{
+            width: parent.width
+            height: 25
+        }
     }
-
 }

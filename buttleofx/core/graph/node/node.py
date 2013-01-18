@@ -11,40 +11,16 @@ nodeDescriptors = {
         "color": (58, 174, 206),
         "nbInput": 1,
         "url": "../img/brazil.jpg",
-        "params": [
-            ParamString(defaultValue="Blur", stringType="Name"),
-            ParamString(defaultValue="node.getType()", stringType="Type"),
-            ParamDouble2D(defaultValue1="node.getCoord()[0]", defaultValue2="node.getCoord()[1]", minimum=0, maximum=1000, text="Coord"),
-            ParamDouble3D(defaultValue1=58, defaultValue2=174, defaultValue3=206, minimum=0, maximum=255, text="Color"),
-            ParamInt(defaultValue="node.getNbInput()", minimum=1, maximum=15, text="Nb input"),
-            ParamString(defaultValue="node.getImage()", stringType="Image file"),
-        ],
     },
     "Gamma": {
         "color": (221, 54, 138),
         "nbInput": 2,
         "url": "../img/brazil2.jpg",
-        "params": [
-            ParamString(defaultValue="Gamma", stringType="Name"),
-            ParamString(defaultValue="node.getType()", stringType="Type"),
-            ParamDouble3D(defaultValue1=221, defaultValue2=54, defaultValue3=138, minimum=0, maximum=255, text="Color"),
-            ParamDouble2D(defaultValue1="node.getCoord()[0]", defaultValue2="node.getCoord()[1]", minimum=0, maximum=1000, text="Coord"),
-            ParamInt(defaultValue="node.getNbInput()", minimum=1, maximum=15, text="Nb input"),
-            ParamString(defaultValue="node.getImage()", stringType="Image file"),
-        ],
     },
     "Invert": {
         "color": (90, 205, 45),
         "nbInput": 3,
         "url": "../img/brazil3.jpg",
-        "params": [
-            ParamString(defaultValue="Invert", stringType="Name"),
-            ParamString(defaultValue="node.getType()", stringType="Type"),
-            ParamDouble3D(defaultValue1=90, defaultValue2=205, defaultValue3=45, minimum=0, maximum=255, text="Color"),
-            ParamDouble2D(defaultValue1="node.getCoord()[0]", defaultValue2="node.getCoord()[1]", minimum=0, maximum=1000, text="Coord"),
-            ParamInt(defaultValue="node.getNbInput()", minimum=1, maximum=15, text="Nb input"),
-            ParamString(defaultValue="node.getImage()", stringType="Image file"),
-        ],
     }
 }
 

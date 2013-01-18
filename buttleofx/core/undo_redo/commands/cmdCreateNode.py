@@ -14,10 +14,10 @@ class CmdCreateNode(UndoableCommand):
         - nodeName
     """
 
-    def __init__(self, graphTarget, nodeType):
+    def __init__(self, graphTarget, nodeType, x, y):
         self.graphTarget = graphTarget
         self.nodeType = nodeType
-        self.nodeCoord = (20, 20)
+        self.nodeCoord = (x, y)
 
     def undoCmd(self):
         """

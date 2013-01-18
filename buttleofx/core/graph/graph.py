@@ -49,12 +49,12 @@ class Graph(object):
 
     ################################################## CREATION & DESTRUCTION ##################################################
 
-    def createNode(self, nodeType):
+    def createNode(self, nodeType, x, y):
         """
             Adds a node from the node list when a node is created.
         """
         print "createNode"
-        cmdCreateNode = CmdCreateNode(self, nodeType)
+        cmdCreateNode = CmdCreateNode(self, nodeType, x, y)
         cmdManager = CommandManager()
         cmdManager.push(cmdCreateNode)
 

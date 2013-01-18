@@ -108,7 +108,7 @@ Rectangle {
                     onExited: parent.color = "#343434"
                     onClicked: {
                         if(nodeMenuView.state == "shown"){
-                            _buttleData.getGraphWrapper().creationNode(cat2)
+                            _buttleData.getGraphWrapper().creationNode(cat2, -connectNodeX + 20, -connectNodeY + 20)
                             nodeMenuView.state = "hidden"
                         }
                     }

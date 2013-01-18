@@ -15,6 +15,8 @@ Rectangle {
 
     Item {
         id: connectnode
+        width: parent.width
+        height: parent.height
 
         Item {
             id: nodes
@@ -55,5 +57,9 @@ Rectangle {
         acceptedButtons: Qt.MiddleButton
         drag.target: connectnode
         drag.axis: Drag.XandYAxis
+        onReleased: {
+            connectNodeX = connectnode.x
+            connectNodeY = connectnode.y
+        }
     } 
 }

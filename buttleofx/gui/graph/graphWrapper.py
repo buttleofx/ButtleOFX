@@ -205,12 +205,13 @@ class GraphWrapper(QtCore.QObject):
 
     ################################################## CREATION & DESTRUCTION ##################################################
 
-    @QtCore.Slot(str)
-    def creationNode(self, nodeType):
+    @QtCore.Slot(str, float, float)
+    def creationNode(self, nodeType, x, y):
         """
             Function called when we want to create a node from the QML.
         """
-        self._graph.createNode(nodeType)
+        print "GrahWrapper creation node"
+        self._graph.createNode(nodeType, x, y)
         # debug
         self.__str__()
 

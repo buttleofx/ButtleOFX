@@ -48,7 +48,7 @@ Rectangle {
             anchors.centerIn: parent
             text: m.nodeModel.name
             font.pointSize: 10
-            color: (m.nodeModel == _buttleData.graphWrapper.currentNodeWrapper) ? "#00b2a1" : "black"
+            color: (m.nodeModel == _buttleData.graphWrapper.currentSelectedNodeWrapper) ? "#00b2a1" : "black"
         }
     }
     Column {
@@ -109,34 +109,36 @@ Rectangle {
         anchors.fill: parent
         drag.target: parent
         drag.axis: Drag.XandYAxis
+        acceptedButtons: Qt.LeftButton | Qt.RightButton
         onPressed: {
-            console.log("node onPressed")
-            if(_buttleData.graphWrapper.currentNodeWrapper != m.nodeModel) {
-                _buttleData.graphWrapper.currentNodeWrapper = m.nodeModel
-                _buttleData.graphWrapper.zMax += 1
-                parent.z = _buttleData.graphWrapper.zMax
+            // left button : we change the current selected node & we start moving
+            if (mouse.button == Qt.LeftButton) {
+                if(_buttleData.graphWrapper.currentSelectedNodeWrapper != m.nodeModel) {
+                    _buttleData.graphWrapper.currentSelectedNodeWrapper = m.nodeModel
+                    _buttleData.graphWrapper.zMax += 1
+                    parent.z = _buttleData.graphWrapper.zMax
+                }
+                stateMoving.state = "moving"
+                _buttleData.graphWrapper.updateConnectionsCoord()
             }
-            stateMoving.state = "moving"
-            _buttleData.graphWrapper.updateConnectionsCoord()
+            // right button : we change the current param node
+           else if (mouse.button == Qt.RightButton) {
+                 _buttleData.graphWrapper.currentParamNodeWrapper = m.nodeModel;
+            }
+
+
         }
         onReleased: {
-            console.log("node onReleased")
-
-           // m.nodeModel.nodeMoved(parent.x, parent.y) // (obsolete)
-            _buttleData.graphWrapper.nodeMoved(m.nodeModel.name, parent.x, parent.y)
-            /*
-                => Why not managed by the nodeWrapped anymore ? Because we can't store the node in the cmdManager, we need to store the node name.
-                If we store the node and the node is deleted, we won't be able to apply undo/redo on it because the recreated node won't be the same.
-                But the node name will be the same. So we need the node name.
-                The fonction is managed by the graphWrapper because in order to find the right node, we need to give the graph to the cmdManager.
-            */
-
-            stateMoving.state = "normal"
-            //m.modelPosX = nodeModel.coord[0]
-            //m.modelPosY = nodeModel.coord[1]
-            console.log(m.nodeModel.coord.x)
-            console.log(m.nodeModel.coord.y)
-            _buttleData.graphWrapper.updateConnectionsCoord()
+            // left button : we end moving
+            if (mouse.button == Qt.LeftButton) {
+                _buttleData.graphWrapper.nodeMoved(m.nodeModel.name, parent.x, parent.y)
+                stateMoving.state = "normal"
+                _buttleData.graphWrapper.updateConnectionsCoord()
+            }
+        }
+        // double click : we change the current viewer node
+        onDoubleClicked: {
+            _buttleData.graphWrapper.currentViewerNodeWrapper = m.nodeModel;
         }
     }
 }

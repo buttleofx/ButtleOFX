@@ -103,7 +103,6 @@ class CommandManager(Singleton):
         Executes a new undoable command (add command to the stack ?)
         """
 
-        print "Push function "
         # clear the redoable part of commands
         for command in self.commands[self.index:]:
             self.commands.pop(self.commands.index(command))

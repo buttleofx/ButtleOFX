@@ -67,7 +67,7 @@ Rectangle {
                     //Splitter.expanding: true
                     width: parent.width
                     height: 0.5*parent.height
-                    node: _buttleData.graphWrapper.currentNodeWrapper
+                    node: _buttleData.graphWrapper.currentViewerNodeWrapper
                 }
 
                 GraphEditor {
@@ -80,7 +80,7 @@ Rectangle {
             ParamEditor {
                 //Splitter.minimumWidth: 0 
                 width: 0.30*parent.width
-                params: _buttleData.graphWrapper.currentNodeWrapper ? _buttleData.graphWrapper.currentNodeWrapper.params : null
+                params: _buttleData.graphWrapper.currentParamNodeWrapper ? _buttleData.graphWrapper.currentParamNodeWrapper.params : null
             }
         }
     }

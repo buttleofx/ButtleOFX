@@ -57,7 +57,7 @@ Rectangle {
             /*There is a bug with splitter column, the draggable splitter doesn't moove as it should, this bug has been solved in qtcomponents for qt5, 
             but for the moment we are using qt 4*/
             SplitterColumn {
-                width: 0.2*parent.width
+                width: 0.7*parent.width
                 height: parent.height
                 handleWidth: 3
                 //Splitter.expanding: true // obligatory to allow to have the minimumWidth
@@ -78,7 +78,7 @@ Rectangle {
 
             ParamEditor {
                 //Splitter.minimumWidth: 0 
-                width: 0.8*parent.width
+                width: 0.30*parent.width
             }
         }
     }

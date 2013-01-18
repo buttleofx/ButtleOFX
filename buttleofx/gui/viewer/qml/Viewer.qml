@@ -4,7 +4,11 @@ Rectangle {
     id: viewer
     implicitHeight: 300
     implicitWidth: 800
-    color:"#141414"
+    color: "#141414"
+    gradient: Gradient {
+        GradientStop { position: 0.085; color: "#141414" }
+        GradientStop { position: 1; color: "#111111" }
+    }
     property url imageFile: _buttleData.getGraphWrapper().currentImage
     property double sizeScaleFirstImage: 0.95
     property double sizeScaleEvent: 0.1

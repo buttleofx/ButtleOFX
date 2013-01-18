@@ -12,16 +12,11 @@ Item {
         height: 25
     }
 
+    //presence of the rectangle just avoid a little bug of display
     Rectangle{
         height: parent.height - tabBar.height
         width: parent.width
         y: tabBar.height
-        color: "#141414"
-        gradient: Gradient {
-            GradientStop { position: 0.085; color: "#141414" }
-            GradientStop { position: 1; color: "#111111" }
-        }
-
         Viewer {
             width: parent.width
             height: parent.height

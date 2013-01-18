@@ -5,16 +5,16 @@ import QtQuick 1.1
 Rectangle {
     id: tabBar
     implicitWidth: 850
-    width: parent.width
-    height: 30
+    implicitHeight: 20
     color: "transparent"
 
     property color tabColor: "#141414"
 
     Item {
         id: tab1
-        width: 75
-        height: 30
+        implicitWidth: 100
+        implicitHeight: 20
+        height: parent.height
         clip: true
         Rectangle {
             anchors {
@@ -35,9 +35,9 @@ Rectangle {
 
     Item {
         id: tab2
-        width: 30
-        height: 30
-        x: 76
+        implicitWidth: 30
+        height: parent.height
+        x: tab1.width + 1
         clip: true
         Rectangle {
             anchors {

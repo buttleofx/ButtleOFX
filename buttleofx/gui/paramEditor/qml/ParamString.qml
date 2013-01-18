@@ -4,9 +4,8 @@ import QtQuick 1.1
 
 Item {
     id: containerParamString
-    width: parent.width
-    height: parent.height
-
+    implicitWidth: 300
+    implicitHeight: 30
 
     /*Container of the textInput*/
     Row{
@@ -27,7 +26,7 @@ Item {
         /*Input field limited to 50 characters*/
         Rectangle{
             height: 20
-            width:200
+            implicitWidth: 200
             color: "#212121"
             border.width: 1
             border.color: "#333"
@@ -38,9 +37,8 @@ Item {
                 anchors.left: parent.left
                 anchors.leftMargin: 5
                 maximumLength: 100
-                activeFocusOnPress : true
                 selectByMouse : true
-                color: focus ? "white" : "grey"
+                color: activeFocus ? "white" : "grey"
                 onAccepted: model.object.setDefaultValue(parent.text)
             }
         }

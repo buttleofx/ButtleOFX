@@ -1,15 +1,13 @@
 from PySide import QtGui, QtDeclarative
-import os
+import os, sys
 # data
 from buttleofx.datas import ButtleData
 #connections
 from buttleofx.gui.graph.connection import LineItem
-# paramEditor
-from buttleofx.core.params import ParamInt, ParamString, ParamBoolean, ParamDouble, ParamDouble2D, ParamDouble3D
-from buttleofx.gui.paramEditor.wrappers import ParamEditorWrapper
-
 # undo_redo
 from buttleofx.core.undo_redo.manageTools import CommandManager
+# quickmamba
+from quickmamba.utils import QmlInstantCoding
 
 currentFilePath = os.path.dirname(os.path.abspath(__file__))
 
@@ -18,15 +16,17 @@ def main(argv):
     # add new QML type
     QtDeclarative.qmlRegisterType(LineItem, "ConnectionLineItem", 1, 0, "ConnectionLine")
 
-    # create undo_redo contexts
+    # init undo_redo contexts
     cmdManager = CommandManager()
     cmdManager.setActive()
     cmdManager.clean()
 
     # create QApplication
-    QApplication = QtGui.QApplication(argv)
+    QApplication = QtGui.QApplication(sys.argv)
+    # create the declarative view
     view = QtDeclarative.QDeclarativeView()
     view.setWindowTitle("ButtleOFX")
+    view.setResizeMode(QtDeclarative.QDeclarativeView.SizeRootObjectToView)
 
     # data
     buttleData = ButtleData().init(view)
@@ -35,8 +35,13 @@ def main(argv):
     rc = view.rootContext()
     rc.setContextProperty("_buttleData", buttleData)
 
-    # launch QApplication
+    # set the view
     view.setSource(os.path.join(currentFilePath, "MainWindow.qml"))
-    view.setResizeMode(QtDeclarative.QDeclarativeView.SizeRootObjectToView)
+
+    # Declare we are using instant coding tool on this view
+    qic = QmlInstantCoding(view, verbose=True)
+    # Add any source file (.qml and .js by default) in current working directory
+    qic.addFilesFromDirectory(os.getcwd(), recursive=True)
+
     view.show()
     QApplication.exec_()

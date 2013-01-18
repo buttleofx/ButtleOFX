@@ -7,6 +7,7 @@ Rectangle {
     //width is 30% of the row
     //width: 30/100 * parent.width
     //height: parent.height
+    property variant params 
 
     width: 300
     height: 500
@@ -37,7 +38,7 @@ Rectangle {
         anchors.fill: parent
         anchors.margins: 20
         anchors.topMargin: 50
-        model: _buttleData.graphWrapper.currentNodeWrapper.params
+        model: params
 
         delegate: Component {
             Loader {
@@ -47,6 +48,8 @@ Rectangle {
             }
         }
     }
+
+
 }
 
 /*

@@ -2,9 +2,10 @@ import QtQuick 1.1
 
 Item {
     id: player
-    anchors.fill: parent
 
-    property url imageFile: parent.imageFile
+    implicitWidth: 300
+    implicitHeight: 300
+    property url imageFile
     property double sizeScaleFirstImage: 0.95
 
     Image  {

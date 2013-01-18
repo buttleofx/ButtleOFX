@@ -4,6 +4,8 @@ import QtQuick 1.1
 
 Item {
     id: player
+
+    property variant node
     implicitWidth: 850
     implicitHeight: 400
 
@@ -22,12 +24,21 @@ Item {
             GradientStop { position: 1; color: "#111111" }
         }
 
-        property url imageFile: _buttleData.graphWrapper.currentNodeWrapper.image
-
         property double sizeScaleEvent: 0.1
         property int sizeDragEvent: 5
 
-        Viewer {}
+        Loader {
+            sourceComponent: node ? viewer_component : undefined
+            anchors.fill: parent
+            Component {
+                id: viewer_component
+                Viewer {
+                    id: viewer
+                    anchors.fill: parent
+                    imageFile: node.image
+                }
+            }
+        }
 
         ToolBar{}
     }

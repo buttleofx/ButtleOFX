@@ -61,7 +61,8 @@ class NodeWrapper(QtCore.QObject):
         return self._node._image
 
     def getParams(self):
-        return ParamEditorWrapper(self._view, self._node.getParams())
+        paramEditorWrapper = ParamEditorWrapper(self._view, self._node.getParams())
+        return paramEditorWrapper.paramElmts
 
     ######## setters ########
 
@@ -77,7 +78,7 @@ class NodeWrapper(QtCore.QObject):
         print "nodeWrapper.setCoord"
         self._node.setCoord(point.x(), point.y())
         # self._node._coord = (point.x(), point.y())
-        print "nodeWrapper Coords have changed : " + str(self._node._coord)
+        print "nodeWrapper Coords have changed : ", str(self._node._coord)
 
     @QtCore.Slot(int, int, int)
     def setColor(self, r, g, b):
@@ -100,3 +101,4 @@ class NodeWrapper(QtCore.QObject):
     color = QtCore.Property(QtGui.QColor, getColor, setColor, notify=changed)
     nbInput = QtCore.Property(int, getNbInput, setNbInput, notify=changed)
     image = QtCore.Property(str, getImage, setImage, notify=changed)
+    params = QtCore.Property(QtCore.QObject, getParams, constant=True)

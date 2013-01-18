@@ -2,54 +2,54 @@ from PySide import QtCore
 
 
 class IntWrapper(QtCore.QObject):
-    def __init__(self, paramElmt):
+    def __init__(self, param):
         QtCore.QObject.__init__(self)
-        self._paramType = paramElmt.paramType
-        self._text = paramElmt.text
-        self._defaultValue = paramElmt.defaultValue
-        self._maximum = paramElmt.maximum
-        self._minimum = paramElmt.minimum
+        self._param = param
 
     #################### getters ####################
 
     def getParamType(self):
-        return self._paramType
+        return self._param.paramType
 
     def getText(self):
-        return self._text
+        return self._param.text
 
     def getDefaultValue(self):
-        return self._defaultValue
+        return self._param.defaultValue
+
+    def getValue(self):
+        return self._param.value
 
     def getMaximum(self):
-        return self._maximum
+        return self._param.maximum
 
     def getMinimum(self):
-        return self._minimum
+        return self._param.minimum
 
     #################### setters ####################
 
     def setParamType(self, paramType):
-        self._paramType = paramType
+        self._param.paramType = paramType
 
     def setText(self, text):
-        self._text = text
+        self._param.text = text
 
-    @QtCore.Slot(float)
     def setDefaultValue(self, defaultValue):
-        self._defaultValue = defaultValue
-        self.changed.emit()
+        self._param.defaultValue = defaultValue
+
+    def setValue(self, value):
+        self._param.value = value
 
     def setMaximum(self, maximum):
-        self._maximum = maximum
+        self._param.maximum = maximum
 
     def setMinimum(self, minimum):
-        self._minimum = minimum
+        self._param.minimum = minimum
 
     changed = QtCore.Signal()
 
     paramType = QtCore.Property(unicode, getParamType, setParamType, notify=changed)
     text = QtCore.Property(unicode, getText, setText, notify=changed)
-    defaultValue = QtCore.Property(float, getDefaultValue, setDefaultValue, notify=changed)
+    value = QtCore.Property(float, getValue, setValue, notify=changed)
     maximum = QtCore.Property(float, getMaximum, setMaximum, notify=changed)
     minimum = QtCore.Property(float, getMinimum, setMinimum, notify=changed)

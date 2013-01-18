@@ -4,9 +4,8 @@ import QtQuick 1.1
 
 Item {
     id: containerParamDouble2D
-    width: parent.width
-    height: parent.height
-
+    implicitWidth: 300
+    implicitHeight: 30
 
     /*Container of the two input field*/
      Row{
@@ -33,15 +32,15 @@ Item {
             radius: 3
             TextInput{
                 id: paramDouble2Dinput1
-                text: model.object.defaultValue1
+                text: model.object.value1
                 anchors.left: parent.left
                 anchors.leftMargin: 5
                 maximumLength: 5
-                color: focus ? "white" : "grey"
+                color: activeFocus ? "white" : "grey"
                 width: 40
                 activeFocusOnPress : true
                 selectByMouse : true
-                onAccepted: model.object.setDefaultValue1(parent.text)
+                onAccepted: model.object.value1 = paramDouble2Dinput1.text
                 validator: DoubleValidator{
                     bottom: model.object.minimum
                     top:  model.object.maximum
@@ -59,15 +58,14 @@ Item {
             radius: 3
             TextInput{
                 id: paramDouble2Dinput2
-                text: model.object.defaultValue2
+                text: model.object.value2
                 anchors.left: parent.left
                 anchors.leftMargin: 5
                 maximumLength: 5
-                color: focus ? "white" : "grey"
+                color: activeFocus ? "white" : "grey"
                 width: 40
-                activeFocusOnPress : true
                 selectByMouse : true
-                onAccepted: model.object.setDefaultValue2(parent.text)
+                onAccepted: model.object.value2 = paramDouble2Dinput2.text
                 validator: DoubleValidator{
                     bottom: model.object.minimum
                     top:  model.object.maximum

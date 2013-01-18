@@ -70,6 +70,7 @@ class Node(object):
         - _color
         - _nbInput
         - _image
+        - _params
 
         Signal :
         - changed : a signal emited to the wrapper layer
@@ -86,8 +87,39 @@ class Node(object):
         self._color = nodeDesc["color"]
         self._nbInput = nodeDesc["nbInput"]
         self._image = nodeDesc["url"]
-        self._params = nodeDesc["params"]
         # ###
+        self._params = [
+            ParamString(defaultValue=self.getName(), stringType="Name"),
+            ParamString(defaultValue=self.getType(), stringType="Type"),
+        ]
+
+        if nodeType == "Blur":
+            self._params.extend(
+                [
+                ParamDouble2D(defaultValue1=self.getCoord()[0], defaultValue2=self.getCoord()[1], minimum=0, maximum=1000, text="Coord"),
+                ParamDouble3D(defaultValue1=58, defaultValue2=174, defaultValue3=206, minimum=0, maximum=255, text="Color"),
+                ParamInt(defaultValue=self.getNbInput(), minimum=1, maximum=15, text="Nb input"),
+                ParamString(defaultValue=self.getImage(), stringType="Image file")
+                ]
+            )
+        elif nodeType == "Gamma":
+            self._params.extend(
+                [
+                ParamDouble3D(defaultValue1=221, defaultValue2=54, defaultValue3=138, minimum=0, maximum=255, text="Color"),
+                ParamDouble2D(defaultValue1=self.getCoord()[0], defaultValue2=self.getCoord()[1], minimum=0, maximum=1000, text="Coord"),
+                ParamInt(defaultValue=self.getNbInput(), minimum=1, maximum=15, text="Nb input"),
+                ParamString(defaultValue=self.getImage(), stringType="Image file")
+                ]
+            )
+        elif nodeType == "Invert":
+            self._params.extend(
+                [
+                ParamDouble3D(defaultValue1=90, defaultValue2=205, defaultValue3=45, minimum=0, maximum=255, text="Color"),
+                ParamDouble2D(defaultValue1=self.getCoord()[0], defaultValue2=self.getCoord()[1], minimum=0, maximum=1000, text="Coord"),
+                ParamInt(defaultValue=self.getNbInput(), minimum=1, maximum=15, text="Nb input"),
+                ParamString(defaultValue=self.getImage(), stringType="Image file")
+                ]
+            )
 
         self.changed = Signal()
 

@@ -8,16 +8,16 @@ Rectangle {
     width: 850
     height: 350 - y
 
+    property alias originX: connectnode.x
+    property alias originY: connectnode.y
+
     gradient: Gradient {
         GradientStop { position: 0.0; color: "#111111" }
         GradientStop { position: 0.015; color: "#212121" }
     }
 
-    Item {
+    Rectangle {
         id: connectnode
-        width: parent.width
-        height: parent.height
-
         Item {
             id: nodes
             width: graphArea.width
@@ -33,9 +33,9 @@ Rectangle {
         }
 
         Item{
-        id: connections
-        width: graphArea.width
-        height: graphArea.height
+            id: connections
+            width: graphArea.width
+            height: graphArea.height
             Repeater {
                 model : _buttleData.getGraphWrapper().getConnectionWrappers()
                 ConnectionLine {
@@ -57,9 +57,6 @@ Rectangle {
         acceptedButtons: Qt.MiddleButton
         drag.target: connectnode
         drag.axis: Drag.XandYAxis
-        onReleased: {
-            connectNodeX = connectnode.x
-            connectNodeY = connectnode.y
-        }
+
     } 
 }

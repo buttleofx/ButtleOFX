@@ -18,8 +18,8 @@ Rectangle {
     property int inputSpacing : _buttleData.getGraphWrapper().clipSpacing
     property int clipSize: _buttleData.getGraphWrapper().clipSize
 
-    x: m.nodeModel.coord[0]
-    y: m.nodeModel.coord[1]
+    x: m.nodeModel.coord.x
+    y: m.nodeModel.coord.y
     z: _buttleData.getGraphWrapper().getZMax()
 
     property int inputTopMargin: (node.height- node.clipSize*node.nbInput - node.inputSpacing * (node.nbInput-1)) / 2
@@ -84,11 +84,11 @@ Rectangle {
         states: [
             State {
                 name: "normal"
-                PropertyChanges { target: node; x: m.nodeModel.coord[0]; y: m.nodeModel.coord[1] }
+                PropertyChanges { target: node; x: m.nodeModel.coord.x; y: m.nodeModel.coord.y }
             },
             State {
                 name: "moving"
-                PropertyChanges { target: node; x: m.nodeModel.coord[0] ; y: m.nodeModel.coord[1] }
+                PropertyChanges { target: node; x: m.nodeModel.coord.x ; y: m.nodeModel.coord.y }
             }
         ]
     }

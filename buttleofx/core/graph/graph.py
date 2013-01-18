@@ -22,7 +22,6 @@ class Graph(object):
         self._nodes = []
         self._connections = []
         self._nbNodesCreated = 0
-
         self.nodesChanged = Signal()
         self.connectionsChanged = Signal()
         self.connectionsCoordChanged = Signal()
@@ -49,12 +48,12 @@ class Graph(object):
 
     ################################################## CREATION & DESTRUCTION ##################################################
 
-    def createNode(self, nodeType, x, y):
+    def createNode(self, nodeType):
         """
             Adds a node from the node list when a node is created.
         """
         print "createNode"
-        cmdCreateNode = CmdCreateNode(self, nodeType, x, y)
+        cmdCreateNode = CmdCreateNode(self, nodeType)
         cmdManager = CommandManager()
         cmdManager.push(cmdCreateNode)
 

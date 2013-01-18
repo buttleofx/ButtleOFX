@@ -49,7 +49,7 @@ class NodeWrapper(QtCore.QObject):
         return str(self._node._type)
 
     def getCoord(self):
-        return self._node._coord
+        return QtCore.QPoint(self._node._coord[0], self._node._coord[1])
 
     def getColor(self):
         return QtGui.QColor(*self._node._color)
@@ -73,11 +73,11 @@ class NodeWrapper(QtCore.QObject):
         self._node._type = nodeType
         self.changed()
 
-    def setCoord(self, x, y):
+    def setCoord(self, point):
         print "nodeWrapper.setCoord"
-        self._node._coord = (x, y)
+        self._node.setCoord(point.x(), point.y())
+        # self._node._coord = (point.x(), point.y())
         print "nodeWrapper Coords have changed : " + str(self._node._coord)
-        self.changed()
 
     @QtCore.Slot(int, int, int)
     def setColor(self, r, g, b):

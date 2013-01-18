@@ -5,6 +5,8 @@ Rectangle {
     width: 850
     height: 30
 
+    signal clickCreationNode( string nodeType)
+
     z: 2000
     anchors.top: parent.top
     color: "#212121"
@@ -107,8 +109,8 @@ Rectangle {
                     onEntered: parent.color = "#bbb"
                     onExited: parent.color = "#343434"
                     onClicked: {
-                        if(nodeMenuView.state == "shown"){
-                            _buttleData.getGraphWrapper().creationNode(cat2, -connectNodeX + 20, -connectNodeY + 20)
+                        if(nodeMenuView.state == "shown"){                          
+                            tools.clickCreationNode(cat2)
                             nodeMenuView.state = "hidden"
                         }
                     }

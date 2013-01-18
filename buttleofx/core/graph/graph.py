@@ -1,7 +1,3 @@
-from PySide import QtCore
-# core
-from buttleofx.core.graph.node import Node
-from buttleofx.core.graph.connection import Connection
 #undo_redo
 from buttleofx.core.undo_redo.manageTools import CommandManager
 from buttleofx.core.undo_redo.commands import CmdCreateNode, CmdDeleteNode, CmdCreateConnection

@@ -1,6 +1,5 @@
-from PySide import QtDeclarative, QtCore
+from PySide import QtCore
 # core
-from buttleofx.core.graph import Graph
 from buttleofx.core.graph.connection import IdClip
 # undo redo
 from buttleofx.core.undo_redo.manageTools import CommandManager
@@ -10,13 +9,11 @@ from buttleofx.gui.graph.node import NodeWrapper
 from buttleofx.gui.graph.connection import ConnectionWrapper
 # quickmamba
 from quickmamba.models import QObjectListModel
-from quickmamba.patterns import Signal
 
 
 class GraphWrapper(QtCore.QObject):
     """
         Class GraphWrapper defined by:
-        - _engine : to have the view engine
         - _rootObject : to have the root object
         - _nodeWrappers : list of node wrappers (the python objects we use to communicate with the QML)
         - _connectionWrappers : list of connections wrappers (the python objects we use to communicate with the QML)
@@ -34,7 +31,6 @@ class GraphWrapper(QtCore.QObject):
         super(GraphWrapper, self).__init__(view)
 
         self._view = view
-        self._engine = view.engine()
         self._rootObject = view.rootObject()
 
         self._nodeWrappers = QObjectListModel(self)
@@ -211,7 +207,7 @@ class GraphWrapper(QtCore.QObject):
             Function called when we want to delete a node from the QML.
         """
         # if at least one node in the graph
-        if len(self._nodeWrappers) > 0 and len(self._graph._nodes) > 0:
+        if len(self._nodeWrappers) > 0 and len(self._graph.getNodes()) > 0:
             # if a node is selected
             if self._currentNodeName != None:
                 self._graph.deleteNode(self._currentNodeName)

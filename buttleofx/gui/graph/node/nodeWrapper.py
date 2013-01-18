@@ -40,22 +40,22 @@ class NodeWrapper(QtCore.QObject):
     ######## getters ########
 
     def getName(self):
-        return str(self._node._name)
+        return self._node.getName()
 
     def getType(self):
-        return str(self._node._type)
+        return self._node.getType()
 
     def getCoord(self):
-        return self._node._coord
+        return self._node.getCoord()
 
     def getColor(self):
-        return QtGui.QColor(*self._node._color)
+        return QtGui.QColor(self._node.getColor())
 
     def getNbInput(self):
-        return self._node._nbInput
+        return self._node.getNbInput()
 
     def getImage(self):
-        return self._node._image
+        return self._node.getImage()
 
     def getParams(self):
         paramEditorWrapper = ParamEditorWrapper(self._view, self._node.getParams())

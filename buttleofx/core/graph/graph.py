@@ -4,7 +4,7 @@ from buttleofx.core.graph.node import Node
 from buttleofx.core.graph.connection import Connection
 #undo_redo
 from buttleofx.core.undo_redo.manageTools import CommandManager
-from buttleofx.core.undo_redo.commands import CmdCreateNode, CmdDeleteNode, CmdCreateConnection
+from buttleofx.core.undo_redo.commands import CmdCreateNode, CmdDeleteNode, CmdCreateConnection, CmdDeleteConnection
 # quickmamba
 from quickmamba.patterns import Signal
 
@@ -77,7 +77,9 @@ class Graph(object):
         """
             Removes a connection.
         """
-        self._connections.remove(connection)
+        cmdDeleteConnection = CmdDeleteConnection(self, connection)
+        cmdManager = CommandManager()
+        cmdManager.push(cmdDeleteConnection)
 
     def deleteNodeConnections(self, nodeName):
         """

@@ -37,7 +37,7 @@ Rectangle {
         anchors.fill: parent
         anchors.margins: 20
         anchors.topMargin: 50
-        model: _buttleData.getGraphWrapper().currentParams
+        model: _buttleData.graphWrapper.currentNodeWrapper.params
 
         delegate: Component {
             Loader {

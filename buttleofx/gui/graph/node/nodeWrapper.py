@@ -61,7 +61,8 @@ class NodeWrapper(QtCore.QObject):
         return self._node._image
 
     def getParams(self):
-        return ParamEditorWrapper(self._view, self._node.getParams())
+        paramEditorWrapper = ParamEditorWrapper(self._view, self._node.getParams())
+        return paramEditorWrapper.paramElmts
 
     ######## setters ########
 
@@ -100,3 +101,4 @@ class NodeWrapper(QtCore.QObject):
     color = QtCore.Property(QtGui.QColor, getColor, setColor, notify=changed)
     nbInput = QtCore.Property(int, getNbInput, setNbInput, notify=changed)
     image = QtCore.Property(str, getImage, setImage, notify=changed)
+    params = QtCore.Property(QtCore.QObject, getParams, constant=True)

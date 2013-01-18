@@ -21,7 +21,7 @@ Rectangle {
             width: graphArea.width
             height: graphArea.height
             Repeater {
-                model : _buttleData.getGraphWrapper().getNodeWrappers()
+                model : _buttleData.graphWrapper.nodeWrappers
                 Node {
                     Component.onDestruction: {
                         nodes.forceActiveFocus()
@@ -35,7 +35,7 @@ Rectangle {
         width: graphArea.width
         height: graphArea.height
             Repeater {
-                model : _buttleData.getGraphWrapper().getConnectionWrappers()
+                model : _buttleData.graphWrapper.connectionWrappers
                 ConnectionLine {
                     x1: model.object.clipOutPosX
                     y1: model.object.clipOutPosY

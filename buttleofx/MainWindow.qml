@@ -80,6 +80,7 @@ Rectangle {
             ParamEditor {
                 Splitter.minimumWidth: 5
                 width: 0.3*parent.width
+                //params: _buttleData.currentClip.params
             }
         }
     }

@@ -1,6 +1,5 @@
 import QtQuick 1.1
 
-import Qt 4.7
 
 Rectangle {
     id: node
@@ -9,21 +8,21 @@ Rectangle {
         id: m
         property variant nodeModel: model.object
     }
-    property int heightEmptyNode : _buttleData.getGraphWrapper().heightEmptyNode
+    property int heightEmptyNode : _buttleData.graphWrapper.heightEmptyNode
     property int nbInput: m.nodeModel.nbInput
 
     height: node.heightEmptyNode + node.inputSpacing * node.nbInput
     width: 110
 
-    property int inputSpacing : _buttleData.getGraphWrapper().clipSpacing
-    property int clipSize: _buttleData.getGraphWrapper().clipSize
+    property int inputSpacing : _buttleData.graphWrapper.clipSpacing
+    property int clipSize: _buttleData.graphWrapper.clipSize
 
     x: m.nodeModel.coord[0]
     y: m.nodeModel.coord[1]
-    z: _buttleData.getGraphWrapper().getZMax()
+    z: _buttleData.graphWrapper.zMax
 
     property int inputTopMargin: (node.height- node.clipSize*node.nbInput - node.inputSpacing * (node.nbInput-1)) / 2
-    property int inputSideMargin: _buttleData.getGraphWrapper().nodeInputSideMargin
+    property int inputSideMargin: _buttleData.graphWrapper.nodeInputSideMargin
 
     color: "transparent"
     focus: true
@@ -31,7 +30,7 @@ Rectangle {
     Rectangle {
         id: nodeBorder
         height: parent.height
-        width: _buttleData.getGraphWrapper().widthNode
+        width: _buttleData.graphWrapper.widthNode
         anchors.centerIn: parent
         color: m.nodeModel.color
         opacity: 0.5
@@ -48,7 +47,7 @@ Rectangle {
             anchors.centerIn: parent
             text: m.nodeModel.name
             font.pointSize: 10
-            color: (m.nodeModel.name === _buttleData.getGraphWrapper().currentNode) ? "#00b2a1" : "black"
+            color: (m.nodeModel == _buttleData.graphWrapper.currentNodeWrapper) ? "#00b2a1" : "black"
         }
     }
     Column {
@@ -111,19 +110,19 @@ Rectangle {
         drag.axis: Drag.XandYAxis
         onPressed: {
             console.log("node onPressed")
-            if(_buttleData.getGraphWrapper().getCurrentNode() != m.nodeModel.name) {
-                _buttleData.getGraphWrapper().setCurrentNode(m.nodeModel.name)
-                _buttleData.getGraphWrapper().setZMax()
-                parent.z = _buttleData.getGraphWrapper().getZMax()
+            if(_buttleData.graphWrapper.currentNodeWrapper != m.nodeModel) {
+                _buttleData.graphWrapper.currentNodeWrapper = m.nodeModel
+                _buttleData.graphWrapper.zMax += 1
+                parent.z = _buttleData.graphWrapper.zMax
             }
             stateMoving.state = "moving"
-            _buttleData.getGraphWrapper().updateConnectionsCoord()
+            _buttleData.graphWrapper.updateConnectionsCoord()
         }
         onReleased: {
             console.log("node onReleased")
 
            // m.nodeModel.nodeMoved(parent.x, parent.y) // (obsolete)
-            _buttleData.getGraphWrapper().nodeMoved(m.nodeModel.name, parent.x, parent.y)
+            _buttleData.graphWrapper.nodeMoved(m.nodeModel.name, parent.x, parent.y)
             /*
                 => Why not managed by the nodeWrapped anymore ? Because we can't store the node in the cmdManager, we need to store the node name.
                 If we store the node and the node is deleted, we won't be able to apply undo/redo on it because the recreated node won't be the same.
@@ -136,7 +135,7 @@ Rectangle {
             //m.modelPosY = nodeModel.coord[1]
             console.log(m.nodeModel.coord[0])
             console.log(m.nodeModel.coord[1])
-            _buttleData.getGraphWrapper().updateConnectionsCoord()
+            _buttleData.graphWrapper.updateConnectionsCoord()
         }
     }
 }

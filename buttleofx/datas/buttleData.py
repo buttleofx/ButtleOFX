@@ -42,3 +42,5 @@ class ButtleData(QtCore.QObject, Singleton):
         """
         cmdManager = CommandManager()
         cmdManager.redo()
+
+    graphWrapper = QtCore.Property(QtCore.QObject, getGraphWrapper, constant=True)

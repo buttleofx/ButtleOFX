@@ -22,7 +22,7 @@ Item {
             GradientStop { position: 1; color: "#111111" }
         }
 
-        property url imageFile: _buttleData.getGraphWrapper().currentImage
+        property url imageFile: _buttleData.graphWrapper.currentNodeWrapper.image
 
         property double sizeScaleEvent: 0.1
         property int sizeDragEvent: 5

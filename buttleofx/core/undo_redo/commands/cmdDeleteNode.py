@@ -1,54 +1,59 @@
+# undo_redo
 from buttleofx.core.undo_redo.manageTools import UndoableCommand
+# core
 from buttleofx.core.graph.node import Node
 
 
 class CmdDeleteNode(UndoableCommand):
     """
         Command that delete a node.
+        Attributes :
+        - graphTarget : the graph in which the node will be deleted.
+        - nodeName
+        - nodeCoord
+        - nodeType
+        - connections : list of the connections of the node, based on all the connections. We just keep the connections concerning our node.
     """
 
-    def __init__(self, graphTarget, nodeName, cmdManager):
-        """
-            Initializes the member variables :
-            graphTarget  is the graph in which the node will be deleted.
-            nodeName is the name of the node we want to create.
-       """
+    def __init__(self, graphTarget, nodeName):
         self.graphTarget = graphTarget
-        self.cmdManager = cmdManager
         self.nodeName = nodeName
         self.nodeCoord = (50, 20)
+        self.connections = [connection for connection in self.graphTarget.getConnections() if (connection.getClipOut().getNodeName() == nodeName or connection.getClipIn().getNodeName() == nodeName)]
 
     def undoCmd(self):
         """
-            Undo the delete of the node.
+            Undo the suppression of the node <=> recreate the node.
         """
-        print "Undo delete"
-        self.graphTarget.createNode(self.nodeType, self.cmdManager)
+        print "Undo delete node"
+        # we recreate the node
+        self.graphTarget.getNodes().append(Node(self.nodeName, self.nodeType, self.nodeCoord))
+        # we recreate all the connections
+        for connection in self.connections:
+            self.graphTarget.getConnections().append(connection)
+
+        self.graphTarget.nodesChanged()
+        self.graphTarget.connectionsChanged()
 
     def redoCmd(self):
         """
-            Redo the delete of the node.
+            Redo the suppression of the node.
         """
-        print "Redo creation"
+        print "Redo delete node"
         self.doCmd()
 
     def doCmd(self):
         """
             Delete a node.
         """
-        self.graphTarget._nbNodesCreated -= 1
-        # we search the right node to delete
-        indexWrapper = 0
-        for node in self.graphTarget._nodes:
-            if node.getName() == self.nodeName:
-                self.nodeType = node.getType()
-                # delete his connections
-                for connection in self.graphTarget._connections:
-                    if connection.getClipOut().getNodeName() == self.nodeName or connection.getClipIn().getNodeName() == self.nodeName:
-                        self.graphTarget.deleteConnection(connection)
-                # delete the node
-                self.graphTarget._nodes.remove(node)
-                break
-            indexWrapper += 1
+        node = self.graphTarget.getNode(self.nodeName)
+        # we store the node type and its coordinates in order to be able to recreate it
+        self.nodeType = node.getType()
+        self.nodeCoord = node.getCoord()
+        # we delete its connections
+        self.graphTarget.deleteNodeConnections(self.nodeName)
+        # and then we delete the node
+        self.graphTarget.getNodes().remove(node)
+
         self.graphTarget.nodesChanged()
         self.graphTarget.connectionsChanged()

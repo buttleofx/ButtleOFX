@@ -4,13 +4,13 @@ from buttleofx.core.graph import Graph
 from buttleofx.core.graph.connection import IdClip
 # undo redo
 from buttleofx.core.undo_redo.manageTools import CommandManager
+from buttleofx.core.undo_redo.commands import CmdSetCoord
 # gui
 from buttleofx.gui.graph.node import NodeWrapper
 from buttleofx.gui.graph.connection import ConnectionWrapper
 # quickmamba
 from quickmamba.models import QObjectListModel
 from quickmamba.patterns import Signal
-
 
 
 class GraphWrapper(QtCore.QObject):
@@ -40,7 +40,9 @@ class GraphWrapper(QtCore.QObject):
         self._connectionWrappers = QObjectListModel(self)
 
         self._currentNode = None
+        self._currentParams = None
         self._currentImage = ""
+
         self._tmpClipIn = None
         self._tmpClipOut = None
 
@@ -51,6 +53,7 @@ class GraphWrapper(QtCore.QObject):
         # the links between the graph and this graphWrapper
         graph.nodesChanged.connect(self.updateNodeWrappers)
         graph.connectionsChanged.connect(self.updateConnectionWrappers)
+        graph.connectionsCoordChanged.connect(self.updateConnectionsCoord)
 
     def __str__(self):
         """
@@ -90,7 +93,7 @@ class GraphWrapper(QtCore.QObject):
         """
         return self._nodeWrappers
 
-    @QtCore.Slot(result=NodeWrapper)
+    @QtCore.Slot(str, result="QtCore.QObject")
     def getNodeWrapper(self, nodeName):
         """
             Returns the right nodeWrapper, identified with its nodeName.
@@ -107,18 +110,54 @@ class GraphWrapper(QtCore.QObject):
         """
         return self._connectionWrappers
 
-    @QtCore.Slot(result="QVariant")
+    @QtCore.Slot(result=str)
     def getCurrentNode(self):
         """
             Return the name of the current selected node.
         """
         return self._currentNode
 
+    @QtCore.Slot(result="QtCore.QObject")
+    def getCurrentNodeWrapper(self):
+        """
+            Return the current nodeWrapper.
+        """
+        return self.getNodeWrapper(self._currentNode)
+
+    def getCurrentParams(self):
+        """
+            Return the params of the current node.
+        """
+        return self._currentParams
+
+    @QtCore.Slot(result=IdClip)
+    def getTmpClipOut(self):
+        return self._tmpClipOut
+
+    @QtCore.Slot(result=IdClip)
+    def getTmpClipIn(self):
+        return self._tmpClipIn
+
     def getCurrentImage(self):
         """
             Return the url of the current image
         """
         return self._currentImage
+
+    def getWidthNode(self):
+        return NodeWrapper.widthNode
+
+    def getHeightEmptyNode(self):
+        return NodeWrapper.heightEmptyNode
+
+    def getClipSpacing(self):
+        return NodeWrapper.clipSpacing
+
+    def getClipSize(self):
+        return NodeWrapper.clipSize
+
+    def getNodeInputSideMargin(self):
+        return NodeWrapper.inputSideMargin
 
     #################### setters ####################
 
@@ -136,11 +175,18 @@ class GraphWrapper(QtCore.QObject):
         for nodeWrapper in self._nodeWrappers:
             if nodeWrapper.getName() == nodeName:
                 self.setCurrentImage(nodeWrapper.getImage())
-                print(nodeWrapper.getImage())
-                print(self._currentImage)
+                self.setCurrentParams(nodeName)
 
         self._currentNode = nodeName
+
         self.currentNodeChanged.emit()
+
+    def setCurrentParams(self, nodeName):
+        """
+            Change the current params and emit the change.
+        """
+        self._currentParams = self.getNodeWrapper(nodeName).getParams().getParamElts()
+        self.currentParamsChanged.emit()
 
     def setCurrentImage(self, urlImage):
         """
@@ -159,12 +205,26 @@ class GraphWrapper(QtCore.QObject):
 
     ################################################## CREATION & DESTRUCTION ##################################################
 
-    @QtCore.Slot(str, CommandManager)
-    def creationNode(self, nodeType, cmdManager):
+    @QtCore.Slot(str)
+    def creationNode(self, nodeType):
         """
             Function called when we want to create a node from the QML.
         """
-        self._graph.createNode(nodeType, cmdManager)
+        self._graph.createNode(nodeType)
+        # debug
+        self.__str__()
+
+    @QtCore.Slot()
+    def destructionNode(self):
+        """
+            Function called when we want to delete a node from the QML.
+        """
+        # if at least one node in the graph
+        if len(self._nodeWrappers) > 0 and len(self._graph._nodes) > 0:
+            # if a node is selected
+            if self._currentNode != None:
+                self._graph.deleteNode(self._currentNode)
+        self._currentNode = None
         # debug
         self.__str__()
 
@@ -180,19 +240,18 @@ class GraphWrapper(QtCore.QObject):
             nodeWrapper = NodeWrapper(node, self._view)
             self._nodeWrappers.append(nodeWrapper)
 
-    @QtCore.Slot(CommandManager)
-    def destructionNode(self, cmdManager):
-        """
-            Function called when we want to delete a node from the QML.
-        """
-        # if at least one node in the graph
-        if len(self._nodeWrappers) > 0 and len(self._graph._nodes) > 0:
-            # if a node is selected
-            if self._currentNode != None:
-                self._graph.deleteNode(self._currentNode, cmdManager)
-        self._currentNode = None
-        # debug
-        self.__str__()
+    ################################################## INTERACTIONS ##################################################
+
+    @QtCore.Slot(str, int, int)
+    def nodeMoved(self, nodeName, x, y):
+        print "Coordinates before movement :"
+        print self._graph.getNode(nodeName).getCoord()
+
+        cmdMoved = CmdSetCoord(self._graph, nodeName, (x, y))
+        cmdManager = CommandManager()
+        cmdManager.push(cmdMoved)
+        print "Coordinates after movement :"
+        print self._graph.getNode(nodeName).getCoord()
 
     ################################################## CONNECTIONS MANAGEMENT ##################################################
 
@@ -203,10 +262,10 @@ class GraphWrapper(QtCore.QObject):
             The calculation is the same as in the QML file (Node.qml).
         """
         nodeCoord = self._graph.getNode(nodeName).getCoord()
-        widthNode = 110
-        heightEmptyNode = 35
-        clipSpacing = 7
-        clipSize = 8
+        widthNode = self.getWidthNode()
+        heightEmptyNode = self.getHeightEmptyNode()
+        clipSpacing = self.getClipSpacing()
+        clipSize = self.getClipSize()
         nbInput = self._graph.getNode(nodeName).getNbInput()
         heightNode = heightEmptyNode + clipSpacing * nbInput
         inputTopMargin = (heightNode - clipSize * nbInput - clipSpacing * (nbInput - 1)) / 2
@@ -236,11 +295,11 @@ class GraphWrapper(QtCore.QObject):
 
         return True
 
-    def connect(self, clipOut, clipIn, cmdManager):
+    def connect(self, clipOut, clipIn):
         """
             Add a connection between 2 clips.
         """
-        self._graph.createConnection(clipOut, clipIn, cmdManager)
+        self._graph.createConnection(clipOut, clipIn)
         self._tmpClipIn = None
         self._tmpClipOut = None
         self.__str__()
@@ -251,6 +310,7 @@ class GraphWrapper(QtCore.QObject):
             Function called when a clip is pressed (but not released yet).
             The function replace the tmpClipIn or tmpClipOut.
         """
+        print "clip pressed"
         position = self.getPositionClip(nodeName, port, clipNumber)
         #position = self._graph.getNode(nodeName).getCoord()
         idClip = IdClip(nodeName, port, clipNumber, position)
@@ -259,8 +319,8 @@ class GraphWrapper(QtCore.QObject):
         elif (port == "output"):
             self._tmpClipOut = idClip
 
-    @QtCore.Slot(str, str, int, CommandManager)
-    def clipReleased(self, nodeName, port, clipNumber, cmdManager):
+    @QtCore.Slot(str, str, int)
+    def clipReleased(self, nodeName, port, clipNumber):
 
         if (port == "input"):
             #if there is a tmpNodeOut we can connect the nodes
@@ -268,7 +328,7 @@ class GraphWrapper(QtCore.QObject):
                 position = self.getPositionClip(nodeName, port, clipNumber)
                 idClip = IdClip(nodeName, port, clipNumber, position)
                 if self.canConnect(self._tmpClipOut, idClip):
-                    self.connect(self._tmpClipOut, idClip, cmdManager)
+                    self.connect(self._tmpClipOut, idClip)
                 else:
                     print "Unable to connect the nodes."
 
@@ -278,7 +338,7 @@ class GraphWrapper(QtCore.QObject):
                 position = self.getPositionClip(nodeName, port, clipNumber)
                 idClip = IdClip(nodeName, port, clipNumber, position)
                 if self.canConnect(idClip, self._tmpClipIn):
-                    self.connect(idClip, self._tmpClipIn, cmdManager)
+                    self.connect(idClip, self._tmpClipIn)
                 else:
                     print "Unable to connect the nodes."
 
@@ -293,8 +353,9 @@ class GraphWrapper(QtCore.QObject):
 
     def updateNodeWrappers(self):
         """
-            Updates the nodeWrappers when the signal nodesChanged has been emited.
+            Updates the nodeWrappers when the signal nodesChanged has been emitted.
         """
+        print "UPDATE NODE WRAPPERS"
         # we clear the list
         self._nodeWrappers.clear()
         # and we fill with the new data
@@ -303,9 +364,9 @@ class GraphWrapper(QtCore.QObject):
 
     def updateConnectionWrappers(self):
         """
-            Updates the connectionWrappers when the signal connectionsChanged has been emited.
+            Updates the connectionWrappers when the signal connectionsChanged has been emitted.
         """
-        print "UPDATE CONNECTIONS WRAPPERS"
+        print "UPDATE CONNECTION WRAPPERS"
         # we clear the list
         self._connectionWrappers.clear()
         # and we fill with the new data
@@ -314,7 +375,7 @@ class GraphWrapper(QtCore.QObject):
 
     @QtCore.Slot()
     def updateConnectionsCoord(self):
-        print "UPDATE CONNECTIONS COORDS"
+        print "UPDATE CONNECTION COORDS"
         for connection in self._graph.getConnections():
             clipOut = connection.getClipOut()
             clipIn = connection.getClipIn()
@@ -324,11 +385,26 @@ class GraphWrapper(QtCore.QObject):
 
     ################################################## DATA EXPOSED TO QML ##################################################
 
+    @QtCore.Signal
+    def changed(self):
+        pass
+
     nodesChanged = QtCore.Signal()
     nodes = QtCore.Property("QVariant", getNodeWrappers, notify=nodesChanged)
+
     connectionWrappersChanged = QtCore.Signal()
     connections = QtCore.Property("QVariant", getConnectionWrappers, notify=connectionWrappersChanged)
+
     currentNodeChanged = QtCore.Signal()
     currentNode = QtCore.Property(str, getCurrentNode, setCurrentNode, notify=currentNodeChanged)
+
+    currentParamsChanged = QtCore.Signal()
+    currentParams = QtCore.Property("QVariant", getCurrentParams, setCurrentParams, notify=currentParamsChanged)
     currentImageChanged = QtCore.Signal()
     currentImage = QtCore.Property(str, getCurrentImage, setCurrentImage, notify=currentImageChanged)
+
+    widthNode = QtCore.Property(int, getWidthNode, notify=changed)
+    heightEmptyNode = QtCore.Property(int, getHeightEmptyNode, notify=changed)
+    clipSpacing = QtCore.Property(int, getClipSpacing, notify=changed)
+    clipSize = QtCore.Property(int, getClipSize, notify=changed)
+    nodeInputSideMargin = QtCore.Property(int, getNodeInputSideMargin, notify=changed)

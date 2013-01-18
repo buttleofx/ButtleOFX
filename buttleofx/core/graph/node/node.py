@@ -1,8 +1,10 @@
 from quickmamba.patterns import Signal
 from PySide import QtGui
 # paramEditor
-from buttleofx.gui.paramEditor.params import ParamInt
-from buttleofx.gui.paramEditor.params import ParamString
+from buttleofx.core.params import ParamInt
+from buttleofx.core.params import ParamString
+from buttleofx.core.params import ParamDouble2D
+from buttleofx.core.params import ParamDouble3D
 
 nodeDescriptors = {
     "Blur": {
@@ -10,13 +12,10 @@ nodeDescriptors = {
         "nbInput": 1,
         "url": "../img/brazil.jpg",
         "params": [
-            ParamString(defaultValue="node.getName()", stringType="Name"),
+            ParamString(defaultValue="Blur", stringType="Name"),
             ParamString(defaultValue="node.getType()", stringType="Type"),
-            ParamInt(defaultValue="node.getCoord()[0]", minimum=0, maximum=1000, text="Coord x"),
-            ParamInt(defaultValue="node.getCoord()[1]", minimum=0, maximum=1000, text="Coord y"),
-            ParamInt(defaultValue="node.getColor().red()", minimum=0, maximum=255, text="Color red"),
-            ParamInt(defaultValue="node.getColor().green()", minimum=0, maximum=255, text="Color green"),
-            ParamInt(defaultValue="node.getColor().blue()", minimum=0, maximum=255, text="Color blue"),
+            ParamDouble2D(defaultValue1="node.getCoord()[0]", defaultValue2="node.getCoord()[1]", minimum=0, maximum=1000, text="Coord"),
+            ParamDouble3D(defaultValue1=58, defaultValue2=174, defaultValue3=206, minimum=0, maximum=255, text="Color"),
             ParamInt(defaultValue="node.getNbInput()", minimum=1, maximum=15, text="Nb input"),
             ParamString(defaultValue="node.getImage()", stringType="Image file"),
         ],
@@ -26,10 +25,10 @@ nodeDescriptors = {
         "nbInput": 2,
         "url": "../img/brazil2.jpg",
         "params": [
-            ParamString(defaultValue="node.getName()", stringType="Name"),
+            ParamString(defaultValue="Gamma", stringType="Name"),
             ParamString(defaultValue="node.getType()", stringType="Type"),
-            ParamInt(defaultValue="node.getCoord()[0]", minimum=0, maximum=1000, text="Coord x"),
-            ParamInt(defaultValue="node.getCoord()[1]", minimum=0, maximum=1000, text="Coord y"),
+            ParamDouble3D(defaultValue1=221, defaultValue2=54, defaultValue3=138, minimum=0, maximum=255, text="Color"),
+            ParamDouble2D(defaultValue1="node.getCoord()[0]", defaultValue2="node.getCoord()[1]", minimum=0, maximum=1000, text="Coord"),
             ParamInt(defaultValue="node.getNbInput()", minimum=1, maximum=15, text="Nb input"),
             ParamString(defaultValue="node.getImage()", stringType="Image file"),
         ],
@@ -39,11 +38,10 @@ nodeDescriptors = {
         "nbInput": 3,
         "url": "../img/brazil3.jpg",
         "params": [
-            ParamString(defaultValue="node.getName()", stringType="Name"),
+            ParamString(defaultValue="Invert", stringType="Name"),
             ParamString(defaultValue="node.getType()", stringType="Type"),
-            ParamInt(defaultValue="node.getColor().red()", minimum=0, maximum=255, text="Color red"),
-            ParamInt(defaultValue="node.getColor().green()", minimum=0, maximum=255, text="Color green"),
-            ParamInt(defaultValue="node.getColor().blue()", minimum=0, maximum=255, text="Color blue"),
+            ParamDouble3D(defaultValue1=90, defaultValue2=205, defaultValue3=45, minimum=0, maximum=255, text="Color"),
+            ParamDouble2D(defaultValue1="node.getCoord()[0]", defaultValue2="node.getCoord()[1]", minimum=0, maximum=1000, text="Coord"),
             ParamInt(defaultValue="node.getNbInput()", minimum=1, maximum=15, text="Nb input"),
             ParamString(defaultValue="node.getImage()", stringType="Image file"),
         ],
@@ -59,6 +57,7 @@ defaultNodeDesc = {
         ParamString(defaultValue="node.getType()", stringType="Type"),
     ],
 }
+
 
 class Node(object):
     """
@@ -83,6 +82,7 @@ class Node(object):
 
         # soon from Tuttle
         nodeDesc = nodeDescriptors[nodeType] if nodeType in nodeDescriptors else defaultNodeDesc
+
         self._color = nodeDesc["color"]
         self._nbInput = nodeDesc["nbInput"]
         self._image = nodeDesc["url"]
@@ -116,6 +116,9 @@ class Node(object):
 
     def getImage(self):
         return self._image
+
+    def getParams(self):
+        return self._params
 
     ######## setters ########
 

@@ -8,46 +8,48 @@ Item {
     width: parent.width
     height:parent.height
 
-    /*Title of the paramInt */
-    Text {
-        id: paramIntTitle
-        width: 80
-        text: model.object.text + " : "
-        color: "white"
-       // font.pointSize: 8
-        anchors.top: parent.top
-        anchors.verticalCenter: parent.verticalCenter
-    }
 
 
     /*Container of the textInput*/
-    Rectangle{
+    Row{
         id: paramIntInputContainer
-        color: "#212121"
-        border.width: 1
-        border.color: "#111111"
-        radius: 4
+        spacing: 10
 
-        anchors.left: paramIntTitle.right
-        anchors.leftMargin: 5
-
+        /*Title of the paramInt */
+        Text {
+            id: paramIntTitle
+            width: 80
+            text: model.object.text + " : "
+            color: "white"
+           // font.pointSize: 8
+            anchors.top: parent.top
+            anchors.verticalCenter: parent.verticalCenter
+        }
 
         /*Input field accepting only number between 0 and 255*/
-        TextInput{
-            id: paramIntInput
-            text: model.object.defaultValue
-            anchors.left: parent.left
-            anchors.leftMargin: 5
-            maximumLength: 3
-            color: focus ? "white" : "grey"
-            validator: IntValidator{
-                bottom: model.object.minimum
-                top:  model.object.maximum
+        Rectangle{
+            height: 20
+            width:40
+            color: "#212121"
+            border.width: 1
+            border.color: "#333"
+            radius: 3
+            TextInput{
+                id: paramIntInput
+                text: model.object.defaultValue
+                anchors.left: parent.left
+                anchors.leftMargin: 5
+                maximumLength: 3
+                color: focus ? "white" : "grey"
+                width: 40
+                activeFocusOnPress : true
+                selectByMouse : true
+                onAccepted: model.object.setDefaultValue(parent.text)
+                validator: IntValidator{
+                    bottom: model.object.minimum
+                    top:  model.object.maximum
+                }
             }
-        }
-        MouseArea{
-            anchors.fill: parent
-            onPressed: input.focus = true
         }
     }
 

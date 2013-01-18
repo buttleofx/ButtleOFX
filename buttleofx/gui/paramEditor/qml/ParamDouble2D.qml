@@ -7,65 +7,72 @@ Item {
     width: parent.width
     height: parent.height
 
-    // Title of the paramDouble
-    Text {
-        id: paramDouble2DTitle
-        width: 80
-        text: model.object.text + " : "
-        color: "white"
-       // font.pointSize: 8
-        anchors.top: parent.top
-        anchors.verticalCenter: parent.verticalCenter
-    }  
 
     /*Container of the two input field*/
-     Rectangle{
+     Row{
         id: paramDouble2DInputContainer
-        color: "#212121"
-        border.width: 1
-        border.color: "#111111"
-        radius: 4
+        spacing : 10
 
-        anchors.left: paramDouble2DTitle.right
-        anchors.leftMargin: 5
+        // Title of the paramDouble
+        Text {
+            id: paramDouble2DTitle
+            width: 80
+            text: model.object.text + " : "
+            color: "white"
+            anchors.top: parent.top
+            anchors.verticalCenter: parent.verticalCenter
+        }
 
         /* First input */
-        TextInput{
-            id: paramDouble2Dinput1
-            text: model.object.defaultValue1
-            anchors.left: parent.left
-            anchors.leftMargin: 5
-            maximumLength: 10
-            color: focus ? "white" : "grey"
-            validator: DoubleValidator{
-                bottom: model.object.minimum
-                top:  model.object.maximum
+        Rectangle{
+            height: 20
+            width:40
+            color: "#212121"
+            border.width: 1
+            border.color: "#333"
+            radius: 3
+            TextInput{
+                id: paramDouble2Dinput1
+                text: model.object.defaultValue1
+                anchors.left: parent.left
+                anchors.leftMargin: 5
+                maximumLength: 5
+                color: focus ? "white" : "grey"
+                width: 40
+                activeFocusOnPress : true
+                selectByMouse : true
+                onAccepted: model.object.setDefaultValue1(parent.text)
+                validator: DoubleValidator{
+                    bottom: model.object.minimum
+                    top:  model.object.maximum
+                }
             }
-        }
-        MouseArea{
-            anchors.fill: parent
-            onPressed: input.focus = true
         }
 
         /* Second input */
-        TextInput{
-            id: paramDouble2Dinput2
-            text: model.object.defaultValue2
-            anchors.left: parent.left
-            anchors.leftMargin: 30
-            maximumLength: 10
-            color: focus ? "white" : "grey"
-            validator: DoubleValidator{
-                bottom: model.object.minimum
-                top:  model.object.maximum
+        Rectangle{
+            height: 20
+            width:40
+            color: "#212121"
+            border.width: 1
+            border.color: "#333"
+            radius: 3
+            TextInput{
+                id: paramDouble2Dinput2
+                text: model.object.defaultValue2
+                anchors.left: parent.left
+                anchors.leftMargin: 5
+                maximumLength: 5
+                color: focus ? "white" : "grey"
+                width: 40
+                activeFocusOnPress : true
+                selectByMouse : true
+                onAccepted: model.object.setDefaultValue2(parent.text)
+                validator: DoubleValidator{
+                    bottom: model.object.minimum
+                    top:  model.object.maximum
+                }
             }
         }
-        MouseArea{
-            anchors.fill: parent
-            onPressed: input.focus = true
-        }
-
     }
-
-
 }

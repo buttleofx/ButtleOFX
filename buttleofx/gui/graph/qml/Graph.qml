@@ -30,7 +30,6 @@ Rectangle {
             }
         }
 
-
         Item{
         id: connections
         width: graphArea.width
@@ -43,9 +42,13 @@ Rectangle {
                     x2: model.object.clipInPosX
                     y2: model.object.clipInPosY
                 }
+
             }
+
         }
     }
+
+
 
     MouseArea{
         anchors.fill: parent

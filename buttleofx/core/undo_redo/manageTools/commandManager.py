@@ -1,13 +1,10 @@
 from quickmamba.patterns import Singleton
 
-from PySide import QtCore, QtGui
 
-#class CommandManager(QtCore.QObject):
 class CommandManager(Singleton):
     """
     Manage a list of commands.
     """
-
     commands = []  # list of undo/redo commands
     index = 0
 
@@ -118,7 +115,6 @@ class CommandManager(Singleton):
         newCommand.doCmd()
         self.index += 1
 
-    @QtCore.Slot()
     def undo(self):
         """
         Undoes the last command.
@@ -131,7 +127,6 @@ class CommandManager(Singleton):
         else:
             print "can't undo."
 
-    @QtCore.Slot()
     def redo(self):
         """
         Redoes the last undone command.

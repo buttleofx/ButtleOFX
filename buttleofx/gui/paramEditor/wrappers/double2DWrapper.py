@@ -11,6 +11,8 @@ class Double2DWrapper(QtCore.QObject):
         self._maximum = paramElmt.maximum
         self._minimum = paramElmt.minimum
 
+    #################### getters ####################
+
     def getParamType(self):
         return self._paramType
 
@@ -29,11 +31,35 @@ class Double2DWrapper(QtCore.QObject):
     def getMinimum(self):
         return self._minimum
 
+    #################### setters ####################
+
+    def setParamType(self, paramType):
+        self._paramType = paramType
+
+    def setText(self, text):
+        self._text = text
+
+    @QtCore.Slot(int)
+    def setDefaultValue1(self, value1):
+        self._defaultValue1 = value1
+        self.changed.emit()
+
+    @QtCore.Slot(int)
+    def setDefaultValue2(self, value2):
+        self._defaultValue2 = value2
+        self.changed.emit()
+
+    def setMaximum(self, maximum):
+        self._maximum = maximum
+
+    def setMinimum(self, minimum):
+        self._minimum = minimum
+
     changed = QtCore.Signal()
 
-    paramType = QtCore.Property(unicode, getParamType, notify=changed)
-    text = QtCore.Property(unicode, getText, notify=changed)
-    defaultValue1 = QtCore.Property(float, getDefaultValue1, notify=changed)
-    defaultValue2 = QtCore.Property(float, getDefaultValue2, notify=changed)
-    maximum = QtCore.Property(float, getMaximum, notify=changed)
-    minimum = QtCore.Property(float, getMinimum, notify=changed)
+    paramType = QtCore.Property(unicode, getParamType, setParamType, notify=changed)
+    text = QtCore.Property(unicode, getText, setText, notify=changed)
+    defaultValue1 = QtCore.Property(int, getDefaultValue1, setDefaultValue1, notify=changed)
+    defaultValue2 = QtCore.Property(int, getDefaultValue2, setDefaultValue2, notify=changed)
+    maximum = QtCore.Property(float, getMaximum, setMaximum, notify=changed)
+    minimum = QtCore.Property(float, getMinimum, setMinimum, notify=changed)

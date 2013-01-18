@@ -17,7 +17,7 @@ Rectangle {
         }
         onReleased: {
             color = "#bbbbbb"
-             _buttleData.getGraphWrapper().clipReleased(m.nodeModel.name, port, index, _cmdManager)
+             _buttleData.getGraphWrapper().clipReleased(m.nodeModel.name, port, index)
         }
         onEntered: {
             color = "blue"

@@ -9,20 +9,21 @@ Rectangle {
         id: m
         property variant nodeModel: model.object
     }
-    property int heightEmptyNode : 35
+    property int heightEmptyNode : _buttleData.getGraphWrapper().heightEmptyNode
     property int nbInput: m.nodeModel.nbInput
 
     height: node.heightEmptyNode + node.inputSpacing * node.nbInput
     width: 110
 
+    property int inputSpacing : _buttleData.getGraphWrapper().clipSpacing
+    property int clipSize: _buttleData.getGraphWrapper().clipSize
+
     x: m.nodeModel.coord[0]
     y: m.nodeModel.coord[1]
     z: _buttleData.getGraphWrapper().getZMax()
 
-    property int inputSpacing : 7
-    property int clipSize: 8
     property int inputTopMargin: (node.height- node.clipSize*node.nbInput - node.inputSpacing * (node.nbInput-1)) / 2
-    property int inputSideMargin: 6
+    property int inputSideMargin: _buttleData.getGraphWrapper().nodeInputSideMargin
 
     color: "transparent"
     focus: true
@@ -30,7 +31,7 @@ Rectangle {
     Rectangle {
         id: nodeBorder
         height: parent.height
-        width: 110
+        width: _buttleData.getGraphWrapper().widthNode
         anchors.centerIn: parent
         color: m.nodeModel.color
         opacity: 0.5
@@ -40,7 +41,7 @@ Rectangle {
         id: nodeRectangle
         anchors.centerIn: parent
         height: parent.height - 8
-        width: 102
+        width: nodeBorder.width - 10
         color: "#bbbbbb"
         radius: 8
         Text {
@@ -120,7 +121,16 @@ Rectangle {
         }
         onReleased: {
             console.log("node onReleased")
-            m.nodeModel.nodeMoved(parent.x, parent.y, _cmdManager)
+
+           // m.nodeModel.nodeMoved(parent.x, parent.y) // (obsolete)
+            _buttleData.getGraphWrapper().nodeMoved(m.nodeModel.name, parent.x, parent.y)
+            /*
+                => Why not managed by the nodeWrapped anymore ? Because we can't store the node in the cmdManager, we need to store the node name.
+                If we store the node and the node is deleted, we won't be able to apply undo/redo on it because the recreated node won't be the same.
+                But the node name will be the same. So we need the node name.
+                The fonction is managed by the graphWrapper because in order to find the right node, we need to give the graph to the cmdManager.
+            */
+
             stateMoving.state = "normal"
             //m.modelPosX = nodeModel.coord[0]
             //m.modelPosY = nodeModel.coord[1]

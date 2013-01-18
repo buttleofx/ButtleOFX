@@ -14,8 +14,8 @@ class Graph(object):
         Class Graph contains
         - _nodes : list of nodes (python objects, the core nodes)
         - _connections : list of connections (python objects, the core connections)
-        - nodeCreated : the signal emited to the wrapper layer when a node is created
-        - nodeDeleted : the signal emited to the wrapper layer when a node is deleted
+        - nodesChanged : the signal emited to the wrapper layer to update nodeWrappers
+        - connectionsChanged : the signal emited to the wrapper layer to update connectionWrappers
     """
 
     def __init__(self):
@@ -25,6 +25,9 @@ class Graph(object):
 
         self.nodesChanged = Signal()
         self.connectionsChanged = Signal()
+        self.connectionsCoordChanged = Signal()
+
+    ################################################## ACCESSORS ##################################################
 
     def getNodes(self):
         """
@@ -44,44 +47,51 @@ class Graph(object):
         """
         return self._connections
 
-    def createNode(self, nodeType, cmdManager):
+    ################################################## CREATION & DESTRUCTION ##################################################
+
+    def createNode(self, nodeType):
         """
             Adds a node from the node list when a node is created.
         """
         print "createNode"
-        cmdCreateNode = CmdCreateNode(self, nodeType, cmdManager)
+        cmdCreateNode = CmdCreateNode(self, nodeType)
+        cmdManager = CommandManager()
         cmdManager.push(cmdCreateNode)
 
-    def deleteNode(self, nodeName, cmdManager):
+    def deleteNode(self, nodeName):
         """
             Removes a node in the node list when a node is deleted.
         """
         print "deleteNode"
-        cmdDeleteNode = CmdDeleteNode(self, nodeName, cmdManager)
+        cmdDeleteNode = CmdDeleteNode(self, nodeName)
+        cmdManager = CommandManager()
         cmdManager.push(cmdDeleteNode)
 
-    def createConnection(self, clipOut, clipIn, cmdManager):
+    def createConnection(self, clipOut, clipIn):
         """
             Adds a connection in the connection list when a connection is created.
         """
         print "createConnection"
         cmdCreateConnection = CmdCreateConnection(self, clipOut, clipIn)
+        cmdManager = CommandManager()
         cmdManager.push(cmdCreateConnection)
 
     def deleteConnection(self, connection):
         """
-            Delete a connection.
+            Removes a connection.
         """
+        print "deleteConnection"
         self._connections.remove(connection)
 
     def deleteNodeConnections(self, nodeName):
         """
-            Delete all the connections of the node.
+            Removes all the connections of the node.
         """
-        for connection in self._connections:
-            if connection.getClipOut().getNodeName() == nodeName or connection.getClipIn().getNodeName() == nodeName:
-                self.deleteConnection(connection)
+        # We can't use a for loop. We have to rebuild the list, based on the current values.
+        self._connections = [connection for connection in self._connections if not (connection.getClipOut().getNodeName() == nodeName or connection.getClipIn().getNodeName() == nodeName)]
         self.connectionsChanged()
+
+    ################################################## FLAGS ##################################################
 
     def contains(self, clip):
         """

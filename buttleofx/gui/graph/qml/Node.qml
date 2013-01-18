@@ -111,18 +111,16 @@ Rectangle {
         drag.axis: Drag.XandYAxis
         onPressed: {
             console.log("node onPressed")
+            // if current node changed
             if(_buttleData.getGraphWrapper().getCurrentNode() != m.nodeModel.name) {
                 _buttleData.getGraphWrapper().setCurrentNode(m.nodeModel.name)
                 _buttleData.getGraphWrapper().setZMax()
                 parent.z = _buttleData.getGraphWrapper().getZMax()
             }
             stateMoving.state = "moving"
-            _buttleData.getGraphWrapper().updateConnectionsCoord()
         }
         onReleased: {
             console.log("node onReleased")
-
-           // m.nodeModel.nodeMoved(parent.x, parent.y) // (obsolete)
             _buttleData.getGraphWrapper().nodeMoved(m.nodeModel.name, parent.x, parent.y)
             /*
                 => Why not managed by the nodeWrapped anymore ? Because we can't store the node in the cmdManager, we need to store the node name.
@@ -130,13 +128,7 @@ Rectangle {
                 But the node name will be the same. So we need the node name.
                 The fonction is managed by the graphWrapper because in order to find the right node, we need to give the graph to the cmdManager.
             */
-
             stateMoving.state = "normal"
-            //m.modelPosX = nodeModel.coord[0]
-            //m.modelPosY = nodeModel.coord[1]
-            console.log(m.nodeModel.coord[0])
-            console.log(m.nodeModel.coord[1])
-            _buttleData.getGraphWrapper().updateConnectionsCoord()
         }
     }
 }

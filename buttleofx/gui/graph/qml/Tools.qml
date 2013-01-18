@@ -47,7 +47,6 @@ Rectangle {
         MouseArea {
             anchors.fill: parent
             onClicked: {
-                //_graphWrapper.deleteCurrentNode();
                 _buttleData.getGraphWrapper().destructionNode()
 
             }

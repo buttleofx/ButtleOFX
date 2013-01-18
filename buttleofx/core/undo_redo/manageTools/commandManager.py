@@ -103,7 +103,6 @@ class CommandManager(Singleton):
         Executes a new undoable command (add command to the stack ?)
         """
 
-        print "Push function "
         # clear the redoable part of commands
         for command in self.commands[self.index:]:
             self.commands.pop(self.commands.index(command))
@@ -119,9 +118,7 @@ class CommandManager(Singleton):
         """
         Undoes the last command.
         """
-        print "Undo function ! "
         if self.canUndo():
-            print "can undo."
             self.index -= 1
             self.commands[self.index].undoCmd()
         else:
@@ -132,7 +129,6 @@ class CommandManager(Singleton):
         Redoes the last undone command.
         """
         if self.canRedo():
-            print "can redo."
             self.commands[self.index].redoCmd()
             self.index += 1
         else:

@@ -55,6 +55,7 @@ class GraphWrapper(QtCore.QObject):
         graph.connectionsChanged.connect(self.updateConnectionWrappers)
         graph.connectionsCoordChanged.connect(self.updateConnectionsCoord)
 
+
     def __str__(self):
         """
             Displays on terminal some data.
@@ -101,6 +102,7 @@ class GraphWrapper(QtCore.QObject):
         for node in self._nodeWrappers:
             if node.getName() == nodeName:
                 return node
+        print "!!! Failure in getNodeWrapper !!!"
         return None
 
     @QtCore.Slot(result="QVariant")
@@ -170,15 +172,12 @@ class GraphWrapper(QtCore.QObject):
 
         if self._currentNode == nodeName:
             return
-
-        #we search the image of the selected node
-        for nodeWrapper in self._nodeWrappers:
-            if nodeWrapper.getName() == nodeName:
-                self.setCurrentImage(nodeWrapper.getImage())
-                self.setCurrentParams(nodeName)
-
         self._currentNode = nodeName
 
+        # update the viewer and the params we display
+        self.setCurrentImage(self.getNodeWrapper(self._currentNode).getImage())
+        self.setCurrentParams(self._currentNode)
+        # warn QML
         self.currentNodeChanged.emit()
 
     def setCurrentParams(self, nodeName):
@@ -186,6 +185,7 @@ class GraphWrapper(QtCore.QObject):
             Change the current params and emit the change.
         """
         self._currentParams = self.getNodeWrapper(nodeName).getParams().getParamElts()
+        # warn QML
         self.currentParamsChanged.emit()
 
     def setCurrentImage(self, urlImage):
@@ -193,6 +193,7 @@ class GraphWrapper(QtCore.QObject):
             Change the currentImage, displayed in the viewer
         """
         self._currentImage = urlImage
+        # warn QML
         self.currentImageChanged.emit()
 
     @QtCore.Slot(result="double")
@@ -211,8 +212,6 @@ class GraphWrapper(QtCore.QObject):
             Function called when we want to create a node from the QML.
         """
         self._graph.createNode(nodeType)
-        # debug
-        self.__str__()
 
     @QtCore.Slot()
     def destructionNode(self):
@@ -225,15 +224,11 @@ class GraphWrapper(QtCore.QObject):
             if self._currentNode != None:
                 self._graph.deleteNode(self._currentNode)
         self._currentNode = None
-        # debug
-        self.__str__()
 
     def createNodeWrapper(self, nodeName):
         """
             Creates a node wrapper and add it to the nodeWrappers list.
         """
-        print "createNodeWrapper"
-
         # search the right node in the node list
         node = self._graph.getNode(nodeName)
         if (node != None):
@@ -244,14 +239,14 @@ class GraphWrapper(QtCore.QObject):
 
     @QtCore.Slot(str, int, int)
     def nodeMoved(self, nodeName, x, y):
-        print "Coordinates before movement :"
-        print self._graph.getNode(nodeName).getCoord()
-
-        cmdMoved = CmdSetCoord(self._graph, nodeName, (x, y))
-        cmdManager = CommandManager()
-        cmdManager.push(cmdMoved)
-        print "Coordinates after movement :"
-        print self._graph.getNode(nodeName).getCoord()
+        """
+            Manage when a node is moved.
+        """
+        # only push a cmd if the node truly moved
+        if self._graph.getNode(nodeName).getCoord() != (x, y):
+            cmdMoved = CmdSetCoord(self._graph, nodeName, (x, y))
+            cmdManager = CommandManager()
+            cmdManager.push(cmdMoved)
 
     ################################################## CONNECTIONS MANAGEMENT ##################################################
 
@@ -302,7 +297,6 @@ class GraphWrapper(QtCore.QObject):
         self._graph.createConnection(clipOut, clipIn)
         self._tmpClipIn = None
         self._tmpClipOut = None
-        self.__str__()
 
     @QtCore.Slot(str, str, int)
     def clipPressed(self, nodeName, port, clipNumber):
@@ -355,7 +349,7 @@ class GraphWrapper(QtCore.QObject):
         """
             Updates the nodeWrappers when the signal nodesChanged has been emitted.
         """
-        print "UPDATE NODE WRAPPERS"
+        print "=> UPDATE NODE WRAPPERS"
         # we clear the list
         self._nodeWrappers.clear()
         # and we fill with the new data
@@ -366,7 +360,7 @@ class GraphWrapper(QtCore.QObject):
         """
             Updates the connectionWrappers when the signal connectionsChanged has been emitted.
         """
-        print "UPDATE CONNECTION WRAPPERS"
+        print "=> UPDATE CONNECTION WRAPPERS"
         # we clear the list
         self._connectionWrappers.clear()
         # and we fill with the new data
@@ -375,7 +369,7 @@ class GraphWrapper(QtCore.QObject):
 
     @QtCore.Slot()
     def updateConnectionsCoord(self):
-        print "UPDATE CONNECTION COORDS"
+        print "=> UPDATE CONNECTION COORDS"
         for connection in self._graph.getConnections():
             clipOut = connection.getClipOut()
             clipIn = connection.getClipIn()
@@ -389,20 +383,25 @@ class GraphWrapper(QtCore.QObject):
     def changed(self):
         pass
 
+    # nodes
     nodesChanged = QtCore.Signal()
     nodes = QtCore.Property("QVariant", getNodeWrappers, notify=nodesChanged)
 
+    # connections
     connectionWrappersChanged = QtCore.Signal()
     connections = QtCore.Property("QVariant", getConnectionWrappers, notify=connectionWrappersChanged)
 
+    # current node
     currentNodeChanged = QtCore.Signal()
     currentNode = QtCore.Property(str, getCurrentNode, setCurrentNode, notify=currentNodeChanged)
-
+    # current params
     currentParamsChanged = QtCore.Signal()
     currentParams = QtCore.Property("QVariant", getCurrentParams, setCurrentParams, notify=currentParamsChanged)
+    # current image
     currentImageChanged = QtCore.Signal()
     currentImage = QtCore.Property(str, getCurrentImage, setCurrentImage, notify=currentImageChanged)
 
+    # for a clean display of connection
     widthNode = QtCore.Property(int, getWidthNode, notify=changed)
     heightEmptyNode = QtCore.Property(int, getHeightEmptyNode, notify=changed)
     clipSpacing = QtCore.Property(int, getClipSpacing, notify=changed)

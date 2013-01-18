@@ -53,7 +53,6 @@ class Graph(object):
         """
             Adds a node from the node list when a node is created.
         """
-        print "createNode"
         cmdCreateNode = CmdCreateNode(self, nodeType)
         cmdManager = CommandManager()
         cmdManager.push(cmdCreateNode)
@@ -62,7 +61,6 @@ class Graph(object):
         """
             Removes a node in the node list when a node is deleted.
         """
-        print "deleteNode"
         cmdDeleteNode = CmdDeleteNode(self, nodeName)
         cmdManager = CommandManager()
         cmdManager.push(cmdDeleteNode)
@@ -71,7 +69,6 @@ class Graph(object):
         """
             Adds a connection in the connection list when a connection is created.
         """
-        print "createConnection"
         cmdCreateConnection = CmdCreateConnection(self, clipOut, clipIn)
         cmdManager = CommandManager()
         cmdManager.push(cmdCreateConnection)
@@ -80,7 +77,6 @@ class Graph(object):
         """
             Removes a connection.
         """
-        print "deleteConnection"
         self._connections.remove(connection)
 
     def deleteNodeConnections(self, nodeName):

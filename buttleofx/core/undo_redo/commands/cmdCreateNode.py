@@ -23,7 +23,6 @@ class CmdCreateNode(UndoableCommand):
         """
             Undo the creation of the node.
         """
-        print "Undo creation "
         node = self.graphTarget.getNode(self.nodeName)
         self.nodeCoord = node.getCoord()
         self.graphTarget.deleteNodeConnections(self.nodeName)
@@ -34,7 +33,6 @@ class CmdCreateNode(UndoableCommand):
         """
             Redo the creation of the node.
         """
-        print "Redo creation"
         self.graphTarget.getNodes().append(Node(self.nodeName, self.nodeType, self.nodeCoord))
         self.graphTarget.nodesChanged()
         # We don't have to recreate the connections because when a node is created, it can't have connections !

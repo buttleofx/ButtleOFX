@@ -25,6 +25,7 @@ class GraphWrapper(QtCore.QObject):
         - _graph : the data of the graph (python objects, the core data : the nodes and the connections)
 
         Creates a QObject from a given python object Graph.
+
     """
 
     def __init__(self, graph, view):
@@ -150,7 +151,10 @@ class GraphWrapper(QtCore.QObject):
     def getNodeInputSideMargin(self):
         return NodeWrapper.inputSideMargin
 
-    #################### setters ####################
+    @QtCore.Slot(result="QVariant")
+    def getLastCreatedNodeWrapper(self):
+        return self._nodeWrappers[-1]
+
 
     def setCurrentNodeWrapper(self, nodeWrapper):
         """

@@ -17,9 +17,10 @@ Rectangle {
     property int inputSpacing : _buttleData.graphWrapper.clipSpacing
     property int clipSize: _buttleData.graphWrapper.clipSize
 
-    x: m.nodeModel.coord[0]
-    y: m.nodeModel.coord[1]
+    x: m.nodeModel.coord.x
+    y: m.nodeModel.coord.y
     z: _buttleData.graphWrapper.zMax
+
 
     property int inputTopMargin: (node.height- node.clipSize*node.nbInput - node.inputSpacing * (node.nbInput-1)) / 2
     property int inputSideMargin: _buttleData.graphWrapper.nodeInputSideMargin
@@ -83,11 +84,11 @@ Rectangle {
         states: [
             State {
                 name: "normal"
-                PropertyChanges { target: node; x: m.nodeModel.coord[0]; y: m.nodeModel.coord[1] }
+                PropertyChanges { target: node; x: m.nodeModel.coord.x; y: m.nodeModel.coord.y }
             },
             State {
                 name: "moving"
-                PropertyChanges { target: node; x: m.nodeModel.coord[0] ; y: m.nodeModel.coord[1] }
+                PropertyChanges { target: node; x: m.nodeModel.coord.x ; y: m.nodeModel.coord.y }
             }
         ]
     }
@@ -133,8 +134,8 @@ Rectangle {
             stateMoving.state = "normal"
             //m.modelPosX = nodeModel.coord[0]
             //m.modelPosY = nodeModel.coord[1]
-            console.log(m.nodeModel.coord[0])
-            console.log(m.nodeModel.coord[1])
+            console.log(m.nodeModel.coord.x)
+            console.log(m.nodeModel.coord.y)
             _buttleData.graphWrapper.updateConnectionsCoord()
         }
     }

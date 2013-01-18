@@ -2,38 +2,40 @@ from PySide import QtCore
 
 
 class StringWrapper(QtCore.QObject):
-    def __init__(self, paramElmt):
+    def __init__(self, param):
         QtCore.QObject.__init__(self)
-        self._paramType = paramElmt.paramType
-        self._defaultValue = paramElmt.defaultValue
-        self._stringType = paramElmt.stringType
+        self._param = param
 
     #################### getters ####################
 
     def getParamType(self):
-        return self._paramType
+        return self._param.paramType
 
     def getDefaultValue(self):
-        return self._defaultValue
+        return self._param.defaultValue
+
+    def getValue(self):
+        return self._param.value
 
     def getStringType(self):
-        return self._stringType
+        return self._param.stringType
 
     #################### setters ####################
 
     def setParamType(self, paramType):
-        self._paramType = paramType
+        self._param.paramType = paramType
 
-    @QtCore.Slot(str)
     def setDefaultValue(self, defaultValue):
-        self._defaultValue = defaultValue
-        self.changed.emit()
+        self._param.defaultValue = defaultValue
+
+    def setValue(self, value):
+        self._param.value = value
 
     def setStringType(self, stringType):
-        self._stringType = stringType
+        self._param.stringType = stringType
 
     changed = QtCore.Signal()
 
-    paramType = QtCore.Property(str, getParamType, setParamType, notify=changed)
-    defaultValue = QtCore.Property(str, getDefaultValue, setDefaultValue, notify=changed)
+    paramType = QtCore.Property(unicode, getParamType, setParamType, notify=changed)
+    value = QtCore.Property(str, getValue, setValue, notify=changed)
     stringType = QtCore.Property(str, getStringType, setStringType, notify=changed)

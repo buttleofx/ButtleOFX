@@ -34,14 +34,14 @@ Item {
             radius: 3
             TextInput{
                 id: paramStringInput
-                text: model.object.defaultValue
+                text: model.object.value
                 anchors.left: parent.left
                 anchors.leftMargin: 5
                 maximumLength: 100
                 activeFocusOnPress : true
                 selectByMouse : true
                 color: focus ? "white" : "grey"
-                onAccepted: model.object.setDefaultValue(parent.text)
+                onAccepted: model.object.value = paramStringInput.text
             }
         }
     }

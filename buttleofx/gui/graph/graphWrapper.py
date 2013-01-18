@@ -160,7 +160,6 @@ class GraphWrapper(QtCore.QObject):
         """
             Change the current selected node and emit the change.
         """
-        print "setCurrentNode : " + str(nodeWrapper.getName())
 
         if self._currentNodeName == nodeWrapper.getName():
             return
@@ -217,6 +216,7 @@ class GraphWrapper(QtCore.QObject):
             if self._currentNodeName != None:
                 self._graph.deleteNode(self._currentNodeName)
         self._currentNodeName = None
+        self.currentNodeChanged.emit()
         # debug
         self.__str__()
 
@@ -224,7 +224,6 @@ class GraphWrapper(QtCore.QObject):
         """
             Creates a node wrapper and add it to the nodeWrappers list.
         """
-        print "createNodeWrapper"
 
         # search the right node in the node list
         node = self._graph.getNode(nodeName)
@@ -236,14 +235,9 @@ class GraphWrapper(QtCore.QObject):
 
     @QtCore.Slot(str, int, int)
     def nodeMoved(self, nodeName, x, y):
-        print "Coordinates before movement :"
-        print self._graph.getNode(nodeName).getCoord()
-
         cmdMoved = CmdSetCoord(self._graph, nodeName, (x, y))
         cmdManager = CommandManager()
         cmdManager.push(cmdMoved)
-        print "Coordinates after movement :"
-        print self._graph.getNode(nodeName).getCoord()
 
     ################################################## CONNECTIONS MANAGEMENT ##################################################
 
@@ -302,7 +296,6 @@ class GraphWrapper(QtCore.QObject):
             Function called when a clip is pressed (but not released yet).
             The function replace the tmpClipIn or tmpClipOut.
         """
-        print "clip pressed"
         position = self.getPositionClip(nodeName, port, clipNumber)
         #position = self._graph.getNode(nodeName).getCoord()
         idClip = IdClip(nodeName, port, clipNumber, position)
@@ -347,7 +340,6 @@ class GraphWrapper(QtCore.QObject):
         """
             Updates the nodeWrappers when the signal nodesChanged has been emitted.
         """
-        print "UPDATE NODE WRAPPERS"
         # we clear the list
         self._nodeWrappers.clear()
         # and we fill with the new data
@@ -358,7 +350,6 @@ class GraphWrapper(QtCore.QObject):
         """
             Updates the connectionWrappers when the signal connectionsChanged has been emitted.
         """
-        print "UPDATE CONNECTION WRAPPERS"
         # we clear the list
         self._connectionWrappers.clear()
         # and we fill with the new data
@@ -367,7 +358,6 @@ class GraphWrapper(QtCore.QObject):
 
     @QtCore.Slot()
     def updateConnectionsCoord(self):
-        print "UPDATE CONNECTION COORDS"
         for connection in self._graph.getConnections():
             clipOut = connection.getClipOut()
             clipIn = connection.getClipIn()

@@ -34,8 +34,8 @@ Item {
             border.color: "#333"
             radius: 3
             TextInput{
-                id: paramDoubleinput
-                text: model.object.defaultValue
+                id: paramDoubleInput
+                text: model.object.value
                 anchors.left: parent.left
                 anchors.leftMargin: 5
                 maximumLength: 5
@@ -47,7 +47,7 @@ Item {
                     bottom: model.object.minimum
                     top:  model.object.maximum
                 }
-                onAccepted: model.object.setDefaultValue(parent.text)
+                onAccepted: model.object.value = paramDoubleInput.text
             }
         }
     }

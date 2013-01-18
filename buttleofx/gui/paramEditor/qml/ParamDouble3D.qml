@@ -41,7 +41,7 @@ Item {
             radius: 3
             TextInput{
                 id: paramDouble3Dinput1
-                text: model.object.defaultValue1
+                text: model.object.value1
                 anchors.left: parent.left
                 anchors.leftMargin: 5
                 maximumLength: 5
@@ -67,7 +67,7 @@ Item {
             radius: 3
             TextInput{
                 id: paramDouble3Dinput2
-                text: model.object.defaultValue2
+                text: model.object.value2
                 anchors.left: parent.left
                 anchors.leftMargin: 5
                 maximumLength: 5
@@ -93,7 +93,7 @@ Item {
             radius: 3
             TextInput{
                 id: paramDouble3Dinput3
-                text: model.object.defaultValue3
+                text: model.object.value3
                 anchors.left: parent.left
                 anchors.leftMargin: 5
                 maximumLength: 5

@@ -9,6 +9,10 @@ Item {
     implicitWidth: 850
     implicitHeight: 400
 
+    onNodeChanged: {
+        console.log("Node Changed : ", node)
+    }
+
     TabBar{}
 
     Rectangle {

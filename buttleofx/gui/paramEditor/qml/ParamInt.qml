@@ -36,7 +36,7 @@ Item {
             radius: 3
             TextInput{
                 id: paramIntInput
-                text: model.object.defaultValue
+                text: model.object.value
                 anchors.left: parent.left
                 anchors.leftMargin: 5
                 maximumLength: 3
@@ -44,7 +44,7 @@ Item {
                 width: 40
                 activeFocusOnPress : true
                 selectByMouse : true
-                onAccepted: model.object.setDefaultValue(parent.text)
+                onAccepted: model.object.value = paramIntInput.text
                 validator: IntValidator{
                     bottom: model.object.minimum
                     top:  model.object.maximum

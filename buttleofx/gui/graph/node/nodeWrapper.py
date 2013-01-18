@@ -2,8 +2,6 @@ from PySide import QtCore, QtGui
 
 # wrappers
 from buttleofx.gui.paramEditor.wrappers import ParamEditorWrapper
-# quickmamba
-from quickmamba.patterns import Signal
 
 
 class NodeWrapper(QtCore.QObject):
@@ -37,7 +35,6 @@ class NodeWrapper(QtCore.QObject):
         pass
 
     def emitChanged(self):
-        print "node emitChanged"
         self.changed.emit()
 
     ######## getters ########
@@ -67,31 +64,22 @@ class NodeWrapper(QtCore.QObject):
     ######## setters ########
 
     def setName(self, name):
-        self._node._name = name
-        self.changed()
+        self._node.setName(name)
 
     def setType(self, nodeType):
-        self._node._type = nodeType
-        self.changed()
+        self._node.setType(nodeType)
 
     def setCoord(self, x, y):
-        print "nodeWrapper.setCoord"
-        self._node._coord = (x, y)
-        print "nodeWrapper Coords have changed : " + str(self._node._coord)
-        self.changed()
+        self._node.setCoord(x, y)
 
-    @QtCore.Slot(int, int, int)
     def setColor(self, r, g, b):
-        self._node._color = (r, g, b)
-        self.changed()
+        self._node.setColor(r, g, b)
 
     def setNbInput(self, nbInput):
-        self._node._nbInput = nbInput
-        self.changed()
+        self._node.setNbInput(nbInput)
 
     def setImage(self, image):
-        self._node._image = image
-        self.changed()
+        self._node.setImage(image)
 
     ######## Slots ########
 

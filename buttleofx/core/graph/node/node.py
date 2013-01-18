@@ -1,10 +1,7 @@
 from quickmamba.patterns import Signal
 from PySide import QtGui
 # paramEditor
-from buttleofx.core.params import ParamInt
-from buttleofx.core.params import ParamString
-from buttleofx.core.params import ParamDouble2D
-from buttleofx.core.params import ParamDouble3D
+from buttleofx.core.params import ParamInt, ParamString, ParamDouble2D, ParamDouble3D
 
 nodeDescriptors = {
     "Blur": {
@@ -132,31 +129,24 @@ class Node(object):
 
     def setName(self, name):
         self._name = name
-        #self.NodeNameChanged()
         self.changed()
 
     def setType(self, nodeType):
         self._type = nodeType
-        #self.NodeTypeChanged()
         self.changed()
 
     def setCoord(self, x, y):
-        print "node.setCoord"
         self._coord = (x, y)
-        print "Node Coords have changed : " + str(self._coord)
         self.changed()
 
     def setColor(self, r, g, b):
         self._color = (r, g, b)
-        #self.NodeColorChanged()
         self.changed()
 
     def setNbInput(self, nbInput):
         self._nbInput = nbInput
-        #self.NodeNbInputChanged()
         self.changed()
 
     def setImage(self, image):
         self._image = image
-        #self.NodeImageChanged()
         self.changed()

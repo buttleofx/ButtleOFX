@@ -1,4 +1,4 @@
-# garph
+# graph
 from buttleofx.core.graph import Graph
 from buttleofx.gui.graph import GraphWrapper
 # undo_redo

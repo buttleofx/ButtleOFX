@@ -35,6 +35,7 @@ def main(argv):
 
     decView = QtDeclarative.QDeclarativeView()
     decView.setViewport( QtOpenGL.QGLWidget() )
+    decView.setViewportUpdateMode(QtDeclarative.QDeclarativeView.FullViewportUpdate)
     if tuttleofx_installed:
         QtDeclarative.qmlRegisterType(GLViewport_tuttleofx, "Viewport", 1, 0, "GLViewport")
     else:

@@ -1,4 +1,4 @@
-from PySide import QtGui, QtDeclarative
+from PySide import QtGui, QtDeclarative, QtOpenGL
 import os, sys
 # data
 from buttleofx.datas import ButtleData
@@ -25,6 +25,9 @@ def main(argv):
     QApplication = QtGui.QApplication(sys.argv)
     # create the declarative view
     view = QtDeclarative.QDeclarativeView()
+    view.setViewport(QtOpenGL.QGLWidget())
+    view.setViewportUpdateMode(QtDeclarative.QDeclarativeView.FullViewportUpdate)
+    
     view.setWindowTitle("ButtleOFX")
     view.setResizeMode(QtDeclarative.QDeclarativeView.SizeRootObjectToView)
 
@@ -45,3 +48,4 @@ def main(argv):
 
     view.show()
     QApplication.exec_()
+

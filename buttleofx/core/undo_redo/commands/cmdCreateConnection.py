@@ -17,7 +17,7 @@ class CmdCreateConnection(UndoableCommand):
         """
             Undo the creation of the connection.
         """
-        self._graph.deleteConnection(self._connection)
+        self._graph.getConnections().remove(self._connection)
         self._graph.connectionsChanged()
 
     def redoCmd(self):

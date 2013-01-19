@@ -1,6 +1,6 @@
 #undo_redo
 from buttleofx.core.undo_redo.manageTools import CommandManager
-from buttleofx.core.undo_redo.commands import CmdCreateNode, CmdDeleteNode, CmdCreateConnection
+from buttleofx.core.undo_redo.commands import CmdCreateNode, CmdDeleteNode, CmdCreateConnection, CmdDeleteConnection
 # quickmamba
 from quickmamba.patterns import Signal
 
@@ -48,7 +48,6 @@ class Graph(object):
         """
             Adds a node from the node list when a node is created.
         """
-        print "createNode"
         cmdCreateNode = CmdCreateNode(self, nodeType)
         cmdManager = CommandManager()
         cmdManager.push(cmdCreateNode)
@@ -57,7 +56,6 @@ class Graph(object):
         """
             Removes a node in the node list when a node is deleted.
         """
-        print "deleteNode"
         cmdDeleteNode = CmdDeleteNode(self, nodeName)
         cmdManager = CommandManager()
         cmdManager.push(cmdDeleteNode)
@@ -66,7 +64,6 @@ class Graph(object):
         """
             Adds a connection in the connection list when a connection is created.
         """
-        print "createConnection"
         cmdCreateConnection = CmdCreateConnection(self, clipOut, clipIn)
         cmdManager = CommandManager()
         cmdManager.push(cmdCreateConnection)
@@ -75,8 +72,9 @@ class Graph(object):
         """
             Removes a connection.
         """
-        print "deleteConnection"
-        self._connections.remove(connection)
+        cmdDeleteConnection = CmdDeleteConnection(self, connection)
+        cmdManager = CommandManager()
+        cmdManager.push(cmdDeleteConnection)
 
     def deleteNodeConnections(self, nodeName):
         """

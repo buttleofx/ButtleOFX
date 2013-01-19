@@ -118,9 +118,7 @@ class CommandManager(Singleton):
         """
         Undoes the last command.
         """
-        print "Undo function ! "
         if self.canUndo():
-            print "can undo."
             self.index -= 1
             self.commands[self.index].undoCmd()
         else:
@@ -131,7 +129,6 @@ class CommandManager(Singleton):
         Redoes the last undone command.
         """
         if self.canRedo():
-            print "can redo."
             self.commands[self.index].redoCmd()
             self.index += 1
         else:

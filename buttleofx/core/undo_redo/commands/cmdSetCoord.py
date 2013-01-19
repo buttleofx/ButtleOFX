@@ -24,7 +24,6 @@ class CmdSetCoord(UndoableCommand):
         """
         self.graphTarget.getNode(self.nodeTargetName).setCoord(self.coordOld[0], self.coordOld[1])
         self.graphTarget.connectionsCoordChanged()
-        #return self.nodeTargetName
 
     def redoCmd(self):
         """
@@ -36,7 +35,5 @@ class CmdSetCoord(UndoableCommand):
         """
             Executes the movement of the node.
         """
-
         self.graphTarget.getNode(self.nodeTargetName).setCoord(self.newCoord[0], self.newCoord[1])
         self.graphTarget.connectionsCoordChanged()
-        #return self.nodeTargetName

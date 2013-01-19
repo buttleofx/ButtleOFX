@@ -1,5 +1,7 @@
 from PySide import QtGui, QtDeclarative, QtOpenGL
 import os, sys
+from OpenGL import GL
+
 # data
 from buttleofx.datas import ButtleData
 #connections

@@ -25,7 +25,6 @@ class CmdDeleteNode(UndoableCommand):
         """
             Undo the suppression of the node <=> recreate the node.
         """
-        print "Undo delete node"
         # we recreate the node
         self.graphTarget.getNodes().append(Node(self.nodeName, self.nodeType, self.nodeCoord))
         # we recreate all the connections
@@ -39,7 +38,6 @@ class CmdDeleteNode(UndoableCommand):
         """
             Redo the suppression of the node.
         """
-        print "Redo delete node"
         self.doCmd()
 
     def doCmd(self):

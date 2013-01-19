@@ -125,15 +125,13 @@ Rectangle {
            else if (mouse.button == Qt.RightButton) {
                  _buttleData.graphWrapper.currentParamNodeWrapper = m.nodeModel;
             }
-
-
         }
         onReleased: {
             // left button : we end moving
             if (mouse.button == Qt.LeftButton) {
                 _buttleData.graphWrapper.nodeMoved(m.nodeModel.name, parent.x, parent.y)
                 stateMoving.state = "normal"
-                _buttleData.graphWrapper.updateConnectionsCoord()
+                //_buttleData.graphWrapper.updateConnectionsCoord() // useless, isn't it ?
             }
         }
         // double click : we change the current viewer node

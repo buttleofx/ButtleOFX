@@ -60,11 +60,16 @@ Rectangle {
     }   
 
     MouseArea{
-        id: mouseArea
         anchors.fill: parent
-        acceptedButtons: Qt.MiddleButton | Qt.RightButton
+        acceptedButtons: Qt.MiddleButton 
         drag.target: connectnode
         drag.axis: Drag.XandYAxis
+    } 
+
+    MouseArea{
+        id: mouseArea
+        anchors.fill: parent
+        acceptedButtons: Qt.RightButton
         onClicked: {
              if (mouse.button == Qt.RightButton)
              listmodel.x = mouseX

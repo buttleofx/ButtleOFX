@@ -11,6 +11,11 @@ Rectangle {
     property alias originX: connectnode.x
     property alias originY: connectnode.y
 
+    property alias mouseX: mouseArea.mouseX
+    property alias mouseY: mouseArea.mouseY
+
+    signal clickCreationNode(string nodeType)
+
     gradient: Gradient {
         GradientStop { position: 0.0; color: "#111111" }
         GradientStop { position: 0.015; color: "#212121" }
@@ -50,13 +55,22 @@ Rectangle {
         }
     }
 
-
+    MenuList {
+        id: listmodel
+    }   
 
     MouseArea{
+        id: mouseArea
         anchors.fill: parent
-        acceptedButtons: Qt.MiddleButton
+        acceptedButtons: Qt.MiddleButton | Qt.RightButton
         drag.target: connectnode
         drag.axis: Drag.XandYAxis
-
+        onClicked: {
+             if (mouse.button == Qt.RightButton)
+             listmodel.x = mouseX
+             listmodel.y = mouseY - 30
+             listmodel.clickFrom = graphArea
+             listmodel.menuState = (listmodel.menuState == "hidden") ? "shown" : "hidden"
+        }
     } 
 }

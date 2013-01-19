@@ -103,7 +103,6 @@ class GraphWrapper(QtCore.QObject):
         for nodeWrapper in self._nodeWrappers:
             if nodeWrapper.getName() == nodeName:
                 return nodeWrapper
-        print "!!! Failure in getNodeWrapper !!!"
         return None
 
     def getConnectionWrappers(self):

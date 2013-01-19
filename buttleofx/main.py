@@ -11,6 +11,17 @@ from quickmamba.utils import QmlInstantCoding
 
 currentFilePath = os.path.dirname(os.path.abspath(__file__))
 
+class ButtleApp(QtGui.QApplication):
+    def __init__(self, argv):
+        super(ButtleApp, self).__init__(argv)
+    
+    def notify(self, receiver, event):
+        try:
+            #print("QApp notify")
+            return QtGui.QApplication.notify(self, receiver, event)
+        except Exception as e:
+            print("QApp notify exception: " + str(e))
+
 
 def main(argv):
     # add new QML type
@@ -22,7 +33,7 @@ def main(argv):
     cmdManager.clean()
 
     # create QApplication
-    QApplication = QtGui.QApplication(sys.argv)
+    app = ButtleApp(argv)
     # create the declarative view
     view = QtDeclarative.QDeclarativeView()
     view.setViewport(QtOpenGL.QGLWidget())
@@ -47,5 +58,5 @@ def main(argv):
     qic.addFilesFromDirectory(os.getcwd(), recursive=True)
 
     view.show()
-    QApplication.exec_()
+    app.exec_()
 

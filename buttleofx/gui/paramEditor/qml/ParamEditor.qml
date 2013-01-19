@@ -1,4 +1,5 @@
 import QtQuick 1.1
+import QtDesktop 0.1
 
 //parent of the ParamEditor is the Row of the ButtleAp
 Rectangle {
@@ -47,7 +48,11 @@ Rectangle {
         }
     }
 
+    Slider{
 
+    y:30
+
+    }
 }
 
 /*

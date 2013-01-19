@@ -1,16 +1,14 @@
 import QtQuick 1.1
 
 /*ParamDouble is an input field*/
-
 Item {
     id: containerParamDouble
-    width: parent.width
-    height: parent.height
+    implicitWidth: 300
+    implicitHeight: 30
 
 
     /*Container of the textInput*/
     Row {
-
         id: paramDoubleInputContainer
         spacing: 10
 
@@ -34,20 +32,19 @@ Item {
             border.color: "#333"
             radius: 3
             TextInput{
-                id: paramDoubleinput
-                text: model.object.defaultValue
+                id: paramDoubleInput
+                text: model.object.value
                 anchors.left: parent.left
                 anchors.leftMargin: 5
                 maximumLength: 5
-                color: focus ? "white" : "grey"
+                color: activeFocus ? "white" : "grey"
                 width: 40
-                activeFocusOnPress : true
                 selectByMouse : true
                 validator: DoubleValidator{
                     bottom: model.object.minimum
                     top:  model.object.maximum
                 }
-                onAccepted: model.object.setDefaultValue(parent.text)
+                onAccepted: model.object.value = paramDoubleInput.text
             }
         }
     }

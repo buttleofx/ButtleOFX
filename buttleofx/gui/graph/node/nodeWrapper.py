@@ -2,8 +2,6 @@ from PySide import QtCore, QtGui
 
 # wrappers
 from buttleofx.gui.paramEditor.wrappers import ParamEditorWrapper
-# quickmamba
-from quickmamba.patterns import Signal
 
 
 class NodeWrapper(QtCore.QObject):
@@ -37,60 +35,51 @@ class NodeWrapper(QtCore.QObject):
         pass
 
     def emitChanged(self):
-        print "node emitChanged"
         self.changed.emit()
 
     ######## getters ########
 
     def getName(self):
-        return str(self._node._name)
+        return self._node.getName()
 
     def getType(self):
-        return str(self._node._type)
+        return self._node.getType()
 
     def getCoord(self):
-        return self._node._coord
+        return QtCore.QPoint(self._node.getCoord()[0], self._node.getCoord()[1])
 
     def getColor(self):
-        return QtGui.QColor(*self._node._color)
+        return QtGui.QColor(self._node.getColor())
 
     def getNbInput(self):
-        return self._node._nbInput
+        return self._node.getNbInput()
 
     def getImage(self):
-        return self._node._image
+        return self._node.getImage()
 
     def getParams(self):
-        return ParamEditorWrapper(self._view, self._node.getParams())
+        paramEditorWrapper = ParamEditorWrapper(self._view, self._node.getParams())
+        return paramEditorWrapper.paramElmts
 
     ######## setters ########
 
     def setName(self, name):
-        self._node._name = name
-        self.changed()
+        self._node.setName(name)
 
     def setType(self, nodeType):
-        self._node._type = nodeType
-        self.changed()
+        self._node.setType(nodeType)
 
-    def setCoord(self, x, y):
-        print "nodeWrapper.setCoord"
-        self._node._coord = (x, y)
-        print "nodeWrapper Coords have changed : " + str(self._node._coord)
-        self.changed()
+    def setCoord(self, point):
+        self._node.setCoord(point.x(), point.y())
 
-    @QtCore.Slot(int, int, int)
     def setColor(self, r, g, b):
-        self._node._color = (r, g, b)
-        self.changed()
+        self._node.setColor(r, g, b)
 
     def setNbInput(self, nbInput):
-        self._node._nbInput = nbInput
-        self.changed()
+        self._node.setNbInput(nbInput)
 
     def setImage(self, image):
-        self._node._image = image
-        self.changed()
+        self._node.setImage(image)
 
     ######## Slots ########
 
@@ -100,3 +89,4 @@ class NodeWrapper(QtCore.QObject):
     color = QtCore.Property(QtGui.QColor, getColor, setColor, notify=changed)
     nbInput = QtCore.Property(int, getNbInput, setNbInput, notify=changed)
     image = QtCore.Property(str, getImage, setImage, notify=changed)
+    params = QtCore.Property(QtCore.QObject, getParams, constant=True)

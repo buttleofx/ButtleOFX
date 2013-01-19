@@ -1,7 +1,3 @@
-from PySide import QtCore
-# core
-from buttleofx.core.graph.node import Node
-from buttleofx.core.graph.connection import Connection
 #undo_redo
 from buttleofx.core.undo_redo.manageTools import CommandManager
 from buttleofx.core.undo_redo.commands import CmdCreateNode, CmdDeleteNode, CmdCreateConnection, CmdDeleteConnection
@@ -22,7 +18,6 @@ class Graph(object):
         self._nodes = []
         self._connections = []
         self._nbNodesCreated = 0
-
         self.nodesChanged = Signal()
         self.connectionsChanged = Signal()
         self.connectionsCoordChanged = Signal()

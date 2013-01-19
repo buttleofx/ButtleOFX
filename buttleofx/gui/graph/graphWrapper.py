@@ -1,6 +1,5 @@
-from PySide import QtDeclarative, QtCore
+from PySide import QtCore
 # core
-from buttleofx.core.graph import Graph
 from buttleofx.core.graph.connection import IdClip
 # undo redo
 from buttleofx.core.undo_redo.manageTools import CommandManager
@@ -10,38 +9,42 @@ from buttleofx.gui.graph.node import NodeWrapper
 from buttleofx.gui.graph.connection import ConnectionWrapper
 # quickmamba
 from quickmamba.models import QObjectListModel
-from quickmamba.patterns import Signal
 
 
 class GraphWrapper(QtCore.QObject):
     """
         Class GraphWrapper defined by:
-        - _engine : to have the view engine
         - _rootObject : to have the root object
         - _nodeWrappers : list of node wrappers (the python objects we use to communicate with the QML)
         - _connectionWrappers : list of connections wrappers (the python objects we use to communicate with the QML)
-        - _currentNode : the current selected node (in QML). This is just the nodeName.
+        - _currentNodeName : the current selected node (in QML). This is just the name of the node.
+        - _currentNodeWrapper : the current selected node (in QML). This is a NodeWrapper.
         - _tmpClipOut : the future connected output clip when a connection is beeing created. It correspounds of the output clip which was beeing clicked and not connected for the moment.
         - _tmpClipIn : the future connected input clip when a connection is beeing created. It correspounds of the input clip which was beeing clicked and not connected for the moment.
         - _zMax : to manage the depth of the graph (in QML)
         - _graph : the data of the graph (python objects, the core data : the nodes and the connections)
 
         Creates a QObject from a given python object Graph.
+
     """
 
     def __init__(self, graph, view):
         super(GraphWrapper, self).__init__(view)
 
         self._view = view
-        self._engine = view.engine()
         self._rootObject = view.rootObject()
 
         self._nodeWrappers = QObjectListModel(self)
         self._connectionWrappers = QObjectListModel(self)
 
-        self._currentNode = None
-        self._currentParams = None
-        self._currentImage = ""
+        self._currentParamNodeName = None
+        self._currentParamNodeWrapper = None
+
+        self._currentSelectedNodeName = None
+        self._currentSelectedNodeWrapper = None
+
+        self._currentViewerNodeName = None
+        self._currentViewerNodeWrapper = None
 
         self._tmpClipIn = None
         self._tmpClipOut = None
@@ -87,64 +90,69 @@ class GraphWrapper(QtCore.QObject):
         """
         return self._graph
 
-    @QtCore.Slot(result="QVariant")
     def getNodeWrappers(self):
         """
             Returns the nodeWrapper list.
         """
         return self._nodeWrappers
 
-    @QtCore.Slot(str, result="QtCore.QObject")
     def getNodeWrapper(self, nodeName):
         """
             Returns the right nodeWrapper, identified with its nodeName.
         """
-        for node in self._nodeWrappers:
-            if node.getName() == nodeName:
-                return node
+        for nodeWrapper in self._nodeWrappers:
+            if nodeWrapper.getName() == nodeName:
+                return nodeWrapper
         print "!!! Failure in getNodeWrapper !!!"
         return None
 
-    @QtCore.Slot(result="QVariant")
     def getConnectionWrappers(self):
         """
-            Return the connectionWrapper list.
+            Returns the connectionWrapper list.
         """
         return self._connectionWrappers
 
-    @QtCore.Slot(result=str)
-    def getCurrentNode(self):
+    def getCurrentParamNodeName(self):
         """
-            Return the name of the current selected node.
+            Returns the name of the current param node.
         """
-        return self._currentNode
+        return self._currentParamNodeName
 
-    @QtCore.Slot(result="QtCore.QObject")
-    def getCurrentNodeWrapper(self):
+    def getCurrentSelectedNodeName(self):
         """
-            Return the current nodeWrapper.
+            Returns the name of the current selected node.
         """
-        return self.getNodeWrapper(self._currentNode)
+        return self._currentSelectedNodeName
 
-    def getCurrentParams(self):
+    def getCurrentViewerNodeName(self):
         """
-            Return the params of the current node.
+            Returns the name of the current viewer node.
         """
-        return self._currentParams
+        return self._currentViewerNodeName
 
-    @QtCore.Slot(result=IdClip)
+    def getCurrentParamNodeWrapper(self):
+        """
+            Returns the current param nodeWrapper.
+        """
+        return self.getNodeWrapper(self.getCurrentParamNodeName())
+
+    def getCurrentSelectedNodeWrapper(self):
+        """
+            Returns the current selected nodeWrapper.
+        """
+        return self.getNodeWrapper(self.getCurrentSelectedNodeName())
+
+    def getCurrentViewerNodeWrapper(self):
+        """
+            Returns the current viewer nodeWrapper.
+        """
+        return self.getNodeWrapper(self.getCurrentViewerNodeName())
+
     def getTmpClipOut(self):
         return self._tmpClipOut
 
-    @QtCore.Slot(result=IdClip)
     def getTmpClipIn(self):
         return self._tmpClipIn
-
-    def getCurrentImage(self):
-        """
-            Return the url of the current image
-        """
-        return self._currentImage
 
     def getWidthNode(self):
         return NodeWrapper.widthNode
@@ -161,48 +169,42 @@ class GraphWrapper(QtCore.QObject):
     def getNodeInputSideMargin(self):
         return NodeWrapper.inputSideMargin
 
-    #################### setters ####################
+    @QtCore.Slot(result="QVariant")
+    def getLastCreatedNodeWrapper(self):
+        return self._nodeWrappers[-1]
 
-    @QtCore.Slot(str)
-    def setCurrentNode(self, nodeName):
+    def setCurrentParamNodeWrapper(self, nodeWrapper):
         """
-            Change the current selected node and emit the change.
+            Changes the current param node and emits the change.
         """
-        print "setCurrentNode : " + str(nodeName)
-
-        if self._currentNode == nodeName:
+        if self._currentParamNodeName == nodeWrapper.getName():
             return
-        self._currentNode = nodeName
+        self._currentParamNodeName = nodeWrapper.getName()
+        self.currentParamNodeChanged.emit()
 
-        # update the viewer and the params we display
-        self.setCurrentImage(self.getNodeWrapper(self._currentNode).getImage())
-        self.setCurrentParams(self._currentNode)
-        # warn QML
-        self.currentNodeChanged.emit()
+    def setCurrentSelectedNodeWrapper(self, nodeWrapper):
+        """
+        Changes the current selected node and emits the change.
+        """
+        if self._currentSelectedNodeName == nodeWrapper.getName():
+            return
+        self._currentSelectedNodeName = nodeWrapper.getName()
+        self.currentSelectedNodeChanged.emit()
 
-    def setCurrentParams(self, nodeName):
+    def setCurrentViewerNodeWrapper(self, nodeWrapper):
         """
-            Change the current params and emit the change.
+        Changes the current viewer node and emits the change.
         """
-        self._currentParams = self.getNodeWrapper(nodeName).getParams().getParamElts()
-        # warn QML
-        self.currentParamsChanged.emit()
+        if self._currentViewerNodeName == nodeWrapper.getName():
+            return
+        self._currentViewerNodeName = nodeWrapper.getName()
+        self.currentViewerNodeChanged.emit()
 
-    def setCurrentImage(self, urlImage):
-        """
-            Change the currentImage, displayed in the viewer
-        """
-        self._currentImage = urlImage
-        # warn QML
-        self.currentImageChanged.emit()
-
-    @QtCore.Slot(result="double")
     def getZMax(self):
         return self._zMax
 
-    @QtCore.Slot()
-    def setZMax(self):
-        self._zMax += 1
+    def setZMax(self, zMax):
+        self._zMax = zMax
 
     ################################################## CREATION & DESTRUCTION ##################################################
 
@@ -219,11 +221,12 @@ class GraphWrapper(QtCore.QObject):
             Function called when we want to delete a node from the QML.
         """
         # if at least one node in the graph
-        if len(self._nodeWrappers) > 0 and len(self._graph._nodes) > 0:
+        if len(self._nodeWrappers) > 0 and len(self._graph.getNodes()) > 0:
             # if a node is selected
-            if self._currentNode != None:
-                self._graph.deleteNode(self._currentNode)
-        self._currentNode = None
+            if self._currentSelectedNodeName != None:
+                self._graph.deleteNode(self._currentSelectedNodeName)
+        self._currentSelectedNodeName = None
+        self.currentSelectedNodeChanged.emit()
 
     def createNodeWrapper(self, nodeName):
         """
@@ -322,7 +325,6 @@ class GraphWrapper(QtCore.QObject):
             Function called when a clip is pressed (but not released yet).
             The function replace the tmpClipIn or tmpClipOut.
         """
-        print "clip pressed"
         position = self.getPositionClip(nodeName, port, clipNumber)
         idClip = IdClip(nodeName, port, clipNumber, position)
         if (port == "input"):
@@ -408,23 +410,29 @@ class GraphWrapper(QtCore.QObject):
     def changed(self):
         pass
 
-    # nodes
+    # nodes changed
     nodesChanged = QtCore.Signal()
     nodes = QtCore.Property("QVariant", getNodeWrappers, notify=nodesChanged)
 
-    # connections
+    # connections changed
     connectionWrappersChanged = QtCore.Signal()
     connections = QtCore.Property("QVariant", getConnectionWrappers, notify=connectionWrappersChanged)
 
-    # current node
-    currentNodeChanged = QtCore.Signal()
-    currentNode = QtCore.Property(str, getCurrentNode, setCurrentNode, notify=currentNodeChanged)
-    # current params
-    currentParamsChanged = QtCore.Signal()
-    currentParams = QtCore.Property("QVariant", getCurrentParams, setCurrentParams, notify=currentParamsChanged)
-    # current image
-    currentImageChanged = QtCore.Signal()
-    currentImage = QtCore.Property(str, getCurrentImage, setCurrentImage, notify=currentImageChanged)
+    # nodeWrappers and connectionWrappers
+    nodeWrappers = QtCore.Property(QtCore.QObject, getNodeWrappers, constant=True)
+    connectionWrappers = QtCore.Property(QtCore.QObject, getConnectionWrappers, constant=True)
+
+    # current param, view, and selected node
+    currentParamNodeChanged = QtCore.Signal()
+    currentParamNodeWrapper = QtCore.Property(QtCore.QObject, getCurrentParamNodeWrapper, setCurrentParamNodeWrapper, notify=currentParamNodeChanged)
+    currentViewerNodeChanged = QtCore.Signal()
+    currentViewerNodeWrapper = QtCore.Property(QtCore.QObject, getCurrentViewerNodeWrapper, setCurrentViewerNodeWrapper, notify=currentViewerNodeChanged)
+    currentSelectedNodeChanged = QtCore.Signal()
+    currentSelectedNodeWrapper = QtCore.Property(QtCore.QObject, getCurrentSelectedNodeWrapper, setCurrentSelectedNodeWrapper, notify=currentSelectedNodeChanged)
+
+    # z index for QML
+    zMaxChanged = QtCore.Signal()
+    zMax = QtCore.Property(int, getZMax, setZMax, notify=zMaxChanged)
 
     # for a clean display of connection
     widthNode = QtCore.Property(int, getWidthNode, notify=changed)

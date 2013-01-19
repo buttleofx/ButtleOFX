@@ -1,6 +1,5 @@
 import QtQuick 1.1
 
-import Qt 4.7
 
 Rectangle {
     id: node
@@ -9,21 +8,22 @@ Rectangle {
         id: m
         property variant nodeModel: model.object
     }
-    property int heightEmptyNode : _buttleData.getGraphWrapper().heightEmptyNode
+    property int heightEmptyNode : _buttleData.graphWrapper.heightEmptyNode
     property int nbInput: m.nodeModel.nbInput
 
     height: node.heightEmptyNode + node.inputSpacing * node.nbInput
     width: 110
 
-    property int inputSpacing : _buttleData.getGraphWrapper().clipSpacing
-    property int clipSize: _buttleData.getGraphWrapper().clipSize
+    property int inputSpacing : _buttleData.graphWrapper.clipSpacing
+    property int clipSize: _buttleData.graphWrapper.clipSize
 
-    x: m.nodeModel.coord[0]
-    y: m.nodeModel.coord[1]
-    z: _buttleData.getGraphWrapper().getZMax()
+    x: m.nodeModel.coord.x
+    y: m.nodeModel.coord.y
+    z: _buttleData.graphWrapper.zMax
+
 
     property int inputTopMargin: (node.height- node.clipSize*node.nbInput - node.inputSpacing * (node.nbInput-1)) / 2
-    property int inputSideMargin: _buttleData.getGraphWrapper().nodeInputSideMargin
+    property int inputSideMargin: _buttleData.graphWrapper.nodeInputSideMargin
 
     color: "transparent"
     focus: true
@@ -31,7 +31,7 @@ Rectangle {
     Rectangle {
         id: nodeBorder
         height: parent.height
-        width: _buttleData.getGraphWrapper().widthNode
+        width: _buttleData.graphWrapper.widthNode
         anchors.centerIn: parent
         color: m.nodeModel.color
         opacity: 0.5
@@ -48,7 +48,7 @@ Rectangle {
             anchors.centerIn: parent
             text: m.nodeModel.name
             font.pointSize: 10
-            color: (m.nodeModel.name === _buttleData.getGraphWrapper().currentNode) ? "#00b2a1" : "black"
+            color: (m.nodeModel == _buttleData.graphWrapper.currentSelectedNodeWrapper) ? "#00b2a1" : "black"
         }
     }
     Column {
@@ -84,11 +84,11 @@ Rectangle {
         states: [
             State {
                 name: "normal"
-                PropertyChanges { target: node; x: m.nodeModel.coord[0]; y: m.nodeModel.coord[1] }
+                PropertyChanges { target: node; x: m.nodeModel.coord.x; y: m.nodeModel.coord.y }
             },
             State {
                 name: "moving"
-                PropertyChanges { target: node; x: m.nodeModel.coord[0] ; y: m.nodeModel.coord[1] }
+                PropertyChanges { target: node; x: m.nodeModel.coord.x ; y: m.nodeModel.coord.y }
             }
         ]
     }
@@ -109,26 +109,34 @@ Rectangle {
         anchors.fill: parent
         drag.target: parent
         drag.axis: Drag.XandYAxis
+        acceptedButtons: Qt.LeftButton | Qt.RightButton
         onPressed: {
-            console.log("node onPressed")
-            // if current node changed
-            if(_buttleData.getGraphWrapper().getCurrentNode() != m.nodeModel.name) {
-                _buttleData.getGraphWrapper().setCurrentNode(m.nodeModel.name)
-                _buttleData.getGraphWrapper().setZMax()
-                parent.z = _buttleData.getGraphWrapper().getZMax()
+            // left button : we change the current selected node & we start moving
+            if (mouse.button == Qt.LeftButton) {
+                if(_buttleData.graphWrapper.currentSelectedNodeWrapper != m.nodeModel) {
+                    _buttleData.graphWrapper.currentSelectedNodeWrapper = m.nodeModel
+                    _buttleData.graphWrapper.zMax += 1
+                    parent.z = _buttleData.graphWrapper.zMax
+                }
+                stateMoving.state = "moving"
+                _buttleData.graphWrapper.updateConnectionsCoord()
             }
-            stateMoving.state = "moving"
+            // right button : we change the current param node
+           else if (mouse.button == Qt.RightButton) {
+                 _buttleData.graphWrapper.currentParamNodeWrapper = m.nodeModel;
+            }
         }
         onReleased: {
-            console.log("node onReleased")
-            _buttleData.getGraphWrapper().nodeMoved(m.nodeModel.name, parent.x, parent.y)
-            /*
-                => Why not managed by the nodeWrapped anymore ? Because we can't store the node in the cmdManager, we need to store the node name.
-                If we store the node and the node is deleted, we won't be able to apply undo/redo on it because the recreated node won't be the same.
-                But the node name will be the same. So we need the node name.
-                The fonction is managed by the graphWrapper because in order to find the right node, we need to give the graph to the cmdManager.
-            */
-            stateMoving.state = "normal"
+            // left button : we end moving
+            if (mouse.button == Qt.LeftButton) {
+                _buttleData.graphWrapper.nodeMoved(m.nodeModel.name, parent.x, parent.y)
+                stateMoving.state = "normal"
+                //_buttleData.graphWrapper.updateConnectionsCoord() // useless, isn't it ?
+            }
+        }
+        // double click : we change the current viewer node
+        onDoubleClicked: {
+            _buttleData.graphWrapper.currentViewerNodeWrapper = m.nodeModel;
         }
     }
 }

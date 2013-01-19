@@ -5,7 +5,7 @@ import "gui/viewer/qml"
 import "gui/paramEditor/qml"
 
 Rectangle {
-    width: 500
+    width: 1200
     height: 800
 
     Keys.onPressed: {
@@ -67,6 +67,7 @@ Rectangle {
                     //Splitter.expanding: true
                     width: parent.width
                     height: 0.5*parent.height
+                    node: _buttleData.graphWrapper.currentViewerNodeWrapper
                 }
 
                 GraphEditor {
@@ -78,7 +79,8 @@ Rectangle {
 
             ParamEditor {
                 //Splitter.minimumWidth: 0 
-                width: 0.3*parent.width
+                width: 0.30*parent.width
+                params: _buttleData.graphWrapper.currentParamNodeWrapper ? _buttleData.graphWrapper.currentParamNodeWrapper.params : null
             }
         }
     }

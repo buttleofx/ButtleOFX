@@ -20,32 +20,31 @@ class ConnectionWrapper(QtCore.QObject):
     # @QtCore.Slot()
 
     def emitChanged(self):
-        print "ConnectionWrapper : emitChanged"
         self.changed.emit()
 
     def getClipOutPosX(self):
-        return self._connection._clipOut._coord[0]
+        return self._connection.getClipOut().getCoord()[0]
 
     def getClipOutPosY(self):
-        return self._connection._clipOut._coord[1]
+        return self._connection.getClipOut().getCoord()[1]
 
     def getClipInPosX(self):
-        return self._connection._clipIn._coord[0]
+        return self._connection.getClipIn().getCoord()[0]
 
     def getClipInPosY(self):
-        return self._connection._clipIn._coord[1]
+        return self._connection.getClipIn().getCoord()[1]
 
     def setClipOutPosX(self, posX):
-        self._connection._clipOut._coord[0] = posX
+        self._connection.getClipOut().setXCoord(posX)
 
     def setClipOutPosY(self, posY):
-        self._connection._clipOut._coord[1] = posY
+        self._connection.getClipOut().setYCoord(posY)
 
     def setClipInPosX(self, posX):
-        self._connection._clipIn._coord[0] = posX
+        self._connection.getClipIn().setXCoord(posX)
 
     def setClipInPosY(self, posY):
-        self._connection._clipIn._coord[1] = posY
+        self._connection.getClipIn().setYCoord(posY)
 
     clipOutPosX = QtCore.Property(int, getClipOutPosX, getClipOutPosX, notify=changed)
     clipOutPosY = QtCore.Property(int, getClipOutPosY, setClipOutPosX, notify=changed)

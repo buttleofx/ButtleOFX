@@ -8,20 +8,22 @@ Rectangle {
     width: 850
     height: 350 - y
 
+    property alias originX: connectnode.x
+    property alias originY: connectnode.y
+
     gradient: Gradient {
         GradientStop { position: 0.0; color: "#111111" }
         GradientStop { position: 0.015; color: "#212121" }
     }
 
-    Item {
+    Rectangle {
         id: connectnode
-
         Item {
             id: nodes
             width: graphArea.width
             height: graphArea.height
             Repeater {
-                model : _buttleData.getGraphWrapper().getNodeWrappers()
+                model : _buttleData.graphWrapper.nodeWrappers
                 Node {
                     Component.onDestruction: {
                         nodes.forceActiveFocus()
@@ -31,11 +33,11 @@ Rectangle {
         }
 
         Item{
-        id: connections
-        width: graphArea.width
-        height: graphArea.height
+            id: connections
+            width: graphArea.width
+            height: graphArea.height
             Repeater {
-                model : _buttleData.getGraphWrapper().getConnectionWrappers()
+                model : _buttleData.graphWrapper.connectionWrappers
                 ConnectionLine {
                     x1: model.object.clipOutPosX
                     y1: model.object.clipOutPosY
@@ -55,5 +57,6 @@ Rectangle {
         acceptedButtons: Qt.MiddleButton
         drag.target: connectnode
         drag.axis: Drag.XandYAxis
+
     } 
 }

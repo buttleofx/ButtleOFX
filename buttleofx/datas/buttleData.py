@@ -1,4 +1,4 @@
-from PySide import QtDeclarative, QtCore
+from PySide import QtCore
 # core : graph
 from buttleofx.core.graph import Graph
 # gui : graphWrapper
@@ -7,6 +7,7 @@ from buttleofx.gui.graph import GraphWrapper
 from buttleofx.core.undo_redo.manageTools import CommandManager
 #quickmamba
 from quickmamba.patterns import Singleton
+
 
 class ButtleData(QtCore.QObject, Singleton):
     """
@@ -42,3 +43,5 @@ class ButtleData(QtCore.QObject, Singleton):
         """
         cmdManager = CommandManager()
         cmdManager.redo()
+
+    graphWrapper = QtCore.Property(QtCore.QObject, getGraphWrapper, constant=True)

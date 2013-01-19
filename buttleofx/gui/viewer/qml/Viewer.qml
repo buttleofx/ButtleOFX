@@ -1,14 +1,18 @@
 import QtQuick 1.1
 
+
 Rectangle {
     id: viewer
-    implicitHeight: 300
-    implicitWidth: 800
-    color:"#141414"
-    property url imageFile: _buttleData.getGraphWrapper().currentImage
+
+    property url imageFile
     property double sizeScaleFirstImage: 0.95
     property double sizeScaleEvent: 0.1
     property int sizeDragEvent: 5
+
+    implicitHeight: 300
+    implicitWidth: 800
+
+    color: "#141414"
 
     Image  {
         id: imageViewed

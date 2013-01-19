@@ -23,9 +23,10 @@ Rectangle {
             }
             Text {
                 id: tabLabel
-                anchors.centerIn: parent
+                anchors.horizontalCenter: parent.horizontalCenter
+                y:5
                 text: "Viewer 1"
-                font.pointSize: 8
+                font.pointSize: 10
                 color: "white"
             }
             radius: 10

@@ -39,6 +39,12 @@ class IdClip:
     def setCoord(self, coord):
         self._coord = coord
 
+    def setXCoord(self, xCoord):
+        self._coord[0] = xCoord
+
+    def setYCoord(self, yCoord):
+        self._coord[1] = yCoord
+
     def __eq__(self, otherClip):
         """
             Overloads the operator ==

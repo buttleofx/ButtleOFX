@@ -34,4 +34,3 @@ class Connection(object):
     def setClipIn(self, clipIn):
         self._clipIn = clipIn
         self.changed()
-

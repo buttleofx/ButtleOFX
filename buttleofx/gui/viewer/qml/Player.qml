@@ -3,8 +3,13 @@ import QtQuick 1.1
 
 Item {
     id: player
+    property variant node
     implicitWidth: 850
     implicitHeight: 400
+
+    onNodeChanged: {
+        console.log("Node Changed : ", node)
+    }
     
     TabBar{
         id: tabBar
@@ -12,20 +17,29 @@ Item {
         height: 25
     }
 
+    //presence of the rectangle just avoid a little bug of display
     Rectangle{
         height: parent.height - tabBar.height
         width: parent.width
         y: tabBar.height
         color: "#141414"
-        gradient: Gradient {
-            GradientStop { position: 0.085; color: "#141414" }
-            GradientStop { position: 1; color: "#111111" }
-        }
+    gradient: Gradient {
+        GradientStop { position: 0.085; color: "#141414" }
+        GradientStop { position: 1; color: "#111111" }
+    }
 
-        Viewer {
-            width: parent.width
-            height: parent.height
-            clip: true
+        Loader {
+            sourceComponent: node ? viewer_component : undefined
+            anchors.fill: parent
+            Component {
+                id: viewer_component
+                Viewer {
+                    id: viewer
+                    anchors.fill: parent
+                    imageFile: node.image
+                    clip: true
+                }
+            }
         }
 
         ToolBar{
@@ -33,5 +47,4 @@ Item {
             height: 25
         }
     }
-
 }

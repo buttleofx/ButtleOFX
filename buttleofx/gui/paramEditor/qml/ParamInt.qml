@@ -5,10 +5,8 @@ import QtQuick 1.1
 
 Item {
     id: containerParamInt
-    width: parent.width
-    height:parent.height
-
-
+    implicitWidth: 300
+    implicitHeight: 30
 
     /*Container of the textInput*/
     Row{
@@ -36,15 +34,14 @@ Item {
             radius: 3
             TextInput{
                 id: paramIntInput
-                text: model.object.defaultValue
+                text: model.object.value
                 anchors.left: parent.left
                 anchors.leftMargin: 5
                 maximumLength: 3
-                color: focus ? "white" : "grey"
+                color: activeFocus ? "white" : "grey"
                 width: 40
-                activeFocusOnPress : true
                 selectByMouse : true
-                onAccepted: model.object.setDefaultValue(parent.text)
+                onAccepted: model.object.value = paramIntInput.text
                 validator: IntValidator{
                     bottom: model.object.minimum
                     top:  model.object.maximum

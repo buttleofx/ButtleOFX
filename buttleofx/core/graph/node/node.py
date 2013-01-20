@@ -40,6 +40,7 @@ class Node(object):
         - _name
         - _type
         - _coord
+        - _oldCoord : when a node is being dragged, we need to remember its old coordinates for the undo/redo
         - _color
         - _nbInput
         - _image

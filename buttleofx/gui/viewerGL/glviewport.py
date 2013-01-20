@@ -107,11 +107,12 @@ class GLViewport(QtDeclarative.QDeclarativeItem):
             -(self.width()*.5/self._scaleValue - imgCenter.x()),
             -(self.height()*.5/self._scaleValue - imgCenter.y()) )
 
-    def prepareGL(self):
-        GL.glViewport(0, 0, int(self.width()), int(self.height()))
+    def prepareGL(self, widget):
+
+        GL.glViewport(int(self._glGeometry.left()), int(widget.height()-self._glGeometry.bottom()), int(self._glGeometry.width()), int(self._glGeometry.height()))
         
-        GL.glClearDepth(1) # just for completeness
-        GL.glClearColor( self._bgColorValue.red(), self._bgColorValue.green(), self._bgColorValue.blue(), self._bgColorValue.alpha() )
+        #GL.glClearDepth(1) # just for completeness
+        #GL.glClearColor( self._bgColorValue.red(), self._bgColorValue.green(), self._bgColorValue.blue(), self._bgColorValue.alpha() )
         #GL.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT)
         
         GL.glMatrixMode(GL.GL_PROJECTION)
@@ -168,14 +169,17 @@ class GLViewport(QtDeclarative.QDeclarativeItem):
         
         #self.tuttleReaderNode
         
-    def internPaintGL(self):
-        self.prepareGL()
-        self.drawImage()
-        self.drawRegions()
+    def internPaintGL(self, widget):
+        if self.img_data != None:
+            self.prepareGL(widget)
+            self.drawImage()
+            self.drawRegions()
     
     def paint(self, painter, option, widget):
+        #print "GLViewport.paint"
+
         painter.beginNativePainting();
-        self.internPaintGL()
+        self.internPaintGL(widget)
         painter.endNativePainting()
 
     def drawRect(self, rect):
@@ -187,7 +191,13 @@ class GLViewport(QtDeclarative.QDeclarativeItem):
         GL.glEnd()
 
     def geometryChanged(self, new, old):
-        #print "GLViewport.geometryChanged"
+        print "GLViewport.geometryChanged"
+        print "new:", new.x(), new.y(), new.width(), new.height()
+        #print "old:", old.x(), old.y(), old.width(), old.height()
+
+        self._localGeometry = new
+        self._glGeometry = self.sceneTransform().mapRect(new)
+
         if self._fittedModeValue:
             self.fitImage()
         QtDeclarative.QDeclarativeItem.geometryChanged(self, new, old)
@@ -221,7 +231,7 @@ class GLViewport(QtDeclarative.QDeclarativeItem):
         self.update()
         self.bgColorChanged.emit()
     bgColorChanged = QtCore.Signal()
-    _bgColorValue = QtGui.QColor(0, 0, 0)
+    _bgColorValue = QtGui.QColor(255, 0, 0)
     bgColor = QtCore.Property(QtGui.QColor, getBgColor, setBgColor, notify=bgColorChanged)
 
 

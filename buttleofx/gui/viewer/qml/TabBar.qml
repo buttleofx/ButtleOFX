@@ -15,7 +15,6 @@ Rectangle {
         implicitWidth: 100
         implicitHeight: 20
         height: parent.height
-        clip: true
         Rectangle {
             anchors {
                 fill: parent;
@@ -39,7 +38,6 @@ Rectangle {
         implicitWidth: 30
         height: parent.height
         x: tab1.width + 1
-        clip: true
         Rectangle {
             anchors {
                 fill: parent;

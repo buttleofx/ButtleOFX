@@ -47,12 +47,6 @@ Rectangle {
             }
         }
     }
-
-    Slider{
-
-    y:30
-
-    }
 }
 
 /*

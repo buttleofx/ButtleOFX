@@ -16,8 +16,6 @@ class CmdSetCoord(UndoableCommand):
         self.nodeTargetName = nodeTargetName
         self.oldCoord = graphTarget.getNode(nodeTargetName).getOldCoord()
         self.newCoord = newCoord
-        # all informations are saved, we can change oldCoord parameter of the node.
-        self.graphTarget.getNode(self.nodeTargetName).setOldCoord(self.newCoord[0], self.newCoord[1])
 
     def undoCmd(self):
         """
@@ -25,6 +23,7 @@ class CmdSetCoord(UndoableCommand):
             The target node is reset with the old coordinates.
         """
         self.graphTarget.getNode(self.nodeTargetName).setCoord(self.oldCoord[0], self.oldCoord[1])
+        self.graphTarget.getNode(self.nodeTargetName).setOldCoord(self.oldCoord[0], self.oldCoord[1])
         self.graphTarget.connectionsCoordChanged()
 
     def redoCmd(self):
@@ -38,4 +37,5 @@ class CmdSetCoord(UndoableCommand):
             Executes the movement of the node.
         """
         self.graphTarget.getNode(self.nodeTargetName).setCoord(self.newCoord[0], self.newCoord[1])
+        self.graphTarget.getNode(self.nodeTargetName).setOldCoord(self.newCoord[0], self.newCoord[1])
         self.graphTarget.connectionsCoordChanged()

@@ -51,11 +51,8 @@ Rectangle {
         SplitterRow {
             anchors.fill: parent
             anchors.margins: 3
-            //handleWidth changes the size of the separation between the row, column.
             handleWidth: 3
 
-            /*There is a bug with splitter column, the draggable splitter doesn't moove as it should, this bug has been solved in qtcomponents for qt5, 
-            but for the moment we are using qt 4*/
             SplitterColumn {
                 width: 0.7*parent.width
                 height: parent.height
@@ -79,7 +76,7 @@ Rectangle {
 
             ParamEditor {
                 //Splitter.minimumWidth: 0 
-                width: 0.30*parent.width
+                width: 0.3*parent.width
                 params: _buttleData.graphWrapper.currentParamNodeWrapper ? _buttleData.graphWrapper.currentParamNodeWrapper.params : null
             }
         }

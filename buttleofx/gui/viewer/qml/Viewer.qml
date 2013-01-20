@@ -1,93 +1,84 @@
 import QtQuick 1.1
-
+import QuickMamba 1.0
+import Viewport 1.0
 
 Rectangle {
-    id: viewer
+    id: container
 
     property url imageFile
-    property double sizeScaleFirstImage: 0.95
-    property double sizeScaleEvent: 0.1
-    property int sizeDragEvent: 5
 
-    implicitHeight: 300
-    implicitWidth: 800
+    color:"#1e1e1e"
 
-    color: "#141414"
-
-    Image  {
-        id: imageViewed
-        source: imageFile
-        fillMode: Image.PreserveAspectFit
-        height: (parent.height - 30) * sizeScaleFirstImage
-        width: parent.width * sizeScaleFirstImage
-        x: (parent.width - width) / 2
-        y: (parent.height - height) / 2
-        scale: 1
-    }
-
-    MouseArea {
-        drag.target: imageViewed
-        drag.axis: Drag.XandYAxis
+    GLViewport {
+        id: viewport
         anchors.fill: parent
+        
+        offset.x: 0.0
+        offset.y: 0.0
+        fittedMode: true
+        imageFilepath: parent.imageFile
 
-        onClicked:{
-            console.log("image : " + imageFile)
-           /* if((mouse.button === Qt.LeftButton)) {
-                // Lorsque l'outil Loupe + est activé
-                if(magGlassIn.state == "clicked") {
-                    imageViewed.x -= (mouseX - viewer.width/2)
-                    imageViewed.y -= (mouseY - viewer.height/2)
-                    imageViewed.scale += sizeScaleEvent
-                }
-                // Lorsque l'outil Loupe - est activé
-                if(magGlassOut.state == "clicked") {
-                    imageViewed.x -= (mouseX - viewer.width/2)
-                    imageViewed.y -= (mouseY - viewer.height/2)
-                    imageViewed.scale -= sizeScaleEvent
-                }
-                //Zoom simple
-                if(mouse.modifiers & Qt.ShiftModifier){
-                    if (imageViewed.scale-sizeScaleEvent > 0) {
-                        imageViewed.scale -= sizeScaleEvent
-                    }
-                }
-                else {
-                    imageViewed.scale += sizeScaleEvent
-                }
-            }*/
+        property real inWidth: 16
+        property real inHeight: 9
+        property real inRatio: inWidth/inHeight
+
+        property real outWidth: parent.width
+        property real outHeight: parent.height
+        property real ratioWidth: outWidth / inWidth
+        property real ratioHeight: outHeight / inHeight
+        property real fitOnWidth: ratioWidth > ratioHeight
+        property real fitRatio: fitOnWidth ? ratioWidth : ratioHeight
+
+        MouseArea {
+            anchors.fill: parent
+            acceptedButtons: Qt.LeftButton | Qt.MiddleButton
+            
+            property real offsetXOnPress: 0
+            property real offsetYOnPress: 0
+            property real posXOnPress: 0
+            property real posYOnPress: 0
+            onPositionChanged: {
+                var mouseOffsetX = (mouse.x - posXOnPress) / viewport.imgScale
+                var mouseY = height-mouse.y
+                var mouseOffsetY = (mouseY - posYOnPress) / viewport.imgScale
+                viewport.setOffset_xy(
+                    offsetXOnPress - mouseOffsetX,
+                    offsetYOnPress - mouseOffsetY )
+            }
+            onPressed: {
+                posXOnPress = mouse.x
+                posYOnPress = (height-mouse.y)
+                offsetXOnPress = viewport.offset.x
+                offsetYOnPress = viewport.offset.y
+                viewport.fittedMode = false
+            }
+            onDoubleClicked: {
+                viewport.fitImage()
+                viewport.fittedMode = true
+            }
         }
-
-        Item {
-            focus: true
-            Keys.onPressed: {
-                if (event.modifiers & Qt.ControlModifier) {
-                    if (event.key==Qt.Key_Plus) {
-                        imageViewed.scale += sizeScaleEvent
-                    }
-                    else if (event.key==Qt.Key_Minus) {
-                        if (imageViewed.scale-sizeScaleEvent > 0) {
-                          imageViewed.scale -= sizeScaleEvent
-                        }
-                    }
-                    else if (event.key==Qt.Key_0) {
-                        imageViewed.scale = 1;
-                        imageViewed.x = (container.width - imageViewed.width) / 2;
-                        imageViewed.y = (container.height - tools.height - imageViewed.height) / 2;
-                    }
-                    else if (event.key==Qt.Key_Left) {
-                        imageViewed.x -= sizeDragEvent;
-                    }
-                    else if (event.key==Qt.Key_Right) {
-                        imageViewed.x += sizeDragEvent;
-                    }
-                    else if (event.key==Qt.Key_Up) {
-                        imageViewed.y -= sizeDragEvent;
-                    }
-                    else if (event.key==Qt.Key_Down) {
-                        imageViewed.y += sizeDragEvent;
-                    }
+        WheelArea {
+            anchors.fill: parent
+            property real nbSteps: 10
+            onVerticalWheel: {
+                var deltaF = (delta / 120.0) / nbSteps
+                var newScale = viewport.imgScale * (1.0 + deltaF)
+                viewport.setScaleAtPos_viewportCoord( newScale, pos.x, (height-pos.y) )
+                viewport.fittedMode = false
+            }
+        }
+        DropArea {
+            anchors.fill: parent
+            
+            onDrop: {
+                if( hasUrls )
+                {
+                    viewport.imageFilepath = firstUrl
                 }
             }
-        } // Item (for the key events)
-    } // viewer MouseArea
-} // viewer
+        }
+    }
+
+}
+
+

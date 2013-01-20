@@ -38,6 +38,9 @@ class ButtleApp(QtGui.QApplication):
             return QtGui.QApplication.notify(self, receiver, event)
         except Exception as e:
             print("QApp notify exception: " + str(e))
+            import traceback
+            traceback.print_exc()
+            return False
 
 
 def main(argv):

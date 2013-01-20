@@ -46,7 +46,8 @@ Rectangle {
                          height: parent.height;
                          width: parent.width;
                          color:  m.nodeModel.color;
-                         opacity: 0.5; }
+                         opacity: 0.5;
+                     }
                  },
                  State {
                      name: "currentParamNode"
@@ -101,6 +102,43 @@ Rectangle {
             model: 1
             Clip {
             }
+        }
+    }
+
+    Rectangle {
+        id: deadMosquito
+        width: 23
+        height: 21
+        x: node.width - 12
+        y: -10
+        state: "normal"
+        color: "transparent"
+
+        Image {
+                id: deadMosquitoImage
+                anchors.fill: parent
+             }
+
+        StateGroup {
+            id: stateViewerNode
+             states: [
+                 State {
+                     name: "normal"
+                     when: m.nodeModel != _buttleData.graphWrapper.currentViewerNodeWrapper
+                     PropertyChanges {
+                         target: deadMosquitoImage;
+                         source: ""
+                     }
+                 },
+                 State {
+                     name: "currentViewerNode"
+                     when: m.nodeModel == _buttleData.graphWrapper.currentViewerNodeWrapper
+                     PropertyChanges {
+                         target: deadMosquitoImage;
+                         source: "../img/mosquito_dead.png"
+                     }
+                 }
+             ]
         }
     }
 

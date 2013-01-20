@@ -131,12 +131,27 @@ Rectangle {
             if (mouse.button == Qt.LeftButton) {
                 _buttleData.graphWrapper.nodeMoved(m.nodeModel.name, parent.x, parent.y)
                 stateMoving.state = "normal"
-                //_buttleData.graphWrapper.updateConnectionsCoord() // useless, isn't it ?
             }
         }
         // double click : we change the current viewer node
         onDoubleClicked: {
             _buttleData.graphWrapper.currentViewerNodeWrapper = m.nodeModel;
         }
+
+    }
+
+    onXChanged: {
+        if (nodeMouseArea.drag.active) {
+            node.nodeIsMoving()
+        }
+    }
+    onYChanged: {
+        if (nodeMouseArea.drag.active) {
+            node.nodeIsMoving()
+        }
+    }
+
+    function nodeIsMoving() {
+        _buttleData.graphWrapper.nodeIsMoving(m.nodeModel.name, node.x, node.y)
     }
 }

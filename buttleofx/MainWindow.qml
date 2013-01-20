@@ -12,7 +12,7 @@ Rectangle {
         console.log("ApplicationWindow Keys.onPressed");
         if (event.key == Qt.Key_Delete) {
             console.log("destruction");
-            _buttleData.getGraphWrapper().destructionNode();
+            _buttleData.graphWrapper.destructionNode();
         }
         if (event.key == Qt.Key_U) {
                 console.log("Undo");

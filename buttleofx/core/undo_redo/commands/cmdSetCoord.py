@@ -14,8 +14,9 @@ class CmdSetCoord(UndoableCommand):
     def __init__(self, graphTarget, nodeTargetName, newCoord):
         self.graphTarget = graphTarget
         self.nodeTargetName = nodeTargetName
-        self.coordOld = graphTarget.getNode(nodeTargetName).getCoord()
+        self.coordOld = graphTarget.getNode(nodeTargetName).getOldCoord()
         self.newCoord = newCoord
+        self.graphTarget.getNode(self.nodeTargetName).setOldCoord(self.newCoord[0], self.newCoord[1])
 
     def undoCmd(self):
         """

@@ -1,7 +1,7 @@
 from quickmamba.patterns import Signal
 from PySide import QtGui
 # paramEditor
-from buttleofx.core.params import ParamInt, ParamString, ParamDouble2D, ParamDouble3D
+from buttleofx.core.params import ParamInt, ParamString, ParamDouble, ParamDouble2D, ParamBoolean, ParamDouble3D, ParamChoice3C
 
 nodeDescriptors = {
     "Blur": {
@@ -71,28 +71,35 @@ class Node(object):
         if nodeType == "Blur":
             self._params.extend(
                 [
-                ParamDouble2D(defaultValue1=self.getCoord()[0], defaultValue2=self.getCoord()[1], minimum=0, maximum=1000, text="Coord"),
+                ParamDouble2D(defaultValue1=0, defaultValue2=0, minimum=0, maximum=10, text="Size"),
                 ParamDouble3D(defaultValue1=58, defaultValue2=174, defaultValue3=206, minimum=0, maximum=255, text="Color"),
-                ParamInt(defaultValue=self.getNbInput(), minimum=1, maximum=15, text="Nb input"),
-                ParamString(defaultValue=self.getImage(), stringType="Image file")
+                ParamChoice3C(defaultValue="Coco", text="Border"),
+                ParamBoolean(defaultValue="false", text="Normalized kernel"),
+                ParamDouble(defaultValue=0, minimum=0, maximum=0.01, text="Kernel Espilon")
                 ]
             )
+
         elif nodeType == "Gamma":
             self._params.extend(
                 [
-                ParamDouble3D(defaultValue1=221, defaultValue2=54, defaultValue3=138, minimum=0, maximum=255, text="Color"),
-                ParamDouble2D(defaultValue1=self.getCoord()[0], defaultValue2=self.getCoord()[1], minimum=0, maximum=1000, text="Coord"),
-                ParamInt(defaultValue=self.getNbInput(), minimum=1, maximum=15, text="Nb input"),
-                ParamString(defaultValue=self.getImage(), stringType="Image file")
+                #Miss Choice - Global - RGBA
+                ParamDouble(defaultValue=0, minimum=0.001, maximum=20, text="Master"),
+                ParamDouble(defaultValue=0, minimum=0.001, maximum=20, text="Red"),
+                ParamDouble(defaultValue=0, minimum=0.001, maximum=20, text="Green"),
+                ParamDouble(defaultValue=0, minimum=0.001, maximum=20, text="Blue"),
+                ParamDouble(defaultValue=0, minimum=0.001, maximum=20, text="Alpha"),
+                ParamBoolean(defaultValue="false", text="Invert")
                 ]
             )
+
         elif nodeType == "Invert":
             self._params.extend(
                 [
-                ParamDouble3D(defaultValue1=90, defaultValue2=205, defaultValue3=45, minimum=0, maximum=255, text="Color"),
-                ParamDouble2D(defaultValue1=self.getCoord()[0], defaultValue2=self.getCoord()[1], minimum=0, maximum=1000, text="Coord"),
-                ParamInt(defaultValue=self.getNbInput(), minimum=1, maximum=15, text="Nb input"),
-                ParamString(defaultValue=self.getImage(), stringType="Image file")
+                 ParamBoolean(defaultValue="false", text="Gray"),
+                 ParamBoolean(defaultValue="false", text="Red"),
+                 ParamBoolean(defaultValue="false", text="Green"),
+                 ParamBoolean(defaultValue="false", text="Blue"),
+                 ParamBoolean(defaultValue="false", text="Alpha"),
                 ]
             )
 

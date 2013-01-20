@@ -11,8 +11,8 @@ Rectangle {
     property alias originX: connectnode.x
     property alias originY: connectnode.y
 
-    property alias mouseX: mouseArea.mouseX
-    property alias mouseY: mouseArea.mouseY
+    //property alias mouseX: mouseArea.mouseX
+    //property alias mouseY: mouseArea.mouseY
 
     signal clickCreationNode(string nodeType)
 
@@ -60,11 +60,16 @@ Rectangle {
     }   
 
     MouseArea{
-        id: mouseArea
         anchors.fill: parent
-        acceptedButtons: Qt.MiddleButton | Qt.RightButton
+        acceptedButtons: Qt.MiddleButton 
         drag.target: connectnode
         drag.axis: Drag.XandYAxis
+    } 
+
+    /*MouseArea{
+        id: mouseArea
+        anchors.fill: parent
+        acceptedButtons: Qt.RightButton
         onClicked: {
              if (mouse.button == Qt.RightButton)
              listmodel.x = mouseX
@@ -72,5 +77,5 @@ Rectangle {
              listmodel.clickFrom = graphArea
              listmodel.menuState = (listmodel.menuState == "hidden") ? "shown" : "hidden"
         }
-    } 
+    } */
 }

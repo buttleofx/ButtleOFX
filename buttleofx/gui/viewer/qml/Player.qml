@@ -1,11 +1,13 @@
 import QtQuick 1.1
-//import QtMultimediaKit 1.1
 
 Item {
     id: player
+    width: 850
+    height: 400
+    z: 1
+    clip: true
+
     property variant node
-    implicitWidth: 850
-    implicitHeight: 400
 
     onNodeChanged: {
         console.log("Node Changed : ", node)
@@ -23,10 +25,10 @@ Item {
         width: parent.width
         y: tabBar.height
         color: "#141414"
-    gradient: Gradient {
-        GradientStop { position: 0.085; color: "#141414" }
-        GradientStop { position: 1; color: "#111111" }
-    }
+        gradient: Gradient {
+            GradientStop { position: 0.085; color: "#141414" }
+            GradientStop { position: 1; color: "#111111" }
+        }
 
         Loader {
             sourceComponent: node ? viewer_component : undefined
@@ -43,6 +45,7 @@ Item {
         }
 
         ToolBar{
+            id: toolBar
             width: parent.width
             height: 25
         }

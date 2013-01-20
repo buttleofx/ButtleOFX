@@ -1,6 +1,6 @@
 import QtQuick 1.1
 
-Item{
+Item {
     implicitWidth: 100
     implicitHeight: 20
     property alias title: paramBooleanTitle.text
@@ -15,21 +15,19 @@ Item{
             text: model.object.text + " : "
             color: "white"
            // font.pointSize: 8
-            anchors.top: parent.top
-            anchors.verticalCenter: parent.verticalCenter
+            /*anchors.top: parent.top
+            anchors.verticalCenter: parent.verticalCenter*/
         }
 
         /*Black square we can check*/
         Rectangle {
-            /*anchors.horizontalCenter: parent.horizontalCenter
-            anchors.verticalCenter: parent.verticalCenter*/
             id: box
             width: 15
             height: 15
             radius : 1
             color: "black"
-            anchors.left: paramBooleanTitle.right
-            anchors.leftMargin: 5
+            /*anchors.left: paramBooleanTitle.right
+            anchors.leftMargin: 5*/
 
             /*When we check, an other white square appears in the black one*/
             Rectangle{

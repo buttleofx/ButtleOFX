@@ -40,6 +40,7 @@ class Node(object):
         - _name
         - _type
         - _coord
+        - _oldCoord : when a node is being dragged, we need to remember its old coordinates for the undo/redo
         - _color
         - _nbInput
         - _image
@@ -53,6 +54,7 @@ class Node(object):
         self._name = nodeName
         self._type = nodeType
         self._coord = nodeCoord
+        self._oldCoord = nodeCoord
 
         # soon from Tuttle
         nodeDesc = nodeDescriptors[nodeType] if nodeType in nodeDescriptors else defaultNodeDesc
@@ -117,6 +119,9 @@ class Node(object):
     def getCoord(self):
         return self._coord
 
+    def getOldCoord(self):
+        return self._oldCoord
+
     def getDesc(self):
         return self._desc
 
@@ -144,6 +149,10 @@ class Node(object):
 
     def setCoord(self, x, y):
         self._coord = (x, y)
+        self.changed()
+
+    def setOldCoord(self, x, y):
+        self._oldCoord = (x, y)
         self.changed()
 
     def setColor(self, r, g, b):

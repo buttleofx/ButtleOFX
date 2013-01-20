@@ -12,7 +12,7 @@ Rectangle {
     property int nbInput: m.nodeModel.nbInput
 
     height: node.heightEmptyNode + node.inputSpacing * node.nbInput
-    width: 110
+    width: _buttleData.graphWrapper.widthNode
 
     property int inputSpacing : _buttleData.graphWrapper.clipSpacing
     property int clipSize: _buttleData.graphWrapper.clipSize
@@ -28,20 +28,47 @@ Rectangle {
     color: "transparent"
     focus: true
 
+
     Rectangle {
         id: nodeBorder
-        height: parent.height
-        width: _buttleData.graphWrapper.widthNode
         anchors.centerIn: parent
-        color: m.nodeModel.color
-        opacity: 0.5
         radius: 10
+        state: "normal"
+
+        StateGroup {
+            id: stateParamNode
+             states: [
+                 State {
+                     name: "normal"
+                     when: m.nodeModel != _buttleData.graphWrapper.currentParamNodeWrapper
+                     PropertyChanges {
+                         target: nodeBorder;
+                         height: parent.height;
+                         width: parent.width;
+                         color:  m.nodeModel.color;
+                         opacity: 0.5;
+                     }
+                 },
+                 State {
+                     name: "currentParamNode"
+                     when: m.nodeModel == _buttleData.graphWrapper.currentParamNodeWrapper
+                     PropertyChanges {
+                         target: nodeBorder;
+                         height: parent.height + 5;
+                         width: parent.width + 5;
+                         color:  "#00b2a1";
+                         opacity: 1;
+                     }
+                 }
+             ]
+        }
     }
+
     Rectangle {
         id: nodeRectangle
         anchors.centerIn: parent
         height: parent.height - 8
-        width: nodeBorder.width - 10
+        width: parent.width - 8
         color: "#bbbbbb"
         radius: 8
         Text {
@@ -75,6 +102,43 @@ Rectangle {
             model: 1
             Clip {
             }
+        }
+    }
+
+    Rectangle {
+        id: deadMosquito
+        width: 23
+        height: 21
+        x: node.width - 12
+        y: -10
+        state: "normal"
+        color: "transparent"
+
+        Image {
+                id: deadMosquitoImage
+                anchors.fill: parent
+             }
+
+        StateGroup {
+            id: stateViewerNode
+             states: [
+                 State {
+                     name: "normal"
+                     when: m.nodeModel != _buttleData.graphWrapper.currentViewerNodeWrapper
+                     PropertyChanges {
+                         target: deadMosquitoImage;
+                         source: ""
+                     }
+                 },
+                 State {
+                     name: "currentViewerNode"
+                     when: m.nodeModel == _buttleData.graphWrapper.currentViewerNodeWrapper
+                     PropertyChanges {
+                         target: deadMosquitoImage;
+                         source: "../img/mosquito_dead.png"
+                     }
+                 }
+             ]
         }
     }
 
@@ -131,12 +195,27 @@ Rectangle {
             if (mouse.button == Qt.LeftButton) {
                 _buttleData.graphWrapper.nodeMoved(m.nodeModel.name, parent.x, parent.y)
                 stateMoving.state = "normal"
-                //_buttleData.graphWrapper.updateConnectionsCoord() // useless, isn't it ?
             }
         }
         // double click : we change the current viewer node
         onDoubleClicked: {
             _buttleData.graphWrapper.currentViewerNodeWrapper = m.nodeModel;
         }
+
+    }
+
+    onXChanged: {
+        if (nodeMouseArea.drag.active) {
+            node.nodeIsMoving()
+        }
+    }
+    onYChanged: {
+        if (nodeMouseArea.drag.active) {
+            node.nodeIsMoving()
+        }
+    }
+
+    function nodeIsMoving() {
+        _buttleData.graphWrapper.nodeIsMoving(m.nodeModel.name, node.x, node.y)
     }
 }

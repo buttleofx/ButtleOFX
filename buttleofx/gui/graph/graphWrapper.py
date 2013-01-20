@@ -253,7 +253,6 @@ class GraphWrapper(QtCore.QObject):
         self._tmpClipIn = None
         self._tmpClipOut = None
 
-
     ################################################## INTERACTIONS ##################################################
 
     @QtCore.Slot(str, int, int)
@@ -262,10 +261,23 @@ class GraphWrapper(QtCore.QObject):
             Manage when a node is moved.
         """
         # only push a cmd if the node truly moved
-        if self._graph.getNode(nodeName).getCoord() != (x, y):
+        if self._graph.getNode(nodeName).getOldCoord() != (x, y):
             cmdMoved = CmdSetCoord(self._graph, nodeName, (x, y))
             cmdManager = CommandManager()
             cmdManager.push(cmdMoved)
+
+    @QtCore.Slot(str, int, int)
+    def nodeIsMoving(self, nodeName, x, y):
+        """
+            Manage when a node is moved.
+        """
+        self._graph.getNode(nodeName).setCoord(x, y)
+        self._graph.connectionsCoordChanged()
+        # only push a cmd if the node truly moved
+        # if self._graph.getNode(nodeName).getCoord() != (x, y):
+        #     cmdMoved = CmdSetCoord(self._graph, nodeName, (x, y))
+        #     cmdManager = CommandManager()
+        #     cmdManager.push(cmdMoved)
 
     ################################################## CONNECTIONS MANAGEMENT ##################################################
 

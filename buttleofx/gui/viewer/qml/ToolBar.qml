@@ -2,9 +2,6 @@ import QtQuick 1.1
 
 Rectangle {
     id: tools
-    width: parent.width
-    height: 30
-    anchors.bottom: parent.bottom
     color: "#141414"
 
     Rectangle {

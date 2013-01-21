@@ -1,13 +1,11 @@
 import QtQuick 1.1
 
-/* Tabs bar */
 
 Rectangle {
-    id: tabBar
+    id: tabBarRegion
     implicitWidth: 850
-    implicitHeight: 20
-    color: "transparent"
-
+    implicitHeight: 25
+    color: "red"
     property color tabColor: "#141414"
 
     Item {
@@ -26,7 +24,6 @@ Rectangle {
                 y:5
                 text: "Viewer 1"
                 font.pointSize: 10
-                color: "white"
             }
             radius: 10
             color: tabColor

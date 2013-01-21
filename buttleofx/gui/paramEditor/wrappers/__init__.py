@@ -4,5 +4,5 @@ from booleanWrapper import BooleanWrapper
 from doubleWrapper import DoubleWrapper
 from double2DWrapper import Double2DWrapper
 from double3DWrapper import Double3DWrapper
-from choice3CWrapper import Choice3CWrapper
+from choiceWrapper import ChoiceWrapper
 from paramEditorWrapper import ParamEditorWrapper

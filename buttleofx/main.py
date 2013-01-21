@@ -13,10 +13,11 @@ from quickmamba.utils import QmlInstantCoding
 
 currentFilePath = os.path.dirname(os.path.abspath(__file__))
 
+
 class ButtleApp(QtGui.QApplication):
     def __init__(self, argv):
         super(ButtleApp, self).__init__(argv)
-    
+
     def notify(self, receiver, event):
         try:
             #print("QApp notify")
@@ -40,7 +41,7 @@ def main(argv):
     view = QtDeclarative.QDeclarativeView()
     view.setViewport(QtOpenGL.QGLWidget())
     view.setViewportUpdateMode(QtDeclarative.QDeclarativeView.FullViewportUpdate)
-    
+
     view.setWindowTitle("ButtleOFX")
     view.setResizeMode(QtDeclarative.QDeclarativeView.SizeRootObjectToView)
 
@@ -61,4 +62,3 @@ def main(argv):
 
     view.show()
     app.exec_()
-

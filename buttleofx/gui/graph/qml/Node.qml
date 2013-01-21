@@ -40,7 +40,7 @@ Rectangle {
              states: [
                  State {
                      name: "normal"
-                     when: m.nodeModel != _buttleData.graphWrapper.currentParamNodeWrapper
+                     when: m.nodeModel != _buttleData.currentParamNodeWrapper
                      PropertyChanges {
                          target: nodeBorder;
                          height: parent.height;
@@ -51,7 +51,7 @@ Rectangle {
                  },
                  State {
                      name: "currentParamNode"
-                     when: m.nodeModel == _buttleData.graphWrapper.currentParamNodeWrapper
+                     when: m.nodeModel == _buttleData.currentParamNodeWrapper
                      PropertyChanges {
                          target: nodeBorder;
                          height: parent.height + 5;
@@ -75,7 +75,7 @@ Rectangle {
             anchors.centerIn: parent
             text: m.nodeModel.name
             font.pointSize: 10
-            color: (m.nodeModel == _buttleData.graphWrapper.currentSelectedNodeWrapper) ? "#00b2a1" : "black"
+            color: (m.nodeModel == _buttleData.currentSelectedNodeWrapper) ? "#00b2a1" : "black"
         }
     }
     Column {
@@ -124,7 +124,7 @@ Rectangle {
              states: [
                  State {
                      name: "normal"
-                     when: m.nodeModel != _buttleData.graphWrapper.currentViewerNodeWrapper
+                     when: m.nodeModel != _buttleData.currentViewerNodeWrapper
                      PropertyChanges {
                          target: deadMosquitoImage;
                          source: ""
@@ -132,7 +132,7 @@ Rectangle {
                  },
                  State {
                      name: "currentViewerNode"
-                     when: m.nodeModel == _buttleData.graphWrapper.currentViewerNodeWrapper
+                     when: m.nodeModel == _buttleData.currentViewerNodeWrapper
                      PropertyChanges {
                          target: deadMosquitoImage;
                          source: "../img/mosquito_dead.png"
@@ -177,8 +177,8 @@ Rectangle {
         onPressed: {
             // left button : we change the current selected node & we start moving
             if (mouse.button == Qt.LeftButton) {
-                if(_buttleData.graphWrapper.currentSelectedNodeWrapper != m.nodeModel) {
-                    _buttleData.graphWrapper.currentSelectedNodeWrapper = m.nodeModel
+                if(_buttleData.currentSelectedNodeWrapper != m.nodeModel) {
+                    _buttleData.currentSelectedNodeWrapper = m.nodeModel
                     _buttleData.graphWrapper.zMax += 1
                     parent.z = _buttleData.graphWrapper.zMax
                 }
@@ -187,7 +187,7 @@ Rectangle {
             }
             // right button : we change the current param node
            else if (mouse.button == Qt.RightButton) {
-                 _buttleData.graphWrapper.currentParamNodeWrapper = m.nodeModel;
+                 _buttleData.currentParamNodeWrapper = m.nodeModel;
             }
         }
         onReleased: {
@@ -199,7 +199,7 @@ Rectangle {
         }
         // double click : we change the current viewer node
         onDoubleClicked: {
-            _buttleData.graphWrapper.currentViewerNodeWrapper = m.nodeModel;
+            _buttleData.currentViewerNodeWrapper = m.nodeModel;
         }
 
     }

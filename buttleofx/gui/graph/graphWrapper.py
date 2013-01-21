@@ -14,18 +14,20 @@ from quickmamba.models import QObjectListModel
 class GraphWrapper(QtCore.QObject):
     """
         Class GraphWrapper defined by:
+        - _view : to have the view object
         - _rootObject : to have the root object
+
         - _nodeWrappers : list of node wrappers (the python objects we use to communicate with the QML)
         - _connectionWrappers : list of connections wrappers (the python objects we use to communicate with the QML)
-        - _currentNodeName : the current selected node (in QML). This is just the name of the node.
-        - _currentNodeWrapper : the current selected node (in QML). This is a NodeWrapper.
+
         - _tmpClipOut : the future connected output clip when a connection is beeing created. It correspounds of the output clip which was beeing clicked and not connected for the moment.
         - _tmpClipIn : the future connected input clip when a connection is beeing created. It correspounds of the input clip which was beeing clicked and not connected for the moment.
+        
         - _zMax : to manage the depth of the graph (in QML)
-        - _graph : the data of the graph (python objects, the core data : the nodes and the connections)
+
+        - _graph : the name of the graph mapped by the instance of this class.
 
         Creates a QObject from a given python object Graph.
-
     """
 
     def __init__(self, graph, view):
@@ -36,15 +38,6 @@ class GraphWrapper(QtCore.QObject):
 
         self._nodeWrappers = QObjectListModel(self)
         self._connectionWrappers = QObjectListModel(self)
-
-        self._currentParamNodeName = None
-        self._currentParamNodeWrapper = None
-
-        self._currentSelectedNodeName = None
-        self._currentSelectedNodeWrapper = None
-
-        self._currentViewerNodeName = None
-        self._currentViewerNodeWrapper = None
 
         self._tmpClipIn = None
         self._tmpClipOut = None
@@ -57,6 +50,8 @@ class GraphWrapper(QtCore.QObject):
         graph.nodesChanged.connect(self.updateNodeWrappers)
         graph.connectionsChanged.connect(self.updateConnectionWrappers)
         graph.connectionsCoordChanged.connect(self.updateConnectionsCoord)
+
+        print "Gui : GraphWrapper created"
 
 
     def __str__(self):
@@ -84,11 +79,12 @@ class GraphWrapper(QtCore.QObject):
 
     #################### getters ####################
 
-    def getGraph(self):
+    def getGraphMapped(self):
         """
-            Returns the graph (the node list and the connection list).
+            Returns the graph (the node list and the connection list), mapped by this graphWrapper.
         """
         return self._graph
+        
 
     def getNodeWrappers(self):
         """
@@ -110,42 +106,6 @@ class GraphWrapper(QtCore.QObject):
             Returns the connectionWrapper list.
         """
         return self._connectionWrappers
-
-    def getCurrentParamNodeName(self):
-        """
-            Returns the name of the current param node.
-        """
-        return self._currentParamNodeName
-
-    def getCurrentSelectedNodeName(self):
-        """
-            Returns the name of the current selected node.
-        """
-        return self._currentSelectedNodeName
-
-    def getCurrentViewerNodeName(self):
-        """
-            Returns the name of the current viewer node.
-        """
-        return self._currentViewerNodeName
-
-    def getCurrentParamNodeWrapper(self):
-        """
-            Returns the current param nodeWrapper.
-        """
-        return self.getNodeWrapper(self.getCurrentParamNodeName())
-
-    def getCurrentSelectedNodeWrapper(self):
-        """
-            Returns the current selected nodeWrapper.
-        """
-        return self.getNodeWrapper(self.getCurrentSelectedNodeName())
-
-    def getCurrentViewerNodeWrapper(self):
-        """
-            Returns the current viewer nodeWrapper.
-        """
-        return self.getNodeWrapper(self.getCurrentViewerNodeName())
 
     def getTmpClipOut(self):
         return self._tmpClipOut
@@ -171,33 +131,6 @@ class GraphWrapper(QtCore.QObject):
     @QtCore.Slot(result="QVariant")
     def getLastCreatedNodeWrapper(self):
         return self._nodeWrappers[-1]
-
-    def setCurrentParamNodeWrapper(self, nodeWrapper):
-        """
-            Changes the current param node and emits the change.
-        """
-        if self._currentParamNodeName == nodeWrapper.getName():
-            return
-        self._currentParamNodeName = nodeWrapper.getName()
-        self.currentParamNodeChanged.emit()
-
-    def setCurrentSelectedNodeWrapper(self, nodeWrapper):
-        """
-        Changes the current selected node and emits the change.
-        """
-        if self._currentSelectedNodeName == nodeWrapper.getName():
-            return
-        self._currentSelectedNodeName = nodeWrapper.getName()
-        self.currentSelectedNodeChanged.emit()
-
-    def setCurrentViewerNodeWrapper(self, nodeWrapper):
-        """
-        Changes the current viewer node and emits the change.
-        """
-        if self._currentViewerNodeName == nodeWrapper.getName():
-            return
-        self._currentViewerNodeName = nodeWrapper.getName()
-        self.currentViewerNodeChanged.emit()
 
     def getZMax(self):
         return self._zMax
@@ -391,7 +324,7 @@ class GraphWrapper(QtCore.QObject):
         # and we fill with the new data
         for node in self._graph.getNodes():
             self.createNodeWrapper(node.getName())
-        self.__str__()
+        #self.__str__()
 
     def updateConnectionWrappers(self):
         """
@@ -403,7 +336,7 @@ class GraphWrapper(QtCore.QObject):
         # and we fill with the new data
         for connection in self._graph.getConnections():
             self.createConnectionWrapper(connection)
-        self.__str__()
+        #self.__str__()
 
     @QtCore.Slot()
     def updateConnectionsCoord(self):
@@ -432,14 +365,6 @@ class GraphWrapper(QtCore.QObject):
     # nodeWrappers and connectionWrappers
     nodeWrappers = QtCore.Property(QtCore.QObject, getNodeWrappers, constant=True)
     connectionWrappers = QtCore.Property(QtCore.QObject, getConnectionWrappers, constant=True)
-
-    # current param, view, and selected node
-    currentParamNodeChanged = QtCore.Signal()
-    currentParamNodeWrapper = QtCore.Property(QtCore.QObject, getCurrentParamNodeWrapper, setCurrentParamNodeWrapper, notify=currentParamNodeChanged)
-    currentViewerNodeChanged = QtCore.Signal()
-    currentViewerNodeWrapper = QtCore.Property(QtCore.QObject, getCurrentViewerNodeWrapper, setCurrentViewerNodeWrapper, notify=currentViewerNodeChanged)
-    currentSelectedNodeChanged = QtCore.Signal()
-    currentSelectedNodeWrapper = QtCore.Property(QtCore.QObject, getCurrentSelectedNodeWrapper, setCurrentSelectedNodeWrapper, notify=currentSelectedNodeChanged)
 
     # z index for QML
     zMaxChanged = QtCore.Signal()

@@ -28,6 +28,7 @@ from quickmamba.utils import QmlInstantCoding
 
 currentFilePath = os.path.dirname(os.path.abspath(__file__))
 
+
 class ButtleApp(QtGui.QApplication):
     def __init__(self, argv):
         super(ButtleApp, self).__init__(argv)

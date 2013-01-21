@@ -89,7 +89,8 @@ class Node(object):
                 ParamDouble(defaultValue=0, minimum=0.001, maximum=20, text="Green"),
                 ParamDouble(defaultValue=0, minimum=0.001, maximum=20, text="Blue"),
                 ParamDouble(defaultValue=0, minimum=0.001, maximum=20, text="Alpha"),
-                ParamBoolean(defaultValue="false", text="Invert")
+                ParamBoolean(defaultValue="false", text="Invert"),
+                ParamInt(defaultValue=0, minimum=0, maximum=100, text="ParamInt")
                 ]
             )
 

@@ -50,6 +50,6 @@ class IntWrapper(QtCore.QObject):
 
     paramType = QtCore.Property(unicode, getParamType, setParamType, notify=changed)
     text = QtCore.Property(unicode, getText, setText, notify=changed)
-    value = QtCore.Property(float, getValue, setValue, notify=changed)
-    maximum = QtCore.Property(float, getMaximum, setMaximum, notify=changed)
-    minimum = QtCore.Property(float, getMinimum, setMinimum, notify=changed)
+    value = QtCore.Property(int, getValue, setValue, notify=changed)
+    maximum = QtCore.Property(int, getMaximum, setMaximum, notify=changed)
+    minimum = QtCore.Property(int, getMinimum, setMinimum, notify=changed)

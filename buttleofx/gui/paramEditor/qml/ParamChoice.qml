@@ -35,7 +35,9 @@ Item {
                 id: firstElement
                 width: 120
                 height: 20
-                color: "#363636"
+                color: "#212121"
+                border.width: 1
+                        border.color: "#333"
                 radius: 3
 
                 Text{
@@ -43,7 +45,7 @@ Item {
                     anchors.left: parent.left
                     anchors.leftMargin: 5
                     anchors.verticalCenter: parent.verticalCenter
-                    text: model.object.value
+                    text: paramModel.value
                     color: "white"
 
                 }
@@ -52,7 +54,7 @@ Item {
                     anchors.fill: parent
                     hoverEnabled: true
                     onClicked: {   
-                        console.log("Clic")             
+                        console.log("Clic")           
                         elements.state = ( elements.state == "hidden") ? "shown" : "hidden"
                     }
                 }
@@ -79,10 +81,12 @@ Item {
                         anchors.left: parent.left
                         y: parent.y + 20*index 
                         color: "#343434"
+                        border.width: 1
+                        border.color: "#333"
                         Text{
                             id: textElement
                             anchors.left: parent.left
-                            anchors.leftMargin: 5
+                            anchors.leftMargin: 10
                             anchors.verticalCenter: parent.verticalCenter
                             text: model.object
                             color: "white"
@@ -97,8 +101,7 @@ Item {
                             onClicked: {   
                                 console.log("Clic Repeater")               
                                 elements.state = "hidden"
-                                model.object.value = textElement.text
-                                intitule.text = textElement.text
+                                paramModel.value = textElement.text
 
                             }
                         }

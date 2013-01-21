@@ -1,7 +1,7 @@
 from quickmamba.patterns import Signal
 from PySide import QtGui
 # paramEditor
-from buttleofx.core.params import ParamInt, ParamString, ParamDouble, ParamDouble2D, ParamBoolean, ParamDouble3D, ParamChoice3C
+from buttleofx.core.params import ParamInt, ParamString, ParamDouble, ParamDouble2D, ParamBoolean, ParamDouble3D, ParamChoice3C, ParamPushButton
 
 nodeDescriptors = {
     "Blur": {
@@ -75,7 +75,8 @@ class Node(object):
                 ParamDouble3D(defaultValue1=58, defaultValue2=174, defaultValue3=206, minimum=0, maximum=255, text="Color"),
                 ParamChoice3C(defaultValue="Coco", text="Border"),
                 ParamBoolean(defaultValue="false", text="Normalized kernel"),
-                ParamDouble(defaultValue=0, minimum=0, maximum=0.01, text="Kernel Espilon")
+                ParamDouble(defaultValue=0, minimum=0, maximum=0.01, text="Kernel Espilon"),
+                ParamPushButton(label="Compute", trigger="testFunction", enabled=True, text="Launch compute")
                 ]
             )
 

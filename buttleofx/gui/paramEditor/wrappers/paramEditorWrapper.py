@@ -1,8 +1,8 @@
 from PySide import QtCore
 # core
-from buttleofx.core.params import ParamInt, ParamString, ParamBoolean, ParamDouble, ParamDouble2D, ParamDouble3D, ParamChoice3C
+from buttleofx.core.params import ParamInt, ParamString, ParamBoolean, ParamDouble, ParamDouble2D, ParamDouble3D, ParamChoice3C, ParamPushButton
 # gui
-from buttleofx.gui.paramEditor.wrappers import IntWrapper, StringWrapper, BooleanWrapper, DoubleWrapper, Double2DWrapper, Double3DWrapper, Choice3CWrapper
+from buttleofx.gui.paramEditor.wrappers import IntWrapper, StringWrapper, BooleanWrapper, DoubleWrapper, Double2DWrapper, Double3DWrapper, Choice3CWrapper, PushButtonWrapper
 #quickmamba
 from quickmamba.models import QObjectListModel
 
@@ -20,7 +20,8 @@ class ParamEditorWrapper(QtCore.QObject):
             ParamDouble2D: Double2DWrapper,
             ParamDouble3D: Double3DWrapper,
             ParamBoolean: BooleanWrapper,
-            ParamChoice3C: Choice3CWrapper
+            ParamChoice3C: Choice3CWrapper,
+            ParamPushButton: PushButtonWrapper
         }
 
         paramListModel = [mapTypeToWrapper[paramElt.__class__](paramElt) for paramElt in paramList]

@@ -139,6 +139,10 @@ class ButtleData(QtCore.QObject, Singleton):
                 self.getGraph().deleteNode(self._currentSelectedNodeName)
         self._currentSelectedNodeName = None
         self.currentSelectedNodeChanged.emit()
+        self._currentParamNodeName = None
+        self.currentParamNodeChanged.emit()
+        self._currentViewerNodeName = None
+        self.currentViewerNodeChanged.emit()
 
     ##### Connection #####
 

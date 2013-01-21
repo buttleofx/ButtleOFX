@@ -1,9 +1,6 @@
 from PySide import QtCore
 # core
 from buttleofx.core.graph.connection import IdClip
-# undo redo
-from buttleofx.core.undo_redo.manageTools import CommandManager
-from buttleofx.core.undo_redo.commands import CmdSetCoord
 # gui
 from buttleofx.gui.graph.node import NodeWrapper
 from buttleofx.gui.graph.connection import ConnectionWrapper
@@ -27,7 +24,7 @@ class GraphWrapper(QtCore.QObject):
 
         - _graph : the name of the graph mapped by the instance of this class.
 
-        Creates a QObject from a given python object Graph.
+        This class is a view, a map, of a graph.
     """
 
     def __init__(self, graph, view):
@@ -47,9 +44,9 @@ class GraphWrapper(QtCore.QObject):
         self._graph = graph
 
         # the links between the graph and this graphWrapper
-        graph.nodesChanged.connect(self.updateNodeWrappers)
-        graph.connectionsChanged.connect(self.updateConnectionWrappers)
-        graph.connectionsCoordChanged.connect(self.updateConnectionsCoord)
+        self._graph.nodesChanged.connect(self.updateNodeWrappers)
+        self._graph.connectionsChanged.connect(self.updateConnectionWrappers)
+        self._graph.connectionsCoordChanged.connect(self.updateConnectionsCoord)
 
         print "Gui : GraphWrapper created"
 
@@ -138,27 +135,19 @@ class GraphWrapper(QtCore.QObject):
     def setZMax(self, zMax):
         self._zMax = zMax
 
-    ################################################## CREATION & DESTRUCTION ##################################################
+    #################### setters ####################
 
-    @QtCore.Slot(str)
-    def creationNode(self, nodeType):
-        """
-            Function called when we want to create a node from the QML.
-        """
-        self._graph.createNode(nodeType)
+    def resetTmpClips(self):
+        self._tmpClipIn = None
+        self._tmpClipOut = None
 
-    @QtCore.Slot()
-    def destructionNode(self):
-        """
-            Function called when we want to delete a node from the QML.
-        """
-        # if at least one node in the graph
-        if len(self._nodeWrappers) > 0 and len(self._graph.getNodes()) > 0:
-            # if a node is selected
-            if self._currentSelectedNodeName != None:
-                self._graph.deleteNode(self._currentSelectedNodeName)
-        self._currentSelectedNodeName = None
-        self.currentSelectedNodeChanged.emit()
+    def setTmpClipOut(self, idClip):
+        self._tmpClipOut = idClip
+
+    def setTmpClipIn(self, idClip):
+        self._tmpClipIn = idClip
+
+    ################################################## CREATIONS ##################################################
 
     def createNodeWrapper(self, nodeName):
         """
@@ -170,47 +159,12 @@ class GraphWrapper(QtCore.QObject):
             nodeWrapper = NodeWrapper(node, self._view)
             self._nodeWrappers.append(nodeWrapper)
 
-    def connect(self, clipOut, clipIn):
+    def createConnectionWrapper(self, connection):
         """
-            Add a connection between 2 clips.
+            Creates a connection wrapper and add it to the connectionWrappers list.
         """
-        self._graph.createConnection(clipOut, clipIn)
-        self._tmpClipIn = None
-        self._tmpClipOut = None
-
-    def disconnect(self, connection):
-        """
-            Remove a connection between 2 clips.
-        """
-        self._graph.deleteConnection(connection)
-        self._tmpClipIn = None
-        self._tmpClipOut = None
-
-    ################################################## INTERACTIONS ##################################################
-
-    @QtCore.Slot(str, int, int)
-    def nodeMoved(self, nodeName, x, y):
-        """
-            Manage when a node is moved.
-        """
-        # only push a cmd if the node truly moved
-        if self._graph.getNode(nodeName).getOldCoord() != (x, y):
-            cmdMoved = CmdSetCoord(self._graph, nodeName, (x, y))
-            cmdManager = CommandManager()
-            cmdManager.push(cmdMoved)
-
-    @QtCore.Slot(str, int, int)
-    def nodeIsMoving(self, nodeName, x, y):
-        """
-            Manage when a node is moved.
-        """
-        self._graph.getNode(nodeName).setCoord(x, y)
-        self._graph.connectionsCoordChanged()
-        # only push a cmd if the node truly moved
-        # if self._graph.getNode(nodeName).getCoord() != (x, y):
-        #     cmdMoved = CmdSetCoord(self._graph, nodeName, (x, y))
-        #     cmdManager = CommandManager()
-        #     cmdManager.push(cmdMoved)
+        conWrapper = ConnectionWrapper(connection, self._view)
+        self._connectionWrappers.append(conWrapper)
 
     ################################################## CONNECTIONS MANAGEMENT ##################################################
 
@@ -241,7 +195,7 @@ class GraphWrapper(QtCore.QObject):
         """
             Return the connection, from a clipIn and a clipOut.
         """
-        for connection in self.getGraph().getConnections():
+        for connection in self.getGraphMapped().getConnections():
             if connection.getClipOut() == clipOut and connection.getClipIn() == clipIn:
                 return connection
         return None
@@ -262,55 +216,6 @@ class GraphWrapper(QtCore.QObject):
             return False
 
         return True
-
-    @QtCore.Slot(str, str, int)
-    def clipPressed(self, nodeName, port, clipNumber):
-        """
-            Function called when a clip is pressed (but not released yet).
-            The function replace the tmpClipIn or tmpClipOut.
-        """
-        position = self.getPositionClip(nodeName, port, clipNumber)
-        idClip = IdClip(nodeName, port, clipNumber, position)
-        if (port == "input"):
-            self._tmpClipIn = idClip
-        elif (port == "output"):
-            self._tmpClipOut = idClip
-
-    @QtCore.Slot(str, str, int)
-    def clipReleased(self, nodeName, port, clipNumber):
-        """
-            Function called when a clip is released (after pressed).
-        """
-        if (port == "input"):
-            #if there is a tmpNodeOut
-            if (self._tmpClipOut != None and self._tmpClipOut._nodeName != nodeName):
-                position = self.getPositionClip(nodeName, port, clipNumber)
-                idClip = IdClip(nodeName, port, clipNumber, position)
-                if self.canConnect(self._tmpClipOut, idClip):
-                    self.connect(self._tmpClipOut, idClip)
-                elif self._graph.contains(self._tmpClipOut) and self._graph.contains(idClip):
-                    self.disconnect(self.getConnectionByClips(self._tmpClipOut, idClip))
-                else:
-                    print "Unable to connect or delete the nodes."
-
-        elif (port == "output"):
-            #if there is a tmpNodeIn
-            if (self._tmpClipIn != None and self._tmpClipIn._nodeName != nodeName):
-                position = self.getPositionClip(nodeName, port, clipNumber)
-                idClip = IdClip(nodeName, port, clipNumber, position)
-                if self.canConnect(idClip, self._tmpClipIn):
-                    self.connect(idClip, self._tmpClipIn)
-                elif self._graph.contains(self._tmpClipIn) and self._graph.contains(idClip):
-                    self.disconnect(self.getConnectionByClips(idClip, self._tmpClipIn))
-                else:
-                    print "Unable to connect or delete the nodes."
-
-    def createConnectionWrapper(self, connection):
-        """
-            Creates a connection wrapper and add it to the connectionWrappers list.
-        """
-        conWrapper = ConnectionWrapper(connection, self._view)
-        self._connectionWrappers.append(conWrapper)
 
     ################################################## UPDATE ##################################################
 

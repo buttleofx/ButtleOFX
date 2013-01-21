@@ -108,8 +108,13 @@ class Node(object):
 
         self.changed = Signal()
 
+        print "Core : node created"
+
     def __str__(self):
         return 'Node "%s"' % (self._name)
+
+    def __del__(self):
+        print "Core : Node deleted"
 
     ######## getters ########
 

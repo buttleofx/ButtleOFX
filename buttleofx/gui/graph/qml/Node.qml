@@ -193,7 +193,7 @@ Rectangle {
         onReleased: {
             // left button : we end moving
             if (mouse.button == Qt.LeftButton) {
-                _buttleData.graphWrapper.nodeMoved(m.nodeModel.name, parent.x, parent.y)
+                _buttleData.nodeMoved(m.nodeModel.name, parent.x, parent.y)
                 stateMoving.state = "normal"
             }
         }
@@ -216,6 +216,6 @@ Rectangle {
     }
 
     function nodeIsMoving() {
-        _buttleData.graphWrapper.nodeIsMoving(m.nodeModel.name, node.x, node.y)
+        _buttleData.nodeIsMoving(m.nodeModel.name, node.x, node.y)
     }
 }

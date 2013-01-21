@@ -76,7 +76,7 @@ class Node(object):
                 ParamChoice3C(defaultValue="Coco", text="Border"),
                 ParamBoolean(defaultValue="false", text="Normalized kernel"),
                 ParamDouble(defaultValue=0, minimum=0, maximum=0.01, text="Kernel Espilon"),
-                ParamPushButton(label="Compute", trigger="testFunction", enabled=True, text="Launch compute")
+                ParamPushButton(label="Compute", trigger="testFunction", enabled=True)
                 ]
             )
 

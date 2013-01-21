@@ -10,10 +10,7 @@ class PushButtonWrapper(QtCore.QObject):
 
     def getParamType(self):
         return self._param.paramType
-
-    def getText(self):
-        return self._param.text
-
+    
     def getLabel(self):
         return self._param.label
 
@@ -28,9 +25,6 @@ class PushButtonWrapper(QtCore.QObject):
     def setParamType(self, paramType):
         self._param.paramType = paramType
 
-    def setText(self, text):
-        self._param.text = text
-
     def setLabel(self, label):
         self._param.label = label
 
@@ -44,7 +38,6 @@ class PushButtonWrapper(QtCore.QObject):
     changed = QtCore.Signal()
 
     paramType = QtCore.Property(unicode, getParamType, setParamType, notify=changed)
-    text = QtCore.Property(unicode, getText, setText, notify=changed)
-    label = QtCore.Property(bool, getLabel, setLabel, notify=changed)
-    trigger = QtCore.Property(bool, getTrigger, setTrigger, notify=changed)
+    label = QtCore.Property(str, getLabel, setLabel, notify=changed)
+    trigger = QtCore.Property(str, getTrigger, setTrigger, notify=changed)
     enabled = QtCore.Property(bool, getEnabled, setEnabled, notify=changed)

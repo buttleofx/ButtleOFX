@@ -9,9 +9,9 @@ Rectangle {
     border.width: 2
     border.color: "#00b2a1"
 
-    property alias label: buttonid.text
-    property string trigger
-    property bool enabled:  true
+    property string label: model.object.label
+    property string trigger : model.object.trigger
+    property bool enabled:  model.object.enabled
 
     signal buttonpressed()
 
@@ -23,7 +23,7 @@ Rectangle {
     Text {
         id: buttonid
         color: "black"
-        text: "button"
+        text: label
         font.bold: false
         anchors.centerIn: parent
         font.family: "Arial"

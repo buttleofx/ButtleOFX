@@ -1,7 +1,7 @@
 from quickmamba.patterns import Signal
 from PySide import QtGui
 # paramEditor
-from buttleofx.core.params import ParamInt, ParamString, ParamDouble, ParamDouble2D, ParamBoolean, ParamDouble3D, ParamChoice3C, ParamPushButton
+from buttleofx.core.params import ParamInt, ParamInt2D, ParamString, ParamDouble, ParamDouble2D, ParamBoolean, ParamDouble3D, ParamChoice3C, ParamPushButton
 
 nodeDescriptors = {
     "Blur": {
@@ -76,7 +76,7 @@ class Node(object):
                 ParamChoice3C(defaultValue="Coco", text="Border"),
                 ParamBoolean(defaultValue="false", text="Normalized kernel"),
                 ParamDouble(defaultValue=0, minimum=0, maximum=0.01, text="Kernel Espilon"),
-                ParamPushButton(label="Compute", trigger="testFunction", enabled=True)
+                ParamPushButton(label="Compute", trigger="testFunction", enabled=True),
                 ]
             )
 
@@ -90,7 +90,7 @@ class Node(object):
                 ParamDouble(defaultValue=0, minimum=0.001, maximum=20, text="Blue"),
                 ParamDouble(defaultValue=0, minimum=0.001, maximum=20, text="Alpha"),
                 ParamBoolean(defaultValue="false", text="Invert"),
-                ParamInt(defaultValue=0, minimum=0, maximum=100, text="ParamInt")
+                ParamInt(defaultValue=0, minimum=0, maximum=100, text="ParamInt"),
                 ]
             )
 
@@ -102,6 +102,7 @@ class Node(object):
                  ParamBoolean(defaultValue="false", text="Green"),
                  ParamBoolean(defaultValue="false", text="Blue"),
                  ParamBoolean(defaultValue="false", text="Alpha"),
+                 ParamInt2D(defaultValue1=0, defaultValue2=0, minimum=0, maximum=100, text="Int2D"),
                 ]
             )
 

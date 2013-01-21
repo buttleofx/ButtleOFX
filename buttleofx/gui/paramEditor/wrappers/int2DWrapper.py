@@ -1,7 +1,7 @@
 from PySide import QtCore
 
 
-class Double2DWrapper(QtCore.QObject):
+class Int2DWrapper(QtCore.QObject):
     def __init__(self, param):
         QtCore.QObject.__init__(self)
         self._param = param
@@ -62,7 +62,7 @@ class Double2DWrapper(QtCore.QObject):
 
     paramType = QtCore.Property(unicode, getParamType, setParamType, notify=changed)
     text = QtCore.Property(unicode, getText, setText, notify=changed)
-    value1 = QtCore.Property(float, getValue1, setValue1, notify=changed)
-    value2 = QtCore.Property(float, getValue2, setValue2, notify=changed)
-    maximum = QtCore.Property(float, getMaximum, setMaximum, notify=changed)
-    minimum = QtCore.Property(float, getMinimum, setMinimum, notify=changed)
+    value1 = QtCore.Property(int, getValue1, setValue1, notify=changed)
+    value2 = QtCore.Property(int, getValue2, setValue2, notify=changed)
+    maximum = QtCore.Property(int, getMaximum, setMaximum, notify=changed)
+    minimum = QtCore.Property(int, getMinimum, setMinimum, notify=changed)

@@ -1,4 +1,5 @@
 from paramInt import ParamInt
+from paramInt2D import ParamInt2D
 from paramString import ParamString
 from paramBoolean import ParamBoolean
 from paramDouble import ParamDouble

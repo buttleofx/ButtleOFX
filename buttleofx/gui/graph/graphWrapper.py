@@ -221,13 +221,11 @@ class GraphWrapper(QtCore.QObject):
         """
             Updates the nodeWrappers when the signal nodesChanged has been emitted.
         """
-        print "=> UPDATE NODE WRAPPERS"
         # we clear the list
         self._nodeWrappers.clear()
         # and we fill with the new data
         for node in self._graph.getNodes():
             self.createNodeWrapper(node.getName())
-        #self.__str__()
 
     def updateConnectionWrappers(self):
         """
@@ -238,7 +236,6 @@ class GraphWrapper(QtCore.QObject):
         # and we fill with the new data
         for connection in self._graph.getConnections():
             self.createConnectionWrapper(connection)
-        #self.__str__()
 
     @QtCore.Slot()
     def updateConnectionsCoord(self):

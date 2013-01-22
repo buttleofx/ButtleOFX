@@ -19,7 +19,7 @@ class GraphWrapper(QtCore.QObject):
 
         - _tmpClipOut : the future connected output clip when a connection is beeing created. It correspounds of the output clip which was beeing clicked and not connected for the moment.
         - _tmpClipIn : the future connected input clip when a connection is beeing created. It correspounds of the input clip which was beeing clicked and not connected for the moment.
-        
+
         - _zMax : to manage the depth of the graph (in QML)
 
         - _graph : the name of the graph mapped by the instance of this class.
@@ -50,7 +50,6 @@ class GraphWrapper(QtCore.QObject):
 
         print "Gui : GraphWrapper created"
 
-
     def __str__(self):
         """
             Displays on terminal some data.
@@ -58,11 +57,11 @@ class GraphWrapper(QtCore.QObject):
         """
         print("---- all nodeWrappers ----")
         for nodeWrapper in self._nodeWrappers:
-            print nodeWrapper.getName() + " " + str(nodeWrapper.getCoord())
+            print nodeWrapper.getName()
 
         print("---- all nodes ----")
         for node in self._graph._nodes:
-            print node._name + " " + str(node.getCoord())
+            print node._name
 
         print("---- all connectionWrappers ----")
         for con in self._connectionWrappers:
@@ -81,7 +80,6 @@ class GraphWrapper(QtCore.QObject):
             Returns the graph (the node list and the connection list), mapped by this graphWrapper.
         """
         return self._graph
-        
 
     def getNodeWrappers(self):
         """

@@ -5,6 +5,7 @@ class Double2DWrapper(QtCore.QObject):
     def __init__(self, param):
         QtCore.QObject.__init__(self)
         self._param = param
+        self._param.changed.connect(self.emitChanged)
 
     #################### getters ####################
 
@@ -35,30 +36,35 @@ class Double2DWrapper(QtCore.QObject):
     #################### setters ####################
 
     def setParamType(self, paramType):
-        self._param.paramType = paramType
+        self._param.setParamType(paramType)
 
     def setText(self, text):
-        self._param.text = text
+        self._param.setTxt(text)
 
     def setDefaultValue1(self, value1):
-        self._param.defaultValue1 = value1
+        self._param.setDefaultValue1(value1)
 
     def setDefaultValue2(self, value2):
-        self._param.defaultValue2 = value2
+        self._param.setDefaultValue2(value2)
 
     def setValue1(self, value1):
-        self._param.value1 = value1
+        self._param.setValue1(value1)
 
     def setValue2(self, value2):
-        self._param.value2 = value2
+        self._param.setVlue2(value2)
 
     def setMaximum(self, maximum):
-        self._param.maximum = maximum
+        self._param.setMaximum(maximum)
 
     def setMinimum(self, minimum):
-        self._param.minimum = minimum
+        self._param.setMinimum(minimum)
 
-    changed = QtCore.Signal()
+    @QtCore.Signal
+    def changed(self):
+        pass
+
+    def emitChanged(self):
+        self.changed.emit()
 
     paramType = QtCore.Property(unicode, getParamType, setParamType, notify=changed)
     text = QtCore.Property(unicode, getText, setText, notify=changed)

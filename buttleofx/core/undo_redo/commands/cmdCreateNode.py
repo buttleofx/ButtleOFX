@@ -1,3 +1,6 @@
+# Tuttle
+from pyTuttle import tuttle
+
 # undo_redo
 from buttleofx.core.undo_redo.manageTools import UndoableCommand
 # core
@@ -42,7 +45,15 @@ class CmdCreateNode(UndoableCommand):
         """
             Create a node.
         """
+
+        # New Tuttle node
+        #print " -------------------------------try to create tuttle node-----------------------"
+        #tuttleNode = self.graphTarget.getGraphTuttle().createNode(self.nodeType)
+        #print " -------------------------------tuttle node created-----------------------"
+
+        # New Buttle node
         self.graphTarget._nbNodesCreated += 1
         self.nodeName = str(self.nodeType) + "_" + str(self.graphTarget._nbNodesCreated)
         self.graphTarget._nodes.append(Node(self.nodeName, self.nodeType, self.nodeCoord))
+        #self.graphTarget._nodes.append(Node(self.nodeName, self.nodeType, self.nodeCoord, tuttleNode))
         self.graphTarget.nodesChanged()

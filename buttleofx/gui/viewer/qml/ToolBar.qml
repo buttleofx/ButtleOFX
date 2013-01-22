@@ -2,6 +2,8 @@ import QtQuick 1.1
 
 Rectangle {
     id: tools
+    width: parent.width
+    height: parent.height
     color: "#141414"
 
     Rectangle {
@@ -10,7 +12,7 @@ Rectangle {
         height: parent.height-4
         x: 2
         y: 2
-        color: "transparent"
+        color: "#141414"
 
         Image {
             id: magGlassInButton
@@ -96,82 +98,3 @@ Rectangle {
         ]
     }
 }
-
-    // Old Tools bar
-/*Rectangle {
-     id: tools
-     width: parent.width
-     height: 20
-     anchors.bottom: parent.bottom
-     color: toolbarColor
-     Rectangle {
-         id: zoomInButton
-         width: 20
-         height: 20
-         anchors.verticalCenter: parent.verticalCenter
-         color: "transparent"
-         Text {
-             id: plusButton
-             anchors.centerIn: parent
-             text: "+"
-             font.pointSize: 16
-             color: textColor
-         }
-         MouseArea {
-             anchors.fill: parent
-             onClicked: {
-                 console.log("Zoom in")
-                 imageViewed.scale += sizeScaleEvent
-             }
-
-         }
-     }
-     Rectangle {
-         id: zoomOutButton
-         width: 20
-         height: 20
-         x: 20
-         anchors.verticalCenter: parent.verticalCenter
-         color: "transparent"
-         Text {
-             anchors.centerIn: parent
-             text: "-"
-             font.pointSize: 16
-             color: textColor
-         }
-         MouseArea {
-             anchors.fill: parent
-             onClicked: {
-                 console.log("Zoom out")
-                 if (imageViewed.scale-sizeScaleEvent > 0) {
-                   imageViewed.scale -= sizeScaleEvent
-                 }
-             }
-         }
-      }
-
-     Rectangle {
-         id: resetButton
-         width: 20
-         height: 20
-         x: 40
-         anchors.verticalCenter: parent.verticalCenter
-         color: "transparent"
-         Text {
-             anchors.centerIn: parent
-             text: "="
-             font.pointSize: 16
-             color: textColor
-         }
-         MouseArea {
-             anchors.fill: parent
-             onClicked: {
-                 console.log("Reset");
-                 imageViewed.scale = 1;
-                 imageViewed.x = (container.width - imageViewed.width) / 2;
-                 imageViewed.y = (container.height - tools.height - imageViewed.height) / 2;
-
-             }
-         }
-      }
- }*/

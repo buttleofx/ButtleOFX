@@ -6,6 +6,8 @@ Item {
     implicitWidth: 300
     implicitHeight: 30
 
+    property variant paramObject: model.object
+
     /*Container of the textInput*/
     Row{
         id: paramIntInputContainer
@@ -15,7 +17,7 @@ Item {
         Text {
             id: paramIntTitle
             width: 80
-            text: model.object.text + " : "
+            text: paramObject.text + " : "
             color: "white"
            // font.pointSize: 8
             anchors.top: parent.top
@@ -32,17 +34,17 @@ Item {
             radius: 3
             TextInput{
                 id: paramIntInput
-                text: model.object.value
+                text: paramObject.value
                 anchors.left: parent.left
                 anchors.leftMargin: 5
                 maximumLength: 3
                 color: activeFocus ? "white" : "grey"
                 width: 40
                 selectByMouse : true
-                onAccepted: model.object.value = paramIntInput.text
+                onAccepted: paramObject.value = paramIntInput.text
                 validator: IntValidator{
-                    bottom: model.object.minimum
-                    top:  model.object.maximum
+                    bottom: paramObject.minimum
+                    top:  paramObject.maximum
                 }
             }
         }

@@ -3,7 +3,9 @@ import QtQuick 1.1
 Item {
     implicitWidth: 100
     implicitHeight: 20
+
     property alias title: paramBooleanTitle.text
+    property variant paramObject: model.object
 
     Row {
         id: paramBoleanInputContainer
@@ -12,7 +14,7 @@ Item {
         Text {
             id: paramBooleanTitle
             width: 80
-            text: model.object.text + " : "
+            text: paramObject.text + " : "
             color: "white"
            // font.pointSize: 8
             /*anchors.top: parent.top

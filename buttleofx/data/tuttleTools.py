@@ -26,5 +26,3 @@ def getPlugin(pluginName):
             return plugin
     return None
 
-
-

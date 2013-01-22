@@ -1,11 +1,12 @@
 from PySide import QtCore
+#quickmamba
+from quickmamba.models import QObjectListModel
 
 
-class BooleanWrapper(QtCore.QObject):
+class ChoiceWrapper(QtCore.QObject):
     def __init__(self, param):
         QtCore.QObject.__init__(self)
         self._param = param
-        self._param.changed.connect(self.emitChanged)
 
     #################### getters ####################
 
@@ -15,11 +16,16 @@ class BooleanWrapper(QtCore.QObject):
     def getText(self):
         return self._param.text
 
-    def getDefaultValue(self):
-        return self._param.defaultValue
+    def getListValue(self):
+        tmp = self._param.listValue
+        self._param.listValue = QObjectListModel()
+        for value in tmp:
+            #["coucou", "ohoh", "ahahah"]:
+            self._param.listValue.append(value)
+        return self._param.listValue
 
     def getValue(self):
-        return self._param.value
+            return self._param.value
 
     #################### setters ####################
 
@@ -29,19 +35,16 @@ class BooleanWrapper(QtCore.QObject):
     def setText(self, text):
         self._param.text = text
 
-    def setDefaultValue(self, defaultValue):
-        self._param.defaultValue = defaultValue
+    def setListValue(self, listValue):
+        self._param.listValue = listValue
 
     def setValue(self, value):
         self._param.value = value
 
-    @QtCore.Signal
-    def changed(self):
-        pass
-
-    def emitChanged(self):
-        self.changed.emit()
+    # Just temporary : paramType must be constant
+    changed = QtCore.Signal()
 
     paramType = QtCore.Property(unicode, getParamType, setParamType, notify=changed)
     text = QtCore.Property(unicode, getText, setText, notify=changed)
-    value = QtCore.Property(bool, getValue, setValue, notify=changed)
+    listValue = QtCore.Property("QVariant", getListValue, setListValue, notify=changed)
+    value = QtCore.Property(unicode, getValue, setValue, notify=changed)

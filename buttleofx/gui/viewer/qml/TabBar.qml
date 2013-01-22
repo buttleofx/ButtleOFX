@@ -2,10 +2,10 @@ import QtQuick 1.1
 
 
 Rectangle {
-    id: tabBarRegion
-    implicitWidth: 850
+    id: tabBar
+    implicitWidth: 950
     implicitHeight: 25
-    color: "red"
+    color: "#353535"
     property color tabColor: "#141414"
 
     Item {
@@ -23,10 +23,11 @@ Rectangle {
                 anchors.horizontalCenter: parent.horizontalCenter
                 y:5
                 text: "Viewer 1"
+                color: "white"
                 font.pointSize: 10
             }
             radius: 10
-            color: tabColor
+            color: tabBar.tabColor
         }
     }
 
@@ -46,7 +47,7 @@ Rectangle {
                 anchors.centerIn: parent
             }
             radius: 10
-            color: tabColor
+            color: tabBar.tabColor
         }
     }
 }

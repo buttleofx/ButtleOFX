@@ -25,7 +25,7 @@ nodeDescriptors = {
 }
 
 defaultNodeDesc = {
-    "color": (187, 187, 187),
+    "color": (0, 178, 161),
     "nbInput": 1,
     "url": "../img/uglycorn.jpg",
 }

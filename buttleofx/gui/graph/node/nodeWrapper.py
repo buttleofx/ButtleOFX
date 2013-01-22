@@ -34,7 +34,6 @@ class NodeWrapper(QtCore.QObject):
 
     # We can't connect the two signals because self.changed() is a QML signal.
     # So, we use the function self.emitChanged() to solve the problem
-
     @QtCore.Signal
     def changed(self):
         pass

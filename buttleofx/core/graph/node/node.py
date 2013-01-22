@@ -53,11 +53,13 @@ class Node(object):
         - changed : a signal emited to the wrapper layer
     """
 
+    #def __init__(self, nodeName, nodeType, nodeCoord, tuttleNode):
     def __init__(self, nodeName, nodeType, nodeCoord):
         self._name = nodeName
         self._type = nodeType
         self._coord = nodeCoord
         self._oldCoord = nodeCoord
+        #self._tuttleNode = tuttleNode
 
         # soon from Tuttle
         nodeDesc = nodeDescriptors[nodeType] if nodeType in nodeDescriptors else defaultNodeDesc

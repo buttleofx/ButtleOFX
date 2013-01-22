@@ -81,7 +81,6 @@ class GraphWrapper(QtCore.QObject):
             Returns the graph (the node list and the connection list), mapped by this graphWrapper.
         """
         return self._graph
-        
 
     def getNodeWrappers(self):
         """

@@ -1,3 +1,5 @@
+# Tuttle
+from pyTuttle import tuttle
 #undo_redo
 from buttleofx.core.undo_redo.manageTools import CommandManager
 from buttleofx.core.undo_redo.commands import CmdCreateNode, CmdDeleteNode, CmdCreateConnection, CmdDeleteConnection
@@ -15,6 +17,8 @@ class Graph(object):
     """
 
     def __init__(self):
+        self._graphTuttle = tuttle.Graph()
+
         self._nodes = []
         self._connections = []
 
@@ -45,6 +49,12 @@ class Graph(object):
             Returns the connection List.
         """
         return self._connections
+
+    def getGraphTuttle(self):
+        """
+            Return the Tuttle's graph.
+        """
+        return self._graphTuttle
 
     ################################################## CREATION & DESTRUCTION ##################################################
 

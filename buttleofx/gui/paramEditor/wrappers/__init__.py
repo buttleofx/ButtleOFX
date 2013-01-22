@@ -7,4 +7,6 @@ from double2DWrapper import Double2DWrapper
 from double3DWrapper import Double3DWrapper
 from choiceWrapper import ChoiceWrapper
 from pushButtonWrapper import PushButtonWrapper
+from sliderWrapper import SliderWrapper
+
 from paramEditorWrapper import ParamEditorWrapper

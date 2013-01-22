@@ -7,3 +7,4 @@ from paramDouble2D import ParamDouble2D
 from paramDouble3D import ParamDouble3D
 from paramChoice import ParamChoice
 from paramPushButton import ParamPushButton
+from paramSlider import ParamSlider

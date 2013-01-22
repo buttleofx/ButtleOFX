@@ -13,9 +13,8 @@ def getPluginsNames():
     """
         Returns the list of all names of Tuttle's plugins.
     """
-    # line commented : not yet binded in python
-    pluginCache = tuttle.core().getPluginCache()
-    return [plugin.getIdentifier() for plugin in pluginCache.getPlugins()]
+    return [plugin.getIdentifier() for plugin in getPlugins()]
+    # not yet binded in python :
     #pluginCache = tuttle.core().getImageEffectPluginCache()
     #return [plugin.getDescriptor().getLabel() for plugin in pluginCache.getPlugins()]
 

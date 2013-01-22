@@ -1,3 +1,9 @@
+# Tuttle
+from pyTuttle import tuttle
+from buttleofx.datas import tuttleTools
+
+from quickmamba.models import QObjectListModel
+
 from PySide import QtCore
 # core : graph
 from buttleofx.core.graph import Graph
@@ -24,7 +30,6 @@ class ButtleData(QtCore.QObject, Singleton):
         self._graphWrapper = GraphWrapper(Graph(), view)
         return self
 
-    @QtCore.Slot(result=GraphWrapper)
     def getGraphWrapper(self):
         return self._graphWrapper
 
@@ -44,4 +49,13 @@ class ButtleData(QtCore.QObject, Singleton):
         cmdManager = CommandManager()
         cmdManager.redo()
 
+    def getQObjectPluginsNames(self):
+        """
+            Returns a QObjectListModel of all names of Tuttle's plugins.
+        """
+        pluginsNames = QObjectListModel(self)
+        pluginsNames.setObjectList(tuttleTools.getPluginsNames())
+        return pluginsNames
+
+    tuttlePluginsNames = QtCore.Property(QtCore.QObject, getQObjectPluginsNames, constant=True)
     graphWrapper = QtCore.Property(QtCore.QObject, getGraphWrapper, constant=True)

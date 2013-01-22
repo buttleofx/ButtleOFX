@@ -66,11 +66,11 @@ class GraphWrapper(QtCore.QObject):
         """
         print("---- all nodeWrappers ----")
         for nodeWrapper in self._nodeWrappers:
-            print nodeWrapper.getName() + " " + str(nodeWrapper.getCoord())
+            print nodeWrapper.getName()
 
         print("---- all nodes ----")
         for node in self._graph._nodes:
-            print node._name + " " + str(node.getCoord())
+            print node._name
 
         print("---- all connectionWrappers ----")
         for con in self._connectionWrappers:
@@ -391,7 +391,7 @@ class GraphWrapper(QtCore.QObject):
         # and we fill with the new data
         for node in self._graph.getNodes():
             self.createNodeWrapper(node.getName())
-        self.__str__()
+        #self.__str__()
 
     def updateConnectionWrappers(self):
         """
@@ -403,7 +403,7 @@ class GraphWrapper(QtCore.QObject):
         # and we fill with the new data
         for connection in self._graph.getConnections():
             self.createConnectionWrapper(connection)
-        self.__str__()
+        #self.__str__()
 
     @QtCore.Slot()
     def updateConnectionsCoord(self):

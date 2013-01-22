@@ -6,6 +6,7 @@ Item {
     implicitWidth: 300
     implicitHeight: 30
     property alias title: paramChoiceTitle.text
+    property variant paramObject: model.object
 
     Row {
         id: paramChoiceInputContainer
@@ -15,7 +16,7 @@ Item {
         Text {
             id: paramChoiceTitle
             width: 80
-            text: model.object.text + " : "
+            text: paramObject.text + " : "
             color: "white"
            // font.pointSize: 8
             anchors.top: parent.top

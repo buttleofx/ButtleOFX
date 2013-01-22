@@ -25,10 +25,6 @@ defaultNodeDesc = {
     "color": (187, 187, 187),
     "nbInput": 1,
     "url": "../img/uglycorn.jpg",
-    "params": [
-        ParamString(defaultValue="node.getName()", stringType="Name"),
-        ParamString(defaultValue="node.getType()", stringType="Type"),
-    ],
 }
 
 
@@ -62,11 +58,8 @@ class Node(object):
         self._color = nodeDesc["color"]
         self._nbInput = nodeDesc["nbInput"]
         self._image = nodeDesc["url"]
-        # ###
-        self._params = [
-            ParamString(defaultValue=self.getName(), stringType="Name"),
-            ParamString(defaultValue=self.getType(), stringType="Type"),
-        ]
+
+        self._params = []
 
         if nodeType == "Blur":
             self._params.extend(

@@ -6,6 +6,7 @@ Item {
     implicitWidth: 300
     implicitHeight: 30
 
+    property variant paramObject: model.object
 
     /*Container of the textInput*/
     Row {
@@ -16,7 +17,7 @@ Item {
         Text {
             id: paramDoubleTitle
             width: 80
-            text: model.object.text + " : "
+            text: paramObject.text + " : "
             color: "white"
            // font.pointSize: 8
             anchors.top: parent.top
@@ -33,7 +34,7 @@ Item {
             radius: 3
             TextInput{
                 id: paramDoubleInput
-                text: model.object.value
+                text: paramObject.value
                 anchors.left: parent.left
                 anchors.leftMargin: 5
                 maximumLength: 5
@@ -41,10 +42,10 @@ Item {
                 width: 40
                 selectByMouse : true
                 validator: DoubleValidator{
-                    bottom: model.object.minimum
-                    top:  model.object.maximum
+                    bottom: paramObject.minimum
+                    top:  paramObject.maximum
                 }
-                onAccepted: model.object.value = paramDoubleInput.text
+                onAccepted: paramObject.value = paramDoubleInput.text
             }
         }
     }

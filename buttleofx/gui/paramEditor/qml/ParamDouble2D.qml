@@ -7,6 +7,8 @@ Item {
     implicitWidth: 300
     implicitHeight: 30
 
+    property variant paramObject: model.object
+
     /*Container of the two input field*/
      Row{
         id: paramDouble2DInputContainer
@@ -16,7 +18,7 @@ Item {
         Text {
             id: paramDouble2DTitle
             width: 80
-            text: model.object.text + " : "
+            text: paramObject.text + " : "
             color: "white"
             anchors.top: parent.top
             anchors.verticalCenter: parent.verticalCenter
@@ -32,7 +34,7 @@ Item {
             radius: 3
             TextInput{
                 id: paramDouble2Dinput1
-                text: model.object.value1
+                text: paramObject.value1
                 anchors.left: parent.left
                 anchors.leftMargin: 5
                 maximumLength: 5
@@ -40,10 +42,10 @@ Item {
                 width: 40
                 activeFocusOnPress : true
                 selectByMouse : true
-                onAccepted: model.object.value1 = paramDouble2Dinput1.text
+                onAccepted: paramObject.value1 = paramDouble2Dinput1.text
                 validator: DoubleValidator{
-                    bottom: model.object.minimum
-                    top:  model.object.maximum
+                    bottom: paramObject.minimum
+                    top:  paramObject.maximum
                 }
             }
         }
@@ -58,17 +60,17 @@ Item {
             radius: 3
             TextInput{
                 id: paramDouble2Dinput2
-                text: model.object.value2
+                text: paramObject.value2
                 anchors.left: parent.left
                 anchors.leftMargin: 5
                 maximumLength: 5
                 color: activeFocus ? "white" : "grey"
                 width: 40
                 selectByMouse : true
-                onAccepted: model.object.value2 = paramDouble2Dinput2.text
+                onAccepted: paramObject.value2 = paramDouble2Dinput2.text
                 validator: DoubleValidator{
-                    bottom: model.object.minimum
-                    top:  model.object.maximum
+                    bottom: paramObject.minimum
+                    top: paramObject.maximum
                 }
             }
         }

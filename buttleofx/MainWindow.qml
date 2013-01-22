@@ -78,6 +78,7 @@ Rectangle {
                 //Splitter.minimumWidth: 0 
                 width: 0.3*parent.width
                 params: _buttleData.graphWrapper.currentParamNodeWrapper ? _buttleData.graphWrapper.currentParamNodeWrapper.params : null
+                current_node: _buttleData.graphWrapper.currentParamNodeWrapper ? _buttleData.graphWrapper.currentParamNodeWrapper : null
             }
         }
     }

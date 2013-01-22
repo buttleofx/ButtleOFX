@@ -5,6 +5,7 @@ class BooleanWrapper(QtCore.QObject):
     def __init__(self, param):
         QtCore.QObject.__init__(self)
         self._param = param
+        self._param.changed.connect(self.emitChanged)
 
     #################### getters ####################
 
@@ -34,8 +35,12 @@ class BooleanWrapper(QtCore.QObject):
     def setValue(self, value):
         self._param.value = value
 
-    # Just temporary : paramType must be constant
-    changed = QtCore.Signal()
+    @QtCore.Signal
+    def changed(self):
+        pass
+
+    def emitChanged(self):
+        self.changed.emit()
 
     paramType = QtCore.Property(unicode, getParamType, setParamType, notify=changed)
     text = QtCore.Property(unicode, getText, setText, notify=changed)

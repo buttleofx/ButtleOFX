@@ -12,13 +12,19 @@ Item {
         console.log("Node Changed : ", node)
     }
 
-    TabBar {
-        id: tabBar
+    Rectangle {
+        id: tabBarRegion
         width: parent.width
-        height: 25
+        implicitHeight: 25
+        color: "red"
+        Layout.verticalSizePolicy: Layout.Fixed
+        TabBar {
+            id: tabBar
+            width: parent.width
+            height: 25
+        }
     }
 
-    //presence of the rectangle just avoid a little bug of display
     Rectangle {
         height: parent.height - tabBar.height
         width: parent.width
@@ -31,17 +37,14 @@ Item {
 
         ColumnLayout {
             anchors.fill: parent
-
             Rectangle {
                 id: viewerRegion
-                color: "yellow"
                 width: parent.width
+                color: "transparent"
                 Layout.minimumHeight: 50
                 Layout.verticalSizePolicy: Layout.Expanding
-
                 Component {
                     id: viewer_component
-
                     Viewer {
                         id: viewer
                         imageFile: node.image
@@ -58,6 +61,7 @@ Item {
                 anchors.top: viewerRegion.bottom
                 width: parent.width
                 implicitHeight: 30
+                color: "blue"
                 Layout.verticalSizePolicy: Layout.Fixed
                 ToolBar {
                     id: toolBar

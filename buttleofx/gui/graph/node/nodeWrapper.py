@@ -27,6 +27,11 @@ class NodeWrapper(QtCore.QObject):
 
         self._node.changed.connect(self.emitChanged)
 
+        print "Gui : nodeWrapper created"
+
+    def __del__(self):
+        print "Gui : NodeWrapper deleted"
+
     # We can't connect the two signals because self.changed() is a QML signal.
     # So, we use the function self.emitChanged() to solve the problem
 
@@ -81,7 +86,7 @@ class NodeWrapper(QtCore.QObject):
     def setImage(self, image):
         self._node.setImage(image)
 
-    ######## Slots ########
+    ################################################## DATA EXPOSED TO QML ##################################################
 
     name = QtCore.Property(str, getName, setName, notify=changed)
     nodeType = QtCore.Property(str, getType, setType, notify=changed)

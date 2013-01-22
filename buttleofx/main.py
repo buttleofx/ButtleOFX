@@ -22,7 +22,7 @@ else:
 
 
 # data
-from buttleofx.datas import ButtleData
+from buttleofx.data import ButtleData
 #connections
 from buttleofx.gui.graph.connection import LineItem
 # undo_redo

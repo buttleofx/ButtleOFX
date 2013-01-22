@@ -17,10 +17,14 @@ class Graph(object):
     def __init__(self):
         self._nodes = []
         self._connections = []
+
         self._nbNodesCreated = 0
+
         self.nodesChanged = Signal()
         self.connectionsChanged = Signal()
         self.connectionsCoordChanged = Signal()
+
+        print "Core : Graph created"
 
     ################################################## ACCESSORS ##################################################
 

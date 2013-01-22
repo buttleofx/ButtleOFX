@@ -1,7 +1,7 @@
 from PySide import QtCore
 
 
-class IntWrapper(QtCore.QObject):
+class Int2DWrapper(QtCore.QObject):
     def __init__(self, param):
         QtCore.QObject.__init__(self)
         self._param = param
@@ -14,11 +14,17 @@ class IntWrapper(QtCore.QObject):
     def getText(self):
         return self._param.text
 
-    def getDefaultValue(self):
-        return self._param.defaultValue
+    def getDefaultValue1(self):
+        return self._param.defaultValue1
 
-    def getValue(self):
-        return self._param.value
+    def getDefaultValue2(self):
+        return self._param.defaultValue2
+
+    def getValue1(self):
+        return self._param.value1
+
+    def getValue2(self):
+        return self._param.value2
 
     def getMaximum(self):
         return self._param.maximum
@@ -34,11 +40,17 @@ class IntWrapper(QtCore.QObject):
     def setText(self, text):
         self._param.text = text
 
-    def setDefaultValue(self, defaultValue):
-        self._param.defaultValue = defaultValue
+    def setDefaultValue1(self, value1):
+        self._param.defaultValue1 = value1
 
-    def setValue(self, value):
-        self._param.value = value
+    def setDefaultValue2(self, value2):
+        self._param.defaultValue2 = value2
+
+    def setValue1(self, value1):
+        self._param.value1 = value1
+
+    def setValue2(self, value2):
+        self._param.value2 = value2
 
     def setMaximum(self, maximum):
         self._param.maximum = maximum
@@ -50,6 +62,7 @@ class IntWrapper(QtCore.QObject):
 
     paramType = QtCore.Property(unicode, getParamType, setParamType, notify=changed)
     text = QtCore.Property(unicode, getText, setText, notify=changed)
-    value = QtCore.Property(int, getValue, setValue, notify=changed)
+    value1 = QtCore.Property(int, getValue1, setValue1, notify=changed)
+    value2 = QtCore.Property(int, getValue2, setValue2, notify=changed)
     maximum = QtCore.Property(int, getMaximum, setMaximum, notify=changed)
     minimum = QtCore.Property(int, getMinimum, setMinimum, notify=changed)

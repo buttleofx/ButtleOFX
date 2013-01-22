@@ -6,12 +6,12 @@ Rectangle {
     id: paramEditor
 
     property variant params 
-    property variant current_node
+    property variant currentParamNode
 
     property color background: "#212121"
     property color backgroundInput: "#141414"
-    property color gradian_1: background
-    property color gradian_2: "#111111"
+    property color gradian1: background
+    property color gradian2: "#111111"
     property color borderInput: "#333"
 
     property color textColor : "white"
@@ -42,8 +42,8 @@ Rectangle {
         }
 
         gradient: Gradient {
-            GradientStop { position: 0.65; color: paramEditor.gradian_1 }
-            GradientStop { position: 1; color: paramEditor.gradian_2 }
+            GradientStop { position: 0.65; color: paramEditor.gradian1 }
+            GradientStop { position: 1; color: paramEditor.gradian2 }
         }
     }
     
@@ -67,8 +67,8 @@ Rectangle {
         }
 
         gradient: Gradient {
-            GradientStop { position: 0.95; color: paramEditor.gradian_1 }
-            GradientStop { position: 1; color: paramEditor.gradian_2 }
+            GradientStop { position: 0.95; color: paramEditor.gradian1 }
+            GradientStop { position: 1; color: paramEditor.gradian2 }
         }
     }
 
@@ -110,17 +110,17 @@ Rectangle {
         }
 
         gradient: Gradient {
-            GradientStop { position: 0.95; color: paramEditor.gradian_1 }
-            GradientStop { position: 1; color: paramEditor.gradian_2 }
+            GradientStop { position: 0.95; color: paramEditor.gradian1 }
+            GradientStop { position: 1; color: paramEditor.gradian2 }
         }
     }
 
     Loader {
-        sourceComponent: current_node ? nodeParam_component : undefined
+        sourceComponent: currentParamNode ? nodeParamComponent : undefined
         anchors.fill: parent
         anchors.topMargin: 10
         Component {
-            id: nodeParam_component
+            id: nodeParamComponent
             Column {
                 spacing: 10
                 y: buttleParamTittle.y + buttleParamTittle.height
@@ -157,14 +157,14 @@ Rectangle {
                             radius: 3
                             TextInput{
                                 id: nodeNameUserInput
-                                text: current_node.nameUser
+                                text: currentParamNode.nameUser
                                 anchors.left: parent.left
                                 anchors.verticalCenter: parent.verticalCenter
                                 anchors.leftMargin: 5
                                 maximumLength: 100
                                 selectByMouse : true
                                 color: activeFocus ? activeFocusOn : activeFocusOff
-                                onAccepted: current_node.nameUser = nodeNameUserInput.text
+                                onAccepted: currentParamNode.nameUser = nodeNameUserInput.text
                             }
                         }
                     }
@@ -199,7 +199,7 @@ Rectangle {
                             color: "transparent"
                             Text{
                                 id: nodeTypeInput
-                                text: current_node.nodeType
+                                text: currentParamNode.nodeType
                                 anchors.left: parent.left
                                 anchors.leftMargin: 5
                                 color: "grey"
@@ -253,12 +253,12 @@ Rectangle {
                             radius: 3
                             TextInput {
                                 id: nodeCoordXInput
-                                text: current_node.coord.x
+                                text: currentParamNode.coord.x
                                 anchors.left: parent.left
                                 anchors.leftMargin: 5
                                 color: activeFocus ? activeFocusOn : activeFocusOff
                                 selectByMouse : true
-                                onAccepted: current_node.coord.x = nodeCoordXInput.text
+                                onAccepted: currentParamNode.coord.x = nodeCoordXInput.text
                             }
                         }
 
@@ -285,12 +285,12 @@ Rectangle {
                             radius: 3
                             TextInput {
                                 id: nodeCoordYInput
-                                text: current_node.coord.y
+                                text: currentParamNode.coord.y
                                 anchors.left: parent.left
                                 anchors.leftMargin: 5
                                 color: activeFocus ? activeFocusOn : activeFocusOff
                                 selectByMouse : true
-                                onAccepted: current_node.coord.y = nodeCoordYInput.text
+                                onAccepted: currentParamNode.coord.y = nodeCoordYInput.text
                             }
                         }
                     }
@@ -328,14 +328,14 @@ Rectangle {
                             radius: 3
                             TextInput {
                                 id: nodeColorRGBInput
-                                text: current_node.color
+                                text: currentParamNode.color
                                 anchors.left: parent.left
                                 anchors.verticalCenter: parent.verticalCenter
                                 anchors.leftMargin: 5
                                 maximumLength: 50
                                 selectByMouse : true
                                 color: activeFocus ? activeFocusOn : activeFocusOff
-                                onAccepted: current_node.color = nodeColorRGBInput.text
+                                onAccepted: currentParamNode.color = nodeColorRGBInput.text
                             }
                         }
                     }

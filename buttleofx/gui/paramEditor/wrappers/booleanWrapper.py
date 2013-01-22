@@ -14,16 +14,16 @@ class BooleanWrapper(QtCore.QObject):
     #################### getters ####################
 
     def getParamType(self):
-        return self._param.setParamType()
+        return self._param.getParamType()
 
     def getDefaultValue(self):
-        return self._param.setDefaultValue()
+        return self._param.getDefaultValue()
 
     def getValue(self):
-        return self._param.setValue()
+        return self._param.getValue()
 
     def getText(self):
-        return self._param.setText()
+        return self._param.getText()
 
     #################### setters ####################
 

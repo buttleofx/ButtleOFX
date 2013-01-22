@@ -5,44 +5,6 @@ Item {
     property alias menuState: nodeMenuView.state
     property variant clickFrom: tools
 
-   //ListModel {
-//    ListView {
-//        id: nodeMenuModel
-//        model: _buttleApp.tuttlePluginsNames
-//        delegate {
-//            ListElement { cat1 : "Prout"; cat2: model.object }
-//        }
-
-//    /*
-//        ListElement { cat1: "Color"; cat2: "Invert" }
-//        ListElement { cat1: "Color"; cat2: "Gamma" }
-//        ListElement { cat1: "Filter"; cat2: "Blur" }
-//        ListElement { cat1: "Geometry"; cat2: "Crop" }
-//        ListElement { cat1: "Geometry"; cat2: "Resize" }
-//        */
-//    }
-
-//    Component {
-//        id: nodeMenuDelegate
-//        Row{
-//            Rectangle {
-//                width: 120
-//                height: 25
-//                gradient: Gradient {
-//                    GradientStop { position: 0.0; color: "#111111" }
-//                    GradientStop { position: 1.0; color: "#212121" }
-//                }
-//                Text{
-//                    anchors.left: parent.left
-//                    anchors.leftMargin: 5
-//                    anchors.verticalCenter: parent.verticalCenter
-//                    text: section
-//                    color: "#ddd"
-//                }
-//            }
-//        }
-//    }
-
     ListView {
         id: nodeMenuView
         x: 0
@@ -76,9 +38,7 @@ Item {
                 }
             }
         }
-//        section.property: "cat1"
-//        section.criteria: ViewSection.FullString
-//        section.delegate: nodeMenuDelegate
+
         state: "hidden"
         states: [
             State {

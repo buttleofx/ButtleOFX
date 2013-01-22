@@ -51,8 +51,7 @@ Item {
                 MouseArea {
                     anchors.fill: parent
                     hoverEnabled: true
-                    onClicked: {   
-                        console.log("Clic")           
+                    onClicked: {         
                         elements.state = ( elements.state == "hidden") ? "shown" : "hidden"
                     }
                 }
@@ -96,8 +95,7 @@ Item {
                             hoverEnabled: true
                             onEntered: parent.color = "#bbb"
                             onExited: parent.color = "#343434"
-                            onClicked: {   
-                                console.log("Clic Repeater")               
+                            onClicked: {             
                                 elements.state = "hidden"
                                 paramObject.value = textElement.text
 

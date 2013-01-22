@@ -30,6 +30,24 @@ defaultNodeDesc = {
     "url": "../img/uglycorn.jpg",
 }
 
+mapTuttleParamToButtleParam = {
+    "OfxParamTypeInteger": "ParamInt",
+    "OfxParamTypeDouble": "ParamDouble",
+    "OfxParamTypeBoolean": "ParamBoolean",
+    "OfxParamTypeChoice": "ParamChoice",
+    "OfxRGBA": "ParamRGBA",
+    "OfxParamTypeRGB": "ParamRGB",
+    "OfxParamTypeDouble2D": "ParamDouble2D",
+    "OfxParamTypeInteger2D": "ParamInt2D",
+    "OfxParamTypeDouble3D": "ParamDouble3D",
+    "OfxParamTypeInteger3D": "ParamInt3D",
+    "OfxParamTypeString": "ParamString",
+    "OfxParamTypeCustom": "ParamCustom",
+    "OfxParamTypeGroup": "ParamGroup",
+    "OfxParamTypePage": "ParamPage",
+    "OfxParamTypePushButton": "ParamPushButton"
+}
+
 
 class Node(object):
     """
@@ -51,13 +69,12 @@ class Node(object):
         - changed : a signal emited to the wrapper layer
     """
 
-    #def __init__(self, nodeName, nodeType, nodeCoord, tuttleNode):
-    def __init__(self, nodeName, nodeType, nodeCoord):
+    def __init__(self, nodeName, nodeType, nodeCoord, tuttleNode):
         self._name = nodeName
         self._type = nodeType
         self._coord = nodeCoord
         self._oldCoord = nodeCoord
-        #self._tuttleNode = tuttleNode
+        self._tuttleNode = tuttleNode.asImageEffectNode()
 
         # soon from Tuttle
         nodeDesc = nodeDescriptors[nodeType] if nodeType in nodeDescriptors else defaultNodeDesc
@@ -68,43 +85,87 @@ class Node(object):
 
         self._params = []
 
-        if nodeType == "tuttle.blur":
-            self._params.extend(
-                [
-                ParamDouble2D(defaultValue1=0, defaultValue2=0, minimum=0, maximum=10, text="Size"),
-                ParamDouble3D(defaultValue1=58, defaultValue2=174, defaultValue3=206, minimum=0, maximum=255, text="Color"),
-                ParamChoice(defaultValue="lol", listValue=["lol", "value", "unicorn"], text="Border"),
-                ParamBoolean(defaultValue="false", text="Normalized kernel"),
-                ParamDouble(defaultValue=0, minimum=0, maximum=0.01, text="Kernel Espilon"),
-                ParamPushButton(label="Compute", trigger="testFunction", enabled=True)
-                ]
-            )
+        # Filling the node's param list
+        for param in range(self._tuttleNode.getNbParams()):
 
-        elif nodeType == "tuttle.gamma":
-            self._params.extend(
-                [
-                #Miss Choice - Global - RGBA
-                ParamDouble(defaultValue=0, minimum=0.001, maximum=20, text="Master"),
-                ParamDouble(defaultValue=0, minimum=0.001, maximum=20, text="Red"),
-                ParamDouble(defaultValue=0, minimum=0.001, maximum=20, text="Green"),
-                ParamDouble(defaultValue=0, minimum=0.001, maximum=20, text="Blue"),
-                ParamDouble(defaultValue=0, minimum=0.001, maximum=20, text="Alpha"),
-                ParamBoolean(defaultValue="false", text="Invert"),
-                ParamInt(defaultValue=0, minimum=0, maximum=100, text="ParamInt"),
-                ]
-            )
+            paramElement = self._tuttleNode.getParam(param)
+            paramType = mapTuttleParamToButtleParam[paramElement.getProperties().fetchProperty("OfxParamPropType").getStringValue(0)]
 
-        elif nodeType == "Invert":
-            self._params.extend(
-                [
-                 ParamBoolean(defaultValue="false", text="Gray"),
-                 ParamBoolean(defaultValue="false", text="Red"),
-                 ParamBoolean(defaultValue="false", text="Green"),
-                 ParamBoolean(defaultValue="false", text="Blue"),
-                 ParamBoolean(defaultValue="false", text="Alpha"),
-                 ParamInt2D(defaultValue1=0, defaultValue2=0, minimum=0, maximum=100, text="Int2D"),
-                ]
-            )
+            if paramType == "ParamInt":
+                defaultValue = paramElement.getProperties().fetchProperty("OfxParamPropDefault").getStringValue(0)
+                minValue = paramElement.getProperties().fetchProperty("OfxParamPropMin").getStringValue(0)
+                maxValue = paramElement.getProperties().fetchProperty("OfxParamPropMax").getStringValue(0)
+                label = paramElement.getProperties().fetchProperty("OfxPropName").getStringValue(0)
+                self._params.append(ParamInt(defaultValue, minValue, maxValue, label))
+
+            if paramType == "ParamDouble":
+                defaultValue = paramElement.getProperties().fetchProperty("OfxParamPropDefault").getStringValue(0)
+                minValue = paramElement.getProperties().fetchProperty("OfxParamPropMin").getStringValue(0)
+                maxValue = paramElement.getProperties().fetchProperty("OfxParamPropMax").getStringValue(0)
+                label = paramElement.getProperties().fetchProperty("OfxPropName").getStringValue(0)
+                self._params.append(ParamDouble(defaultValue, minValue, maxValue, label))
+
+            if paramType == "ParamBoolean":
+                defaultValue = paramElement.getProperties().fetchProperty("OfxParamPropDefault").getStringValue(0)
+                label = paramElement.getProperties().fetchProperty("OfxPropName").getStringValue(0)
+                self._params.append(ParamBoolean(defaultValue, label))
+
+            if paramType == "ParamChoice":
+                defaultValue = paramElement.getProperties().fetchProperty("OfxParamPropChoiceOption").getStringValue(0)
+                listValue = []
+                for choice in range(paramElement.getProperties().fetchProperty("OfxParamPropChoiceOption").getDimension()):
+                    listValue.append(paramElement.getProperties().fetchProperty("OfxParamPropChoiceOption").getStringValue(choice))
+                label = paramElement.getProperties().fetchProperty("OfxPropName").getStringValue(0)
+                self._params.append(ParamChoice(defaultValue, listValue, label))
+
+            #if paramType == "ParamRGBA":
+
+            #if paramType == "ParamRGB":
+
+            if paramType == "ParamDouble2D":
+                defaultValue1 = paramElement.getProperties().fetchProperty("OfxParamPropDefault").getStringValue(0)
+                defaultValue2 = paramElement.getProperties().fetchProperty("OfxParamPropDefault").getStringValue(1)
+                minValue = paramElement.getProperties().fetchProperty("OfxParamPropMin").getStringValue(0)
+                maxValue = paramElement.getProperties().fetchProperty("OfxParamPropMax").getStringValue(0)
+                label = paramElement.getProperties().fetchProperty("OfxPropName").getStringValue(0)
+                self._params.append(ParamDouble2D(defaultValue1, defaultValue2, minValue, maxValue, label))
+
+            if paramType == "ParamInt2D":
+                defaultValue1 = paramElement.getProperties().fetchProperty("OfxParamPropDefault").getStringValue(0)
+                defaultValue2 = paramElement.getProperties().fetchProperty("OfxParamPropDefault").getStringValue(1)
+                minValue = paramElement.getProperties().fetchProperty("OfxParamPropMin").getStringValue(0)
+                maxValue = paramElement.getProperties().fetchProperty("OfxParamPropMax").getStringValue(0)
+                label = paramElement.getProperties().fetchProperty("OfxPropName").getStringValue(0)
+                self._params.append(ParamInt2D(defaultValue1, defaultValue2, minValue, maxValue, label))
+
+            if paramType == "ParamDouble3D":
+                defaultValue1 = paramElement.getProperties().fetchProperty("OfxParamPropDefault").getStringValue(0)
+                defaultValue2 = paramElement.getProperties().fetchProperty("OfxParamPropDefault").getStringValue(1)
+                defaultValue3 = paramElement.getProperties().fetchProperty("OfxParamPropDefault").getStringValue(2)
+                minValue = paramElement.getProperties().fetchProperty("OfxParamPropMin").getStringValue(0)
+                maxValue = paramElement.getProperties().fetchProperty("OfxParamPropMax").getStringValue(0)
+                label = paramElement.getProperties().fetchProperty("OfxPropName").getStringValue(0)
+                self._params.append(ParamDouble3D(defaultValue1, defaultValue2, defaultValue3, minValue, maxValue, label))
+
+            # if paramType == "ParamInt3D":
+            #     defaultValue1 = paramElement.getProperties().fetchProperty("OfxParamPropDefault").getStringValue(0)
+            #     defaultValue2 = paramElement.getProperties().fetchProperty("OfxParamPropDefault").getStringValue(1)
+            #     defaultValue3 = paramElement.getProperties().fetchProperty("OfxParamPropDefault").getStringValue(2)
+            #     minValue = paramElement.getProperties().fetchProperty("OfxParamPropMin").getStringValue(0)
+            #     maxValue = paramElement.getProperties().fetchProperty("OfxParamPropMax").getStringValue(0)
+            #     label = paramElement.getProperties().fetchProperty("OfxPropName").getStringValue(0)
+            #     self._params.append(ParamInt3D(defaultValue1, defaultValue2, defaultValue3, minValue, maxValue, label))
+
+            if paramType == "ParamString":
+                defaultValue = paramElement.getProperties().fetchProperty("OfxParamPropDefault").getStringValue(0)
+                label = paramElement.getProperties().fetchProperty("OfxPropName").getStringValue(0)
+                self._params.append(ParamString(defaultValue, label))
+
+            # if paramType == "ParamPushButton":
+            #     trigger = paramElement.getProperties().fetchProperty("OfxParamPropDefault").getStringValue(0)
+            #     label = paramElement.getProperties().fetchProperty("OfxPropName").getStringValue(0)
+            #     enabled = 
+            #     self._params.append(ParamPushButton(trigger, label, enabled))
 
         self.changed = Signal()
 

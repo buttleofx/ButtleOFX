@@ -22,7 +22,7 @@ Rectangle {
     Rectangle{
         id: paramEditorTittle
         width: parent.width
-        height: 80
+        height: 40
         color: paramEditor.background
 
         Text {
@@ -33,7 +33,7 @@ Rectangle {
             color: "white"
             font.weight: Font.DemiBold
             horizontalAlignment: Text.AlignHCenter
-            font.pointSize: 15
+            font.pointSize: 12
             text: "Parameters"
         }
 
@@ -74,8 +74,10 @@ Rectangle {
 
         anchors.fill: parent
         anchors.margins: 20
-        anchors.topMargin: 50
+        anchors.topMargin: 50 + tuttleParamTittle.height
+
         model: params
+        
         delegate: Component {
             Loader {
                 id: param
@@ -91,7 +93,7 @@ Rectangle {
         width: paramEditor.width
         height: 40
         color: paramEditor.background
-        y: paramEditorTittle.height + tuttleParamTittle.height + tuttleParam.y + tuttleParam.contentHeight
+        y: tuttleParam.y + tuttleParam.contentHeight + 20
 
         Text {
             anchors.verticalCenter: parent.verticalCenter
@@ -117,7 +119,7 @@ Rectangle {
             id: nodeParam_component
             Column{
                 spacing: 10
-                y: buttleParamTittle.height + paramEditorTittle.height + tuttleParamTittle.height + tuttleParam.y + tuttleParam.contentHeight
+                y: buttleParamTittle.y + buttleParamTittle.height
 
                 /*Name of the node (Buttle data)*/
                 Item{

@@ -47,13 +47,10 @@ class CmdCreateNode(UndoableCommand):
         """
 
         # New Tuttle node
-        #print " -------------------------------try to create tuttle node-----------------------"
-        #tuttleNode = self.graphTarget.getGraphTuttle().createNode(self.nodeType)
-        #print " -------------------------------tuttle node created-----------------------"
-
+        tuttleNode = self.graphTarget.getGraphTuttle().createNode(str(self.nodeType))
+        
         # New Buttle node
         self.graphTarget._nbNodesCreated += 1
         self.nodeName = str(self.nodeType) + "_" + str(self.graphTarget._nbNodesCreated)
-        self.graphTarget._nodes.append(Node(self.nodeName, self.nodeType, self.nodeCoord))
-        #self.graphTarget._nodes.append(Node(self.nodeName, self.nodeType, self.nodeCoord, tuttleNode))
+        self.graphTarget._nodes.append(Node(self.nodeName, self.nodeType, self.nodeCoord, tuttleNode))
         self.graphTarget.nodesChanged()

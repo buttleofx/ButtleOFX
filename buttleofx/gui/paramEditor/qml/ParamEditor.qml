@@ -14,6 +14,10 @@ Rectangle {
     property color gradian_2: "#111111"
     property color borderInput: "#333"
 
+    property color textColor : "white"
+    property color activeFocusOn : "white"
+    property color activeFocusOff : "grey"
+
     implicitWidth: 300
     implicitHeight: 500
 
@@ -30,7 +34,7 @@ Rectangle {
             anchors.horizontalCenter: parent.horizontalCenter
             anchors.left: parent.left
             anchors.leftMargin: 10
-            color: "white"
+            color: textColor
             font.weight: Font.DemiBold
             horizontalAlignment: Text.AlignHCenter
             font.pointSize: 12
@@ -56,7 +60,7 @@ Rectangle {
             anchors.verticalCenter: parent.verticalCenter
             anchors.left: parent.left
             anchors.leftMargin: 10
-            color: "white"
+            color: textColor
             font.underline: true
             font.pointSize: 12
             text: "Node properties from Tuttle"
@@ -99,7 +103,7 @@ Rectangle {
             anchors.verticalCenter: parent.verticalCenter
             anchors.left: parent.left
             anchors.leftMargin: 10
-            color: "white"
+            color: textColor
             font.underline: true
             font.pointSize: 12
             text: "Node properties from Buttle"
@@ -117,19 +121,19 @@ Rectangle {
         anchors.topMargin: 10
         Component {
             id: nodeParam_component
-            Column{
+            Column {
                 spacing: 10
                 y: buttleParamTittle.y + buttleParamTittle.height
 
                 /*Name of the node (Buttle data)*/
-                Item{
+                Item {
                     id: nodeNameUserItem
                     implicitWidth: 300
                     implicitHeight: 30
                     anchors.left: parent.left
                     anchors.leftMargin: 10
 
-                    Row{
+                    Row {
                         id: nodeNameUserContainer
                         spacing: 10
 
@@ -139,12 +143,12 @@ Rectangle {
                             width: 80
                             anchors.top: parent.top
                             anchors.verticalCenter: parent.verticalCenter
-                            color: "white"
+                            color: textColor
                             text: "Name : "
                         }
 
                         /* Input field limited to 50 characters */
-                        Rectangle{
+                        Rectangle {
                             height: 20
                             implicitWidth: 200
                             color: paramEditor.backgroundInput
@@ -159,7 +163,7 @@ Rectangle {
                                 anchors.leftMargin: 5
                                 maximumLength: 100
                                 selectByMouse : true
-                                color: activeFocus ? "white" : "grey"
+                                color: activeFocus ? activeFocusOn : activeFocusOff
                                 onAccepted: current_node.nameUser = nodeNameUserInput.text
                             }
                         }
@@ -167,14 +171,14 @@ Rectangle {
                 }
             
                 /* Type of the node (Buttle data) */
-                Item{
+                Item {
                     id: nodeTypeItem
                     implicitWidth: 300
                     implicitHeight: 30
                     anchors.left: parent.left
                     anchors.leftMargin: 10
 
-                    Row{
+                    Row {
                         id: nodeTypeContainer
                         spacing: 10
 
@@ -183,7 +187,7 @@ Rectangle {
                             id: nodeTypeText
                             width: 80
                             text: "Type : "
-                            color: "white"
+                            color: textColor
                             anchors.top: parent.top
                             anchors.verticalCenter: parent.verticalCenter
                         }
@@ -205,14 +209,14 @@ Rectangle {
                 }
 
                 /* Coord of the node (Buttle data) */
-                Item{
+                Item {
                     id: nodecoordItem
                     implicitWidth: 300
                     implicitHeight: 30
                     anchors.left: parent.left
                     anchors.leftMargin: 10
 
-                    Row{
+                    Row {
                         id: nodeCoordContainer
                         spacing: 10
 
@@ -220,63 +224,87 @@ Rectangle {
                         Text {
                             id: nodeCoordText
                             width: 80
-                            text: "Coord (x, y) : "
-                            color: "white"
+                            text: "Coord : "
+                            color: textColor
                             anchors.top: parent.top
                             anchors.verticalCenter: parent.verticalCenter
                         }
 
-                        /* Input field limited : x */
-                        Rectangle{
+                        /* Input label : "x : " */
+                        Rectangle {
                             height: 20
-                            implicitWidth: 20
+                            implicitWidth: 15
                             color: "transparent"
                             Text{
-                                id: nodeCoordX
+                                id: nodeCoordXLabel
+                                text: "x :"
+                                anchors.left: parent.left
+                                anchors.leftMargin: 5
+                                color: textColor
+                            }
+                        }
+                        /* Input field limited : x */
+                        Rectangle {
+                            height: 20
+                            implicitWidth: 35
+                            color: paramEditor.backgroundInput
+                            border.width: 1
+                            border.color: paramEditor.borderInput
+                            radius: 3
+                            TextInput {
+                                id: nodeCoordXInput
                                 text: current_node.coord.x
                                 anchors.left: parent.left
                                 anchors.leftMargin: 5
-                                color: "grey"
+                                color: activeFocus ? activeFocusOn : activeFocusOff
+                                selectByMouse : true
+                                onAccepted: current_node.coord.x = nodeCoordXInput.text
                             }
                         }
-                        /* Input field limited : separated */
-                        Rectangle{
+
+                        /* Input label : "y : " */
+                        Rectangle {
                             height: 20
-                            implicitWidth: 5
+                            implicitWidth: 15
                             color: "transparent"
                             Text{
-                                id: coordSeparated
-                                text: "/"
+                                id: nodeCoordYLabel
+                                text: "y :"
                                 anchors.left: parent.left
                                 anchors.leftMargin: 5
-                                color: "white"
+                                color: textColor
                             }
                         }
                         /* Input field limited : y */
-                        Rectangle{
+                        Rectangle {
                             height: 20
-                            implicitWidth: 20
-                            color: "transparent"
-                            Text{
-                                id: nodeCoordY
+                            implicitWidth: 35
+                            color: paramEditor.backgroundInput
+                            border.width: 1
+                            border.color: paramEditor.borderInput
+                            radius: 3
+                            TextInput {
+                                id: nodeCoordYInput
                                 text: current_node.coord.y
                                 anchors.left: parent.left
                                 anchors.leftMargin: 5
-                                color: "grey"
+                                color: activeFocus ? activeFocusOn : activeFocusOff
+                                selectByMouse : true
+                                onAccepted: current_node.coord.y = nodeCoordYInput.text
                             }
                         }
                     }
                 }
 
                 /* Color of the node (Buttle data) */
-                Item{
+                Item {
                     id: nodecolorItem
                     implicitWidth: 300
                     implicitHeight: 30
                     anchors.left: parent.left
                     anchors.leftMargin: 10
 
-                    Row{
+                    Row {
                         id: nodeColorContainer
                         spacing: 10
 
@@ -285,20 +313,20 @@ Rectangle {
                             id: nodeColorText
                             width: 80
                             text: "Color (Hex) : "
-                            color: "white"
+                            color: textColor
                             anchors.top: parent.top
                             anchors.verticalCenter: parent.verticalCenter
                         }
 
                         /* Input field limited : rgb */
-                        Rectangle{
+                        Rectangle {
                             height: 20
                             implicitWidth: 80
                             color: paramEditor.backgroundInput
                             border.width: 1
                             border.color: paramEditor.borderInput
                             radius: 3
-                            TextInput{
+                            TextInput {
                                 id: nodeColorRGBInput
                                 text: current_node.color
                                 anchors.left: parent.left
@@ -306,7 +334,7 @@ Rectangle {
                                 anchors.leftMargin: 5
                                 maximumLength: 50
                                 selectByMouse : true
-                                color: activeFocus ? "white" : "grey"
+                                color: activeFocus ? activeFocusOn : activeFocusOff
                                 onAccepted: current_node.color = nodeColorRGBInput.text
                             }
                         }

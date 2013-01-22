@@ -4,7 +4,7 @@ from buttleofx.data import tuttleTools
 from quickmamba.patterns import Signal
 from PySide import QtGui
 # paramEditor
-from buttleofx.core.params import ParamInt, ParamInt2D, ParamString, ParamDouble, ParamDouble2D, ParamBoolean, ParamDouble3D, ParamChoice3C, ParamPushButton
+from buttleofx.core.params import ParamInt, ParamInt2D, ParamString, ParamDouble, ParamDouble2D, ParamBoolean, ParamDouble3D, ParamChoice, ParamPushButton
 
 nodeDescriptors = {
     "Blur": {
@@ -49,11 +49,13 @@ class Node(object):
         - changed : a signal emited to the wrapper layer
     """
 
+    #def __init__(self, nodeName, nodeType, nodeCoord, tuttleNode):
     def __init__(self, nodeName, nodeType, nodeCoord):
         self._name = nodeName
         self._type = nodeType
         self._coord = nodeCoord
         self._oldCoord = nodeCoord
+        #self._tuttleNode = tuttleNode
 
         # soon from Tuttle
         nodeDesc = nodeDescriptors[nodeType] if nodeType in nodeDescriptors else defaultNodeDesc
@@ -69,10 +71,10 @@ class Node(object):
                 [
                 ParamDouble2D(defaultValue1=0, defaultValue2=0, minimum=0, maximum=10, text="Size"),
                 ParamDouble3D(defaultValue1=58, defaultValue2=174, defaultValue3=206, minimum=0, maximum=255, text="Color"),
-                ParamChoice3C(defaultValue="Coco", text="Border"),
+                ParamChoice(defaultValue="lol", listValue=["lol", "value", "unicorn"], text="Border"),
                 ParamBoolean(defaultValue="false", text="Normalized kernel"),
                 ParamDouble(defaultValue=0, minimum=0, maximum=0.01, text="Kernel Espilon"),
-                ParamPushButton(label="Compute", trigger="testFunction", enabled=True),
+                ParamPushButton(label="Compute", trigger="testFunction", enabled=True)
                 ]
             )
 

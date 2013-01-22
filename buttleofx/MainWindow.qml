@@ -12,7 +12,7 @@ Rectangle {
         console.log("ApplicationWindow Keys.onPressed");
         if (event.key == Qt.Key_Delete) {
             console.log("destruction");
-            _buttleData.graphWrapper.destructionNode();
+            _buttleData.destructionNode();
         }
         if (event.key == Qt.Key_U) {
                 console.log("Undo");
@@ -64,7 +64,7 @@ Rectangle {
                     //Splitter.expanding: true
                     width: parent.width
                     height: 0.5*parent.height
-                    node: _buttleData.graphWrapper.currentViewerNodeWrapper
+                    node: _buttleData.currentViewerNodeWrapper
                 }
 
                 GraphEditor {
@@ -77,8 +77,8 @@ Rectangle {
             ParamEditor {
                 //Splitter.minimumWidth: 0 
                 width: 0.3*parent.width
-                params: _buttleData.graphWrapper.currentParamNodeWrapper ? _buttleData.graphWrapper.currentParamNodeWrapper.params : null
-                current_node: _buttleData.graphWrapper.currentParamNodeWrapper ? _buttleData.graphWrapper.currentParamNodeWrapper : null
+                params: _buttleData.currentParamNodeWrapper ? _buttleData.currentParamNodeWrapper.params : null
+                current_node: _buttleData.currentParamNodeWrapper ? _buttleData.currentParamNodeWrapper : null
             }
         }
     }

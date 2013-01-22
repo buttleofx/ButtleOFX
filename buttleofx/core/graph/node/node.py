@@ -1,7 +1,10 @@
+# Tuttle
+from buttleofx.data import tuttleTools
+# Quickmamba
 from quickmamba.patterns import Signal
 from PySide import QtGui
 # paramEditor
-from buttleofx.core.params import ParamInt, ParamString, ParamDouble, ParamDouble2D, ParamBoolean, ParamDouble3D, ParamChoice3C
+from buttleofx.core.params import ParamInt, ParamInt2D, ParamString, ParamDouble, ParamDouble2D, ParamBoolean, ParamDouble3D, ParamChoice3C, ParamPushButton
 
 nodeDescriptors = {
     "Blur": {
@@ -61,18 +64,19 @@ class Node(object):
 
         self._params = []
 
-        if nodeType == "Blur":
+        if nodeType == "tuttle.blur":
             self._params.extend(
                 [
                 ParamDouble2D(defaultValue1=0, defaultValue2=0, minimum=0, maximum=10, text="Size"),
                 ParamDouble3D(defaultValue1=58, defaultValue2=174, defaultValue3=206, minimum=0, maximum=255, text="Color"),
                 ParamChoice3C(defaultValue="Coco", text="Border"),
                 ParamBoolean(defaultValue="false", text="Normalized kernel"),
-                ParamDouble(defaultValue=0, minimum=0, maximum=0.01, text="Kernel Espilon")
+                ParamDouble(defaultValue=0, minimum=0, maximum=0.01, text="Kernel Espilon"),
+                ParamPushButton(label="Compute", trigger="testFunction", enabled=True),
                 ]
             )
 
-        elif nodeType == "Gamma":
+        elif nodeType == "tuttle.gamma":
             self._params.extend(
                 [
                 #Miss Choice - Global - RGBA
@@ -81,7 +85,8 @@ class Node(object):
                 ParamDouble(defaultValue=0, minimum=0.001, maximum=20, text="Green"),
                 ParamDouble(defaultValue=0, minimum=0.001, maximum=20, text="Blue"),
                 ParamDouble(defaultValue=0, minimum=0.001, maximum=20, text="Alpha"),
-                ParamBoolean(defaultValue="false", text="Invert")
+                ParamBoolean(defaultValue="false", text="Invert"),
+                ParamInt(defaultValue=0, minimum=0, maximum=100, text="ParamInt"),
                 ]
             )
 
@@ -93,13 +98,19 @@ class Node(object):
                  ParamBoolean(defaultValue="false", text="Green"),
                  ParamBoolean(defaultValue="false", text="Blue"),
                  ParamBoolean(defaultValue="false", text="Alpha"),
+                 ParamInt2D(defaultValue1=0, defaultValue2=0, minimum=0, maximum=100, text="Int2D"),
                 ]
             )
 
         self.changed = Signal()
 
+        print "Core : node created"
+
     def __str__(self):
         return 'Node "%s"' % (self._name)
+
+    def __del__(self):
+        print "Core : Node deleted"
 
     ######## getters ########
 

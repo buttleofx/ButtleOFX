@@ -1,6 +1,10 @@
-from PySide import QtGui, QtDeclarative, QtOpenGL
+from pyTuttle import tuttle
+
+from PySide import QtGui, QtDeclarative, QtOpenGL, QtCore
 import os, sys
 from OpenGL import GL
+
+from quickmamba.models import QObjectListModel
 
 # for glViewport
 tuttleofx_installed = False
@@ -18,7 +22,7 @@ else:
 
 
 # data
-from buttleofx.datas import ButtleData
+from buttleofx.data import ButtleData
 #connections
 from buttleofx.gui.graph.connection import LineItem
 # undo_redo
@@ -28,19 +32,27 @@ from quickmamba.utils import QmlInstantCoding
 
 currentFilePath = os.path.dirname(os.path.abspath(__file__))
 
+
 class ButtleApp(QtGui.QApplication):
     def __init__(self, argv):
         super(ButtleApp, self).__init__(argv)
-    
+
     def notify(self, receiver, event):
         try:
             #print("QApp notify")
             return QtGui.QApplication.notify(self, receiver, event)
         except Exception as e:
             print("QApp notify exception: " + str(e))
+            import traceback
+            traceback.print_exc()
+            return False
 
 
 def main(argv):
+
+    #preload Tuttle
+    tuttle.core().preload()
+
     # add new QML type
     QtDeclarative.qmlRegisterType(LineItem, "ConnectionLineItem", 1, 0, "ConnectionLine")
     if tuttleofx_installed:
@@ -67,6 +79,7 @@ def main(argv):
     # expose data to QML
     rc = view.rootContext()
     rc.setContextProperty("_buttleData", buttleData)
+    rc.setContextProperty("_buttleApp", app)
 
     # set the view
     view.setSource(os.path.join(currentFilePath, "MainWindow.qml"))

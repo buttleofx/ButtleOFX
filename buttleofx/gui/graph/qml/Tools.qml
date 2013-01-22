@@ -52,7 +52,7 @@ Rectangle {
         MouseArea {
             anchors.fill: parent
             onClicked: {
-                _buttleData.graphWrapper.destructionNode()
+                _buttleData.destructionNode()
             }
         }
     }

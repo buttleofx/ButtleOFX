@@ -77,19 +77,19 @@ class GLViewport_tuttleofx(GLViewport):
         try:
             self.loadImageFile_tuttle(filename)
             print('Tuttle img_data:', self.img_data)
-        except:#  Exception as e:
+        except:
             print 'Error while loading image file "%s".' % (filename)
-            #print 'Error while loading image file "%s".\nError: "%s"' % (filename, str(e))
             self.img_data = None
             self.setImageBounds( QtCore.QRect() )
+            raise
         
         if self._fittedModeValue:
             self.fitImage()
         
         print "loadImageFile end"
 
-    def internPaintGL(self):
-        super(GLViewport_tuttleofx, self).internPaintGL()
+    def internPaintGL(self, widget):
+        super(GLViewport_tuttleofx, self).internPaintGL(widget)
         pixelScale = tuttle.OfxPointD()
         pixelScale.x = self.getScale()
         pixelScale.y = pixelScale.x

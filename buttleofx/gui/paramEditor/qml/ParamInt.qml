@@ -1,7 +1,5 @@
 import QtQuick 1.1
 
-/*ParamInt is an input field*/
-
 
 Item {
     id: containerParamInt

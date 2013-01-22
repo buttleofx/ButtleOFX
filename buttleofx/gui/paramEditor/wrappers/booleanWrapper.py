@@ -2,6 +2,10 @@ from PySide import QtCore
 
 
 class BooleanWrapper(QtCore.QObject):
+    """
+        Gui class, which maps a ParamBoolean.
+    """
+
     def __init__(self, param):
         QtCore.QObject.__init__(self)
         self._param = param
@@ -10,16 +14,16 @@ class BooleanWrapper(QtCore.QObject):
     #################### getters ####################
 
     def getParamType(self):
-        return self._param.paramType
+        return self._param.setParamType()
 
     def getDefaultValue(self):
-        return self._param.defaultValue
+        return self._param.setDefaultValue()
 
     def getValue(self):
-        return self._param.value
+        return self._param.setValue()
 
     def getText(self):
-        return self._param.text
+        return self._param.setText()
 
     #################### setters ####################
 
@@ -42,6 +46,8 @@ class BooleanWrapper(QtCore.QObject):
     def emitChanged(self):
         self.changed.emit()
 
+    ################################################## DATA EXPOSED TO QML ##################################################
+
     paramType = QtCore.Property(unicode, getParamType, setParamType, notify=changed)
-    text = QtCore.Property(unicode, getText, setText, notify=changed)
     value = QtCore.Property(bool, getValue, setValue, notify=changed)
+    text = QtCore.Property(unicode, getText, setText, notify=changed)

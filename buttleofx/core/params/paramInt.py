@@ -2,59 +2,69 @@ from quickmamba.patterns import Signal
 
 
 class ParamInt(object):
+    """
+        Core class, which represents an int parameter.
+        Contains : 
+            - _paramType : the name of the type of this parameter
+            - _defaultValue : the default value for the input
+            - _value : the value contained by the input
+            - _minimum : the min we can have for the value
+            - _maximum : the max we can have for the value
+            - _text : the label of the input
+    """
 
     def __init__(self, defaultValue, minimum, maximum, text):
-        self.paramType = "ParamInt"
-        self.defaultValue = defaultValue
-        self.value = defaultValue
-        self.minimum = minimum
-        self.maximum = maximum
-        self.text = text
+        self._paramType = "ParamInt"
+        self._defaultValue = defaultValue
+        self._value = defaultValue
+        self._minimum = minimum
+        self._maximum = maximum
+        self._text = text
 
         self.changed = Signal()
 
     #################### getters ####################
 
     def getParamType(self):
-        return self.paramType
+        return self._paramType
 
     def getDefaultValue(self):
-        return self.defaultValue
+        return self._defaultValue
 
     def getValue(self):
-        return self.value
+        return self._value
 
     def getMinimum(self):
-        return self.minimum
+        return self._minimum
 
     def getMaximum(self):
-        return self.maximum
+        return self._maximum
 
     def getText(self, text):
-        return self.text
+        return self._text
 
     #################### setters ####################
 
     def setParamType(self, paramType):
-        self.paramType = paramType
+        self._paramType = paramType
         self.changed()
 
     def setDefaultValue(self, defaultValue):
-        self.defaultValue = defaultValue
+        self._defaultValue = defaultValue
         self.changed()
 
     def setValue(self, value):
-        self.value = value
+        self._value = value
         self.changed()
 
     def setMinimum(self, minimum):
-        self.minimum = minimum
+        self._minimum = minimum
         self.changed()
 
     def setMaximum(self, maximum):
-        self.maximum = maximum
+        self._maximum = maximum
         self.changed()
 
     def setText(self, text):
-        self.text = text
+        self._text = text
         self.changed()

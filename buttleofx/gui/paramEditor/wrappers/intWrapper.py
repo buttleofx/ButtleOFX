@@ -2,6 +2,10 @@ from PySide import QtCore
 
 
 class IntWrapper(QtCore.QObject):
+    """
+        Gui class, which maps a ParamInt.
+    """
+
     def __init__(self, param):
         QtCore.QObject.__init__(self)
         self._param = param
@@ -10,42 +14,42 @@ class IntWrapper(QtCore.QObject):
     #################### getters ####################
 
     def getParamType(self):
-        return self._param.paramType
-
-    def getText(self):
-        return self._param.text
+        return self._param.setParamType()
 
     def getDefaultValue(self):
-        return self._param.defaultValue
+        return self._param.setDefaultValue()
 
     def getValue(self):
-        return self._param.value
+        return self._param.setValue()
 
     def getMaximum(self):
-        return self._param.maximum
+        return self._param.setMaximum()
 
     def getMinimum(self):
-        return self._param.minimum
+        return self._param.setMinimum()
+
+    def getText(self):
+        return self._param.setText()
 
     #################### setters ####################
 
     def setParamType(self, paramType):
-        self._param.paramType = paramType
-
-    def setText(self, text):
-        self._param.text = text
+        self._param.setParamType(paramType)
 
     def setDefaultValue(self, defaultValue):
-        self._param.defaultValue = defaultValue
+        self._param.setDefaultValue(defaultValue)
 
     def setValue(self, value):
-        self._param.value = value
+        self._param.setValue(value)
 
     def setMaximum(self, maximum):
-        self._param.maximum = maximum
+        self._param.setMaximum(maximum)
 
     def setMinimum(self, minimum):
-        self._param.minimum = minimum
+        self._param.setMinimum(minimum)
+
+    def setText(self, text):
+        self._param.setText(text)
 
     @QtCore.Signal
     def changed(self):
@@ -53,6 +57,8 @@ class IntWrapper(QtCore.QObject):
 
     def emitChanged(self):
         self.changed.emit()
+
+    ################################################## DATA EXPOSED TO QML ##################################################
 
     paramType = QtCore.Property(unicode, getParamType, setParamType, notify=changed)
     text = QtCore.Property(unicode, getText, setText, notify=changed)

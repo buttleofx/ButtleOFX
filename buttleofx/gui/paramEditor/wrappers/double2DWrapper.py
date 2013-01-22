@@ -2,6 +2,10 @@ from PySide import QtCore
 
 
 class Double2DWrapper(QtCore.QObject):
+    """
+        Gui class, which maps a ParamDouble2D.
+    """
+
     def __init__(self, param):
         QtCore.QObject.__init__(self)
         self._param = param
@@ -10,36 +14,33 @@ class Double2DWrapper(QtCore.QObject):
     #################### getters ####################
 
     def getParamType(self):
-        return self._param.paramType
-
-    def getText(self):
-        return self._param.text
+        return self._param.setParamType()
 
     def getDefaultValue1(self):
-        return self._param.defaultValue1
+        return self._param.setDefaultValue1()
 
     def getDefaultValue2(self):
-        return self._param.defaultValue2
+        return self._param.setDefaultValue2()
 
     def getValue1(self):
-        return self._param.value1
+        return self._param.setValue1()
 
     def getValue2(self):
-        return self._param.value2
+        return self._param.setValue2()
 
     def getMaximum(self):
-        return self._param.maximum
+        return self._param.setMaximum()
 
     def getMinimum(self):
-        return self._param.minimum
+        return self._param.setMinimum()
+
+    def getText(self):
+        return self._param.setText()
 
     #################### setters ####################
 
     def setParamType(self, paramType):
         self._param.setParamType(paramType)
-
-    def setText(self, text):
-        self._param.setTxt(text)
 
     def setDefaultValue1(self, value1):
         self._param.setDefaultValue1(value1)
@@ -59,12 +60,17 @@ class Double2DWrapper(QtCore.QObject):
     def setMinimum(self, minimum):
         self._param.setMinimum(minimum)
 
+    def setText(self, text):
+        self._param.setTxt(text)
+
     @QtCore.Signal
     def changed(self):
         pass
 
     def emitChanged(self):
         self.changed.emit()
+
+    ################################################## DATA EXPOSED TO QML ##################################################
 
     paramType = QtCore.Property(unicode, getParamType, setParamType, notify=changed)
     text = QtCore.Property(unicode, getText, setText, notify=changed)

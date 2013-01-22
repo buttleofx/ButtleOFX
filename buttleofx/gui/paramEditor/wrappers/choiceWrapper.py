@@ -4,45 +4,55 @@ from quickmamba.models import QObjectListModel
 
 
 class ChoiceWrapper(QtCore.QObject):
+    """
+        Gui class, which maps a ParamChoice.
+    """
+    
     def __init__(self, param):
         QtCore.QObject.__init__(self)
         self._param = param
+        self._param.changed.connect(self.emitChanged)
 
     #################### getters ####################
 
     def getParamType(self):
-        return self._param.paramType
-
-    def getText(self):
-        return self._param.text
+        return self._param.getParamType()
 
     def getListValue(self):
-        tmp = self._param.listValue
-        self._param.listValue = QObjectListModel()
+        tmp = self._param.getListValue()
+        self._param._listValue = QObjectListModel()
         for value in tmp:
-            #["coucou", "ohoh", "ahahah"]:
-            self._param.listValue.append(value)
-        return self._param.listValue
+            self._param._listValue.append(value)
+        return self._param._listValue
 
     def getValue(self):
-            return self._param.value
+            return self._param.getValue()
+
+    def getText(self):
+        return self._param.getText()
 
     #################### setters ####################
 
     def setParamType(self, paramType):
-        self._param.paramType = paramType
-
-    def setText(self, text):
-        self._param.text = text
+        self._param.setParamType(paramType)
 
     def setListValue(self, listValue):
-        self._param.listValue = listValue
+        self._param.setListValue(listValue)
 
     def setValue(self, value):
-        self._param.value = value
+        self._param.setValue(value)
 
-    # Just temporary : paramType must be constant
-    changed = QtCore.Signal()
+    def setText(self, text):
+        self._param.setText(text)
+
+    @QtCore.Signal
+    def changed(self):
+        pass
+
+    def emitChanged(self):
+        self.changed.emit()
+
+    ################################################## DATA EXPOSED TO QML ##################################################
 
     paramType = QtCore.Property(unicode, getParamType, setParamType, notify=changed)
     text = QtCore.Property(unicode, getText, setText, notify=changed)

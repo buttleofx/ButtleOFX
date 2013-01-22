@@ -2,63 +2,75 @@ from PySide import QtCore
 
 
 class Int2DWrapper(QtCore.QObject):
+    """
+        Gui class, which maps a ParamInt2D.
+    """
+
     def __init__(self, param):
         QtCore.QObject.__init__(self)
         self._param = param
+        self._param.changed.connect(self.emitChanged)
 
     #################### getters ####################
 
     def getParamType(self):
-        return self._param.paramType
-
-    def getText(self):
-        return self._param.text
+        return self._param.setParamType()
 
     def getDefaultValue1(self):
-        return self._param.defaultValue1
+        return self._param.setDefaultValue1()
 
     def getDefaultValue2(self):
-        return self._param.defaultValue2
+        return self._param.setDefaultValue2()
 
     def getValue1(self):
-        return self._param.value1
+        return self._param.setValue1()
 
     def getValue2(self):
-        return self._param.value2
+        return self._param.setValue2()
 
     def getMaximum(self):
-        return self._param.maximum
+        return self._param.setMaximum()
 
     def getMinimum(self):
-        return self._param.minimum
+        return self._param.setMinimum()
+
+    def getText(self):
+        return self._param.setText()
 
     #################### setters ####################
 
     def setParamType(self, paramType):
-        self._param.paramType = paramType
+        self._param.setParamType(paramType)
 
-    def setText(self, text):
-        self._param.text = text
+    def setDefaultValue1(self, defaultValue):
+        self._param.setDefaultValue1(defaultValue)
 
-    def setDefaultValue1(self, value1):
-        self._param.defaultValue1 = value1
+    def setDefaultValue2(self, defaultValue):
+        self._param.setDefaultValue2(defaultValue)
 
-    def setDefaultValue2(self, value2):
-        self._param.defaultValue2 = value2
+    def setValue1(self, value):
+        self._param.setValue1(value)
 
-    def setValue1(self, value1):
-        self._param.value1 = value1
-
-    def setValue2(self, value2):
-        self._param.value2 = value2
+    def setValue2(self, value):
+        self._param.setValue2(value)
 
     def setMaximum(self, maximum):
-        self._param.maximum = maximum
+        self._param.setMaximum(maximum)
 
     def setMinimum(self, minimum):
-        self._param.minimum = minimum
+        self._param.setMinimum(minimum)
 
-    changed = QtCore.Signal()
+    def setText(self, text):
+        self._param.setText(text)
+
+    @QtCore.Signal
+    def changed(self):
+        pass
+
+    def emitChanged(self):
+        self.changed.emit()
+
+    ################################################## DATA EXPOSED TO QML ##################################################
 
     paramType = QtCore.Property(unicode, getParamType, setParamType, notify=changed)
     text = QtCore.Property(unicode, getText, setText, notify=changed)

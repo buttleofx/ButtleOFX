@@ -233,7 +233,6 @@ class GraphWrapper(QtCore.QObject):
         """
             Updates the connectionWrappers when the signal connectionsChanged has been emitted.
         """
-        print "=> UPDATE CONNECTION WRAPPERS"
         # we clear the list
         self._connectionWrappers.clear()
         # and we fill with the new data
@@ -243,7 +242,6 @@ class GraphWrapper(QtCore.QObject):
 
     @QtCore.Slot()
     def updateConnectionsCoord(self):
-        print "=> UPDATE CONNECTION COORDS"
         for connection in self._graph.getConnections():
             clipOut = connection.getClipOut()
             clipIn = connection.getClipIn()

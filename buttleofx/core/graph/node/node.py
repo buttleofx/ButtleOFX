@@ -71,6 +71,7 @@ class Node(object):
 
     def __init__(self, nodeName, nodeType, nodeCoord, tuttleNode):
         self._name = nodeName
+        self._nameUser = nodeName.strip('tuttle.')
         self._type = nodeType
         self._coord = nodeCoord
         self._oldCoord = nodeCoord
@@ -182,6 +183,9 @@ class Node(object):
     def getName(self):
         return str(self._name)
 
+    def getNameUser(self):
+        return str(self._nameUser)
+
     def getType(self):
         return str(self._type)
 
@@ -210,6 +214,10 @@ class Node(object):
 
     def setName(self, name):
         self._name = name
+        self.changed()
+
+    def setNameUser(self, nameUser):
+        self._nameUser = nameUser
         self.changed()
 
     def setType(self, nodeType):

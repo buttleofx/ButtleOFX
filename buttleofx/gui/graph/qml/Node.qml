@@ -73,7 +73,7 @@ Rectangle {
         radius: 8
         Text {
             anchors.centerIn: parent
-            text: m.nodeModel.name
+            text: m.nodeModel.nameUser
             font.pointSize: 10
             color: (m.nodeModel == _buttleData.currentSelectedNodeWrapper) ? "#00b2a1" : "black"
         }

@@ -123,19 +123,19 @@ Rectangle {
 
                 /*Name of the node (Buttle data)*/
                 Item{
-                    id: nodeNameItem
+                    id: nodeNameUserItem
                     implicitWidth: 300
                     implicitHeight: 30
                     anchors.left: parent.left
                     anchors.leftMargin: 10
 
                     Row{
-                        id: nodeNameContainer
+                        id: nodeNameUserContainer
                         spacing: 10
 
                         /* Title */
                         Text {
-                            id: nodeNameText
+                            id: nodeNameUserText
                             width: 80
                             anchors.top: parent.top
                             anchors.verticalCenter: parent.verticalCenter
@@ -152,15 +152,15 @@ Rectangle {
                             border.color: paramEditor.borderInput
                             radius: 3
                             TextInput{
-                                id: nodeNameInput
-                                text: current_node.name
+                                id: nodeNameUserInput
+                                text: current_node.nameUser
                                 anchors.left: parent.left
                                 anchors.verticalCenter: parent.verticalCenter
                                 anchors.leftMargin: 5
                                 maximumLength: 100
                                 selectByMouse : true
                                 color: activeFocus ? "white" : "grey"
-                                onAccepted: current_node.name = nodeNameInput.text
+                                onAccepted: current_node.nameUser = nodeNameUserInput.text
                             }
                         }
                     }

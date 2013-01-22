@@ -47,6 +47,9 @@ class NodeWrapper(QtCore.QObject):
     def getName(self):
         return self._node.getName()
 
+    def getNameUser(self):
+        return self._node.getNameUser()
+
     def getType(self):
         return self._node.getType()
 
@@ -70,6 +73,9 @@ class NodeWrapper(QtCore.QObject):
 
     def setName(self, name):
         self._node.setName(name)
+
+    def setNameUser(self, nameUser):
+        self._node.setNameUser(nameUser)
 
     def setType(self, nodeType):
         self._node.setType(nodeType)
@@ -100,6 +106,7 @@ class NodeWrapper(QtCore.QObject):
 
     # params from Buttle
     name = QtCore.Property(str, getName, setName, notify=changed)
+    nameUser = QtCore.Property(str, getNameUser, setNameUser, notify=changed)
     nodeType = QtCore.Property(str, getType, setType, notify=changed)
     coord = QtCore.Property(QtCore.QPoint, getCoord, setCoord, notify=changed)
     color = QtCore.Property(QtGui.QColor, getColor, setColor, notify=changed)

@@ -1,5 +1,6 @@
 from intWrapper import IntWrapper
 from int2DWrapper import Int2DWrapper
+from int3DWrapper import Int3DWrapper
 from stringWrapper import StringWrapper
 from booleanWrapper import BooleanWrapper
 from doubleWrapper import DoubleWrapper

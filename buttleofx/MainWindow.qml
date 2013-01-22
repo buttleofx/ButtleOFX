@@ -12,7 +12,7 @@ Rectangle {
         console.log("ApplicationWindow Keys.onPressed");
         if (event.key == Qt.Key_Delete) {
             console.log("destruction");
-            _buttleData.graphWrapper.destructionNode();
+            _buttleData.destructionNode();
         }
         if (event.key == Qt.Key_U) {
                 console.log("Undo");
@@ -78,6 +78,7 @@ Rectangle {
                 //Splitter.minimumWidth: 0 
                 width: 0.3*parent.width
                 params: _buttleData.currentParamNodeWrapper ? _buttleData.currentParamNodeWrapper.params : null
+                current_node: _buttleData.currentParamNodeWrapper ? _buttleData.currentParamNodeWrapper : null
             }
         }
     }

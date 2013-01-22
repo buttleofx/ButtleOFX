@@ -5,6 +5,7 @@ class Double3DWrapper(QtCore.QObject):
     def __init__(self, param):
         QtCore.QObject.__init__(self)
         self._param = param
+        self._param.changed.connect(self.emitChanged)
 
     #################### getters ####################
 
@@ -70,7 +71,12 @@ class Double3DWrapper(QtCore.QObject):
     def setMinimum(self, minimum):
         self._param.minimum = minimum
 
-    changed = QtCore.Signal()
+    @QtCore.Signal
+    def changed(self):
+        pass
+
+    def emitChanged(self):
+        self.changed.emit()
 
     paramType = QtCore.Property(unicode, getParamType, setParamType, notify=changed)
     text = QtCore.Property(unicode, getText, setText, notify=changed)

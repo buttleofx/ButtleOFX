@@ -7,7 +7,10 @@ Item {
     implicitWidth: 300
     implicitHeight: 30
 
+    property variant paramObject: model.object
+
     /*Container of the textInput*/
+
     Row{
         id: paramStringInputContainer
         spacing: 10
@@ -16,7 +19,7 @@ Item {
         Text {
             id: paramStringTitle
             width: 80
-            text: model.object.stringType + " : "
+            text: paramObject.stringType + " : "
             color: "white"
             //font.pointSize: 8
             anchors.top: parent.top
@@ -33,13 +36,13 @@ Item {
             radius: 3
             TextInput{
                 id: paramStringInput
-                text: model.object.value
+                text: paramObject.value
                 anchors.left: parent.left
                 anchors.leftMargin: 5
                 maximumLength: 100
                 selectByMouse : true
                 color: activeFocus ? "white" : "grey"
-                onAccepted: model.object.value = paramStringInput.text
+                onAccepted: paramObject.value = paramStringInput.text
             }
         }
     }

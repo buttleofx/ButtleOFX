@@ -1,7 +1,10 @@
+# Tuttle
+from buttleofx.data import tuttleTools
+# Quickmamba
 from quickmamba.patterns import Signal
 from PySide import QtGui
 # paramEditor
-from buttleofx.core.params import ParamInt, ParamInt2D, ParamString, ParamDouble, ParamDouble2D, ParamBoolean, ParamDouble3D, ParamChoice3C, ParamPushButton
+from buttleofx.core.params import ParamInt, ParamInt2D, ParamString, ParamDouble, ParamDouble2D, ParamBoolean, ParamDouble3D, ParamChoice, ParamPushButton
 
 nodeDescriptors = {
     "Blur": {
@@ -25,10 +28,6 @@ defaultNodeDesc = {
     "color": (187, 187, 187),
     "nbInput": 1,
     "url": "../img/uglycorn.jpg",
-    "params": [
-        ParamString(defaultValue="node.getName()", stringType="Name"),
-        ParamString(defaultValue="node.getType()", stringType="Type"),
-    ],
 }
 
 
@@ -50,11 +49,13 @@ class Node(object):
         - changed : a signal emited to the wrapper layer
     """
 
+    #def __init__(self, nodeName, nodeType, nodeCoord, tuttleNode):
     def __init__(self, nodeName, nodeType, nodeCoord):
         self._name = nodeName
         self._type = nodeType
         self._coord = nodeCoord
         self._oldCoord = nodeCoord
+        #self._tuttleNode = tuttleNode
 
         # soon from Tuttle
         nodeDesc = nodeDescriptors[nodeType] if nodeType in nodeDescriptors else defaultNodeDesc
@@ -62,25 +63,22 @@ class Node(object):
         self._color = nodeDesc["color"]
         self._nbInput = nodeDesc["nbInput"]
         self._image = nodeDesc["url"]
-        # ###
-        self._params = [
-            ParamString(defaultValue=self.getName(), stringType="Name"),
-            ParamString(defaultValue=self.getType(), stringType="Type"),
-        ]
 
-        if nodeType == "Blur":
+        self._params = []
+
+        if nodeType == "tuttle.blur":
             self._params.extend(
                 [
                 ParamDouble2D(defaultValue1=0, defaultValue2=0, minimum=0, maximum=10, text="Size"),
                 ParamDouble3D(defaultValue1=58, defaultValue2=174, defaultValue3=206, minimum=0, maximum=255, text="Color"),
-                ParamChoice3C(defaultValue="Coco", text="Border"),
+                ParamChoice(defaultValue="lol", listValue=["lol", "value", "unicorn"], text="Border"),
                 ParamBoolean(defaultValue="false", text="Normalized kernel"),
                 ParamDouble(defaultValue=0, minimum=0, maximum=0.01, text="Kernel Espilon"),
-                ParamPushButton(label="Compute", trigger="testFunction", enabled=True),
+                ParamPushButton(label="Compute", trigger="testFunction", enabled=True)
                 ]
             )
 
-        elif nodeType == "Gamma":
+        elif nodeType == "tuttle.gamma":
             self._params.extend(
                 [
                 #Miss Choice - Global - RGBA

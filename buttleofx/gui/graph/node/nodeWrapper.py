@@ -74,11 +74,21 @@ class NodeWrapper(QtCore.QObject):
     def setType(self, nodeType):
         self._node.setType(nodeType)
 
+    # from 2 decimal values
+    def setCoord(self, x, y):
+        self._node.setCoord(x, y)
+
+    # from a QPoint
     def setCoord(self, point):
         self._node.setCoord(point.x(), point.y())
 
+    # from 3 decimal values
     def setColor(self, r, g, b):
         self._node.setColor(r, g, b)
+
+    # from a QColor
+    def setColor(self, color):
+        self._node.setColor(color.red(), color.green(), color.blue())
 
     def setNbInput(self, nbInput):
         self._node.setNbInput(nbInput)
@@ -88,10 +98,12 @@ class NodeWrapper(QtCore.QObject):
 
     ################################################## DATA EXPOSED TO QML ##################################################
 
+    # params from Buttle
     name = QtCore.Property(str, getName, setName, notify=changed)
     nodeType = QtCore.Property(str, getType, setType, notify=changed)
-    coord = QtCore.Property("QVariant", getCoord, setCoord, notify=changed)
+    coord = QtCore.Property(QtCore.QPoint, getCoord, setCoord, notify=changed)
     color = QtCore.Property(QtGui.QColor, getColor, setColor, notify=changed)
     nbInput = QtCore.Property(int, getNbInput, setNbInput, notify=changed)
     image = QtCore.Property(str, getImage, setImage, notify=changed)
+    # params from Tuttle
     params = QtCore.Property(QtCore.QObject, getParams, constant=True)

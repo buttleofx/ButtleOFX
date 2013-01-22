@@ -153,6 +153,7 @@ Rectangle {
                                 id: nodeNameInput
                                 text: current_node.name
                                 anchors.left: parent.left
+                                anchors.verticalCenter: parent.verticalCenter
                                 anchors.leftMargin: 5
                                 maximumLength: 100
                                 selectByMouse : true
@@ -226,39 +227,85 @@ Rectangle {
                         /* Input field limited : x */
                         Rectangle{
                             height: 20
-                            implicitWidth: 50
-                            color: paramEditor.backgroundInput
-                            border.width: 1
-                            border.color: paramEditor.borderInput
-                            radius: 3
-                            TextInput{
-                                id: nodeCoordXInput
+                            implicitWidth: 20
+                            color: "transparent"
+                            Text{
+                                id: nodeCoordX
                                 text: current_node.coord.x
                                 anchors.left: parent.left
                                 anchors.leftMargin: 5
-                                maximumLength: 50
-                                selectByMouse : true
-                                color: activeFocus ? "white" : "grey"
-                                onAccepted: current_node.coord.x = nodeCoordXInput.text
+                                color: "grey"
+                            }
+                        }
+                        /* Input field limited : separated */
+                        Rectangle{
+                            height: 20
+                            implicitWidth: 5
+                            color: "transparent"
+                            Text{
+                                id: coordSeparated
+                                text: "/"
+                                anchors.left: parent.left
+                                anchors.leftMargin: 5
+                                color: "white"
                             }
                         }
                         /* Input field limited : y */
                         Rectangle{
                             height: 20
-                            implicitWidth: 50
+                            implicitWidth: 20
+                            color: "transparent"
+                            Text{
+                                id: nodeCoordY
+                                text: current_node.coord.y
+                                anchors.left: parent.left
+                                anchors.leftMargin: 5
+                                color: "grey"
+                            }
+                        }
+                    }
+                }
+
+                /* Color of the node (Buttle data) */
+                Item{
+                    id: nodecolorItem
+                    implicitWidth: 300
+                    implicitHeight: 30
+                    anchors.left: parent.left
+                    anchors.leftMargin: 10
+
+                    Row{
+                        id: nodeColorContainer
+                        spacing: 10
+
+                        /* Title */
+                        Text {
+                            id: nodeColorText
+                            width: 80
+                            text: "Color (Hex) : "
+                            color: "white"
+                            anchors.top: parent.top
+                            anchors.verticalCenter: parent.verticalCenter
+                        }
+
+                        /* Input field limited : rgb */
+                        Rectangle{
+                            height: 20
+                            implicitWidth: 80
                             color: paramEditor.backgroundInput
                             border.width: 1
                             border.color: paramEditor.borderInput
                             radius: 3
                             TextInput{
-                                id: nodeCoordYInput
-                                text: current_node.coord.y
+                                id: nodeColorRGBInput
+                                text: current_node.color
                                 anchors.left: parent.left
+                                anchors.verticalCenter: parent.verticalCenter
                                 anchors.leftMargin: 5
                                 maximumLength: 50
                                 selectByMouse : true
                                 color: activeFocus ? "white" : "grey"
-                                onAccepted: current_node.coord.y = nodeCoordYInput.text
+                                onAccepted: current_node.color = nodeColorRGBInput.text
                             }
                         }
                     }
@@ -267,4 +314,3 @@ Rectangle {
         }
     }
 }
-

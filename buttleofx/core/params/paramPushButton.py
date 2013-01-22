@@ -1,7 +1,7 @@
 class ParamPushButton(object):
 
-    def __init__(self, label, trigger, enabled=True):
+    def __init__(self, trigger, label, enabled=True):
         self.paramType = "ParamPushButton"
-        self.label = label
         self.trigger = trigger
+        self.label = label
         self.enabled = enabled

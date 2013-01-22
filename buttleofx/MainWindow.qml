@@ -12,7 +12,7 @@ Rectangle {
         console.log("ApplicationWindow Keys.onPressed");
         if (event.key == Qt.Key_Delete) {
             console.log("destruction");
-            _buttleData.getGraphWrapper().destructionNode();
+            _buttleData.graphWrapper.destructionNode();
         }
         if (event.key == Qt.Key_U) {
                 console.log("Undo");
@@ -51,11 +51,8 @@ Rectangle {
         SplitterRow {
             anchors.fill: parent
             anchors.margins: 3
-            //handleWidth changes the size of the separation between the row, column.
             handleWidth: 3
 
-            /*There is a bug with splitter column, the draggable splitter doesn't moove as it should, this bug has been solved in qtcomponents for qt5, 
-            but for the moment we are using qt 4*/
             SplitterColumn {
                 width: 0.7*parent.width
                 height: parent.height
@@ -67,7 +64,7 @@ Rectangle {
                     //Splitter.expanding: true
                     width: parent.width
                     height: 0.5*parent.height
-                    node: _buttleData.graphWrapper.currentViewerNodeWrapper
+                    node: _buttleData.currentViewerNodeWrapper
                 }
 
                 GraphEditor {
@@ -79,8 +76,8 @@ Rectangle {
 
             ParamEditor {
                 //Splitter.minimumWidth: 0 
-                width: 0.30*parent.width
-                params: _buttleData.graphWrapper.currentParamNodeWrapper ? _buttleData.graphWrapper.currentParamNodeWrapper.params : null
+                width: 0.3*parent.width
+                params: _buttleData.currentParamNodeWrapper ? _buttleData.currentParamNodeWrapper.params : null
             }
         }
     }

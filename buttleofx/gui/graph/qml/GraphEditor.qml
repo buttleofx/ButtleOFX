@@ -32,7 +32,7 @@ Rectangle {
 
     // Function to create a node on a precise position
     function nodeCreation(nodeType, insertPosX, insertPosY){
-        _buttleData.graphWrapper.creationNode(nodeType)
+        _buttleData.creationNode(nodeType)
         _buttleData.graphWrapper.getLastCreatedNodeWrapper().coord = Qt.point(insertPosX, insertPosY)
     }
 

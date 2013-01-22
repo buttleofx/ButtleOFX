@@ -1,13 +1,11 @@
 import QtQuick 1.1
 
-/* Tabs bar */
 
 Rectangle {
-    id: tabBar
+    id: tabBarRegion
     implicitWidth: 850
-    implicitHeight: 20
-    color: "transparent"
-
+    implicitHeight: 25
+    color: "red"
     property color tabColor: "#141414"
 
     Item {
@@ -15,7 +13,6 @@ Rectangle {
         implicitWidth: 100
         implicitHeight: 20
         height: parent.height
-        clip: true
         Rectangle {
             anchors {
                 fill: parent;
@@ -27,7 +24,6 @@ Rectangle {
                 y:5
                 text: "Viewer 1"
                 font.pointSize: 10
-                color: "white"
             }
             radius: 10
             color: tabColor
@@ -39,7 +35,6 @@ Rectangle {
         implicitWidth: 30
         height: parent.height
         x: tab1.width + 1
-        clip: true
         Rectangle {
             anchors {
                 fill: parent;

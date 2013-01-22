@@ -2,6 +2,21 @@ from PySide import QtGui, QtDeclarative, QtOpenGL
 import os, sys
 from OpenGL import GL
 
+# for glViewport
+tuttleofx_installed = False
+try:
+    import pyTuttle
+    tuttleofx_installed = True
+    print('Use TuttleOFX.')
+except:
+    print('TuttleFX not installed, use Python Image Library instead.')
+
+if tuttleofx_installed:
+    from buttleofx.gui.viewerGL.glviewport_tuttleofx import GLViewport_tuttleofx
+else:
+    from buttleofx.gui.viewerGL.glviewport_pil import GLViewport_pil
+
+
 # data
 from buttleofx.datas import ButtleData
 #connections
@@ -24,11 +39,18 @@ class ButtleApp(QtGui.QApplication):
             return QtGui.QApplication.notify(self, receiver, event)
         except Exception as e:
             print("QApp notify exception: " + str(e))
+            import traceback
+            traceback.print_exc()
+            return False
 
 
 def main(argv):
     # add new QML type
     QtDeclarative.qmlRegisterType(LineItem, "ConnectionLineItem", 1, 0, "ConnectionLine")
+    if tuttleofx_installed:
+        QtDeclarative.qmlRegisterType(GLViewport_tuttleofx, "Viewport", 1, 0, "GLViewport")
+    else:
+        QtDeclarative.qmlRegisterType(GLViewport_pil, "Viewport", 1, 0, "GLViewport")
 
     # init undo_redo contexts
     cmdManager = CommandManager()
@@ -37,13 +59,11 @@ def main(argv):
 
     # create QApplication
     app = ButtleApp(argv)
+
     # create the declarative view
     view = QtDeclarative.QDeclarativeView()
     view.setViewport(QtOpenGL.QGLWidget())
     view.setViewportUpdateMode(QtDeclarative.QDeclarativeView.FullViewportUpdate)
-
-    view.setWindowTitle("ButtleOFX")
-    view.setResizeMode(QtDeclarative.QDeclarativeView.SizeRootObjectToView)
 
     # data
     buttleData = ButtleData().init(view)
@@ -54,6 +74,8 @@ def main(argv):
 
     # set the view
     view.setSource(os.path.join(currentFilePath, "MainWindow.qml"))
+    view.setResizeMode(QtDeclarative.QDeclarativeView.SizeRootObjectToView)
+    view.setWindowTitle("ButtleOFX")
 
     # Declare we are using instant coding tool on this view
     qic = QmlInstantCoding(view, verbose=True)

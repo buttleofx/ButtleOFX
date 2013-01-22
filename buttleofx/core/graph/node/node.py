@@ -1,7 +1,7 @@
 from quickmamba.patterns import Signal
 from PySide import QtGui
 # paramEditor
-from buttleofx.core.params import ParamInt, ParamString, ParamDouble, ParamDouble2D, ParamBoolean, ParamDouble3D, ParamChoice
+from buttleofx.core.params import ParamInt, ParamInt2D, ParamString, ParamDouble, ParamDouble2D, ParamBoolean, ParamDouble3D, ParamChoice, ParamPushButton
 
 nodeDescriptors = {
     "Blur": {
@@ -40,6 +40,7 @@ class Node(object):
         - _name
         - _type
         - _coord
+        - _oldCoord : when a node is being dragged, we need to remember its old coordinates for the undo/redo
         - _color
         - _nbInput
         - _image
@@ -53,6 +54,7 @@ class Node(object):
         self._name = nodeName
         self._type = nodeType
         self._coord = nodeCoord
+        self._oldCoord = nodeCoord
 
         # soon from Tuttle
         nodeDesc = nodeDescriptors[nodeType] if nodeType in nodeDescriptors else defaultNodeDesc
@@ -71,9 +73,10 @@ class Node(object):
                 [
                 ParamDouble2D(defaultValue1=0, defaultValue2=0, minimum=0, maximum=10, text="Size"),
                 ParamDouble3D(defaultValue1=58, defaultValue2=174, defaultValue3=206, minimum=0, maximum=255, text="Color"),
-                ParamChoice(defaultValue="lol", listValue=["lol", "value", "unicorn"], text="Border")
-                #ParamBoolean(defaultValue="false", text="Normalized kernel"),
-                #ParamDouble(defaultValue=0, minimum=0, maximum=0.01, text="Kernel Espilon")
+                ParamChoice(defaultValue="lol", listValue=["lol", "value", "unicorn"], text="Border"),
+                ParamBoolean(defaultValue="false", text="Normalized kernel"),
+                ParamDouble(defaultValue=0, minimum=0, maximum=0.01, text="Kernel Espilon"),
+                ParamPushButton(label="Compute", trigger="testFunction", enabled=True)
                 ]
             )
 
@@ -86,7 +89,8 @@ class Node(object):
                 ParamDouble(defaultValue=0, minimum=0.001, maximum=20, text="Green"),
                 ParamDouble(defaultValue=0, minimum=0.001, maximum=20, text="Blue"),
                 ParamDouble(defaultValue=0, minimum=0.001, maximum=20, text="Alpha"),
-                ParamBoolean(defaultValue="false", text="Invert")
+                ParamBoolean(defaultValue="false", text="Invert"),
+                ParamInt(defaultValue=0, minimum=0, maximum=100, text="ParamInt"),
                 ]
             )
 
@@ -98,13 +102,19 @@ class Node(object):
                  ParamBoolean(defaultValue="false", text="Green"),
                  ParamBoolean(defaultValue="false", text="Blue"),
                  ParamBoolean(defaultValue="false", text="Alpha"),
+                 ParamInt2D(defaultValue1=0, defaultValue2=0, minimum=0, maximum=100, text="Int2D"),
                 ]
             )
 
         self.changed = Signal()
 
+        print "Core : node created"
+
     def __str__(self):
         return 'Node "%s"' % (self._name)
+
+    def __del__(self):
+        print "Core : Node deleted"
 
     ######## getters ########
 
@@ -116,6 +126,9 @@ class Node(object):
 
     def getCoord(self):
         return self._coord
+
+    def getOldCoord(self):
+        return self._oldCoord
 
     def getDesc(self):
         return self._desc
@@ -144,6 +157,10 @@ class Node(object):
 
     def setCoord(self, x, y):
         self._coord = (x, y)
+        self.changed()
+
+    def setOldCoord(self, x, y):
+        self._oldCoord = (x, y)
         self.changed()
 
     def setColor(self, r, g, b):

@@ -12,28 +12,28 @@ class BooleanWrapper(QtCore.QObject):
     def getParamType(self):
         return self._param.paramType
 
-    def getText(self):
-        return self._param.text
-
     def getDefaultValue(self):
         return self._param.defaultValue
 
     def getValue(self):
         return self._param.value
 
+    def getText(self):
+        return self._param.text
+
     #################### setters ####################
 
     def setParamType(self, paramType):
-        self._param.paramType = paramType
-
-    def setText(self, text):
-        self._param.text = text
+        self._param.setParamType(paramType)
 
     def setDefaultValue(self, defaultValue):
-        self._param.defaultValue = defaultValue
+        self._param.setDefaultValue(defaultValue)
 
     def setValue(self, value):
-        self._param.value = value
+        self._param.setValue(value)
+
+    def setText(self, text):
+        self._param.setText(text)
 
     @QtCore.Signal
     def changed(self):

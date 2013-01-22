@@ -36,14 +36,16 @@ class Node(object):
         Creates a python object Node.
 
         Class Node defined by:
-        - _name
-        - _type
-        - _coord
-        - _oldCoord : when a node is being dragged, we need to remember its old coordinates for the undo/redo
-        - _color
-        - _nbInput
-        - _image
-        - _params
+        - params from Buttle :
+            - _name
+            - _type
+            - _coord
+            - _oldCoord : when a node is being dragged, we need to remember its old coordinates for the undo/redo
+            - _color
+            - _nbInput
+            - _image
+        - params from Tuttle (depend on the node type) :
+            - _params
 
         Signal :
         - changed : a signal emited to the wrapper layer

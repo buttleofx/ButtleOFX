@@ -31,7 +31,6 @@ class ParamEditorWrapper(QtCore.QObject):
     def getParamElts(self):
         return self._paramElmts
 
-    # @QtCore.Slot(Node)
     def setNodeForParam(self, node):
         self._paramElmts = node._params
         self.modelChanged.emit()

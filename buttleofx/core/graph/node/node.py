@@ -1,3 +1,6 @@
+# Tuttle
+from buttleofx.data import tuttleTools
+# Quickmamba
 from quickmamba.patterns import Signal
 from PySide import QtGui
 # paramEditor
@@ -68,7 +71,9 @@ class Node(object):
             ParamString(defaultValue=self.getType(), stringType="Type"),
         ]
 
-        if nodeType == "Blur":
+
+
+        if nodeType == "tuttle.blur":
             self._params.extend(
                 [
                 ParamDouble2D(defaultValue1=0, defaultValue2=0, minimum=0, maximum=10, text="Size"),
@@ -80,7 +85,7 @@ class Node(object):
                 ]
             )
 
-        elif nodeType == "Gamma":
+        elif nodeType == "tuttle.gamma":
             self._params.extend(
                 [
                 #Miss Choice - Global - RGBA

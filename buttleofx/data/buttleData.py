@@ -1,3 +1,8 @@
+# Tuttle
+from buttleofx.data import tuttleTools
+
+from quickmamba.models import QObjectListModel
+
 from PySide import QtCore
 # core : graph
 from buttleofx.core.graph import Graph
@@ -169,7 +174,7 @@ class ButtleData(QtCore.QObject, Singleton):
         position = self.getGraphWrapper().getPositionClip(nodeName, port, clipNumber)
         idClip = IdClip(nodeName, port, clipNumber, position)
         if (port == "input"):
-            self.getGraphWrapper().setTmpClipIn(idClip) 
+            self.getGraphWrapper().setTmpClipIn(idClip)
         elif (port == "output"):
             self.getGraphWrapper().setTmpClipOut(idClip)
 
@@ -241,6 +246,13 @@ class ButtleData(QtCore.QObject, Singleton):
         cmdManager = CommandManager()
         cmdManager.redo()
 
+    def getQObjectPluginsNames(self):
+        """
+            Returns a QObjectListModel of all names of Tuttle's plugins.
+        """
+        pluginsNames = QObjectListModel(self)
+        pluginsNames.setObjectList(tuttleTools.getPluginsNames())
+        return pluginsNames
 
     ################################################## DATA EXPOSED TO QML ##################################################
 
@@ -254,3 +266,6 @@ class ButtleData(QtCore.QObject, Singleton):
     currentViewerNodeWrapper = QtCore.Property(QtCore.QObject, getCurrentViewerNodeWrapper, setCurrentViewerNodeWrapper, notify=currentViewerNodeChanged)
     currentSelectedNodeChanged = QtCore.Signal()
     currentSelectedNodeWrapper = QtCore.Property(QtCore.QObject, getCurrentSelectedNodeWrapper, setCurrentSelectedNodeWrapper, notify=currentSelectedNodeChanged)
+
+    # tuttle data
+    tuttlePluginsNames = QtCore.Property(QtCore.QObject, getQObjectPluginsNames, constant=True)

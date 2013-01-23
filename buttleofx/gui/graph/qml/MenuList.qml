@@ -41,7 +41,7 @@ Item {
                                 if (_buttleData.nextSonIsAPlugin(nodeMenuView.parentName) == true) {
                                     console.log("CREATION NODE")
                                     nodeMenuView.state = "hidden"
-                                    clickFrom.clickCreationNode(model.object)
+                                    clickFrom.clickCreationNode('tuttle.' + model.object)
                                 }
                                 else {
                                     console.log("NEWMODEL")

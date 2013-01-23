@@ -45,6 +45,7 @@ def getPluginsIdentifiersAsDictionary():
         fullPath = node.getProperties().fetchProperty("OfxImageEffectPluginPropGrouping").getStringValue(0)
         parentList = fullPath.split('/')
         parentLabel = ""
+        pluginId = pluginId.lstrip('tuttle.')
         for i in range(len(parentList)):
             parentLabel = parentLabel + parentList[i] + "/"
             if parentLabel not in pluginsIdentifiersAsDictionary:

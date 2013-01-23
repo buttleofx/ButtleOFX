@@ -125,12 +125,12 @@ class ButtleData(QtCore.QObject, Singleton):
 
     ##### Node #####
 
-    @QtCore.Slot(str)
-    def creationNode(self, nodeType):
+    @QtCore.Slot(str, int, int)
+    def creationNode(self, nodeType, x, y):
         """
             Function called when we want to create a node from the QML.
         """
-        self.getGraph().createNode(nodeType)
+        self.getGraph().createNode(nodeType, x, y)
 
     @QtCore.Slot()
     def destructionNode(self):

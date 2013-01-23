@@ -67,6 +67,7 @@ Rectangle {
         id: middleMouseArea
         anchors.fill: parent
         acceptedButtons: Qt.MiddleButton 
+        hoverEnabled: true
         drag.target: connectnode
         drag.axis: Drag.XandYAxis
     }
@@ -75,15 +76,10 @@ Rectangle {
         anchors.fill: parent
         property real nbSteps: 5
         onVerticalWheel: {
-            console.log("Scale : ")
-            console.log(scale.xScale)
-            console.log(scale.yScale)
             if(scale.xScale > 0.3 ) {
-                console.log("Superieur ")
-                //scale.origin.x = middleMouseArea.mouseX
-                //scale.origin.y = middleMouseArea.mouseY
+                scale.origin.x = middleMouseArea.mouseX
+                scale.origin.y = middleMouseArea.mouseY
                 if(delta < 0 && scale.xScale - 0.2 > 0.3 && scale.yScale - 0.2 > 0.3 ) {
-                    console.log("delta positif")
                     scale.xScale -= 0.1 
                     scale.yScale -= 0.1             
                 }

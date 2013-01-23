@@ -15,7 +15,8 @@ Rectangle {
 
         onClickCreationNode: {
             console.log("Node created clicking from Graph")
-            nodeCreation(nodeType, -graph.originX + graph.mouseX,  -graph.originY + graph.mouseY)
+            _buttleData.creationNode(nodeType, -graph.originX + graph.mouseX, -graph.originY + graph.mouseY)
+            //nodeCreation(nodeType, -graph.originX + graph.mouseX,  -graph.originY + graph.mouseY)
         }
     }
 
@@ -26,14 +27,15 @@ Rectangle {
 
         onClickCreationNode: {
             console.log("Node created clicking from Tools")
-            nodeCreation(nodeType, -graph.originX + 20, -graph.originY + 20)
+            _buttleData.creationNode(nodeType, -graph.originX + 20, -graph.originY + 20)
+            //nodeCreation(nodeType, -graph.originX + 20, -graph.originY + 20)
         }
     }
 
     // Function to create a node on a precise position
-    function nodeCreation(nodeType, insertPosX, insertPosY){
-        _buttleData.creationNode(nodeType)
-        _buttleData.graphWrapper.getLastCreatedNodeWrapper().coord = Qt.point(insertPosX, insertPosY)
-    }
+    //function nodeCreation(nodeType, insertPosX, insertPosY){
+    //    _buttleData.creationNode(nodeType)
+    //    _buttleData.graphWrapper.getLastCreatedNodeWrapper().coord = Qt.point(insertPosX, insertPosY)
+    //}
 
 }

@@ -10,15 +10,12 @@ Item {
     Row {
         id: paramBoleanInputContainer
         spacing: 10
+
         /*Title of the param*/
         Text {
             id: paramBooleanTitle
-            width: 80
             text: paramObject.text + " : "
             color: "white"
-           // font.pointSize: 8
-            /*anchors.top: parent.top
-            anchors.verticalCenter: parent.verticalCenter*/
         }
 
         /*Black square we can check*/
@@ -28,8 +25,6 @@ Item {
             height: 15
             radius : 1
             color: "black"
-            /*anchors.left: paramBooleanTitle.right
-            anchors.leftMargin: 5*/
 
             /*When we check, an other white square appears in the black one*/
             Rectangle{

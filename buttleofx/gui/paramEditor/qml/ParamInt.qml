@@ -62,7 +62,7 @@ Item {
                 x: barSlider.x + cursorSlider.x
                 width: barSlider.width - whiteBar.width 
                 height: parent.height
-                color: "red"
+                color: "grey"
             }
         }
         // cursor slider (little white rectangle)
@@ -112,11 +112,8 @@ Item {
         // Title of the paramInt
         Text {
             id: paramIntTitle
-            width: 80
             text: paramObject.text + " : "
             color: "white"
-            anchors.top: parent.top
-            anchors.verticalCenter: parent.verticalCenter
         }
 
         // Input field accepting only number between 0 and 255

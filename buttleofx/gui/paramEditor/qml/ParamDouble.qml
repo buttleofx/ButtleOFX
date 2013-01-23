@@ -112,19 +112,17 @@ Item {
 
         // Title of the paramDouble
         Text {
+
             id: paramDoubleTitle
-            width: 80
             text: paramObject.text + " : "
             color: "white"
-           // font.pointSize: 8
-            anchors.top: parent.top
-            anchors.verticalCenter: parent.verticalCenter
         }
 
-        //Input field accepting only float between 2^31-1 and 2^31
+        // Input field
         Rectangle{
             height: 20
             width:40
+
             color: "#212121"
             border.width: 1
             border.color: "#333"

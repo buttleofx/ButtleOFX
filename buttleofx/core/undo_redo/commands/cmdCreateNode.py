@@ -17,10 +17,11 @@ class CmdCreateNode(UndoableCommand):
         - nodeName
     """
 
-    def __init__(self, graphTarget, nodeType):
+    def __init__(self, graphTarget, nodeType, x, y):
         self.graphTarget = graphTarget
+        self.nodeName = str(nodeType) + "_" + str(graphTarget._nbNodesCreated)
         self.nodeType = nodeType
-        self.nodeCoord = (0, 0)
+        self.nodeCoord = (x, y)
 
     def undoCmd(self):
         """
@@ -48,9 +49,8 @@ class CmdCreateNode(UndoableCommand):
 
         # New Tuttle node
         tuttleNode = self.graphTarget.getGraphTuttle().createNode(str(self.nodeType))
-        
+
         # New Buttle node
         self.graphTarget._nbNodesCreated += 1
-        self.nodeName = str(self.nodeType) + "_" + str(self.graphTarget._nbNodesCreated)
         self.graphTarget._nodes.append(Node(self.nodeName, self.nodeType, self.nodeCoord, tuttleNode))
         self.graphTarget.nodesChanged()

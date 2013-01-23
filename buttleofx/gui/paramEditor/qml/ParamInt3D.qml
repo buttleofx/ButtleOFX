@@ -17,11 +17,8 @@ Item {
         // Title of the paramDouble
         Text {
             id: paramDouble3DTitle
-            width: 80
             text: paramObject.text + " : "
             color: "white"
-            anchors.top: parent.top
-            anchors.verticalCenter: parent.verticalCenter
         }
 
         /* First input */

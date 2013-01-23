@@ -9,7 +9,6 @@ Rectangle {
     height: 800
 
     Keys.onPressed: {
-        console.log("ApplicationWindow Keys.onPressed");
         if (event.key == Qt.Key_Delete) {
             console.log("destruction");
             _buttleData.destructionNode();

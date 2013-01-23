@@ -155,7 +155,7 @@ Rectangle {
                             border.width: 1
                             border.color: paramEditor.borderInput
                             radius: 3
-                            TextInput{
+                            TextInput {
                                 id: nodeNameUserInput
                                 text: currentParamNode.nameUser
                                 anchors.left: parent.left
@@ -164,7 +164,14 @@ Rectangle {
                                 maximumLength: 100
                                 selectByMouse : true
                                 color: activeFocus ? activeFocusOn : activeFocusOff
+
                                 onAccepted: currentParamNode.nameUser = nodeNameUserInput.text
+                                onActiveFocusChanged: currentParamNode.nameUser = nodeNameUserInput.text
+
+                                KeyNavigation.backtab: nodeColorRGBInput
+                                KeyNavigation.tab: nodeCoordXInput
+
+
                             }
                         }
                     }
@@ -258,7 +265,13 @@ Rectangle {
                                 anchors.leftMargin: 5
                                 color: activeFocus ? activeFocusOn : activeFocusOff
                                 selectByMouse : true
+
                                 onAccepted: currentParamNode.coord.x = nodeCoordXInput.text
+                                onActiveFocusChanged: currentParamNode.coord.x = nodeCoordXInput.text
+
+                                KeyNavigation.backtab: nodeNameUserInput
+                                KeyNavigation.tab: nodeCoordYInput
+
                             }
                         }
 
@@ -290,7 +303,12 @@ Rectangle {
                                 anchors.leftMargin: 5
                                 color: activeFocus ? activeFocusOn : activeFocusOff
                                 selectByMouse : true
+
                                 onAccepted: currentParamNode.coord.y = nodeCoordYInput.text
+                                onActiveFocusChanged: currentParamNode.coord.y = nodeCoordYInput.text
+
+                                KeyNavigation.backtab: nodeCoordXInput
+                                KeyNavigation.tab: nodeColorRGBInput
                             }
                         }
                     }
@@ -335,7 +353,12 @@ Rectangle {
                                 maximumLength: 50
                                 selectByMouse : true
                                 color: activeFocus ? activeFocusOn : activeFocusOff
+
                                 onAccepted: currentParamNode.color = nodeColorRGBInput.text
+                                onActiveFocusChanged: currentParamNode.color = nodeColorRGBInput.text
+
+                                KeyNavigation.backtab: nodeCoordYInput
+                                KeyNavigation.tab: nodeNameUserInput
                             }
                         }
                     }

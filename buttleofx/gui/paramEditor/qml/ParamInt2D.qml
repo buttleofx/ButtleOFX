@@ -14,12 +14,8 @@ Item {
         /*Title of the paramInt */
         Text {
             id: paramInt2DTitle
-            width: 80
             text: model.object.text + " : "
             color: "white"
-           // font.pointSize: 8
-            anchors.top: parent.top
-            anchors.verticalCenter: parent.verticalCenter
         }
 
         /* First Input */

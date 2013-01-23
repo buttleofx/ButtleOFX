@@ -7,7 +7,7 @@ class ChoiceWrapper(QtCore.QObject):
     """
         Gui class, which maps a ParamChoice.
     """
-    
+
     def __init__(self, param):
         QtCore.QObject.__init__(self)
         self._param = param
@@ -56,5 +56,5 @@ class ChoiceWrapper(QtCore.QObject):
 
     paramType = QtCore.Property(unicode, getParamType, setParamType, notify=changed)
     text = QtCore.Property(unicode, getText, setText, notify=changed)
-    listValue = QtCore.Property("QVariant", getListValue, setListValue, notify=changed)
+    listValue = QtCore.Property("QVariant", getListValue, constant=True)
     value = QtCore.Property(unicode, getValue, setValue, notify=changed)

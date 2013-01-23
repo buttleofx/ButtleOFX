@@ -34,7 +34,7 @@ Item {
                 width: box.width - box.width/2
                 height: width
                 radius: 1
-                state: "FOCUS_OFF"
+                state: paramObject.value ? "FOCUS_ON" : "FOCUS_OFF"
 
                 states: [
                     State {
@@ -50,7 +50,10 @@ Item {
 
             MouseArea{
                 anchors.fill: parent
-                onPressed: interiorBox.state = (interiorBox.state == "FOCUS_ON") ? "FOCUS_OFF" : "FOCUS_ON"
+                onPressed: {
+                    interiorBox.state = (interiorBox.state == "FOCUS_ON") ? "FOCUS_OFF" : "FOCUS_ON"
+                    paramObject.value = (interiorBox.state == "FOCUS_ON") ? "True" : "False"
+                }
             }
         }
     }

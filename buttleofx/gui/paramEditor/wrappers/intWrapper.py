@@ -14,22 +14,22 @@ class IntWrapper(QtCore.QObject):
     #################### getters ####################
 
     def getParamType(self):
-        return self._param.setParamType()
+        return self._param.getParamType()
 
     def getDefaultValue(self):
-        return self._param.setDefaultValue()
+        return self._param.getDefaultValue()
 
     def getValue(self):
-        return self._param.setValue()
+        return self._param.getValue()
 
     def getMaximum(self):
-        return self._param.setMaximum()
+        return self._param.getMaximum()
 
     def getMinimum(self):
-        return self._param.setMinimum()
+        return self._param.getMinimum()
 
     def getText(self):
-        return self._param.setText()
+        return self._param.getText()
 
     #################### setters ####################
 
@@ -62,6 +62,6 @@ class IntWrapper(QtCore.QObject):
 
     paramType = QtCore.Property(unicode, getParamType, setParamType, notify=changed)
     text = QtCore.Property(unicode, getText, setText, notify=changed)
-    value = QtCore.Property(int, getValue, setValue, notify=changed)
-    maximum = QtCore.Property(int, getMaximum, setMaximum, notify=changed)
-    minimum = QtCore.Property(int, getMinimum, setMinimum, notify=changed)
+    value = QtCore.Property(unicode, getValue, setValue, notify=changed)
+    maximum = QtCore.Property(unicode, getMaximum, setMaximum, notify=changed)
+    minimum = QtCore.Property(unicode, getMinimum, setMinimum, notify=changed)

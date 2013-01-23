@@ -14,34 +14,34 @@ class Int3DWrapper(QtCore.QObject):
     #################### getters ####################
 
     def getParamType(self):
-        return self._param.setParamType()
+        return self._param.getParamType()
 
     def getDefaultValue1(self):
-        return self._param.setDefaultValue1()
+        return self._param.getDefaultValue1()
 
     def getDefaultValue2(self):
-        return self._param.setDefaultValue2()
+        return self._param.getDefaultValue2()
 
     def getDefaultValue3(self):
-        return self._param.setDefaultValue3()
+        return self._param.getDefaultValue3()
 
     def getValue1(self):
-        return self._param.setValue1()
+        return self._param.getValue1()
 
     def getValue2(self):
-        return self._param.setValue2()
+        return self._param.getValue2()
 
     def getValue3(self):
-        return self._param.setValue3()
+        return self._param.getValue3()
 
     def getMaximum(self):
-        return self._param.setMaximum()
+        return self._param.getMaximum()
 
     def getMinimum(self):
-        return self._param.setMinimum()
+        return self._param.getMinimum()
 
     def getText(self):
-        return self._param.setText()
+        return self._param.getText()
 
     #################### setters ####################
 

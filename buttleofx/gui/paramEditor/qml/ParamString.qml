@@ -18,12 +18,8 @@ Item {
         /*Title of the paramInt */
         Text {
             id: paramStringTitle
-            width: 80
             text: paramObject.stringType + " : "
             color: "white"
-            //font.pointSize: 8
-            anchors.top: parent.top
-            anchors.verticalCenter: parent.verticalCenter
         }
 
         /*Input field limited to 50 characters*/

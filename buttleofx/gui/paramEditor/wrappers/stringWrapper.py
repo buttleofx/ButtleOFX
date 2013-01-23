@@ -26,7 +26,7 @@ class StringWrapper(QtCore.QObject):
         return self._param.getStringType()
 
     def getText(self):
-        return self._param.text
+        return self._param.getText()
 
     #################### setters ####################
 

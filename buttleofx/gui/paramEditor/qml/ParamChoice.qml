@@ -15,11 +15,8 @@ Item {
         //Title of the param
         Text {
             id: paramChoiceTitle
-            width: 80
             text: paramObject.text + " : "
             color: "white"
-            anchors.top: parent.top
-            anchors.verticalCenter: parent.verticalCenter
         }
 
         // Container of the diplay
@@ -35,7 +32,7 @@ Item {
                 height: 20
                 color: "#212121"
                 border.width: 1
-                        border.color: "#333"
+                border.color: "#333"
                 radius: 3
 
                 Text{
@@ -95,10 +92,9 @@ Item {
                             hoverEnabled: true
                             onEntered: parent.color = "#bbb"
                             onExited: parent.color = "#343434"
-                            onClicked: {             
-                                elements.state = "hidden"
-                                paramObject.value = textElement.text
-
+                            onClicked: {           
+                                elements.state = "hidden" 
+                                paramObject.value = model.object 
                             }
                         }
                     }
@@ -126,98 +122,3 @@ Item {
        
     }
 }
-
-
-
-
-
-
-// List
-       /*Item {
-            height: 20
-            width: 40
-
-
-            ComboBox {
-                //model: paramObject.listValue
-                width: 150
-                height: 20
-                anchors.left: parent.left
-                anchors.verticalCenter: parent.verticalCenter
-
-                MenuItem {
-                    text: "POIU"
-                }
-                MenuItem {
-                    text: "ihiihihih"
-                }
-                MenuItem {
-                    text: "POIU"
-                }
-                MenuItem {
-                    text: "POIU"
-                }
-                
-                Repeater {
-                    id: ohoh
-                    model: 5
-                }
-            } 
-        }*/
-
-
-
-
-
-
-        /*ListModel {
-            id: nodeMenuModel
-
-            ListElement { cat2: "Invert" }
-            ListElement { cat2: "Gamma" }
-            ListElement { cat2: "Blur" }
-            ListElement { cat2: "Crop" }
-            ListElement { cat2: "Resize" }
-        }
-
-        ListView {
-            id: nodeMenuView
-            x: 0
-            y: 30
-            width: 120
-            height: 500
-            model: nodeMenuModel
-            delegate {
-                Rectangle {
-                    width: 120
-                    height: 20
-                    color: "#343434"
-                    Text {
-                        anchors.left: parent.left
-                        anchors.leftMargin: 15
-                        anchors.verticalCenter: parent.verticalCenter
-                        color: "#eee"
-                        text: cat2
-                    }
-                    MouseArea {
-                        anchors.fill: parent
-                        hoverEnabled: true
-                        onEntered: parent.color = "#bbb"
-                        onExited: parent.color = "#343434"
-                        onClicked: {
-                            console.log(cat2)
-                            mainElement.text = cat2
-                        }
-                    }
-                }
-            }
-        } */
-
-/*
-    function fillModel() {
-        for(element in model.object.listValue) {
-            commonModel.append( "ListElement{text: \"element\"}" );
-            console.log("Element")
-        }
-    }*/
-

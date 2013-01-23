@@ -14,22 +14,22 @@ class IntWrapper(QtCore.QObject):
     #################### getters ####################
 
     def getParamType(self):
-        return self._param.setParamType()
+        return self._param.getParamType()
 
     def getDefaultValue(self):
-        return self._param.setDefaultValue()
+        return self._param.getDefaultValue()
 
     def getValue(self):
-        return self._param.setValue()
+        return self._param.getValue()
 
     def getMaximum(self):
-        return self._param.setMaximum()
+        return self._param.getMaximum()
 
     def getMinimum(self):
-        return self._param.setMinimum()
+        return self._param.getMinimum()
 
     def getText(self):
-        return self._param.setText()
+        return self._param.getText()
 
     #################### setters ####################
 

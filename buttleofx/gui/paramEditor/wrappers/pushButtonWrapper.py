@@ -17,13 +17,13 @@ class PushButtonWrapper(QtCore.QObject):
         return self._param.getParamType()
     
     def getLabel(self):
-        return self._param.setLabel()
+        return self._param.getLabel()
 
     def getTrigger(self):
-        return self._param.setTrigger()
+        return self._param.getTrigger()
 
     def getEnabled(self):
-        return self._param.setEnabled()
+        return self._param.getEnabled()
 
     #################### setters ####################
 

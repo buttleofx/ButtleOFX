@@ -48,7 +48,7 @@ class ParamDouble2D(object):
     def getMaximum(self):
         return self._maximum
 
-    def getText(self, text):
+    def getText(self):
         return self._text
 
     #################### setters ####################

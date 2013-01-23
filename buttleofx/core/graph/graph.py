@@ -50,6 +50,12 @@ class Graph(object):
         """
         return self._connections
 
+    def getConnectionByClips(self, clipOut, clipIn):
+        for connection in self._connections:
+            if connection.getClipOut() == clipOut and connection.getClipIn() == clipIn:
+                return connection
+        return None
+
     def getGraphTuttle(self):
         """
             Return the Tuttle's graph.

@@ -40,9 +40,7 @@ class ChoiceWrapper(QtCore.QObject):
         self._param.setListValue(listValue)
 
     def setValue(self, value):
-        print "choiceWrapper setValue"
         self._param.setValue(value)
-        print "End choiceWrapper setValue", self._param.getValue()
 
     def setText(self, text):
         self._param.setText(text)

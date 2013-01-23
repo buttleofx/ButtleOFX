@@ -112,6 +112,7 @@ Item {
                     height: parent.height
                     color: "#141414"
 
+                    // Zoom +
                     Rectangle {
                         id: magGlassIn
                         width: parent.height-4
@@ -130,6 +131,7 @@ Item {
                             anchors.fill: parent
                             onClicked: {
                                 console.log("Zoom activated")
+
                                 if(magGlassIn.state != "clicked") {
                                     magGlassIn.state = "clicked"
                                     magGlassOut.state = "unclicked"
@@ -158,6 +160,7 @@ Item {
                         ]
                     }
 
+                    // Zoom -
                     Rectangle {
                         id: magGlassOut
                         width: parent.height-4
@@ -203,8 +206,97 @@ Item {
                               }
                         ]
                     }
+
+                    Row {
+                        id: selectViewer
+                        spacing: 5
+                        anchors.right: parent.right
+                        anchors.rightMargin: parent.height + 1
+
+                        // Mosquito
+                        Rectangle {
+                            id: mosquitoTool
+                            width: parent.height-4
+                            height: parent.height-4
+                            color: "transparent"
+                            y: 4
+                            //x: parent.width - 100
+
+                            Image {
+                                id: mosquito
+                                source: "../img/mosquito.png"
+                                anchors.centerIn: parent
+                            }
+                        }
+
+                        Repeater {
+                            id: number
+                            model: 9
+
+                            Rectangle {
+                                id: numberElement
+                                width: tools.height - 4
+                                height: tools.height - 4
+                                y: 2
+                                color: "#343434"
+                                radius: 3
+                                state: "unclicked"
+
+                                Text {
+                                    text: model.index + 1
+                                    color: "white"
+                                    anchors.verticalCenter: parent.verticalCenter
+                                    anchors.left: parent.left
+                                    anchors.leftMargin: 10
+
+                                    //anchors.verticalCenter: parent.verticalCenter
+                                }
+
+                                 MouseArea {
+                                    anchors.fill: parent
+                                    onClicked: { 
+                                        for(var i=0; i<9; ++i) {
+                                            selectViewer.children[i].state = "unclicked"
+                                        }
+                                        numberElement.state = "clicked"
+                                    }
+                                }
+
+                                states: [
+                                    State {
+                                        name: "clicked"
+                                        PropertyChanges {
+                                            target: numberElement
+                                            color: "#212121"}
+                                       },
+                                    State {
+                                    name: "unclicked";
+                                    PropertyChanges {
+                                        target: numberElement
+                                        color: "transparent"
+                                    }
+                                      }
+                                ]
+                            }
+
+                            states: [
+                                State {
+                                    name: "clicked"
+                                    PropertyChanges {
+                                        target: numberElement
+                                        color: "#212121"}
+                                   },
+                                State {
+                                    name: "unclicked";
+                                    PropertyChanges {
+                                        target: numberElement
+                                        color: "transparent"
+                                    }
+                                }
+                            ]
+                        }
+                    }
                 }
-                //
             }
         }
     }

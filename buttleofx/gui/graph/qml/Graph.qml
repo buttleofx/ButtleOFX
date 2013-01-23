@@ -55,7 +55,7 @@ Rectangle {
 
         }
 
-        transform: Scale { id: scale; origin.x: graphArea.x ; origin.y: graphArea.y; xScale: 1; yScale: 1}
+        transform: Scale { id: scale; origin.x: graphArea.width/2; origin.y: graphArea.height/2; xScale: 1; yScale: 1}
     }
     
 
@@ -77,8 +77,8 @@ Rectangle {
         property real nbSteps: 5
         onVerticalWheel: {
             if(scale.xScale > 0.3 ) {
-                scale.origin.x = middleMouseArea.mouseX
-                scale.origin.y = middleMouseArea.mouseY
+                //scale.origin.x = middleMouseArea.mouseX
+                //scale.origin.y = middleMouseArea.mouseY
                 if(delta < 0 && scale.xScale - 0.2 > 0.3 && scale.yScale - 0.2 > 0.3 ) {
                     scale.xScale -= 0.1 
                     scale.yScale -= 0.1             

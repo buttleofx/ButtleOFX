@@ -4,7 +4,7 @@ from quickmamba.patterns import Signal
 class ParamChoice(object):
     """
         Core class, which represents a choice parameter.
-        Contains : 
+        Contains :
             - _paramType : the name of the type of this parameter
             - _defaultValue : the default value for the input
             - _value : the value selected in the list the input
@@ -19,7 +19,7 @@ class ParamChoice(object):
         self._listValue = listValue
         self._text = text
 
-    	self.changed = Signal()
+        self.changed = Signal()
 
     #################### getters ####################
 
@@ -45,8 +45,8 @@ class ParamChoice(object):
         self.changed()
 
     def setDefaultValue(self, defaultValue):
-    	self._defaultValue = defaultValue
-    	self.changed()
+        self._defaultValue = defaultValue
+        self.changed()
 
     def setValue(self, value):
         self._value = value

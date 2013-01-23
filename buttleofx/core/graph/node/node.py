@@ -4,7 +4,7 @@ from buttleofx.data import tuttleTools
 from quickmamba.patterns import Signal
 from PySide import QtGui
 # paramEditor
-from buttleofx.core.params import ParamInt, ParamInt2D, ParamInt3D, ParamString, ParamDouble, ParamDouble2D, ParamBoolean, ParamDouble3D, ParamChoice, ParamPushButton, ParamSlider
+from buttleofx.core.params import ParamInt, ParamInt2D, ParamInt3D, ParamString, ParamDouble, ParamDouble2D, ParamBoolean, ParamDouble3D, ParamChoice, ParamPushButton
 
 nodeDescriptors = {
     "Blur": {
@@ -105,6 +105,7 @@ class Node(object):
                 maxValue = paramElement.getProperties().fetchProperty("OfxParamPropMax").getStringValue(0)
                 label = paramElement.getProperties().fetchProperty("OfxPropName").getStringValue(0)
                 self._params.append(ParamDouble(defaultValue, minValue, maxValue, label))
+                paramTest = ParamDouble(defaultValue, minValue, maxValue, label)
 
             if paramType == "ParamBoolean":
                 defaultValue = paramElement.getProperties().fetchProperty("OfxParamPropDefault").getStringValue(0)

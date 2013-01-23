@@ -50,8 +50,9 @@ class CmdCreateNode(UndoableCommand):
         # New Tuttle node
         tuttleNode = self.graphTarget.getGraphTuttle().createNode(str(self.nodeType))
         #self.graphTarget.getGraphTuttle().addNode(tuttleNode)
-        self.graphTarget.getGraphTuttle().renameNode(tuttleNode, str(self.nodeName))
         print "TuttleNode name : ", tuttleNode.getName()
+        self.graphTarget.getGraphTuttle().renameNode(tuttleNode, str(self.nodeName))
+        print "TuttleNode rename : ", tuttleNode.getName()
         print "TuttleNode : ", self.graphTarget.getGraphTuttle().getNode(str(self.nodeName))
         # New Buttle node
         self.graphTarget._nbNodesCreated += 1

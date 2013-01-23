@@ -4,7 +4,7 @@ from quickmamba.patterns import Signal
 class ParamDouble(object):
     """
         Core class, which represents a double parameter.
-        Contains : 
+        Contains :
             - _paramType : the name of the type of this parameter
             - _defaultValue : the default value for the input
             - _value : the value contained by the input
@@ -13,13 +13,15 @@ class ParamDouble(object):
             - _text : the label of the input
     """
 
-    def __init__(self, defaultValue, minimum, maximum, text):
+    def __init__(self, tuttleParam):
+        self._tuttleParam = tuttleParam
+
         self._paramType = "ParamDouble"
-        self._defaultValue = defaultValue
-        self._value = defaultValue
-        self._minimum = minimum
-        self._maximum = maximum
-        self._text = text
+        self._defaultValue = tuttleParam.getProperties().fetchProperty("OfxParamPropDefault").getStringValue(0)
+        self._value = self._defaultValue
+        self._minimum = tuttleParam.getProperties().fetchProperty("OfxParamPropDisplayMin").getStringValue(0)
+        self._maximum = tuttleParam.getProperties().fetchProperty("OfxParamPropDisplayMax").getStringValue(0)
+        self._text = tuttleParam.getProperties().fetchProperty("OfxPropName").getStringValue(0)
 
         self.changed = Signal()
 
@@ -55,7 +57,10 @@ class ParamDouble(object):
 
     def setValue(self, value):
         self._value = value
+        self._tuttleParam.getProperties().setDoubleProperty("OfxParamPropDefault", float(value))
         self.changed()
+
+        print "TuttleParam Value : ", self._tuttleParam.getProperties().fetchProperty("OfxParamPropDefault").getStringValue(0)
 
     def setMinimum(self, minimum):
         self._minimum = minimum

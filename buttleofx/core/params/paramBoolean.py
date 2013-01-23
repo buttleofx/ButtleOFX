@@ -4,18 +4,19 @@ from quickmamba.patterns import Signal
 class ParamBoolean(object):
     """
         Core class, which represents a boolean parameter.
-        Contains : 
+        Contains :
             - _paramType : the name of the type of this parameter
             - _defaultValue : the default value for the input
             - _value : the value contained by the input
             - _text : the label of the input
     """
 
-    def __init__(self, defaultValue, text):
+    def __init__(self, tuttleParam):
+        self._tuttleParam = tuttleParam
         self._paramType = "ParamBoolean"
-        self._defaultValue = defaultValue
-        self._value = defaultValue
-        self._text = text
+        self._defaultValue = tuttleParam.getProperties().fetchProperty("OfxParamPropDefault").getStringValue(0)
+        self._value = self._defaultValue
+        self._text = tuttleParam.getProperties().fetchProperty("OfxPropName").getStringValue(0)
 
         self.changed = Signal()
 

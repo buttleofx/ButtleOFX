@@ -13,13 +13,16 @@ class ParamInt(object):
             - _text : the label of the input
     """
 
-    def __init__(self, defaultValue, minimum, maximum, text):
+    def __init__(self, tuttleParam):
+
+        self._tuttleParam = tuttleParam
+
         self._paramType = "ParamInt"
-        self._defaultValue = defaultValue
-        self._value = defaultValue
-        self._minimum = minimum
-        self._maximum = maximum
-        self._text = text
+        self._defaultValue = tuttleParam.getProperties().fetchProperty("OfxParamPropDefault").getStringValue(0)
+        self._value = self._defaultValue
+        self._minimum = tuttleParam.getProperties().fetchProperty("OfxParamPropDisplayMin").getStringValue(0)
+        self._maximum = tuttleParam.getProperties().fetchProperty("OfxParamPropDisplayMax").getStringValue(0)
+        self._text = tuttleParam.getProperties().fetchProperty("OfxPropName").getStringValue(0)
 
         self.changed = Signal()
 

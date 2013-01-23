@@ -246,13 +246,13 @@ class ButtleData(QtCore.QObject, Singleton):
         cmdManager = CommandManager()
         cmdManager.redo()
 
-    # def getQObjectPluginsIdentifiers(self):
-    #     """
-    #         Returns a QObjectListModel of all names of Tuttle's plugins.
-    #     """
-    #     pluginsNames = QObjectListModel(self)
-    #     pluginsNames.setObjectList(tuttleTools.getPluginsNames())
-    #     return pluginsNames
+    def getQObjectPluginsIdentifiers(self):
+        """
+            Returns a QObjectListModel of all names of Tuttle's plugins.
+        """
+        pluginsNames = QObjectListModel(self)
+        pluginsNames.setObjectList(tuttleTools.getPluginsNames())
+        return pluginsNames
 
     @QtCore.Slot(str, result="QVariant")
     def getQObjectPluginsIdentifiersByParentPath(self, pathname):
@@ -277,5 +277,5 @@ class ButtleData(QtCore.QObject, Singleton):
     currentSelectedNodeChanged = QtCore.Signal()
     currentSelectedNodeWrapper = QtCore.Property(QtCore.QObject, getCurrentSelectedNodeWrapper, setCurrentSelectedNodeWrapper, notify=currentSelectedNodeChanged)
 
-    # # tuttle data
-    # tuttlePlugins = QtCore.Property(QtCore.QObject, getQObjectPluginsIdentifiers, constant=True)
+    # tuttle data
+    tuttlePlugins = QtCore.Property(QtCore.QObject, getQObjectPluginsIdentifiers, constant=True)

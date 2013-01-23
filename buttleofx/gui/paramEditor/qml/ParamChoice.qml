@@ -15,11 +15,8 @@ Item {
         //Title of the param
         Text {
             id: paramChoiceTitle
-            width: 80
             text: paramObject.text + " : "
             color: "white"
-            anchors.top: parent.top
-            anchors.verticalCenter: parent.verticalCenter
         }
 
         // Container of the diplay
@@ -35,7 +32,7 @@ Item {
                 height: 20
                 color: "#212121"
                 border.width: 1
-                        border.color: "#333"
+                border.color: "#333"
                 radius: 3
 
                 Text{

@@ -17,11 +17,8 @@ Item {
         // Title of the paramDouble
         Text {
             id: paramDouble2DTitle
-            width: 80
             text: paramObject.text + " : "
             color: "white"
-            anchors.top: parent.top
-            anchors.verticalCenter: parent.verticalCenter
         }
 
         /* First input */
@@ -69,8 +66,8 @@ Item {
                 selectByMouse : true
                 onAccepted: paramObject.value2 = paramDouble2Dinput2.text
                 validator: DoubleValidator{
-                    bottom: paramObject.minimum
-                    top: paramObject.maximum
+                bottom: paramObject.minimum
+                top: paramObject.maximum
                 }
             }
         }

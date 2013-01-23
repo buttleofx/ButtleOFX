@@ -16,11 +16,8 @@ Item {
         /* Title of the paramInt */
         Text {
             id: paramIntTitle
-            width: 80
             text: paramObject.text + " : "
             color: "white"
-            anchors.top: parent.top
-            anchors.verticalCenter: parent.verticalCenter
         }
 
         /* Input field accepting only number between 0 and 255 */

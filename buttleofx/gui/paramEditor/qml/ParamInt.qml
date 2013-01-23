@@ -13,18 +13,17 @@ Item {
         id: paramIntInputContainer
         spacing: 10
 
-        /*Title of the paramInt */
+        /* Title of the paramInt */
         Text {
             id: paramIntTitle
             width: 80
             text: paramObject.text + " : "
             color: "white"
-           // font.pointSize: 8
             anchors.top: parent.top
             anchors.verticalCenter: parent.verticalCenter
         }
 
-        /*Input field accepting only number between 0 and 255*/
+        /* Input field accepting only number between 0 and 255 */
         Rectangle{
             height: 20
             width:40

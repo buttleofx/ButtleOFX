@@ -56,7 +56,7 @@ Rectangle {
                          target: nodeBorder;
                          height: parent.height + 5;
                          width: parent.width + 5;
-                         color:  "#00b2a1";
+                         color:  m.nodeModel.color;
                          opacity: 1;
                      }
                  }

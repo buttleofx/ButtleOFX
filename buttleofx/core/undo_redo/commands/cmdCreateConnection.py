@@ -11,7 +11,9 @@ class CmdCreateConnection(UndoableCommand):
 
     def __init__(self, graph, clipOut, clipIn):
         self._graph = graph
-        self._connection = Connection(clipOut, clipIn)
+
+        self._connection = Connection(clipOut, clipIn, tuttleConnection)
+        se
 
     def undoCmd(self):
         """

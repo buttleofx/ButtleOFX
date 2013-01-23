@@ -75,7 +75,7 @@ class Node(object):
         self._type = nodeType
         self._coord = nodeCoord
         self._oldCoord = nodeCoord
-        self._tuttleNode = tuttleNode.asImageEffectNode()
+        self._tuttleNode = tuttleNode
 
         # soon from Tuttle
         nodeDesc = nodeDescriptors[nodeType] if nodeType in nodeDescriptors else defaultNodeDesc
@@ -87,37 +87,26 @@ class Node(object):
         self._params = []
 
         # Filling the node's param list
-        for param in range(self._tuttleNode.getNbParams()):
+        for param in range(self._tuttleNode.asImageEffectNode().getNbParams()):
 
-            paramElement = self._tuttleNode.getParam(param)
-            paramType = mapTuttleParamToButtleParam[paramElement.getProperties().fetchProperty("OfxParamPropType").getStringValue(0)]
+            tuttleParam = self._tuttleNode.asImageEffectNode().getParam(param)
+            paramType = mapTuttleParamToButtleParam[tuttleParam.getProperties().fetchProperty("OfxParamPropType").getStringValue(0)]
 
             if paramType == "ParamInt":
-                defaultValue = paramElement.getProperties().fetchProperty("OfxParamPropDefault").getStringValue(0)
-                minValue = paramElement.getProperties().fetchProperty("OfxParamPropMin").getStringValue(0)
-                maxValue = paramElement.getProperties().fetchProperty("OfxParamPropMax").getStringValue(0)
-                label = paramElement.getProperties().fetchProperty("OfxPropName").getStringValue(0)
-                self._params.append(ParamInt(defaultValue, minValue, maxValue, label))
+                self._params.append(ParamInt(tuttleParam))
 
             if paramType == "ParamDouble":
-                defaultValue = paramElement.getProperties().fetchProperty("OfxParamPropDefault").getStringValue(0)
-                minValue = paramElement.getProperties().fetchProperty("OfxParamPropMin").getStringValue(0)
-                maxValue = paramElement.getProperties().fetchProperty("OfxParamPropMax").getStringValue(0)
-                label = paramElement.getProperties().fetchProperty("OfxPropName").getStringValue(0)
-                self._params.append(ParamDouble(defaultValue, minValue, maxValue, label))
-                paramTest = ParamDouble(defaultValue, minValue, maxValue, label)
+                self._params.append(ParamDouble(tuttleParam))
 
             if paramType == "ParamBoolean":
-                defaultValue = paramElement.getProperties().fetchProperty("OfxParamPropDefault").getStringValue(0)
-                label = paramElement.getProperties().fetchProperty("OfxPropName").getStringValue(0)
-                self._params.append(ParamBoolean(defaultValue, label))
+                self._params.append(ParamBoolean(tuttleParam))
 
             if paramType == "ParamChoice":
-                defaultValue = paramElement.getProperties().fetchProperty("OfxParamPropChoiceOption").getStringValue(0)
+                defaultValue = tuttleParam.getProperties().fetchProperty("OfxParamPropChoiceOption").getStringValue(0)
                 listValue = []
-                for choice in range(paramElement.getProperties().fetchProperty("OfxParamPropChoiceOption").getDimension()):
-                    listValue.append(paramElement.getProperties().fetchProperty("OfxParamPropChoiceOption").getStringValue(choice))
-                label = paramElement.getProperties().fetchProperty("OfxPropName").getStringValue(0)
+                for choice in range(tuttleParam.getProperties().fetchProperty("OfxParamPropChoiceOption").getDimension()):
+                    listValue.append(tuttleParam.getProperties().fetchProperty("OfxParamPropChoiceOption").getStringValue(choice))
+                label = tuttleParam.getProperties().fetchProperty("OfxPropName").getStringValue(0)
                 self._params.append(ParamChoice(defaultValue, listValue, label))
 
             #if paramType == "ParamRGBA":
@@ -125,49 +114,50 @@ class Node(object):
             #if paramType == "ParamRGB":
 
             if paramType == "ParamDouble2D":
-                defaultValue1 = paramElement.getProperties().fetchProperty("OfxParamPropDefault").getStringValue(0)
-                defaultValue2 = paramElement.getProperties().fetchProperty("OfxParamPropDefault").getStringValue(1)
-                minValue = paramElement.getProperties().fetchProperty("OfxParamPropMin").getStringValue(0)
-                maxValue = paramElement.getProperties().fetchProperty("OfxParamPropMax").getStringValue(0)
-                label = paramElement.getProperties().fetchProperty("OfxPropName").getStringValue(0)
+                defaultValue1 = tuttleParam.getProperties().fetchProperty("OfxParamPropDefault").getStringValue(0)
+                defaultValue2 = tuttleParam.getProperties().fetchProperty("OfxParamPropDefault").getStringValue(1)
+                minValue = tuttleParam.getProperties().fetchProperty("OfxParamPropMin").getStringValue(0)
+                maxValue = tuttleParam.getProperties().fetchProperty("OfxParamPropMax").getStringValue(0)
+                label = tuttleParam.getProperties().fetchProperty("OfxPropName").getStringValue(0)
                 self._params.append(ParamDouble2D(defaultValue1, defaultValue2, minValue, maxValue, label))
 
             if paramType == "ParamInt2D":
-                defaultValue1 = paramElement.getProperties().fetchProperty("OfxParamPropDefault").getStringValue(0)
-                defaultValue2 = paramElement.getProperties().fetchProperty("OfxParamPropDefault").getStringValue(1)
-                minValue = paramElement.getProperties().fetchProperty("OfxParamPropMin").getStringValue(0)
-                maxValue = paramElement.getProperties().fetchProperty("OfxParamPropMax").getStringValue(0)
-                label = paramElement.getProperties().fetchProperty("OfxPropName").getStringValue(0)
+                defaultValue1 = tuttleParam.getProperties().fetchProperty("OfxParamPropDefault").getStringValue(0)
+                defaultValue2 = tuttleParam.getProperties().fetchProperty("OfxParamPropDefault").getStringValue(1)
+                minValue = tuttleParam.getProperties().fetchProperty("OfxParamPropMin").getStringValue(0)
+                maxValue = tuttleParam.getProperties().fetchProperty("OfxParamPropMax").getStringValue(0)
+                label = tuttleParam.getProperties().fetchProperty("OfxPropName").getStringValue(0)
                 self._params.append(ParamInt2D(defaultValue1, defaultValue2, minValue, maxValue, label))
 
             if paramType == "ParamDouble3D":
-                defaultValue1 = paramElement.getProperties().fetchProperty("OfxParamPropDefault").getStringValue(0)
-                defaultValue2 = paramElement.getProperties().fetchProperty("OfxParamPropDefault").getStringValue(1)
-                defaultValue3 = paramElement.getProperties().fetchProperty("OfxParamPropDefault").getStringValue(2)
-                minValue = paramElement.getProperties().fetchProperty("OfxParamPropMin").getStringValue(0)
-                maxValue = paramElement.getProperties().fetchProperty("OfxParamPropMax").getStringValue(0)
-                label = paramElement.getProperties().fetchProperty("OfxPropName").getStringValue(0)
+                defaultValue1 = tuttleParam.getProperties().fetchProperty("OfxParamPropDefault").getStringValue(0)
+                defaultValue2 = tuttleParam.getProperties().fetchProperty("OfxParamPropDefault").getStringValue(1)
+                defaultValue3 = tuttleParam.getProperties().fetchProperty("OfxParamPropDefault").getStringValue(2)
+                minValue = tuttleParam.getProperties().fetchProperty("OfxParamPropMin").getStringValue(0)
+                maxValue = tuttleParam.getProperties().fetchProperty("OfxParamPropMax").getStringValue(0)
+                label = tuttleParam.getProperties().fetchProperty("OfxPropName").getStringValue(0)
                 self._params.append(ParamDouble3D(defaultValue1, defaultValue2, defaultValue3, minValue, maxValue, label))
 
-            # if paramType == "ParamInt3D":
-            #     defaultValue1 = paramElement.getProperties().fetchProperty("OfxParamPropDefault").getStringValue(0)
-            #     defaultValue2 = paramElement.getProperties().fetchProperty("OfxParamPropDefault").getStringValue(1)
-            #     defaultValue3 = paramElement.getProperties().fetchProperty("OfxParamPropDefault").getStringValue(2)
-            #     minValue = paramElement.getProperties().fetchProperty("OfxParamPropMin").getStringValue(0)
-            #     maxValue = paramElement.getProperties().fetchProperty("OfxParamPropMax").getStringValue(0)
-            #     label = paramElement.getProperties().fetchProperty("OfxPropName").getStringValue(0)
-            #     self._params.append(ParamInt3D(defaultValue1, defaultValue2, defaultValue3, minValue, maxValue, label))
+            if paramType == "ParamInt3D":
+                defaultValue1 = tuttleParam.getProperties().fetchProperty("OfxParamPropDefault").getStringValue(0)
+                defaultValue2 = tuttleParam.getProperties().fetchProperty("OfxParamPropDefault").getStringValue(1)
+                defaultValue3 = tuttleParam.getProperties().fetchProperty("OfxParamPropDefault").getStringValue(2)
+                minValue = tuttleParam.getProperties().fetchProperty("OfxParamPropMin").getStringValue(0)
+                maxValue = tuttleParam.getProperties().fetchProperty("OfxParamPropMax").getStringValue(0)
+                label = tuttleParam.getProperties().fetchProperty("OfxPropName").getStringValue(0)
+                self._params.append(ParamInt3D(defaultValue1, defaultValue2, defaultValue3, minValue, maxValue, label))
 
             if paramType == "ParamString":
-                defaultValue = paramElement.getProperties().fetchProperty("OfxParamPropDefault").getStringValue(0)
-                label = paramElement.getProperties().fetchProperty("OfxPropName").getStringValue(0)
-                self._params.append(ParamString(defaultValue, label))
+                defaultValue = tuttleParam.getProperties().fetchProperty("OfxParamPropDefault").getStringValue(0)
+                stringType = tuttleParam.getProperties().fetchProperty("OfxParamPropStringMode").getStringValue(0)
+                label = tuttleParam.getProperties().fetchProperty("OfxPropName").getStringValue(0)
+                self._params.append(ParamString(defaultValue, stringType, label))
 
-            # if paramType == "ParamPushButton":
-            #     trigger = paramElement.getProperties().fetchProperty("OfxParamPropDefault").getStringValue(0)
-            #     label = paramElement.getProperties().fetchProperty("OfxPropName").getStringValue(0)
-            #     enabled = 
-            #     self._params.append(ParamPushButton(trigger, label, enabled))
+            if paramType == "ParamPushButton":
+                trigger = tuttleParam.getProperties().fetchProperty("OfxParamPropDefault").getStringValue(0)
+                label = tuttleParam.getProperties().fetchProperty("OfxPropName").getStringValue(0)
+                enabled = True
+                self._params.append(ParamPushButton(trigger, label, enabled))
 
         self.changed = Signal()
 
@@ -210,6 +200,9 @@ class Node(object):
 
     def getParams(self):
         return self._params
+
+    def getTuttleNode(self):
+        return self._tuttleNode
 
     ######## setters ########
 

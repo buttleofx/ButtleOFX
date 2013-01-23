@@ -9,11 +9,13 @@ class Connection(object):
         - clipIn : the IdClip of the second clip
     """
 
-    def __init__(self, clipOut, clipIn):
+    def __init__(self, clipOut, clipIn, tuttleConnection):
         super(Connection, self).__init__()
 
         self._clipOut = clipOut
         self._clipIn = clipIn
+
+        self._tuttleConnection = tuttleConnection
 
         self.changed = Signal()
         self.changed()
@@ -27,10 +29,17 @@ class Connection(object):
     def getClipIn(self):
         return self._clipIn
 
+    def getTuttleConnection(self):
+        return self._tuttleConnection
+
     def setClipOut(self, clipOut):
         self._clipOut = clipOut
         self.changed()
 
     def setClipIn(self, clipIn):
         self._clipIn = clipIn
+        self.changed()
+
+    def setTuttleConnection(self, tuttleConnection):
+        self._tuttleConnection = tuttleConnection
         self.changed()

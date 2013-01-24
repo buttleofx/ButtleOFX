@@ -52,14 +52,14 @@ Item {
             height: 2
             Rectangle{
                 id: whiteBar
-                x: barSlider.x
-                width: cursorSlider.x - barSlider.x
+                x: 0
+                width: cursorSlider.x
                 height: parent.height
-                color: "white"
+                color: "black"
             }
             Rectangle{
                 id: greyBar
-                x: barSlider.x + cursorSlider.x
+                x: cursorSlider.x
                 width: barSlider.width - whiteBar.width 
                 height: parent.height
                 color: "grey"
@@ -78,8 +78,8 @@ Item {
                 anchors.fill: parent
                 drag.target: parent
                 drag.axis: Drag.XAxis
-                drag.minimumX: barSlider.x// - cursorSlider.width/2
-                drag.maximumX: barSlider.x + barSlider.width// - cursorSlider.width/2
+                drag.minimumX: 0// - cursorSlider.width/2
+                drag.maximumX: barSlider.width// - cursorSlider.width/2
                 anchors.margins: -10 // allow to have an area around the cursor which allows to select the cursor even if we are not exactly on it
                 onReleased: paramObject.value = (cursorSlider.x * paramObject.maximum) / barSlider.width
             }
@@ -95,50 +95,3 @@ Item {
         }
     }
 }
-
-
-/*Item {
-    id: containerParamInt
-    implicitWidth: 300
-    implicitHeight: 30
-
-    property variant paramObject: model.object
-
-    // Container of the textInput
-    Row{
-        id: paramIntInputContainer
-        spacing: 10
-
-        // Title of the paramInt
-        Text {
-            id: paramIntTitle
-            text: paramObject.text + " : "
-            color: "white"
-        }
-
-        // Input field accepting only number between 0 and 255
-        Rectangle{
-            height: 20
-            width:40
-            color: "#212121"
-            border.width: 1
-            border.color: "#333"
-            radius: 3
-            TextInput{
-                id: paramIntInput
-                text: paramObject.value
-                anchors.left: parent.left
-                anchors.leftMargin: 5
-                maximumLength: 3
-                color: activeFocus ? "white" : "grey"
-                width: 40
-                selectByMouse : true
-                onAccepted: paramObject.value = paramIntInput.text
-                validator: IntValidator{
-                    bottom: paramObject.minimum
-                    top:  paramObject.maximum
-                }
-            }
-        }
-    }
-}*/

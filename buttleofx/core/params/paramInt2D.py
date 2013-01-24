@@ -4,7 +4,8 @@ from quickmamba.patterns import Signal
 class ParamInt2D(object):
     """
         Core class, which represents a int2D parameter.
-        Contains :
+        Contains : 
+            - _tuttleParam : link to the corresponding tuttleParam
             - _paramType : the name of the type of this parameter
             - _defaultValue1 and _defaultValue2 : the default values for the 2 inputs
             - _value1 and _value2 : the values contained by the 2 inputs
@@ -13,90 +14,56 @@ class ParamInt2D(object):
             - _text : the label of the input
     """
 
-    def __init__(self, defaultValue1, defaultValue2, minimum1, maximum1, minimum2, maximum2, text="default"):
-        self._paramType = "ParamInt2D"
-        self._defaultValue1 = defaultValue1
-        self._defaultValue2 = defaultValue2
-        self._value1 = defaultValue1
-        self._value2 = defaultValue2
-        self._minimum1 = minimum1
-        self._maximum1 = maximum1
-        self._minimum2 = minimum2
-        self._maximum2 = maximum2
-        self._text = text
+    def __init__(self, tuttleParam):
+        self._tuttleParam = tuttleParam
 
         self.changed = Signal()
 
     #################### getters ####################
 
+    def getTuttleParam(self):
+        return self._tuttleParam
+
     def getParamType(self):
-        return self._paramType
+        return "ParamInt2D"
 
     def getDefaultValue1(self):
-        return self._defaultValue1
+        return self._tuttleParam.getProperties().fetchProperty("OfxParamPropDefault").getStringValue(0)
 
     def getDefaultValue2(self):
-        return self._defaultValue2
+        return self._tuttleParam.getProperties().fetchProperty("OfxParamPropDefault").getStringValue(1)
 
     def getValue1(self):
-        return self._value1
+        return self._tuttleParam.getProperties().fetchProperty("OfxParamPropDefault").getStringValue(0)
 
     def getValue2(self):
-        return self._value2
+        return self._tuttleParam.getProperties().fetchProperty("OfxParamPropDefault").getStringValue(1)
 
     def getMinimum1(self):
-        return self._minimum1
+        return self._tuttleParam.getProperties().fetchProperty("OfxParamPropMin").getStringValue(0)
 
     def getMaximum1(self):
-        return self._maximum1
+        return self._tuttleParam.getProperties().fetchProperty("OfxParamPropMax").getStringValue(0)
 
     def getMinimum2(self):
-        return self._minimum2
+        return self._tuttleParam.getProperties().fetchProperty("OfxParamPropMin").getStringValue(1)
 
     def getMaximum2(self):
-        return self._maximum2
+        return self._tuttleParam.getProperties().fetchProperty("OfxParamPropMax").getStringValue(1)
 
     def getText(self):
-        return self._text
+        return self._tuttleParam.getProperties().fetchProperty("OfxPropName").getStringValue(0)
 
     #################### setters ####################
 
-    def setParamType(self, paramType):
-        self._paramType = paramType
-        self.changed()
-
-    def setDefaultValue1(self, defaultValue):
-        self._defaultValue1 = defaultValue
-        self.changed()
-
-    def setDefaultValue2(self, defaultValue):
-        self._defaultValue2 = defaultValue
-        self.changed()
-
     def setValue1(self, value):
-        self._value1 = value
+        self._tuttleParam.getProperties().setIntProperty("OfxParamPropDefault", float(value), 0)
         self.changed()
+
+        print "TuttleParam new Value : ", self._tuttleParam.getProperties().fetchProperty("OfxParamPropDefault").getStringValue(0)
 
     def setValue2(self, value):
-        self._value2 = value
+        self._tuttleParam.getProperties().setIntProperty("OfxParamPropDefault", float(value), 1)
         self.changed()
 
-    def setMinimum1(self, minimum):
-        self._minimum1 = minimum
-        self.changed()
-
-    def setMaximum1(self, maximum):
-        self._maximum1 = maximum
-        self.changed()
-
-    def setMinimum2(self, minimum):
-        self._minimum2 = minimum
-        self.changed()
-
-    def setMaximum2(self, maximum):
-        self._maximum2 = maximum
-        self.changed()
-
-    def setText(self, text):
-        self._text = text
-        self.changed()
+        print "TuttleParam new Value : ", self._tuttleParam.getProperties().fetchProperty("OfxParamPropDefault").getStringValue(1)

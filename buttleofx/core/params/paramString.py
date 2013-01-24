@@ -12,50 +12,41 @@ class ParamString(object):
             - _text : the label of the input
     """
 
-    def __init__(self, defaultValue, stringType, text):
-        self._paramType = "ParamString"
-        self._defaultValue = defaultValue
-        self._value = defaultValue
-        self._stringType = stringType
-        self._text = text
+    def __init__(self, tuttleParam):
+        self._tuttleParam = tuttleParam
 
         self.changed = Signal()
 
     #################### getters ####################
 
+    def getTuttleParam(self):
+        return self._tuttleParam
+
     def getParamType(self):
-        return self._paramType
+        return "ParamString"
 
     def getDefaultValue(self):
-        return self._defaultValue
+        return self._tuttleParam.getProperties().fetchProperty("OfxParamPropDefault").getStringValue(0)
 
     def getValue(self):
-        return self._value
+        return self._tuttleParam.getProperties().fetchProperty("OfxParamPropDefault").getStringValue(0)
 
     def getStringType(self):
-        return self._stringType
+        # OfxParamPropStringFilePathExists
+        # OfxParamStringIsSingleLine
+        # OfxParamStringIsMultiLine
+        # OfxParamStringIsFilePath
+        # OfxParamStringIsDirectoryPath
+        # OfxParamStringIsLabel
+        return self._tuttleParam.getProperties().fetchProperty("OfxParamPropStringMode").getStringValue(0)
 
     def getText(self):
-        return self._text
+        return self._tuttleParam.getProperties().fetchProperty("OfxPropName").getStringValue(0)
 
     #################### setters ####################
 
-    def setParamType(self, paramType):
-        self._paramType = paramType
-        self.changed()
-
-    def setDefaultValue(self, defaultValue):
-        self._defaultValue = defaultValue
-        self.changed()
-
     def setValue(self, value):
-        self._value = value
+        self._tuttleParam.getProperties().setStringProperty("OfxParamPropDefault", float(value))
         self.changed()
 
-    def setStringType(self, stringType):
-        self._stringType = stringType
-        self.changed()
-
-    def setText(self, text):
-        self._text = text
-        self.changed()
+        print "TuttleParam new Value : ", self._tuttleParam.getProperties().fetchProperty("OfxParamPropDefault").getStringValue(0)

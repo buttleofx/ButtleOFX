@@ -8,6 +8,29 @@ Item {
 
     property variant node
 
+    property int signalPosition : 0 // current position of the signal (milliseconds)
+    property int oldSignalPosition : 0 // position of the signal before animation start
+    property int signalDuration : 10000 // total durqtion of the signal (milliseconds)
+
+    // Displays an integer with 2 digits
+    function with2digits(n){
+        return n > 9 ? "" + n: "0" + n;
+    }
+
+    // Returns the string displayed under the viewer. It's the current position of the signal.
+    function getTimePosition() {
+        var totalSeconds = Math.floor(player.signalDuration / 1000)
+        var totalMinutes = Math.floor(totalSeconds / 60)
+        var totalHours = Math.floor(totalMinutes / 60)
+
+        var elapsedSeconds = Math.floor(player.signalPosition / 1000)
+        var elapsedMinutes = Math.floor(totalSeconds / 60)
+        var elapsedHours = Math.floor(totalMinutes / 60)
+
+        return with2digits(elapsedHours) + ":" + with2digits(elapsedMinutes) + ":" + with2digits(elapsedSeconds) + " / " + with2digits(totalHours) + ":" + with2digits(totalMinutes) + ":" + with2digits(totalSeconds)
+
+    }
+
     onNodeChanged: {
         console.log("Node Changed : ", node)
     }
@@ -62,9 +85,13 @@ Item {
                 color: tabBar.tabColor
             }
         }
-    }
-    //
 
+        onWidthChanged: {
+            console.log("jhbjhb")
+        }
+    }
+
+    // Viewer & tools
     Rectangle {
         height: parent.height - tabBar.height
         width: parent.width
@@ -76,6 +103,7 @@ Item {
         }
 
         ColumnLayout {
+
             //Viewer
             anchors.fill: parent
             Rectangle {
@@ -97,116 +125,225 @@ Item {
                     anchors.fill: parent
                 }
             }
-            //
+
+
+            // Timeline
+            Item {
+                id: timeline
+                anchors.top: viewerRegion.bottom
+                width: parent.width
+                implicitHeight: 10
+
+                property double endPosition : barTimeline.x + barTimeline.width - cursorTimeline.width
+
+                // Playing animation
+                NumberAnimation {
+                     id: playingAnimation
+                     target: cursorTimeline
+                     properties: "x"
+                     from: cursorTimeline.x
+                     to: timeline.endPosition
+                     duration : player.signalDuration - player.oldSignalPosition
+                }
+
+                // main container
+                Rectangle {
+                    width: parent.width
+                    height: parent.height
+                    color: "transparent"
+
+                    Rectangle {
+                        id: barTimeline
+                        anchors.verticalCenter: parent.verticalCenter
+                        width: parent.width
+                        height: 2
+
+                        Rectangle{
+                            id: whiteBar
+                            x: barTimeline.x
+                            width: cursorTimeline.x - barTimeline.x
+                            height: parent.height
+                            color: "white"
+                        }
+                        Rectangle{
+                            id: greyBar
+                            x: barTimeline.x + cursorTimeline.x
+                            width: barTimeline.width - whiteBar.width
+                            height: parent.height
+                            color: "grey"
+                        }
+                        MouseArea {
+                            anchors.fill : parent
+                            anchors.margins: -10
+                            onPressed : {
+                                cursorTimeline.x = mouse.x
+                            }
+                            onReleased : {
+                                player.oldSignalPosition = player.signalPosition
+                            }
+                        }
+                    }
+
+                    // cursor timeline (little white rectangle)
+                    Rectangle {
+                        id: cursorTimeline
+                        anchors.verticalCenter: parent.verticalCenter
+                        x: (player.signalPosition * (barTimeline.width - cursorTimeline.width)) / player.signalDuration
+                        height: 10
+                        width: 5
+                        radius: 1
+                        color: "white"
+
+                        onXChanged: {
+                            player.signalPosition = (cursorTimeline.x * player.signalDuration) / (barTimeline.width - cursorTimeline.width);
+                         }
+
+
+                        MouseArea{
+                            anchors.fill: parent
+                            drag.target: parent
+                            drag.axis: Drag.XAxis
+                            drag.minimumX: barTimeline.x
+                            drag.maximumX: timeline.endPosition
+                            anchors.margins: -10 // allow to have an area around the cursor which allows to select the cursor even if we are not exactly on it
+                            onPressed: {
+                                playingAnimation.stop();
+                            }
+                            onReleased: {
+                                player.oldSignalPosition = player.signalPosition
+                            }
+                        }
+                    }
+                }
+            }
+
+
+
+
+            // ToolBar
             Rectangle {
                 id: toolBarRegion
-                anchors.top: viewerRegion.bottom
+                anchors.top: timeline.bottom
                 width: parent.width
                 implicitHeight: 30
                 color: "transparent"
                 Layout.verticalSizePolicy: Layout.Fixed
-                //ToolBar
+
+                // Tools (zoom, timeline buttons, mosquitos)
                 Rectangle {
                     id: tools
                     width: parent.width
                     height: parent.height
                     color: "#141414"
 
-                    // Zoom +
-                    Rectangle {
-                        id: magGlassIn
-                        width: parent.height-4
-                        height: parent.height-4
-                        x: 2
-                        y: 2
-                        color: "#141414"
+                    // zoomTools
+                    Row {
+                        id: zoomTools
+                        anchors.verticalCenter: parent.verticalCenter
+                        anchors.left: parent.left
+                        spacing : 5
 
-                        Image {
-                            id: magGlassInButton
-                            source: "../img/zoom_plus.png"
-                            anchors.centerIn: parent
-                        }
+                        // Zoom +
+                        Rectangle {
+                            id: magGlassIn
+                            width: 22
+                            height: 15
+                            //x: 2
+                            //y: 2
+                            color: "#141414"
 
-                        MouseArea {
-                            anchors.fill: parent
-                            onClicked: {
-                                console.log("Zoom activated")
+                            Image {
+                                id: magGlassInButton
+                                source: "../img/zoom_plus.png"
+                                anchors.centerIn: parent
+                            }
 
-                                if(magGlassIn.state != "clicked") {
-                                    magGlassIn.state = "clicked"
-                                    magGlassOut.state = "unclicked"
-                                }
+                            MouseArea {
+                                anchors.fill: parent
+                                onClicked: {
+                                    console.log("Zoom activated")
 
-                                else {
-                                    magGlassIn.state = "unclicked"
+                                    if(magGlassIn.state != "clicked") {
+                                        magGlassIn.state = "clicked"
+                                        magGlassOut.state = "unclicked"
+                                    }
+
+                                    else {
+                                        magGlassIn.state = "unclicked"
+                                    }
                                 }
                             }
+
+                            states: [
+                                State {
+                                    name: "clicked"
+                                    PropertyChanges {
+                                        target: magGlassIn
+                                        color: "#212121"
+                                    }
+                                   },
+                                State {
+                                name: "unclicked";
+                                    PropertyChanges {
+                                        target: magGlassIn
+                                        color: "transparent"
+                                    }
+                                  }
+                            ]
                         }
 
-                        states: [
-                            State {
-                                name: "clicked"
-                                PropertyChanges {
-                                    target: magGlassIn
-                                    color: "#212121"}
-                               },
-                            State {
-                            name: "unclicked";
-                            PropertyChanges {
-                                target: magGlassIn
-                                color: "transparent"
+                        // Zoom -
+                        Rectangle {
+                            id: magGlassOut
+                            width: 22
+                            height: 15
+                            //x: parent.height+2
+                            //y: 2
+                            color: "transparent"
+
+                            Image {
+                                id: magGlassOutButton
+                                source: "../img/zoom_moins.png"
+                                anchors.centerIn: parent
                             }
-                              }
-                        ]
+
+                            MouseArea {
+                                anchors.fill: parent
+                                onClicked: {
+                                    console.log("ZoomOut activated")
+                                    if(magGlassOut.state != "clicked") {
+                                        magGlassOut.state = "clicked"
+                                        magGlassIn.state = "unclicked"
+                                    }
+
+                                    else {
+                                        magGlassOut.state = "unclicked"
+                                    }
+                                }
+                            }
+
+                            states: [
+                                State {
+                                    name: "clicked"
+                                    PropertyChanges {
+                                        target: magGlassOut
+                                        color: "#212121"
+                                    }
+                                   },
+                                State {
+                                    name: "unclicked";
+                                    PropertyChanges {
+                                        target: magGlassOut
+                                        color: "transparent"
+                                    }
+                                  }
+                            ]
+                        }
                     }
 
-                    // Zoom -
-                    Rectangle {
-                        id: magGlassOut
-                        width: parent.height-4
-                        height: parent.height-4
-                        x: parent.height+2
-                        y: 2
-                        color: "transparent"
+                    TimelineTools {}
 
-                        Image {
-                            id: magGlassOutButton
-                            source: "../img/zoom_moins.png"
-                            anchors.centerIn: parent
-                        }
-
-                        MouseArea {
-                            anchors.fill: parent
-                            onClicked: {
-                                console.log("ZoomOut activated")
-                                if(magGlassOut.state != "clicked") {
-                                    magGlassOut.state = "clicked"
-                                    magGlassIn.state = "unclicked"
-                                }
-
-                                else {
-                                    magGlassOut.state = "unclicked"
-                                }
-                            }
-                        }
-
-                        states: [
-                            State {
-                                name: "clicked"
-                                PropertyChanges {
-                                    target: magGlassOut
-                                    color: "#212121"}
-                               },
-                            State {
-                            name: "unclicked";
-                            PropertyChanges {
-                                target: magGlassOut
-                                color: "transparent"
-                            }
-                              }
-                        ]
-                    }
-
+                    // mosquitos
                     Row {
                         id: selectViewer
                         spacing: 5
@@ -229,6 +366,7 @@ Item {
                             }
                         }
 
+                        // mosquitos numbers
                         Repeater {
                             id: number
                             model: 9
@@ -254,7 +392,7 @@ Item {
 
                                  MouseArea {
                                     anchors.fill: parent
-                                    onClicked: { 
+                                    onClicked: {
                                         for(var i=0; i<9; ++i) {
                                             selectViewer.children[i].state = "unclicked"
                                         }
@@ -267,14 +405,15 @@ Item {
                                         name: "clicked"
                                         PropertyChanges {
                                             target: numberElement
-                                            color: "#212121"}
+                                            color: "#212121"
+                                        }
                                        },
                                     State {
                                     name: "unclicked";
-                                    PropertyChanges {
-                                        target: numberElement
-                                        color: "transparent"
-                                    }
+                                        PropertyChanges {
+                                            target: numberElement
+                                            color: "transparent"
+                                        }
                                       }
                                 ]
                             }
@@ -294,10 +433,11 @@ Item {
                                     }
                                 }
                             ]
-                        }
-                    }
-                }
-            }
-        }
-    }
-}
+                        } // Repeater mosquito
+                    } // Row (selectViewer = mosquitos )
+                } // Tools Rectangle (zoom, timeline buttons, mosquitos)
+            } // Rectangle (toolBarRegion)
+        } //ColumnLayout
+    } // Viewer & tools
+} // Item player
+

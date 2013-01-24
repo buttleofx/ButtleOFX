@@ -5,6 +5,7 @@ class ParamBoolean(object):
     """
         Core class, which represents a boolean parameter.
         Contains :
+            - _tuttleParam : link to the corresponding tuttleParam
             - _paramType : the name of the type of this parameter
             - _defaultValue : the default value for the input
             - _value : the value contained by the input
@@ -13,41 +14,30 @@ class ParamBoolean(object):
 
     def __init__(self, tuttleParam):
         self._tuttleParam = tuttleParam
-        self._paramType = "ParamBoolean"
-        self._defaultValue = tuttleParam.getProperties().fetchProperty("OfxParamPropDefault").getStringValue(0)
-        self._value = self._defaultValue
-        self._text = tuttleParam.getProperties().fetchProperty("OfxPropName").getStringValue(0)
 
         self.changed = Signal()
 
     #################### getters ####################
 
+    def getTuttleParam(self):
+        return self._tuttleParam
+
     def getParamType(self):
-        return self._paramType
+        return "ParamBoolean"
 
     def getDefaultValue(self):
-        return self._defaultValue
+        return self._tuttleParam.getProperties().fetchProperty("OfxParamPropDefault").getStringValue(0)
 
     def getValue(self):
-        return self._value
+        return self._tuttleParam.getProperties().fetchProperty("OfxParamPropDefault").getStringValue(0)
 
     def getText(self):
-        return self._text
+        return self._tuttleParam.getProperties().fetchProperty("OfxPropName").getStringValue(0)
 
     #################### setters ####################
 
-    def setParamType(self, paramType):
-        self._paramType = paramType
-        self.changed()
-
-    def setDefaultValue(self, defaultValue):
-        self._defaultValue = defaultValue
-        self.changed()
-
     def setValue(self, value):
-        self._value = value
+        self._tuttleParam.getProperties().seValue(value)
         self.changed()
 
-    def setText(self, text):
-        self._text = text
-        self.changed()
+        print "TuttleParam new Value : ", self._tuttleParam.getProperties().fetchProperty("OfxParamPropDefault").getStringValue(0)

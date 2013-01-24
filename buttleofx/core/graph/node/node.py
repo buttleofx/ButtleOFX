@@ -190,7 +190,7 @@ class Node(object):
         return self._desc
 
     def getColor(self):
-        return QtGui.QColor(*self._color)
+        return self._color
 
     def getNbInput(self):
         return self._nbInput
@@ -230,10 +230,22 @@ class Node(object):
         self._color = (r, g, b)
         self.changed()
 
+    def setColor(self, color):
+        self._color = (color.red(), color.green(), color.blue())
+        self.changed()
+
     def setNbInput(self, nbInput):
         self._nbInput = nbInput
         self.changed()
 
     def setImage(self, image):
         self._image = image
+        self.changed()
+
+    def setParams(self, params):
+        self._params = params
+        self.changed()
+
+    def setTuttleNode(self, tuttleNode):
+        self._tuttleNode = tuttleNode
         self.changed()

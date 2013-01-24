@@ -56,7 +56,7 @@ class NodeWrapper(QtCore.QObject):
         return QtCore.QPoint(self._node.getCoord()[0], self._node.getCoord()[1])
 
     def getColor(self):
-        return QtGui.QColor(self._node.getColor())
+        return QtGui.QColor(*self._node.getColor())
 
     def getNbInput(self):
         return self._node.getNbInput()
@@ -93,7 +93,7 @@ class NodeWrapper(QtCore.QObject):
 
     # from a QColor
     def setColor(self, color):
-        self._node.setColor(color.red(), color.green(), color.blue())
+        self._node.setColor(color)
 
     def setNbInput(self, nbInput):
         self._node.setNbInput(nbInput)

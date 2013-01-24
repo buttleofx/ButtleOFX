@@ -1,4 +1,5 @@
 import QtQuick 1.1
+import QuickMamba 1.0
 import ConnectionLineItem 1.0
 
 Rectangle {
@@ -53,18 +54,43 @@ Rectangle {
             }
 
         }
+
+        transform: Scale { id: scale; origin.x: graphArea.width/2; origin.y: graphArea.height/2; xScale: 1; yScale: 1}
     }
+    
 
     MenuList {
         id: listmodel
     }   
 
     MouseArea{
+        id: middleMouseArea
         anchors.fill: parent
         acceptedButtons: Qt.MiddleButton 
+        hoverEnabled: true
         drag.target: connectnode
         drag.axis: Drag.XandYAxis
-    } 
+    }
+
+    WheelArea {
+        anchors.fill: parent
+        property real nbSteps: 5
+        onVerticalWheel: {
+            if(scale.xScale > 0.3 ) {
+                //scale.origin.x = middleMouseArea.mouseX
+                //scale.origin.y = middleMouseArea.mouseY
+                console.log(connectnode.width)
+                if(delta < 0 && scale.xScale - 0.2 > 0.3 && scale.yScale - 0.2 > 0.3 ) {
+                    scale.xScale -= 0.1 
+                    scale.yScale -= 0.1             
+                }
+                if(delta > 0) {
+                    scale.xScale += 0.1
+                    scale.yScale += 0.1  
+                }
+            }          
+        } 
+    }
 
     /*MouseArea{
         id: mouseArea
@@ -78,4 +104,6 @@ Rectangle {
              listmodel.menuState = (listmodel.menuState == "hidden") ? "shown" : "hidden"
         }
     } */
+
+    
 }

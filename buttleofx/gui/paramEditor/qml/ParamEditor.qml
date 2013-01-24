@@ -51,9 +51,9 @@ Rectangle {
 
 
     SplitterColumn {
-            width: parent.width
-            height: parent.height
-            handleWidth: 3
+        width: parent.width
+        height: parent.height
+        handleWidth: 3
 
         /*TUTTLE PARAMS*/
         Rectangle{

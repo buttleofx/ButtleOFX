@@ -13,14 +13,18 @@ Rectangle {
             console.log("destruction");
             _buttleData.destructionNode();
         }
-        if (event.key == Qt.Key_U) {
+        if ((event.key == Qt.Key_Z) && (event.modifiers & Qt.ControlModifier)) {
                 console.log("Undo");
                 _buttleData.undo();
-            }
-            if (event.key == Qt.Key_R) {
-                console.log("Redo");
-                _buttleData.redo();
-            }
+        }
+        if ((event.key == Qt.Key_Y) && (event.modifiers & Qt.ControlModifier)) {
+            console.log("Redo");
+            _buttleData.redo();
+        }
+        if ((event.key == Qt.Key_D) && (event.modifiers & Qt.ControlModifier)){
+            console.log("Duplicate");
+            _buttleData.duplicationNode()
+        }
     }
 
     Rectangle {
@@ -61,6 +65,7 @@ Rectangle {
                 Player {
                     //Splitter.minimumHeight: 0
                     //Splitter.expanding: true
+                    id: player
                     width: parent.width
                     height: 0.5*parent.height
                     node: _buttleData.currentViewerNodeWrapper

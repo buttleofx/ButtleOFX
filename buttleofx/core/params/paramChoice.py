@@ -12,50 +12,39 @@ class ParamChoice(object):
             - _text : the label of the input
     """
 
-    def __init__(self, defaultValue, listValue, text):
-        self._paramType = "ParamChoice"
-        self._defaultValue = defaultValue
-        self._value = defaultValue
-        self._listValue = listValue
-        self._text = text
+    def __init__(self, tuttleParam):
+        self._tuttleParam = tuttleParam
+
+        self._listValue = []
+        for choice in range(tuttleParam.getProperties().fetchProperty("OfxParamPropChoiceOption").getDimension()):
+            self._listValue.append(tuttleParam.getProperties().fetchProperty("OfxParamPropChoiceOption").getStringValue(choice))
 
         self.changed = Signal()
 
     #################### getters ####################
 
+    def getTuttleParam(self):
+        return self._tuttleParam
+
     def getParamType(self):
-        return self._paramType
+        return "ParamChoice"
 
     def getDefaultValue(self):
-        return self._defaultValue
+        return self._tuttleParam.getProperties().fetchProperty("OfxParamPropChoiceOption").getStringValue(0)
 
     def getValue(self):
-        return self._value
+        return self._tuttleParam.getProperties().fetchProperty("OfxParamPropChoiceOption").getStringValue(0)
 
     def getListValue(self):
         return self._listValue
 
     def getText(self):
-        return self._text
+        return self._tuttleParam.getProperties().fetchProperty("OfxPropName").getStringValue(0)
 
     #################### setters ####################
 
-    def setParamType(self, paramType):
-        self._paramType = paramType
-        self.changed()
-
-    def setDefaultValue(self, defaultValue):
-        self._defaultValue = defaultValue
-        self.changed()
-
     def setValue(self, value):
-        self._value = value
+        self._tuttleParam.getProperties().setValue(float(value))
         self.changed()
 
-    def setListValue(self, listValue):
-        self._listValue = listValue
-        self.changed()
-
-    def setText(self, text):
-        self._text = text
-        self.changed()
+        print "TuttleParam new Value : ", self._tuttleParam.getProperties().fetchProperty("OfxParamPropDefault").getStringValue(0)

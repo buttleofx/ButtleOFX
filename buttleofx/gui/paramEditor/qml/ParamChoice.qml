@@ -73,7 +73,7 @@ Item {
                         width: 120
                         height: 20
                         anchors.left: parent.left
-                        y: parent.y + 20*index 
+                        y: parent.y + 20*index
                         color: "#343434"
                         border.width: 1
                         border.color: "#333"

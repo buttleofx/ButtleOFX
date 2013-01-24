@@ -28,8 +28,7 @@ class CmdCreateNode(UndoableCommand):
             Undo the creation of the node.
         """
         node = self.graphTarget.getNode(self.nodeName)
-        self.nodeCoord = node.getCoord()
-        self.graphTarget.deleteNodeConnections(self.nodeName)
+        self.graphTarget.getGraphTuttle().deleteNode(self.graphTarget.getGraphTuttle().getNode(str(self.nodeName)))
         self.graphTarget.getNodes().remove(node)
         self.graphTarget.nodesChanged()
 
@@ -37,7 +36,8 @@ class CmdCreateNode(UndoableCommand):
         """
             Redo the creation of the node.
         """
-        self.graphTarget.getNodes().append(Node(self.nodeName, self.nodeType, self.nodeCoord))
+        tuttleNode = self.graphTarget.getGraphTuttle().createNode(str(self.nodeType))
+        self.graphTarget.getNodes().append(Node(self.nodeName, self.nodeType, self.nodeCoord, tuttleNode))
         self.graphTarget.nodesChanged()
         # We don't have to recreate the connections because when a node is created, it can't have connections !
         # But maybe we should delete the (hypothetical) connections anyway ??
@@ -49,7 +49,11 @@ class CmdCreateNode(UndoableCommand):
 
         # New Tuttle node
         tuttleNode = self.graphTarget.getGraphTuttle().createNode(str(self.nodeType))
-
+        #self.graphTarget.getGraphTuttle().addNode(tuttleNode)
+        print "TuttleNode name : ", tuttleNode.getName()
+        self.graphTarget.getGraphTuttle().renameNode(tuttleNode, str(self.nodeName))
+        print "TuttleNode rename : ", tuttleNode.getName()
+        print "TuttleNode : ", self.graphTarget.getGraphTuttle().getNode(str(self.nodeName))
         # New Buttle node
         self.graphTarget._nbNodesCreated += 1
         self.graphTarget._nodes.append(Node(self.nodeName, self.nodeType, self.nodeCoord, tuttleNode))

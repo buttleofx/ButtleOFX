@@ -1,80 +1,67 @@
 import QtQuick 1.1
 
-Rectangle {
-    id: pushButton
-    width: 60
-    height: 20
-    color: "#d1cbcb"
-    radius: 5
-    border.width: 2
-    border.color: "#00b2a1"
+Item {
+    implicitWidth: 120
+    implicitHeight: 30
 
-    property string label: model.object.label
-    property string trigger : model.object.trigger
-    property bool enabled:  model.object.enabled
+    property variant paramObject: model.object
 
-    signal buttonpressed()
+    Rectangle {
+        id: pushButton
+        width: 120
+        height: 30
+        color: "#212121"
+        radius: 5
+        border.width: 2
+        border.color: "grey"
 
-    function setEnabled(isenabled)
-    {
-        enabled = isenabled
-    }
+        property string label: paramObject.label
+        property bool enabled:  paramObject.enabled
 
-    Text {
-        id: buttonid
-        color: "black"
-        text: label
-        font.bold: false
-        anchors.centerIn: parent
-        font.family: "Arial"
-        font.pixelSize: 14
+        state: paramObject.enabled ? "enabled" : "disnabled"
 
-        Component.onCompleted:
-        {
-            pushButton.height = font.pixelSize + 6
-        }
-    }
+        Text {
+            id: buttonid
+            color: "white"
+            text: parent.label
+            anchors.centerIn: parent
+            font.family: "Arial"
+            font.pixelSize: 14
 
-    MouseArea {
-        id: buttonmousearea
-        anchors.fill: parent
-
-        onPressed:
-        {
-            if (pushButton.enabled)
+            Component.onCompleted:
             {
-                parent.color = "#ffffff"
+                pushButton.height = font.pixelSize + 6
             }
         }
 
-        onReleased:
-        {
-            if (pushButton.enabled)
+        MouseArea {
+            id: buttonmousearea
+            anchors.fill: parent
+
+            onPressed:
             {
-                parent.color = "#d1cbcb"
+                pushButton.state = (pushButton.state == "FOCUS_ON") ? "FOCUS_OFF" : "FOCUS_ON"
+                paramObject.enabled = (pushButton.state == "FOCUS_ON") ? "True" : "False"
             }
         }
 
-        onClicked:
-        {
-            if (pushButton.enabled)
-            {
-                pushButton.buttonpressed(trigger)
+        states: [
+            State {
+                id: stateEnabled
+                name: "enabled"; when: pushButton.enabled
+                PropertyChanges { 
+                    target: buttonid; 
+                    color: "white";  
+                }
+            },
+            State {
+                id: stateDisnabled
+                name: "disnabled"; when: !pushButton.enabled
+                PropertyChanges { 
+                    target: buttonid; 
+                    color: "grey";  
+                }
             }
-        }
-
+        ]
     }
-
-    states: [
-    State {
-        id: stateEnabled
-        name: "enabled"; when: pushButton.enabled
-        PropertyChanges { target: buttonid; color: "black";  }
-    },
-    State {
-        id: stateDisnabled
-        name: "disnabled"; when: !pushButton.enabled
-        PropertyChanges { target: buttonid; color: "gray";  }
-    }
-    ]
 }

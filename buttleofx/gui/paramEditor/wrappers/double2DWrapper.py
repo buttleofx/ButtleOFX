@@ -28,11 +28,17 @@ class Double2DWrapper(QtCore.QObject):
     def getValue2(self):
         return self._param.getValue2()
 
-    def getMaximum(self):
-        return self._param.getMaximum()
+    def getMaximum1(self):
+        return self._param.getMaximum1()
 
-    def getMinimum(self):
-        return self._param.getMinimum()
+    def getMinimum1(self):
+        return self._param.getMinimum1()
+
+    def getMaximum2(self):
+        return self._param.getMaximum2()
+
+    def getMinimum2(self):
+        return self._param.getMinimum2()
 
     def getText(self):
         return self._param.getText()
@@ -54,11 +60,17 @@ class Double2DWrapper(QtCore.QObject):
     def setValue2(self, value2):
         self._param.setVlue2(value2)
 
-    def setMaximum(self, maximum):
-        self._param.setMaximum(maximum)
+    def setMaximum1(self, maximum):
+        self._param.setMaximum1(maximum)
 
-    def setMinimum(self, minimum):
-        self._param.setMinimum(minimum)
+    def setMinimum1(self, minimum):
+        self._param.setMinimum1(minimum)
+
+    def setMaximum2(self, maximum):
+        self._param.setMaximum2(maximum)
+
+    def setMinimum2(self, minimum):
+        self._param.setMinimum2(minimum)
 
     def setText(self, text):
         self._param.setTxt(text)
@@ -76,5 +88,7 @@ class Double2DWrapper(QtCore.QObject):
     text = QtCore.Property(unicode, getText, setText, notify=changed)
     value1 = QtCore.Property(float, getValue1, setValue1, notify=changed)
     value2 = QtCore.Property(float, getValue2, setValue2, notify=changed)
-    maximum = QtCore.Property(float, getMaximum, setMaximum, notify=changed)
-    minimum = QtCore.Property(float, getMinimum, setMinimum, notify=changed)
+    maximum1 = QtCore.Property(float, getMaximum1, setMaximum1, notify=changed)
+    minimum1 = QtCore.Property(float, getMinimum1, setMinimum1, notify=changed)
+    maximum2 = QtCore.Property(float, getMaximum2, setMaximum2, notify=changed)
+    minimum2 = QtCore.Property(float, getMinimum2, setMinimum2, notify=changed)

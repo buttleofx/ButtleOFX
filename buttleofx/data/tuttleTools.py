@@ -37,12 +37,13 @@ def getPluginsIdentifiersAsDictionary():
         pluginsIdentifiersAsDictionary["tuttle/image/"] = ['io', 'process', 'generator', 'display', 'tool']
         pluginsIdentifiersAsDictionary["tuttle/image/tool/"] = ['tuttle.dummy']
     """
-    g = tuttle.Graph()
+    pluginCache = tuttle.core().getImageEffectPluginCache()
+    plugins = pluginCache.getPlugins()
+
     pluginsIdentifiersAsDictionary = dict()
-    for pluginId in getPluginsNames():
-        p = g.createNode(pluginId)
-        node = p.asImageEffectNode()
-        fullPath = node.getProperties().fetchProperty("OfxImageEffectPluginPropGrouping").getStringValue(0)
+    for plugin in plugins:
+        pluginId = plugin.getIdentifier()
+        fullPath = plugin.getDescriptor().getPluginGrouping()
         parentList = fullPath.split('/')
         parentLabel = ""
         pluginId = pluginId.lstrip('tuttle.')

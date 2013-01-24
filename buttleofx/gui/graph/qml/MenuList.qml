@@ -27,7 +27,7 @@ Item {
                         anchors.leftMargin: 15
                         anchors.verticalCenter: parent.verticalCenter
                         color: "#eee"
-                        text: model.object
+                        text: object
                     }
                     MouseArea {
                         anchors.fill: parent
@@ -36,17 +36,24 @@ Item {
                         onExited: parent.color = "#343434"
                         onClicked: {
                             if(nodeMenuView.state == "shown"){
-                                nodeMenuView.parentName = nodeMenuView.parentName + model.object + "/"
+                                nodeMenuView.parentName = nodeMenuView.parentName + object + "/"
 
                                 if (_buttleData.nextSonIsAPlugin(nodeMenuView.parentName) == true) {
                                     console.log("CREATION NODE")
                                     nodeMenuView.state = "hidden"
-                                    clickFrom.clickCreationNode('tuttle.' + model.object)
+                                    clickFrom.clickCreationNode('tuttle.' + object)
                                 }
                                 else {
                                     console.log("NEWMODEL")
                                     var newModel = _buttleData.getQObjectPluginsIdentifiersByParentPath(nodeMenuView.parentName)
+                                    console.log("1")
+
                                     nodeMenuView.model = newModel
+
+                                    //Qt.createQmlObject()
+
+
+                                    console.log("2")
                                 }
                             }
                         }

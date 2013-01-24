@@ -11,42 +11,29 @@ class ParamPushButton(object):
             - _enabled : flag to see if the push button is clickable or not 
     """
 
-    def __init__(self, label, trigger, enabled=True):
-        self._paramType = "ParamPushButton"
-        self._label = label
-        self._trigger = trigger
-        self._enabled = enabled
+    def __init__(self, tuttleParam):
+        self._tuttleParam = tuttleParam
 
         self.changed = Signal()
 
     #################### getters ####################
 
+    def getTuttleParam(self):
+        return self._tuttleParam
+
     def getParamType(self):
-        return self._paramType
+        return "ParamPushButton"
 
     def getLabel(self):
-        return self._label
-
-    def getTrigger(self):
-        return self._trigger
+        return self._tuttleParam.getProperties().fetchProperty("OfxPropName").getStringValue(0)
 
     def getEnabled(self):
-        return self._enabled
+        return self._tuttleParam.getProperties().fetchProperty("OfxParamPropDefault").getStringValue(0)
 
     #################### setters ####################
 
-    def setParamType(self, paramType):
-        self._paramType = paramType
-        self.changed()
-
-    def setLabel(self, label):
-        self._label = label
-        self.changed()
-
-    def setTrigger(self, trigger):
-        self._trigger = trigger
-        self.changed()
-
     def setEnabled(self, enabled):
-        self._enabled = enabled
+        self._tuttleParam.getProperties().seValue(enabled)
         self.changed()
+
+        print "TuttleParam new Value : ", self._tuttleParam.getProperties().fetchProperty("OfxParamPropDefault").getStringValue(0)

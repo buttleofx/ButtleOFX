@@ -6,6 +6,8 @@ Item {
     implicitWidth: 300
     implicitHeight: 30
 
+    property variant paramObject: model.object
+
     /*Container of the textInput*/
     Row{
         id: paramInt2DInputContainer
@@ -14,7 +16,7 @@ Item {
         /*Title of the paramInt */
         Text {
             id: paramInt2DTitle
-            text: model.object.text + " : "
+            text: paramObject.text + " : "
             color: "white"
         }
 
@@ -28,17 +30,17 @@ Item {
             radius: 3
             TextInput{
                 id: paramInt2DInput1
-                text: model.object.value1
+                text: paramObject.maximum
                 anchors.left: parent.left
                 anchors.leftMargin: 5
                 maximumLength: 3
                 color: activeFocus ? "white" : "grey"
                 width: 40
                 selectByMouse : true
-                onAccepted: model.object.value1 = paramInt2DInput1.text
+                onAccepted: paramObject.value1 = paramInt2DInput1.text
                 validator: IntValidator{
-                    bottom: model.object.minimum
-                    top:  model.object.maximum
+                    bottom: paramObject.minimum
+                    top:  paramObject.maximum
                 }
             }
         }
@@ -53,17 +55,17 @@ Item {
             radius: 3
             TextInput{
                 id: paramInt2DInput2
-                text: model.object.value2
+                text: paramObject.maximum
                 anchors.left: parent.left
                 anchors.leftMargin: 5
                 maximumLength: 3
                 color: activeFocus ? "white" : "grey"
                 width: 40
                 selectByMouse : true
-                onAccepted: model.object.value2 = paramInt2DInput2.text
+                onAccepted: paramObject.value2 = paramInt2DInput2.text
                 validator: IntValidator{
-                    bottom: model.object.minimum
-                    top:  model.object.maximum
+                    bottom: paramObject.minimum
+                    top:  paramObject.maximum
                 }
             }
         }

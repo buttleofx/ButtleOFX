@@ -39,8 +39,13 @@ Item {
                 selectByMouse : true
                 onAccepted: paramObject.value1 = paramInt2DInput1.text
                 validator: IntValidator{
+<<<<<<< HEAD
                     bottom: paramObject.minimum
                     top:  paramObject.maximum
+=======
+                    bottom: model.object.minimum1
+                    top:  model.object.maximum1
+>>>>>>> 389b39d7e3b3f39c0f0d3c6c50a9cba7fd04857a
                 }
             }
         }
@@ -64,8 +69,13 @@ Item {
                 selectByMouse : true
                 onAccepted: paramObject.value2 = paramInt2DInput2.text
                 validator: IntValidator{
+<<<<<<< HEAD
                     bottom: paramObject.minimum
                     top:  paramObject.maximum
+=======
+                    bottom: model.object.minimum2
+                    top:  model.object.maximum2
+>>>>>>> 389b39d7e3b3f39c0f0d3c6c50a9cba7fd04857a
                 }
             }
         }

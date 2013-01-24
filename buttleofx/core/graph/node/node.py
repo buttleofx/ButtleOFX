@@ -56,34 +56,31 @@ class Node(object):
         Class Node defined by:
         - params from Buttle :
             - _name
+            - _nameUser
             - _type
             - _coord
             - _oldCoord : when a node is being dragged, we need to remember its old coordinates for the undo/redo
             - _color
             - _nbInput
             - _image
-        - params from Tuttle (depend on the node type) :
-            - _params
+            - _params : params from Tuttle (depend on the node type)
 
         Signal :
         - changed : a signal emited to the wrapper layer
     """
 
     def __init__(self, nodeName, nodeType, nodeCoord, tuttleNode):
+        self._tuttleNode = tuttleNode
+        nodeDesc = nodeDescriptors[nodeType] if nodeType in nodeDescriptors else defaultNodeDesc
+
         self._name = nodeName
         self._nameUser = nodeName.strip('tuttle.')
         self._type = nodeType
         self._coord = nodeCoord
         self._oldCoord = nodeCoord
-        self._tuttleNode = tuttleNode
-
-        # soon from Tuttle
-        nodeDesc = nodeDescriptors[nodeType] if nodeType in nodeDescriptors else defaultNodeDesc
-
         self._color = nodeDesc["color"]
         self._nbInput = nodeDesc["nbInput"]
         self._image = nodeDesc["url"]
-
         self._params = []
 
         # Filling the node's param list
@@ -157,7 +154,7 @@ class Node(object):
         return self._desc
 
     def getColor(self):
-        return QtGui.QColor(*self._color)
+        return self._color
 
     def getNbInput(self):
         return self._nbInput
@@ -197,10 +194,22 @@ class Node(object):
         self._color = (r, g, b)
         self.changed()
 
+    def setColor(self, color):
+        self._color = (color.red(), color.green(), color.blue())
+        self.changed()
+
     def setNbInput(self, nbInput):
         self._nbInput = nbInput
         self.changed()
 
     def setImage(self, image):
         self._image = image
+        self.changed()
+
+    def setParams(self, params):
+        self._params = params
+        self.changed()
+
+    def setTuttleNode(self, tuttleNode):
+        self._tuttleNode = tuttleNode
         self.changed()

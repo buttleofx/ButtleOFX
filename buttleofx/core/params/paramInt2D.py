@@ -9,8 +9,8 @@ class ParamInt2D(object):
             - _paramType : the name of the type of this parameter
             - _defaultValue1 and _defaultValue2 : the default values for the 2 inputs
             - _value1 and _value2 : the values contained by the 2 inputs
-            - _minimum : the min we can have for the value
-            - _maximum : the max we can have for the value
+            - _minimum1 and minimum2 : the min we can have for the 2 values
+            - _maximum1 and maximum2 : the max we can have for the 2 values
             - _text : the label of the input
     """
 
@@ -39,11 +39,17 @@ class ParamInt2D(object):
     def getValue2(self):
         return self._tuttleParam.getProperties().fetchProperty("OfxParamPropDefault").getStringValue(1)
 
-    def getMinimum(self):
+    def getMinimum1(self):
         return self._tuttleParam.getProperties().fetchProperty("OfxParamPropMin").getStringValue(0)
 
-    def getMaximum(self):
+    def getMaximum1(self):
         return self._tuttleParam.getProperties().fetchProperty("OfxParamPropMax").getStringValue(0)
+
+    def getMinimum2(self):
+        return self._tuttleParam.getProperties().fetchProperty("OfxParamPropMin").getStringValue(1)
+
+    def getMaximum2(self):
+        return self._tuttleParam.getProperties().fetchProperty("OfxParamPropMax").getStringValue(1)
 
     def getText(self):
         return self._tuttleParam.getProperties().fetchProperty("OfxPropName").getStringValue(0)

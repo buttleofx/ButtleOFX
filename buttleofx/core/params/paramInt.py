@@ -45,7 +45,7 @@ class ParamInt(object):
     #################### setters ####################
 
     def setValue(self, value):
-        self._tuttleParam.getProperties().setIntProperty("OfxParamPropDefault", float(value))
+        self._tuttleParam.getProperties().setIntProperty("OfxParamPropDefault", int(float(value)))
         self.changed()
 
         print "TuttleParam new Value : ", self._tuttleParam.getProperties().fetchProperty("OfxParamPropDefault").getStringValue(0)

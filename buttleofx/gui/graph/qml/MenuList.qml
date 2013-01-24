@@ -8,7 +8,7 @@ Item {
 
     ListView {
         id: nodeMenuView
-
+        interactive: false
         x: 0
         y: 30
         width: 120

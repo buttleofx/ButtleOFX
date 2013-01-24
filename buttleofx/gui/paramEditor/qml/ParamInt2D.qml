@@ -37,8 +37,8 @@ Item {
                 selectByMouse : true
                 onAccepted: model.object.value1 = paramInt2DInput1.text
                 validator: IntValidator{
-                    bottom: model.object.minimum
-                    top:  model.object.maximum
+                    bottom: model.object.minimum1
+                    top:  model.object.maximum1
                 }
             }
         }
@@ -62,8 +62,8 @@ Item {
                 selectByMouse : true
                 onAccepted: model.object.value2 = paramInt2DInput2.text
                 validator: IntValidator{
-                    bottom: model.object.minimum
-                    top:  model.object.maximum
+                    bottom: model.object.minimum2
+                    top:  model.object.maximum2
                 }
             }
         }

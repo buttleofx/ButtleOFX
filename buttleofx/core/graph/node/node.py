@@ -56,34 +56,31 @@ class Node(object):
         Class Node defined by:
         - params from Buttle :
             - _name
+            - _nameUser
             - _type
             - _coord
             - _oldCoord : when a node is being dragged, we need to remember its old coordinates for the undo/redo
             - _color
             - _nbInput
             - _image
-        - params from Tuttle (depend on the node type) :
-            - _params
+            - _params : params from Tuttle (depend on the node type)
 
         Signal :
         - changed : a signal emited to the wrapper layer
     """
 
     def __init__(self, nodeName, nodeType, nodeCoord, tuttleNode):
+        self._tuttleNode = tuttleNode
+        nodeDesc = nodeDescriptors[nodeType] if nodeType in nodeDescriptors else defaultNodeDesc
+
         self._name = nodeName
         self._nameUser = nodeName.strip('tuttle.')
         self._type = nodeType
         self._coord = nodeCoord
         self._oldCoord = nodeCoord
-        self._tuttleNode = tuttleNode
-
-        # soon from Tuttle
-        nodeDesc = nodeDescriptors[nodeType] if nodeType in nodeDescriptors else defaultNodeDesc
-
         self._color = nodeDesc["color"]
         self._nbInput = nodeDesc["nbInput"]
         self._image = nodeDesc["url"]
-
         self._params = []
 
         # Filling the node's param list
@@ -116,36 +113,48 @@ class Node(object):
             if paramType == "ParamDouble2D":
                 defaultValue1 = tuttleParam.getProperties().fetchProperty("OfxParamPropDefault").getStringValue(0)
                 defaultValue2 = tuttleParam.getProperties().fetchProperty("OfxParamPropDefault").getStringValue(1)
-                minValue = tuttleParam.getProperties().fetchProperty("OfxParamPropMin").getStringValue(0)
-                maxValue = tuttleParam.getProperties().fetchProperty("OfxParamPropMax").getStringValue(0)
+                minValue1 = tuttleParam.getProperties().fetchProperty("OfxParamPropMin").getStringValue(0)
+                maxValue1 = tuttleParam.getProperties().fetchProperty("OfxParamPropMax").getStringValue(0)
+                minValue2 = tuttleParam.getProperties().fetchProperty("OfxParamPropMin").getStringValue(1)
+                maxValue2 = tuttleParam.getProperties().fetchProperty("OfxParamPropMax").getStringValue(1)
                 label = tuttleParam.getProperties().fetchProperty("OfxPropName").getStringValue(0)
-                self._params.append(ParamDouble2D(defaultValue1, defaultValue2, minValue, maxValue, label))
+                self._params.append(ParamDouble2D(defaultValue1, defaultValue2, minValue1, maxValue1, minValue2, maxValue2, label))
 
             if paramType == "ParamInt2D":
                 defaultValue1 = tuttleParam.getProperties().fetchProperty("OfxParamPropDefault").getStringValue(0)
                 defaultValue2 = tuttleParam.getProperties().fetchProperty("OfxParamPropDefault").getStringValue(1)
-                minValue = tuttleParam.getProperties().fetchProperty("OfxParamPropMin").getStringValue(0)
-                maxValue = tuttleParam.getProperties().fetchProperty("OfxParamPropMax").getStringValue(0)
+                minValue1 = tuttleParam.getProperties().fetchProperty("OfxParamPropMin").getStringValue(0)
+                maxValue1 = tuttleParam.getProperties().fetchProperty("OfxParamPropMax").getStringValue(0)
+                minValue2 = tuttleParam.getProperties().fetchProperty("OfxParamPropMin").getStringValue(1)
+                maxValue2 = tuttleParam.getProperties().fetchProperty("OfxParamPropMax").getStringValue(1)
                 label = tuttleParam.getProperties().fetchProperty("OfxPropName").getStringValue(0)
-                self._params.append(ParamInt2D(defaultValue1, defaultValue2, minValue, maxValue, label))
+                self._params.append(ParamInt2D(defaultValue1, defaultValue2, minValue1, maxValue1, minValue2, maxValue2, label))
 
             if paramType == "ParamDouble3D":
                 defaultValue1 = tuttleParam.getProperties().fetchProperty("OfxParamPropDefault").getStringValue(0)
                 defaultValue2 = tuttleParam.getProperties().fetchProperty("OfxParamPropDefault").getStringValue(1)
                 defaultValue3 = tuttleParam.getProperties().fetchProperty("OfxParamPropDefault").getStringValue(2)
-                minValue = tuttleParam.getProperties().fetchProperty("OfxParamPropMin").getStringValue(0)
-                maxValue = tuttleParam.getProperties().fetchProperty("OfxParamPropMax").getStringValue(0)
+                minValue1 = tuttleParam.getProperties().fetchProperty("OfxParamPropMin").getStringValue(0)
+                maxValue1 = tuttleParam.getProperties().fetchProperty("OfxParamPropMax").getStringValue(0)
+                minValue2 = tuttleParam.getProperties().fetchProperty("OfxParamPropMin").getStringValue(1)
+                maxValue2 = tuttleParam.getProperties().fetchProperty("OfxParamPropMax").getStringValue(1)
+                minValue3 = tuttleParam.getProperties().fetchProperty("OfxParamPropMin").getStringValue(2)
+                maxValue3 = tuttleParam.getProperties().fetchProperty("OfxParamPropMax").getStringValue(2)
                 label = tuttleParam.getProperties().fetchProperty("OfxPropName").getStringValue(0)
-                self._params.append(ParamDouble3D(defaultValue1, defaultValue2, defaultValue3, minValue, maxValue, label))
+                self._params.append(ParamDouble3D(defaultValue1, defaultValue2, defaultValue3, minValue1, maxValue1, minValue2, maxValue2, minValue3, maxValue3, label))
 
             if paramType == "ParamInt3D":
                 defaultValue1 = tuttleParam.getProperties().fetchProperty("OfxParamPropDefault").getStringValue(0)
                 defaultValue2 = tuttleParam.getProperties().fetchProperty("OfxParamPropDefault").getStringValue(1)
                 defaultValue3 = tuttleParam.getProperties().fetchProperty("OfxParamPropDefault").getStringValue(2)
-                minValue = tuttleParam.getProperties().fetchProperty("OfxParamPropMin").getStringValue(0)
-                maxValue = tuttleParam.getProperties().fetchProperty("OfxParamPropMax").getStringValue(0)
+                minValue1 = tuttleParam.getProperties().fetchProperty("OfxParamPropMin").getStringValue(0)
+                maxValue1 = tuttleParam.getProperties().fetchProperty("OfxParamPropMax").getStringValue(0)
+                minValue2 = tuttleParam.getProperties().fetchProperty("OfxParamPropMin").getStringValue(1)
+                maxValue2 = tuttleParam.getProperties().fetchProperty("OfxParamPropMax").getStringValue(1)
+                minValue3 = tuttleParam.getProperties().fetchProperty("OfxParamPropMin").getStringValue(2)
+                maxValue3 = tuttleParam.getProperties().fetchProperty("OfxParamPropMax").getStringValue(2)
                 label = tuttleParam.getProperties().fetchProperty("OfxPropName").getStringValue(0)
-                self._params.append(ParamInt3D(defaultValue1, defaultValue2, defaultValue3, minValue, maxValue, label))
+                self._params.append(ParamInt3D(defaultValue1, defaultValue2, defaultValue3, minValue1, maxValue1, minValue2, maxValue2, minValue3, maxValue3, label))
 
             if paramType == "ParamString":
                 defaultValue = tuttleParam.getProperties().fetchProperty("OfxParamPropDefault").getStringValue(0)
@@ -190,7 +199,7 @@ class Node(object):
         return self._desc
 
     def getColor(self):
-        return QtGui.QColor(*self._color)
+        return self._color
 
     def getNbInput(self):
         return self._nbInput
@@ -230,10 +239,22 @@ class Node(object):
         self._color = (r, g, b)
         self.changed()
 
+    def setColor(self, color):
+        self._color = (color.red(), color.green(), color.blue())
+        self.changed()
+
     def setNbInput(self, nbInput):
         self._nbInput = nbInput
         self.changed()
 
     def setImage(self, image):
         self._image = image
+        self.changed()
+
+    def setParams(self, params):
+        self._params = params
+        self.changed()
+
+    def setTuttleNode(self, tuttleNode):
+        self._tuttleNode = tuttleNode
         self.changed()

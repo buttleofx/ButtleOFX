@@ -61,6 +61,7 @@ Rectangle {
                 Player {
                     //Splitter.minimumHeight: 0
                     //Splitter.expanding: true
+                    id: player
                     width: parent.width
                     height: 0.5*parent.height
                     node: _buttleData.currentViewerNodeWrapper

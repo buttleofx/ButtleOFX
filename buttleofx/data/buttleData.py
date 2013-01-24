@@ -14,6 +14,8 @@ from buttleofx.core.undo_redo.manageTools import CommandManager
 from buttleofx.core.undo_redo.commands import CmdSetCoord
 # quickmamba
 from quickmamba.patterns import Singleton
+# copy
+from copy import copy
 
 
 class ButtleData(QtCore.QObject, Singleton):
@@ -163,15 +165,17 @@ class ButtleData(QtCore.QObject, Singleton):
         # Set properties
         nameUser = self._currentSelectedNodeWrapper.getNameUser() + "_copie"
         oldCoord = self._currentSelectedNodeWrapper._node.getOldCoord()
-        #tuttleNode = self._currentSelectedNodeWrapper._node.getTuttleNode()
+        tuttleNode = copy(self._currentSelectedNodeWrapper._node.getTuttleNode())
         color = self._currentSelectedNodeWrapper.getColor()
         nbInput = self._currentSelectedNodeWrapper.getNbInput()
         image = self._currentSelectedNodeWrapper.getImage()
-        params = self._currentSelectedNodeWrapper._node.getParams()
+        params = []
+        for param in self._currentSelectedNodeWrapper._node.getParams():
+            params.append(copy(param))
 
         self.getGraph()._nodes[-1].setNameUser(nameUser)
         self.getGraph()._nodes[-1].setOldCoord(oldCoord[0], oldCoord[1])
-        #self.getGraph()._nodes[-1].setTuttleNode(tuttleNode)
+        self.getGraph()._nodes[-1].setTuttleNode(tuttleNode)
         self.getGraph()._nodes[-1].setColor(color)
         self.getGraph()._nodes[-1].setNbInput(nbInput)
         self.getGraph()._nodes[-1].setImage(image)

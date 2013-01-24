@@ -42,11 +42,11 @@ Rectangle {
                      name: "normal"
                      when: m.nodeModel != _buttleData.currentParamNodeWrapper
                      PropertyChanges {
-                         target: nodeBorder;
-                         height: parent.height;
-                         width: parent.width;
-                         color:  m.nodeModel.color;
-                         opacity: 0.5;
+                         target: nodeBorder
+                         height: parent.height
+                         width: parent.width
+                         color:  m.nodeModel.color
+                         opacity: 0.5
                      }
                  },
                  State {
@@ -54,9 +54,9 @@ Rectangle {
                      when: m.nodeModel == _buttleData.currentParamNodeWrapper
                      PropertyChanges {
                          target: nodeBorder;
-                         height: parent.height + 5;
-                         width: parent.width + 5;
-                         color:  m.nodeModel.color;
+                         height: parent.height
+                         width: parent.width
+                         color:  m.nodeModel.color
                          opacity: 1;
                      }
                  }
@@ -75,7 +75,7 @@ Rectangle {
             anchors.centerIn: parent
             text: m.nodeModel.nameUser
             font.pointSize: 10
-            color: (m.nodeModel == _buttleData.currentSelectedNodeWrapper) ? "#00b2a1" : "black"
+            color: (m.nodeModel == _buttleData.currentSelectedNodeWrapper) ? m.nodeModel.color : "black"
         }
     }
     Column {

@@ -12,8 +12,23 @@ Item {
     property int oldSignalPosition : 500 // position of the signal before animation start
     property int signalDuration : 10000 // total durqtion of the signal (milliseconds)
 
-    onSignalPositionChanged: {
-        console.log("signalPosition : " + signalPosition)
+    // Displays an integer with 2 digits
+    function with2digits(n){
+        return n > 9 ? "" + n: "0" + n;
+    }
+
+    // Returns the string displayed under the viewer. It's the current position of the signal.
+    function getTimePosition() {
+        var totalSeconds = Math.floor(player.signalDuration / 1000)
+        var totalMinutes = Math.floor(totalSeconds / 60)
+        var totalHours = Math.floor(totalMinutes / 60)
+
+        var elapsedSeconds = Math.floor(player.signalPosition / 1000)
+        var elapsedMinutes = Math.floor(totalSeconds / 60)
+        var elapsedHours = Math.floor(totalMinutes / 60)
+
+        return with2digits(elapsedHours) + ":" + with2digits(elapsedMinutes) + ":" + with2digits(elapsedSeconds) + " / " + with2digits(totalHours) + ":" + with2digits(totalMinutes) + ":" + with2digits(totalSeconds)
+
     }
 
     onNodeChanged: {
@@ -214,115 +229,131 @@ Item {
                 color: "transparent"
                 Layout.verticalSizePolicy: Layout.Fixed
 
-                //Tools (zoom, timeline buttons, mosquitos)
+                // Tools (zoom, timeline buttons, mosquitos)
                 Rectangle {
                     id: tools
                     width: parent.width
                     height: parent.height
                     color: "#141414"
 
-                    // Zoom +
-                    Rectangle {
-                        id: magGlassIn
-                        width: parent.height-4
-                        height: parent.height-4
-                        x: 2
-                        y: 2
-                        color: "#141414"
+                    // zoomTools
+                    Row {
+                        id: zoomTools
+                        anchors.verticalCenter: parent.verticalCenter
+                        anchors.left: parent.left
+                        spacing : 5
 
-                        Image {
-                            id: magGlassInButton
-                            source: "../img/zoom_plus.png"
-                            anchors.centerIn: parent
-                        }
+                        // Zoom +
+                        Rectangle {
+                            id: magGlassIn
+                            width: 22
+                            height: 15
+                            //x: 2
+                            //y: 2
+                            color: "#141414"
 
-                        MouseArea {
-                            anchors.fill: parent
-                            onClicked: {
-                                console.log("Zoom activated")
+                            Image {
+                                id: magGlassInButton
+                                source: "../img/zoom_plus.png"
+                                anchors.centerIn: parent
+                            }
 
-                                if(magGlassIn.state != "clicked") {
-                                    magGlassIn.state = "clicked"
-                                    magGlassOut.state = "unclicked"
-                                }
+                            MouseArea {
+                                anchors.fill: parent
+                                onClicked: {
+                                    console.log("Zoom activated")
 
-                                else {
-                                    magGlassIn.state = "unclicked"
+                                    if(magGlassIn.state != "clicked") {
+                                        magGlassIn.state = "clicked"
+                                        magGlassOut.state = "unclicked"
+                                    }
+
+                                    else {
+                                        magGlassIn.state = "unclicked"
+                                    }
                                 }
                             }
-                        }
 
-                        states: [
-                            State {
-                                name: "clicked"
-                                PropertyChanges {
-                                    target: magGlassIn
-                                    color: "#212121"
-                                }
-                               },
-                            State {
-                            name: "unclicked";
-                                PropertyChanges {
-                                    target: magGlassIn
-                                    color: "transparent"
-                                }
-                              }
-                        ]
-                    }
-
-                    // Zoom -
-                    Rectangle {
-                        id: magGlassOut
-                        width: parent.height-4
-                        height: parent.height-4
-                        x: parent.height+2
-                        y: 2
-                        color: "transparent"
-
-                        Image {
-                            id: magGlassOutButton
-                            source: "../img/zoom_moins.png"
-                            anchors.centerIn: parent
-                        }
-
-                        MouseArea {
-                            anchors.fill: parent
-                            onClicked: {
-                                console.log("ZoomOut activated")
-                                if(magGlassOut.state != "clicked") {
-                                    magGlassOut.state = "clicked"
-                                    magGlassIn.state = "unclicked"
-                                }
-
-                                else {
-                                    magGlassOut.state = "unclicked"
-                                }
-                            }
-                        }
-
-                        states: [
-                            State {
-                                name: "clicked"
-                                PropertyChanges {
-                                    target: magGlassOut
-                                    color: "#212121"
-                                }
-                               },
-                            State {
+                            states: [
+                                State {
+                                    name: "clicked"
+                                    PropertyChanges {
+                                        target: magGlassIn
+                                        color: "#212121"
+                                    }
+                                   },
+                                State {
                                 name: "unclicked";
-                                PropertyChanges {
-                                    target: magGlassOut
-                                    color: "transparent"
+                                    PropertyChanges {
+                                        target: magGlassIn
+                                        color: "transparent"
+                                    }
+                                  }
+                            ]
+                        }
+
+                        // Zoom -
+                        Rectangle {
+                            id: magGlassOut
+                            width: 22
+                            height: 15
+                            //x: parent.height+2
+                            //y: 2
+                            color: "transparent"
+
+                            Image {
+                                id: magGlassOutButton
+                                source: "../img/zoom_moins.png"
+                                anchors.centerIn: parent
+                            }
+
+                            MouseArea {
+                                anchors.fill: parent
+                                onClicked: {
+                                    console.log("ZoomOut activated")
+                                    if(magGlassOut.state != "clicked") {
+                                        magGlassOut.state = "clicked"
+                                        magGlassIn.state = "unclicked"
+                                    }
+
+                                    else {
+                                        magGlassOut.state = "unclicked"
+                                    }
                                 }
-                              }
-                        ]
+                            }
+
+                            states: [
+                                State {
+                                    name: "clicked"
+                                    PropertyChanges {
+                                        target: magGlassOut
+                                        color: "#212121"
+                                    }
+                                   },
+                                State {
+                                    name: "unclicked";
+                                    PropertyChanges {
+                                        target: magGlassOut
+                                        color: "transparent"
+                                    }
+                                  }
+                            ]
+                        }
                     }
 
                     // timeline tools
                     Row {
-                        anchors.centerIn: parent
+                        anchors.verticalCenter: parent.verticalCenter
+                        anchors.left: zoomTools.right
+                        anchors.leftMargin: 50
                         spacing: 8
                         property int buttonSize : 8
+
+                        Text {
+                            id: textTimeline
+                            color: "white"
+                            text: getTimePosition()
+                        }
 
                         // back to begin
                         Rectangle {

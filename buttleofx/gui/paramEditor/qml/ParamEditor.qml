@@ -75,7 +75,7 @@ Rectangle {
     /* Params depend on the node type (Tuttle data)*/
     ListView {
         id: tuttleParam
-
+        interactive: false
         anchors.fill: parent
         anchors.margins: 20
         anchors.topMargin: 50 + tuttleParamTittle.height

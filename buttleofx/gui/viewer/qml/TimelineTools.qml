@@ -9,7 +9,7 @@ Row {
 
     Text {
         id: textTimeline
-        color: "white"
+        color: "#bbbbbb"
         text: getTimePosition()
     }
 

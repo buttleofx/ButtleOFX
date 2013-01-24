@@ -8,8 +8,8 @@ Item {
 
     property variant node
 
-    property int signalPosition : 500 // current position of the signal (milliseconds)
-    property int oldSignalPosition : 500 // position of the signal before animation start
+    property int signalPosition : 0 // current position of the signal (milliseconds)
+    property int oldSignalPosition : 0 // position of the signal before animation start
     property int signalDuration : 10000 // total durqtion of the signal (milliseconds)
 
     // Displays an integer with 2 digits

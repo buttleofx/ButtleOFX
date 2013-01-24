@@ -1,6 +1,8 @@
 import QtQuick 1.1
 import QtDesktop 0.1
 
+import "ScrollBar"
+
 //parent of the ParamEditor is the Row of the ButtleAp
 Rectangle {
     id: paramEditor

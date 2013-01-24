@@ -4,7 +4,7 @@ from buttleofx.data import tuttleTools
 from quickmamba.patterns import Signal
 from PySide import QtGui
 # paramEditor
-from buttleofx.core.params import ParamInt, ParamInt2D, ParamInt3D, ParamString, ParamDouble, ParamDouble2D, ParamBoolean, ParamDouble3D, ParamChoice, ParamPushButton
+from buttleofx.core.params import ParamInt, ParamInt2D, ParamInt3D, ParamString, ParamDouble, ParamDouble2D, ParamBoolean, ParamDouble3D, ParamChoice, ParamPushButton, ParamRGBA, ParamRGB
 
 nodeDescriptors = {
     "Blur": {
@@ -35,7 +35,7 @@ mapTuttleParamToButtleParam = {
     "OfxParamTypeDouble": "ParamDouble",
     "OfxParamTypeBoolean": "ParamBoolean",
     "OfxParamTypeChoice": "ParamChoice",
-    "OfxRGBA": "ParamRGBA",
+    "OfxParamTypeRGBA": "ParamRGBA",
     "OfxParamTypeRGB": "ParamRGB",
     "OfxParamTypeDouble2D": "ParamDouble2D",
     "OfxParamTypeInteger2D": "ParamInt2D",
@@ -101,9 +101,11 @@ class Node(object):
             if paramType == "ParamChoice":
                 self._params.append(ParamChoice(tuttleParam))
 
-            #if paramType == "ParamRGBA":
+            if paramType == "ParamRGBA":
+                 self._params.append(ParamRGBA(tuttleParam))
 
-            #if paramType == "ParamRGB":
+            if paramType == "ParamRGB":
+                 self._params.append(ParamRGB(tuttleParam))
 
             if paramType == "ParamDouble2D":
                 self._params.append(ParamDouble2D(tuttleParam))

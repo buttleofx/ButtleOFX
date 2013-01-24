@@ -35,6 +35,7 @@ Row {
         clip: true
         TextInput {
             id: colorValue
+            //text: "default"
             anchors.leftMargin: 4
             anchors.topMargin: 0 
             anchors.fill: parent
@@ -49,6 +50,7 @@ Row {
                 bottom: 0; top: 255; decimals: 2
                 notation: DoubleValidator.StandardNotation
             }
+
         }
     }
 }

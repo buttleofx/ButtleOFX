@@ -6,9 +6,11 @@ from quickmamba.models import QObjectListModel
 from PySide import QtCore
 # core : graph
 from buttleofx.core.graph import Graph
+from buttleofx.core.graph.node import Node
 from buttleofx.core.graph.connection import IdClip
 # gui : graphWrapper
 from buttleofx.gui.graph import GraphWrapper
+from buttleofx.gui.graph.node import NodeWrapper
 # undo redo
 from buttleofx.core.undo_redo.manageTools import CommandManager
 from buttleofx.core.undo_redo.commands import CmdSetCoord
@@ -26,12 +28,16 @@ class ButtleData(QtCore.QObject, Singleton):
         - _currentNodeViewer
         - _currentNodeParam
         - _currentNodeGraph
+        - _currentNodeCopy
 
         This class :
             - containts all data we need to manage the application.
             - receives the undo and redo from QML, and call the cmdManager to do this.
     """
     def init(self, view):
+
+        self._view = view
+
         self._graph = Graph()
         self._graphWrapper = GraphWrapper(self._graph, view)
 
@@ -43,6 +49,8 @@ class ButtleData(QtCore.QObject, Singleton):
 
         self._currentViewerNodeName = None
         self._currentViewerNodeWrapper = None
+
+        self._currentCopiedNodeWrapper = None
 
         return self
 
@@ -153,17 +161,13 @@ class ButtleData(QtCore.QObject, Singleton):
         self.currentViewerNodeChanged.emit()
 
     @QtCore.Slot()
-    def duplicationNode(self):
-        """
-            Function called from the QML when we want to duplicate a node.
-        """
-        # Create node
-        nodeType = self._currentSelectedNodeWrapper.getType()
-        coord = self._currentSelectedNodeWrapper._node.getCoord()
-        self.getGraph().createNode(nodeType, coord[0], coord[1])
+    def copyNode(self):
+        if self._currentCopiedNodeWrapper == None:
+            self._currentCopiedNodeWrapper = NodeWrapper(Node("name", "type", (0, 0, 0), self._graph.getGraphTuttle().createNode("tuttle.invert")), self._view)
 
-        # Set properties
-        nameUser = self._currentSelectedNodeWrapper.getNameUser() + "_copie"
+        # Get the current selected node's properties
+        nodeType = self._currentSelectedNodeWrapper.getType()
+        nameUser = copy(self._currentSelectedNodeWrapper.getNameUser())
         oldCoord = self._currentSelectedNodeWrapper._node.getOldCoord()
         tuttleNode = copy(self._currentSelectedNodeWrapper._node.getTuttleNode())
         color = self._currentSelectedNodeWrapper.getColor()
@@ -173,6 +177,64 @@ class ButtleData(QtCore.QObject, Singleton):
         for param in self._currentSelectedNodeWrapper._node.getParams():
             params.append(copy(param))
 
+        # Use the current selected node's properties to set the duplicated node's properties
+        self._currentCopiedNodeWrapper._node.setType(nodeType)
+        self._currentCopiedNodeWrapper._node.setNameUser(nameUser)
+        self._currentCopiedNodeWrapper._node.setOldCoord(oldCoord[0], oldCoord[1])
+        self._currentCopiedNodeWrapper._node.setTuttleNode(tuttleNode)
+        self._currentCopiedNodeWrapper._node.setColor(color)
+        self._currentCopiedNodeWrapper._node.setNbInput(nbInput)
+        self._currentCopiedNodeWrapper._node.setImage(image)
+        self._currentCopiedNodeWrapper._node.setParams(params)
+
+    @QtCore.Slot()
+    def pasteNode(self):
+        # Create a node giving the current copied node's type, x and y
+        nodeType = self._currentCopiedNodeWrapper.getType()
+        self.getGraph().createNode(nodeType, 20, 20)
+
+        # Get the current selected node's properties
+        nameUser = self._currentCopiedNodeWrapper.getNameUser() + "_copy"
+        oldCoord = self._currentCopiedNodeWrapper._node.getOldCoord()
+        tuttleNode = copy(self._currentCopiedNodeWrapper._node.getTuttleNode())
+        color = self._currentCopiedNodeWrapper.getColor()
+        nbInput = self._currentCopiedNodeWrapper.getNbInput()
+        image = self._currentCopiedNodeWrapper.getImage()
+        params = []
+        for param in self._currentCopiedNodeWrapper._node.getParams():
+            params.append(copy(param))
+
+        # Use the current selected node's properties to set the duplicated node's properties
+        self.getGraph()._nodes[-1].setNameUser(nameUser)
+        self.getGraph()._nodes[-1].setOldCoord(oldCoord[0], oldCoord[1])
+        self.getGraph()._nodes[-1].setTuttleNode(tuttleNode)
+        self.getGraph()._nodes[-1].setColor(color)
+        self.getGraph()._nodes[-1].setNbInput(nbInput)
+        self.getGraph()._nodes[-1].setImage(image)
+        self.getGraph()._nodes[-1].setParams(params)
+
+    @QtCore.Slot()
+    def duplicationNode(self):
+        """
+            Function called from the QML when we want to duplicate a node.
+        """
+        # Create a node giving the current selected node's type, x and y
+        nodeType = self._currentSelectedNodeWrapper.getType()
+        coord = self._currentSelectedNodeWrapper._node.getCoord()
+        self.getGraph().createNode(nodeType, coord[0], coord[1])
+
+        # Get the current selected node's properties
+        nameUser = self._currentSelectedNodeWrapper.getNameUser() + "_duplicate"
+        oldCoord = self._currentSelectedNodeWrapper._node.getOldCoord()
+        tuttleNode = copy(self._currentSelectedNodeWrapper._node.getTuttleNode())
+        color = self._currentSelectedNodeWrapper.getColor()
+        nbInput = self._currentSelectedNodeWrapper.getNbInput()
+        image = self._currentSelectedNodeWrapper.getImage()
+        params = []
+        for param in self._currentSelectedNodeWrapper._node.getParams():
+            params.append(copy(param))
+
+        # Use the current selected node's properties to set the duplicated node's properties
         self.getGraph()._nodes[-1].setNameUser(nameUser)
         self.getGraph()._nodes[-1].setOldCoord(oldCoord[0], oldCoord[1])
         self.getGraph()._nodes[-1].setTuttleNode(tuttleNode)

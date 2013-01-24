@@ -58,7 +58,7 @@ Rectangle {
             Splitter.minimumHeight: tuttleParamTitle.height
 
             id: tuttleParams
-            height: parent.height - buttleParams.height
+            height: 550
             width: parent.width
             color: paramEditor.background
             /* title of tuttle params */
@@ -96,7 +96,6 @@ Rectangle {
 
                     }
                     interactive: true
-                    boundsBehavior: Flickable.StopAtBounds
                 }
             }
 
@@ -131,7 +130,7 @@ Rectangle {
             //Splitter.minimumHeight: buttleParamTitle.height
             id: buttleParams
             height: 190
-            width: parent.width
+            width: paramEditor.width
             color: paramEditor.background
             anchors.bottom: parent.bottom
 

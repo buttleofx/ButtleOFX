@@ -35,5 +35,11 @@ Rectangle {
 
     // Animate scrollbar appearing/disappearing
     Behavior on opacity { NumberAnimation { duration: 200 }}
+
+    MouseArea {
+        onClicked: {
+            y: vertical ? flickable.visibleArea.yPosition * parent.height : parent.height - height
+        }
+    }
 }
  

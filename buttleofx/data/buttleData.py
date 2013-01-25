@@ -188,6 +188,10 @@ class ButtleData(QtCore.QObject):
         self.getGraph().getNodes()[-1].setImage(image)
         self.getGraph().getNodes()[-1].setParams(params)
 
+    @QtCore.Slot(str)
+    def dropReaderNode(self, url):
+        self.getGraph().createReaderNode(url)
+
     ##### Connection #####
 
     def connect(self, clipOut, clipIn):

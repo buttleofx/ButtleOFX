@@ -57,18 +57,6 @@ class Double3DWrapper(QtCore.QObject):
 
     #################### setters ####################
 
-    def setParamType(self, paramType):
-        self._param.setParamType(paramType)
-
-    def setDefaultValue1(self, defaultValue1):
-        self._param.setDefaultValue1(defaultValue1)
-
-    def setDefaultValue2(self, defaultValue2):
-        self._param.setDefaultValue2(defaultValue2)
-
-    def setDefaultValue3(self, defaultValue3):
-        self._param.setDefaultValue3(defaultValue3)
-
     def setValue1(self, value1):
         self._param.setValue1(value1)
 
@@ -77,27 +65,6 @@ class Double3DWrapper(QtCore.QObject):
 
     def setValue3(self, value3):
         self._param.setValue3(value3)
-
-    def setMaximum1(self, maximum):
-        self._param.setMaximum1(maximum)
-
-    def setMinimum1(self, minimum):
-        self._param.setMinimum1(minimum)
-
-    def setMaximum2(self, maximum):
-        self._param.setMaximum2(maximum)
-
-    def setMinimum2(self, minimum):
-        self._param.setMinimum2(minimum)
-
-    def setMaximum3(self, maximum):
-        self._param.setMaximum3(maximum)
-
-    def setMinimum3(self, minimum):
-        self._param.setMinimum3(minimum)
-
-    def setText(self, text):
-        self._param.setText(text)
 
     @QtCore.Signal
     def changed(self):
@@ -108,14 +75,14 @@ class Double3DWrapper(QtCore.QObject):
 
     ################################################## DATA EXPOSED TO QML ##################################################
 
-    paramType = QtCore.Property(unicode, getParamType, setParamType, notify=changed)
-    text = QtCore.Property(unicode, getText, setText, notify=changed)
+    paramType = QtCore.Property(unicode, getParamType, notify=changed)
+    text = QtCore.Property(unicode, getText, notify=changed)
     value1 = QtCore.Property(float, getValue1, setValue1, notify=changed)
     value2 = QtCore.Property(float, getValue2, setValue2, notify=changed)
     value3 = QtCore.Property(float, getValue3, setValue2, notify=changed)
-    maximum1 = QtCore.Property(float, getMaximum1, setMaximum1, notify=changed)
-    minimum1 = QtCore.Property(float, getMinimum1, setMinimum1, notify=changed)
-    maximum2 = QtCore.Property(float, getMaximum2, setMaximum2, notify=changed)
-    minimum2 = QtCore.Property(float, getMinimum2, setMinimum2, notify=changed)
-    maximum3 = QtCore.Property(float, getMaximum3, setMaximum3, notify=changed)
-    minimum3 = QtCore.Property(float, getMinimum3, setMinimum3, notify=changed)
+    maximum1 = QtCore.Property(float, getMaximum1, notify=changed)
+    minimum1 = QtCore.Property(float, getMinimum1, notify=changed)
+    maximum2 = QtCore.Property(float, getMaximum2, notify=changed)
+    minimum2 = QtCore.Property(float, getMinimum2, notify=changed)
+    maximum3 = QtCore.Property(float, getMaximum3, notify=changed)
+    minimum3 = QtCore.Property(float, getMinimum3, notify=changed)

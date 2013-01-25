@@ -30,7 +30,7 @@ Item {
             radius: 3
             TextInput{
                 id: paramInt2DInput1
-                text: paramObject.maximum
+                text: paramObject.value1
                 anchors.left: parent.left
                 anchors.leftMargin: 5
                 maximumLength: 3
@@ -55,7 +55,7 @@ Item {
             radius: 3
             TextInput{
                 id: paramInt2DInput2
-                text: paramObject.maximum
+                text: paramObject.value2
                 anchors.left: parent.left
                 anchors.leftMargin: 5
                 maximumLength: 3

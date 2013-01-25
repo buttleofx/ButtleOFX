@@ -33,23 +33,8 @@ class IntWrapper(QtCore.QObject):
 
     #################### setters ####################
 
-    def setParamType(self, paramType):
-        self._param.setParamType(paramType)
-
-    def setDefaultValue(self, defaultValue):
-        self._param.setDefaultValue(defaultValue)
-
     def setValue(self, value):
         self._param.setValue(value)
-
-    def setMaximum(self, maximum):
-        self._param.setMaximum(maximum)
-
-    def setMinimum(self, minimum):
-        self._param.setMinimum(minimum)
-
-    def setText(self, text):
-        self._param.setText(text)
 
     @QtCore.Signal
     def changed(self):
@@ -60,8 +45,8 @@ class IntWrapper(QtCore.QObject):
 
     ################################################## DATA EXPOSED TO QML ##################################################
 
-    paramType = QtCore.Property(unicode, getParamType, setParamType, notify=changed)
-    text = QtCore.Property(unicode, getText, setText, notify=changed)
-    value = QtCore.Property(unicode, getValue, setValue, notify=changed)
-    maximum = QtCore.Property(unicode, getMaximum, setMaximum, notify=changed)
-    minimum = QtCore.Property(unicode, getMinimum, setMinimum, notify=changed)
+    paramType = QtCore.Property(unicode, getParamType, notify=changed)
+    text = QtCore.Property(unicode, getText, notify=changed)
+    value = QtCore.Property(int, getValue, setValue, notify=changed)
+    maximum = QtCore.Property(unicode, getMaximum, notify=changed)
+    minimum = QtCore.Property(unicode, getMinimum, notify=changed)

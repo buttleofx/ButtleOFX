@@ -55,7 +55,7 @@ Item {
                 x: 0
                 width: cursorSlider.x
                 height: parent.height
-                color: "black"
+                color: "white"
             }
             Rectangle{
                 id: greyBar

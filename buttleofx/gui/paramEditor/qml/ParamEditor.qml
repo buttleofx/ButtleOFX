@@ -79,6 +79,7 @@ Rectangle {
                     anchors.fill: parent
                     anchors.topMargin: 5
                     anchors.bottomMargin: 5
+                    spacing: 6
 
                     model: params
                     

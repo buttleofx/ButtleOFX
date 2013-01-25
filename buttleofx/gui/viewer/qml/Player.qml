@@ -393,7 +393,8 @@ Item {
                                  MouseArea {
                                     anchors.fill: parent
                                     onClicked: {
-                                        for(var i=0; i<9; ++i) {
+                                        // from 1 to 9 because the first element of 'selectViewer is the mosquito image !
+                                        for(var i=1; i<10; ++i) {
                                             selectViewer.children[i].state = "unclicked"
                                         }
                                         numberElement.state = "clicked"
@@ -417,22 +418,6 @@ Item {
                                       }
                                 ]
                             }
-
-                            states: [
-                                State {
-                                    name: "clicked"
-                                    PropertyChanges {
-                                        target: numberElement
-                                        color: "#212121"}
-                                   },
-                                State {
-                                    name: "unclicked";
-                                    PropertyChanges {
-                                        target: numberElement
-                                        color: "transparent"
-                                    }
-                                }
-                            ]
                         } // Repeater mosquito
                     } // Row (selectViewer = mosquitos )
                 } // Tools Rectangle (zoom, timeline buttons, mosquitos)

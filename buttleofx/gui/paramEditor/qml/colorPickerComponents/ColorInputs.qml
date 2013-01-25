@@ -65,6 +65,13 @@ Rectangle {
                 focus: true
                 selectByMouse: true
                 text: colorFields.alphaColorText
+
+                onTextChanged: {
+                    paramObject.r = rInput.colorValueText
+                    paramObject.g = gInput.colorValueText
+                    paramObject.b = bInput.colorValueText
+                    paramObject.a = aInput.colorValueText
+                }
             }
         }
 
@@ -104,32 +111,45 @@ Rectangle {
             width: parent.width
             spacing: 4
             ColorInput {
-                id: "rInput"
+                id: rInput
                 colorName: "R:"
                 colorValueText: colorFields.redValue
                 minValue: 0
                 maxValue: 255
+                onColorValueTextChanged: {
+                    paramObject.r = colorValueText
+                }
             }
             ColorInput {
-                id: "gInput"
+                id: gInput
                 colorName: "G:"
                 colorValueText: colorFields.greenValue
                 minValue: 0
                 maxValue: 255
+                onColorValueTextChanged: {
+                    paramObject.g = colorValueText
+                }
             }
             ColorInput {
-                id:"blueInput"
+                id: bInput
                 colorName: "B:"
                 colorValueText: colorFields.blueValue
                 minValue: 0 
                 maxValue: 255
+                onColorValueTextChanged: {
+                    paramObject.b = colorValueText
+                }
             }
             // alpha value box
             ColorInput {
+                id: aInput
                 colorName: "A:";
                 colorValueText: colorFields.alphaValue
                 minValue: 0
                 maxValue: 255
+                onColorValueTextChanged: {
+                    paramObject.a = colorValueText
+                }
             }
         }
 

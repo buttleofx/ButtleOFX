@@ -22,52 +22,52 @@ class ParamRGBA(object):
         return "ParamRGBA"
 
     def getDefaultR(self):
-        return self._tuttleParam.getProperties().fetchProperty("OfxParamPropDefault").getStringValue(0)
+        return self._tuttleParam.getDoubleValueAtIndex(0)
 
     def getDefaultG(self):
-        return self._tuttleParam.getProperties().fetchProperty("OfxParamPropDefault").getStringValue(1)
+        return self._tuttleParam.getDoubleValueAtIndex(1)
 
     def getDefaultB(self):
-        return self._tuttleParam.getProperties().fetchProperty("OfxParamPropDefault").getStringValue(2)
+        return self._tuttleParam.getDoubleValueAtIndex(2)
 
     def getDefaultA(self):
-        return self._tuttleParam.getProperties().fetchProperty("OfxParamPropDefault").getStringValue(2)
+        return self._tuttleParam.getDoubleValueAtIndex(3)
 
     def getValueR(self):
-        return self._tuttleParam.getProperties().fetchProperty("OfxParamPropDefault").getStringValue(0)
+        return self._tuttleParam.getDoubleValueAtIndex(0)
 
     def getValueG(self):
-        return self._tuttleParam.getProperties().fetchProperty("OfxParamPropDefault").getStringValue(1)
+        return self._tuttleParam.getDoubleValueAtIndex(1)
 
     def getValueB(self):
-        return self._tuttleParam.getProperties().fetchProperty("OfxParamPropDefault").getStringValue(2)
+        return self._tuttleParam.getDoubleValueAtIndex(2)
 
     def getValueA(self):
-        return self._tuttleParam.getProperties().fetchProperty("OfxParamPropDefault").getStringValue(2)
+        return self._tuttleParam.getDoubleValueAtIndex(3)
 
     def getText(self):
-        return self._tuttleParam.getProperties().fetchProperty("OfxPropName").getStringValue(0)
+        return self._tuttleParam.getName()
 
     #################### setters ####################
 
     def setValueR(self, value1):
-        self._tuttleParam.getProperties().setIntProperty("OfxParamPropDefault", float(value), 0)
+        self._tuttleParam.setValueAtIndex(0, float(value1))
         self.changed()
 
-        print "TuttleParam new Value : ", self._tuttleParam.getProperties().fetchProperty("OfxParamPropDefault").getStringValue(0)
+        print "TuttleParam new Value : ", self.getValueR()
 
     def setValueG(self, value2):
-        self._tuttleParam.getProperties().setIntProperty("OfxParamPropDefault", float(value), 1)
+        self._tuttleParam.setValueAtIndex(1, float(value2))
         self.changed()
 
-        print "TuttleParam new Value : ", self._tuttleParam.getProperties().fetchProperty("OfxParamPropDefault").getStringValue(1)
+        print "TuttleParam new Value : ", self.getValueG()
 
     def setValueB(self, value3):
-        self._tuttleParam.getProperties().setIntProperty("OfxParamPropDefault", float(value), 2)
+        self._tuttleParam.setValueAtIndex(2, float(value3))
 
-        print "TuttleParam new Value : ", self._tuttleParam.getProperties().fetchProperty("OfxParamPropDefault").getStringValue(3)
+        print "TuttleParam new Value : ", self.getValueB()
 
-    def setValueA(self, value3):
-        self._tuttleParam.getProperties().setIntProperty("OfxParamPropDefault", float(value), 3)
+    def setValueA(self, value4):
+        self._tuttleParam.setValueAtIndex(3, float(value4))
 
-        print "TuttleParam new Value : ", self._tuttleParam.getProperties().fetchProperty("OfxParamPropDefault").getStringValue(4)
+        print "TuttleParam new Value : ", self.getValueA()

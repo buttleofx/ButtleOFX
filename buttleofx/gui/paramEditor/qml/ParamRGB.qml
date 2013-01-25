@@ -2,12 +2,6 @@ import QtQuick 1.1
 import "colorPickerComponents"
 import "colorPickerComponents/ColorFunctions.js" as ColorFunctions
 
-/*onChangeColor: {
-    paramObject.r = redValue
-    paramObject.g = greenValue
-    paramObject.b = blueValue
-    paramObject.a = alphaValue
-}*/
 
 Item{
     id: colorPicker
@@ -20,33 +14,29 @@ Item{
 
     property variant paramObject: model.object
 
-    signal changeColor()
-
     Column {
         Text {
             id: titleColorPicker
             color: "white"
             text: paramObject.text
-            //anchors.verticalCenter: parent.verticalCenter
         }
 
         Row{
-            anchors.fill: parent
             spacing: 5
 
             ColorSelector{
                 id: colorSelector
-                height: parent.height
+                height: colorPicker.height
                 width: height
                 currentColor: colorValue
             }
             ColorSlider{
                 id: colorSlider
-                height: parent.height
+                height: colorPicker.height
             }
             ColorInputs{
                 id: colorInputs
-                height: parent.height
+                height: colorPicker.height
                 currentColor: colorPicker.colorValue
                 // if we try to implement that as a property of colorPicker, we have no more capital letters...
                 redValue: ColorFunctions.getChannelStr(colorPicker.colorValue, 0)
@@ -55,8 +45,6 @@ Item{
                 hValue: colorSlider.value.toFixed(2)
                 sValue: colorSelector.saturation.toFixed(2)
                 bValue: colorSelector.brightness.toFixed(2)
-
-                //colorPicker.changeColor()
             }
         }
     }

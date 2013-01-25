@@ -34,13 +34,17 @@ class Graph(object):
             Usefull to debug the class.
         """
 
-        # print("---- all nodes ----")
-        # for node in self._graph._nodes:
-        #     print node._name
+        print("=== Graph Buttle ===")
+        print("---- all nodes ----")
+        for node in self._nodes:
+            print node
 
         print("---- all connections ----")
         for con in self._connections:
-            con.__str__()
+            print con
+
+        print("=== Graph Tuttle ===")
+        print self._graphTuttle
 
     ################################################## ACCESSORS ##################################################
 

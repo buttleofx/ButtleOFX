@@ -1,9 +1,11 @@
+from PySide import QtCore
+# copy
+from copy import copy
 # Tuttle
 from buttleofx.data import tuttleTools
-
+# quickmamba
+from quickmamba.patterns import Singleton
 from quickmamba.models import QObjectListModel
-
-from PySide import QtCore
 # core : graph
 from buttleofx.core.graph import Graph
 from buttleofx.core.graph.node import Node
@@ -14,10 +16,6 @@ from buttleofx.gui.graph.node import NodeWrapper
 # undo redo
 from buttleofx.core.undo_redo.manageTools import CommandManager
 from buttleofx.core.undo_redo.commands import CmdSetCoord
-# quickmamba
-from quickmamba.patterns import Singleton
-# copy
-from copy import copy
 
 
 class ButtleData(QtCore.QObject):
@@ -39,15 +37,12 @@ class ButtleData(QtCore.QObject):
     _graphWrapper = None
 
     _currentParamNodeName = None
-
     _currentSelectedNodeName = None
-
     _currentViewerNodeName = None
 
     _computedImage = None
 
     def init(self, view):
-
         self._graph = Graph()
         self._graphWrapper = GraphWrapper(self._graph, view)
 
@@ -150,13 +145,17 @@ class ButtleData(QtCore.QObject):
         if len(self.getGraphWrapper().getNodeWrappers()) > 0 and len(self.getGraph().getNodes()) > 0:
             # if a node is selected
             if self._currentSelectedNodeName != None:
-                self.getGraph().deleteNode(self._currentSelectedNodeName)
-        self._currentSelectedNodeName = None
-        self.currentSelectedNodeChanged.emit()
-        self._currentParamNodeName = None
-        self.currentParamNodeChanged.emit()
-        self._currentViewerNodeName = None
-        self.currentViewerNodeChanged.emit()
+                self.getGraph().deleteNode(self.getCurrentSelectedNodeWrapper().getNode())
+
+        # set the current nodes
+        # if the params of the current node just deleted are display
+        if self._currentSelectedNodeName == self._currentParamNodeName:
+            self._currentParamNodeName = None
+            self.currentParamNodeChanged.emit()
+        # if the viewer of the current node just deleted is display
+        if self._currentSelectedNodeName == self.currentViewerNodeWrapper:
+            self._currentViewerNodeName = None
+            self.currentViewerNodeChanged.emit()
 
     @QtCore.Slot()
     def duplicationNode(self):
@@ -164,29 +163,30 @@ class ButtleData(QtCore.QObject):
             Function called from the QML when we want to duplicate a node.
         """
         # Create a node giving the current selected node's type, x and y
-        nodeType = self.getCurrentSelectedNodeWrapper().getType()
-        coord = self.getCurrentSelectedNodeWrapper()._node.getCoord()
+        nodeType = self.getCurrentSelectedNodeWrapper().getNode().getType()
+        coord = self.getCurrentSelectedNodeWrapper().getNode().getCoord()
         self.getGraph().createNode(nodeType, coord[0], coord[1])
 
         # Get the current selected node's properties
         nameUser = self.getCurrentSelectedNodeWrapper().getNameUser() + "_duplicate"
-        oldCoord = self.getCurrentSelectedNodeWrapper()._node.getOldCoord()
-        tuttleNode = copy(self.getCurrentSelectedNodeWrapper()._node.getTuttleNode())
+        oldCoord = self.getCurrentSelectedNodeWrapper().getNode().getOldCoord()
+        tuttleNode = copy(self.getCurrentSelectedNodeWrapper().getNode().getTuttleNode())
         color = self.getCurrentSelectedNodeWrapper().getColor()
         nbInput = self.getCurrentSelectedNodeWrapper().getNbInput()
         image = self.getCurrentSelectedNodeWrapper().getImage()
+        # doesn't work : the params are pointer, but we want real copy...
         params = []
-        for param in self.getCurrentSelectedNodeWrapper()._node.getParams():
+        for param in self.getCurrentSelectedNodeWrapper().getNode().getParams():
             params.append(copy(param))
 
         # Use the current selected node's properties to set the duplicated node's properties
-        self.getGraph()._nodes[-1].setNameUser(nameUser)
-        self.getGraph()._nodes[-1].setOldCoord(oldCoord[0], oldCoord[1])
-        self.getGraph()._nodes[-1].setTuttleNode(tuttleNode)
-        self.getGraph()._nodes[-1].setColor(color)
-        self.getGraph()._nodes[-1].setNbInput(nbInput)
-        self.getGraph()._nodes[-1].setImage(image)
-        self.getGraph()._nodes[-1].setParams(params)
+        self.getGraph().getNodes()[-1].setNameUser(nameUser)
+        self.getGraph().getNodes()[-1].setOldCoord(oldCoord[0], oldCoord[1])
+        self.getGraph().getNodes()[-1].setTuttleNode(tuttleNode)
+        self.getGraph().getNodes()[-1].setColor(color.red(), color.green(), color.blue())
+        self.getGraph().getNodes()[-1].setNbInput(nbInput)
+        self.getGraph().getNodes()[-1].setImage(image)
+        self.getGraph().getNodes()[-1].setParams(params)
 
     ##### Connection #####
 

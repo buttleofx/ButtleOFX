@@ -47,6 +47,6 @@ class DoubleWrapper(QtCore.QObject):
 
     paramType = QtCore.Property(unicode, getParamType, notify=changed)
     text = QtCore.Property(unicode, getText, notify=changed)
-    value = QtCore.Property(unicode, getValue, setValue, notify=changed)
+    value = QtCore.Property(float, getValue, setValue, notify=changed)
     maximum = QtCore.Property(unicode, getMaximum, notify=changed)
     minimum = QtCore.Property(unicode, getMinimum, notify=changed)

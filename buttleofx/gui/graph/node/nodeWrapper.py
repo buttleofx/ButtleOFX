@@ -90,10 +90,6 @@ class NodeWrapper(QtCore.QObject):
     def setCoord(self, point):
         self._node.setCoord(point.x(), point.y())
 
-    # from 3 decimal values
-    def setColor(self, r, g, b):
-        self._node.setColor(r, g, b)
-
     # from a QColor
     def setColor(self, color):
         self._node.setColor(color.red(), color.green(), color.blue())

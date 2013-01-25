@@ -35,8 +35,8 @@ mapTuttleParamToButtleParam = {
     "OfxParamTypeDouble": ParamDouble,
     "OfxParamTypeBoolean": ParamBoolean,
     "OfxParamTypeChoice": ParamChoice,
-    #"OfxParamTypeRGBA": ParamRGBA,
-    #"OfxParamTypeRGB": ParamRGB,
+    "OfxParamTypeRGBA": ParamRGBA,
+    "OfxParamTypeRGB": ParamRGB,
     "OfxParamTypeDouble2D": ParamDouble2D,
     "OfxParamTypeInteger2D": ParamInt2D,
     "OfxParamTypeDouble3D": ParamDouble3D,
@@ -73,8 +73,8 @@ class Node(object):
         self._tuttleNode = tuttleNode
         nodeDesc = nodeDescriptors[nodeType] if nodeType in nodeDescriptors else defaultNodeDesc
 
-        self._name = nodeName
-        self._nameUser = nodeName.strip('tuttle.')
+        self._name = nodeName # useful for us inside buttle (same id as tuttle)
+        self._nameUser = nodeName.strip('tuttle.') # the name visible for the user
         self._type = nodeType
         self._coord = nodeCoord
         self._oldCoord = nodeCoord
@@ -158,10 +158,6 @@ class Node(object):
 
     def setColor(self, r, g, b):
         self._color = (r, g, b)
-        self.changed()
-
-    def setColor(self, color):
-        self._color = (color.red(), color.green(), color.blue())
         self.changed()
 
     def setNbInput(self, nbInput):

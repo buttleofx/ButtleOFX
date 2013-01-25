@@ -6,6 +6,9 @@ from OpenGL import GL
 
 from quickmamba.models import QObjectListModel
 
+#from buttleofx.gui.viewerGL import GLViewport_tuttleofx
+from buttleofx.gui.viewerGL import GLViewport
+
 # for glViewport
 tuttleofx_installed = False
 try:
@@ -80,6 +83,8 @@ def main(argv):
     rc = view.rootContext()
     rc.setContextProperty("_buttleData", buttleData)
     rc.setContextProperty("_buttleApp", app)
+    #rc.setContextProperty("_glViewport", GLViewport_tuttleofx)
+    rc.setContextProperty("_glViewport", GLViewport)
 
     # set the view
     view.setSource(os.path.join(currentFilePath, "MainWindow.qml"))

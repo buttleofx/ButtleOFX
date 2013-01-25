@@ -224,15 +224,15 @@ class GLViewport(QtDeclarative.QDeclarativeItem):
     imageFilepath = QtCore.Property(str, getImageFilepath, setImageFilepath, notify=imageFilepathChanged)
 
 
-    def getBgColor(self):
-        return self._bgColorValue
-    def setBgColor(self, color):
-        self._bgColorValue = color
+    def getTime(self):
+        return self._time
+    def setTime(self, currentTime):
+        self._time = currentTime
         self.update()
-        self.bgColorChanged.emit()
-    bgColorChanged = QtCore.Signal()
-    _bgColorValue = QtGui.QColor(255, 0, 0)
-    bgColor = QtCore.Property(QtGui.QColor, getBgColor, setBgColor, notify=bgColorChanged)
+        self.timeChanged.emit()
+    _time = 0
+    timeChanged = QtCore.Signal()
+    time = QtCore.Property(float, getTime, setTime, notify=timeChanged)
 
 
     def getImageBounds(self):
@@ -327,5 +327,4 @@ class GLViewport(QtDeclarative.QDeclarativeItem):
     scaleChanged = QtCore.Signal()
     _scaleValue = 1.
     imgScale = QtCore.Property(float, getScale, setScale, notify=scaleChanged)
-
 

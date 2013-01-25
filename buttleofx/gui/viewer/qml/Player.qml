@@ -8,9 +8,12 @@ Item {
 
     property variant node
 
-    property int signalPosition : 500 // current position of the signal (milliseconds)
-    property int oldSignalPosition : 500 // position of the signal before animation start
-    property int signalDuration : 10000 // total durqtion of the signal (milliseconds)
+    QtObject {
+        id: m
+        property real time : 45 // current position of the signal (milliseconds)
+        property real oldSignalPosition : 0 // position of the signal before animation start
+        property real signalDuration : 10000 // total durqtion of the signal (milliseconds)
+    }
 
     // Displays an integer with 2 digits
     function with2digits(n){
@@ -117,6 +120,7 @@ Item {
                     Viewer {
                         id: viewer
                         imageFile: node.image
+                        time: m.time
                         clip: true
                     }
                 }
@@ -180,6 +184,8 @@ Item {
                             }
                             onReleased : {
                                 player.oldSignalPosition = player.signalPosition
+                                //_glViewport.currentTime = player.signalPosition
+
                             }
                         }
                     }
@@ -195,7 +201,8 @@ Item {
                         color: "white"
 
                         onXChanged: {
-                            player.signalPosition = (cursorTimeline.x * player.signalDuration) / (barTimeline.width - cursorTimeline.width);
+                            m.time = (cursorTimeline.x * player.signalDuration) / (barTimeline.width - cursorTimeline.width);
+                            //_glViewport.currentTime = player.signalPosition
                          }
 
 

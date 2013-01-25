@@ -14,7 +14,7 @@ from buttleofx.gui.graph import GraphWrapper
 from buttleofx.gui.graph.node import NodeWrapper
 # undo redo
 from buttleofx.core.undo_redo.manageTools import CommandManager
-from buttleofx.core.undo_redo.commands import CmdSetCoord
+from buttleofx.core.undo_redo.commands.node import CmdSetCoord
 # copy
 from copy import copy
 
@@ -27,7 +27,8 @@ class ButtleData(QtCore.QObject):
         - _currentNodeViewer
         - _currentNodeParam
         - _currentNodeGraph
-        - _currentNodeCopy
+        - soon : _currentNodeCopy
+        - _computedImage
 
         This class :
             - containts all data we need to manage the application.
@@ -341,6 +342,7 @@ class ButtleData(QtCore.QObject):
     tuttlePlugins = QtCore.Property(QtCore.QObject, getQObjectPluginsIdentifiers, constant=True)
 
 
+# This class exists just because thre are problems when a class extends 2 other class (Singleton and QObject)
 class ButtleDataSingleton(Singleton):
 
     _buttleData = ButtleData()

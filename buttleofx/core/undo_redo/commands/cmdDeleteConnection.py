@@ -7,18 +7,24 @@ from buttleofx.core.graph.connection import Connection
 class CmdDeleteConnection(UndoableCommand):
     """
         Command that delete a connection between 2 clips.
+        Attributes :
+        - graphTarget
+        - connection : we save the buttle connection because we will need it for the redo
     """
 
-    def __init__(self, graph, connection):
-        self._graph = graph
+    def __init__(self, graphTarget, connection):
+        self._graphTarget = graphTarget
         self._connection = connection
 
     def undoCmd(self):
         """
             Undo the delete of the connection <=> recreate the connection.
         """
-        self._graph.getConnections().append(self._connection)
-        self._graph.connectionsChanged()
+        tuttleNodeSource = self._graphTarget.getNode(self._connection.getClipOut().getNodeName()).getTuttleNode()
+        tuttleNodeOutput = self._graphTarget.getNode(self._connection.getClipIn().getNodeName()).getTuttleNode()
+        self._graphTarget.getGraphTuttle().connect(tuttleNodeSource, tuttleNodeOutput)
+        self._graphTarget.getConnections().append(self._connection)
+        self._graphTarget.connectionsChanged()
 
     def redoCmd(self):
         """
@@ -30,5 +36,8 @@ class CmdDeleteConnection(UndoableCommand):
         """
             Delete a connection.
         """
-        self._graph.getConnections().remove(self._connection)
-        self._graph.connectionsChanged()
+        # Function unconnect deletes all the node's connections, we are waiting for the binding of a more adapted function
+        self._graphTarget.getGraphTuttle().unconnect(self._graphTarget.getNode(self._connection.getClipOut().getNodeName()).getTuttleNode())
+        self._graphTarget.getConnections().remove(self._connection)
+        self._graphTarget.connectionsChanged()
+

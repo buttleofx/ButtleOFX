@@ -6,52 +6,45 @@ from buttleofx.core.graph.node import Node
 
 class CmdDeleteNode(UndoableCommand):
     """
-        Command that delete a node.
+        Command that deletes a node.
         Attributes :
         - graphTarget : the graph in which the node will be deleted.
-        - nodeName
-        - nodeCoord
-        - nodeType
+        - node : we save the node's data because we will need it for the redo
         - connections : list of the connections of the node, based on all the connections. We just keep the connections concerning our node.
     """
 
-    def __init__(self, graphTarget, nodeName):
-        self.graphTarget = graphTarget
-        self.nodeName = nodeName
-        self.nodeCoord = (50, 20)
-        self.connections = [connection for connection in self.graphTarget.getConnections() if (connection.getClipOut().getNodeName() == nodeName or connection.getClipIn().getNodeName() == nodeName)]
+    def __init__(self, graphTarget, node):
+        self._graphTarget = graphTarget
+        self._node = node
+        self._connections = [connection for connection in self._graphTarget.getConnections() if (connection.getClipOut().getNodeName() == node.getName() or connection.getClipIn().getNodeName() == node.getName())]
 
     def undoCmd(self):
         """
             Undo the suppression of the node <=> recreate the node.
         """
         # we recreate the node
-        self.graphTarget.getNodes().append(Node(self.nodeName, self.nodeType, self.nodeCoord))
+        self._graphTarget.getNodes().append(self._node)
         # we recreate all the connections
-        for connection in self.connections:
-            self.graphTarget.getConnections().append(connection)
+        for connection in self._connections:
+            self._graphTarget.getConnections().append(connection)
 
-        self.graphTarget.nodesChanged()
-        self.graphTarget.connectionsChanged()
+        self._graphTarget.nodesChanged()
+        self._graphTarget.connectionsChanged()
 
     def redoCmd(self):
         """
             Redo the suppression of the node.
         """
-        self.doCmd()
+        self._doCmd()
 
     def doCmd(self):
         """
             Delete a node.
         """
-        node = self.graphTarget.getNode(self.nodeName)
-        # we store the node type and its coordinates in order to be able to recreate it
-        self.nodeType = node.getType()
-        self.nodeCoord = node.getCoord()
         # we delete its connections
-        self.graphTarget.deleteNodeConnections(self.nodeName)
+        self._graphTarget.deleteNodeConnections(self._node.getName())
         # and then we delete the node
-        self.graphTarget.getNodes().remove(node)
+        self._graphTarget.getNodes().remove(self._node)
 
-        self.graphTarget.nodesChanged()
-        self.graphTarget.connectionsChanged()
+        self._graphTarget.nodesChanged()
+        self._graphTarget.connectionsChanged()

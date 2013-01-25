@@ -6,11 +6,17 @@ from buttleofx.core.graph.connection import Connection
 
 class CmdCreateConnection(UndoableCommand):
     """
-        Command that create a connection between 2 clips.
+        Command that create a connection between 2 clips
+        Attributes :
+        - graphTarget
+        - connection : we save the buttle connection because we will need it for the redo
+        - clipOut
+        - clipIn
     """
 
     def __init__(self, graphTarget, clipOut, clipIn):
         self._graphTarget = graphTarget
+        self._connection = None
         self._clipOut = clipOut
         self._clipIn = clipIn
 
@@ -18,6 +24,7 @@ class CmdCreateConnection(UndoableCommand):
         """
             Undo the creation of the connection.
         """
+        # Function unconnect deletes all the node's connections, we are waiting for the binding of a more adapted function
         self._graphTarget.getGraphTuttle().unconnect(self._graphTarget.getNode(self._clipOut.getNodeName()).getTuttleNode())
         self._graphTarget.getConnections().remove(self._graphTarget.getConnectionByClips(self._clipOut, self._clipIn))
         self._graphTarget.connectionsChanged()
@@ -26,18 +33,25 @@ class CmdCreateConnection(UndoableCommand):
         """
             Redo the creation of the connection.
         """
-        self.doCmd()
+        # Creation of the tuttle connection
+        tuttleNodeSource = self._graphTarget.getNode(self._clipOut.getNodeName()).getTuttleNode()
+        tuttleNodeOutput = self._graphTarget.getNode(self._clipIn.getNodeName()).getTuttleNode()
+        self._graphTarget.getGraphTuttle().connect(tuttleNodeSource, tuttleNodeOutput)
+
+        # Creation of the buttle connection
+        self._graphTarget.getConnections().append(self._connection)
+        self._graphTarget.connectionsChanged()
 
     def doCmd(self):
         """
             Create a connection.
         """
-
+        # Creation of the tuttle connection
         tuttleNodeSource = self._graphTarget.getNode(self._clipOut.getNodeName()).getTuttleNode()
         tuttleNodeOutput = self._graphTarget.getNode(self._clipIn.getNodeName()).getTuttleNode()
         tuttleConnection = self._graphTarget.getGraphTuttle().connect(tuttleNodeSource, tuttleNodeOutput)
 
-        self._graphTarget.getGraphTuttle().__str__()
-
-        self._graphTarget.getConnections().append(Connection(self._clipOut, self._clipIn, tuttleConnection))
+        # Creation of the buttle connection
+        self._connection = Connection(self._clipOut, self._clipIn, tuttleConnection)
+        self._graphTarget.getConnections().append(self._connection)
         self._graphTarget.connectionsChanged()

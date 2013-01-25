@@ -12,49 +12,45 @@ class CmdCreateNode(UndoableCommand):
         Command that create a node.
         Attributes :
         - graphTarget : the graph in which the node will be created.
+        - node : we save the node's data because we will need it for the redo
+        - nodeName
         - nodeType
         - nodeCoord
-        - nodeName
     """
 
     def __init__(self, graphTarget, nodeType, x, y):
-        self.graphTarget = graphTarget
-        self.nodeName = str(nodeType) + "_" + str(graphTarget._nbNodesCreated)
-        self.nodeType = nodeType
-        self.nodeCoord = (x, y)
+        self._graphTarget = graphTarget
+        self._node = None
+        self._nodeName = None
+        self._nodeType = nodeType
+        self._nodeCoord = (x, y)
 
     def undoCmd(self):
         """
             Undo the creation of the node.
         """
-        node = self.graphTarget.getNode(self.nodeName)
-        self.graphTarget.getGraphTuttle().deleteNode(self.graphTarget.getGraphTuttle().getNode(str(self.nodeName)))
-        self.graphTarget.getNodes().remove(node)
-        self.graphTarget.nodesChanged()
+        # The tuttle node is not deleted. We keep it so we don't need to recreate it when the redo command is called.
+        node = self._graphTarget.getNode(self._nodeName)
+        self._graphTarget.getNodes().remove(node)
+        self._graphTarget.nodesChanged()
 
     def redoCmd(self):
         """
             Redo the creation of the node.
         """
-        tuttleNode = self.graphTarget.getGraphTuttle().createNode(str(self.nodeType))
-        self.graphTarget.getNodes().append(Node(self.nodeName, self.nodeType, self.nodeCoord, tuttleNode))
-        self.graphTarget.nodesChanged()
         # We don't have to recreate the connections because when a node is created, it can't have connections !
-        # But maybe we should delete the (hypothetical) connections anyway ??
+        self._graphTarget.getNodes().append(self._node)
+        self._graphTarget.nodesChanged()
 
     def doCmd(self):
         """
             Create a node.
         """
+        # We create a new Tuttle node and rename it so it has the same name as the Node
+        tuttleNode = self._graphTarget.getGraphTuttle().createNode(str(self._nodeType))
+        self._nodeName = tuttleNode.getName()
 
-        # New Tuttle node
-        tuttleNode = self.graphTarget.getGraphTuttle().createNode(str(self.nodeType))
-        #self.graphTarget.getGraphTuttle().addNode(tuttleNode)
-        print "TuttleNode name : ", tuttleNode.getName()
-        self.graphTarget.getGraphTuttle().renameNode(tuttleNode, str(self.nodeName))
-        print "TuttleNode rename : ", tuttleNode.getName()
-        print "TuttleNode : ", self.graphTarget.getGraphTuttle().getNode(str(self.nodeName))
         # New Buttle node
-        self.graphTarget._nbNodesCreated += 1
-        self.graphTarget._nodes.append(Node(self.nodeName, self.nodeType, self.nodeCoord, tuttleNode))
-        self.graphTarget.nodesChanged()
+        self._node = Node(self._nodeName, self._nodeType, self._nodeCoord, tuttleNode)
+        self._graphTarget._nodes.append(self._node)
+        self._graphTarget.nodesChanged()

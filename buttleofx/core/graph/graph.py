@@ -2,7 +2,7 @@
 from pyTuttle import tuttle
 #undo_redo
 from buttleofx.core.undo_redo.manageTools import CommandManager, GroupUndoableCommands
-from buttleofx.core.undo_redo.commands import CmdCreateNode, CmdDeleteNode, CmdCreateConnection, CmdDeleteConnection, CmdSetParam
+from buttleofx.core.undo_redo.commands import CmdCreateNode, CmdDeleteNode, CmdCreateConnection, CmdDeleteConnection, CmdCreateReaderNode
 # quickmamba
 from quickmamba.patterns import Signal
 
@@ -110,7 +110,7 @@ class Graph(object):
             # There is a probleme when the format is in capital letters !
 
         # create the node
-        cmdCreateNode = CmdCreateNode(self, nodeType, 20, 20)
+        cmdCreateReaderNode = CmdCreateReaderNode(self, nodeType, 20, 20, url)
 
         # set the url of the node
         # We need the tuttleNode but it isn't yet created ! => No possible to use GroupCmds ? => Create a new command "createReaderNode" ??
@@ -122,7 +122,7 @@ class Graph(object):
         # cmdManager.push(groupCmd)
 
         cmdManager = CommandManager()
-        cmdManager.push(cmdCreateNode)
+        cmdManager.push(cmdCreateReaderNode)
 
 
     def deleteNode(self, node):

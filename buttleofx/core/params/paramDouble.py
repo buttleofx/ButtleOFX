@@ -10,7 +10,7 @@ class ParamDouble(object):
 
     def __init__(self, tuttleParam):
         self._tuttleParam = tuttleParam
-        print self._tuttleParam
+
         self.changed = Signal()
 
     #################### getters ####################
@@ -22,16 +22,16 @@ class ParamDouble(object):
         return "ParamDouble"
 
     def getDefaultValue(self):
-        return self._tuttleParam.getProperties().fetchProperty("OfxParamPropDefault").getDoubleValue()
+        return self._tuttleParam.getDoubleValue()
 
     def getValue(self):
         return self._tuttleParam.getDoubleValue()
 
     def getMinimum(self):
-        return self._tuttleParam.getProperties().fetchProperty("OfxParamPropDisplayMin").getDoubleValue()
+        return self._tuttleParam.getProperties().fetchProperty("OfxParamPropDisplayMin").getStringValue(0)
 
     def getMaximum(self):
-        return self._tuttleParam.getProperties().fetchProperty("OfxParamPropDisplayMax").getDoubleValue()
+        return self._tuttleParam.getProperties().fetchProperty("OfxParamPropDisplayMax").getStringValue(0)
 
     def getText(self):
         return self._tuttleParam.getName()
@@ -42,4 +42,4 @@ class ParamDouble(object):
         self._tuttleParam.setValue(float(value))
         self.changed()
 
-        print "TuttleParam new Value : ", self._tuttleParam.getDoubleValue()
+        print "TuttleParam new Value : ", self.getValue()

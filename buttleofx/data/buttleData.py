@@ -36,16 +36,10 @@ class ButtleData(QtCore.QObject):
     _graph = None
     _graphWrapper = None
 
-    #_currentParamNodeName = None
-    #_currentParamNodeWrapper = None
-
     _currentParamNodeName = None
     _currentSelectedNodeName = None
     _currentViewerNodeName = None
-    #_currentSelectedNodeWrapper = None
-
-    #_currentViewerNodeWrapper = None
-
+    
     _computedImage = None
 
     def init(self, view):

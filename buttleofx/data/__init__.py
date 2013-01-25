@@ -1,1 +1,1 @@
-from buttleData import ButtleData
+from buttleData import ButtleData, ButtleDataSingleton

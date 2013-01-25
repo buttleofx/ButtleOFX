@@ -18,7 +18,7 @@ from buttleofx.core.undo_redo.manageTools import CommandManager
 from buttleofx.core.undo_redo.commands import CmdSetCoord
 
 
-class ButtleData(QtCore.QObject, Singleton):
+class ButtleData(QtCore.QObject):
     """
         Class ButtleData defined by:
         - _graphWrapper
@@ -32,18 +32,25 @@ class ButtleData(QtCore.QObject, Singleton):
             - containts all data we need to manage the application.
             - receives the undo and redo from QML, and call the cmdManager to do this.
     """
+
+    _graph = None
+    _graphWrapper = None
+
+    #_currentParamNodeName = None
+    #_currentParamNodeWrapper = None
+
+    _currentParamNodeName = None
+    _currentSelectedNodeName = None
+    _currentViewerNodeName = None
+    #_currentSelectedNodeWrapper = None
+
+    #_currentViewerNodeWrapper = None
+
+    _computedImage = None
+
     def init(self, view):
-
-        self._view = view
-
         self._graph = Graph()
         self._graphWrapper = GraphWrapper(self._graph, view)
-
-        self._currentParamNodeName = None
-        self._currentSelectedNodeName = None
-        self._currentViewerNodeName = None
-
-        #self._currentCopiedNodeWrapper = None
 
         return self
 
@@ -320,3 +327,11 @@ class ButtleData(QtCore.QObject, Singleton):
 
     # tuttle data
     tuttlePlugins = QtCore.Property(QtCore.QObject, getQObjectPluginsIdentifiers, constant=True)
+
+
+class ButtleDataSingleton(Singleton):
+
+    _buttleData = ButtleData()
+
+    def get(self):
+        return self._buttleData

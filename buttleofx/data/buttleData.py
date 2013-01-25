@@ -256,6 +256,8 @@ class ButtleData(QtCore.QObject):
 
     ################################################## INTERACTIONS ##################################################
 
+    ##### Node #####
+
     @QtCore.Slot(str, int, int)
     def nodeMoved(self, nodeName, x, y):
         """

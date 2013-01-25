@@ -50,7 +50,6 @@ Row {
                 bottom: 0; top: 255; decimals: 2
                 notation: DoubleValidator.StandardNotation
             }
-
         }
     }
 }

@@ -4,7 +4,7 @@ from quickmamba.patterns import Signal
 class ParamString(object):
     """
         Core class, which represents a string parameter.
-        Contains : 
+        Contains :
             - _paramType : the name of the type of this parameter
             - _defaultValue : the default value for the input
             - _value : the value contained by the input

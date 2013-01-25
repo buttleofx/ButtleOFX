@@ -1,9 +1,9 @@
 from buttleofx.core.undo_redo.manageTools import UndoableCommand
 
 
-class CmdSetParamDouble(UndoableCommand):
+class CmdSetParamInt(UndoableCommand):
     """
-        Command that update the value of a paramDouble.
+        Command that update the value of a paramInt.
         Attributes :
         - param : the target param wich will be changed by the update
         - newValue : the value wich will be mofidy in the target
@@ -19,7 +19,7 @@ class CmdSetParamDouble(UndoableCommand):
         """
             Undoes the update of the param.
         """
-        self._param.getTuttleParam().setValue(float(self._oldValue))
+        self._param.getTuttleParam().setValue(int(self._oldValue))
         self._param.changed()
 
         print "TuttleParam new Value : ", self._param.getValue()
@@ -34,7 +34,7 @@ class CmdSetParamDouble(UndoableCommand):
         """
             Executes the update of the param.
         """
-        self._param.getTuttleParam().setValue(float(self._newValue))
+        self._param.getTuttleParam().setValue(int(self._newValue))
         self._param.changed()
 
         print "TuttleParam new Value : ", self._param.getValue()

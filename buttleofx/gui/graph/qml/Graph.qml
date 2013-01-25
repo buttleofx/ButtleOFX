@@ -181,5 +181,17 @@ Rectangle {
         }
     } */
 
+    DropArea {
+        anchors.fill: parent
+        onDrop: {
+            if( hasUrls )
+            {
+                console.log('image : ' + firstUrl)
+                _buttleData.dropReaderNode(firstUrl)
+                //graphArea.clickCreationNode('tuttle.jpeg2000reader')
+                // à améliorer pour drag and drop
+            }
+        }
+    }
     
 }

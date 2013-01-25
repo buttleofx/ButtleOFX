@@ -2,7 +2,7 @@
 from pyTuttle import tuttle
 #undo_redo
 from buttleofx.core.undo_redo.manageTools import CommandManager
-from buttleofx.core.undo_redo.commands.node import CmdCreateNode, CmdDeleteNode
+from buttleofx.core.undo_redo.commands.node import CmdCreateNode, CmdDeleteNode, CmdCreateReaderNode
 from buttleofx.core.undo_redo.commands.connection import CmdCreateConnection, CmdDeleteConnection
 # quickmamba
 from quickmamba.patterns import Signal
@@ -89,6 +89,43 @@ class Graph(object):
         cmdCreateNode = CmdCreateNode(self, nodeType, x, y)
         cmdManager = CommandManager()
         cmdManager.push(cmdCreateNode)
+
+    def createReaderNode(self, url):
+        extension = url.split(".")[-1]
+
+        if extension in ['jpeg', 'jpg', 'jpe', 'jfif', 'jfi']:
+            nodeType = 'tuttle.turbojpegreader'
+        elif extension == 'png':
+            nodeType = 'tuttle.pngreader'
+        elif extension in ['aac', 'ac3', 'adf', 'adx', 'aea', 'ape', 'apl', 'mac', 'bin', 'bit', 'bmv', 'cdg', 'cdxl', 'xl', '302', 'daud', 'dts', 'dv', 'dif', 'cdata', 'eac3', 'flm', 'flac', 'flv', 'g722', '722', 'tco', 'rco', 'g723_1', 'g729', 'gsm', 'h261', 'h26l', 'h264', '264', 'idf', 'cgi', 'latm', 'm4v', 'mjpg', 'mjpeg', 'mpo', 'mlp', 'mp2', 'mp3', 'm2a', 'mpc', 'mvi', 'mxg', 'v', 'nut', 'ogg', 'oma', 'omg', 'aa3', 'al', 'ul', 'sw', 'sb', 'uw', 'ub', 'yuv', 'cif', 'qcif', 'rgb', 'rt', 'rso', 'smi', 'sami', 'sbg', 'shn', 'vb', 'son', 'mjpg', 'sub', 'thd', 'tta', 'ans', 'art', 'asc', 'diz', 'ice', 'nfo', 'txt', 'vt', 'vc1', 'vqf', 'vql', 'vqe', 'vtt', 'yop', 'y4m']:
+            nodeType = 'tuttle.ffmpegreader'
+        elif extension in ['bmp', 'cin', 'dds', 'dpx', 'exr', 'fits', 'hdr', 'ico', 'j2k', 'j2c', 'jp2', 'jpeg', 'jpg', 'jpe', 'jfif', 'jfi', 'pbm', 'pgm', 'png', 'pnm', 'ppm', 'pic', 'psd', 'rgbe', 'sgi', 'tga', 'tif', 'tiff', 'tpic', 'tx', 'webp']:
+            nodeType = 'tuttle.oiioreader'
+        elif extension in ['3fr', 'ari', 'arw', 'bay', 'crw', 'cr2', 'cap', 'dng', 'dcs', 'dcr', 'dng', 'drf', 'eip', 'erf', 'fff', 'iiq', 'k25', 'kdc', 'mef', 'mos', 'mrw', 'nef', 'nrw', 'obm', 'orf', 'pef', 'ptx', 'pxn', 'r3d', 'rad', 'raf', 'rw2', 'raw', 'rwl', 'rwz', 'srf', 'sr2', 'srw', 'x3f']:
+            nodeType = 'tuttle.rawreader'
+        elif extension in ['aai', 'art', 'arw', 'avi', 'avs', 'bmp', 'bmp2', 'bmp3', 'cals', 'cgm', 'cin', 'cmyk', 'cmyka', 'cr2', 'crw', 'cur', 'cut', 'dcm', 'dcr', 'dcx', 'dib', 'djvu', 'dng', 'dot', 'dpx', 'emf', 'epdf', 'epi', 'eps', 'eps2', 'eps3', 'epsf', 'epsi', 'ept', 'exr', 'fax', 'fig', 'fits', 'fpx', 'gif', 'gplt', 'gray', 'hdr', 'hpgl', 'hrz', 'html', 'ico', 'info', 'inline', 'jbig', 'jng', 'jp2', 'jpc', 'jpg', 'jpeg', 'man', 'mat', 'miff', 'mono', 'mng', 'm2v', 'mpeg', 'mpc', 'mpr', 'mrw', 'msl', 'mtv', 'mvg', 'nef', 'orf', 'otb', 'p7', 'palm', 'pam', 'pbm', 'pcd', 'pcds', 'pcl', 'pcx', 'pdb', 'pdf', 'pef', 'pfa', 'pfb', 'pfm', 'pgm', 'picon', 'pict', 'pix', 'png', 'png8', 'png16', 'png32', 'pnm', 'ppm', 'ps', 'ps2', 'ps3', 'psb', 'psd', 'ptif', 'pwp', 'rad', 'rgb', 'rgba', 'rla', 'rle', 'sct', 'sfw', 'sgi', 'shtml', 'sid', 'mrsid', 'sun', 'svg', 'tga', 'tiff', 'tim', 'tif', 'txt', 'uil', 'uyvy', 'vicar', 'viff', 'wbmp', 'webp', 'wmf', 'wpg', 'x', 'xbm', 'xcf', 'xpm', 'xwd', 'x3f', 'ycbcr', 'ycbcra', 'yuv']:
+            nodeType = 'tuttle.imagemagickreader'
+        else:
+            print "Unknown format. Can't create reader node."
+            return
+            #use exception !
+            # There is a probleme when the format is in capital letters !
+
+        # create the node
+        cmdCreateReaderNode = CmdCreateReaderNode(self, nodeType, 20, 20, url)
+
+        # set the url of the node
+        # We need the tuttleNode but it isn't yet created ! => No possible to use GroupCmds ? => Create a new command "createReaderNode" ??
+
+        # CmdSetFilename(node, param, value)
+        # cmdSetFilename = CmdSetParam(cmdCreateNode._node, "filename", url)
+        # groupCmd = GroupUndoableCommands([cmdCreateNode, cmdSetFilename])
+        # cmdManager = CommandManager()
+        # cmdManager.push(groupCmd)
+
+        cmdManager = CommandManager()
+        cmdManager.push(cmdCreateReaderNode)
+
 
     def deleteNode(self, node):
         """

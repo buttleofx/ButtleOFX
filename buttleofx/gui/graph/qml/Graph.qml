@@ -57,18 +57,23 @@ Rectangle {
                 Canvas {
                     id: connection
                     property int canvasMargin: 20
+                    property int inPath: 0
                     width: Math.abs(model.object.clipOutPosX - model.object.clipInPosX) + 2*canvasMargin
                     height: Math.abs(model.object.clipOutPosY - model.object.clipInPosY) + 2*canvasMargin
 
                     x: Math.min(model.object.clipOutPosX, model.object.clipInPosX) - canvasMargin
                     y: Math.min(model.object.clipOutPosY, model.object.clipInPosY) - canvasMargin
-                    onXChanged: {requestPaint()}
 
                     color: "transparent"
                     onPaint: {
                         var ctx = getContext();
                         var cHeight = height;
                         var cWidth = width;
+                        var startX = 0
+                        var startY = 0
+                        var endX = 0
+                        var endY = 0
+                        var controlPointXOffset = 40;
                         ctx.strokeStyle = "rgb(0,150,70)";
                         ctx.lineWidth = 2;
 
@@ -76,35 +81,34 @@ Rectangle {
 
                         if(model.object.clipOutPosX <= model.object.clipInPosX
                         && model.object.clipOutPosY <= model.object.clipInPosY){
-                            var startX = canvasMargin
-                            var startY = canvasMargin
-                            var endX = width - canvasMargin
-                            var endY = height - canvasMargin
+                            startX = canvasMargin
+                            startY = canvasMargin
+                            endX = width - canvasMargin
+                            endY = height - canvasMargin
                         }
                         if(model.object.clipOutPosX <= model.object.clipInPosX
                         && model.object.clipOutPosY > model.object.clipInPosY){
-                            var startX = canvasMargin
-                            var startY = height - canvasMargin
-                            var endX = width - canvasMargin
-                            var endY = canvasMargin
+                            startX = canvasMargin
+                            startY = height - canvasMargin
+                            endX = width - canvasMargin
+                            endY = canvasMargin
                         }
                         if(model.object.clipOutPosX > model.object.clipInPosX
                         && model.object.clipOutPosY <= model.object.clipInPosY){
-                            var startX = width - canvasMargin
-                            var startY = canvasMargin
-                            var endX = canvasMargin
-                            var endY = height - canvasMargin
+                            startX = width - canvasMargin
+                            startY = canvasMargin
+                            endX = canvasMargin
+                            endY = height - canvasMargin
                         }
                         if(model.object.clipOutPosX > model.object.clipInPosX
                         && model.object.clipOutPosY > model.object.clipInPosY){
-                            var startX = width - canvasMargin
-                            var startY = height - canvasMargin
-                            var endX = canvasMargin
-                            var endY = canvasMargin
+                            startX = width - canvasMargin
+                            startY = height - canvasMargin
+                            endX = canvasMargin
+                            endY = canvasMargin
                         }
 
                         ctx.moveTo(startX , startY)
-                        var controlPointXOffset = 40;
                         ctx.bezierCurveTo(startX + controlPointXOffset, startY, endX - controlPointXOffset, endY, endX, endY)
                         ctx.stroke()
                         ctx.closePath()
@@ -116,7 +120,8 @@ Rectangle {
                             for(var x = mouseX - 5; x< mouseX + 5; x++){
                                 for(var y = mouseY - 5; y< mouseY + 5; y++){
                                     if(connection.getContext().isPointInPath(x, y)){
-                                        console.log("In path");
+                                        inPath = 1
+                                        return true;
                                     }
                                 }
                             }

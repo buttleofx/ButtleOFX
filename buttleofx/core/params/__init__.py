@@ -10,3 +10,4 @@ from paramChoice import ParamChoice
 from paramPushButton import ParamPushButton
 from paramRGBA import ParamRGBA
 from paramRGB import ParamRGB
+from paramGroup import ParamGroup

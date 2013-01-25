@@ -51,7 +51,8 @@ Row {
             anchors.fill: parent
             onClicked: {
                 playingAnimation.stop();
-                cursorTimeline.x =  ((player.signalPosition - 1000/25) * (barTimeline.width - cursorTimeline.width)) / player.signalDuration // - 1/25 s
+                var xCursorPreviousImage = ((player.signalPosition - 1000/25) * (barTimeline.width - cursorTimeline.width)) / player.signalDuration // - 1/25 s
+                cursorTimeline.x =  xCursorPreviousImage > 0 ? xCursorPreviousImage : 0
                 player.oldSignalPosition = player.signalPosition
             }
         }
@@ -114,7 +115,8 @@ Row {
             anchors.fill: parent
             onClicked: {
                 playingAnimation.stop();
-                cursorTimeline.x =  ((player.signalPosition + 1000/25) * (barTimeline.width - cursorTimeline.width)) / player.signalDuration // + 1/25 s
+                var xCursorNextImage = ((player.signalPosition + 1000/25) * (barTimeline.width - cursorTimeline.width)) / player.signalDuration // + 1/25 s
+                cursorTimeline.x = xCursorNextImage < timeline.endPosition ? xCursorNextImage : timeline.endPosition
                 player.oldSignalPosition = player.signalPosition
             }
         }

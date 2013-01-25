@@ -31,7 +31,7 @@ Rectangle {
         Rectangle {
             id: currentColorBox
             width: parent.width
-            height: 30
+            height: parent.height / 5
             SquaresGrid { cellSize: 5 }
             Rectangle{
                 width: parent.width

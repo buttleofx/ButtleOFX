@@ -8,5 +8,7 @@ from double2DWrapper import Double2DWrapper
 from double3DWrapper import Double3DWrapper
 from choiceWrapper import ChoiceWrapper
 from pushButtonWrapper import PushButtonWrapper
+from rgbaWrapper import RGBAWrapper
+from rgbWrapper import RGBWrapper
 
 from paramEditorWrapper import ParamEditorWrapper

@@ -22,13 +22,25 @@ class Graph(object):
         self._nodes = []
         self._connections = []
 
-        self._nbNodesCreated = 0
-
         self.nodesChanged = Signal()
         self.connectionsChanged = Signal()
         self.connectionsCoordChanged = Signal()
 
         print "Core : Graph created"
+
+    def __str__(self):
+        """
+            Displays on terminal some data.
+            Usefull to debug the class.
+        """
+
+        # print("---- all nodes ----")
+        # for node in self._graph._nodes:
+        #     print node._name
+
+        print("---- all connections ----")
+        for con in self._connections:
+            con.__str__()
 
     ################################################## ACCESSORS ##################################################
 
@@ -72,11 +84,11 @@ class Graph(object):
         cmdManager = CommandManager()
         cmdManager.push(cmdCreateNode)
 
-    def deleteNode(self, nodeName):
+    def deleteNode(self, node):
         """
             Removes a node in the node list when a node is deleted.
         """
-        cmdDeleteNode = CmdDeleteNode(self, nodeName)
+        cmdDeleteNode = CmdDeleteNode(self, node)
         cmdManager = CommandManager()
         cmdManager.push(cmdDeleteNode)
 

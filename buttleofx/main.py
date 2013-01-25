@@ -22,7 +22,7 @@ else:
 
 
 # data
-from buttleofx.data import ButtleData
+from buttleofx.data import ButtleData, ButtleDataSingleton
 #connections
 from buttleofx.gui.graph.connection import LineItem
 # undo_redo
@@ -73,8 +73,8 @@ def main(argv):
     view.setViewport(QtOpenGL.QGLWidget())
     view.setViewportUpdateMode(QtDeclarative.QDeclarativeView.FullViewportUpdate)
 
-    # data
-    buttleData = ButtleData().init(view)
+   # data
+    buttleData = ButtleDataSingleton().get().init(view)
 
     # expose data to QML
     rc = view.rootContext()

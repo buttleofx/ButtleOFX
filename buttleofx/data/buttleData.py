@@ -162,12 +162,10 @@ class ButtleData(QtCore.QObject):
         """
             Function called from the QML when we want to duplicate a node.
         """
-        # Create node
-        self.getGraph().__str__()
-        nodeType = self.getCurrentSelectedNodeWrapper().getType()
+        # Create a node giving the current selected node's type, x and y
+        nodeType = self.getCurrentSelectedNodeWrapper().getNode().getType()
         coord = self.getCurrentSelectedNodeWrapper().getNode().getCoord()
         self.getGraph().createNode(nodeType, coord[0], coord[1])
-        self.getGraph().__str__()
 
         # Get the current selected node's properties
         nameUser = self.getCurrentSelectedNodeWrapper().getNameUser() + "_duplicate"

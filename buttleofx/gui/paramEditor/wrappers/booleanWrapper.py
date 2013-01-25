@@ -27,17 +27,8 @@ class BooleanWrapper(QtCore.QObject):
 
     #################### setters ####################
 
-    def setParamType(self, paramType):
-        self._param.setParamType(paramType)
-
-    def setDefaultValue(self, defaultValue):
-        self._param.setDefaultValue(defaultValue)
-
     def setValue(self, value):
         self._param.setValue(value)
-
-    def setText(self, text):
-        self._param.setText(text)
 
     @QtCore.Signal
     def changed(self):
@@ -48,6 +39,6 @@ class BooleanWrapper(QtCore.QObject):
 
     ################################################## DATA EXPOSED TO QML ##################################################
 
-    paramType = QtCore.Property(unicode, getParamType, setParamType, notify=changed)
+    paramType = QtCore.Property(unicode, getParamType, notify=changed)
     value = QtCore.Property(bool, getValue, setValue, notify=changed)
-    text = QtCore.Property(unicode, getText, setText, notify=changed)
+    text = QtCore.Property(unicode, getText, notify=changed)

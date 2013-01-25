@@ -52,7 +52,7 @@ Item {
                 anchors.fill: parent
                 onPressed: {
                     interiorBox.state = (interiorBox.state == "FOCUS_ON") ? "FOCUS_OFF" : "FOCUS_ON"
-                    paramObject.value = (interiorBox.state == "FOCUS_ON") ? "True" : "False"
+                    paramObject.value = (interiorBox.state == "FOCUS_ON") ? 1 : 0
                 }
             }
         }

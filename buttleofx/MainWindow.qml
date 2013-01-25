@@ -25,14 +25,14 @@ Rectangle {
             console.log("Duplicate");
             _buttleData.duplicationNode()
         }
-        if ((event.key == Qt.Key_C) && (event.modifiers & Qt.ControlModifier)){
-            console.log("Copy");
-            _buttleData.copyNode()
-        }
-        if ((event.key == Qt.Key_V) && (event.modifiers & Qt.ControlModifier)){
-            console.log("Paste");
-            _buttleData.pasteNode()
-        }
+//        if ((event.key == Qt.Key_C) && (event.modifiers & Qt.ControlModifier)){
+//            console.log("Copy");
+//            _buttleData.copyNode()
+//        }
+//        if ((event.key == Qt.Key_V) && (event.modifiers & Qt.ControlModifier)){
+//            console.log("Paste");
+//            _buttleData.pasteNode()
+//        }
     }
 
     Rectangle {

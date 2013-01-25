@@ -71,4 +71,3 @@ def getPluginsIdentifiersByParentPath(parentPath):
         Returns the list of what must be displayed in the application after clicking on "parentPath"
     """
     return getPluginsIdentifiersAsDictionary()[parentPath]
-

@@ -1,6 +1,4 @@
-from PySide import QtCore, QtDeclarative
-from buttleofx.data import tuttleTools
-from buttleofx.gui.graph.menu import NodeItem
+from PySide import QtCore
 
 
 class MenuItem(QtCore.QObject):
@@ -10,18 +8,6 @@ class MenuItem(QtCore.QObject):
         self._label = label
         self._type = typeItem
         self._listMenuItem = listMenuItem
-
-    # def getLabel(self):
-    #     return self._label
-
-    # def getType(self):
-    #     if self._label in tuttleTools.getPluginsIdentifiersAsDictionary():
-    #         return MenuItem()
-    #     else:
-    #         return NodeItem()
-
-    # def getListMenuItem(self):
-    #     return tuttleTools.getPluginsIdentifiersByParentPath(self._parentPath)
 
     def getLabel(self):
         return self._label

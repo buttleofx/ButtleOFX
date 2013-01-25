@@ -9,6 +9,8 @@ from buttleofx.core.graph import Graph
 from buttleofx.core.graph.connection import IdClip
 # gui : graphWrapper
 from buttleofx.gui.graph import GraphWrapper
+# gui : menu item
+from buttleofx.gui.graph.menu import MenuItem
 # undo redo
 from buttleofx.core.undo_redo.manageTools import CommandManager
 from buttleofx.core.undo_redo.commands import CmdSetCoord
@@ -254,15 +256,31 @@ class ButtleData(QtCore.QObject, Singleton):
     #     pluginsNames.setObjectList(tuttleTools.getPluginsNames())
     #     return pluginsNames
 
-    @QtCore.Slot(str, result="QVariant")
-    def getQObjectPluginsIdentifiersByParentPath(self, pathname):
-        pluginsIds = QObjectListModel(self)
-        pluginsIds.setObjectList(tuttleTools.getPluginsIdentifiersByParentPath(pathname))
-        return pluginsIds
+    # @QtCore.Slot(str, result="QVariant")
+    # def getQObjectPluginsIdentifiersByParentPath(self, pathname):
+    #     pluginsIds = QObjectListModel(self)
+    #     pluginsIds.setObjectList(tuttleTools.getPluginsIdentifiersByParentPath(pathname))
+    #     return pluginsIds
 
-    @QtCore.Slot(str, result=bool)
-    def nextSonIsAPlugin(self, pathname):
-        return pathname not in tuttleTools.getPluginsIdentifiersAsDictionary()
+    def getListMenuTitemByParentPath(self, parentPath):
+        itemsIdentifiers = tuttleTools.getPluginsIdentifiersAsDictionary()[parentPath]
+        menuItemList = []
+        for itemId in itemsIdentifiers:
+            sonPath = parentPath + itemId + "/"
+            sonsItemsId = tuttleTools.getPluginsIdentifiersAsDictionary()[sonPath]
+            menuItemList.append(MenuItem(itemId, "truc", sonsItemsId))
+            # for the first test I did'nt manage the case we got a list of plugins
+        return menuItemList
+
+    @QtCore.Slot(str, result="QVariant")
+    def getQObjectListMenuTitemsByParentPath(self, pathname):
+        listMenuItem = QObjectListModel(self)
+        listMenuItem.setObjectList(self.getListMenuTitemByParentPath(pathname))
+        return listMenuItem
+
+    # @QtCore.Slot(str, result=bool)
+    # def nextSonIsAPlugin(self, pathname):
+    #     return pathname not in tuttleTools.getPluginsIdentifiersAsDictionary()
 
     ################################################## DATA EXPOSED TO QML ##################################################
 

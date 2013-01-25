@@ -10,8 +10,7 @@ Item {
 
     ListView {
         id: nodeMenuView
-        property string parentName : parentName
-        model: _buttleData.getQObjectPluginsIdentifiersByParentPath(parentName) // liste de MenuItem qui connaissent leurs enfants
+        model: _buttleData.getQObjectListMenuTitemsByParentPath(menulist.parentName) // list of MenuItem knowing their children
 
         delegate {
             Component {
@@ -22,7 +21,7 @@ Item {
                         anchors.fill : parent
                         onClicked: {
                             if (object.type == "node") {
-                                // create node
+                                console.log("cration node")
                             }
                             else {
                                 menuItemLoader.sourceComponent = object.listMenuItem

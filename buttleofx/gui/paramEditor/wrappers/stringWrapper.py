@@ -30,20 +30,8 @@ class StringWrapper(QtCore.QObject):
 
     #################### setters ####################
 
-    def setParamType(self, paramType):
-        self._param.setParamType(paramType)
-
-    def setDefaultValue(self, defaultValue):
-        self._param.setDefaultValue(defaultValue)
-
     def setValue(self, value):
         self._param.setValue(value)
-
-    def setStringType(self, stringType):
-        self._param.setStringType(stringType)
-
-    def setText(self, text):
-        self._param.setText(text)
 
     @QtCore.Signal
     def changed(self):
@@ -54,7 +42,7 @@ class StringWrapper(QtCore.QObject):
 
     ################################################## DATA EXPOSED TO QML ##################################################
 
-    paramType = QtCore.Property(unicode, getParamType, setParamType, notify=changed)
+    paramType = QtCore.Property(unicode, getParamType, notify=changed)
     value = QtCore.Property(str, getValue, setValue, notify=changed)
-    stringType = QtCore.Property(str, getStringType, setStringType, notify=changed)
-    text = QtCore.Property(unicode, getText, setText, notify=changed)
+    stringType = QtCore.Property(str, getStringType, notify=changed)
+    text = QtCore.Property(unicode, getText, notify=changed)

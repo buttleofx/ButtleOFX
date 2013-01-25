@@ -74,11 +74,14 @@ Rectangle {
                 y: tuttleParamTitle.height
                 color: paramEditor.background
 
+                property string lastGroupParam : "No Group."
+
                 ListView {
                     id: tuttleParam
                     anchors.fill: parent
                     anchors.topMargin: 5
                     anchors.bottomMargin: 5
+                    spacing: 6
 
                     model: params
                     
@@ -88,6 +91,7 @@ Rectangle {
                             source : model.object.paramType + ".qml"
                             width: parent.width
                             x: 15 // here is the distance to the left of the listview
+
                         }
                     }
                     ButtleScrollBar{

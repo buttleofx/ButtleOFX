@@ -6,6 +6,9 @@ from pyTuttle import tuttle
 
 from PySide import QtCore
 
+# data
+from buttleofx.data import *
+
 
 class GLViewport_tuttleofx(GLViewport):
     def __init__(self, parent=None):
@@ -14,7 +17,12 @@ class GLViewport_tuttleofx(GLViewport):
         self.tuttleOverlay = None
         self.recomputeOverlay = False
         
-        self.init_tuttle()
+        buttleData = ButtleDataSingleton().get()
+        buttleData.currentViewerNodeChangedPython.connect(self.reloadImage)
+        #self.init_tuttle()
+    
+    def reloadImage(self):
+        self.loadImageFile("")
     
     def init_tuttle(self):
         tuttle.core().preload(False)
@@ -33,10 +41,14 @@ class GLViewport_tuttleofx(GLViewport):
     def loadImageFile_tuttle(self, filename):
         print 'loadImageFile_tuttle:', str(filename)
         
-        self.tuttleReaderNode.getParam("filename").setValue(str(filename))
-        outputCache = tuttle.MemoryCache()
-        self.tuttleGraph.compute(outputCache)
-        imgRes = outputCache.get(0);
+        #self.tuttleReaderNode.getParam("filename").setValue(str(filename))
+        #outputCache = tuttle.MemoryCache()
+        #self.tuttleGraph.compute(outputCache, self.tuttleLensNode)
+
+        buttleData = ButtleDataSingleton().get()
+        imgRes = buttleData.computeNode()
+        
+        #imgRes = outputCache.get(0);
         #print 'type imgRes:', type( imgRes )
         #print 'imgRes:', dir( imgRes )
         #print 'FullName:', imgRes.getFullName()
@@ -52,7 +64,7 @@ class GLViewport_tuttleofx(GLViewport):
         
         self.setImageBounds( QtCore.QRect(bounds.x1, bounds.y1, width, height) )
         
-        self.tuttleOverlay.setupGraph()
+        #self.tuttleOverlay.setupGraph()
         
 #        self.recomputeOverlay = False
 #        if self.recomputeOverlay:

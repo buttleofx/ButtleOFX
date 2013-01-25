@@ -39,7 +39,7 @@ class ButtleData(QtCore.QObject):
     _currentParamNodeName = None
     _currentSelectedNodeName = None
     _currentViewerNodeName = None
-    
+
     _computedImage = None
 
     def init(self, view):
@@ -112,7 +112,6 @@ class ButtleData(QtCore.QObject):
         if self._currentSelectedNodeName == nodeWrapper.getName():
             return
         self._currentSelectedNodeName = nodeWrapper.getName()
-        #self._currentSelectedNodeWrapper = nodeWrapper
         self.currentSelectedNodeChanged.emit()
 
     def setCurrentViewerNodeWrapper(self, nodeWrapper):
@@ -154,7 +153,7 @@ class ButtleData(QtCore.QObject):
             self._currentParamNodeName = None
             self.currentParamNodeChanged.emit()
         # if the viewer of the current node just deleted is display
-        if self._currentSelectedNodeName == self.currentViewerNodeWrapper:
+        if self._currentSelectedNodeName == self._currentViewerNodeName:
             self._currentViewerNodeName = None
             self.currentViewerNodeChanged.emit()
 

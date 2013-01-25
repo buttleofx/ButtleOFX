@@ -43,6 +43,9 @@ class NodeWrapper(QtCore.QObject):
 
     ######## getters ########
 
+    def getNode(self):
+        return self._node
+
     def getName(self):
         return self._node.getName()
 
@@ -93,7 +96,7 @@ class NodeWrapper(QtCore.QObject):
 
     # from a QColor
     def setColor(self, color):
-        self._node.setColor(color)
+        self._node.setColor(color.red(), color.green(), color.blue())
 
     def setNbInput(self, nbInput):
         self._node.setNbInput(nbInput)

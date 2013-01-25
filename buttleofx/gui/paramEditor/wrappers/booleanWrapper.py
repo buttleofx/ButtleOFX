@@ -25,9 +25,6 @@ class BooleanWrapper(QtCore.QObject):
     def getText(self):
         return self._param.getText()
 
-    def getParent(self):
-        return self._param.getParent()
-
     #################### setters ####################
 
     def setValue(self, value):
@@ -45,4 +42,3 @@ class BooleanWrapper(QtCore.QObject):
     paramType = QtCore.Property(unicode, getParamType, notify=changed)
     value = QtCore.Property(bool, getValue, setValue, notify=changed)
     text = QtCore.Property(unicode, getText, notify=changed)
-    parent = QtCore.Property(unicode, getParent, constant=True)

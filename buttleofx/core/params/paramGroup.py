@@ -15,8 +15,8 @@ class ParamGroup(object):
 
     # #################### getters ####################
 
-    # def getTuttleParam(self):
-    #     return self._tuttleParam
+    def getTuttleParam(self):
+        return self._tuttleParam
 
     def getParamType(self):
         return "ParamGroup"

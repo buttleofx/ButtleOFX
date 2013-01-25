@@ -27,6 +27,7 @@ class ParamEditorWrapper(QtCore.QObject):
             ParamRGBA: RGBAWrapper,
             ParamRGB: RGBWrapper,
             ParamGroup: GroupWrapper
+            #ParamPage: PageWrapper
         }
 
         paramListModel = [mapTypeToWrapper[paramElt.__class__](paramElt) for paramElt in paramList]

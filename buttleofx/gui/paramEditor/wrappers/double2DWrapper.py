@@ -43,9 +43,6 @@ class Double2DWrapper(QtCore.QObject):
     def getText(self):
         return self._param.getText()
 
-    def getParent(self):
-        return self._param.getParent()
-
     #################### setters ####################
 
     def setParamType(self, paramType):
@@ -95,4 +92,3 @@ class Double2DWrapper(QtCore.QObject):
     minimum1 = QtCore.Property(float, getMinimum1, setMinimum1, notify=changed)
     maximum2 = QtCore.Property(float, getMaximum2, setMaximum2, notify=changed)
     minimum2 = QtCore.Property(float, getMinimum2, setMinimum2, notify=changed)
-    parent = QtCore.Property(unicode, getParent, constant=True)

@@ -42,13 +42,10 @@ class ButtleData(QtCore.QObject, Singleton):
         self._graphWrapper = GraphWrapper(self._graph, view)
 
         self._currentParamNodeName = None
-        self._currentParamNodeWrapper = None
 
         self._currentSelectedNodeName = None
-        self._currentSelectedNodeWrapper = None
 
         self._currentViewerNodeName = None
-        self._currentViewerNodeWrapper = None
 
         #self._currentCopiedNodeWrapper = None
 
@@ -152,26 +149,13 @@ class ButtleData(QtCore.QObject, Singleton):
         if len(self.getGraphWrapper().getNodeWrappers()) > 0 and len(self.getGraph().getNodes()) > 0:
             # if a node is selected
             if self._currentSelectedNodeName != None:
-                self.getGraph().deleteNode(self._currentSelectedNodeWrapper.getNode())
-
-        if self._currentSelectedNodeName == self.currentParamNodeWrapper:
-            self._currentParamNodeName = None
-            self.currentParamNodeChanged.emit()
-        if self._currentSelectedNodeName == self.currentViewerNodeWrapper:
-            self._currentViewerNodeName = None
-        if len(self.getGraphWrapper().getNodeWrappers()) > 0 and len(self.getGraph().getNodes()) > 0:
-            # if a node is selected
-            if self._currentSelectedNodeName != None:
-                self.getGraph().deleteNode(self._currentSelectedNodeWrapper.getNode())
-
-        if self._currentSelectedNodeName == self.currentParamNodeWrapper:
-            self._currentParamNodeName = None
-            self.currentParamNodeChanged.emit()
-        if self._currentSelectedNodeName == self.currentViewerNodeWrapper:
-            self._currentViewerNodeName = None
-            self.currentViewerNodeChanged.emit()
+                self.getGraph().deleteNode(self._currentSelectedNodeName)
         self._currentSelectedNodeName = None
         self.currentSelectedNodeChanged.emit()
+        self._currentParamNodeName = None
+        self.currentParamNodeChanged.emit()
+        self._currentViewerNodeName = None
+        self.currentViewerNodeChanged.emit()
 
     @QtCore.Slot()
     def duplicationNode(self):
@@ -179,19 +163,19 @@ class ButtleData(QtCore.QObject, Singleton):
             Function called from the QML when we want to duplicate a node.
         """
         # Create a node giving the current selected node's type, x and y
-        nodeType = self._currentSelectedNodeWrapper.getType()
-        coord = self._currentSelectedNodeWrapper._node.getCoord()
+        nodeType = self.getCurrentSelectedNodeWrapper().getType()
+        coord = self.getCurrentSelectedNodeWrapper()._node.getCoord()
         self.getGraph().createNode(nodeType, coord[0], coord[1])
 
         # Get the current selected node's properties
-        nameUser = self._currentSelectedNodeWrapper.getNameUser() + "_duplicate"
-        oldCoord = self._currentSelectedNodeWrapper._node.getOldCoord()
-        tuttleNode = copy(self._currentSelectedNodeWrapper._node.getTuttleNode())
-        color = self._currentSelectedNodeWrapper.getColor()
-        nbInput = self._currentSelectedNodeWrapper.getNbInput()
-        image = self._currentSelectedNodeWrapper.getImage()
+        nameUser = self.getCurrentSelectedNodeWrapper().getNameUser() + "_duplicate"
+        oldCoord = self.getCurrentSelectedNodeWrapper()._node.getOldCoord()
+        tuttleNode = copy(self.getCurrentSelectedNodeWrapper()._node.getTuttleNode())
+        color = self.getCurrentSelectedNodeWrapper().getColor()
+        nbInput = self.getCurrentSelectedNodeWrapper().getNbInput()
+        image = self.getCurrentSelectedNodeWrapper().getImage()
         params = []
-        for param in self._currentSelectedNodeWrapper._node.getParams():
+        for param in self.getCurrentSelectedNodeWrapper()._node.getParams():
             params.append(copy(param))
 
         # Use the current selected node's properties to set the duplicated node's properties

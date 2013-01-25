@@ -10,7 +10,7 @@ class ParamDouble(object):
 
     def __init__(self, tuttleParam):
         self._tuttleParam = tuttleParam
-
+        print self._tuttleParam
         self.changed = Signal()
 
     #################### getters ####################
@@ -22,24 +22,24 @@ class ParamDouble(object):
         return "ParamDouble"
 
     def getDefaultValue(self):
-        return self._tuttleParam.getProperties().fetchProperty("OfxParamPropDefault").getStringValue(0)
+        return self._tuttleParam.getProperties().fetchProperty("OfxParamPropDefault").getDoubleValue()
 
     def getValue(self):
-        return self._tuttleParam.getProperties().fetchProperty("OfxParamPropDefault").getStringValue(0)
+        return self._tuttleParam.getDoubleValue()
 
     def getMinimum(self):
-        return self._tuttleParam.getProperties().fetchProperty("OfxParamPropDisplayMin").getStringValue(0)
+        return self._tuttleParam.getProperties().fetchProperty("OfxParamPropDisplayMin").getDoubleValue()
 
     def getMaximum(self):
-        return self._tuttleParam.getProperties().fetchProperty("OfxParamPropDisplayMax").getStringValue(0)
+        return self._tuttleParam.getProperties().fetchProperty("OfxParamPropDisplayMax").getDoubleValue()
 
     def getText(self):
-        return self._tuttleParam.getProperties().fetchProperty("OfxPropName").getStringValue(0)
+        return self._tuttleParam.getName()
 
     #################### setters ####################
 
     def setValue(self, value):
-        self._tuttleParam.getProperties().setDoubleProperty("OfxParamPropDefault", float(value))
+        self._tuttleParam.setValue(float(value))
         self.changed()
 
-        print "TuttleParam new Value : ", self._tuttleParam.getProperties().fetchProperty("OfxParamPropDefault").getStringValue(0)
+        print "TuttleParam new Value : ", self._tuttleParam.getDoubleValue()

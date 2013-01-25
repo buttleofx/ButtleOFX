@@ -35,7 +35,7 @@ class CmdDeleteNode(UndoableCommand):
         """
             Redo the suppression of the node.
         """
-        self._doCmd()
+        self.doCmd()
 
     def doCmd(self):
         """

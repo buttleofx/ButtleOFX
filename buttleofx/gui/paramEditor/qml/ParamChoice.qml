@@ -63,6 +63,7 @@ Item {
                 state: "hidden"
                 x: firstElement.x
                 y: firstElement.y
+                //z: 150
 
                 Repeater {
                     id: repeater
@@ -77,6 +78,7 @@ Item {
                         color: "#343434"
                         border.width: 1
                         border.color: "#333"
+                        //z: 15000
                         Text{
                             id: textElement
                             anchors.left: parent.left

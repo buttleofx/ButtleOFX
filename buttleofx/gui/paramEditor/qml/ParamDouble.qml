@@ -61,7 +61,7 @@ Item {
                 x: cursorSlider.x
                 width: barSlider.width - whiteBar.width 
                 height: parent.height
-                color: "grey"
+                color: "red"
             }
         }
         // cursor slider (little white rectangle)

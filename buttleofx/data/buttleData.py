@@ -1,9 +1,11 @@
+from PySide import QtCore
+# copy
+from copy import copy
 # Tuttle
 from buttleofx.data import tuttleTools
-
+# quickmamba
+from quickmamba.patterns import Singleton
 from quickmamba.models import QObjectListModel
-
-from PySide import QtCore
 # core : graph
 from buttleofx.core.graph import Graph
 from buttleofx.core.graph.node import Node
@@ -14,10 +16,6 @@ from buttleofx.gui.graph.node import NodeWrapper
 # undo redo
 from buttleofx.core.undo_redo.manageTools import CommandManager
 from buttleofx.core.undo_redo.commands import CmdSetCoord
-# quickmamba
-from quickmamba.patterns import Singleton
-# copy
-from copy import copy
 
 
 class ButtleData(QtCore.QObject, Singleton):
@@ -42,13 +40,8 @@ class ButtleData(QtCore.QObject, Singleton):
         self._graphWrapper = GraphWrapper(self._graph, view)
 
         self._currentParamNodeName = None
-        self._currentParamNodeWrapper = None
-
         self._currentSelectedNodeName = None
-        self._currentSelectedNodeWrapper = None
-
         self._currentViewerNodeName = None
-        self._currentViewerNodeWrapper = None
 
         #self._currentCopiedNodeWrapper = None
 
@@ -118,7 +111,7 @@ class ButtleData(QtCore.QObject, Singleton):
         if self._currentSelectedNodeName == nodeWrapper.getName():
             return
         self._currentSelectedNodeName = nodeWrapper.getName()
-        self._currentSelectedNodeWrapper = nodeWrapper
+        #self._currentSelectedNodeWrapper = nodeWrapper
         self.currentSelectedNodeChanged.emit()
 
     def setCurrentViewerNodeWrapper(self, nodeWrapper):
@@ -152,56 +145,50 @@ class ButtleData(QtCore.QObject, Singleton):
         if len(self.getGraphWrapper().getNodeWrappers()) > 0 and len(self.getGraph().getNodes()) > 0:
             # if a node is selected
             if self._currentSelectedNodeName != None:
-                self.getGraph().deleteNode(self._currentSelectedNodeWrapper.getNode())
+                self.getGraph().deleteNode(self.getCurrentSelectedNodeWrapper().getNode())
 
-        if self._currentSelectedNodeName == self.currentParamNodeWrapper:
+        # set the current nodes
+        # if the params of the current node just deleted are display
+        if self._currentSelectedNodeName == self._currentParamNodeName:
             self._currentParamNodeName = None
             self.currentParamNodeChanged.emit()
-        if self._currentSelectedNodeName == self.currentViewerNodeWrapper:
-            self._currentViewerNodeName = None
-        if len(self.getGraphWrapper().getNodeWrappers()) > 0 and len(self.getGraph().getNodes()) > 0:
-            # if a node is selected
-            if self._currentSelectedNodeName != None:
-                self.getGraph().deleteNode(self._currentSelectedNodeWrapper.getNode())
-
-        if self._currentSelectedNodeName == self.currentParamNodeWrapper:
-            self._currentParamNodeName = None
-            self.currentParamNodeChanged.emit()
+        # if the viewer of the current node just deleted is display
         if self._currentSelectedNodeName == self.currentViewerNodeWrapper:
             self._currentViewerNodeName = None
             self.currentViewerNodeChanged.emit()
-        self._currentSelectedNodeName = None
-        self.currentSelectedNodeChanged.emit()
 
     @QtCore.Slot()
     def duplicationNode(self):
         """
             Function called from the QML when we want to duplicate a node.
         """
-        # Create a node giving the current selected node's type, x and y
-        nodeType = self._currentSelectedNodeWrapper.getType()
-        coord = self._currentSelectedNodeWrapper._node.getCoord()
+        # Create node
+        self.getGraph().__str__()
+        nodeType = self.getCurrentSelectedNodeWrapper().getType()
+        coord = self.getCurrentSelectedNodeWrapper().getNode().getCoord()
         self.getGraph().createNode(nodeType, coord[0], coord[1])
+        self.getGraph().__str__()
 
         # Get the current selected node's properties
-        nameUser = self._currentSelectedNodeWrapper.getNameUser() + "_duplicate"
-        oldCoord = self._currentSelectedNodeWrapper._node.getOldCoord()
-        tuttleNode = copy(self._currentSelectedNodeWrapper._node.getTuttleNode())
-        color = self._currentSelectedNodeWrapper.getColor()
-        nbInput = self._currentSelectedNodeWrapper.getNbInput()
-        image = self._currentSelectedNodeWrapper.getImage()
+        nameUser = self.getCurrentSelectedNodeWrapper().getNameUser() + "_duplicate"
+        oldCoord = self.getCurrentSelectedNodeWrapper().getNode().getOldCoord()
+        tuttleNode = copy(self.getCurrentSelectedNodeWrapper().getNode().getTuttleNode())
+        color = self.getCurrentSelectedNodeWrapper().getColor()
+        nbInput = self.getCurrentSelectedNodeWrapper().getNbInput()
+        image = self.getCurrentSelectedNodeWrapper().getImage()
+        # doesn't work : the params are pointer, but we want real copy...
         params = []
-        for param in self._currentSelectedNodeWrapper._node.getParams():
+        for param in self.getCurrentSelectedNodeWrapper().getNode().getParams():
             params.append(copy(param))
 
         # Use the current selected node's properties to set the duplicated node's properties
-        self.getGraph()._nodes[-1].setNameUser(nameUser)
-        self.getGraph()._nodes[-1].setOldCoord(oldCoord[0], oldCoord[1])
-        self.getGraph()._nodes[-1].setTuttleNode(tuttleNode)
-        self.getGraph()._nodes[-1].setColor(color)
-        self.getGraph()._nodes[-1].setNbInput(nbInput)
-        self.getGraph()._nodes[-1].setImage(image)
-        self.getGraph()._nodes[-1].setParams(params)
+        self.getGraph().getNodes()[-1].setNameUser(nameUser)
+        self.getGraph().getNodes()[-1].setOldCoord(oldCoord[0], oldCoord[1])
+        self.getGraph().getNodes()[-1].setTuttleNode(tuttleNode)
+        self.getGraph().getNodes()[-1].setColor(color.red(), color.green(), color.blue())
+        self.getGraph().getNodes()[-1].setNbInput(nbInput)
+        self.getGraph().getNodes()[-1].setImage(image)
+        self.getGraph().getNodes()[-1].setParams(params)
 
     ##### Connection #####
 

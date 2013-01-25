@@ -118,7 +118,6 @@ class ButtleData(QtCore.QObject):
         if self._currentSelectedNodeName == nodeWrapper.getName():
             return
         self._currentSelectedNodeName = nodeWrapper.getName()
-        #self._currentSelectedNodeWrapper = nodeWrapper
         self.currentSelectedNodeChanged.emit()
 
     def setCurrentViewerNodeWrapper(self, nodeWrapper):
@@ -161,7 +160,7 @@ class ButtleData(QtCore.QObject):
             self._currentParamNodeName = None
             self.currentParamNodeChanged.emit()
         # if the viewer of the current node just deleted is display
-        if self._currentSelectedNodeName == self.currentViewerNodeWrapper:
+        if self._currentSelectedNodeName == self._currentViewerNodeName:
             self._currentViewerNodeName = None
             self.currentViewerNodeChanged.emit()
 
@@ -170,12 +169,10 @@ class ButtleData(QtCore.QObject):
         """
             Function called from the QML when we want to duplicate a node.
         """
-        # Create node
-        self.getGraph().__str__()
-        nodeType = self.getCurrentSelectedNodeWrapper().getType()
+        # Create a node giving the current selected node's type, x and y
+        nodeType = self.getCurrentSelectedNodeWrapper().getNode().getType()
         coord = self.getCurrentSelectedNodeWrapper().getNode().getCoord()
         self.getGraph().createNode(nodeType, coord[0], coord[1])
-        self.getGraph().__str__()
 
         # Get the current selected node's properties
         nameUser = self.getCurrentSelectedNodeWrapper().getNameUser() + "_duplicate"

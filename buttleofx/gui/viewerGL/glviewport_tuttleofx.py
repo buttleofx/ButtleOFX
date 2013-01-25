@@ -13,8 +13,9 @@ class GLViewport_tuttleofx(GLViewport):
         
         self.tuttleOverlay = None
         self.recomputeOverlay = False
-        
+        self._time = self.getTime()
         self.init_tuttle()
+        #self._currenTime.changed(self.emitChanged)
     
     def init_tuttle(self):
         tuttle.core().preload(False)
@@ -35,7 +36,7 @@ class GLViewport_tuttleofx(GLViewport):
         
         self.tuttleReaderNode.getParam("filename").setValue(str(filename))
         outputCache = tuttle.MemoryCache()
-        self.tuttleGraph.compute(outputCache)
+        self.tuttleGraph.compute(outputCache, self.tuttleLensNode, tuttle.ComputeOptions(0))
         imgRes = outputCache.get(0);
         #print 'type imgRes:', type( imgRes )
         #print 'imgRes:', dir( imgRes )
@@ -96,3 +97,21 @@ class GLViewport_tuttleofx(GLViewport):
         if self.img_data is not None and self.tuttleOverlay:
             self.tuttleOverlay.draw(pixelScale)
 
+
+ #   def getCurrentTime(self):
+ #       return self._currentTime
+#
+    #def setCurrentTime(self, currentTime):
+ #       self._currentTime = currentTime
+ #       super.setOffset(self, currentTime)
+#
+ #   @QtCore.Signal
+ #   def changed(self):
+ #       pass
+
+ #   def emitChanged(self):
+  #      self.changed.emit()
+
+#times signals
+    #timeChanged = QtCore.Signal()
+    #currentTime = QtCore.Property(QtCore.QObject, getCurrentTime, setCurrentTime, notify = timeChanged)

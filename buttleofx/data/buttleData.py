@@ -304,6 +304,7 @@ class ButtleData(QtCore.QObject):
 
     @QtCore.Slot(str, result=bool)
     def nextSonIsAPlugin(self, pathname):
+        print "pathname :", pathname
         return pathname not in tuttleTools.getPluginsIdentifiersAsDictionary()
 
     ################################################## DATA EXPOSED TO QML ##################################################

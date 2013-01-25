@@ -6,6 +6,7 @@ Rectangle {
     id: container
 
     property url imageFile
+    property real time: 0
 
     color:"#1e1e1e"
 
@@ -15,6 +16,7 @@ Rectangle {
         
         offset.x: 0.0
         offset.y: 0.0
+        time: container.time
         fittedMode: true
         imageFilepath: parent.imageFile
 

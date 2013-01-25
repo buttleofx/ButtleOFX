@@ -48,6 +48,9 @@ class ParamDouble2D(object):
     def getText(self):
         return self._tuttleParam.getName()
 
+    def getParent(self):
+        return self._tuttleParam.getProperties().fetchProperty("OfxParamPropParent").getStringValue(0)
+
     #################### setters ####################
 
     def setValue1(self, value1):

@@ -30,21 +30,21 @@ class ParamChoice(object):
         return "ParamChoice"
 
     def getDefaultValue(self):
-        return self._tuttleParam.getProperties().fetchProperty("OfxParamPropChoiceOption").getStringValue(0)
+        return self._tuttleParam.getProperties().getStringProperty("OfxParamPropChoiceOption", 0)
 
     def getValue(self):
-        return self._tuttleParam.getProperties().fetchProperty("OfxParamPropChoiceOption").getStringValue(0)
+        return self._tuttleParam.getStringValue()
 
     def getListValue(self):
         return self._listValue
 
     def getText(self):
-        return self._tuttleParam.getProperties().fetchProperty("OfxPropName").getStringValue(0)
+        return self._tuttleParam.getName()
 
     #################### setters ####################
 
     def setValue(self, value):
-        self._tuttleParam.getProperties().setValue(float(value))
+        self._tuttleParam.setValue(str(value))
         self.changed()
 
-        print "TuttleParam new Value : ", self._tuttleParam.getProperties().fetchProperty("OfxParamPropDefault").getStringValue(0)
+        print "TuttleParam new Value : ", self._tuttleParam.getStringValue()

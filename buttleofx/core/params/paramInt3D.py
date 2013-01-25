@@ -63,19 +63,19 @@ class ParamInt3D(object):
     #################### setters ####################
 
     def setValue1(self, value1):
-        self._tuttleParam.setValue(int(value))
+        self._tuttleParam.setValue([int(value), self.getValue2(), self.getValue2()])
         self.changed()
 
         print "TuttleParam new Value : ", self.getValue1()
 
     def setValue2(self, value2):
-        self._tuttleParam.setValue(int(value), 1)
+        self._tuttleParam.setValue([self.getValue1(), int(value), self.getValue3()])
         self.changed()
 
         print "TuttleParam new Value : ", self.getValue2()
 
     def setValue3(self, value3):
-        self._tuttleParam.setValue(int(value), 2)
+        self._tuttleParam.setValue([self.getValue1(), self.getValue2(), int(value)])
         self.changed()
 
         print "TuttleParam new Value : ", self.getValue3()

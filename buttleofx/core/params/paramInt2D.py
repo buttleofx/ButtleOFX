@@ -51,13 +51,14 @@ class ParamInt2D(object):
     #################### setters ####################
 
     def setValue1(self, value):
-        self._tuttleParam.setValue(int(value))
+        self._tuttleParam.setValue([int(value), self.getValue2()])
         self.changed()
 
         print "TuttleParam new Value : ", self.getValue1()
 
     def setValue2(self, value):
-        self._tuttleParam.setValue(int(value), 1)
+        self._tuttleParam.setValue([self.getValue1(), int(value)])
         self.changed()
 
         print "TuttleParam new Value : ", self.getValue2()
+

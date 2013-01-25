@@ -63,19 +63,19 @@ class ParamDouble3D(object):
     #################### setters ####################
 
     def setValue1(self, value1):
-        self._tuttleParam.setValue(float(value))
+        self._tuttleParam.setValue([float(value), self.getValue2(), self.getValue3()])
         self.changed()
 
         print "TuttleParam new Value : ", self.getValue1()
 
     def setValue2(self, value2):
-        self._tuttleParam.setValue(float(value), 1)
+        self._tuttleParam.setValue([self.getValue1(), float(value), self.getValue3()])
         self.changed()
 
         print "TuttleParam new Value : ", self.getValue2()
 
     def setValue3(self, value3):
-        self._tuttleParam.setValue(float(value), 2)
+        self._tuttleParam.setValue([self.getValue1(), self.getValue2(), float(value)])
         self.changed()
 
         print "TuttleParam new Value : ", self.getValue3()

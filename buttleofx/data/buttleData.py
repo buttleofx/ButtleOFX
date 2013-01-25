@@ -153,7 +153,7 @@ class ButtleData(QtCore.QObject):
             self._currentParamNodeName = None
             self.currentParamNodeChanged.emit()
         # if the viewer of the current node just deleted is display
-        if self._currentSelectedNodeName == self.currentViewerNodeWrapper:
+        if self._currentSelectedNodeName == self._currentViewerNodeName:
             self._currentViewerNodeName = None
             self.currentViewerNodeChanged.emit()
 

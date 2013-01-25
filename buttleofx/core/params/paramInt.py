@@ -6,12 +6,6 @@ class ParamInt(object):
         Core class, which represents an int parameter.
         Contains : 
             - _tuttleParam : link to the corresponding tuttleParam
-            - _paramType : the name of the type of this parameter
-            - _defaultValue : the default value for the input
-            - _value : the value contained by the input
-            - _minimum : the min we can have for the value
-            - _maximum : the max we can have for the value
-            - _text : the label of the input
     """
 
     def __init__(self, tuttleParam):

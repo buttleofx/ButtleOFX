@@ -21,7 +21,7 @@ class GLViewport_tuttleofx(GLViewport):
         tuttle.core().preload(False)
         #print "Plugins cache:", tuttle.core().getImageEffectPluginCache()
         self.tuttleGraph = tuttle.Graph()
-        self.tuttleReaderNode = self.tuttleGraph.createNode("tuttle.jpegreader")
+        self.tuttleReaderNode = self.tuttleGraph.createNode("tuttle.ffmpegreader")
         #self.tuttleLensNode = self.tuttleGraph.createNode("tuttle.lensdistort")
         self.tuttleLensNode = self.tuttleGraph.createNode("tuttle.lensdistort",
                     coef1=.5, #outOfImage='transparency',

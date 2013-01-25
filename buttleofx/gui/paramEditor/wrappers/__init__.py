@@ -10,5 +10,6 @@ from choiceWrapper import ChoiceWrapper
 from pushButtonWrapper import PushButtonWrapper
 from rgbaWrapper import RGBAWrapper
 from rgbWrapper import RGBWrapper
+from groupWrapper import GroupWrapper
 
 from paramEditorWrapper import ParamEditorWrapper

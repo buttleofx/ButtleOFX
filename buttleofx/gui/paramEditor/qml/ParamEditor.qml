@@ -74,6 +74,8 @@ Rectangle {
                 y: tuttleParamTitle.height
                 color: paramEditor.background
 
+                property string lastGroupParam : "No Group."
+
                 ListView {
                     id: tuttleParam
                     anchors.fill: parent
@@ -87,7 +89,18 @@ Rectangle {
                             id: param
                             source : model.object.paramType + ".qml"
                             width: parent.width
-                            x: 15 // here is the distance to the left of the listview
+                            x: (model.object.parent == tuttleParamContent.lastGroupParam) ? 50 : 15 // here is the distance to the left of the listview
+
+                            Component.onCompleted: {
+                                console.log("paramtype " + model.object.paramType)
+                                console.log("lastGroupParam " + tuttleParamContent.lastGroupParam)
+                                if (model.object.parent == tuttleParamContent.lastGroupParam) {
+                                    console.log ("oui")
+                                }
+                                else {
+                                    console.log("non")
+                                }
+                            }
                         }
                     }
                     ButtleScrollBar{

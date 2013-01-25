@@ -57,6 +57,7 @@ Rectangle {
 
     MenuList {
         id: listmodel
+        parentName: "tuttle/"
     }   
 
     MouseArea{

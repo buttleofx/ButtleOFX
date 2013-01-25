@@ -31,21 +31,21 @@ defaultNodeDesc = {
 }
 
 mapTuttleParamToButtleParam = {
-    "OfxParamTypeInteger": "ParamInt",
-    "OfxParamTypeDouble": "ParamDouble",
-    "OfxParamTypeBoolean": "ParamBoolean",
-    "OfxParamTypeChoice": "ParamChoice",
-    "OfxRGBA": "ParamRGBA",
-    "OfxParamTypeRGB": "ParamRGB",
-    "OfxParamTypeDouble2D": "ParamDouble2D",
-    "OfxParamTypeInteger2D": "ParamInt2D",
-    "OfxParamTypeDouble3D": "ParamDouble3D",
-    "OfxParamTypeInteger3D": "ParamInt3D",
-    "OfxParamTypeString": "ParamString",
-    "OfxParamTypeCustom": "ParamCustom",
-    "OfxParamTypeGroup": "ParamGroup",
-    "OfxParamTypePage": "ParamPage",
-    "OfxParamTypePushButton": "ParamPushButton"
+    "OfxParamTypeInteger": ParamInt,
+    "OfxParamTypeDouble": ParamDouble,
+    "OfxParamTypeBoolean": ParamBoolean,
+    "OfxParamTypeChoice": ParamChoice,
+    #"OfxRGBA": ParamRGBA,
+    #"OfxParamTypeRGB": ParamRGB,
+    "OfxParamTypeDouble2D": ParamDouble2D,
+    "OfxParamTypeInteger2D": ParamInt2D,
+    "OfxParamTypeDouble3D": ParamDouble3D,
+    "OfxParamTypeInteger3D": ParamInt3D,
+    "OfxParamTypeString": ParamString,
+    #"OfxParamTypeCustom": ParamCustom,
+    #"OfxParamTypeGroup": ParamGroup,
+    #"OfxParamTypePage": ParamPage,
+    "OfxParamTypePushButton": ParamPushButton
 }
 
 
@@ -87,41 +87,7 @@ class Node(object):
         for param in range(self._tuttleNode.asImageEffectNode().getNbParams()):
 
             tuttleParam = self._tuttleNode.asImageEffectNode().getParam(param)
-            paramType = mapTuttleParamToButtleParam[tuttleParam.getProperties().fetchProperty("OfxParamPropType").getStringValue(0)]
-
-            if paramType == "ParamInt":
-                self._params.append(ParamInt(tuttleParam))
-
-            if paramType == "ParamDouble":
-                self._params.append(ParamDouble(tuttleParam))
-
-            if paramType == "ParamBoolean":
-                self._params.append(ParamBoolean(tuttleParam))
-
-            if paramType == "ParamChoice":
-                self._params.append(ParamChoice(tuttleParam))
-
-            #if paramType == "ParamRGBA":
-
-            #if paramType == "ParamRGB":
-
-            if paramType == "ParamDouble2D":
-                self._params.append(ParamDouble2D(tuttleParam))
-
-            if paramType == "ParamInt2D":
-                self._params.append(ParamInt2D(tuttleParam))
-
-            if paramType == "ParamDouble3D":
-                self._params.append(ParamDouble3D(tuttleParam))
-
-            if paramType == "ParamInt3D":
-                self._params.append(ParamInt3D(tuttleParam))
-
-            if paramType == "ParamString":
-                self._params.append(ParamString(tuttleParam))
-
-            if paramType == "ParamPushButton":
-                self._params.append(ParamPushButton(tuttleParam))
+            self._params.append(mapTuttleParamToButtleParam[tuttleParam.getProperties().fetchProperty("OfxParamPropType").getStringValue(0)](tuttleParam))
 
         self.changed = Signal()
 

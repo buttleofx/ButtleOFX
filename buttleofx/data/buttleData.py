@@ -1,10 +1,9 @@
-from PySide import QtCore
-# copy
-from copy import copy
 # Tuttle
 from buttleofx.data import tuttleTools
+from pyTuttle import tuttle
+from PySide import QtCore
 # quickmamba
-from quickmamba.patterns import Singleton
+from quickmamba.patterns import Singleton, Signal
 from quickmamba.models import QObjectListModel
 # core : graph
 from buttleofx.core.graph import Graph
@@ -16,6 +15,8 @@ from buttleofx.gui.graph.node import NodeWrapper
 # undo redo
 from buttleofx.core.undo_redo.manageTools import CommandManager
 from buttleofx.core.undo_redo.commands import CmdSetCoord
+# copy
+from copy import copy
 
 
 class ButtleData(QtCore.QObject):
@@ -39,19 +40,24 @@ class ButtleData(QtCore.QObject):
     _currentParamNodeName = None
     _currentSelectedNodeName = None
     _currentViewerNodeName = None
-    
+
     _computedImage = None
 
     def init(self, view):
+        print "------------------------------------Init ButtleData----------------------------"
         self._graph = Graph()
         self._graphWrapper = GraphWrapper(self._graph, view)
+        self.currentViewerNodeChangedPython = Signal()
+        #self.currentViewerNodeChangedPython.connect(self.computeNode)
+        print "------------------------------------Init ButtleData end----------------------------"
 
         return self
+
 
     ################################################## GETTERS ET SETTERS ##################################################
 
     #################### getters ####################
-
+    
     def getGraph(self):
         return self._graph
 
@@ -123,6 +129,7 @@ class ButtleData(QtCore.QObject):
             return
         self._currentViewerNodeName = nodeWrapper.getName()
         self.currentViewerNodeChanged.emit()
+        self.currentViewerNodeChangedPython()
 
     ################################################## EVENT FROM QML #####################################################
 
@@ -305,6 +312,20 @@ class ButtleData(QtCore.QObject):
     @QtCore.Slot(str, result=bool)
     def nextSonIsAPlugin(self, pathname):
         return pathname not in tuttleTools.getPluginsIdentifiersAsDictionary()
+
+     ###################################################  TUTTLE  ############################################################
+    def computeNode(self):
+        print "------- COMPUTE NODE -------"
+
+        #Get the name of the currentNode of the viewer
+        node = self.getCurrentViewerNodeName()
+        #Get the output where we save the result
+
+        self._tuttleImageCache = tuttle.MemoryCache()
+        self.getGraph().getGraphTuttle().compute(self._tuttleImageCache, node)
+        self._computedImage = self._tuttleImageCache.get(0)
+        return self._computedImage
+        #self.getGraph.getGraphTuttle().compute(self._computedImage, self.getCurrentViewerNoneName()
 
     ################################################## DATA EXPOSED TO QML ##################################################
 

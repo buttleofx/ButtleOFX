@@ -19,7 +19,7 @@ Item {
                 Rectangle {
                     id: nodeMenuElement
                     width: 120
-                    height: 20
+                    height: 10
                     color: "#343434"
                     Text {
                         anchors.left: parent.left
@@ -27,6 +27,7 @@ Item {
                         anchors.verticalCenter: parent.verticalCenter
                         color: "#eee"
                         text: model.object
+                        font.pointSize: 10
                     }
                     MouseArea {
                         anchors.fill: parent

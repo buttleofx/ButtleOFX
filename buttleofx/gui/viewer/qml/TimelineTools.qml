@@ -30,7 +30,7 @@ Row {
             onClicked: {
                 playingAnimation.stop();
                 cursorTimeline.x = 0
-                player.oldSignalPosition = player.signalPosition
+                timeProperties.formerKeyTime = timeProperties.currentTime
             }
         }
     }
@@ -51,9 +51,9 @@ Row {
             anchors.fill: parent
             onClicked: {
                 playingAnimation.stop();
-                var xCursorPreviousImage = ((player.signalPosition - 1000/25) * (barTimeline.width - cursorTimeline.width)) / player.signalDuration // - 1/25 s
+                var xCursorPreviousImage = ((timeProperties.currentTime - 1000/25) * (barTimeline.width - cursorTimeline.width)) / timeProperties.timeDuration // - 1/25 s
                 cursorTimeline.x =  xCursorPreviousImage > 0 ? xCursorPreviousImage : 0
-                player.oldSignalPosition = player.signalPosition
+                timeProperties.formerKeyTime = timeProperties.currentTime
             }
         }
     }
@@ -74,7 +74,7 @@ Row {
             anchors.fill: parent
             onClicked: {
                 playingAnimation.stop();
-                player.oldSignalPosition = player.signalPosition
+                timeProperties.formerKeyTime = timeProperties.currentTime
             }
         }
     }
@@ -115,9 +115,9 @@ Row {
             anchors.fill: parent
             onClicked: {
                 playingAnimation.stop();
-                var xCursorNextImage = ((player.signalPosition + 1000/25) * (barTimeline.width - cursorTimeline.width)) / player.signalDuration // + 1/25 s
+                var xCursorNextImage = ((timeProperties.currentTime + 1000/25) * (barTimeline.width - cursorTimeline.width)) / timeProperties.timeDuration // + 1/25 s
                 cursorTimeline.x = xCursorNextImage < timeline.endPosition ? xCursorNextImage : timeline.endPosition
-                player.oldSignalPosition = player.signalPosition
+                timeProperties.formerKeyTime = timeProperties.currentTime
             }
         }
     }
@@ -139,7 +139,7 @@ Row {
             onClicked: {
                 playingAnimation.stop();
                 cursorTimeline.x = timeline.endPosition
-                player.oldSignalPosition = player.signalPosition
+                timeProperties.formerKeyTime = timeProperties.currentTime
             }
         }
     }

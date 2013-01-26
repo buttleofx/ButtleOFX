@@ -319,7 +319,7 @@ class ButtleData(QtCore.QObject):
         return pathname not in tuttleTools.getPluginsIdentifiersAsDictionary()
 
      ###################################################  TUTTLE  ############################################################
-    def computeNode(self):
+    def computeNode(self, time):
         print "------- COMPUTE NODE -------"
 
         #Get the name of the currentNode of the viewer
@@ -327,7 +327,7 @@ class ButtleData(QtCore.QObject):
         #Get the output where we save the result
 
         self._tuttleImageCache = tuttle.MemoryCache()
-        self.getGraph().getGraphTuttle().compute(self._tuttleImageCache, node)
+        self.getGraph().getGraphTuttle().compute(self._tuttleImageCache, node, tuttle.ComputeOptions(int(time)))
         self._computedImage = self._tuttleImageCache.get(0)
 
         print "------- END COMPUTE NODE -------"

@@ -233,17 +233,6 @@ class GLViewport(QtDeclarative.QDeclarativeItem):
     _bgColorValue = QtGui.QColor(255, 0, 0)
     bgColor = QtCore.Property(QtGui.QColor, getBgColor, setBgColor, notify=bgColorChanged)
 
-    def getTime(self):
-        return self._time
-    def setTime(self, currentTime):
-        self._time = currentTime
-        self.update()
-        self.timeChanged.emit()
-    _time = 0
-    timeChanged = QtCore.Signal()
-    time = QtCore.Property(float, getTime, setTime, notify=timeChanged)
-
-
     def getImageBounds(self):
         return self._imageBoundsValue
     def setImageBounds(self, imgSize):

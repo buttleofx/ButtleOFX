@@ -9,10 +9,10 @@ Item {
     property variant node
 
     QtObject {
-        id: m
-        property real time : 45 // current position of the signal (milliseconds)
-        property real oldSignalPosition : 0 // position of the signal before animation start
-        property real signalDuration : 10000 // total durqtion of the signal (milliseconds)
+        id: timeProperties
+        property real currentTime : 4500 // current position of the time (milliseconds)
+        property real formerKeyTime : 0 // position of the time before animation starts
+        property real timeDuration : 10000 // total duration of the time (milliseconds)
     }
 
 
@@ -21,13 +21,13 @@ Item {
         return n > 9 ? "" + n: "0" + n;
     }
 
-    // Returns the string displayed under the viewer. It's the current position of the signal.
+    // Returns the string displayed under the viewer. It's the current time.
     function getTimePosition() {
-        var totalSeconds = Math.floor(player.signalDuration / 1000)
+        var totalSeconds = Math.floor(timeProperties.timeDuration / 1000)
         var totalMinutes = Math.floor(totalSeconds / 60)
         var totalHours = Math.floor(totalMinutes / 60)
 
-        var elapsedSeconds = Math.floor(player.signalPosition / 1000)
+        var elapsedSeconds = Math.floor(timeProperties.currentTime / 1000)
         var elapsedMinutes = Math.floor(totalSeconds / 60)
         var elapsedHours = Math.floor(totalMinutes / 60)
 
@@ -39,7 +39,7 @@ Item {
         console.log("Node Changed : ", node)
     }
 
-    // TabBar
+    /*************************** TabBar*************************************/
     Rectangle {
         id: tabBar
         implicitWidth: 950
@@ -95,7 +95,7 @@ Item {
         }
     }
 
-    // Viewer & tools
+    /********************************Viewer and Tools************************************/
     Rectangle {
         height: parent.height - tabBar.height
         width: parent.width
@@ -121,7 +121,7 @@ Item {
                     Viewer {
                         id: viewer
                         imageFile: node.image
-                        time: m.time
+                        time: timeProperties.currentTime
                         clip: true
                     }
                 }
@@ -132,7 +132,7 @@ Item {
             }
 
 
-            // Timeline
+            /****************Timeline*******************/
             Item {
                 id: timeline
                 anchors.top: viewerRegion.bottom
@@ -148,7 +148,7 @@ Item {
                      properties: "x"
                      from: cursorTimeline.x
                      to: timeline.endPosition
-                     duration : player.signalDuration - player.oldSignalPosition
+                     duration : timeProperties.timeDuration - timeProperties.formerKeyTime
                 }
 
                 // main container
@@ -184,9 +184,7 @@ Item {
                                 cursorTimeline.x = mouse.x
                             }
                             onReleased : {
-                                player.oldSignalPosition = player.signalPosition
-                                //_glViewport.currentTime = player.signalPosition
-
+                                timeProperties.formerKeyTime = timeProperties.currentTime
                             }
                         }
                     }
@@ -195,17 +193,15 @@ Item {
                     Rectangle {
                         id: cursorTimeline
                         anchors.verticalCenter: parent.verticalCenter
-                        x: (player.signalPosition * (barTimeline.width - cursorTimeline.width)) / player.signalDuration
+                        x: (timeProperties.currentTime * (barTimeline.width - cursorTimeline.width)) / timeProperties.timeDuration
                         height: 10
                         width: 5
                         radius: 1
                         color: "white"
 
                         onXChanged: {
-                            m.time = (cursorTimeline.x * player.signalDuration) / (barTimeline.width - cursorTimeline.width);
-                            //_glViewport.currentTime = player.signalPosition
+                            timeProperties.currentTime = (cursorTimeline.x * timeProperties.timeDuration) / (barTimeline.width - cursorTimeline.width);
                          }
-
 
                         MouseArea{
                             anchors.fill: parent
@@ -218,7 +214,7 @@ Item {
                                 playingAnimation.stop();
                             }
                             onReleased: {
-                                player.oldSignalPosition = player.signalPosition
+                                timeProperties.formerKeyTime = timeProperties.currentTime
                             }
                         }
                     }
@@ -228,7 +224,7 @@ Item {
 
 
 
-            // ToolBar
+            /******************* ToolBar *************************************/
             Rectangle {
                 id: toolBarRegion
                 anchors.top: timeline.bottom

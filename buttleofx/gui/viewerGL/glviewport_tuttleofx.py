@@ -13,7 +13,9 @@ class GLViewport_tuttleofx(GLViewport):
         
         self.tuttleOverlay = None
         self.recomputeOverlay = False
-        self._time = self.getTime()
+
+        self._time = 0
+
         self.init_tuttle()
         #self._currenTime.changed(self.emitChanged)
     
@@ -21,7 +23,7 @@ class GLViewport_tuttleofx(GLViewport):
         tuttle.core().preload(False)
         #print "Plugins cache:", tuttle.core().getImageEffectPluginCache()
         self.tuttleGraph = tuttle.Graph()
-        self.tuttleReaderNode = self.tuttleGraph.createNode("tuttle.ffmpegreader")
+        self.tuttleReaderNode = self.tuttleGraph.createNode("tuttle.jpegreader")
         #self.tuttleLensNode = self.tuttleGraph.createNode("tuttle.lensdistort")
         self.tuttleLensNode = self.tuttleGraph.createNode("tuttle.lensdistort",
                     coef1=.5, #outOfImage='transparency',
@@ -36,7 +38,8 @@ class GLViewport_tuttleofx(GLViewport):
         
         self.tuttleReaderNode.getParam("filename").setValue(str(filename))
         outputCache = tuttle.MemoryCache()
-        self.tuttleGraph.compute(outputCache, self.tuttleLensNode, tuttle.ComputeOptions(0))
+        self.tuttleGraph.compute(outputCache, self.tuttleLensNode, tuttle.ComputeOptions(int(self._time)))
+        print "self._time du load:", int(self._time)
         imgRes = outputCache.get(0);
         #print 'type imgRes:', type( imgRes )
         #print 'imgRes:', dir( imgRes )
@@ -97,6 +100,19 @@ class GLViewport_tuttleofx(GLViewport):
         if self.img_data is not None and self.tuttleOverlay:
             self.tuttleOverlay.draw(pixelScale)
 
+    #time management
+    def getTime(self):
+        return self._time
+
+    def setTime(self, currentTime):
+        self._time = currentTime
+        self.update()
+        self.timeChanged.emit()
+        #print "self._time du setTime:", self._time
+    
+    timeChanged = QtCore.Signal()
+    time = QtCore.Property(float, getTime, setTime, notify=timeChanged)
+ 
 
  #   def getCurrentTime(self):
  #       return self._currentTime

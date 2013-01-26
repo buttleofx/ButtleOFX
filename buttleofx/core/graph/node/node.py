@@ -6,28 +6,8 @@ from PySide import QtGui
 # paramEditor
 from buttleofx.core.params import ParamInt, ParamInt2D, ParamInt3D, ParamString, ParamDouble, ParamDouble2D, ParamBoolean, ParamDouble3D, ParamChoice, ParamPushButton, ParamRGBA, ParamRGB, ParamGroup
 
-nodeDescriptors = {
-    "Blur": {
-        "color": (58, 174, 206),
-        "nbInput": 1,
-        "url": "../img/brazil.jpg",
-    },
-    "Gamma": {
-        "color": (221, 54, 138),
-        "nbInput": 2,
-        "url": "../img/brazil2.jpg",
-    },
-    "Invert": {
-        "color": (90, 205, 45),
-        "nbInput": 3,
-        "url": "../img/brazil3.jpg",
-    }
-}
-
 defaultNodeDesc = {
     "color": (0, 178, 161),
-    "nbInput": 1,
-    #"url": "../img/uglycorn.jpg",
     "url": "../img/brazil.jpg"
 }
 
@@ -72,7 +52,7 @@ class Node(object):
 
     def __init__(self, nodeName, nodeType, nodeCoord, tuttleNode):
         self._tuttleNode = tuttleNode
-        nodeDesc = nodeDescriptors[nodeType] if nodeType in nodeDescriptors else defaultNodeDesc
+        nodeDesc = defaultNodeDesc
 
         self._name = nodeName  # useful for us inside buttle (same id as tuttle)
         self._nameUser = nodeName.strip('tuttle.')  # the name visible for the user
@@ -80,7 +60,7 @@ class Node(object):
         self._coord = nodeCoord
         self._oldCoord = nodeCoord
         self._color = nodeDesc["color"]
-        self._nbInput = nodeDesc["nbInput"]
+        self._nbInput = self._tuttleNode.asImageEffectNode().getClipImageSet().getNbClips()
         #self._image = nodeDesc["url"]
         self._params = []
 

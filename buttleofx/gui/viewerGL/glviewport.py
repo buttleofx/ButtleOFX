@@ -66,8 +66,7 @@ def loadTextureFromImage(imgBounds, img_data):
     # GL_TEXTURE_MAG_FILTER: a surface is bigger than the texture being applied (near objects)
     GL.glTexParameterf(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_MAG_FILTER, GL.GL_NEAREST)
     # GL_TEXTURE_MIN_FILTER: a surface is rendered with smaller dimensions than its corresponding texture bitmap (far away objects)
-    GL.glTexParameterf(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_MIN_FILTER, GL.GL_LINEAR)
-    #GL.GL_LINEAR_MIPMAP_LINEAR) #GL.GL_NEAREST)
+    GL.glTexParameterf(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_MIN_FILTER, GL.GL_LINEAR)  # GL.GL_LINEAR_MIPMAP_LINEAR) #GL.GL_NEAREST)
     #GL.glTexImage2D(GL.GL_TEXTURE_2D, 0, GL.GL_RGB, imgBounds.width(), imgBounds.height(), 0, GL.GL_RGB, GL.GL_UNSIGNED_BYTE, img_data)
 
     load_texture(img_data, imgBounds.width(), imgBounds.height())
@@ -84,14 +83,12 @@ class GLViewport(QtDeclarative.QDeclarativeItem):
         # Enable paint method calls
         self.setFlag(QtGui.QGraphicsItem.ItemHasNoContents, False)
 
-    def loadImageFile(self, filename):
+    def loadImage(self):
         raise NotImplementedError("Load image not implemented")
 
     def initializeGL(self):
-        # We assign a black background
-        GL.glClearColor(0.0, 0.0, 0.0, 0.0)
-        # We applied a flat shading mode
-        GL.glShadeModel(GL.GL_FLAT)
+        GL.glClearColor(0.0, 0.0, 0.0, 0.0)  # We assign a black background
+        GL.glShadeModel(GL.GL_FLAT)  # We applied a flat shading mode
         GL.glEnable(GL.GL_LINE_SMOOTH)
 
     def updateTextureFromImage(self):
@@ -152,24 +149,28 @@ class GLViewport(QtDeclarative.QDeclarativeItem):
 
         imgRect = QtCore.QRectF(self.getImageBounds())
 
-        GL.glColor3d( 1.0, 1.0, 1.0 )
+        GL.glColor3d(1.0, 1.0, 1.0)
         GL.glBegin(GL.GL_QUADS)
-        GL.glTexCoord2d(0.0, 1.0); GL.glVertex2d(imgRect.left(), imgRect.top())
-        GL.glTexCoord2d(1.0, 1.0); GL.glVertex2d(imgRect.right(), imgRect.top())
-        GL.glTexCoord2d(1.0, 0.0); GL.glVertex2d(imgRect.right(), imgRect.bottom())
-        GL.glTexCoord2d(0.0, 0.0); GL.glVertex2d(imgRect.left(), imgRect.bottom())
+        GL.glTexCoord2d(0.0, 1.0)
+        GL.glVertex2d(imgRect.left(), imgRect.top())
+        GL.glTexCoord2d(1.0, 1.0)
+        GL.glVertex2d(imgRect.right(), imgRect.top())
+        GL.glTexCoord2d(1.0, 0.0)
+        GL.glVertex2d(imgRect.right(), imgRect.bottom())
+        GL.glTexCoord2d(0.0, 0.0)
+        GL.glVertex2d(imgRect.left(), imgRect.bottom())
         GL.glEnd()
 
     def drawRegions(self):
-        GL.glLineWidth(3);
+        GL.glLineWidth(3)
         GL.glEnable(GL.GL_LINE_STIPPLE)
         GL.glLineStipple(1, 0xAAAA)
 
-        GL.glColor3d( 1., 0., 0. )
-        self.drawRect( self._rodValue ) # RoD
+        GL.glColor3d(1., 0., 0.)
+        self.drawRect(self._rodValue)  # RoD
 
-        GL.glColor3d( 1., 1., 1. )
-        self.drawRect( self._rowValue ) # RoW
+        GL.glColor3d(1., 1., 1.)
+        self.drawRect(self._rowValue)  # RoW
 
         GL.glDisable(GL.GL_LINE_STIPPLE)
 
@@ -184,7 +185,7 @@ class GLViewport(QtDeclarative.QDeclarativeItem):
     def paint(self, painter, option, widget):
         #print "GLViewport.paint"
 
-        painter.beginNativePainting();
+        painter.beginNativePainting()
         self.internPaintGL(widget)
         painter.endNativePainting()
 
@@ -212,16 +213,16 @@ class GLViewport(QtDeclarative.QDeclarativeItem):
         #print "GLViewport.mousePressEvent"
         QtDeclarative.QDeclarativeItem.mousePressEvent(self, event)
 
-
     def getImageFilepath(self):
         return self._imageFilepathValue
+
     def setImageFilepath(self, imageFilepath):
         print 'setImageFilepath:', imageFilepath
         self._imageFilepathValue = imageFilepath
         if self._imageFilepathValue.startswith("file://"):
-            self.loadImageFile(imageFilepath[len("file://"):])
+            self.loadImage()
         elif os.path.isfile(imageFilepath):
-            self.loadImageFile(imageFilepath)
+            self.loadImage()
 
         self.update()
         self.imageFilepathChanged.emit()
@@ -229,9 +230,9 @@ class GLViewport(QtDeclarative.QDeclarativeItem):
     _imageFilepathValue = str
     imageFilepath = QtCore.Property(str, getImageFilepath, setImageFilepath, notify=imageFilepathChanged)
 
-
     def getBgColor(self):
         return self._bgColorValue
+
     def setBgColor(self, color):
         self._bgColorValue = color
         self.update()
@@ -240,9 +241,9 @@ class GLViewport(QtDeclarative.QDeclarativeItem):
     _bgColorValue = QtGui.QColor(255, 0, 0)
     bgColor = QtCore.Property(QtGui.QColor, getBgColor, setBgColor, notify=bgColorChanged)
 
-
     def getImageBounds(self):
         return self._imageBoundsValue
+
     def setImageBounds(self, imgSize):
         self._imageBoundsValue = imgSize
         self.update()
@@ -251,9 +252,9 @@ class GLViewport(QtDeclarative.QDeclarativeItem):
     _imageBoundsValue = QtCore.QRect(0, 0, 800, 600)
     imageSize = QtCore.Property(QtCore.QSize, getImageBounds, setImageBounds, notify=imageBoundsChanged)
 
-
     def getRegionOfDefinition(self):
         return self._rodValue
+
     def setRegionOfDefinition(self, rod):
         self._rodValue = rod
         self.update()
@@ -262,9 +263,9 @@ class GLViewport(QtDeclarative.QDeclarativeItem):
     _rodValue = QtCore.QRectF(-50., -100., 900., 500.)
     rod = QtCore.Property(QtCore.QRectF, getRegionOfDefinition, setRegionOfDefinition, notify=rodChanged)
 
-
     def getRegionOfWork(self):
         return self._rowValue
+
     def setRegionOfWork(self, row):
         self._rowValue = row
         self.update()
@@ -273,9 +274,9 @@ class GLViewport(QtDeclarative.QDeclarativeItem):
     _rowValue = QtCore.QRectF(0., 0., 720., 576.)
     row = QtCore.Property(QtCore.QRectF, getRegionOfWork, setRegionOfWork, notify=rowChanged)
 
-
     def getFittedMode(self):
         return self._fittedModeValue
+
     def setfittedMode(self, fittedMode):
         self._fittedModeValue = fittedMode
         self.fittedModeChanged.emit()
@@ -283,9 +284,9 @@ class GLViewport(QtDeclarative.QDeclarativeItem):
     _fittedModeValue = False
     fittedMode = QtCore.Property(bool, getFittedMode, setfittedMode, notify=fittedModeChanged)
 
-
     def getOffset(self):
         return self._offsetValue
+
     def setOffset(self, offset):
         #print "setOffset:", offset
         self._offsetValue = offset
@@ -297,17 +298,18 @@ class GLViewport(QtDeclarative.QDeclarativeItem):
 
     @QtCore.Slot(float, float)
     def setOffset_xy(self, x, y):
-        self.setOffset( QtCore.QPointF(x, y) )
-        
+        self.setOffset(QtCore.QPointF(x, y))
+
     def getScale(self):
         return self._scaleValue
+
     def setScale(self, scale):
         #print "setScale:", self._scaleValue, " => ", scale
         minValue = 0.001
         self._scaleValue = scale if scale > minValue else minValue
         self.update()
         self.scaleChanged.emit()
-    
+
     @QtCore.Slot(float, float, float)
     def setScaleAtPos_viewportCoord(self, scale, x, y):
         '''
@@ -320,11 +322,11 @@ class GLViewport(QtDeclarative.QDeclarativeItem):
         minValue = 0.001
         newScale = scale if scale > minValue else minValue
         scaleRatio = newScale / oldScale
-        # position relative to the viewport but in root scale 
+        # position relative to the viewport but in root scale
         pos_viewport_rootScale = (pos_viewportCoord / oldScale)
         pos_rootCoord = oldOffset + pos_viewport_rootScale
         newOffset = pos_rootCoord - (pos_viewport_rootScale / scaleRatio)
-        
+
         self._offsetValue = newOffset
         self._scaleValue = newScale
         self.update()
@@ -333,5 +335,3 @@ class GLViewport(QtDeclarative.QDeclarativeItem):
     scaleChanged = QtCore.Signal()
     _scaleValue = 1.
     imgScale = QtCore.Property(float, getScale, setScale, notify=scaleChanged)
-
-

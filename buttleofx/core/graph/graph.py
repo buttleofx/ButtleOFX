@@ -1,8 +1,9 @@
 # Tuttle
 from pyTuttle import tuttle
 #undo_redo
-from buttleofx.core.undo_redo.manageTools import CommandManager, GroupUndoableCommands
-from buttleofx.core.undo_redo.commands import CmdCreateNode, CmdDeleteNode, CmdCreateConnection, CmdDeleteConnection, CmdCreateReaderNode
+from buttleofx.core.undo_redo.manageTools import CommandManager
+from buttleofx.core.undo_redo.commands.node import CmdCreateNode, CmdDeleteNode, CmdCreateReaderNode
+from buttleofx.core.undo_redo.commands.connection import CmdCreateConnection, CmdDeleteConnection
 # quickmamba
 from quickmamba.patterns import Signal
 
@@ -13,7 +14,9 @@ class Graph(object):
         - _nodes : list of nodes (python objects, the core nodes)
         - _connections : list of connections (python objects, the core connections)
         - nodesChanged : the signal emited to the wrapper layer to update nodeWrappers
+        - connectionChanged : the signal emited to the wrapper layer to update connectionWrappers
         - connectionsChanged : the signal emited to the wrapper layer to update connectionWrappers
+        - connectionsCoordChanged : the signal emited to the wrapper layer to update coord of connectionWrappers (it's a trick in QML)
     """
 
     def __init__(self):
@@ -33,7 +36,6 @@ class Graph(object):
             Displays on terminal some data.
             Usefull to debug the class.
         """
-
         print("=== Graph Buttle ===")
         print("---- all nodes ----")
         for node in self._nodes:

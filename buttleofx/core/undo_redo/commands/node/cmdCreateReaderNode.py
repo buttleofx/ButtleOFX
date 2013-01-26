@@ -1,6 +1,6 @@
 # undo_redo
 from buttleofx.core.undo_redo.manageTools import UndoableCommand
-from buttleofx.core.undo_redo.commands import CmdCreateNode
+from buttleofx.core.undo_redo.commands.node import CmdCreateNode
 
 
 class CmdCreateReaderNode(UndoableCommand, CmdCreateNode):

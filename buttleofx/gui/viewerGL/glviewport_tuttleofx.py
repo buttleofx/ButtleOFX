@@ -23,7 +23,7 @@ class GLViewport_tuttleofx(GLViewport):
     def loadImage_tuttle(self):
         print "--------------------------------- loadImage_tuttle ---------------------------"
         buttleData = ButtleDataSingleton().get()
-        imgRes = buttleData.computeNode()
+        imgRes = buttleData.retrieveImage()
 
         self.img_data = imgRes.getNumpyArray()
 

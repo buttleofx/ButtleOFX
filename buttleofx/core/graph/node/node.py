@@ -27,7 +27,8 @@ nodeDescriptors = {
 defaultNodeDesc = {
     "color": (0, 178, 161),
     "nbInput": 1,
-    "url": "../img/uglycorn.jpg",
+    #"url": "../img/uglycorn.jpg",
+    "url": "../img/brazil.jpg"
 }
 
 mapTuttleParamToButtleParam = {

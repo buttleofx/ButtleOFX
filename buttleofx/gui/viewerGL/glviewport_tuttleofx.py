@@ -16,14 +16,16 @@ class GLViewport_tuttleofx(GLViewport):
 
         self.tuttleOverlay = None
         self.recomputeOverlay = False
-
+        
         buttleData = ButtleDataSingleton().get()
         buttleData.currentViewerNodeChangedPython.connect(self.loadImage)
 
     def loadImage_tuttle(self):
         print "--------------------------------- loadImage_tuttle ---------------------------"
         buttleData = ButtleDataSingleton().get()
-        imgRes = buttleData.computeNode()
+        imgRes = buttleData.computeNode(self._time)
+
+        self._time = 0
 
         self.img_data = imgRes.getNumpyArray()
 
@@ -59,3 +61,37 @@ class GLViewport_tuttleofx(GLViewport):
         pixelScale.y = pixelScale.x
         if self.img_data is not None and self.tuttleOverlay:
             self.tuttleOverlay.draw(pixelScale)
+
+    #time management
+    def getTime(self):
+        return self._time
+
+    def setTime(self, currentTime):
+        self._time = currentTime
+        self.update()
+        self.timeChanged.emit()
+        self.reloadImage()
+        #print "self._time du setTime:", self._time
+    
+    timeChanged = QtCore.Signal()
+    time = QtCore.Property(float, getTime, setTime, notify=timeChanged)
+ 
+
+ #   def getCurrentTime(self):
+ #       return self._currentTime
+#
+    #def setCurrentTime(self, currentTime):
+ #       self._currentTime = currentTime
+ #       super.setOffset(self, currentTime)
+#
+ #   @QtCore.Signal
+ #   def changed(self):
+ #       pass
+
+ #   def emitChanged(self):
+  #      self.changed.emit()
+
+#times signals
+    #timeChanged = QtCore.Signal()
+    #currentTime = QtCore.Property(QtCore.QObject, getCurrentTime, setCurrentTime, notify = timeChanged)
+

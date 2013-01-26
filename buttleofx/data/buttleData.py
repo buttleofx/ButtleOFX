@@ -324,31 +324,33 @@ class ButtleData(QtCore.QObject):
 
         #Get the name of the currentNode of the viewer
         node = self.getCurrentViewerNodeName()
-        #Get the output where we save the result
 
+        #Get the output where we save the result
         self._tuttleImageCache = tuttle.MemoryCache()
         self.getGraph().getGraphTuttle().compute(self._tuttleImageCache, node, tuttle.ComputeOptions(int(time)))
         self._computedImage = self._tuttleImageCache.get(0)
 
-        print "------- END COMPUTE NODE -------"
+        #Add the computedImage to the map
+        self._mapNodeNameToComputedImage.update({node: self._computedImage})
+
         return self._computedImage
-        #self.getGraph.getGraphTuttle().compute(self._computedImage, self.getCurrentViewerNoneName()
 
-    # def retrieveImage(self):
-    #     print "--------------------------------- retrieveImage  ButtleData ---------------------------"
-    #     #Get the name of the currentNode of the viewer
-    #     node = self.getCurrentViewerNodeName()
+    def retrieveImage(self, time, timeChanged):
+        #Get the name of the currentNode of the viewer
+        node = self.getCurrentViewerNodeName()
 
-    #     #Get the map
-    #     mapNodeToImage = self._mapNodeNameToComputedImage
+        #Get the map
+        mapNodeToImage = self._mapNodeNameToComputedImage
 
-    #     #If the image is already calculated
-    #     if node is mapNodeToImage:
-    #         print "**************************Image already calculated**********************"
-    #         return self._mapNodeNameToComputedImage[self.getCurrentViewerNodeName()]
-    #     else:
-    #         print "************************Calcul of image***************************"
-    #         self.computeNode()
+        #If the image is already calculated
+        for element in mapNodeToImage:
+            if node == element and timeChanged is False:
+                print "**************************Image already calculated**********************"
+                return self._mapNodeNameToComputedImage[node]
+        # If it is not
+        else:
+            print "************************Calcul of image***************************"
+            return self.computeNode(time)
     ################################################## DATA EXPOSED TO QML ##################################################
 
     # graphWrapper

@@ -17,6 +17,8 @@ class GLViewport_tuttleofx(GLViewport):
         self.tuttleOverlay = None
         self.recomputeOverlay = False
 
+        self._timeHasChanged = False
+
         self._time = 0
         
         buttleData = ButtleDataSingleton().get()
@@ -25,7 +27,10 @@ class GLViewport_tuttleofx(GLViewport):
     def loadImage_tuttle(self):
         print "--------------------------------- loadImage_tuttle ---------------------------"
         buttleData = ButtleDataSingleton().get()
-        imgRes = buttleData.computeNode(self._time)
+        #imgRes = buttleData.computeNode(self._time)
+
+        imgRes = buttleData.retrieveImage(self._time, self._timeHasChanged)
+        self._timeHasChanged = False
 
         self.img_data = imgRes.getNumpyArray()
 
@@ -67,6 +72,7 @@ class GLViewport_tuttleofx(GLViewport):
         return self._time
 
     def setTime(self, currentTime):
+        self._timeHasChanged = True
         self._time = currentTime
         self.update()
         self.timeChanged.emit()

@@ -1,7 +1,4 @@
 from quickmamba.patterns import Signal
-# undo redo
-from buttleofx.core.undo_redo.manageTools import CommandManager
-from buttleofx.core.undo_redo.commands.params import CmdSetParamDouble
 
 
 class ParamDouble(object):
@@ -41,7 +38,8 @@ class ParamDouble(object):
 
     #################### setters ####################
 
-    def setValue(self, newValue):
-        cmdUpdate = CmdSetParamDouble(self, newValue)
-        cmdManager = CommandManager()
-        cmdManager.push(cmdUpdate)
+    def setValue(self, value):
+        self._tuttleParam.setValue(float(value))
+        self.changed()
+
+        print "TuttleParam new Value : ", self.getValue()

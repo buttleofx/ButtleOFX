@@ -14,7 +14,7 @@ from buttleofx.gui.graph import GraphWrapper
 from buttleofx.gui.graph.node import NodeWrapper
 # undo redo
 from buttleofx.core.undo_redo.manageTools import CommandManager
-from buttleofx.core.undo_redo.commands.node import CmdSetCoord
+from buttleofx.core.undo_redo.commands import CmdSetCoord
 # copy
 from copy import copy
 
@@ -27,8 +27,7 @@ class ButtleData(QtCore.QObject):
         - _currentNodeViewer
         - _currentNodeParam
         - _currentNodeGraph
-        - soon : _currentNodeCopy
-        - _computedImage
+        - _currentNodeCopy
 
         This class :
             - containts all data we need to manage the application.
@@ -196,25 +195,18 @@ class ButtleData(QtCore.QObject):
         self.getGraph().getNodes()[-1].setImage(image)
         self.getGraph().getNodes()[-1].setParams(params)
 
-    @QtCore.Slot(str, int, int)
-    def dropReaderNode(self, url, x, y):
-        """
-            Function called when an image is dropped in the graph.
-        """
-        self.getGraph().createReaderNode(url, x, y)
-
     ##### Connection #####
 
     def connect(self, clipOut, clipIn):
         """
-            Adds a connection between 2 clips.
+            Add a connection between 2 clips.
         """
         self.getGraph().createConnection(clipOut, clipIn)
         self.getGraphWrapper().resetTmpClips()
 
     def disconnect(self, connection):
         """
-            Removes a connection between 2 clips.
+            Remove a connection between 2 clips.
         """
         self.getGraph().deleteConnection(connection)
         self.getGraphWrapper().resetTmpClips()
@@ -262,8 +254,6 @@ class ButtleData(QtCore.QObject):
                     print "Unable to connect or delete the nodes."
 
     ################################################## INTERACTIONS ##################################################
-
-    ##### Node #####
 
     @QtCore.Slot(str, int, int)
     def nodeMoved(self, nodeName, x, y):
@@ -332,6 +322,7 @@ class ButtleData(QtCore.QObject):
         self.getGraph().getGraphTuttle().compute(self._tuttleImageCache, node)
         self._computedImage = self._tuttleImageCache.get(0)
         return self._computedImage
+        print "------- END COMPUTE NODE -------"
         #self.getGraph.getGraphTuttle().compute(self._computedImage, self.getCurrentViewerNoneName()
 
     ################################################## DATA EXPOSED TO QML ##################################################
@@ -351,7 +342,6 @@ class ButtleData(QtCore.QObject):
     tuttlePlugins = QtCore.Property(QtCore.QObject, getQObjectPluginsIdentifiers, constant=True)
 
 
-# This class exists just because thre are problems when a class extends 2 other class (Singleton and QObject)
 class ButtleDataSingleton(Singleton):
 
     _buttleData = ButtleData()

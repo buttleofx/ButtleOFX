@@ -1,7 +1,4 @@
 from quickmamba.patterns import Signal
-# undo redo
-from buttleofx.core.undo_redo.manageTools import CommandManager
-from buttleofx.core.undo_redo.commands.params import CmdSetParamInt
 
 
 class ParamInt(object):
@@ -25,7 +22,7 @@ class ParamInt(object):
         return "ParamInt"
 
     def getDefaultValue(self):
-        return self._tuttleParam.getProperties().getIntProperty("OfxParamPropDefault", 0)
+        return self._tuttleParam.getIntValue()
 
     def getValue(self):
         return self._tuttleParam.getIntValue()
@@ -41,7 +38,8 @@ class ParamInt(object):
 
     #################### setters ####################
 
-    def setValue(self, newValue):
-        cmdUpdate = CmdSetParamInt(self, newValue)
-        cmdManager = CommandManager()
-        cmdManager.push(cmdUpdate)
+    def setValue(self, value):
+        self._tuttleParam.setValue(int(value))
+        self.changed()
+
+        print "TuttleParam new Value : ", self.getValue()

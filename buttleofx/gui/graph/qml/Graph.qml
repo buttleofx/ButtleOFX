@@ -168,8 +168,7 @@ Rectangle {
         } 
     }
 
-    /*  // NODE CREATION WITH RIGHT CLICK
-        MouseArea{
+    /*MouseArea{
         id: mouseArea
         anchors.fill: parent
         acceptedButtons: Qt.RightButton
@@ -182,14 +181,5 @@ Rectangle {
         }
     } */
 
-    DropArea {
-        anchors.fill: parent
-        onDrop: {
-            if( hasUrls )
-            {
-                _buttleData.dropReaderNode(firstUrl, pos.x, pos.y)
-            }
-        }
-    }
     
 }

@@ -18,7 +18,7 @@ Item {
         /*Title of the paramInt */
         Text {
             id: paramStringTitle
-            text: paramObject.text + " : "
+            text: paramObject.stringType + " : "
             color: "white"
         }
 

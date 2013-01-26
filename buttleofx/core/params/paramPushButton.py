@@ -33,7 +33,7 @@ class ParamPushButton(object):
     #################### setters ####################
 
     def setEnabled(self, enabled):
-        self._tuttleParam.getProperties().setValue(enabled)
+        self._tuttleParam.getProperties().seValue(enabled)
         self.changed()
 
         print "TuttleParam new Value : ", self._tuttleParam.getProperties().fetchProperty("OfxParamPropDefault").getStringValue(0)

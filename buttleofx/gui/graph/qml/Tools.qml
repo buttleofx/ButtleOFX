@@ -57,7 +57,7 @@ Rectangle {
         }
     }
 
-    MenuList {
-        id: listmodel
-    }   
+//    MenuList {
+//        id: listmodel
+//    }
 }

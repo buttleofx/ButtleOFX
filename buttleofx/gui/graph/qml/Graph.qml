@@ -55,10 +55,14 @@ Rectangle {
         }
     }
 
-    MenuList {
-        id: listmodel
-        parentName: "tuttle/"
-    }   
+    Item {
+        id: globalListPlugins
+        property variant children: null
+        MenuList {
+            id: listmodel
+            parentName: "tuttle/"
+        }
+    }
 
     MouseArea{
         anchors.fill: parent

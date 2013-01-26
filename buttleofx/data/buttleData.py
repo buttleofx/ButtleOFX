@@ -248,19 +248,19 @@ class ButtleData(QtCore.QObject, Singleton):
         cmdManager = CommandManager()
         cmdManager.redo()
 
-    # def getQObjectPluginsIdentifiers(self):
-    #     """
-    #         Returns a QObjectListModel of all names of Tuttle's plugins.
-    #     """
-    #     pluginsNames = QObjectListModel(self)
-    #     pluginsNames.setObjectList(tuttleTools.getPluginsNames())
-    #     return pluginsNames
+    def getQObjectPluginsIdentifiers(self):
+        """
+            Returns a QObjectListModel of all names of Tuttle's plugins.
+        """
+        pluginsNames = QObjectListModel(self)
+        pluginsNames.setObjectList(tuttleTools.getPluginsNames())
+        return pluginsNames
 
-    # @QtCore.Slot(str, result="QVariant")
-    # def getQObjectPluginsIdentifiersByParentPath(self, pathname):
-    #     pluginsIds = QObjectListModel(self)
-    #     pluginsIds.setObjectList(tuttleTools.getPluginsIdentifiersByParentPath(pathname))
-    #     return pluginsIds
+    @QtCore.Slot(str, result="QVariant")
+    def getQObjectPluginsIdentifiersByParentPath(self, pathname):
+        pluginsIds = QObjectListModel(self)
+        pluginsIds.setObjectList(tuttleTools.getPluginsIdentifiersByParentPath(pathname))
+        return pluginsIds
 
     def getListMenuTitemByParentPath(self, parentPath):
         itemsIdentifiers = tuttleTools.getPluginsIdentifiersAsDictionary()[parentPath]
@@ -277,6 +277,10 @@ class ButtleData(QtCore.QObject, Singleton):
         listMenuItem = QObjectListModel(self)
         listMenuItem.setObjectList(self.getListMenuTitemByParentPath(pathname))
         return listMenuItem
+
+    @QtCore.Slot(str, result=bool)
+    def isAPlugin(self, pluginId):
+        return pluginId in tuttleTools.getPluginsIdentifiers()
 
     # @QtCore.Slot(str, result=bool)
     # def nextSonIsAPlugin(self, pathname):

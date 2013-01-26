@@ -26,7 +26,6 @@ class GLViewport_tuttleofx(GLViewport):
         print "--------------------------------- loadImage_tuttle ---------------------------"
         buttleData = ButtleDataSingleton().get()
         imgRes = buttleData.computeNode(self._time)
-        #print "time of the loadImage_tuttle :", self._time
 
         self.img_data = imgRes.getNumpyArray()
 
@@ -72,7 +71,6 @@ class GLViewport_tuttleofx(GLViewport):
         self.update()
         self.timeChanged.emit()
         self.loadImage()
-        print "self._time du setTime:", self._time
     
     timeChanged = QtCore.Signal()
     time = QtCore.Property(float, getTime, setTime, notify=timeChanged)

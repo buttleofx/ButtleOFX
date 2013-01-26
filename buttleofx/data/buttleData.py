@@ -322,6 +322,7 @@ class ButtleData(QtCore.QObject):
         self.getGraph().getGraphTuttle().compute(self._tuttleImageCache, node)
         self._computedImage = self._tuttleImageCache.get(0)
         return self._computedImage
+        print "------- END COMPUTE NODE -------"
         #self.getGraph.getGraphTuttle().compute(self._computedImage, self.getCurrentViewerNoneName()
 
     ################################################## DATA EXPOSED TO QML ##################################################

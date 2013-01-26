@@ -89,13 +89,14 @@ class Graph(object):
         cmdManager.push(cmdCreateNode)
 
     def createReaderNode(self, url):
-        extension = url.split(".")[-1]
+        extension = url.split(".")[-1].lower()
+        print extension
 
         if extension in ['jpeg', 'jpg', 'jpe', 'jfif', 'jfi']:
             nodeType = 'tuttle.turbojpegreader'
         elif extension == 'png':
             nodeType = 'tuttle.pngreader'
-        elif extension in ['aac', 'ac3', 'adf', 'adx', 'aea', 'ape', 'apl', 'mac', 'bin', 'bit', 'bmv', 'cdg', 'cdxl', 'xl', '302', 'daud', 'dts', 'dv', 'dif', 'cdata', 'eac3', 'flm', 'flac', 'flv', 'g722', '722', 'tco', 'rco', 'g723_1', 'g729', 'gsm', 'h261', 'h26l', 'h264', '264', 'idf', 'cgi', 'latm', 'm4v', 'mjpg', 'mjpeg', 'mpo', 'mlp', 'mp2', 'mp3', 'm2a', 'mpc', 'mvi', 'mxg', 'v', 'nut', 'ogg', 'oma', 'omg', 'aa3', 'al', 'ul', 'sw', 'sb', 'uw', 'ub', 'yuv', 'cif', 'qcif', 'rgb', 'rt', 'rso', 'smi', 'sami', 'sbg', 'shn', 'vb', 'son', 'mjpg', 'sub', 'thd', 'tta', 'ans', 'art', 'asc', 'diz', 'ice', 'nfo', 'txt', 'vt', 'vc1', 'vqf', 'vql', 'vqe', 'vtt', 'yop', 'y4m']:
+        elif extension in ['avi', 'mov', 'aac', 'ac3', 'adf', 'adx', 'aea', 'ape', 'apl', 'mac', 'bin', 'bit', 'bmv', 'cdg', 'cdxl', 'xl', '302', 'daud', 'dts', 'dv', 'dif', 'cdata', 'eac3', 'flm', 'flac', 'flv', 'g722', '722', 'tco', 'rco', 'g723_1', 'g729', 'gsm', 'h261', 'h26l', 'h264', '264', 'idf', 'cgi', 'latm', 'm4v', 'mjpg', 'mjpeg', 'mpo', 'mlp', 'mp2', 'mp3', 'm2a', 'mpc', 'mvi', 'mxg', 'v', 'nut', 'ogg', 'oma', 'omg', 'aa3', 'al', 'ul', 'sw', 'sb', 'uw', 'ub', 'yuv', 'cif', 'qcif', 'rgb', 'rt', 'rso', 'smi', 'sami', 'sbg', 'shn', 'vb', 'son', 'mjpg', 'sub', 'thd', 'tta', 'ans', 'art', 'asc', 'diz', 'ice', 'nfo', 'txt', 'vt', 'vc1', 'vqf', 'vql', 'vqe', 'vtt', 'yop', 'y4m']:
             nodeType = 'tuttle.ffmpegreader'
         elif extension in ['bmp', 'cin', 'dds', 'dpx', 'exr', 'fits', 'hdr', 'ico', 'j2k', 'j2c', 'jp2', 'jpeg', 'jpg', 'jpe', 'jfif', 'jfi', 'pbm', 'pgm', 'png', 'pnm', 'ppm', 'pic', 'psd', 'rgbe', 'sgi', 'tga', 'tif', 'tiff', 'tpic', 'tx', 'webp']:
             nodeType = 'tuttle.oiioreader'
@@ -107,23 +108,11 @@ class Graph(object):
             print "Unknown format. Can't create reader node."
             return
             #use exception !
-            # There is a probleme when the format is in capital letters !
 
         # create the node
         cmdCreateReaderNode = CmdCreateReaderNode(self, nodeType, 20, 20, url)
-
-        # set the url of the node
-        # We need the tuttleNode but it isn't yet created ! => No possible to use GroupCmds ? => Create a new command "createReaderNode" ??
-
-        # CmdSetFilename(node, param, value)
-        # cmdSetFilename = CmdSetParam(cmdCreateNode._node, "filename", url)
-        # groupCmd = GroupUndoableCommands([cmdCreateNode, cmdSetFilename])
-        # cmdManager = CommandManager()
-        # cmdManager.push(groupCmd)
-
         cmdManager = CommandManager()
         cmdManager.push(cmdCreateReaderNode)
-
 
     def deleteNode(self, node):
         """

@@ -27,16 +27,13 @@ class CmdCreateReaderNode(UndoableCommand, CmdCreateNode):
             Redo the creation of the node.
         """
         CmdCreateNode.redoCmd(self)
-        #self._node.getTuttleNode().getParam('filename').setValue(self._filename)
-        self._node.getTuttleNode().getParam('filename').setValue("self._filename")
+        self._node.getTuttleNode().getParam('filename').setValue(str(self._filename))
         self._graphTarget.nodesChanged()
 
     def doCmd(self):
         """
             Create a node.
         """
-        print "kjvhhvhvhvhvhv", self._filename
         CmdCreateNode.doCmd(self)
-        #self._node.getTuttleNode().getParam('filename').setValue(self._filename)
-        self._node.getTuttleNode().getParam('filename').setValue("self._filename")
+        self._node.getTuttleNode().getParam('filename').setValue(str(self._filename))
         self._graphTarget.nodesChanged()

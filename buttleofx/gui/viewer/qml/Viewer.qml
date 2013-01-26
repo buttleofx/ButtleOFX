@@ -16,7 +16,7 @@ Rectangle {
         offset.x: 0.0
         offset.y: 0.0
         fittedMode: true
-        imageFilepath: parent.imageFile
+        //imageFilepath: _buttleData.curren
 
         property real inWidth: 16
         property real inHeight: 9
@@ -67,16 +67,16 @@ Rectangle {
                 viewport.fittedMode = false
             }
         }
-        DropArea {
+        /*DropArea {
             anchors.fill: parent
             
             onDrop: {
                 if( hasUrls )
                 {
-                    viewport.imageFilepath = firstUrl
+                    //viewport.imageFilepath = firstUrl
                 }
             }
-        }
+        }*/
     }
 
 }

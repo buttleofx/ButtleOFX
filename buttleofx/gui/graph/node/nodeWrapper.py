@@ -64,8 +64,8 @@ class NodeWrapper(QtCore.QObject):
     def getNbInput(self):
         return self._node.getNbInput()
 
-    def getImage(self):
-        return self._node.getImage()
+    # def getImage(self):
+    #     return self._node.getImage()
 
     def getParams(self):
         paramEditorWrapper = ParamEditorWrapper(self._view, self._node.getParams())
@@ -97,8 +97,8 @@ class NodeWrapper(QtCore.QObject):
     def setNbInput(self, nbInput):
         self._node.setNbInput(nbInput)
 
-    def setImage(self, image):
-        self._node.setImage(image)
+    # def setImage(self, image):
+    #     self._node.setImage(image)
 
     ################################################## DATA EXPOSED TO QML ##################################################
 
@@ -109,6 +109,6 @@ class NodeWrapper(QtCore.QObject):
     coord = QtCore.Property(QtCore.QPoint, getCoord, setCoord, notify=changed)
     color = QtCore.Property(QtGui.QColor, getColor, setColor, notify=changed)
     nbInput = QtCore.Property(int, getNbInput, setNbInput, notify=changed)
-    image = QtCore.Property(str, getImage, setImage, notify=changed)
+    # image = QtCore.Property(str, getImage, setImage, notify=changed)
     # params from Tuttle
     params = QtCore.Property(QtCore.QObject, getParams, constant=True)

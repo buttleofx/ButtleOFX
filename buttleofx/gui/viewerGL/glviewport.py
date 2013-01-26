@@ -83,9 +83,6 @@ class GLViewport(QtDeclarative.QDeclarativeItem):
         # Enable paint method calls
         self.setFlag(QtGui.QGraphicsItem.ItemHasNoContents, False)
 
-    def loadImage(self):
-        raise NotImplementedError("Load image not implemented")
-
     def initializeGL(self):
         GL.glClearColor(0.0, 0.0, 0.0, 0.0)  # We assign a black background
         GL.glShadeModel(GL.GL_FLAT)  # We applied a flat shading mode
@@ -212,23 +209,6 @@ class GLViewport(QtDeclarative.QDeclarativeItem):
     def mousePressEvent(self, event):
         #print "GLViewport.mousePressEvent"
         QtDeclarative.QDeclarativeItem.mousePressEvent(self, event)
-
-    def getImageFilepath(self):
-        return self._imageFilepathValue
-
-    def setImageFilepath(self, imageFilepath):
-        print 'setImageFilepath:', imageFilepath
-        self._imageFilepathValue = imageFilepath
-        if self._imageFilepathValue.startswith("file://"):
-            self.loadImage()
-        elif os.path.isfile(imageFilepath):
-            self.loadImage()
-
-        self.update()
-        self.imageFilepathChanged.emit()
-    imageFilepathChanged = QtCore.Signal()
-    _imageFilepathValue = str
-    imageFilepath = QtCore.Property(str, getImageFilepath, setImageFilepath, notify=imageFilepathChanged)
 
     def getBgColor(self):
         return self._bgColorValue

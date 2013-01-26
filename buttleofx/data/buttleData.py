@@ -43,22 +43,19 @@ class ButtleData(QtCore.QObject):
     _currentViewerNodeName = None
 
     _computedImage = None
+    _mapNodeNameToComputedImage = {}
 
     def init(self, view):
-        print "------------------------------------Init ButtleData----------------------------"
         self._graph = Graph()
         self._graphWrapper = GraphWrapper(self._graph, view)
         self.currentViewerNodeChangedPython = Signal()
-        #self.currentViewerNodeChangedPython.connect(self.computeNode)
-        print "------------------------------------Init ButtleData end----------------------------"
 
         return self
-
 
     ################################################## GETTERS ET SETTERS ##################################################
 
     #################### getters ####################
-    
+
     def getGraph(self):
         return self._graph
 
@@ -181,7 +178,7 @@ class ButtleData(QtCore.QObject):
         tuttleNode = copy(self.getCurrentSelectedNodeWrapper().getNode().getTuttleNode())
         color = self.getCurrentSelectedNodeWrapper().getColor()
         nbInput = self.getCurrentSelectedNodeWrapper().getNbInput()
-        image = self.getCurrentSelectedNodeWrapper().getImage()
+        #image = self.getCurrentSelectedNodeWrapper().getImage()
         # doesn't work : the params are pointer, but we want real copy...
         params = []
         for param in self.getCurrentSelectedNodeWrapper().getNode().getParams():
@@ -193,7 +190,7 @@ class ButtleData(QtCore.QObject):
         self.getGraph().getNodes()[-1].setTuttleNode(tuttleNode)
         self.getGraph().getNodes()[-1].setColor(color.red(), color.green(), color.blue())
         self.getGraph().getNodes()[-1].setNbInput(nbInput)
-        self.getGraph().getNodes()[-1].setImage(image)
+        #self.getGraph().getNodes()[-1].setImage(image)
         self.getGraph().getNodes()[-1].setParams(params)
 
     @QtCore.Slot(str, int, int)
@@ -331,9 +328,26 @@ class ButtleData(QtCore.QObject):
         self._tuttleImageCache = tuttle.MemoryCache()
         self.getGraph().getGraphTuttle().compute(self._tuttleImageCache, node)
         self._computedImage = self._tuttleImageCache.get(0)
+
+        print "------- END COMPUTE NODE -------"
         return self._computedImage
         #self.getGraph.getGraphTuttle().compute(self._computedImage, self.getCurrentViewerNoneName()
 
+    # def retrieveImage(self):
+    #     print "--------------------------------- retrieveImage  ButtleData ---------------------------"
+    #     #Get the name of the currentNode of the viewer
+    #     node = self.getCurrentViewerNodeName()
+
+    #     #Get the map
+    #     mapNodeToImage = self._mapNodeNameToComputedImage
+
+    #     #If the image is already calculated
+    #     if node is mapNodeToImage:
+    #         print "**************************Image already calculated**********************"
+    #         return self._mapNodeNameToComputedImage[self.getCurrentViewerNodeName()]
+    #     else:
+    #         print "************************Calcul of image***************************"
+    #         self.computeNode()
     ################################################## DATA EXPOSED TO QML ##################################################
 
     # graphWrapper

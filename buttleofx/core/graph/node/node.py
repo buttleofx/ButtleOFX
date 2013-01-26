@@ -73,14 +73,14 @@ class Node(object):
         self._tuttleNode = tuttleNode
         nodeDesc = nodeDescriptors[nodeType] if nodeType in nodeDescriptors else defaultNodeDesc
 
-        self._name = nodeName # useful for us inside buttle (same id as tuttle)
-        self._nameUser = nodeName.strip('tuttle.') # the name visible for the user
+        self._name = nodeName  # useful for us inside buttle (same id as tuttle)
+        self._nameUser = nodeName.strip('tuttle.')  # the name visible for the user
         self._type = nodeType
         self._coord = nodeCoord
         self._oldCoord = nodeCoord
         self._color = nodeDesc["color"]
         self._nbInput = nodeDesc["nbInput"]
-        self._image = nodeDesc["url"]
+        #self._image = nodeDesc["url"]
         self._params = []
 
         # Filling the node's param list
@@ -125,8 +125,8 @@ class Node(object):
     def getNbInput(self):
         return self._nbInput
 
-    def getImage(self):
-        return self._image
+    # def getImage(self):
+    #     return self._image
 
     def getParams(self):
         return self._params
@@ -164,9 +164,9 @@ class Node(object):
         self._nbInput = nbInput
         self.changed()
 
-    def setImage(self, image):
-        self._image = image
-        self.changed()
+    # def setImage(self, image):
+    #     self._image = image
+    #     self.changed()
 
     def setParams(self, params):
         self._params = params

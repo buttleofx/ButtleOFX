@@ -18,28 +18,10 @@ class GLViewport_tuttleofx(GLViewport):
         self.recomputeOverlay = False
 
         buttleData = ButtleDataSingleton().get()
-        buttleData.currentViewerNodeChangedPython.connect(self.reloadImage)
-        #self.init_tuttle()
-
-    def reloadImage(self):
-        self.loadImage()
-
-    # def init_tuttle(self):
-    #     tuttle.core().preload(False)
-    #     #print "Plugins cache:", tuttle.core().getImageEffectPluginCache()
-    #     self.tuttleGraph = tuttle.Graph()
-    #     self.tuttleReaderNode = self.tuttleGraph.createNode("tuttle.jpegreader")
-    #     #self.tuttleLensNode = self.tuttleGraph.createNode("tuttle.lensdistort")
-    #     self.tuttleLensNode = self.tuttleGraph.createNode("tuttle.lensdistort",
-    #                 coef1=.5, #outOfImage='transparency',
-    #                 gridOverlay=True, gridCenterOverlay=True) #, debugDisplayRoi=True)
-    #     self.tuttleGraph.connect(self.tuttleReaderNode, self.tuttleLensNode)
-    #     self.tuttleOverlay = TuttleOverlayInteract(self, self.tuttleGraph, self.tuttleLensNode)
-    #     #self.tuttleOverlay.createInstanceAction()
-    #     #self.tuttleOverlay.initOverlayDescriptor(8, True)
+        buttleData.currentViewerNodeChangedPython.connect(self.loadImage)
 
     def loadImage_tuttle(self):
-
+        print "--------------------------------- loadImage_tuttle ---------------------------"
         buttleData = ButtleDataSingleton().get()
         imgRes = buttleData.computeNode()
 
@@ -51,49 +33,6 @@ class GLViewport_tuttleofx(GLViewport):
         height = bounds.y2 - bounds.y1
 
         self.setImageBounds(QtCore.QRect(bounds.x1, bounds.y1, width, height))
-
-#     def loadImageFile_tuttle(self, filename):
-#         print 'loadImageFile_tuttle:', str(filename)
-
-#         #self.tuttleReaderNode.getParam("filename").setValue(str(filename))
-#         #outputCache = tuttle.MemoryCache()
-#         #self.tuttleGraph.compute(outputCache, self.tuttleLensNode)
-
-#         buttleData = ButtleDataSingleton().get()
-#         imgRes = buttleData.computeNode()
-
-#         #imgRes = outputCache.get(0);
-#         #print 'type imgRes:', type( imgRes )
-#         #print 'imgRes:', dir( imgRes )
-#         #print 'FullName:', imgRes.getFullName()
-#         #print 'MemorySize:', imgRes.getMemorySize()
-#         #print 'Bounds:', imgRes.getBounds()
-
-#         self.img_data = imgRes.getNumpyArray()
-
-#         bounds = imgRes.getBounds()
-#         #self.getVoidPixelData()
-#         width = bounds.x2 - bounds.x1
-#         height = bounds.y2 - bounds.y1
-
-#         self.setImageBounds(QtCore.QRect(bounds.x1, bounds.y1, width, height))
-
-#         #self.tuttleOverlay.setupGraph()
-
-# #        self.recomputeOverlay = False
-# #        if self.recomputeOverlay:
-# #            print("GLViewport_tuttleofx.loadImageFile_tuttle recomputeOverlay")
-# #            try:
-# #                print("GLViewport_tuttleofx.loadImageFile_tuttle recomputeOverlay A")
-# #                self.tuttleOverlay = None
-# #                self.tuttleOverlay = TuttleOverlayInteract(self, self.tuttleLensNode)
-# #                print("GLViewport_tuttleofx.loadImageFile_tuttle recomputeOverlay B")
-# #                self.tuttleOverlay.createInstanceAction()
-# #                print("GLViewport_tuttleofx.loadImageFile_tuttle recomputeOverlay C")
-# #            except Exception as e:
-# #                print "Exception: ", str(e)
-# #                self.tuttleOverlay = None
-# #            self.recomputeOverlay = False
 
     def loadImage(self):
         self.img_data = None

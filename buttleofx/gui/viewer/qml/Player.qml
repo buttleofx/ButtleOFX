@@ -116,7 +116,7 @@ Item {
                     id: viewer_component
                     Viewer {
                         id: viewer
-                        imageFile: node.image
+                        //imageFile: node.image
                         clip: true
                     }
                 }

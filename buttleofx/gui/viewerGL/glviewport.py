@@ -17,7 +17,6 @@ def nbChannelsToGlPixelType(nbChannels):
     else:
         raise NotImplementedError("load_texture: Unsupported pixel type, nb channels is " + str(nbChannels) + ".")
 
-
 def numpyValueTypeToGlType(valueType):
     if valueType == numpy.uint8:
         return GL.GL_UNSIGNED_BYTE
@@ -34,9 +33,9 @@ def load_texture(array, width, height):
     print('shape:', array.shape)
     print('array.ndim', array.ndim)
     print('array.dtype', array.dtype)
-
+    
     array_type = numpyValueTypeToGlType(array.dtype)
-
+    
     if array.ndim == 2:
         # linear array of pixels
         size, channels = array.shape
@@ -49,109 +48,104 @@ def load_texture(array, width, height):
         print('width:%d, height:%d, channels:%d' % (width, height, channels))
         array_channelGL = nbChannelsToGlPixelType(channels)
         return GL.glTexImage2D(GL.GL_TEXTURE_2D, 0, GL.GL_RGBA, array_width, array_height, 0, array_channelGL, array_type, array)
-
+    
     # if you get here, it means a case was missed
     raise NotImplementedError("load_texture: Unsupported image type, ndim is " + str(array.ndim) + ".")
-
 
 def loadTextureFromImage(imgBounds, img_data):
     texture = GL.glGenTextures(1)
     GL.glBindTexture(GL.GL_TEXTURE_2D, texture)
-    GL.glPixelStorei(GL.GL_UNPACK_ALIGNMENT, 1)
+    GL.glPixelStorei(GL.GL_UNPACK_ALIGNMENT,1)
 
-    # Texture parameters are part of the texture object, so you need to
+    # Texture parameters are part of the texture object, so you need to 
     # specify them only once for a given texture object.
     GL.glTexParameterf(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_WRAP_S, GL.GL_CLAMP)
     GL.glTexParameterf(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_WRAP_T, GL.GL_CLAMP)
     # GL_TEXTURE_MAG_FILTER: a surface is bigger than the texture being applied (near objects)
     GL.glTexParameterf(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_MAG_FILTER, GL.GL_NEAREST)
     # GL_TEXTURE_MIN_FILTER: a surface is rendered with smaller dimensions than its corresponding texture bitmap (far away objects)
-    GL.glTexParameterf(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_MIN_FILTER, GL.GL_LINEAR)
-    #GL.GL_LINEAR_MIPMAP_LINEAR) #GL.GL_NEAREST)
+    GL.glTexParameterf(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_MIN_FILTER, GL.GL_LINEAR) #GL.GL_LINEAR_MIPMAP_LINEAR) #GL.GL_NEAREST)
     #GL.glTexImage2D(GL.GL_TEXTURE_2D, 0, GL.GL_RGB, imgBounds.width(), imgBounds.height(), 0, GL.GL_RGB, GL.GL_UNSIGNED_BYTE, img_data)
-
+    
     load_texture(img_data, imgBounds.width(), imgBounds.height())
     return texture
-
 
 class GLViewport(QtDeclarative.QDeclarativeItem):
     def __init__(self, parent=None):
         super(GLViewport, self).__init__(parent)
-
+        
         self.img_data = None
         self.tex = None
-
+        
         # Enable paint method calls
         self.setFlag(QtGui.QGraphicsItem.ItemHasNoContents, False)
-
+        
     def loadImageFile(self, filename):
         raise NotImplementedError("Load image not implemented")
-
+    
     def initializeGL(self):
-        # We assign a black background
-        GL.glClearColor(0.0, 0.0, 0.0, 0.0)
-        # We applied a flat shading mode
-        GL.glShadeModel(GL.GL_FLAT)
+        GL.glClearColor(0.0,0.0,0.0,0.0) # We assign a black background
+        GL.glShadeModel(GL.GL_FLAT) # We applied a flat shading mode
         GL.glEnable(GL.GL_LINE_SMOOTH)
-
+    
     def updateTextureFromImage(self):
         print "updateTextureFromImage begin"
         if self.img_data is not None:
-            self.tex = loadTextureFromImage(self._imageBoundsValue, self.img_data)
+            self.tex = loadTextureFromImage( self._imageBoundsValue, self.img_data )
         else:
             self.tex = None
         print "updateTextureFromImage end"
-
+    
     @QtCore.Slot()
     def fitImage(self):
-        widthRatio = self.width() / float(self.getImageBounds().width()) if self.getImageBounds().width() else 1.0
-        heightRatio = self.height() / float(self.getImageBounds().height()) if self.getImageBounds().height() else 1.0
-        self.setScale(min(widthRatio, heightRatio))
-
+        widthRatio = self.width()/float(self.getImageBounds().width()) if self.getImageBounds().width() else 1.0
+        heightRatio = self.height()/float(self.getImageBounds().height()) if self.getImageBounds().height() else 1.0
+        self.setScale( min(widthRatio, heightRatio) )
+        
         imgCenter = self.getImageBounds().center()
         self.setOffset_xy(
-            -(self.width() * .5 / self._scaleValue - imgCenter.x()),
-            -(self.height() * .5 / self._scaleValue - imgCenter.y()))
+            -(self.width()*.5/self._scaleValue - imgCenter.x()),
+            -(self.height()*.5/self._scaleValue - imgCenter.y()) )
 
     def prepareGL(self, widget):
 
-        GL.glViewport(int(self._glGeometry.left()), int(widget.height() - self._glGeometry.bottom()), int(self._glGeometry.width()), int(self._glGeometry.height()))
-
+        GL.glViewport(int(self._glGeometry.left()), int(widget.height()-self._glGeometry.bottom()), int(self._glGeometry.width()), int(self._glGeometry.height()))
+        
         #GL.glClearDepth(1) # just for completeness
         #GL.glClearColor( self._bgColorValue.red(), self._bgColorValue.green(), self._bgColorValue.blue(), self._bgColorValue.alpha() )
         #GL.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT)
-
+        
         GL.glMatrixMode(GL.GL_PROJECTION)
         GL.glLoadIdentity()
-
+        
         # glOrtho( left, right, bottom, top, near, far )
         #GL.glOrtho(0, self.width(), 0, self.height(), -1, 1)
         GL.glOrtho(
-            self._offsetValue.x(), self._offsetValue.x() + self.width() / self._scaleValue,
-            self._offsetValue.y(), self._offsetValue.y() + self.height() / self._scaleValue,
+            self._offsetValue.x(), self._offsetValue.x()+self.width()/self._scaleValue,
+            self._offsetValue.y(), self._offsetValue.y()+self.height()/self._scaleValue,
             -1, 1)
-
-        GL.glMatrixMode(GL.GL_MODELVIEW)
+        
+        GL.glMatrixMode(GL.GL_MODELVIEW);
         GL.glLoadIdentity()
-
+        
         GL.glColor3d(1.0, 1.0, 1.0)
-
+        
     def drawImage(self):
         #print "GLViewport.drawImage"
         #print "widget size:", self.width(), "x", self.height()
         #print "image size:", self.getImageBounds().width(), "x", self.getImageBounds().height()
-
+        
         if self.img_data is not None and self.tex is None:
             self.updateTextureFromImage()
-
+        
         if self.tex is None:
             return
-
+        
         GL.glEnable(GL.GL_TEXTURE_2D)
         GL.glBindTexture(GL.GL_TEXTURE_2D, self.tex)
-
+        
         imgRect = QtCore.QRectF(self.getImageBounds())
-
+        
         GL.glColor3d( 1.0, 1.0, 1.0 )
         GL.glBegin(GL.GL_QUADS)
         GL.glTexCoord2d(0.0, 1.0); GL.glVertex2d(imgRect.left(), imgRect.top())
@@ -159,28 +153,28 @@ class GLViewport(QtDeclarative.QDeclarativeItem):
         GL.glTexCoord2d(1.0, 0.0); GL.glVertex2d(imgRect.right(), imgRect.bottom())
         GL.glTexCoord2d(0.0, 0.0); GL.glVertex2d(imgRect.left(), imgRect.bottom())
         GL.glEnd()
-
+        
     def drawRegions(self):
         GL.glLineWidth(3);
         GL.glEnable(GL.GL_LINE_STIPPLE)
         GL.glLineStipple(1, 0xAAAA)
-
+        
         GL.glColor3d( 1., 0., 0. )
         self.drawRect( self._rodValue ) # RoD
-
+        
         GL.glColor3d( 1., 1., 1. )
         self.drawRect( self._rowValue ) # RoW
-
+        
         GL.glDisable(GL.GL_LINE_STIPPLE)
-
+        
         #self.tuttleReaderNode
-
+        
     def internPaintGL(self, widget):
         if self.img_data != None:
             self.prepareGL(widget)
             self.drawImage()
             self.drawRegions()
-
+    
     def paint(self, painter, option, widget):
         #print "GLViewport.paint"
 
@@ -222,7 +216,7 @@ class GLViewport(QtDeclarative.QDeclarativeItem):
             self.loadImageFile(imageFilepath[len("file://"):])
         elif os.path.isfile(imageFilepath):
             self.loadImageFile(imageFilepath)
-
+            
         self.update()
         self.imageFilepathChanged.emit()
     imageFilepathChanged = QtCore.Signal()

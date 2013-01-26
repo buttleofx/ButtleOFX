@@ -8,6 +8,7 @@ class CmdCreateReaderNode(UndoableCommand, CmdCreateNode):
         Command that create a node and set its filename. It's the case when an image is dropped in the graph.
         We can't use a group of commands because we need the tuttle node to set the value, and this tuttle node is created in the function doCmd() of the cmdCreateNode.!
         Then we need a separate class CmdCreateReaderNode.
+        This class inherits CmdCreateNode and reuse its commands.
 
         Attributes :
         - graphTarget : the graph in which the node will be created.
@@ -21,14 +22,6 @@ class CmdCreateReaderNode(UndoableCommand, CmdCreateNode):
     def __init__(self, graphTarget, nodeType, x, y, filename):
         CmdCreateNode.__init__(self, graphTarget, nodeType, x, y)
         self._filename = filename
-
-    def redoCmd(self):
-        """
-            Redo the creation of the node.
-        """
-        CmdCreateNode.redoCmd(self)
-        self._node.getTuttleNode().getParam('filename').setValue(str(self._filename))
-        self._graphTarget.nodesChanged()
 
     def doCmd(self):
         """

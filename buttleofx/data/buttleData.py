@@ -195,22 +195,25 @@ class ButtleData(QtCore.QObject):
         self.getGraph().getNodes()[-1].setImage(image)
         self.getGraph().getNodes()[-1].setParams(params)
 
-    @QtCore.Slot(str)
-    def dropReaderNode(self, url):
-        self.getGraph().createReaderNode(url)
+    @QtCore.Slot(str, int, int)
+    def dropReaderNode(self, url, x, y):
+        """
+            Function called when an image is dropped in the graph.
+        """
+        self.getGraph().createReaderNode(url, x, y)
 
     ##### Connection #####
 
     def connect(self, clipOut, clipIn):
         """
-            Add a connection between 2 clips.
+            Adds a connection between 2 clips.
         """
         self.getGraph().createConnection(clipOut, clipIn)
         self.getGraphWrapper().resetTmpClips()
 
     def disconnect(self, connection):
         """
-            Remove a connection between 2 clips.
+            Removes a connection between 2 clips.
         """
         self.getGraph().deleteConnection(connection)
         self.getGraphWrapper().resetTmpClips()

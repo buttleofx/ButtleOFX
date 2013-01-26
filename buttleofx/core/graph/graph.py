@@ -88,7 +88,10 @@ class Graph(object):
         cmdManager = CommandManager()
         cmdManager.push(cmdCreateNode)
 
-    def createReaderNode(self, url):
+    def createReaderNode(self, url, x, y):
+        """
+            Creates a reader node when an image has been dropped in the graph.
+        """
         extension = url.split(".")[-1].lower()
         print extension
 
@@ -110,7 +113,7 @@ class Graph(object):
             #use exception !
 
         # create the node
-        cmdCreateReaderNode = CmdCreateReaderNode(self, nodeType, 20, 20, url)
+        cmdCreateReaderNode = CmdCreateReaderNode(self, nodeType, x, y, url)
         cmdManager = CommandManager()
         cmdManager.push(cmdCreateReaderNode)
 

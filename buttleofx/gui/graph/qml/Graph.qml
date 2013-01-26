@@ -168,7 +168,8 @@ Rectangle {
         } 
     }
 
-    /*MouseArea{
+    /*  // NODE CREATION WITH RIGHT CLICK
+        MouseArea{
         id: mouseArea
         anchors.fill: parent
         acceptedButtons: Qt.RightButton
@@ -186,10 +187,7 @@ Rectangle {
         onDrop: {
             if( hasUrls )
             {
-                console.log('image : ' + firstUrl)
-                _buttleData.dropReaderNode(firstUrl)
-                //graphArea.clickCreationNode('tuttle.jpeg2000reader')
-                // à améliorer pour drag and drop
+                _buttleData.dropReaderNode(firstUrl, pos.x, pos.y)
             }
         }
     }

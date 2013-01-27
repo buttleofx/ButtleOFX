@@ -23,6 +23,12 @@ class CmdCreateReaderNode(UndoableCommand, CmdCreateNode):
         CmdCreateNode.__init__(self, graphTarget, nodeType, x, y)
         self._filename = filename
 
+    def undoCmd(self):
+        CmdCreateNode.undoCmd(self)
+
+    def redoCmd(self):
+        CmdCreateNode.redoCmd(self)
+
     def doCmd(self):
         """
             Create a node.

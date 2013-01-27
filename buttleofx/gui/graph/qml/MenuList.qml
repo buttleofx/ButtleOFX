@@ -6,8 +6,7 @@ Item {
     property variant clickFrom: tools
 
     ListView {
-        //property variant children: null
-        height: 5000 // à changer
+        height: 300
         id: nodeMenuView
         model: _buttleData.getQObjectPluginsIdentifiersByParentPath(menulist.parentName)
         delegate {
@@ -19,6 +18,5 @@ Item {
             }
         }
     }
+
 }
-
-

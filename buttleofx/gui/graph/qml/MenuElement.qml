@@ -9,7 +9,8 @@ Rectangle {
     property string labelElement
     property string parentName
     property variant children: null
-    property string tuttleId: 'tuttle.' + labelElement
+    //property string tuttleId: 'tuttle.' + labelElement
+    property string tuttleId: labelElement
     property variant type: _buttleData.isAPlugin(tuttleId) ? "node" : "category"
     property variant clickFrom: tools
 
@@ -17,7 +18,7 @@ Rectangle {
         anchors.left: parent.left
         anchors.leftMargin: 15
         anchors.verticalCenter: parent.verticalCenter
-        color: "#eee"
+        color: type == "category" ? "#eee" : "black"
         text: nodeMenuElement.labelElement
     }
     MouseArea {
@@ -34,7 +35,7 @@ Rectangle {
         }
         onEntered: {
             parent.color = "#bbb"
-            if(type=="category"){
+            if(type=="category") {
                 if (nodeMenuElement.children) {
                     nodeMenuElement.children.destroy();
                 }

@@ -314,9 +314,12 @@ class ButtleData(QtCore.QObject):
         return pluginsIds
 
     @QtCore.Slot(str, result=bool)
-    def nextSonIsAPlugin(self, pathname):
-        print "pathname :", pathname
-        return pathname not in tuttleTools.getPluginsIdentifiersAsDictionary()
+    def isAPlugin(self, pluginId):
+        return pluginId in tuttleTools.getPluginsIdentifiers()
+
+    # @QtCore.Slot(str, result=bool)
+    # def nextSonIsAPlugin(self, pathname):
+    #     return pathname not in tuttleTools.getPluginsIdentifiersAsDictionary()
 
      ###################################################  TUTTLE  ############################################################
     def computeNode(self, time):

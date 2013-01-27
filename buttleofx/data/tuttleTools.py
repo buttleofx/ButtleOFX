@@ -9,12 +9,10 @@ def getPlugins():
         return pluginCache.getPlugins()
 
 
-def getPluginsNames():
+def getPluginsIdentifiers():
     """
         Returns the list of all names of Tuttle's plugins.
     """
-    #pluginCache = tuttle.core().getImageEffectPluginCache()
-    #return [plugin.getDescriptor().getLabel() for plugin in pluginCache.getPlugins()]
     pluginCache = tuttle.core().getPluginCache()
     return [plugin.getIdentifier() for plugin in pluginCache.getPlugins()]
 
@@ -37,15 +35,16 @@ def getPluginsIdentifiersAsDictionary():
         pluginsIdentifiersAsDictionary["tuttle/image/"] = ['io', 'process', 'generator', 'display', 'tool']
         pluginsIdentifiersAsDictionary["tuttle/image/tool/"] = ['tuttle.dummy']
     """
-    g = tuttle.Graph()
+    pluginCache = tuttle.core().getImageEffectPluginCache()
+    plugins = pluginCache.getPlugins()
+
     pluginsIdentifiersAsDictionary = dict()
-    for pluginId in getPluginsNames():
-        p = g.createNode(pluginId)
-        node = p.asImageEffectNode()
-        fullPath = node.getProperties().fetchProperty("OfxImageEffectPluginPropGrouping").getStringValue(0)
+    for plugin in plugins:
+        pluginId = plugin.getIdentifier()
+        fullPath = plugin.getDescriptor().getPluginGrouping()
         parentList = fullPath.split('/')
         parentLabel = ""
-        pluginId = pluginId.lstrip('tuttle.')
+        #pluginId = pluginId.lstrip('tuttle.')
         for i in range(len(parentList)):
             parentLabel = parentLabel + parentList[i] + "/"
             if parentLabel not in pluginsIdentifiersAsDictionary:
@@ -70,4 +69,3 @@ def getPluginsIdentifiersByParentPath(parentPath):
         Returns the list of what must be displayed in the application after clicking on "parentPath"
     """
     return getPluginsIdentifiersAsDictionary()[parentPath]
-

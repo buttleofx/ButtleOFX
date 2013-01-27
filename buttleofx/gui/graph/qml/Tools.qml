@@ -4,12 +4,23 @@ Rectangle {
     id: tools
     width: 850
     height: 30
+    property variant children
 
     signal clickCreationNode(string nodeType)
 
     z: 2000
     anchors.top: parent.top
     color: "#212121"
+
+    MouseArea {
+        anchors.fill: parent
+        hoverEnabled: true
+        onEntered: {
+            if (tools.children) {
+                tools.children.destroy();
+            }
+        }
+    }
 
     Rectangle {
         id: addNodeButton
@@ -27,9 +38,10 @@ Rectangle {
         }
         MouseArea {
             anchors.fill: parent
+
             onClicked: {
-                listmodel.clickFrom = tools
-                listmodel.menuState = (listmodel.menuState == "hidden") ? "shown" : "hidden"
+                var newComponent = Qt.createQmlObject('MenuList { parentName: "tuttle/"; y: 30;}', parent);
+                tools.children = newComponent;
             }
         }
     }
@@ -57,7 +69,4 @@ Rectangle {
         }
     }
 
-    MenuList {
-        id: listmodel
-    }   
 }

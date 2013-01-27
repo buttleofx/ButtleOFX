@@ -135,9 +135,6 @@ Rectangle {
     }
     
 
-    MenuList {
-        id: listmodel
-    }   
 
     MouseArea{
         id: middleMouseArea

@@ -8,10 +8,13 @@ Rectangle {
 
     property string labelElement
     property string parentName
+
+    // if the submenu of this element is open (= if "MenuElement has children"), property children is this submenu just created. Else, null.
     property variant children: null
+
     //property string tuttleId: 'tuttle.' + labelElement
     property string tuttleId: labelElement
-    property variant type: _buttleData.isAPlugin(tuttleId) ? "node" : "category"
+    property variant type: _buttleData.isAPlugin(tuttleId) ? "plugin" : "category"
     property variant clickFrom: tools
 
     Text {
@@ -25,6 +28,7 @@ Rectangle {
         anchors.fill: parent
         hoverEnabled: true
 
+        // On mouse exited the element, we destroy its children if it exists.
         onExited: {
             parent.color = "#343434"
             if (mouseX <= nodeMenuElement.x + nodeMenuElement.width - 10) {
@@ -33,6 +37,8 @@ Rectangle {
                 }
             }
         }
+
+        // On mouse entered the element, we create the new MenuList of its children (only if this element is a category)
         onEntered: {
             parent.color = "#bbb"
             if(type=="category") {
@@ -45,8 +51,9 @@ Rectangle {
             }
         }
 
+        // On mouse clicked, we call the creationNode fonction if the element is a plugin.
         onClicked: {
-            if (nodeMenuElement.type == "node") {
+            if (nodeMenuElement.type == "plugin") {
                 clickFrom.clickCreationNode(nodeMenuElement.tuttleId)
             }
         }

@@ -4,6 +4,8 @@ Rectangle {
     id: tools
     width: 850
     height: 30
+
+    // if the menu is open (= if "tools has children"), property children is the first list created. Else, null.
     property variant children
 
     signal clickCreationNode(string nodeType)
@@ -12,6 +14,7 @@ Rectangle {
     anchors.top: parent.top
     color: "#212121"
 
+    // On mouse entered the tools area, we destroy the MenuList component if it exists.
     MouseArea {
         anchors.fill: parent
         hoverEnabled: true
@@ -39,6 +42,7 @@ Rectangle {
         MouseArea {
             anchors.fill: parent
 
+            // On clicked, we create a MenuList component and add it to the tools' children.
             onClicked: {
                 var newComponent = Qt.createQmlObject('MenuList { parentName: "tuttle/"; y: 30;}', parent);
                 tools.children = newComponent;

@@ -265,7 +265,8 @@ class ButtleData(QtCore.QObject):
     @QtCore.Slot(str, int, int)
     def nodeMoved(self, nodeName, x, y):
         """
-            Manage when a node is moved.
+            Fonction called when a node has moved.
+            This fonction push a cmdMoved in the CommandManager.
         """
         # only push a cmd if the node truly moved
         if self.getGraph().getNode(nodeName).getOldCoord() != (x, y):
@@ -276,7 +277,8 @@ class ButtleData(QtCore.QObject):
     @QtCore.Slot(str, int, int)
     def nodeIsMoving(self, nodeName, x, y):
         """
-            Manage when a node is moved.
+            Fonction called when a node is moving.
+            This fonction update the position of the connections.
         """
         self.getGraph().getNode(nodeName).setCoord(x, y)
         self.getGraph().connectionsCoordChanged()
@@ -286,7 +288,7 @@ class ButtleData(QtCore.QObject):
     @QtCore.Slot()
     def undo(self):
         """
-            Call the cmdManager to undo the last command.
+            Calls the cmdManager to undo the last command.
         """
         cmdManager = CommandManager()
         cmdManager.undo()
@@ -294,32 +296,28 @@ class ButtleData(QtCore.QObject):
     @QtCore.Slot()
     def redo(self):
         """
-            Call the cmdManager to redo the last command.
+            Calls the cmdManager to redo the last command.
         """
         cmdManager = CommandManager()
         cmdManager.redo()
 
-    def getQObjectPluginsIdentifiers(self):
-        """
-            Returns a QObjectListModel of all names of Tuttle's plugins.
-        """
-        pluginsNames = QObjectListModel(self)
-        pluginsNames.setObjectList(tuttleTools.getPluginsNames())
-        return pluginsNames
+    ##### Plugins' menu #####
 
     @QtCore.Slot(str, result="QVariant")
     def getQObjectPluginsIdentifiersByParentPath(self, pathname):
+        """
+            Returns a QObjectListModel
+        """
         pluginsIds = QObjectListModel(self)
         pluginsIds.setObjectList(tuttleTools.getPluginsIdentifiersByParentPath(pathname))
         return pluginsIds
 
     @QtCore.Slot(str, result=bool)
     def isAPlugin(self, pluginId):
+        """
+            Returns if a string is a plugin identifier.
+        """
         return pluginId in tuttleTools.getPluginsIdentifiers()
-
-    # @QtCore.Slot(str, result=bool)
-    # def nextSonIsAPlugin(self, pathname):
-    #     return pathname not in tuttleTools.getPluginsIdentifiersAsDictionary()
 
      ###################################################  TUTTLE  ############################################################
     def computeNode(self, time):
@@ -366,9 +364,6 @@ class ButtleData(QtCore.QObject):
     currentViewerNodeWrapper = QtCore.Property(QtCore.QObject, getCurrentViewerNodeWrapper, setCurrentViewerNodeWrapper, notify=currentViewerNodeChanged)
     currentSelectedNodeChanged = QtCore.Signal()
     currentSelectedNodeWrapper = QtCore.Property(QtCore.QObject, getCurrentSelectedNodeWrapper, setCurrentSelectedNodeWrapper, notify=currentSelectedNodeChanged)
-
-    # tuttle data
-    tuttlePlugins = QtCore.Property(QtCore.QObject, getQObjectPluginsIdentifiers, constant=True)
 
 
 # This class exists just because thre are problems when a class extends 2 other class (Singleton and QObject)

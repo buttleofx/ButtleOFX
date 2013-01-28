@@ -1,7 +1,6 @@
 import QtQuick 1.1
 
 Rectangle {
-    id: nodeMenuElement
     width: 160
     height: 20
     color: "#343434"
@@ -10,11 +9,10 @@ Rectangle {
     property string idElement
     property string parentName
 
+    property variant menuListItem
     // if the submenu of this element is open (= if "MenuElement has children"), property children is this submenu just created. Else, null.
     property variant children: null
 
-    //property string tuttleId: 'tuttle.' + labelElement
-    //property string tuttleId: labelElement
     property variant type: _buttleData.isAPlugin(idElement) ? "plugin" : "category"
     property variant clickFrom: tools
 
@@ -31,30 +29,25 @@ Rectangle {
 
         // On mouse exited the element, we destroy its children if it exists.
         onExited: {
-            parent.color = "#343434"
+            nodeMenuElement.color = "#343434"
             if (mouseX <= nodeMenuElement.x + nodeMenuElement.width - 10) {
-                if (nodeMenuElement.children) {
-                    nodeMenuElement.children.destroy();
-                }
+                menuListItem.destroyNextMenu();
             }
         }
 
         // On mouse entered the element, we create the new MenuList of its children (only if this element is a category)
         onEntered: {
-            parent.color = "#bbb"
+            nodeMenuElement.color = "#bbb"
             if(type=="category") {
-                if (nodeMenuElement.children) {
-                    nodeMenuElement.children.destroy();
-                }
-
-                var newComponent = Qt.createQmlObject('MenuList { parentName: "' + nodeMenuElement.parentName + nodeMenuElement.labelElement + '/"; x: ' + parent.width + '; }', parent);
-                nodeMenuElement.children = newComponent
+                menuListItem.destroyNextMenu();
+                menuListItem.createNextMenu(nodeMenuElement.parentName, nodeMenuElement.labelElement, nodeMenuElement.x + nodeMenuElement.width, nodeMenuElement.y)
             }
         }
 
         // On mouse clicked, we call the creationNode fonction if the element is a plugin. Then we destroy the menu.
         onClicked: {
             if (nodeMenuElement.type == "plugin") {
+                console.log("creation node")
                 clickFrom.clickCreationNode(nodeMenuElement.idElement);
                 if (tools.children) {
                     tools.children.destroy();

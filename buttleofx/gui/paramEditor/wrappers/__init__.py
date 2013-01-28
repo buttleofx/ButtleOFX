@@ -11,5 +11,6 @@ from pushButtonWrapper import PushButtonWrapper
 from rgbaWrapper import RGBAWrapper
 from rgbWrapper import RGBWrapper
 from groupWrapper import GroupWrapper
+from pageWrapper import PageWrapper
 
 from paramEditorWrapper import ParamEditorWrapper

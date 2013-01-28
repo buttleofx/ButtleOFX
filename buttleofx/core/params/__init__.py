@@ -11,3 +11,4 @@ from paramPushButton import ParamPushButton
 from paramRGBA import ParamRGBA
 from paramRGB import ParamRGB
 from paramGroup import ParamGroup
+from paramPage import ParamPage

@@ -18,6 +18,7 @@ Item {
             id: paramGroupTitle
             text: object.label
             color: "white"
+            font.pointSize: 12
         }
 
         Rectangle {

@@ -14,7 +14,8 @@ Item {
         delegate {
             Component {
                 MenuElement {
-                    labelElement: object
+                    labelElement: object[0]
+                    idElement: object[1]
                     parentName: menulist.parentName
                 }
             }

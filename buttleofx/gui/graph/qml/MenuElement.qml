@@ -7,14 +7,15 @@ Rectangle {
     color: "#343434"
 
     property string labelElement
+    property string idElement
     property string parentName
 
     // if the submenu of this element is open (= if "MenuElement has children"), property children is this submenu just created. Else, null.
     property variant children: null
 
     //property string tuttleId: 'tuttle.' + labelElement
-    property string tuttleId: labelElement
-    property variant type: _buttleData.isAPlugin(tuttleId) ? "plugin" : "category"
+    //property string tuttleId: labelElement
+    property variant type: _buttleData.isAPlugin(idElement) ? "plugin" : "category"
     property variant clickFrom: tools
 
     Text {
@@ -51,10 +52,13 @@ Rectangle {
             }
         }
 
-        // On mouse clicked, we call the creationNode fonction if the element is a plugin.
+        // On mouse clicked, we call the creationNode fonction if the element is a plugin. Then we destroy the menu.
         onClicked: {
             if (nodeMenuElement.type == "plugin") {
-                clickFrom.clickCreationNode(nodeMenuElement.tuttleId)
+                clickFrom.clickCreationNode(nodeMenuElement.idElement);
+                if (tools.children) {
+                    tools.children.destroy();
+                }
             }
         }
     }

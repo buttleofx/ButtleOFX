@@ -18,7 +18,12 @@ Rectangle {
     property real bValue: 0
     property int alphaValue: 0
 
-    //column containing the inputs colors
+    // test for enter colors values in inputs and adapt display
+    property real cursorColorPositionInputs: rInput.cursorPositionInput + gInput.cursorPositionInput + bInput.cursorPositionInput
+    property real cursorAlphaPositionInputs: aInput.cursorPositionInput
+
+
+    // column containing the inputs colors 
     Column {
         anchors.fill: parent
         anchors.leftMargin: 5
@@ -32,13 +37,20 @@ Rectangle {
             id: currentColorBox
             width: parent.width
             height: parent.height / 5
-            SquaresGrid { cellSize: 5 }
+            SquaresGrid { 
+                cellSide: 3
+                height: currentColorBox.height
+                width: currentColorBox.width
+            }
             Rectangle{
                 width: parent.width
                 height: parent.height
                 border.width: 1
                 border.color: "black"
                 color: colorFields.currentColor
+            }
+            MouseArea{
+                anchors.fill: parent
             } 
         }
 
@@ -117,7 +129,9 @@ Rectangle {
                 minValue: 0
                 maxValue: 255
                 onColorValueTextChanged: {
-                    paramObject.r = colorValueText
+                    paramObject.r = colorValueText 
+                    // test to adapt display of colorSlider in function of values enter in inputs
+                    //cursorColorPosition = 120 * (rInput.colorValueText + gInput.colorValueText + bInput.colorValueText )/(3*255)
                 }
             }
             ColorInput {
@@ -128,6 +142,8 @@ Rectangle {
                 maxValue: 255
                 onColorValueTextChanged: {
                     paramObject.g = colorValueText
+                    // test to adapt display of colorSlider in function of values enter in inputs
+                    //cursorColorPosition = 120 * (rInput.colorValueText + gInput.colorValueText + bInput.colorValueText )/(3*255)
                 }
             }
             ColorInput {
@@ -138,6 +154,8 @@ Rectangle {
                 maxValue: 255
                 onColorValueTextChanged: {
                     paramObject.b = colorValueText
+                    // test to adapt display of colorSlider in function of values enter in inputs
+                    //cursorColorPosition = 120 * (rInput.colorValueText + gInput.colorValueText + bInput.colorValueText )/(3*255)
                 }
             }
             // alpha value box
@@ -152,7 +170,5 @@ Rectangle {
                 }
             }
         }
-
-
     }
 }

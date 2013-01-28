@@ -75,7 +75,7 @@ Rectangle {
                 color: paramEditor.background
 
                 property string lastGroupParam : "No Group."
-
+                ScrollArea{
                 ListView {
                     id: tuttleParam
                     anchors.fill: parent
@@ -101,6 +101,7 @@ Rectangle {
 
                     }
                     interactive: true
+                }
                 }
             }
 

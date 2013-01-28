@@ -12,18 +12,17 @@ class NodeWrapper(QtCore.QObject):
         Creates a QObject from a given python object Node.
     """
 
-    # static variables usefull to display nodes & clips :
-    widthNode = 110
-    heightEmptyNode = 35
-    clipSpacing = 7
-    clipSize = 8
-    inputSideMargin = 6
-
     def __init__(self, node, view):
         super(NodeWrapper, self).__init__(view)
 
         self._node = node
         self._view = view
+
+        self._widthEmptyNode = 15
+        self._heightEmptyNode = 35
+        self._clipSpacing = 7
+        self._clipSize = 8
+        self._inputSideMargin = 6
 
         self._node.changed.connect(self.emitChanged)
 
@@ -64,6 +63,24 @@ class NodeWrapper(QtCore.QObject):
     def getNbInput(self):
         return self._node.getNbInput()
 
+    def getWidth(self):
+        return self._widthEmptyNode + 9 * len(self.getNameUser())
+
+    def getHeight(self):
+        return int(self._heightEmptyNode + self._clipSpacing * self.getNbInput())
+
+    def getClipSpacing(self):
+        return self._clipSpacing
+
+    def getClipSize(self):
+        return self._clipSize
+
+    def getInputSideMargin(self):
+        return self._inputSideMargin
+
+    def getInputTopMargin(self):
+        return (self.getHeight() - self.getClipSize() * self.getNbInput() - self.getClipSpacing() * (self.getNbInput() - 1)) / 2
+
     # def getImage(self):
     #     return self._node.getImage()
 
@@ -78,6 +95,7 @@ class NodeWrapper(QtCore.QObject):
 
     def setNameUser(self, nameUser):
         self._node.setNameUser(nameUser)
+        self.changed.emitChanged()
 
     def setType(self, nodeType):
         self._node.setType(nodeType)
@@ -112,3 +130,11 @@ class NodeWrapper(QtCore.QObject):
     # image = QtCore.Property(str, getImage, setImage, notify=changed)
     # params from Tuttle
     params = QtCore.Property(QtCore.QObject, getParams, constant=True)
+
+    # for a clean display of connections
+    width = QtCore.Property(int, getWidth, notify=changed)
+    height = QtCore.Property(int, getHeight, constant=True)
+    clipSpacing = QtCore.Property(int, getClipSpacing, constant=True)
+    clipSize = QtCore.Property(int, getClipSize, constant=True)
+    inputSideMargin = QtCore.Property(int, getInputSideMargin, constant=True)
+    inputTopMargin = QtCore.Property(int, getInputTopMargin, constant=True)

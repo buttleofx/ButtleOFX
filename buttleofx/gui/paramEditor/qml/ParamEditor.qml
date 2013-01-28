@@ -213,8 +213,14 @@ Rectangle {
                                         selectByMouse : true
                                         color: activeFocus ? activeFocusOn : activeFocusOff
 
-                                        onAccepted: currentParamNode.nameUser = nodeNameUserInput.text
-                                        onActiveFocusChanged: currentParamNode.nameUser = nodeNameUserInput.text
+                                        onAccepted: {
+                                            currentParamNode.nameUser = nodeNameUserInput.text
+                                            _buttleData.graphWrapper.updateConnectionsCoord()
+                                        }
+                                        onActiveFocusChanged: {
+                                            currentParamNode.nameUser = nodeNameUserInput.text
+                                            _buttleData.graphWrapper.updateConnectionsCoord()
+                                        }
 
                                         KeyNavigation.backtab: nodeColorRGBInput
                                         KeyNavigation.tab: nodeCoordXInput
@@ -314,8 +320,14 @@ Rectangle {
                                         color: activeFocus ? activeFocusOn : activeFocusOff
                                         selectByMouse : true
 
-                                        onAccepted: currentParamNode.coord.x = nodeCoordXInput.text
-                                        onActiveFocusChanged: currentParamNode.coord.x = nodeCoordXInput.text
+                                        onAccepted: {
+                                            currentParamNode.coord.x = nodeCoordXInput.text
+                                            _buttleData.graphWrapper.updateConnectionsCoord()
+                                        }
+                                        onActiveFocusChanged: {
+                                            currentParamNode.coord.x = nodeCoordXInput.text
+                                            _buttleData.graphWrapper.updateConnectionsCoord()
+                                        }
 
                                         KeyNavigation.backtab: nodeNameUserInput
                                         KeyNavigation.tab: nodeCoordYInput
@@ -352,8 +364,14 @@ Rectangle {
                                         color: activeFocus ? activeFocusOn : activeFocusOff
                                         selectByMouse : true
 
-                                        onAccepted: currentParamNode.coord.y = nodeCoordYInput.text
-                                        onActiveFocusChanged: currentParamNode.coord.y = nodeCoordYInput.text
+                                        onAccepted: {
+                                            currentParamNode.coord.y = nodeCoordYInput.text
+                                            _buttleData.graphWrapper.updateConnectionsCoord()
+                                        }
+                                        onActiveFocusChanged: {
+                                            currentParamNode.coord.y = nodeCoordYInput.text
+                                            _buttleData.graphWrapper.updateConnectionsCoord()
+                                        }
 
                                         KeyNavigation.backtab: nodeCoordXInput
                                         KeyNavigation.tab: nodeColorRGBInput

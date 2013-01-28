@@ -95,14 +95,13 @@ class NodeWrapper(QtCore.QObject):
 
     def setNameUser(self, nameUser):
         self._node.setNameUser(nameUser)
-        self.changed.emitChanged()
 
     def setType(self, nodeType):
         self._node.setType(nodeType)
 
     # from 2 decimal values
-    def setCoord(self, x, y):
-        self._node.setCoord(x, y)
+    # def setCoord(self, x, y):
+    #     self._node.setCoord(x, y)
 
     # from a QPoint
     def setCoord(self, point):

@@ -2,7 +2,7 @@ import QtQuick 1.1
 
 Rectangle {
     id: nodeMenuElement
-    width: 120
+    width: 160
     height: 20
     color: "#343434"
 

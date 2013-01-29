@@ -44,8 +44,7 @@ Rectangle {
 
             // On clicked, we create a MenuList component and add it to the tools' children.
             onClicked: {
-                //var newComponent = Qt.createQmlObject('MenuList { parentName: "buttle/"; y: 30;}', parent);
-                var newComponent = Qt.createQmlObject('MenuList { parentName: "tuttle/"; y: 30;}', parent);
+                var newComponent = Qt.createQmlObject('MenuList { parentName: "buttle/"; y: 30;}', parent);
                 tools.children = newComponent;
             }
         }
@@ -115,3 +114,5 @@ Rectangle {
     }
 
 }
+
+

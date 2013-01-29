@@ -38,5 +38,5 @@ class ParamBoolean(object):
         self.changed()
         # data
         from buttleofx.data import ButtleDataSingleton
-        # buttleData = ButtleDataSingleton().get()
-        # buttleData.paramChanged()
+        buttleData = ButtleDataSingleton().get()
+        buttleData.updateMapAndViewer()

@@ -44,4 +44,6 @@ class ParamString(object):
         self._tuttleParam.setValue(str(value))
         self.changed()
 
-        print "Tuttle update : ", self.getValue()
+        from buttleofx.data import ButtleDataSingleton
+        buttleData = ButtleDataSingleton().get()
+        buttleData.updateMapAndViewer()

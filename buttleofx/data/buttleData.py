@@ -408,12 +408,12 @@ class ButtleData(QtCore.QObject):
             self.setNodeError(str(e))
             raise
 
-    def paramChanged(self):
-        #Clear the map
+    def updateMapAndViewer(self):
+        # Clear the map
         self._mapNodeNameToComputedImage.clear()
 
-        #Calculate the current image
-        self.computeNode()
+        # Emit the signal to load the new image
+        self.paramChangedSignal()
 
     ################################################## DATA EXPOSED TO QML ##################################################
 
@@ -427,6 +427,7 @@ class ButtleData(QtCore.QObject):
     currentViewerNodeWrapper = QtCore.Property(QtCore.QObject, getCurrentViewerNodeWrapper, setCurrentViewerNodeWrapper, notify=currentViewerNodeChanged)
     currentSelectedNodeChanged = QtCore.Signal()
     currentSelectedNodeWrapper = QtCore.Property(QtCore.QObject, getCurrentSelectedNodeWrapper, setCurrentSelectedNodeWrapper, notify=currentSelectedNodeChanged)
+    paramChangedSignal = Signal()
 
     nodeErrorChanged = QtCore.Signal()
     nodeError = QtCore.Property(str, getNodeError, setNodeError, notify=nodeErrorChanged)

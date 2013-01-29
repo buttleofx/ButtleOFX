@@ -25,6 +25,7 @@ class CmdDeleteConnection(UndoableCommand):
         self._graphTarget.getGraphTuttle().connect(tuttleNodeSource, tuttleNodeOutput)
         self._graphTarget.getConnections().append(self._connection)
         self._graphTarget.connectionsChanged()
+        print "Undo delete connection : ", self._graphTarget.getGraphTuttle()
 
     def redoCmd(self):
         """
@@ -36,8 +37,21 @@ class CmdDeleteConnection(UndoableCommand):
         """
             Delete a connection.
         """
-        # Function unconnect deletes all the node's connections, we are waiting for the binding of a more adapted function
-        self._graphTarget.getGraphTuttle().unconnect(self._graphTarget.getNode(self._connection.getClipOut().getNodeName()).getTuttleNode())
+        # Get the output clip and the source clip of the tuttle connection
+        tuttleNodeSource = self._graphTarget.getNode(self._connection.getClipOut().getNodeName()).getTuttleNode()
+        tuttleNodeOutput = self._graphTarget.getNode(self._connection.getClipIn().getNodeName()).getTuttleNode()
+        outputClip = tuttleNodeSource.getClip("Output")
+        for clip in tuttleNodeOutput.getClipImageSet().getClips():
+            # We tried to use clip.isConnected(), to connect the output clip with the sourceB clip if sourceA is already connected
+            # But this function returns false when sourceA is already connected with another node's output clip
+            if not clip.isOutput():
+                srcClip = tuttleNodeOutput.getClip(str(clip.getName()))
+                break
+
+        # Delete the tuttle connection
+        self._graphTarget.getGraphTuttle().unconnect(outputClip, srcClip)
+
+        # Delete the buttle connection
         self._graphTarget.getConnections().remove(self._connection)
         self._graphTarget.connectionsChanged()
-
+        print "Delete connection : ", self._graphTarget.getGraphTuttle()

@@ -48,4 +48,4 @@ class ParamPushButton(object):
         self.changed()
         from buttleofx.data import ButtleDataSingleton
         buttleData = ButtleDataSingleton().get()
-        buttleData.paramChanged()
+        buttleData.updateMapAndViewer()

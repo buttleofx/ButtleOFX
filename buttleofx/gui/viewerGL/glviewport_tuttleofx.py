@@ -7,7 +7,7 @@ from pyTuttle import tuttle
 from PySide import QtCore
 
 # data
-from buttleofx.data import *
+from buttleofx.data import ButtleDataSingleton
 
 
 class GLViewport_tuttleofx(GLViewport):
@@ -20,7 +20,7 @@ class GLViewport_tuttleofx(GLViewport):
         self._timeHasChanged = False
 
         self._time = 0
-        
+
         buttleData = ButtleDataSingleton().get()
         buttleData.currentViewerNodeChangedPython.connect(self.loadImage)
 
@@ -52,7 +52,7 @@ class GLViewport_tuttleofx(GLViewport):
             print 'Error while loading image file '
             self.img_data = None
             self.setImageBounds(QtCore.QRect())
-            raise
+            #raise
 
         if self._fittedModeValue:
             self.fitImage()
@@ -77,6 +77,6 @@ class GLViewport_tuttleofx(GLViewport):
         self.update()
         self.timeChanged.emit()
         self.loadImage()
-    
+
     timeChanged = QtCore.Signal()
     time = QtCore.Property(float, getTime, setTime, notify=timeChanged)

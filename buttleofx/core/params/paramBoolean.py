@@ -10,8 +10,9 @@ class ParamBoolean(object):
 
     def __init__(self, tuttleParam):
         self._tuttleParam = tuttleParam
-
+        #buttleData = ButtleDataSingleton().get()
         self.changed = Signal()
+        #self.changed.connect(buttleData.paramChanged)
 
     #################### getters ####################
 
@@ -35,3 +36,7 @@ class ParamBoolean(object):
     def setValue(self, value):
         self._tuttleParam.setValue(value)
         self.changed()
+        # data
+        from buttleofx.data import ButtleDataSingleton
+        # buttleData = ButtleDataSingleton().get()
+        # buttleData.paramChanged()

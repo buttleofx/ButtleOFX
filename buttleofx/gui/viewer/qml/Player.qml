@@ -129,6 +129,67 @@ Item {
                     sourceComponent: node ? viewer_component : undefined
                     anchors.fill: parent
                 }
+
+
+                Rectangle {
+                    id: titleErrorDisplay
+                    color: "red"
+                    width: titleError.width + 20
+                    height: titleError.lineCount * 20
+                    border.width: 2
+                    border.color: "brown"
+                    state: "hidden"
+                   Text {
+                        id: titleError
+                        anchors.left: parent.left
+                        anchors.leftMargin: 10
+                        anchors.verticalCenter: parent.verticalCenter
+                        text: "Can't display node : " + _buttleData.currentViewerNodeWrapper.name
+                    }
+                    Rectangle {
+                        id: errorDisplay
+                        color: "red"
+                        anchors.top: parent.bottom
+                        anchors.left: parent.left
+                        width: errorMessage.width + 20
+                        height: errorMessage.lineCount * 20
+                        opacity: 0
+                        Text {
+                            id: errorMessage
+                            text: _buttleData.nodeError
+                            anchors.left: parent.left
+                            anchors.leftMargin: 10
+                        }
+                    }
+
+                    MouseArea {
+                        id: errorArea
+                        anchors.fill: parent
+                        onClicked: {
+                            errorDisplay.opacity = (errorDisplay.opacity == 0) ? 1 : 0
+                            //elements.state = ( elements.state == "hidden") ? "shown" : "hidden"
+                        }
+                    }
+                    states: [
+                        State {
+                            name: "hidden"
+                            when: _buttleData.nodeError == ""
+                            PropertyChanges {
+                                target: titleErrorDisplay
+                                opacity: 0
+                            }
+                        }, 
+                        State {
+                            name: "shown"
+                            when: _buttleData.nodeError != ""
+                            PropertyChanges {
+                                target: titleErrorDisplay
+                                opacity: 1
+                            }
+                        }
+                    ]
+                }
+                
             }
 
 

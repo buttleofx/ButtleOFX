@@ -7,11 +7,13 @@ Row {
     property alias  minValue: numValidator.bottom
     property alias  maxValue: numValidator.top
     property alias  decimals: numValidator.decimals
+    // test for enter colors values in inputs and adapt display
+    property real cursorPositionInput: 255
 
     width: 80
     height: 14
     spacing: 4
-    // title of the color
+    // title of the color (R, G or B for example)
     Text {
         id: colorName
         width: 18
@@ -35,7 +37,6 @@ Row {
         clip: true
         TextInput {
             id: colorValue
-            //text: "default"
             anchors.leftMargin: 4
             anchors.topMargin: 0 
             anchors.fill: parent
@@ -49,6 +50,10 @@ Row {
                 //default values
                 bottom: 0; top: 255; decimals: 2
                 notation: DoubleValidator.StandardNotation
+            }
+            onAccepted: {
+                cursorPositionInput = colorValue.text
+                console.log(cursorPositionInput)
             }
         }
     }

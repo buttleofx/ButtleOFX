@@ -33,6 +33,7 @@ Rectangle {
         }
     }
 
+    // create and delete node
     Rectangle {
         id: addNodeButton
         implicitWidth: 20
@@ -81,6 +82,7 @@ Rectangle {
         }
     }
 
+    // undo redo
     Rectangle {
         id: undoButton
         implicitWidth: 20
@@ -121,6 +123,87 @@ Rectangle {
         }
     }
 
+    // copy / cut / past / duplicate
+    Rectangle {
+        id: copyButton
+        implicitWidth: 20
+        implicitHeight: 20
+        width: 4/10 * parent.height
+        height: width
+        x: 160
+        y: 8
+        color: "#212121"
+        Image {
+            source: "img/buttons/copy.png"
+        }
+        MouseArea {
+            anchors.fill: parent
+            onClicked: {
+                _buttleData.copyNode();
+            }
+        }
+    }
+
+    Rectangle {
+        id: cutButton
+        implicitWidth: 20
+        implicitHeight: 20
+        width: 4/10 * parent.height
+        height: width
+        x: 190
+        y: 8
+        color: "#212121"
+        Image {
+            source: "img/buttons/cut.png"
+        }
+        MouseArea {
+            anchors.fill: parent
+            onClicked: {
+                _buttleData.cutNode();
+            }
+        }
+    }
+
+    Rectangle {
+        id: pastButton
+        implicitWidth: 20
+        implicitHeight: 20
+        width: 4/10 * parent.height
+        height: width
+        x: 220
+        y: 8
+        color: "#212121"
+        Image {
+            source: "img/buttons/past.png"
+        }
+        MouseArea {
+            anchors.fill: parent
+            onClicked: {
+                _buttleData.pasteNode();
+            }
+        }
+    }
+
+
+    Rectangle {
+        id: duplicateButton
+        implicitWidth: 20
+        implicitHeight: 20
+        width: 4/10 * parent.height
+        height: width
+        x: 250
+        y: 8
+        color: "#212121"
+        Image {
+            source: "img/buttons/duplicate.png"
+        }
+        MouseArea {
+            anchors.fill: parent
+            onClicked: {
+                _buttleData.duplicationNode();
+            }
+        }
+    }
 }
 
 

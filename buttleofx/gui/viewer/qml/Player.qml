@@ -10,9 +10,9 @@ Item {
 
     QtObject {
         id: timeProperties
-        property real currentTime : 4500 // current position of the time (milliseconds)
+        property real currentTime : 0 // current position of the time (milliseconds)
         property real formerKeyTime : 0 // position of the time before animation starts
-        property real timeDuration : 10000 // total duration of the time (milliseconds)
+        property real timeDuration : 5000 // total duration of the time (milliseconds)
     }
 
 

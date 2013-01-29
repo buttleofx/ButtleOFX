@@ -179,19 +179,25 @@ class ButtleData(QtCore.QObject):
             Function called from the QML when we want to cut a node.
         """
         self.copyNode()
-        self._currentCopiedNodeInfo.update({"mode": ""})
-        self.destructionNode()
+        if self.getCurrentSelectedNodeWrapper() == None:
+            print "Can't cut"
+        else:
+            self._currentCopiedNodeInfo.update({"mode": ""})
+            self.destructionNode()
 
     @QtCore.Slot()
     def copyNode(self):
         """
             Function called from the QML when we want to copy a node.
         """
-        self._currentCopiedNodeInfo.update({"nodeType": self.getCurrentSelectedNodeWrapper().getNode().getType()})
-        self._currentCopiedNodeInfo.update({"nameUser": self.getCurrentSelectedNodeWrapper().getNode().getNameUser()})
-        self._currentCopiedNodeInfo.update({"color": self.getCurrentSelectedNodeWrapper().getNode().getColor()})
-        self._currentCopiedNodeInfo.update({"params": self.getCurrentSelectedNodeWrapper().getNode().getTuttleNode().getParamSet()})
-        self._currentCopiedNodeInfo.update({"mode": "_copy"})
+        if self.getCurrentSelectedNodeWrapper() == None:
+            print "Can't copy."
+        else:
+            self._currentCopiedNodeInfo.update({"nodeType": self.getCurrentSelectedNodeWrapper().getNode().getType()})
+            self._currentCopiedNodeInfo.update({"nameUser": self.getCurrentSelectedNodeWrapper().getNode().getNameUser()})
+            self._currentCopiedNodeInfo.update({"color": self.getCurrentSelectedNodeWrapper().getNode().getColor()})
+            self._currentCopiedNodeInfo.update({"params": self.getCurrentSelectedNodeWrapper().getNode().getTuttleNode().getParamSet()})
+            self._currentCopiedNodeInfo.update({"mode": "_copy"})
 
     @QtCore.Slot()
     def pasteNode(self):
@@ -206,28 +212,33 @@ class ButtleData(QtCore.QObject):
             newNode.getTuttleNode().getParamSet().copyParamsValues(self._currentCopiedNodeInfo["params"])
             self._currentCopiedNodeInfo.clear()
             print "clear dict"
+        else:
+            print "Can't past"
 
     @QtCore.Slot()
     def duplicationNode(self):
         """
             Function called from the QML when we want to duplicate a node.
-        """
-        # Create a node giving the current selected node's type, x and y
-        nodeType = self.getCurrentSelectedNodeWrapper().getNode().getType()
-        coord = self.getCurrentSelectedNodeWrapper().getNode().getCoord()
-        self.getGraph().createNode(nodeType, coord[0], coord[1])
-        newNode = self.getGraph().getNodes()[-1]
+        """ 
+        if self.getCurrentSelectedNodeWrapper() == None:
+            print "Can't duplicate."
+        else:
+            # Create a node giving the current selected node's type, x and y
+            nodeType = self.getCurrentSelectedNodeWrapper().getNode().getType()
+            coord = self.getCurrentSelectedNodeWrapper().getNode().getCoord()
+            self.getGraph().createNode(nodeType, coord[0], coord[1])
+            newNode = self.getGraph().getNodes()[-1]
 
-        # Get the current selected node's properties
-        nameUser = self.getCurrentSelectedNodeWrapper().getNameUser() + "_duplicate"
-        oldCoord = self.getCurrentSelectedNodeWrapper().getNode().getOldCoord()
-        color = self.getCurrentSelectedNodeWrapper().getNode().getColor()
+            # Get the current selected node's properties
+            nameUser = self.getCurrentSelectedNodeWrapper().getNameUser() + "_duplicate"
+            oldCoord = self.getCurrentSelectedNodeWrapper().getNode().getOldCoord()
+            color = self.getCurrentSelectedNodeWrapper().getNode().getColor()
 
-        # Use the current selected node's properties to set the duplicated node's properties
-        newNode.setNameUser(nameUser)
-        newNode.setOldCoord(oldCoord[0], oldCoord[1])
-        newNode.setColor(color[0], color[1], color[2])
-        newNode.getTuttleNode().getParamSet().copyParamsValues(self.getCurrentSelectedNodeWrapper().getNode().getTuttleNode().getParamSet())
+            # Use the current selected node's properties to set the duplicated node's properties
+            newNode.setNameUser(nameUser)
+            newNode.setOldCoord(oldCoord[0], oldCoord[1])
+            newNode.setColor(color[0], color[1], color[2])
+            newNode.getTuttleNode().getParamSet().copyParamsValues(self.getCurrentSelectedNodeWrapper().getNode().getTuttleNode().getParamSet())
 
     @QtCore.Slot(str, int, int)
     def dropReaderNode(self, url, x, y):
@@ -364,7 +375,9 @@ class ButtleData(QtCore.QObject):
 
         #Get the output where we save the result
         self._tuttleImageCache = tuttle.MemoryCache()
-        self.getGraph().getGraphTuttle().compute(self._tuttleImageCache, node, tuttle.ComputeOptions(int(time)))
+        #should replace 25 by the fps of the video (a sort of getFPS(node))
+        #should expose the duration of the video to the QML too
+        self.getGraph().getGraphTuttle().compute(self._tuttleImageCache, node, tuttle.ComputeOptions(int(time) / 1000 * 25))
         self._computedImage = self._tuttleImageCache.get(0)
 
         #Add the computedImage to the map

@@ -46,32 +46,37 @@ Item {
 
                 property string lastGroupParam : "No Group."
 
-                ListView {
-                    id: tuttleParam
+                ScrollArea{
                     anchors.fill: parent
-                    anchors.topMargin: 20
-                    anchors.bottomMargin: 20
-                    interactive: true
-                    spacing: 6
+                    anchors.topMargin: 5
+                    anchors.bottomMargin: 5
+                    height: 110
+                    width: 110
+                    frame: false
+                    frameWidth: 0
+                    ListView {
+                        id: tuttleParam
+                        height: contentHeight
+                        anchors.topMargin: 5
+                        anchors.bottomMargin: 5
+                        spacing: 6
 
-                    model: params
-                    
-                    delegate: Component {
-                        Loader {
-                            id: param
-                            source : model.object.paramType + ".qml"
-                            width: parent.width
-                            x: 15 // here is the distance to the left of the listview
-                            //onActiveFocusChanged: 
+                        interactive: false
+
+                        model: params
+                        
+                        delegate: Component {
+                            Loader {
+                                id: param
+                                source : model.object.paramType + ".qml"
+                                width: parent.width
+                                x: 15 // here is the distance to the left of the listview
+
+                            }
                         }
-                    }
-                }
-                ButtleScrollBar{
-                        flickable: tuttleParam
-                        vertical: true
-                        hideScrollBarsWhenStopped: false
-                    }
-            }
+                    }//Listview
+                }//scrollArea
+            }//rectangle param
 
             //placed here to avoid a bug of display with the listView (should be displayed after the listview)
             Rectangle{

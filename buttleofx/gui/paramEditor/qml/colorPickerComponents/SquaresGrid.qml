@@ -1,20 +1,15 @@
-import QtQuick 1.1
+import QtQuick 1.
 
-// grid of squares to see the transparency
 Grid {
     id: gridOfSquares
-
-    property int cellSize: 5
-
-    anchors.fill: parent
-    rows: height/cellSize
-    columns: width/cellSize
-    clip: true
+    property int cellSide: 10
+    width: 110; height: 110
+    rows: height/cellSide; columns: width/cellSide
     Repeater {
         model: gridOfSquares.columns*gridOfSquares.rows
         Rectangle {
-            width: gridOfSquares.cellSize; height: gridOfSquares.cellSize
-            color: (index%2 == 1) ? "grey" : "white"
+            width: gridOfSquares.cellSide; height: gridOfSquares.cellSide
+            color: (index%2 == 0) ? "gray" : "white"
         }
     }
 }

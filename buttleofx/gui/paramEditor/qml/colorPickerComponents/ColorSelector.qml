@@ -5,11 +5,20 @@ Item{
     id: colorPicker
     implicitWidth: 120
     implicitHeight: 120
+    clip: true
 
     property color currentColor : "blue"
     property real saturation : cursorPicker.x/colorPicker.width
     property real brightness : 1 - cursorPicker.y/colorPicker.height
-    clip: true
+
+
+
+    SquaresGrid { 
+        height: parent.height
+        width: parent.width
+        cellSide: 3 
+    } 
+
     Rectangle{
         anchors.fill: parent;
         rotation: -90
@@ -26,22 +35,37 @@ Item{
         }
     }
 
-    Rectangle{
+    Item {
         id: cursorPicker
-        width: 5
-        height: 5
-        radius: 2
-        color: "white"
-        border.color: "black"
-        MouseArea{
-            anchors.fill: parent
-            drag.target: parent
-            drag.axis: Drag.XandYAxis
-            drag.minimumX: 0 //- cursorPicker.width/2
-            drag.maximumX: colorPicker.width - cursorPicker.width
-            drag.minimumY: 0 //- cursorPicker.width/2
-            drag.maximumY: colorPicker.height - cursorPicker.height
-            anchors.margins: -5 // allow to have an area around the cursor which allows to select the cursor even if we are not exactly on it
-        }    
-    }   
+        property int r : 5
+        Rectangle {
+            x: -parent.r; y: -parent.r
+            width: parent.r*2; height: parent.r*2
+            radius: parent.r
+            border.color: "black"
+            border.width: 1
+            color: "transparent"
+            Rectangle {
+                anchors.fill: parent; anchors.margins: 1;
+                border.color: "white"
+                border.width: 1
+                radius: width/2
+                color: "transparent"
+            }
+        }
+    }
+    MouseArea {
+        anchors.fill: parent
+        //handleMouse used to manage the displacement of the little circle cursor in the square
+        function handleMouse(mouse) {
+            if (mouse.buttons & Qt.LeftButton) {
+                cursorPicker.x = Math.max(0, 
+                    Math.min(width,  mouse.x));
+                cursorPicker.y = Math.max(0, 
+                    Math.min(height, mouse.y));
+            }
+        }
+        onPositionChanged: handleMouse(mouse)
+        onPressed: handleMouse(mouse)
+    }
 }

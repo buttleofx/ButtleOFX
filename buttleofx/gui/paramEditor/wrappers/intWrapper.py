@@ -36,6 +36,10 @@ class IntWrapper(QtCore.QObject):
     def setValue(self, value):
         self._param.setValue(value)
 
+    @QtCore.Slot(int)
+    def pushValue(self, value):
+        self._param.pushValue(value)
+
     @QtCore.Signal
     def changed(self):
         pass

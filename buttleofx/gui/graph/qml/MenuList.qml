@@ -9,14 +9,33 @@ Item {
 
     ListView {
         height: 300
+        width: 160
         id: nodeMenuView
         model: _buttleData.getQObjectPluginsIdentifiersByParentPath(menulist.parentName)
+
+        property variant nextMenu: null
+
+        function destroyNextMenu()
+        {
+            if( nodeMenuView.nextMenu )
+                nodeMenuView.nextMenu.destroy()
+        }
+
+        function createNextMenu(parentName, labelElement, x, y)
+        {
+            destroyNextMenu()
+            var newComponent = Qt.createQmlObject('MenuList { parentName: "' + parentName + labelElement + '/"; x: ' + x + '; y: ' + y + '; }', nodeMenuView);
+            nodeMenuView.nextMenu = newComponent
+        }
+
         delegate {
             Component {
                 MenuElement {
+                    id: nodeMenuElement
                     labelElement: object[0]
                     idElement: object[1]
                     parentName: menulist.parentName
+                    menuListItem: nodeMenuView
                 }
             }
         }

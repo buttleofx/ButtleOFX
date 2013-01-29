@@ -74,6 +74,8 @@ def loadTextureFromImage(imgBounds, img_data):
 
 
 class GLViewport(QtDeclarative.QDeclarativeItem):
+    _glGeometry = QtCore.QRect()
+
     def __init__(self, parent=None):
         super(GLViewport, self).__init__(parent)
 
@@ -177,7 +179,7 @@ class GLViewport(QtDeclarative.QDeclarativeItem):
         if self.img_data != None:
             self.prepareGL(widget)
             self.drawImage()
-            self.drawRegions()
+            #self.drawRegions()
 
     def paint(self, painter, option, widget):
         #print "GLViewport.paint"

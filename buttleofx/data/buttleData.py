@@ -44,6 +44,8 @@ class ButtleData(QtCore.QObject):
     _computedImage = None
     _mapNodeNameToComputedImage = {}
 
+    _nodeError = ""
+
     def init(self, view):
         self._graph = Graph()
         self._graphWrapper = GraphWrapper(self._graph, view)
@@ -97,6 +99,12 @@ class ButtleData(QtCore.QObject):
         """
         return self.getGraphWrapper().getNodeWrapper(self.getCurrentViewerNodeName())
 
+    def getNodeError(self):
+        """
+            Returns the name of the node that can't be displayed.
+        """
+        return self._nodeError
+
     #################### setters ####################
 
     def setCurrentParamNodeWrapper(self, nodeWrapper):
@@ -126,6 +134,10 @@ class ButtleData(QtCore.QObject):
         self._currentViewerNodeName = nodeWrapper.getName()
         self.currentViewerNodeChanged.emit()
         self.currentViewerNodeChangedPython()
+
+    def setNodeError(self, nodeName):
+        self._nodeError = nodeName
+        self.nodeErrorChanged.emit()
 
     ################################################## EVENT FROM QML #####################################################
 
@@ -367,15 +379,29 @@ class ButtleData(QtCore.QObject):
         #Get the map
         mapNodeToImage = self._mapNodeNameToComputedImage
 
-        #If the image is already calculated
-        for element in mapNodeToImage:
-            if node == element and timeChanged is False:
-                print "**************************Image already calculated**********************"
-                return self._mapNodeNameToComputedImage[node]
-        # If it is not
-        else:
-            print "************************Calcul of image***************************"
-            return self.computeNode(time)
+        try:
+            self.setNodeError("")
+            #If the image is already calculated
+            for element in mapNodeToImage:
+                if node == element and timeChanged is False:
+                    print "**************************Image already calculated**********************"
+                    return self._mapNodeNameToComputedImage[node]
+                # If it is not
+            else:
+                print "************************Calcul of image***************************"
+                return self.computeNode(time)
+        except Exception as e:
+            print "Can't display node : " + node
+            self.setNodeError(str(e))
+            raise
+
+    def paramChanged(self):
+        #Clear the map
+        self._mapNodeNameToComputedImage.clear()
+
+        #Calculate the current image
+        self.computeNode()
+
     ################################################## DATA EXPOSED TO QML ##################################################
 
     # graphWrapper
@@ -388,6 +414,9 @@ class ButtleData(QtCore.QObject):
     currentViewerNodeWrapper = QtCore.Property(QtCore.QObject, getCurrentViewerNodeWrapper, setCurrentViewerNodeWrapper, notify=currentViewerNodeChanged)
     currentSelectedNodeChanged = QtCore.Signal()
     currentSelectedNodeWrapper = QtCore.Property(QtCore.QObject, getCurrentSelectedNodeWrapper, setCurrentSelectedNodeWrapper, notify=currentSelectedNodeChanged)
+
+    nodeErrorChanged = QtCore.Signal()
+    nodeError = QtCore.Property(str, getNodeError, setNodeError, notify=nodeErrorChanged)
 
 
 # This class exists just because thre are problems when a class extends 2 other class (Singleton and QObject)

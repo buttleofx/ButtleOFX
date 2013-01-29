@@ -62,7 +62,7 @@ Item {
                             source : model.object.paramType + ".qml"
                             width: parent.width
                             x: 15 // here is the distance to the left of the listview
-
+                            //onActiveFocusChanged: 
                         }
                     }
                 }

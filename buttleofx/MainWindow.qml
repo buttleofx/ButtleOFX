@@ -13,7 +13,7 @@ Rectangle {
             _buttleData.destructionNode();
         }
         if ((event.key == Qt.Key_Z) && (event.modifiers & Qt.ControlModifier)) {
-                _buttleData.undo();
+            _buttleData.undo();
         }
         if ((event.key == Qt.Key_Y) && (event.modifiers & Qt.ControlModifier)) {
             _buttleData.redo();

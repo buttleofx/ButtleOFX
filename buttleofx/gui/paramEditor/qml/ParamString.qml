@@ -64,40 +64,39 @@ Item {
                 ]
         }
         //if(paramObject.stringType == "OfxParamStringIsFilePath" || paramObject.stringType == "OfxParamStringIsDirectoryPath") {
-        Rectangle {
-            id: fileButton
-            height:20
-            width: 20
-            color: "grey"
-            radius: 3
-            Image {
-                id: folder
-                source: "img/folder.png"
-                anchors.centerIn: parent
-                height: parent.height - 1
-                width: parent.width - 2
-            }
-            states: [
-                State {
-                    name: "shown"
-                    when: paramObject.stringType == "OfxParamStringIsFilePath" || paramObject.stringType == "OfxParamStringIsDirectoryPath"
-                    PropertyChanges {
-                        target: fileButton
-                        opacity: 1
-                    }
-                },
-                State {
-                    name: "hidden"
-                    when: paramObject.stringType != "OfxParamStringIsFilePath" && paramObject.stringType != "OfxParamStringIsDirectoryPath"
-                    PropertyChanges {
-                        target: fileButton
-                        opacity: 0
-                    }
+            Rectangle {
+                id: fileButton
+                height:20
+                width: 20
+                color: "grey"
+                radius: 3
+                Image {
+                    id: folder
+                    source: "img/folder.png"
+                    anchors.centerIn: parent
+                    height: parent.height - 1
+                    width: parent.width - 2
                 }
-            ]
+                states: [
+                    State {
+                        name: "shown"
+                        when: paramObject.stringType == "OfxParamStringIsFilePath" || paramObject.stringType == "OfxParamStringIsDirectoryPath"
+                        PropertyChanges {
+                            target: fileButton
+                            opacity: 1
+                        }
+                    },
+                    State {
+                        name: "hidden"
+                        when: paramObject.stringType != "OfxParamStringIsFilePath" && paramObject.stringType != "OfxParamStringIsDirectoryPath"
+                        PropertyChanges {
+                            target: fileButton
+                            opacity: 0
+                        }
+                    }
+                ]
 
-
-        }
+            }
         //}
     }
 }

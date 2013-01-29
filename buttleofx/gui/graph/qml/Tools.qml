@@ -52,7 +52,7 @@ Rectangle {
 
             // On clicked, we create a MenuList component and add it to the tools' children.
             onClicked: {
-                var newComponent = Qt.createQmlObject('MenuList { parentName: "tuttle/"; y: 30;}', parent);
+                var newComponent = Qt.createQmlObject('MenuList { parentName: "buttle/"; y: 30;}', parent);
                 tools.children = newComponent;
             }
         }
@@ -81,4 +81,46 @@ Rectangle {
         }
     }
 
+    Rectangle {
+        id: undoButton
+        implicitWidth: 20
+        implicitHeight: 20
+        width: 4/10 * parent.height
+        height: width
+        x: 80
+        y: 15
+        color: "#212121"
+        Image {
+            source: "img/buttons/undo.png"
+        }
+        MouseArea {
+            anchors.fill: parent
+            onClicked: {
+                _buttleData.undo();
+            }
+        }
+    }
+
+    Rectangle {
+        id: redoButton
+        implicitWidth: 20
+        implicitHeight: 20
+        width: 4/10 * parent.height
+        height: width
+        x: 110
+        y: 15
+        color: "#212121"
+        Image {
+            source: "img/buttons/redo.png"
+        }
+        MouseArea {
+            anchors.fill: parent
+            onClicked: {
+                _buttleData.redo();
+            }
+        }
+    }
+
 }
+
+

@@ -13,6 +13,7 @@ class ParamDouble(object):
 
     def __init__(self, tuttleParam):
         self._tuttleParam = tuttleParam
+        self._oldValue = self.getValue()
 
         self.changed = Signal()
 
@@ -26,6 +27,9 @@ class ParamDouble(object):
 
     def getDefaultValue(self):
         return self._tuttleParam.getProperties().getDoubleProperty("OfxParamPropDefault", 0)
+
+    def getOldValue(self):
+        return self._oldValue
 
     def getValue(self):
         return self._tuttleParam.getDoubleValue()
@@ -41,7 +45,14 @@ class ParamDouble(object):
 
     #################### setters ####################
 
-    def setValue(self, newValue):
+    def setOldValue(self, value):
+        self._oldValue = value
+
+    def setValue(self, value):
+        self._tuttleParam.setValue(float(value))
+        self.changed()
+
+    def pushValue(self, newValue):
         cmdUpdate = CmdSetParamDouble(self, newValue)
         cmdManager = CommandManager()
         cmdManager.push(cmdUpdate)

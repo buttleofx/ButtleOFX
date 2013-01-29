@@ -13,6 +13,7 @@ class ParamInt(object):
 
     def __init__(self, tuttleParam):
         self._tuttleParam = tuttleParam
+        self._oldValue = self.getValue()
 
         self.changed = Signal()
 
@@ -26,6 +27,9 @@ class ParamInt(object):
 
     def getDefaultValue(self):
         return self._tuttleParam.getProperties().getIntProperty("OfxParamPropDefault")
+
+    def getOldValue(self):
+        return self._oldValue
 
     def getValue(self):
         return self._tuttleParam.getIntValue()
@@ -41,7 +45,14 @@ class ParamInt(object):
 
     #################### setters ####################
 
-    def setValue(self, newValue):
+    def setOldValue(self, value):
+        self._oldValue = value
+
+    def setValue(self, value):
+        self._tuttleParam.setValue(int(value))
+        self.changed()
+
+    def pushValue(self, newValue):
         cmdUpdate = CmdSetParamInt(self, newValue)
         cmdManager = CommandManager()
         cmdManager.push(cmdUpdate)

@@ -12,7 +12,7 @@ class CmdSetParamInt(UndoableCommand):
 
     def __init__(self, param, newValue):
         self._param = param
-        self._oldValue = param.getValue()
+        self._oldValue = param.getOldValue()
         self._newValue = newValue
 
     def undoCmd(self):
@@ -20,6 +20,7 @@ class CmdSetParamInt(UndoableCommand):
         Undoes the update of the param.
         """
         self._param.getTuttleParam().setValue(int(self._oldValue))
+        self._param.setOldValue(int(self._oldValue))
         self._param.changed()
 
         print "TuttleParam new Value : ", self._param.getValue()
@@ -35,6 +36,7 @@ class CmdSetParamInt(UndoableCommand):
         Executes the update of the param.
         """
         self._param.getTuttleParam().setValue(int(self._newValue))
+        self._param.setOldValue(int(self._newValue))
         self._param.changed()
 
         print "TuttleParam new Value : ", self._param.getValue()

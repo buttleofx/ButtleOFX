@@ -37,7 +37,6 @@ Item {
                 maximumLength: 5
                 color: activeFocus ? "white" : "grey"
                 width: 40
-                activeFocusOnPress : true
                 selectByMouse : true
                 onAccepted: paramObject.value1 = paramDouble2Dinput1.text
                 validator: DoubleValidator{
@@ -66,8 +65,8 @@ Item {
                 selectByMouse : true
                 onAccepted: paramObject.value2 = paramDouble2Dinput2.text
                 validator: DoubleValidator{
-                bottom: paramObject.minimum2
-                top: paramObject.maximum2
+                    bottom: paramObject.minimum2
+                    top: paramObject.maximum2
                 }
             }
         }

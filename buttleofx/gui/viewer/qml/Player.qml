@@ -58,13 +58,13 @@ Item {
                     id: tabLabel
                     anchors.horizontalCenter: parent.horizontalCenter
                     y:10
-                    text: "Viewer 1"
+                    text: "Viewer"
                     color: "white"
                     font.pointSize: 10
                 }
             }
 
-            Rectangle {
+            /*Rectangle {
                 id: tab2
                 implicitWidth: 30
                 implicitHeight: 200
@@ -81,7 +81,7 @@ Item {
                     source: "../img/plus.png"
                     anchors.centerIn: parent
                 }
-            }
+            }*/
         }
     }
 

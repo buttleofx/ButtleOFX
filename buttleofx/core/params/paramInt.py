@@ -25,16 +25,16 @@ class ParamInt(object):
         return "ParamInt"
 
     def getDefaultValue(self):
-        return self._tuttleParam.getProperties().getIntProperty("OfxParamPropDefault", 0)
+        return self._tuttleParam.getProperties().getIntProperty("OfxParamPropDefault")
 
     def getValue(self):
         return self._tuttleParam.getIntValue()
 
     def getMinimum(self):
-        return self._tuttleParam.getProperties().fetchProperty("OfxParamPropDisplayMin").getStringValue(0) # != OfxParamPropMin
+        return self._tuttleParam.getProperties().getIntProperty("OfxParamPropDisplayMin")
 
     def getMaximum(self):
-        return self._tuttleParam.getProperties().fetchProperty("OfxParamPropDisplayMax").getStringValue(0) # != OfxParamPropMax
+        return self._tuttleParam.getProperties().getIntProperty("OfxParamPropDisplayMax")
 
     def getText(self):
         return self._tuttleParam.getName()

@@ -48,7 +48,8 @@ class CmdCreateNode(UndoableCommand):
         """
         # We create a new Tuttle node and rename it so it has the same name as the Node
         tuttleNode = self._graphTarget.getGraphTuttle().createNode(str(self._nodeType))
-        self._nodeName = tuttleNode.getName().replace('Tuttle', '', 1)
+        #self._nodeName = tuttleNode.getName().replace('Tuttle', '', 1)
+        self._nodeName = tuttleNode.getName()
 
         # New Buttle node
         self._node = Node(self._nodeName, self._nodeType, self._nodeCoord, tuttleNode)

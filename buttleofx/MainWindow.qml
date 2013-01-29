@@ -10,7 +10,6 @@ Rectangle {
 
     Keys.onPressed: {
         if (event.key == Qt.Key_Delete) {
-            console.log("destruction");
             _buttleData.destructionNode();
         }
         if ((event.key == Qt.Key_Z) && (event.modifiers & Qt.ControlModifier)) {
@@ -20,17 +19,17 @@ Rectangle {
             _buttleData.redo();
         }
         if ((event.key == Qt.Key_D) && (event.modifiers & Qt.ControlModifier)){
-            console.log("Duplicate");
             _buttleData.duplicationNode()
         }
-//        if ((event.key == Qt.Key_C) && (event.modifiers & Qt.ControlModifier)){
-//            console.log("Copy");
-//            _buttleData.copyNode()
-//        }
-//        if ((event.key == Qt.Key_V) && (event.modifiers & Qt.ControlModifier)){
-//            console.log("Paste");
-//            _buttleData.pasteNode()
-//        }
+        if ((event.key == Qt.Key_C) && (event.modifiers & Qt.ControlModifier)){
+            _buttleData.copyNode()
+        }
+        if ((event.key == Qt.Key_V) && (event.modifiers & Qt.ControlModifier)){
+            _buttleData.pasteNode()
+        }
+        if ((event.key == Qt.Key_X) && (event.modifiers & Qt.ControlModifier)){
+            _buttleData.cutNode()
+        }
     }
 
     Rectangle {

@@ -40,71 +40,58 @@ Item {
     }
 
     /*************************** TabBar*************************************/
-    Rectangle {
+    Item {
         id: tabBar
         implicitWidth: 950
-        implicitHeight: 25
-        color: "#353535"
+        implicitHeight: 30
         property color tabColor: "#141414"
 
-        Item {
-            id: tab1
-            implicitWidth: 100
-            implicitHeight: 20
-            height: parent.height
+        Row{
+            spacing: 1
             Rectangle {
-                anchors {
-                    fill: parent;
-                    bottomMargin: -radius
-                }
+                id:tab1
+                implicitWidth: 100
+                implicitHeight: 200
+                radius: 10
+                color: tabBar.tabColor
                 Text {
                     id: tabLabel
                     anchors.horizontalCenter: parent.horizontalCenter
-                    y:5
+                    y:10
                     text: "Viewer 1"
                     color: "white"
                     font.pointSize: 10
                 }
+            }
+
+            Rectangle {
+                id: tab2
+                implicitWidth: 30
+                implicitHeight: 200
                 radius: 10
                 color: tabBar.tabColor
-            }
-        }
-
-        Item {
-            id: tab2
-            implicitWidth: 30
-            height: parent.height
-            x: tab1.width + 1
-            Rectangle {
-                anchors {
-                    fill: parent;
-                    bottomMargin: -radius
+                gradient: Gradient {
+                    GradientStop { position: 0.0; color: "#141414" }
+                    GradientStop { position: 0.11; color: "#141414" }
+                    GradientStop { position: 0.15; color: "#111111" }
+                    GradientStop { position: 0.16; color: "#111111" }
                 }
                 Image {
                     id: addButton
                     source: "../img/plus.png"
                     anchors.centerIn: parent
                 }
-                radius: 10
-                color: tabBar.tabColor
             }
-        }
-
-        onWidthChanged: {
-            console.log("jhbjhb")
         }
     }
 
     /********************************Viewer and Tools************************************/
     Rectangle {
+        id: viewerAndTools
         height: parent.height - tabBar.height
         width: parent.width
         y: tabBar.height
         color: "#141414"
-        gradient: Gradient {
-            GradientStop { position: 0.085; color: "#141414" }
-            GradientStop { position: 1; color: "#111111" }
-        }
 
         ColumnLayout {
 
@@ -120,7 +107,6 @@ Item {
                     id: viewer_component
                     Viewer {
                         id: viewer
-                        //imageFile: node.image
                         time: timeProperties.currentTime
                         clip: true
                     }
@@ -144,7 +130,7 @@ Item {
                         anchors.left: parent.left
                         anchors.leftMargin: 10
                         anchors.verticalCenter: parent.verticalCenter
-                        text: "Can't display node : " + _buttleData.currentViewerNodeWrapper.name
+                        text: node ? "Can't display node : " + node.name : "No current node"
                     }
                     Rectangle {
                         id: errorDisplay
@@ -196,10 +182,9 @@ Item {
             /****************Timeline*******************/
             Item {
                 id: timeline
-                anchors.top: viewerRegion.bottom
                 width: parent.width
                 implicitHeight: 10
-
+                y: tabBar.height
                 property double endPosition : barTimeline.x + barTimeline.width - cursorTimeline.width
 
                 // Playing animation
@@ -288,9 +273,9 @@ Item {
             /******************* ToolBar *************************************/
             Rectangle {
                 id: toolBarRegion
-                anchors.top: timeline.bottom
+                y: parent.height + tabBar.height
                 width: parent.width
-                implicitHeight: 30
+                implicitHeight: 40
                 color: "transparent"
                 Layout.verticalSizePolicy: Layout.Fixed
 
@@ -300,6 +285,12 @@ Item {
                     width: parent.width
                     height: parent.height
                     color: "#141414"
+                    gradient: Gradient {
+                        GradientStop { position: 0.0; color: "#141414" }
+                        GradientStop { position: 0.15; color: "#010101" }
+                        GradientStop { position: 0.16; color: "#141414" }
+                        GradientStop { position: 1; color: "#141414" }
+                    }
 
                     // zoomTools
                     Row {
@@ -313,8 +304,6 @@ Item {
                             id: magGlassIn
                             width: 22
                             height: 15
-                            //x: 2
-                            //y: 2
                             color: "#141414"
 
                             Image {
@@ -413,16 +402,15 @@ Item {
                         id: selectViewer
                         spacing: 5
                         anchors.right: parent.right
-                        anchors.rightMargin: parent.height + 1
+                        anchors.rightMargin: parent.height
 
                         // Mosquito
                         Rectangle {
                             id: mosquitoTool
-                            width: parent.height-4
-                            height: parent.height-4
+                            width: parent.height-5
+                            height: parent.height-5
                             color: "transparent"
-                            y: 4
-                            //x: parent.width - 100
+                            y: 9
 
                             Image {
                                 id: mosquito
@@ -438,9 +426,9 @@ Item {
 
                             Rectangle {
                                 id: numberElement
-                                width: tools.height - 4
-                                height: tools.height - 4
-                                y: 2
+                                width: tools.height - 10
+                                height: tools.height - 10
+                                y: 8
                                 color: "#343434"
                                 radius: 3
                                 state: "unclicked"

@@ -8,26 +8,22 @@ Rectangle {
         id: m
         property variant nodeModel: model.object
     }
-    //property int heightEmptyNode : _buttleData.graphWrapper.heightEmptyNode
-    property int nbInput: m.nodeModel.nbInput
+
+    x: m.nodeModel.coord.x
+    y: m.nodeModel.coord.y
+    z: _buttleData.graphWrapper.zMax
 
     height: m.nodeModel.height
     width: m.nodeModel.width
 
     property int inputSpacing : m.nodeModel.clipSpacing
     property int clipSize: m.nodeModel.clipSize
-
-    x: m.nodeModel.coord.x
-    y: m.nodeModel.coord.y
-    z: _buttleData.graphWrapper.zMax
-
-
+    property int nbInput: m.nodeModel.nbInput
     property int inputTopMargin: m.nodeModel.inputTopMargin
     property int inputSideMargin: m.nodeModel.inputSideMargin
 
     color: "transparent"
     focus: true
-
 
     Rectangle {
         id: nodeBorder

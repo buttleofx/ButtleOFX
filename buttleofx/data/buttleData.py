@@ -15,8 +15,6 @@ from buttleofx.gui.graph.node import NodeWrapper
 # undo redo
 from buttleofx.core.undo_redo.manageTools import CommandManager
 from buttleofx.core.undo_redo.commands.node import CmdSetCoord
-# copy
-from copy import copy
 
 
 class ButtleData(QtCore.QObject):
@@ -41,6 +39,7 @@ class ButtleData(QtCore.QObject):
     _currentParamNodeName = None
     _currentSelectedNodeName = None
     _currentViewerNodeName = None
+    _currentCopiedNodeInfo = {}
 
     _computedImage = None
     _mapNodeNameToComputedImage = {}
@@ -175,6 +174,40 @@ class ButtleData(QtCore.QObject):
             self.currentViewerNodeChanged.emit()
 
     @QtCore.Slot()
+    def cutNode(self):
+        """
+            Function called from the QML when we want to cut a node.
+        """
+        self.copyNode()
+        self._currentCopiedNodeInfo.update({"mode": ""})
+        self.destructionNode()
+
+    @QtCore.Slot()
+    def copyNode(self):
+        """
+            Function called from the QML when we want to copy a node.
+        """
+        self._currentCopiedNodeInfo.update({"nodeType": self.getCurrentSelectedNodeWrapper().getNode().getType()})
+        self._currentCopiedNodeInfo.update({"nameUser": self.getCurrentSelectedNodeWrapper().getNode().getNameUser()})
+        self._currentCopiedNodeInfo.update({"color": self.getCurrentSelectedNodeWrapper().getNode().getColor()})
+        self._currentCopiedNodeInfo.update({"params": self.getCurrentSelectedNodeWrapper().getNode().getTuttleNode().getParamSet()})
+        self._currentCopiedNodeInfo.update({"mode": "_copy"})
+
+    @QtCore.Slot()
+    def pasteNode(self):
+        """
+            Function called from the QML when we want to paste a node.
+        """
+        if self._currentCopiedNodeInfo:
+            self.getGraph().createNode(self._currentCopiedNodeInfo["nodeType"], 20, 20)
+            newNode = self.getGraph().getNodes()[-1]
+            newNode.setColor(self._currentCopiedNodeInfo["color"][0], self._currentCopiedNodeInfo["color"][1], self._currentCopiedNodeInfo["color"][2])
+            newNode.setNameUser(self._currentCopiedNodeInfo["nameUser"] + self._currentCopiedNodeInfo["mode"])
+            newNode.getTuttleNode().getParamSet().copyParamsValues(self._currentCopiedNodeInfo["params"])
+            self._currentCopiedNodeInfo.clear()
+            print "clear dict"
+
+    @QtCore.Slot()
     def duplicationNode(self):
         """
             Function called from the QML when we want to duplicate a node.
@@ -183,27 +216,18 @@ class ButtleData(QtCore.QObject):
         nodeType = self.getCurrentSelectedNodeWrapper().getNode().getType()
         coord = self.getCurrentSelectedNodeWrapper().getNode().getCoord()
         self.getGraph().createNode(nodeType, coord[0], coord[1])
+        newNode = self.getGraph().getNodes()[-1]
 
         # Get the current selected node's properties
         nameUser = self.getCurrentSelectedNodeWrapper().getNameUser() + "_duplicate"
         oldCoord = self.getCurrentSelectedNodeWrapper().getNode().getOldCoord()
-        tuttleNode = copy(self.getCurrentSelectedNodeWrapper().getNode().getTuttleNode())
-        color = self.getCurrentSelectedNodeWrapper().getColor()
-        nbInput = self.getCurrentSelectedNodeWrapper().getNbInput()
-        #image = self.getCurrentSelectedNodeWrapper().getImage()
-        # doesn't work : the params are pointer, but we want real copy...
-        params = []
-        for param in self.getCurrentSelectedNodeWrapper().getNode().getParams():
-            params.append(copy(param))
+        color = self.getCurrentSelectedNodeWrapper().getNode().getColor()
 
         # Use the current selected node's properties to set the duplicated node's properties
-        self.getGraph().getNodes()[-1].setNameUser(nameUser)
-        self.getGraph().getNodes()[-1].setOldCoord(oldCoord[0], oldCoord[1])
-        self.getGraph().getNodes()[-1].setTuttleNode(tuttleNode)
-        self.getGraph().getNodes()[-1].setColor(color.red(), color.green(), color.blue())
-        self.getGraph().getNodes()[-1].setNbInput(nbInput)
-        #self.getGraph().getNodes()[-1].setImage(image)
-        self.getGraph().getNodes()[-1].setParams(params)
+        newNode.setNameUser(nameUser)
+        newNode.setOldCoord(oldCoord[0], oldCoord[1])
+        newNode.setColor(color[0], color[1], color[2])
+        newNode.getTuttleNode().getParamSet().copyParamsValues(self.getCurrentSelectedNodeWrapper().getNode().getTuttleNode().getParamSet())
 
     @QtCore.Slot(str, int, int)
     def dropReaderNode(self, url, x, y):

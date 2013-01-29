@@ -108,21 +108,6 @@ class GraphWrapper(QtCore.QObject):
     def getTmpClipIn(self):
         return self._tmpClipIn
 
-    def getWidthNode(self):
-        return NodeWrapper.widthNode
-
-    def getHeightEmptyNode(self):
-        return NodeWrapper.heightEmptyNode
-
-    def getClipSpacing(self):
-        return NodeWrapper.clipSpacing
-
-    def getClipSize(self):
-        return NodeWrapper.clipSize
-
-    def getNodeInputSideMargin(self):
-        return NodeWrapper.inputSideMargin
-
     @QtCore.Slot(result="QVariant")
     def getLastCreatedNodeWrapper(self):
         return self._nodeWrappers[-1]
@@ -172,21 +157,21 @@ class GraphWrapper(QtCore.QObject):
             Returns the position of the clip.
             The calculation is the same as in the QML file (Node.qml).
         """
-        nodeCoord = self._graph.getNode(nodeName).getCoord()
-        widthNode = self.getWidthNode()
-        heightEmptyNode = self.getHeightEmptyNode()
-        clipSpacing = self.getClipSpacing()
-        clipSize = self.getClipSize()
-        nbInput = self._graph.getNode(nodeName).getNbInput()
-        heightNode = heightEmptyNode + clipSpacing * nbInput
-        inputTopMargin = (heightNode - clipSize * nbInput - clipSpacing * (nbInput - 1)) / 2
+        node = self.getNodeWrapper(nodeName)
+
+        nodeCoord = node.getCoord()
+        widthNode = node.getWidth()
+        clipSpacing = node.getClipSpacing()
+        clipSize = node.getClipSize()
+        heightNode = node.getHeight()
+        inputTopMargin = node.getInputTopMargin()
 
         if (port == "input"):
-            xClip = nodeCoord[0] - clipSize / 2
-            yClip = nodeCoord[1] + inputTopMargin + (clipNumber) * (clipSpacing + clipSize) + clipSize / 2
+            xClip = nodeCoord.x() - clipSize / 2
+            yClip = nodeCoord.y() + inputTopMargin + (clipNumber) * (clipSpacing + clipSize) + clipSize / 2
         elif (port == "output"):
-            xClip = nodeCoord[0] + widthNode + clipSize / 2
-            yClip = nodeCoord[1] + heightNode / 2 + clipSize / 2
+            xClip = nodeCoord.x() + widthNode + clipSize / 2
+            yClip = nodeCoord.y() + heightNode / 2 + clipSize / 2
         return (xClip, yClip)
 
     def getConnectionByClips(self, clipOut, clipIn):
@@ -267,10 +252,3 @@ class GraphWrapper(QtCore.QObject):
     # z index for QML
     zMaxChanged = QtCore.Signal()
     zMax = QtCore.Property(int, getZMax, setZMax, notify=zMaxChanged)
-
-    # for a clean display of connection
-    widthNode = QtCore.Property(int, getWidthNode, notify=changed)
-    heightEmptyNode = QtCore.Property(int, getHeightEmptyNode, notify=changed)
-    clipSpacing = QtCore.Property(int, getClipSpacing, notify=changed)
-    clipSize = QtCore.Property(int, getClipSize, notify=changed)
-    nodeInputSideMargin = QtCore.Property(int, getNodeInputSideMargin, notify=changed)

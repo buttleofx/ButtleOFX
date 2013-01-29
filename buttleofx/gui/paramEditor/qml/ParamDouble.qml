@@ -69,7 +69,7 @@ Item {
         Rectangle {
             id: cursorSlider
             anchors.verticalCenter: parent.verticalCenter
-            x: (paramObject.value * barSlider.width) / paramObject.maximum
+            x: ((paramObject.value - paramObject.minimum) * barSlider.width) / (paramObject.maximum - paramObject.minimum) 
             height: 10
             width: 5
             radius: 1
@@ -81,7 +81,10 @@ Item {
                 drag.minimumX: 0// - cursorSlider.width/2
                 drag.maximumX: barSlider.width// - cursorSlider.width/2
                 anchors.margins: -10 // allow to have an area around the cursor which allows to select the cursor even if we are not exactly on it
-                onReleased: paramObject.value = (cursorSlider.x * paramObject.maximum) / barSlider.width
+                onReleased: paramObject.value = (cursorSlider.x * (paramObject.maximum - paramObject.minimum)) / barSlider.width + paramObject.minimum 
+            }
+            onXChanged: {
+                paramObject.value = (cursorSlider.x * (paramObject.maximum - paramObject.minimum)) / barSlider.width + paramObject.minimum 
             }
         }
         // The max value (at the end of the bar slider)
@@ -95,55 +98,3 @@ Item {
         }
     }
 }
-
-
-/*
-//ParamDouble is an input field
-Item {
-    id: containerParamDouble
-    implicitWidth: 300
-    implicitHeight: 30
-
-    property variant paramObject: model.object
-
-    //Container of the textInput
-    Row {
-        id: paramDoubleInputContainer
-        spacing: 10
-
-        // Title of the paramDouble
-        Text {
-
-            id: paramDoubleTitle
-            text: paramObject.text + " : "
-            color: "white"
-        }
-
-        // Input field
-        Rectangle{
-            height: 20
-            width:40
-
-            color: "#212121"
-            border.width: 1
-            border.color: "#333"
-            radius: 3
-            TextInput{
-                id: paramDoubleInput
-                text: paramObject.value
-                anchors.left: parent.left
-                anchors.leftMargin: 5
-                maximumLength: 5
-                color: activeFocus ? "white" : "grey"
-                width: 40
-                selectByMouse : true
-                validator: DoubleValidator{
-                    bottom: paramObject.minimum
-                    top:  paramObject.maximum
-                }
-                onAccepted: paramObject.value = paramDoubleInput.text
-            }
-        }
-    }
-}*/
-

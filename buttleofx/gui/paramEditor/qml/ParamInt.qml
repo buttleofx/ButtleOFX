@@ -69,7 +69,7 @@ Item {
         Rectangle {
             id: cursorSlider
             anchors.verticalCenter: parent.verticalCenter
-            x: (paramObject.value * barSlider.width) / paramObject.maximum
+            x: ((paramObject.value - paramObject.minimum) * barSlider.width) / (paramObject.maximum - paramObject.minimum) 
             height: 10
             width: 5
             radius: 1
@@ -81,7 +81,10 @@ Item {
                 drag.minimumX: 0// - cursorSlider.width/2
                 drag.maximumX: barSlider.width// - cursorSlider.width/2
                 anchors.margins: -10 // allow to have an area around the cursor which allows to select the cursor even if we are not exactly on it
-                onReleased: paramObject.value = (cursorSlider.x * paramObject.maximum) / barSlider.width
+                onReleased: paramObject.value = (cursorSlider.x * (paramObject.maximum - paramObject.minimum)) / barSlider.width + paramObject.minimum 
+            }
+            onXChanged: {
+                paramObject.value = (cursorSlider.x * (paramObject.maximum - paramObject.minimum)) / barSlider.width + paramObject.minimum 
             }
         }
         // The max value (at the end of the bar slider)

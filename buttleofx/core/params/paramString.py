@@ -14,6 +14,7 @@ class ParamString(object):
 
     def __init__(self, tuttleParam):
         self._tuttleParam = tuttleParam
+        print tuttleParam
 
         self.changed = Signal()
 

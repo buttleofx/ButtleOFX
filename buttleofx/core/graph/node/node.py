@@ -4,7 +4,7 @@ from buttleofx.data import tuttleTools
 from quickmamba.patterns import Signal
 from PySide import QtGui
 # paramEditor
-from buttleofx.core.params import ParamInt, ParamInt2D, ParamInt3D, ParamString, ParamDouble, ParamDouble2D, ParamBoolean, ParamDouble3D, ParamChoice, ParamPushButton, ParamRGBA, ParamRGB, ParamGroup
+from buttleofx.core.params import ParamInt, ParamInt2D, ParamInt3D, ParamString, ParamDouble, ParamDouble2D, ParamBoolean, ParamDouble3D, ParamChoice, ParamPushButton, ParamRGBA, ParamRGB, ParamGroup, ParamPage
 
 defaultNodeDesc = {
     "color": (0, 178, 161),
@@ -25,7 +25,7 @@ mapTuttleParamToButtleParam = {
     "OfxParamTypeString": ParamString,
     #"OfxParamTypeCustom": ParamCustom,
     "OfxParamTypeGroup": ParamGroup,
-    #"OfxParamTypePage": ParamPage,
+    "OfxParamTypePage": ParamPage,
     "OfxParamTypePushButton": ParamPushButton
 }
 

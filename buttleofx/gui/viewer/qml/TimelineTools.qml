@@ -10,7 +10,7 @@ Row {
     Text {
         id: textTimeline
         color: "#bbbbbb"
-        text: getTimePosition()
+        text: getTimePosition()//define in player
     }
 
     // back to begin

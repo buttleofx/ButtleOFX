@@ -24,31 +24,6 @@ Rectangle {
     implicitHeight: 500
 
     color: "#353535" // used to have the same color for the splitterColumn separator
-    /*TITLE OF THE PARAMEDITOR*/
-    /*Rectangle{
-        id: paramEditorTitle
-        width: parent.width
-        height: 40
-        color: paramEditor.background
-
-        Text {
-            anchors.verticalCenter: parent.verticalCenter
-            anchors.horizontalCenter: parent.horizontalCenter
-            anchors.left: parent.left
-            anchors.leftMargin: 10
-            color: textColor
-            font.weight: Font.DemiBold
-            horizontalAlignment: Text.AlignHCenter
-            font.pointSize: 12
-            text: "Parameters"
-        }
-
-        gradient: Gradient {
-            GradientStop { position: 0.65; color: paramEditor.gradian1 }
-            GradientStop { position: 1; color: paramEditor.gradian2 }
-        }
-    }*/
-
 
     SplitterColumn {
         width: parent.width
@@ -76,34 +51,36 @@ Rectangle {
 
                 property string lastGroupParam : "No Group."
                 ScrollArea{
-                ListView {
-                    id: tuttleParam
                     anchors.fill: parent
                     anchors.topMargin: 5
                     anchors.bottomMargin: 5
-                    spacing: 6
+                    height: 110
+                    width: 110
+                    frame: false
+                    frameWidth: 0
+                    ListView {
+                        id: tuttleParam
+                        height: contentHeight
+                        anchors.topMargin: 5
+                        anchors.bottomMargin: 5
+                        spacing: 6
 
-                    model: params
-                    
-                    delegate: Component {
-                        Loader {
-                            id: param
-                            source : model.object.paramType + ".qml"
-                            width: parent.width
-                            x: 15 // here is the distance to the left of the listview
+                        interactive: false
 
+                        model: params
+                        
+                        delegate: Component {
+                            Loader {
+                                id: param
+                                source : model.object.paramType + ".qml"
+                                width: parent.width
+                                x: 15 // here is the distance to the left of the listview
+
+                            }
                         }
-                    }
-                    ButtleScrollBar{
-                        flickable: tuttleParam
-                        vertical: true
-                        hideScrollBarsWhenStopped: false
-
-                    }
-                    interactive: true
-                }
-                }
-            }
+                    }//Listview
+                }//scrollArea
+            }//rectangle param
 
             //placed here to avoid a bug of display with the listView (should be displayed after the listview)
             Rectangle{

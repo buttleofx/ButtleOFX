@@ -328,7 +328,9 @@ class ButtleData(QtCore.QObject):
 
         #Get the output where we save the result
         self._tuttleImageCache = tuttle.MemoryCache()
-        self.getGraph().getGraphTuttle().compute(self._tuttleImageCache, node, tuttle.ComputeOptions(int(time)))
+        #should replace 25 by the fps of the video (a sort of getFPS(node))
+        #should expose the duration of the video to the QML too
+        self.getGraph().getGraphTuttle().compute(self._tuttleImageCache, node, tuttle.ComputeOptions(int(time) / 1000 * 25))
         self._computedImage = self._tuttleImageCache.get(0)
 
         #Add the computedImage to the map

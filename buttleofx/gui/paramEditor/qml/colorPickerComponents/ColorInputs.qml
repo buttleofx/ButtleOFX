@@ -79,10 +79,10 @@ Rectangle {
                 text: colorFields.alphaColorText
 
                 onTextChanged: {
-                    paramObject.r = rInput.colorValueText
-                    paramObject.g = gInput.colorValueText
-                    paramObject.b = bInput.colorValueText
-                    paramObject.a = aInput.colorValueText
+                    paramObject ? paramObject.r = rInput.colorValueText : 255
+                    paramObject ? paramObject.g = gInput.colorValueText : 255
+                    paramObject ? paramObject.b = bInput.colorValueText : 255
+                    paramObject ? paramObject.a = aInput.colorValueText : 255
                 }
             }
         }
@@ -128,11 +128,11 @@ Rectangle {
                 colorValueText: colorFields.redValue
                 minValue: 0
                 maxValue: 255
-                onColorValueTextChanged: {
-                    paramObject.r = colorValueText 
+                /*onColorValueTextChanged: {
+                     paramObject ? paramObject.r = colorValueText : 255
                     // test to adapt display of colorSlider in function of values enter in inputs
                     //cursorColorPosition = 120 * (rInput.colorValueText + gInput.colorValueText + bInput.colorValueText )/(3*255)
-                }
+                }*/
             }
             ColorInput {
                 id: gInput
@@ -140,11 +140,11 @@ Rectangle {
                 colorValueText: colorFields.greenValue
                 minValue: 0
                 maxValue: 255
-                onColorValueTextChanged: {
-                    paramObject.g = colorValueText
+                /*onColorValueTextChanged: {
+                    paramObject ? paramObject.g = colorValueText : 255
                     // test to adapt display of colorSlider in function of values enter in inputs
                     //cursorColorPosition = 120 * (rInput.colorValueText + gInput.colorValueText + bInput.colorValueText )/(3*255)
-                }
+                }*/
             }
             ColorInput {
                 id: bInput
@@ -152,11 +152,11 @@ Rectangle {
                 colorValueText: colorFields.blueValue
                 minValue: 0 
                 maxValue: 255
-                onColorValueTextChanged: {
-                    paramObject.b = colorValueText
+                /*onColorValueTextChanged: {
+                    paramObject ? paramObject.b = colorValueText : 255
                     // test to adapt display of colorSlider in function of values enter in inputs
                     //cursorColorPosition = 120 * (rInput.colorValueText + gInput.colorValueText + bInput.colorValueText )/(3*255)
-                }
+                }*/
             }
             // alpha value box
             ColorInput {
@@ -165,9 +165,9 @@ Rectangle {
                 colorValueText: colorFields.alphaValue
                 minValue: 0
                 maxValue: 255
-                onColorValueTextChanged: {
-                    paramObject.a = colorValueText
-                }
+                /*onColorValueTextChanged: {
+                    paramObject ? paramObject.a = colorValueText : 255
+                }*/
             }
         }
     }

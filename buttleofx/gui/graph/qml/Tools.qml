@@ -10,6 +10,8 @@ Rectangle {
     property color gradian1: "#111111"
     property color gradian2: "#212121"
 
+    property int buttonSize : 20
+
     signal clickCreationNode(string nodeType)
 
     z: 2000
@@ -33,174 +35,176 @@ Rectangle {
         }
     }
 
-    // create and delete node
-    Rectangle {
-        id: addNodeButton
-        implicitWidth: 20
-        implicitHeight: 20
-        width: 7/10 * parent.height
-        height: width
-        anchors.verticalCenter: parent.verticalCenter
-        color: "#212121"
-        Text {
-            anchors.centerIn: parent
-            text: "+"
-            font.pointSize: 16
-            color: "white"
-        }
-        MouseArea {
-            anchors.fill: parent
+    Row {
+        spacing: 15
+        y: 5
+        // create and delete node
+        Rectangle {
+            id: addNodeButton
+            anchors.verticalCenter: parent.verticalCenter
+            implicitWidth: buttonSize
+            implicitHeight: buttonSize
+            width: 7/10 * tools.height
+            height: width
+            color: "transparent"
+            Text {
+                anchors.centerIn: parent
+                text: "+"
+                font.pointSize: 16
+                color: "white"
+            }
+            MouseArea {
+                anchors.fill: parent
 
-            // On clicked, we create a MenuList component and add it to the tools' children.
-            onClicked: {
-                var newComponent = Qt.createQmlObject('MenuList { parentName: "buttle/"; y: 30;}', parent);
-                tools.children = newComponent;
+                // On clicked, we create a MenuList component and add it to the tools' children.
+                onClicked: {
+                    var newComponent = Qt.createQmlObject('MenuList { parentName: "buttle/"; y: 30;}', parent);
+                    tools.children = newComponent;
+                }
             }
         }
-    }
 
-    Rectangle {
-        id: delNodeButton
-        implicitWidth: 20
-        implicitHeight: 20
-        width: 7/10 * parent.height
-        height: width
-        x: 30
-        y: 6
-        color: "#212121"
-        Text {
-            anchors.centerIn: parent
-            text: "-"
-            font.pointSize: 16
-            color: "white"
-        }
-        MouseArea {
-            anchors.fill: parent
-            onClicked: {
-                _buttleData.destructionNode()
+        Rectangle {
+            id: delNodeButton
+            anchors.verticalCenter: parent.verticalCenter
+            implicitWidth: buttonSize
+            implicitHeight: buttonSize
+            width: 7/10 * tools.height
+            height: width
+            color: "transparent"
+            Text {
+                anchors.centerIn: parent
+                text: "-"
+                font.pointSize: 16
+                color: "white"
+            }
+            MouseArea {
+                anchors.fill: parent
+                onClicked: {
+                    _buttleData.destructionNode()
+                }
             }
         }
-    }
 
-    // undo redo
-    Rectangle {
-        id: undoButton
-        implicitWidth: 20
-        implicitHeight: 20
-        width: 4/10 * parent.height
-        height: width
-        x: 80
-        y: 15
-        color: "#212121"
-        Image {
-            source: "img/buttons/undo.png"
-        }
-        MouseArea {
-            anchors.fill: parent
-            onClicked: {
-                _buttleData.undo();
+        // undo redo
+        Rectangle {
+            id: undoButton
+            anchors.verticalCenter: parent.verticalCenter
+            implicitWidth: buttonSize
+            implicitHeight: buttonSize
+            width: 4/10 * tools.height
+            height: width
+            color: "transparent"
+            Image {
+                source: "img/buttons/undo.png"
+                anchors.verticalCenter: parent.verticalCenter
+            }
+            MouseArea {
+                anchors.fill: parent
+                onClicked: {
+                    _buttleData.undo();
+                }
             }
         }
-    }
 
-    Rectangle {
-        id: redoButton
-        implicitWidth: 20
-        implicitHeight: 20
-        width: 4/10 * parent.height
-        height: width
-        x: 110
-        y: 15
-        color: "#212121"
-        Image {
-            source: "img/buttons/redo.png"
-        }
-        MouseArea {
-            anchors.fill: parent
-            onClicked: {
-                _buttleData.redo();
+        Rectangle {
+            id: redoButton
+            anchors.verticalCenter: parent.verticalCenter
+            implicitWidth: buttonSize
+            implicitHeight: buttonSize
+            width: 4/10 * tools.height
+            height: width
+            color: "transparent"
+            Image {
+                source: "img/buttons/redo.png"
+                anchors.verticalCenter: parent.verticalCenter
+            }
+            MouseArea {
+                anchors.fill: parent
+                onClicked: {
+                    _buttleData.redo();
+                }
             }
         }
-    }
 
-    // copy / cut / past / duplicate
-    Rectangle {
-        id: copyButton
-        implicitWidth: 20
-        implicitHeight: 20
-        width: 4/10 * parent.height
-        height: width
-        x: 160
-        y: 8
-        color: "#212121"
-        Image {
-            source: "img/buttons/copy.png"
-        }
-        MouseArea {
-            anchors.fill: parent
-            onClicked: {
-                _buttleData.copyNode();
+        // copy / cut / past / duplicate
+        Rectangle {
+            id: copyButton
+            anchors.verticalCenter: parent.verticalCenter
+            implicitWidth: buttonSize
+            implicitHeight: buttonSize
+            width: 4/10 * tools.height
+            height: width
+            color: "transparent"
+            Image {
+                source: "img/buttons/copy.png"
+                anchors.verticalCenter: parent.verticalCenter
+            }
+            MouseArea {
+                anchors.fill: parent
+                onClicked: {
+                    _buttleData.copyNode();
+                }
             }
         }
-    }
 
-    Rectangle {
-        id: cutButton
-        implicitWidth: 20
-        implicitHeight: 20
-        width: 4/10 * parent.height
-        height: width
-        x: 190
-        y: 8
-        color: "#212121"
-        Image {
-            source: "img/buttons/cut.png"
-        }
-        MouseArea {
-            anchors.fill: parent
-            onClicked: {
-                _buttleData.cutNode();
+        Rectangle {
+            id: cutButton
+            anchors.verticalCenter: parent.verticalCenter
+            implicitWidth: buttonSize
+            implicitHeight: buttonSize
+            width: 4/10 * tools.height
+            height: width
+            color: "transparent"
+            Image {
+                source: "img/buttons/cut.png"
+                anchors.verticalCenter: parent.verticalCenter
+            }
+            MouseArea {
+                anchors.fill: parent
+                onClicked: {
+                    _buttleData.cutNode();
+                }
             }
         }
-    }
 
-    Rectangle {
-        id: pastButton
-        implicitWidth: 20
-        implicitHeight: 20
-        width: 4/10 * parent.height
-        height: width
-        x: 220
-        y: 8
-        color: "#212121"
-        Image {
-            source: "img/buttons/past.png"
-        }
-        MouseArea {
-            anchors.fill: parent
-            onClicked: {
-                _buttleData.pasteNode();
+        Rectangle {
+            id: pastButton
+            anchors.verticalCenter: parent.verticalCenter
+            implicitWidth: buttonSize
+            implicitHeight: buttonSize
+            width: 4/10 * tools.height
+            height: width
+            color: "transparent"
+            Image {
+                source: "img/buttons/past.png"
+                anchors.verticalCenter: parent.verticalCenter
+            }
+            MouseArea {
+                anchors.fill: parent
+                onClicked: {
+                    _buttleData.pasteNode();
+                }
             }
         }
-    }
 
-
-    Rectangle {
-        id: duplicateButton
-        implicitWidth: 20
-        implicitHeight: 20
-        width: 4/10 * parent.height
-        height: width
-        x: 250
-        y: 8
-        color: "#212121"
-        Image {
-            source: "img/buttons/duplicate.png"
-        }
-        MouseArea {
-            anchors.fill: parent
-            onClicked: {
-                _buttleData.duplicationNode();
+        Rectangle {
+            id: duplicateButton
+            anchors.verticalCenter: parent.verticalCenter
+            implicitWidth: buttonSize
+            implicitHeight: buttonSize
+            width: 4/10 * tools.height
+            height: width
+            color: "transparent"
+            Image {
+                source: "img/buttons/duplicate.png"
+                anchors.verticalCenter: parent.verticalCenter
+            }
+            MouseArea {
+                anchors.fill: parent
+                onClicked: {
+                    _buttleData.duplicationNode();
+                }
             }
         }
     }

@@ -126,9 +126,6 @@ class Graph(object):
         cmdDeleteNode = CmdDeleteNode(self, node)
         cmdManager = CommandManager()
         cmdManager.push(cmdDeleteNode)
-        from buttleofx.data import ButtleDataSingleton
-        buttleData = ButtleDataSingleton().get()
-        buttleData.paramChanged()
 
     def createConnection(self, clipOut, clipIn):
         """

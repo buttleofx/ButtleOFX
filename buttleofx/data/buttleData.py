@@ -408,7 +408,7 @@ class ButtleData(QtCore.QObject):
             self.setNodeError(str(e))
             raise
 
-    def paramChanged(self):
+    def updateMapAndViewer(self):
         # Clear the map
         self._mapNodeNameToComputedImage.clear()
 

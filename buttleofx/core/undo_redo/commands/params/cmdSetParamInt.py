@@ -22,6 +22,9 @@ class CmdSetParamInt(UndoableCommand):
         self._param.getTuttleParam().setValue(int(self._oldValue))
         self._param.setOldValue(int(self._oldValue))
         self._param.changed()
+        from buttleofx.data import ButtleDataSingleton
+        buttleData = ButtleDataSingleton().get()
+        buttleData.updateMapAndViewer()
 
         print "TuttleParam new Value : ", self._param.getValue()
 
@@ -38,5 +41,8 @@ class CmdSetParamInt(UndoableCommand):
         self._param.getTuttleParam().setValue(int(self._newValue))
         self._param.setOldValue(int(self._newValue))
         self._param.changed()
+        from buttleofx.data import ButtleDataSingleton
+        buttleData = ButtleDataSingleton().get()
+        buttleData.updateMapAndViewer()
 
         print "TuttleParam new Value : ", self._param.getValue()

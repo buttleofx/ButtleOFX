@@ -62,11 +62,11 @@ class ParamInt2D(object):
         self.changed()
         from buttleofx.data import ButtleDataSingleton
         buttleData = ButtleDataSingleton().get()
-        buttleData.paramChanged()
+        buttleData.updateMapAndViewer()
 
     def setValue2(self, value):
         self._tuttleParam.setValue([self.getValue1(), int(value)])
         self.changed()
         from buttleofx.data import ButtleDataSingleton
         buttleData = ButtleDataSingleton().get()
-        buttleData.paramChanged()
+        buttleData.updateMapAndViewer()

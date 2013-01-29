@@ -56,6 +56,3 @@ class ParamInt(object):
         cmdUpdate = CmdSetParamInt(self, newValue)
         cmdManager = CommandManager()
         cmdManager.push(cmdUpdate)
-        from buttleofx.data import ButtleDataSingleton
-        buttleData = ButtleDataSingleton().get()
-        buttleData.paramChanged()

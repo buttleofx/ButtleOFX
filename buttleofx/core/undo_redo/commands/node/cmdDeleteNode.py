@@ -57,3 +57,5 @@ class CmdDeleteNode(UndoableCommand):
         # Emit signals
         self._graphTarget.nodesChanged()
         self._graphTarget.connectionsChanged()
+
+        print "Delete node : ", self._graphTarget.getGraphTuttle()

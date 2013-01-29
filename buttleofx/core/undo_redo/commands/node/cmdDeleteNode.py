@@ -26,6 +26,10 @@ class CmdDeleteNode(UndoableCommand):
         self._graphTarget.getNodes().append(self._node)
         # we recreate all the connections
         for connection in self._connections:
+            tuttleNodeSource = self._graphTarget.getNode(connection.getClipOut().getNodeName()).getTuttleNode()
+            tuttleNodeOutput = self._graphTarget.getNode(connection.getClipIn().getNodeName()).getTuttleNode()
+            tuttleConnection = self._graphTarget.getGraphTuttle().connect(tuttleNodeSource, tuttleNodeOutput)
+            connection.setTuttleConnection(tuttleConnection)
             self._graphTarget.getConnections().append(connection)
 
         self._graphTarget.nodesChanged()
@@ -41,10 +45,15 @@ class CmdDeleteNode(UndoableCommand):
         """
             Delete a node.
         """
-        # we delete its connections
+        # Delete the tuttle connections
+        self._graphTarget.getGraphTuttle().unconnect(self._node.getTuttleNode())
+
+        # Delete the buttle conenctions
         self._graphTarget.deleteNodeConnections(self._node.getName())
-        # and then we delete the node
+
+        # Delete the node
         self._graphTarget.getNodes().remove(self._node)
 
+        # Emit signals
         self._graphTarget.nodesChanged()
         self._graphTarget.connectionsChanged()

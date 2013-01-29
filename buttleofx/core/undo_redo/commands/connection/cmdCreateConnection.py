@@ -24,10 +24,19 @@ class CmdCreateConnection(UndoableCommand):
         """
             Undo the creation of the connection.
         """
-        # Function unconnect deletes all the node's connections, we are waiting for the binding of a more adapted function
-        self._graphTarget.getGraphTuttle().unconnect(self._graphTarget.getNode(self._clipOut.getNodeName()).getTuttleNode())
+        # Get the output clip and the source clip of the tuttle connection
+        tuttleNodeSource = self._graphTarget.getNode(self._connection.getClipOut().getNodeName()).getTuttleNode()
+        tuttleNodeOutput = self._graphTarget.getNode(self._connection.getClipIn().getNodeName()).getTuttleNode()
+        outputClip = tuttleNodeSource.getClip("Output")
+        srcClip = tuttleNodeOutput.getClip("Source")
+
+        # Delete the tuttle connection
+        self._graphTarget.getGraphTuttle().unconnect(outputClip, srcClip)
+
+        # Delete the buttle connection
         self._graphTarget.getConnections().remove(self._graphTarget.getConnectionByClips(self._clipOut, self._clipIn))
         self._graphTarget.connectionsChanged()
+        print "Undo create connection : ", self._graphTarget.getGraphTuttle()
 
     def redoCmd(self):
         """
@@ -55,3 +64,4 @@ class CmdCreateConnection(UndoableCommand):
         self._connection = Connection(self._clipOut, self._clipIn, tuttleConnection)
         self._graphTarget.getConnections().append(self._connection)
         self._graphTarget.connectionsChanged()
+        print "Create connection : ", self._graphTarget.getGraphTuttle()

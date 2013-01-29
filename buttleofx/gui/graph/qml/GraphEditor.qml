@@ -23,7 +23,7 @@ Rectangle {
     Tools {
         id: tools
         width : parent.width
-        height: 30
+        height: 40
         children: null
 
         onClickCreationNode: {

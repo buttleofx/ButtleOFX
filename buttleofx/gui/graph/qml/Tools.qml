@@ -3,16 +3,24 @@ import QtQuick 1.1
 Rectangle {
     id: tools
     width: 850
-    height: 30
+    height: 40
 
     // if the menu is open (= if "tools has children"), property children is the first list created. Else, null.
     property variant children
+    property color gradian1: "#111111"
+    property color gradian2: "#212121"
 
     signal clickCreationNode(string nodeType)
 
     z: 2000
     anchors.top: parent.top
     color: "#212121"
+    gradient: Gradient {
+        GradientStop { position: 0.0; color: gradian2 }
+        GradientStop { position: 0.85; color: gradian2 }
+        GradientStop { position: 0.86; color: gradian1 }
+        GradientStop { position: 1; color: gradian2 }
+    }
 
     // On mouse entered the tools area, we destroy the MenuList component if it exists.
     MouseArea {

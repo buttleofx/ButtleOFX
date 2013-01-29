@@ -8,7 +8,7 @@ Rectangle {
     property url imageFile
     property real time: 0
 
-    color:"#1e1e1e"
+    color:"#111111"
 
     GLViewport {
         id: viewport

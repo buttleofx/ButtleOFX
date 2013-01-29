@@ -14,6 +14,7 @@ class ParamString(object):
 
     def __init__(self, tuttleParam):
         self._tuttleParam = tuttleParam
+        print tuttleParam
 
         self.changed = Signal()
 
@@ -48,5 +49,3 @@ class ParamString(object):
     def setValue(self, value):
         self._tuttleParam.setValue(str(value))
         self.changed()
-
-        print "TuttleParam new Value : ", self.getStringValue()

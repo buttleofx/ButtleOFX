@@ -1,9 +1,9 @@
 from quickmamba.patterns import Signal
 
 
-class ParamGroup(object):
+class ParamPage(object):
     """
-        Core class, which represents a group parameter.
+        Core class, which represents a page parameter.
         Contains :
             - _tuttleParam : link to the corresponding tuttleParam
     """
@@ -19,7 +19,7 @@ class ParamGroup(object):
         return self._tuttleParam
 
     def getParamType(self):
-        return "ParamGroup"
+        return "ParamPage"
 
     def getLabel(self):
         return self._tuttleParam.getProperties().fetchProperty("OfxPropLabel").getStringValue(0)

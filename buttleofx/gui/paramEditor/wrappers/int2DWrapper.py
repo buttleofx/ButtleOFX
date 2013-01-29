@@ -22,6 +22,9 @@ class Int2DWrapper(QtCore.QObject):
     def getDefaultValue2(self):
         return self._param.getDefaultValue2()
 
+    def getValue(self):
+        return self._param.getValue()
+
     def getValue1(self):
         return self._param.getValue1()
 
@@ -44,6 +47,9 @@ class Int2DWrapper(QtCore.QObject):
         return self._param.getText()
 
     #################### setters ####################
+
+    def setValue(self, values):
+        self._param.setValue(values)
 
     def setValue1(self, value):
         self._param.setValue1(value)

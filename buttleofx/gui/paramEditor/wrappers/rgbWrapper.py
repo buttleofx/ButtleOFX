@@ -25,6 +25,9 @@ class RGBWrapper(QtCore.QObject):
     def getDefaultB(self):
         return self._param.getDefaultB()
 
+    def getValue(self):
+        return self._param.getValue()
+
     def getValueR(self):
         return self._param.getValueR()
 
@@ -38,6 +41,9 @@ class RGBWrapper(QtCore.QObject):
         return self._param.getText()
 
     #################### setters ####################
+
+    def setValue(self, values):
+        self._param.setValue(values)
 
     def setValueR(self, value):
         self._param.setValueR(value)

@@ -4,7 +4,7 @@ import QtDesktop 0.1
 import "ScrollBar"
 
 //parent of the ParamEditor is the Row of the ButtleAp
-Rectangle {
+Item {
     id: paramEditor
 
     property variant params 
@@ -12,8 +12,8 @@ Rectangle {
 
     property color background: "#212121"
     property color backgroundInput: "#141414"
-    property color gradian1: background
-    property color gradian2: "#111111"
+    property color gradian1: "#111111"
+    property color gradian2: "#212121"
     property color borderInput: "#333"
 
     property color textColor : "white"
@@ -22,8 +22,6 @@ Rectangle {
 
     implicitWidth: 300
     implicitHeight: 500
-
-    color: "#353535" // used to have the same color for the splitterColumn separator
 
     SplitterColumn {
         width: parent.width
@@ -35,21 +33,19 @@ Rectangle {
             Splitter.minimumHeight: tuttleParamTitle.height
 
             id: tuttleParams
-            height: 550
+            height: 500
             width: parent.width
-            color: paramEditor.background
-            /* title of tuttle params */
-            
+            color: paramEditor.background           
 
             /* Params depend on the node type (Tuttle data)*/
-            Rectangle{
+            Item{
                 id: tuttleParamContent
                 height: parent.height - tuttleParamTitle.height
                 width: parent.width
                 y: tuttleParamTitle.height
-                color: paramEditor.background
 
                 property string lastGroupParam : "No Group."
+
                 ScrollArea{
                     anchors.fill: parent
                     anchors.topMargin: 5
@@ -88,62 +84,57 @@ Rectangle {
                 width: paramEditor.width
                 height: 40
                 color: paramEditor.background
+                gradient: Gradient {
+                    GradientStop { position: 0.0; color: gradian2 }
+                    GradientStop { position: 0.85; color: gradian2 }
+                    GradientStop { position: 0.86; color: gradian1 }
+                    GradientStop { position: 1; color: gradian2 }
+                } 
 
                 Text {
                     anchors.verticalCenter: parent.verticalCenter
                     anchors.left: parent.left
                     anchors.leftMargin: 10
                     color: textColor
-                    //font.underline: true
-                    font.pointSize: 12
+                    font.pointSize: 11
                     text: "Parameters"
-                }
-
-                gradient: Gradient {
-                    GradientStop { position: 0.0; color: paramEditor.gradian2 }
-                    GradientStop { position: 0.05; color: paramEditor.gradian1 }
-                    GradientStop { position: 0.50; color: paramEditor.gradian1 }
-                    GradientStop { position: 1; color: paramEditor.gradian2 }
                 }
             }
         }
 
         /*BUTTLE PARAMS*/
         Rectangle{
-            //Splitter.minimumHeight: buttleParamTitle.height
+            Splitter.minimumHeight: buttleParamTitle.height
             id: buttleParams
+            anchors.bottom: parent.bottom
             height: 190
             width: paramEditor.width
             color: paramEditor.background
-            anchors.bottom: parent.bottom
 
             Rectangle{
                 id: buttleParamTitle
                 width: parent.width
                 height: 40
                 color: paramEditor.background
+                gradient: Gradient {
+                    GradientStop { position: 0.0; color: gradian2 }
+                    GradientStop { position: 0.85; color: gradian2 }
+                    GradientStop { position: 0.86; color: gradian1 }
+                    GradientStop { position: 1; color: gradian2 }
+                } 
 
                 Text {
                     anchors.verticalCenter: parent.verticalCenter
                     anchors.left: parent.left
                     anchors.leftMargin: 10
                     color: textColor
-                    //font.underline: true
-                    font.pointSize: 12
+                    font.pointSize: 11
                     text: "Node properties"
-                }
-
-                gradient: Gradient {
-                    GradientStop { position: 0.0; color: paramEditor.gradian2 }
-                    GradientStop { position: 0.05; color: paramEditor.gradian1 }
-                    GradientStop { position: 0.50; color: paramEditor.gradian1 }
-                    GradientStop { position: 1; color: paramEditor.gradian2 }
                 }
             }
 
             Loader {
                 sourceComponent: currentParamNode ? nodeParamComponent : undefined
-                //anchors.fill: parent
                 anchors.top: buttleParamTitle.bottom
                 anchors.topMargin: 10
                 Component {
@@ -155,7 +146,7 @@ Rectangle {
                         Item {
                             id: nodeNameUserItem
                             implicitWidth: 300
-                            implicitHeight: 30
+                            implicitHeight: 40
                             anchors.left: parent.left
                             anchors.leftMargin: 10
 

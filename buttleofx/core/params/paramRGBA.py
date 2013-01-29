@@ -33,6 +33,9 @@ class ParamRGBA(object):
     def getDefaultA(self):
         return self._tuttleParam.getDoubleValueAtIndex(3)
 
+    def getValue(self):
+        return (self.getValueR(), self.getValueG(), self.getValueB(), self.getValueA())
+
     def getValueR(self):
         return self._tuttleParam.getDoubleValueAtIndex(0)
 
@@ -50,24 +53,22 @@ class ParamRGBA(object):
 
     #################### setters ####################
 
+    def setValue(self, values):
+        self.setValueR(values[0])
+        self.setValueG(values[1])
+        self.setValueB(values[2])
+        self.setValueA(values[3])
+
     def setValueR(self, value1):
         self._tuttleParam.setValueAtIndex(0, float(value1))
         self.changed()
-
-        print "TuttleParam new Value : ", self.getValueR()
 
     def setValueG(self, value2):
         self._tuttleParam.setValueAtIndex(1, float(value2))
         self.changed()
 
-        print "TuttleParam new Value : ", self.getValueG()
-
     def setValueB(self, value3):
         self._tuttleParam.setValueAtIndex(2, float(value3))
 
-        print "TuttleParam new Value : ", self.getValueB()
-
     def setValueA(self, value4):
         self._tuttleParam.setValueAtIndex(3, float(value4))
-
-        print "TuttleParam new Value : ", self.getValueA()

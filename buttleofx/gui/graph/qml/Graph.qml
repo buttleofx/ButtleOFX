@@ -17,11 +17,7 @@ Rectangle {
     //property alias mouseY: mouseArea.mouseY
 
     signal clickCreationNode(string nodeType)
-    color: "#191919"
-//    gradient: Gradient {
-//        GradientStop { position: 0.0; color: "#111111" }
-//        GradientStop { position: 0.015; color: "#212121" }
-//    }
+    color: "#212121"
 
     Rectangle {
         id: connectnode

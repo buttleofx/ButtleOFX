@@ -14,11 +14,9 @@ Rectangle {
             _buttleData.destructionNode();
         }
         if ((event.key == Qt.Key_Z) && (event.modifiers & Qt.ControlModifier)) {
-                console.log("Undo");
-                _buttleData.undo();
+            _buttleData.undo();
         }
         if ((event.key == Qt.Key_Y) && (event.modifiers & Qt.ControlModifier)) {
-            console.log("Redo");
             _buttleData.redo();
         }
         if ((event.key == Qt.Key_D) && (event.modifiers & Qt.ControlModifier)){

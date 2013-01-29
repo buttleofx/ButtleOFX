@@ -73,6 +73,46 @@ Rectangle {
         }
     }
 
+    Rectangle {
+        id: undoButton
+        implicitWidth: 20
+        implicitHeight: 20
+        width: 7/10 * parent.height
+        height: width
+        x: 80
+        y: 10
+        color: "#212121"
+        Image {
+            source: "img/buttons/undo.png"
+        }
+        MouseArea {
+            anchors.fill: parent
+            onClicked: {
+                _buttleData.undo();
+            }
+        }
+    }
+
+    Rectangle {
+        id: redoButton
+        implicitWidth: 20
+        implicitHeight: 20
+        width: 7/10 * parent.height
+        height: width
+        x: 110
+        y: 10
+        color: "#212121"
+        Image {
+            source: "img/buttons/redo.png"
+        }
+        MouseArea {
+            anchors.fill: parent
+            onClicked: {
+                _buttleData.redo();
+            }
+        }
+    }
+
 }
 
 

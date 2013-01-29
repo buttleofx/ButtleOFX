@@ -42,6 +42,9 @@ class ParamDouble(object):
     #################### setters ####################
 
     def setValue(self, newValue):
+        from buttleofx.data import ButtleDataSingleton
+        buttleData = ButtleDataSingleton().get()
         cmdUpdate = CmdSetParamDouble(self, newValue)
         cmdManager = CommandManager()
         cmdManager.push(cmdUpdate)
+        buttleData.paramChanged()

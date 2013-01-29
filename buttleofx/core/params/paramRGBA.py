@@ -62,13 +62,25 @@ class ParamRGBA(object):
     def setValueR(self, value1):
         self._tuttleParam.setValueAtIndex(0, float(value1))
         self.changed()
+        from buttleofx.data import ButtleDataSingleton
+        buttleData = ButtleDataSingleton().get()
+        buttleData.paramChanged()
 
     def setValueG(self, value2):
         self._tuttleParam.setValueAtIndex(1, float(value2))
         self.changed()
+        from buttleofx.data import ButtleDataSingleton
+        buttleData = ButtleDataSingleton().get()
+        buttleData.paramChanged()
 
     def setValueB(self, value3):
         self._tuttleParam.setValueAtIndex(2, float(value3))
+        from buttleofx.data import ButtleDataSingleton
+        buttleData = ButtleDataSingleton().get()
+        buttleData.paramChanged()
 
     def setValueA(self, value4):
         self._tuttleParam.setValueAtIndex(3, float(value4))
+        from buttleofx.data import ButtleDataSingleton
+        buttleData = ButtleDataSingleton().get()
+        buttleData.paramChanged()

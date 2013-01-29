@@ -73,11 +73,20 @@ class ParamInt3D(object):
     def setValue1(self, value1):
         self._tuttleParam.setValue([int(value1), self.getValue2(), self.getValue2()])
         self.changed()
+        from buttleofx.data import ButtleDataSingleton
+        buttleData = ButtleDataSingleton().get()
+        buttleData.paramChanged(0)
 
     def setValue2(self, value2):
         self._tuttleParam.setValue([self.getValue1(), int(value2), self.getValue3()])
         self.changed()
+        from buttleofx.data import ButtleDataSingleton
+        buttleData = ButtleDataSingleton().get()
+        buttleData.paramChanged(0)
 
     def setValue3(self, value3):
         self._tuttleParam.setValue([self.getValue1(), self.getValue2(), int(value3)])
         self.changed()
+        from buttleofx.data import ButtleDataSingleton
+        buttleData = ButtleDataSingleton().get()
+        buttleData.paramChanged(0)

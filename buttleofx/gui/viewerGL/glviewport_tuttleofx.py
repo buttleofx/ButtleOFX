@@ -23,6 +23,7 @@ class GLViewport_tuttleofx(GLViewport):
 
         buttleData = ButtleDataSingleton().get()
         buttleData.currentViewerNodeChangedPython.connect(self.loadImage)
+        buttleData.paramChangedSignal.connect(self.loadImage)
 
     def loadImage_tuttle(self):
         print "--------------------------------- loadImage_tuttle ---------------------------"
@@ -56,8 +57,6 @@ class GLViewport_tuttleofx(GLViewport):
 
         if self._fittedModeValue:
             self.fitImage()
-
-        print "loadImageFile end"
 
     def internPaintGL(self, widget):
         super(GLViewport_tuttleofx, self).internPaintGL(widget)

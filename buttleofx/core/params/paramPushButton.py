@@ -41,3 +41,6 @@ class ParamPushButton(object):
     def setEnabled(self, enabled):
         self._tuttleParam.getProperties().setValue(enabled)
         self.changed()
+        from buttleofx.data import ButtleDataSingleton
+        buttleData = ButtleDataSingleton().get()
+        buttleData.paramChanged()

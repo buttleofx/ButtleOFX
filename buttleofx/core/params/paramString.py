@@ -33,12 +33,6 @@ class ParamString(object):
         return self._tuttleParam.getStringValue()
 
     def getStringType(self):
-        # OfxParamPropStringFilePathExists
-        # OfxParamStringIsSingleLine
-        # OfxParamStringIsMultiLine
-        # OfxParamStringIsFilePath
-        # OfxParamStringIsDirectoryPath
-        # OfxParamStringIsLabel
         return self._tuttleParam.getProperties().fetchProperty("OfxParamPropStringMode").getStringValue(0)
 
     def getText(self):
@@ -49,3 +43,5 @@ class ParamString(object):
     def setValue(self, value):
         self._tuttleParam.setValue(str(value))
         self.changed()
+
+        print "Tuttle update : ", self.getValue()

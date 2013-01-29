@@ -41,5 +41,3 @@ class ParamInt(object):
     def setValue(self, value):
         self._tuttleParam.setValue(int(value))
         self.changed()
-
-        print "TuttleParam new Value : ", self.getValue()

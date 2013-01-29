@@ -30,6 +30,9 @@ class ParamDouble3D(object):
     def getDefaultValue3(self):
         return self._tuttleParam.getProperties().getDoubleProperty("OfxParamPropDefault", 2)
 
+    def getValue(self):
+        return (self.getValue1(), self.getValue2(), self.getValue3())
+
     def getValue1(self):
         return self._tuttleParam.getDoubleValueAtIndex(0)
 
@@ -62,20 +65,19 @@ class ParamDouble3D(object):
 
     #################### setters ####################
 
-    def setValue1(self, value1):
-        self._tuttleParam.setValue([float(value), self.getValue2(), self.getValue3()])
-        self.changed()
+    def setValue(self, values):
+        self.setValue1(values[0])
+        self.setValue2(values[1])
+        self.setValue3(values[2])
 
-        print "TuttleParam new Value : ", self.getValue1()
+    def setValue1(self, value1):
+        self._tuttleParam.setValue([float(value1), self.getValue2(), self.getValue3()])
+        self.changed()
 
     def setValue2(self, value2):
-        self._tuttleParam.setValue([self.getValue1(), float(value), self.getValue3()])
+        self._tuttleParam.setValue([self.getValue1(), float(value2), self.getValue3()])
         self.changed()
-
-        print "TuttleParam new Value : ", self.getValue2()
 
     def setValue3(self, value3):
-        self._tuttleParam.setValue([self.getValue1(), self.getValue2(), float(value)])
+        self._tuttleParam.setValue([self.getValue1(), self.getValue2(), float(value3)])
         self.changed()
-
-        print "TuttleParam new Value : ", self.getValue3()

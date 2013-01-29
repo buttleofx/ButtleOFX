@@ -41,5 +41,3 @@ class ParamDouble(object):
     def setValue(self, value):
         self._tuttleParam.setValue(float(value))
         self.changed()
-
-        print "TuttleParam new Value : ", self.getValue()

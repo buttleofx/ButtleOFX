@@ -25,6 +25,9 @@ class Double3DWrapper(QtCore.QObject):
     def getDefaultValue3(self):
         return self._param.getDefaultValue3()
 
+    def getValue(self):
+        return self._param.getValue()
+
     def getValue1(self):
         return self._param.getValue1()
 
@@ -56,6 +59,9 @@ class Double3DWrapper(QtCore.QObject):
         return self._param.getText()
 
     #################### setters ####################
+
+    def setValue(self, values):
+        self._param.setValue(values)
 
     def setValue1(self, value1):
         self._param.setValue1(value1)

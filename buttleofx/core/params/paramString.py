@@ -48,5 +48,3 @@ class ParamString(object):
     def setValue(self, value):
         self._tuttleParam.setValue(str(value))
         self.changed()
-
-        print "TuttleParam new Value : ", self.getStringValue()

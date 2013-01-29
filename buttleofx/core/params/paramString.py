@@ -49,3 +49,6 @@ class ParamString(object):
     def setValue(self, value):
         self._tuttleParam.setValue(str(value))
         self.changed()
+        from buttleofx.data import ButtleDataSingleton
+        buttleData = ButtleDataSingleton().get()
+        buttleData.paramChanged()

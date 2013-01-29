@@ -14,6 +14,8 @@ class ParamPushButton(object):
     def __init__(self, tuttleParam):
         self._tuttleParam = tuttleParam
 
+        print "PUSH BUTTON / ", tuttleParam
+
         self.changed = Signal()
 
     #################### getters ####################
@@ -27,17 +29,20 @@ class ParamPushButton(object):
     def getValue(self):
         self.getLabel()
 
-    def getLabel(self):
+    def getName(self):
         return self._tuttleParam.getProperties().fetchProperty("OfxPropName").getStringValue(0)
 
+    def getLabel(self):
+        return self._tuttleParam.getProperties().fetchProperty("OfxPropLabel").getStringValue(0)
+
     def getEnabled(self):
-        return self._tuttleParam.getProperties().fetchProperty("OfxParamPropDefault").getStringValue(0)
+        return self._tuttleParam.getProperties().fetchProperty("OfxParamPropEnabled").getStringValue(0)
 
     #################### setters ####################
 
-    def setValue(self, value):
-        self.setEnabled()
+    # def setValue(self, value):
+    #     self.setEnabled()
 
     def setEnabled(self, enabled):
-        self._tuttleParam.getProperties().setValue(enabled)
+        self._tuttleParam.setValue(enabled)
         self.changed()

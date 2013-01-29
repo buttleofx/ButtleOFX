@@ -22,19 +22,22 @@ class PushButtonWrapper(QtCore.QObject):
     def getLabel(self):
         return self._param.getLabel()
 
+    def getName(self):
+        return self._param.getName()
+
     def getEnabled(self):
         return self._param.getEnabled()
 
     #################### setters ####################
 
-    def setParamType(self, paramType):
-        self._param.setParamType(paramType)
+    # def setParamType(self, paramType):
+    #     self._param.setParamType(paramType)
 
-    def setLabel(self, label):
-        self._param.setLabel(label)
+    # def setLabel(self, label):
+    #     self._param.setLabel(label)
 
-    def setValue(self, value):
-        self._param.setValue(value)
+    # def setValue(self, value):
+    #     self._param.setValue(value)
 
     def setEnabled(self, enabled):
         self._param.setEnabled(enabled)
@@ -48,6 +51,7 @@ class PushButtonWrapper(QtCore.QObject):
 
     ################################################## DATA EXPOSED TO QML ##################################################
 
-    paramType = QtCore.Property(unicode, getParamType, setParamType, notify=changed)
-    label = QtCore.Property(str, getLabel, setLabel, notify=changed)
+    paramType = QtCore.Property(unicode, getParamType, constant=True)
+    label = QtCore.Property(str, getLabel, constant=True)
+    name = QtCore.Property(str, getName, constant=True)
     enabled = QtCore.Property(bool, getEnabled, setEnabled, notify=changed)

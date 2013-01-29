@@ -6,6 +6,7 @@ Item {
 
     property variant paramObject: model.object
 
+
     Rectangle {
         id: pushButton
         width: 120
@@ -18,7 +19,7 @@ Item {
         property string label: paramObject.label
         property bool enabled:  paramObject.enabled
 
-        state: paramObject.enabled ? "enabled" : "disnabled"
+        // state: paramObject.enabled ? "enabled" : "disabled"
 
         Text {
             id: buttonid
@@ -40,15 +41,16 @@ Item {
 
             onPressed:
             {
-                pushButton.state = (pushButton.state == "FOCUS_ON") ? "FOCUS_OFF" : "FOCUS_ON"
-                paramObject.enabled = (pushButton.state == "FOCUS_ON") ? "True" : "False"
+                //pushButton.state = (pushButton.state == "FOCUS_ON") ? "FOCUS_OFF" : "FOCUS_ON"
+                paramObject.enabled = "True" //(pushButton.state == "FOCUS_ON") ? "True" : "False"
             }
         }
 
         states: [
             State {
                 id: stateEnabled
-                name: "enabled"; when: pushButton.enabled
+                name: "enabled"
+                when: pushButton.enabled
                 PropertyChanges { 
                     target: buttonid; 
                     color: "white";  
@@ -56,7 +58,8 @@ Item {
             },
             State {
                 id: stateDisnabled
-                name: "disnabled"; when: !pushButton.enabled
+                name: "disabled"
+                when: !pushButton.enabled
                 PropertyChanges { 
                     target: buttonid; 
                     color: "grey";  

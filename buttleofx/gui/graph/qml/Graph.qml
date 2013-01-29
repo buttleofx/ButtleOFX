@@ -139,7 +139,15 @@ Rectangle {
         hoverEnabled: true
         drag.target: connectnode
         drag.axis: Drag.XandYAxis
+
+        // When the menu is open and mouse enter the graph, we destroy the menu.
+        onEntered: {
+            if (tools.children) {
+                tools.children.destroy();
+            }
+        }
     }
+
 
     WheelArea {
         anchors.fill: parent

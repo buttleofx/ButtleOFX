@@ -14,6 +14,7 @@ Item {
         model: _buttleData.getQObjectPluginsIdentifiersByParentPath(menulist.parentName)
 
         property variant nextMenu: null
+        property variant currentElementLabel: ""
 
         function destroyNextMenu()
         {

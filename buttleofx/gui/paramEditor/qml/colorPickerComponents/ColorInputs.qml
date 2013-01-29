@@ -18,7 +18,12 @@ Rectangle {
     property real bValue: 0
     property int alphaValue: 0
 
-    //column containing the inputs colors
+    // test for enter colors values in inputs and adapt display
+    property real cursorColorPositionInputs: rInput.cursorPositionInput + gInput.cursorPositionInput + bInput.cursorPositionInput
+    property real cursorAlphaPositionInputs: aInput.cursorPositionInput
+
+
+    // column containing the inputs colors 
     Column {
         anchors.fill: parent
         anchors.leftMargin: 5
@@ -32,13 +37,20 @@ Rectangle {
             id: currentColorBox
             width: parent.width
             height: parent.height / 5
-            SquaresGrid { cellSize: 5 }
+            SquaresGrid { 
+                cellSide: 3
+                height: currentColorBox.height
+                width: currentColorBox.width
+            }
             Rectangle{
                 width: parent.width
                 height: parent.height
                 border.width: 1
                 border.color: "black"
                 color: colorFields.currentColor
+            }
+            MouseArea{
+                anchors.fill: parent
             } 
         }
 
@@ -67,10 +79,10 @@ Rectangle {
                 text: colorFields.alphaColorText
 
                 onTextChanged: {
-                    paramObject.r = rInput.colorValueText
-                    paramObject.g = gInput.colorValueText
-                    paramObject.b = bInput.colorValueText
-                    paramObject.a = aInput.colorValueText
+                    paramObject ? paramObject.r = rInput.colorValueText : 255
+                    paramObject ? paramObject.g = gInput.colorValueText : 255
+                    paramObject ? paramObject.b = bInput.colorValueText : 255
+                    paramObject ? paramObject.a = aInput.colorValueText : 255
                 }
             }
         }
@@ -116,9 +128,11 @@ Rectangle {
                 colorValueText: colorFields.redValue
                 minValue: 0
                 maxValue: 255
-                onColorValueTextChanged: {
-                    paramObject.r = colorValueText
-                }
+                /*onColorValueTextChanged: {
+                     paramObject ? paramObject.r = colorValueText : 255
+                    // test to adapt display of colorSlider in function of values enter in inputs
+                    //cursorColorPosition = 120 * (rInput.colorValueText + gInput.colorValueText + bInput.colorValueText )/(3*255)
+                }*/
             }
             ColorInput {
                 id: gInput
@@ -126,9 +140,11 @@ Rectangle {
                 colorValueText: colorFields.greenValue
                 minValue: 0
                 maxValue: 255
-                onColorValueTextChanged: {
-                    paramObject.g = colorValueText
-                }
+                /*onColorValueTextChanged: {
+                    paramObject ? paramObject.g = colorValueText : 255
+                    // test to adapt display of colorSlider in function of values enter in inputs
+                    //cursorColorPosition = 120 * (rInput.colorValueText + gInput.colorValueText + bInput.colorValueText )/(3*255)
+                }*/
             }
             ColorInput {
                 id: bInput
@@ -136,9 +152,11 @@ Rectangle {
                 colorValueText: colorFields.blueValue
                 minValue: 0 
                 maxValue: 255
-                onColorValueTextChanged: {
-                    paramObject.b = colorValueText
-                }
+                /*onColorValueTextChanged: {
+                    paramObject ? paramObject.b = colorValueText : 255
+                    // test to adapt display of colorSlider in function of values enter in inputs
+                    //cursorColorPosition = 120 * (rInput.colorValueText + gInput.colorValueText + bInput.colorValueText )/(3*255)
+                }*/
             }
             // alpha value box
             ColorInput {
@@ -147,12 +165,10 @@ Rectangle {
                 colorValueText: colorFields.alphaValue
                 minValue: 0
                 maxValue: 255
-                onColorValueTextChanged: {
-                    paramObject.a = colorValueText
-                }
+                /*onColorValueTextChanged: {
+                    paramObject ? paramObject.a = colorValueText : 255
+                }*/
             }
         }
-
-
     }
 }

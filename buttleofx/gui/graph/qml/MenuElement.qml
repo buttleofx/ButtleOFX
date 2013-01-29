@@ -3,41 +3,43 @@ import QtQuick 1.1
 Rectangle {
     width: 160
     height: 20
-    color: "#343434"
+    //color: "#343434"
 
     property string labelElement
     property string idElement
     property string parentName
 
+    // The MenuList where from the element come
     property variant menuListItem
-    // if the submenu of this element is open (= if "MenuElement has children"), property children is this submenu just created. Else, null.
-    property variant children: null
+
+    // To remember the path
+    color: menuListItem.currentElementLabel == labelElement ? "#bbb" : "#343434"
 
     property variant type: _buttleData.isAPlugin(idElement) ? "plugin" : "category"
     property variant clickFrom: tools
 
     Text {
+        id: textMenuElement
         anchors.left: parent.left
         anchors.leftMargin: 15
         anchors.verticalCenter: parent.verticalCenter
-        color: type == "category" ? "#eee" : "black"
+        color: type == "category" ? "#eee" : "#019fde"
         text: nodeMenuElement.labelElement
     }
     MouseArea {
         anchors.fill: parent
         hoverEnabled: true
 
-        // On mouse exited the element, we destroy its children if it exists.
+        // On mouse exited the element, we destroy its submenu if it exists.
         onExited: {
-            nodeMenuElement.color = "#343434"
             if (mouseX <= nodeMenuElement.x + nodeMenuElement.width - 10) {
                 menuListItem.destroyNextMenu();
             }
         }
 
-        // On mouse entered the element, we create the new MenuList of its children (only if this element is a category)
+        // On mouse entered the element, we create the new next menu (only if this element is a category)
         onEntered: {
-            nodeMenuElement.color = "#bbb"
+            menuListItem.currentElementLabel = textMenuElement.text
             if(type=="category") {
                 menuListItem.destroyNextMenu();
                 menuListItem.createNextMenu(nodeMenuElement.parentName, nodeMenuElement.labelElement, nodeMenuElement.x + nodeMenuElement.width, nodeMenuElement.y)

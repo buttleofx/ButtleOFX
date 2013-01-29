@@ -18,7 +18,6 @@ Rectangle {
         offset.y: 0.0
         time: container.time
         fittedMode: true
-        //imageFilepath: _buttleData.curren
 
         property real inWidth: 16
         property real inHeight: 9

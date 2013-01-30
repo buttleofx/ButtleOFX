@@ -30,7 +30,7 @@ Item {
             spacing: 2
                 Rectangle {
                     id: firstElement
-                    width: 150
+                    width: intitule.width + 10
                     height: 20
                     color: "#343434"
                     border.width: 1
@@ -89,7 +89,7 @@ Item {
 
                     Rectangle {
                         id: itemElement
-                        width: 150
+                        width: textElement.width + 10
                         height: 20
                         anchors.left: parent.left
                         y: parent.y + 20*index

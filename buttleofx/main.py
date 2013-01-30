@@ -23,8 +23,7 @@ else:
 
 # data
 from buttleofx.data import ButtleData, ButtleDataSingleton
-# new QML types
-from buttleofx.gui.graph.connection import LineItem
+# new QML type
 from buttleofx.gui.paramEditor import Finder
 # undo_redo
 from buttleofx.core.undo_redo.manageTools import CommandManager
@@ -56,7 +55,6 @@ def main(argv):
 
     # add new QML type
     QtDeclarative.qmlRegisterType(Finder, "FolderListViewItem", 1, 0, "FolderListView")
-    QtDeclarative.qmlRegisterType(LineItem, "ConnectionLineItem", 1, 0, "ConnectionLine")
     if tuttleofx_installed:
         QtDeclarative.qmlRegisterType(GLViewport_tuttleofx, "Viewport", 1, 0, "GLViewport")
     else:

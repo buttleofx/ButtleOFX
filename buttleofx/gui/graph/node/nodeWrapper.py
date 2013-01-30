@@ -90,11 +90,20 @@ class NodeWrapper(QtCore.QObject):
 
     #for video
     def getFPS(self):
-        print "OUYAYAYAYAYAYYAYAYAYAYAYAYAYAYAIIIIIIIIII" * 100
-        return self._node.fsqfeqsgetTuttleNode().fps()
+        #print "OUYAYAYAYAYAYYAYAYAYAYAYAYAYAYAIIIIIIIIII" * 100
+        from buttleofx.data import ButtleDataSingleton
+        buttleData = ButtleDataSingleton().get()
+
+        graph = buttleData.getGraph()
+        node = self._node.getTuttleNode().asImageEffectNode()
+        graph.setup()
+        td = node.getTimeDomain()
+        print "node timeDomain: ", td.min, td.max
+        framerate = node.getFrameRate()
+        print "framerate: ", framerate
 
     def getNbFrames(self):
-        print "OUYAYAYAYAYAYYAYAYAYAYAYAYAYAYAIIIIIIIIII" * 100
+        #print "OUYAYAYAYAYAYYAYAYAYAYAYAYAYAYAIIIIIIIIII" * 100
         return self._node.getTuttleNode().getTimeDomain()
 
 

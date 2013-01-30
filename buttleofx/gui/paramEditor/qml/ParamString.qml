@@ -1,4 +1,5 @@
 import QtQuick 1.1
+import FolderListViewItem 1.0
 
 /*ParamString is an input field*/
 
@@ -26,9 +27,9 @@ Item {
         Rectangle{
             id: stringInput
             height: 20
-            color: "#212121"
+            color: "#343434"
             border.width: 1
-            border.color: "#333"
+            border.color: "#444"
             radius: 3
             TextInput{
                 id: paramStringInput
@@ -90,6 +91,7 @@ Item {
                 }
             ]
         }
+        FolderListView {id: finder}
         // hidden by default
         Image {
             id: folderforFileOrDirectory
@@ -100,9 +102,13 @@ Item {
             MouseArea {
                 id: buttonmousearea
                 anchors.fill: parent
-
-                onPressed: console.log('jkhlhj')
+                onPressed: {
+                    finder.browseFile(_buttleData.currentParamNodeWrapper);
+                    paramObject.value = finder.propFile
+                }
             }
         }
     }
 }
+
+

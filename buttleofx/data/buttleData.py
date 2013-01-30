@@ -184,6 +184,10 @@ class ButtleData(QtCore.QObject):
         else:
             self._currentCopiedNodeInfo.update({"mode": ""})
             self.destructionNode()
+            if self._currentCopiedNodeInfo["name"] == self._currentViewerNodeName:
+                self._currentViewerNodeName = None
+            if self._currentCopiedNodeInfo["name"] == self._currentParamNodeName:
+                self._currentParamNodeName = None
 
     @QtCore.Slot()
     def copyNode(self):
@@ -210,16 +214,14 @@ class ButtleData(QtCore.QObject):
             newNode.setColor(self._currentCopiedNodeInfo["color"][0], self._currentCopiedNodeInfo["color"][1], self._currentCopiedNodeInfo["color"][2])
             newNode.setNameUser(self._currentCopiedNodeInfo["nameUser"] + self._currentCopiedNodeInfo["mode"])
             newNode.getTuttleNode().getParamSet().copyParamsValues(self._currentCopiedNodeInfo["params"])
-            self._currentCopiedNodeInfo.clear()
-            print "clear dict"
         else:
-            print "Can't past"
+            print "Can't paste"
 
     @QtCore.Slot()
     def duplicationNode(self):
         """
             Function called from the QML when we want to duplicate a node.
-        """ 
+        """
         if self.getCurrentSelectedNodeWrapper() == None:
             print "Can't duplicate."
         else:
@@ -367,7 +369,10 @@ class ButtleData(QtCore.QObject):
         return pluginId in tuttleTools.getPluginsIdentifiers()
 
      ###################################################  TUTTLE  ############################################################
-    def computeNode(self, time):
+    def computeNode(self, frame):
+        """
+            Compute the node at the frame indicated
+        """
         print "------- COMPUTE NODE -------"
 
         #Get the name of the currentNode of the viewer
@@ -377,7 +382,7 @@ class ButtleData(QtCore.QObject):
         self._tuttleImageCache = tuttle.MemoryCache()
         #should replace 25 by the fps of the video (a sort of getFPS(node))
         #should expose the duration of the video to the QML too
-        self.getGraph().getGraphTuttle().compute(self._tuttleImageCache, node, tuttle.ComputeOptions(int(time) / 1000 * 25))
+        self.getGraph().getGraphTuttle().compute(self._tuttleImageCache, node, tuttle.ComputeOptions(int(frame)))
         self._computedImage = self._tuttleImageCache.get(0)
 
         #Add the computedImage to the map
@@ -385,7 +390,10 @@ class ButtleData(QtCore.QObject):
 
         return self._computedImage
 
-    def retrieveImage(self, time, timeChanged):
+    def retrieveImage(self, frame, frameChanged):
+        """
+            Compute the node at the frame indicated if the frame has changed (if the time has changed)
+        """
         #Get the name of the currentNode of the viewer
         node = self.getCurrentViewerNodeName()
 
@@ -396,13 +404,12 @@ class ButtleData(QtCore.QObject):
             self.setNodeError("")
             #If the image is already calculated
             for element in mapNodeToImage:
-                if node == element and timeChanged is False:
+                if node == element and frameChanged is False:
                     print "**************************Image already calculated**********************"
                     return self._mapNodeNameToComputedImage[node]
                 # If it is not
-            else:
-                print "************************Calcul of image***************************"
-                return self.computeNode(time)
+            print "************************Calcul of image***************************"
+            return self.computeNode(frame)
         except Exception as e:
             print "Can't display node : " + node
             self.setNodeError(str(e))
@@ -429,9 +436,9 @@ class ButtleData(QtCore.QObject):
     currentSelectedNodeWrapper = QtCore.Property(QtCore.QObject, getCurrentSelectedNodeWrapper, setCurrentSelectedNodeWrapper, notify=currentSelectedNodeChanged)
     paramChangedSignal = Signal()
 
+    # error display on the Viewer
     nodeErrorChanged = QtCore.Signal()
     nodeError = QtCore.Property(str, getNodeError, setNodeError, notify=nodeErrorChanged)
-
 
 # This class exists just because thre are problems when a class extends 2 other class (Singleton and QObject)
 class ButtleDataSingleton(Singleton):

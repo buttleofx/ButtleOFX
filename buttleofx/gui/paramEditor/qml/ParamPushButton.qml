@@ -11,22 +11,23 @@ Item {
         id: pushButton
         width: 120
         height: 30
-        color: "#212121"
+        color: "#343434"
         radius: 5
-        border.width: 2
-        border.color: "grey"
+        border.width: 1
+        border.color: "#444"
 
         property string label: paramObject.label
         property bool enabled:  paramObject.enabled
 
         // state: paramObject.enabled ? "enabled" : "disabled"
+        state: "disabled"
 
         Text {
             id: buttonid
             color: "white"
             text: parent.label
-            anchors.centerIn: parent
-            font.family: "Arial"
+            anchors.horizontalCenter: parent.horizontalCenter
+            y: 3
             font.pixelSize: 14
 
             Component.onCompleted:
@@ -43,6 +44,7 @@ Item {
             {
                 //pushButton.state = (pushButton.state == "FOCUS_ON") ? "FOCUS_OFF" : "FOCUS_ON"
                 paramObject.enabled = "True" //(pushButton.state == "FOCUS_ON") ? "True" : "False"
+                pushButton.state = "enabled"
             }
         }
 
@@ -52,17 +54,25 @@ Item {
                 name: "enabled"
                 when: pushButton.enabled
                 PropertyChanges { 
-                    target: buttonid; 
-                    color: "white";  
+                    target: buttonid
+                    color: "white"
+                }
+                PropertyChanges { 
+                    target: pushButton 
+                    color: "555"
                 }
             },
             State {
-                id: stateDisnabled
+                id: stateDisabled
                 name: "disabled"
                 when: !pushButton.enabled
                 PropertyChanges { 
-                    target: buttonid; 
-                    color: "grey";  
+                    target: buttonid
+                    color: "grey"
+                }
+                PropertyChanges { 
+                    target: pushButton 
+                    color: "#343434" 
                 }
             }
         ]

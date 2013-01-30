@@ -2,7 +2,7 @@ import QtQuick 1.1
 
 Item {
     implicitWidth: 100
-    implicitHeight: 20
+    implicitHeight: 30
 
     property alias title: paramBooleanTitle.text
     property variant paramObject: model.object
@@ -24,14 +24,15 @@ Item {
             width: 15
             height: 15
             radius : 1
-            color: "black"
+            color: "#343434"
+            border.width: 1
+            border.color: "#444"
 
             /*When we check, an other white square appears in the black one*/
             Rectangle{
                 id: interiorBox
-                anchors.horizontalCenter: parent.horizontalCenter
-                anchors.verticalCenter: parent.verticalCenter
-                width: box.width - box.width/2
+                anchors.centerIn: parent
+                width: box.width/2 + 1
                 height: width
                 radius: 1
                 state: paramObject.value ? "FOCUS_ON" : "FOCUS_OFF"
@@ -39,11 +40,11 @@ Item {
                 states: [
                     State {
                         name: "FOCUS_OFF"
-                        PropertyChanges { target: interiorBox; color: "black" }
+                        PropertyChanges { target: interiorBox; color: "#343434" }
                     },
                     State {
                         name: "FOCUS_ON"
-                        PropertyChanges { target: interiorBox; color: "white" }
+                        PropertyChanges { target: interiorBox; color: "#00b2a1" }
                     }
                 ]
             }

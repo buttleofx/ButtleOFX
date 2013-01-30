@@ -35,16 +35,30 @@ Rectangle {
     Rectangle {
         id:mainMenu
         width: parent.width
-        height: 30
+        height: 32
         color: "#141414"
-
-        Text {
-            anchors.verticalCenter: parent.verticalCenter
-            anchors.left: parent.left
-            anchors.leftMargin: 10
-            color: "#00b2a1"
-            text: "ButtleOFX"
-            font.pointSize: 14
+        Row {
+            spacing: 7
+            x: 3
+            Rectangle{
+                height: 24
+                width: 24
+                color: "#222"
+                border.width: 1
+                border.color: "#252525"
+                y: 4
+                Image {
+                    id: mosquito
+                    source: "gui/graph/img/mosquito.png"
+                    x: 2
+                }
+            }
+            Text {
+                color: "#00b2a1"
+                text: "ButtleOFX"
+                y: 7
+                font.pointSize: 14
+            }
         }
     }
 

@@ -1,6 +1,5 @@
 import QtQuick 1.1
 import QuickMamba 1.0
-import ConnectionLineItem 1.0
 import Canvas 1.0
 
 Rectangle {
@@ -44,12 +43,6 @@ Rectangle {
             z: 0
             Repeater {
                 model : _buttleData.graphWrapper.connectionWrappers
-//                ConnectionLine {
-//                    x1: model.object.clipOutPosX
-//                    y1: model.object.clipOutPosY
-//                    x2: model.object.clipInPosX
-//                    y2: model.object.clipInPosY
-//                }
                 Canvas {
                     id: connection
                     property int canvasMargin: 20
@@ -70,7 +63,7 @@ Rectangle {
                         var endX = 0
                         var endY = 0
                         var controlPointXOffset = 40;
-                        ctx.strokeStyle = "rgb(0,150,70)";
+                        ctx.strokeStyle = "rgb(0,178,161)";
                         ctx.lineWidth = 2;
 
                         ctx.beginPath()

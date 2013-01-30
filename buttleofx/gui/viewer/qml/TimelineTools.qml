@@ -1,16 +1,14 @@
 import QtQuick 1.1
 
 Row {
-    anchors.verticalCenter: parent.verticalCenter
-    anchors.left: zoomTools.right
-    anchors.leftMargin: 50
-    spacing: 8
+    spacing: 20
     property int buttonSize : 8
 
     Text {
         id: textTimeline
         color: "#bbbbbb"
-        text: getTimePosition()
+        text: getTimePosition()//define in player
+        y: 2
     }
 
     // back to begin
@@ -18,19 +16,18 @@ Row {
         id: beginbutton
         width: parent.buttonSize
         height: parent.buttonSize
-        y: 2
+        y: 5
         color: "transparent"
 
         Image {
             source: "../img/begin.png"
-        }
-
-        MouseArea {
-            anchors.fill: parent
-            onClicked: {
-                playingAnimation.stop();
-                cursorTimeline.x = 0
-                timeProperties.formerKeyTime = timeProperties.currentTime
+            MouseArea {
+                anchors.fill: parent
+                onClicked: {
+                    playingAnimation.stop();
+                    cursorTimeline.x = 0
+                    timeProperties.formerKeyTime = timeProperties.currentTime
+                }
             }
         }
     }
@@ -40,20 +37,19 @@ Row {
         id: previousbutton
         width: parent.buttonSize
         height: parent.buttonSize
-        y: 2
+        y: 5
         color: "transparent"
 
         Image {
             source: "../img/previous.png"
-        }
-
-        MouseArea {
-            anchors.fill: parent
-            onClicked: {
-                playingAnimation.stop();
-                var xCursorPreviousImage = ((timeProperties.currentTime - 1000/25) * (barTimeline.width - cursorTimeline.width)) / timeProperties.timeDuration // - 1/25 s
-                cursorTimeline.x =  xCursorPreviousImage > 0 ? xCursorPreviousImage : 0
-                timeProperties.formerKeyTime = timeProperties.currentTime
+            MouseArea {
+                anchors.fill: parent
+                onClicked: {
+                    playingAnimation.stop();
+                    var xCursorPreviousImage = ((timeProperties.currentTime - 1000/25) * (barTimeline.width - cursorTimeline.width)) / timeProperties.timeDuration // - 1/25 s
+                    cursorTimeline.x =  xCursorPreviousImage > 0 ? xCursorPreviousImage : 0
+                    timeProperties.formerKeyTime = timeProperties.currentTime
+                }
             }
         }
     }
@@ -63,18 +59,17 @@ Row {
         id: stopbutton
         width: parent.buttonSize
         height: parent.buttonSize
-        y: 2
+        y: 5
         color: "transparent"
 
         Image {
             source: "../img/stop.png"
-        }
-
-        MouseArea {
-            anchors.fill: parent
-            onClicked: {
-                playingAnimation.stop();
-                timeProperties.formerKeyTime = timeProperties.currentTime
+            MouseArea {
+                anchors.fill: parent
+                onClicked: {
+                    playingAnimation.stop();
+                    timeProperties.formerKeyTime = timeProperties.currentTime
+                }
             }
         }
     }
@@ -84,17 +79,16 @@ Row {
         id: playbutton
         width: parent.buttonSize
         height: parent.buttonSize
-        y: 2
+        y: 5
         color: "transparent"
 
         Image {
             source: "../img/play.png"
-        }
-
-        MouseArea {
-            anchors.fill: parent
-            onClicked: {
-                playingAnimation.start();
+            MouseArea {
+                anchors.fill: parent
+                onClicked: {
+                    playingAnimation.start();
+                }
             }
         }
     }
@@ -104,20 +98,19 @@ Row {
         id: nextbutton
         width: parent.buttonSize
         height: parent.buttonSize
-        y: 2
+        y: 5
         color: "transparent"
 
         Image {
             source: "../img/next.png"
-        }
-
-        MouseArea {
-            anchors.fill: parent
-            onClicked: {
-                playingAnimation.stop();
-                var xCursorNextImage = ((timeProperties.currentTime + 1000/25) * (barTimeline.width - cursorTimeline.width)) / timeProperties.timeDuration // + 1/25 s
-                cursorTimeline.x = xCursorNextImage < timeline.endPosition ? xCursorNextImage : timeline.endPosition
-                timeProperties.formerKeyTime = timeProperties.currentTime
+            MouseArea {
+                anchors.fill: parent
+                onClicked: {
+                    playingAnimation.stop();
+                    var xCursorNextImage = ((timeProperties.currentTime + 1000/25) * (barTimeline.width - cursorTimeline.width)) / timeProperties.timeDuration // + 1/25 s
+                    cursorTimeline.x = xCursorNextImage < timeline.endPosition ? xCursorNextImage : timeline.endPosition
+                    timeProperties.formerKeyTime = timeProperties.currentTime
+                }
             }
         }
     }
@@ -127,19 +120,18 @@ Row {
         id: endbutton
         width: parent.buttonSize
         height: parent.buttonSize
-        y: 2
+        y: 5
         color: "transparent"
 
         Image {
             source: "../img/end.png"
-        }
-
-        MouseArea {
-            anchors.fill: parent
-            onClicked: {
-                playingAnimation.stop();
-                cursorTimeline.x = timeline.endPosition
-                timeProperties.formerKeyTime = timeProperties.currentTime
+            MouseArea {
+                anchors.fill: parent
+                onClicked: {
+                    playingAnimation.stop();
+                    cursorTimeline.x = timeline.endPosition
+                    timeProperties.formerKeyTime = timeProperties.currentTime
+                }
             }
         }
     }

@@ -24,9 +24,9 @@ Item {
         Rectangle{
             height: 20
             width:40
-            color: "#212121"
+            color: "#343434"
             border.width: 1
-            border.color: "#333"
+            border.color: "#444"
             radius: 3
             TextInput{
                 id: paramInt2DInput1
@@ -49,9 +49,9 @@ Item {
         Rectangle{
             height: 20
             width:40
-            color: "#212121"
+            color: "#343434"
             border.width: 1
-            border.color: "#333"
+            border.color: "#444"
             radius: 3
             TextInput{
                 id: paramInt2DInput2

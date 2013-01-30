@@ -92,7 +92,11 @@ Item {
                 width: 40
                 selectByMouse : true
                 onAccepted: paramObject.value3 = paramDouble3Dinput3.text
-                onActiveFocusChanged: paramObject.value3 = paramDouble3Dinput3.text
+                onActiveFocusChanged: {
+                    if(acceptableInput){
+                        paramObject.value3 = paramDouble3Dinput3.text
+                    }
+                }
                 validator: DoubleValidator{
                     bottom: paramObject.minimum3
                     top: paramObject.maximum3

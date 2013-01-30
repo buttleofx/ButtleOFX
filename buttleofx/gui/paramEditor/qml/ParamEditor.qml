@@ -57,8 +57,9 @@ Item {
                     ListView {
                         id: tuttleParam
                         height: getListViewContentHeight()
+                        anchors.topMargin: 5
+                        anchors.bottomMargin: 5
                         spacing: 6
-                        y: parent.y + 10
 
                         interactive: false
 

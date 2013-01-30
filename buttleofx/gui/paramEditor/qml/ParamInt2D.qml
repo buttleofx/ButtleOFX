@@ -64,7 +64,11 @@ Item {
                 width: 40
                 selectByMouse : true
                 onAccepted: paramObject.value2 = paramInt2DInput2.text
-                onActiveFocusChanged: paramObject.value2 = paramInt2DInput2.text
+                onActiveFocusChanged: {
+                    if(acceptableInput){
+                        paramObject.value2 = paramInt2DInput2.text
+                    }
+                }
                 validator: IntValidator{
                     bottom: model.object.minimum2
                     top:  model.object.maximum2

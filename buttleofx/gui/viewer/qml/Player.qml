@@ -200,7 +200,8 @@ Item {
                         GradientStop { position: 1; color: "#141414" }
                     }
 
-                    // zoomTools
+                    // WILL BE USED LATER
+                    // Zoom tools
 /*                    Row {
                         id: zoomTools
                         y: 15
@@ -306,7 +307,8 @@ Item {
                         TimelineTools {}
                     }
 
-                    // mosquitos
+                    // WILL BE USED LATER
+                    // Mosquitos
 /*                    Row {
                         id: selectViewer
                         spacing: 5

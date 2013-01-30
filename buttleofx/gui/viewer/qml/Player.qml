@@ -116,9 +116,8 @@ Item {
                         clip: true
                         onTimeChanged: {
                             console.log("TAAAAAAAAAAAAAAIIIIIIiiiIIIIOOOOOOOOOOOOOOOOOOO")
+                            fps: node.fps
                             console.log(timeProperties.fps)
-                            nbFrames: node.nbFrames
-                            console.log(timeProperties.nbFrames)
                         }
                     }
                 }

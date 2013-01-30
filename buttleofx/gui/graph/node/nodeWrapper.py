@@ -94,7 +94,7 @@ class NodeWrapper(QtCore.QObject):
         from buttleofx.data import ButtleDataSingleton
         buttleData = ButtleDataSingleton().get()
 
-        graph = buttleData.getGraph()
+        graph = buttleData.getGraph().getGraphTuttle()
         node = self._node.getTuttleNode().asImageEffectNode()
         graph.setup()
         td = node.getTimeDomain()
@@ -104,7 +104,7 @@ class NodeWrapper(QtCore.QObject):
 
     def getNbFrames(self):
         #print "OUYAYAYAYAYAYYAYAYAYAYAYAYAYAYAIIIIIIIIII" * 100
-        return self._node.getTuttleNode().getTimeDomain()
+        return "lol"
 
 
     ######## setters ########

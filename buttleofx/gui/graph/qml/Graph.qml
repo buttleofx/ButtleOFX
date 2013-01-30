@@ -63,7 +63,7 @@ Rectangle {
                         var endX = 0
                         var endY = 0
                         var controlPointXOffset = 40;
-                        ctx.strokeStyle = "rgb(0,150,70)";
+                        ctx.strokeStyle = "rgb(0,178,161)";
                         ctx.lineWidth = 2;
 
                         ctx.beginPath()

@@ -88,6 +88,25 @@ class NodeWrapper(QtCore.QObject):
         paramEditorWrapper = ParamEditorWrapper(self._view, self._node.getParams())
         return paramEditorWrapper.paramElmts
 
+    #for video
+    def getFPS(self):
+        #print "OUYAYAYAYAYAYYAYAYAYAYAYAYAYAYAIIIIIIIIII" * 100
+        from buttleofx.data import ButtleDataSingleton
+        buttleData = ButtleDataSingleton().get()
+
+        graph = buttleData.getGraph().getGraphTuttle()
+        node = self._node.getTuttleNode().asImageEffectNode()
+        graph.setup()
+        td = node.getTimeDomain()
+        print "node timeDomain: ", td.min, td.max
+        framerate = node.getFrameRate()
+        print "framerate: ", framerate
+
+    def getNbFrames(self):
+        #print "OUYAYAYAYAYAYYAYAYAYAYAYAYAYAYAIIIIIIIIII" * 100
+        return "lol"
+
+
     ######## setters ########
 
     def setName(self, name):
@@ -117,6 +136,7 @@ class NodeWrapper(QtCore.QObject):
     # def setImage(self, image):
     #     self._node.setImage(image)
 
+
     ################################################## DATA EXPOSED TO QML ##################################################
 
     # params from Buttle
@@ -129,6 +149,9 @@ class NodeWrapper(QtCore.QObject):
     # image = QtCore.Property(str, getImage, setImage, notify=changed)
     # params from Tuttle
     params = QtCore.Property(QtCore.QObject, getParams, constant=True)
+    #video
+    fps = QtCore.Property(float, getFPS, notify=changed)
+    nbFrames = QtCore.Property(int, getNbFrames, notify=changed)
 
     # for a clean display of connections
     width = QtCore.Property(int, getWidth, notify=changed)
@@ -137,3 +160,4 @@ class NodeWrapper(QtCore.QObject):
     clipSize = QtCore.Property(int, getClipSize, constant=True)
     inputSideMargin = QtCore.Property(int, getInputSideMargin, constant=True)
     inputTopMargin = QtCore.Property(int, getInputTopMargin, constant=True)
+

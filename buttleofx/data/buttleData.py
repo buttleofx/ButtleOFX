@@ -400,9 +400,8 @@ class ButtleData(QtCore.QObject):
                     print "**************************Image already calculated**********************"
                     return self._mapNodeNameToComputedImage[node]
                 # If it is not
-            else:
-                print "************************Calcul of image***************************"
-                return self.computeNode(time)
+            print "************************Calcul of image***************************"
+            return self.computeNode(time)
         except Exception as e:
             print "Can't display node : " + node
             self.setNodeError(str(e))

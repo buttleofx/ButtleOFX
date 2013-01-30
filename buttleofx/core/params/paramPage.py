@@ -25,4 +25,4 @@ class ParamPage(object):
         return self._tuttleParam.getProperties().fetchProperty("OfxPropLabel").getStringValue(0)
 
     def getName(self):
-        return self._tuttleParam.getName()
+        return self._tuttleParam.getName()[0].capitalize() + self._tuttleParam.getName()[1:]

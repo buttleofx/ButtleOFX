@@ -1,10 +1,7 @@
 import QtQuick 1.1
 
 Rectangle {
-    width: 160
-    height: 20
     //color: "#343434"
-
     property string labelElement
     property string idElement
     property string parentName

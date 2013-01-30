@@ -88,8 +88,35 @@ class NodeWrapper(QtCore.QObject):
         paramEditorWrapper = ParamEditorWrapper(self._view, self._node.getParams())
         return paramEditorWrapper.paramElmts
 
-    ######## setters ########
+    #for video
+    def getFPS(self):
+        #import which need to be changed in the future
+        from buttleofx.data import ButtleDataSingleton
+        buttleData = ButtleDataSingleton().get()
+        graph = buttleData.getGraph().getGraphTuttle()
+        node = self._node.getTuttleNode().asImageEffectNode()
+        graph.setup()
+        framerate = node.getFrameRate()
+        print "framerate: ", framerate
+        print "identifiant : ", self._node.getType()
+        return framerate
 
+    def getNbFrames(self):
+        #import which need to be changed in the future
+        from buttleofx.data import ButtleDataSingleton
+        buttleData = ButtleDataSingleton().get()
+        graph = buttleData.getGraph().getGraphTuttle()
+        node = self._node.getTuttleNode().asImageEffectNode()
+        graph.setup()
+        timeDomain = node.getTimeDomain()
+        #getTimeDomain() returns first frame and last one
+        nbFrames = timeDomain.max - timeDomain.min
+        #not very elegant but allow to avoid a problem because an image returns a number of frames very high
+        if nbFrames > 100000000:
+            nbFrames = 1
+        return nbFrames
+
+    ######## setters ########
     def setName(self, name):
         self._node.setName(name)
 
@@ -117,6 +144,7 @@ class NodeWrapper(QtCore.QObject):
     # def setImage(self, image):
     #     self._node.setImage(image)
 
+
     ################################################## DATA EXPOSED TO QML ##################################################
 
     # params from Buttle
@@ -129,6 +157,9 @@ class NodeWrapper(QtCore.QObject):
     # image = QtCore.Property(str, getImage, setImage, notify=changed)
     # params from Tuttle
     params = QtCore.Property(QtCore.QObject, getParams, constant=True)
+    #video
+    fps = QtCore.Property(float, getFPS, notify=changed)
+    nbFrames = QtCore.Property(int, getNbFrames, notify=changed)
 
     # for a clean display of connections
     width = QtCore.Property(int, getWidth, notify=changed)
@@ -137,3 +168,4 @@ class NodeWrapper(QtCore.QObject):
     clipSize = QtCore.Property(int, getClipSize, constant=True)
     inputSideMargin = QtCore.Property(int, getInputSideMargin, constant=True)
     inputTopMargin = QtCore.Property(int, getInputTopMargin, constant=True)
+

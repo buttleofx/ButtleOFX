@@ -61,7 +61,7 @@ class ParamRGBA(object):
         self.setValueA(values[3])
 
     def setValueR(self, value1):
-        self._tuttleParam.setValueAtIndex(0, int(value1))
+        self._tuttleParam.setValueAtIndex(0, float(value1 / 255))
         self.changed()
 
         print "Rouge : ", self.getValueR()
@@ -71,7 +71,7 @@ class ParamRGBA(object):
         buttleData.updateMapAndViewer()
 
     def setValueG(self, value2):
-        self._tuttleParam.setValueAtIndex(1, int(value2))
+        self._tuttleParam.setValueAtIndex(1, float(value2 / 255))
         self.changed()
 
         print "Vert : ", self.getValueG()
@@ -81,7 +81,7 @@ class ParamRGBA(object):
         buttleData.updateMapAndViewer()
 
     def setValueB(self, value3):
-        self._tuttleParam.setValueAtIndex(2, int(value3))
+        self._tuttleParam.setValueAtIndex(2, float(value3 / 255))
         self.changed()
 
         print "Blue : ", self.getValueB()
@@ -91,7 +91,7 @@ class ParamRGBA(object):
         buttleData.updateMapAndViewer()
 
     def setValueA(self, value4):
-        self._tuttleParam.setValueAtIndex(3, 1)
+        self._tuttleParam.setValueAtIndex(3, float(value4 / 255))
         self.changed()
 
         print "Alpha : ", self.getValueA()

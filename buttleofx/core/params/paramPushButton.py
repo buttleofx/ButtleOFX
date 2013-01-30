@@ -30,7 +30,7 @@ class ParamPushButton(object):
         self.getLabel()
 
     def getName(self):
-        return self._tuttleParam.getProperties().fetchProperty("OfxPropName").getStringValue(0)
+        return self._tuttleParam.getName()[0].capitalize() + self._tuttleParam.getName()[1:]
 
     def getLabel(self):
         return self._tuttleParam.getProperties().fetchProperty("OfxPropLabel").getStringValue(0)

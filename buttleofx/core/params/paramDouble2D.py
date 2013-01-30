@@ -49,7 +49,7 @@ class ParamDouble2D(object):
         return self._tuttleParam.getProperties().getDoubleProperty("OfxParamPropDisplayMax", 1)
 
     def getText(self):
-        return self._tuttleParam.getName()
+        return self._tuttleParam.getName()[0].capitalize() + self._tuttleParam.getName()[1:]
 
     def getParent(self):
         return self._tuttleParam.getProperties().fetchProperty("OfxParamPropParent").getStringValue(0)

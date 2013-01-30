@@ -35,7 +35,7 @@ class ParamString(object):
         return self._tuttleParam.getProperties().fetchProperty("OfxParamPropStringMode").getStringValue(0)
 
     def getText(self):
-        return self._tuttleParam.getName()
+        return self._tuttleParam.getName()[0].capitalize() + self._tuttleParam.getName()[1:]
 
     #################### setters ####################
 

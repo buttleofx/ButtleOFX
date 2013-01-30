@@ -49,7 +49,7 @@ class ParamInt2D(object):
         return self._tuttleParam.getProperties().getIntProperty("OfxParamPropMax", 1)
 
     def getText(self):
-        return self._tuttleParam.getName()
+        return self._tuttleParam.getName()[0].capitalize() + self._tuttleParam.getName()[1:]
 
     #################### setters ####################
 

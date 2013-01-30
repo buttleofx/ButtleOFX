@@ -10,7 +10,7 @@ Rectangle {
     property real value: (1 - cursorColorSlider.y/colorSlider.height)
 
     // test for enter colors values in inputs and adapt display
-    property real cursorColorPositionSlider: 0
+    //property real cursorColorPositionSlider: 0
 
 
     //alpha intensity gradient 

@@ -26,8 +26,6 @@ class CmdSetParamInt(UndoableCommand):
         buttleData = ButtleDataSingleton().get()
         buttleData.updateMapAndViewer()
 
-        print "TuttleParam new Value : ", self._param.getValue()
-
     def redoCmd(self):
         """
         Redoes the update of the param.
@@ -44,5 +42,3 @@ class CmdSetParamInt(UndoableCommand):
         from buttleofx.data import ButtleDataSingleton
         buttleData = ButtleDataSingleton().get()
         buttleData.updateMapAndViewer()
-
-        print "TuttleParam new Value : ", self._param.getValue()

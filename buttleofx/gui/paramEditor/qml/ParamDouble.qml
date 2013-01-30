@@ -72,7 +72,6 @@ Item {
 
             }
 
-
             // bar slider : one grey, one white
             Rectangle {
                 id: barSlider
@@ -104,7 +103,7 @@ Item {
                 width: 5
                 radius: 2
                 color: "white"
-                MouseArea{
+                MouseArea {
                     anchors.fill: parent
                     drag.target: parent
                     drag.axis: Drag.XAxis

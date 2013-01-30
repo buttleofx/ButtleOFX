@@ -68,6 +68,6 @@ class RGBWrapper(QtCore.QObject):
 
     paramType = QtCore.Property(unicode, getParamType, notify=changed)
     text = QtCore.Property(unicode, getText, setText, notify=changed)
-    r = QtCore.Property(int, getValueR, setValueR, notify=changed)
-    g = QtCore.Property(int, getValueG, setValueG, notify=changed)
-    b = QtCore.Property(int, getValueB, setValueB, notify=changed)
+    r = QtCore.Property(float, getValueR, setValueR, notify=changed)
+    g = QtCore.Property(float, getValueG, setValueG, notify=changed)
+    b = QtCore.Property(float, getValueB, setValueB, notify=changed)

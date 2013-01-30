@@ -39,6 +39,7 @@ Item {
                 width: 40
                 selectByMouse : true
                 onAccepted: paramObject.value1 = paramDouble3Dinput1.text
+                onActiveFocusChanged: paramObject.value1 = paramDouble3Dinput1.text
                 validator: DoubleValidator{
                     bottom: paramObject.minimum1
                     top:  paramObject.maximum1
@@ -65,6 +66,11 @@ Item {
                 activeFocusOnPress : true
                 selectByMouse : true
                 onAccepted: paramObject.value2 = paramDouble3Dinput2.text
+                onActiveFocusChanged: {
+                    if(acceptableInput){
+                        paramObject.value2 = paramDouble3Dinput2.text
+                    }
+                }
                 validator: DoubleValidator{
                     bottom: paramObject.minimum2
                     top: paramObject.maximum2
@@ -91,6 +97,11 @@ Item {
                 activeFocusOnPress : true
                 selectByMouse : true
                 onAccepted: paramObject.value3 = paramDouble3Dinput3.text
+                onActiveFocusChanged: {
+                    if(acceptableInput){
+                        paramObject.value3 = paramDouble3Dinput3.text
+                    }
+                }
                 validator: DoubleValidator{
                     bottom: paramObject.minimum3
                     top: paramObject.maximum3

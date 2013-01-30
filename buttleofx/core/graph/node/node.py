@@ -6,10 +6,6 @@ from PySide import QtGui
 # paramEditor
 from buttleofx.core.params import ParamInt, ParamInt2D, ParamInt3D, ParamString, ParamDouble, ParamDouble2D, ParamBoolean, ParamDouble3D, ParamChoice, ParamPushButton, ParamRGBA, ParamRGB, ParamGroup, ParamPage
 
-defaultNodeDesc = {
-    "color": (0, 178, 161),
-    "url": "../img/brazil.jpg"
-}
 
 mapTuttleParamToButtleParam = {
     "OfxParamTypeInteger": ParamInt,
@@ -52,16 +48,14 @@ class Node(object):
 
     def __init__(self, nodeName, nodeType, nodeCoord, tuttleNode):
         self._tuttleNode = tuttleNode
-        nodeDesc = defaultNodeDesc
 
         self._name = nodeName  # useful for us inside buttle (same id as tuttle)
         self._nameUser = nodeName.strip('tuttle.')  # the name visible for the user
         self._type = nodeType
         self._coord = nodeCoord
         self._oldCoord = nodeCoord
-        self._color = nodeDesc["color"]
+        self._color = (0, 178, 161)
         self._nbInput = self._tuttleNode.asImageEffectNode().getClipImageSet().getNbClips()
-        #self._image = nodeDesc["url"]
         self._params = []
 
         # Filling the node's param list

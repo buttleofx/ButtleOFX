@@ -2,12 +2,11 @@ import QtQuick 1.1
 import "colorPickerComponents"
 import "colorPickerComponents/ColorFunctions.js" as ColorFunctions
 
-//set of tools to choose the color (square + slider color + slider alpha + color inputs)
+//set of tools to choose the color (square + slider color + color inputs)
 Item{
     id: colorPicker
 
-    property color colorValue: ColorFunctions.hsba(colorSlider.value, colorSelector.saturation, colorSelector.brightness, alphaSlider.value)
-    property color alphaColorText: ColorFunctions.fullColorString(colorPicker.colorValue, alphaSlider.value)
+    property color colorValue: ColorFunctions.hsba(colorSlider.value, colorSelector.saturation, colorSelector.brightness, 1)
     property color colorSelectorValue: ColorFunctions.hsba(colorSlider.value, 1, 1, 1)
 
 
@@ -38,19 +37,17 @@ Item{
                 height: colorPicker.height
                 //cursorColorPositionSlider: (colorInputs.cursorColorPositionInputs)/765 * colorPicker.height
             }
-            ColorInputs{
+            ColorInputsRGB{
                 id: colorInputs
                 height: colorPicker.height
                 currentColor: colorPicker.colorValue
                 // if we try to implement that as a property of colorPicker, we have no more capital letters...
-                alphaColorText: ColorFunctions.fullColorString(colorPicker.colorValue, alphaSlider.value)
                 redValue: ColorFunctions.getChannelStr(colorPicker.colorValue, 0)
                 greenValue: ColorFunctions.getChannelStr(colorPicker.colorValue, 1)
                 blueValue: ColorFunctions.getChannelStr(colorPicker.colorValue, 2)
                 hValue: colorSlider.value.toFixed(2)
                 sValue: colorSelector.saturation.toFixed(2)
                 bValue: colorSelector.brightness.toFixed(2)
-                alphaValue: Math.ceil(alphaSlider.value*255)
             }
         }
     }

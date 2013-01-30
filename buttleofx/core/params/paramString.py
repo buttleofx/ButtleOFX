@@ -14,7 +14,6 @@ class ParamString(object):
 
     def __init__(self, tuttleParam):
         self._tuttleParam = tuttleParam
-        print tuttleParam
 
         self.changed = Signal()
 
@@ -36,14 +35,13 @@ class ParamString(object):
         return self._tuttleParam.getProperties().fetchProperty("OfxParamPropStringMode").getStringValue(0)
 
     def getText(self):
-        return self._tuttleParam.getName()
+        return self._tuttleParam.getName()[0].capitalize() + self._tuttleParam.getName()[1:]
 
     #################### setters ####################
 
     def setValue(self, value):
         self._tuttleParam.setValue(str(value))
         self.changed()
-
         from buttleofx.data import ButtleDataSingleton
         buttleData = ButtleDataSingleton().get()
         buttleData.updateMapAndViewer()

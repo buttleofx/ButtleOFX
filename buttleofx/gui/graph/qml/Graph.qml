@@ -18,6 +18,17 @@ Rectangle {
     signal clickCreationNode(string nodeType)
     color: "#212121"
 
+    MouseArea{
+        id: leftMouseArea
+        anchors.fill: parent
+        acceptedButtons: Qt.LeftButton
+        onClicked: {
+            if (tools.children) {
+                tools.children.destroy();
+            }
+        }
+    }
+
     Rectangle {
         id: connectnode
         Item {
@@ -35,7 +46,7 @@ Rectangle {
             }
         }
 
-        Item{
+        Item {
             id: connections
             width: graphArea.width
             height: graphArea.height
@@ -124,7 +135,6 @@ Rectangle {
     }
     
 
-
     MouseArea{
         id: middleMouseArea
         anchors.fill: parent
@@ -132,17 +142,6 @@ Rectangle {
         hoverEnabled: true
         drag.target: connectnode
         drag.axis: Drag.XandYAxis
-    }
-
-    MouseArea{
-        id: leftMouseArea
-        anchors.fill: parent
-        acceptedButtons: Qt.LeftButton
-        onClicked: {
-            if (tools.children) {
-                tools.children.destroy();
-            }
-        }
     }
 
 

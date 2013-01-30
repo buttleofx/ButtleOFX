@@ -31,25 +31,63 @@ Item {
             border.width: 1
             border.color: "#333"
             radius: 3
+            // this text input is hidden if we need multiline
             TextInput{
                 id: paramStringInput
                 text: paramObject.value
                 anchors.left: parent.left
                 anchors.leftMargin: 5
+                anchors.rightMargin: 5
                 maximumLength: 100
-                width: parent.width - 10
+                width: (paramObject.stringType != "OfxParamStringIsMultiLine") ? parent.width - 10 : 0
                 height: parent.height
                 color: activeFocus ? "white" : "grey"
                 onAccepted: paramObject.value = paramStringInput.text
                 focus: true
             }
+            // this text input is visible if we need multiline
+            Flickable {
+                id: flick
+
+                width: (paramObject.stringType == "OfxParamStringIsMultiLine") ? parent.width - 10 : 0 
+                height: parent.height
+                contentWidth: paramStringMultilines.paintedWidth
+                contentHeight: paramStringMultilines.paintedHeight
+                clip: true
+
+                function ensureVisible(r)
+                {
+                    if (contentX >= r.x)
+                        contentX = r.x;
+                    else if (contentX+width <= r.x+r.width)
+                        contentX = r.x+r.width-width;
+                    if (contentY >= r.y)
+                        contentY = r.y;
+                    else if (contentY+height <= r.y+r.height)
+                        contentY = r.y+r.height-height;
+                }
+
+                TextEdit {
+                    id: paramStringMultilines
+                    width: flick.width
+                    height: flick.height
+                    text: paramObject.value
+                    focus: true
+                    color: "white"
+                    font.pointSize: 10
+                    wrapMode: TextEdit.Wrap
+                    onCursorRectangleChanged: flick.ensureVisible(cursorRectangle)
+                    onTextChanged: paramObject.value = paramStringMultilines.text
+                }
+            }
+            // state which enable us to update display, depend on what type of String we have on TuttleOFX
             states: [
                 State {
                     name: "singleLine"
                     when: paramObject.stringType == "OfxParamStringIsSingleLine"
                     PropertyChanges {
                         target: stringInput
-                        width: 50
+                        width: 200
                     }
                 },
                 State {
@@ -57,8 +95,8 @@ Item {
                     when: paramObject.stringType == "OfxParamStringIsMultiLine"
                     PropertyChanges {
                         target: stringInput
-                        height: 60
-                        width: 200
+                        width: 280
+                        height: 30
                     }
                 },
                 State {
@@ -66,7 +104,7 @@ Item {
                     when: paramObject.stringType == "OfxParamStringIsFilePath"
                     PropertyChanges {
                         target: stringInput
-                        width: 200
+                        width: 180
                     }
                 },
                 State {
@@ -74,11 +112,7 @@ Item {
                     when: paramObject.stringType == "OfxParamStringIsDirectoryPath"
                     PropertyChanges {
                         target: stringInput
-                        width: 200
-                    }
-                    PropertyChanges {
-                        target: folderforDirectory
-                        width: 50
+                        width: 180
                     }
                 },
                 State {
@@ -105,6 +139,7 @@ Item {
                 onPressed: {
                     finder.browseFile(_buttleData.currentParamNodeWrapper);
                     paramObject.value = finder.propFile
+                    console.log(paramObject.stringType)
                 }
             }
         }

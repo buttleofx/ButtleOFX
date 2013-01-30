@@ -45,3 +45,4 @@ class ParamString(object):
         from buttleofx.data import ButtleDataSingleton
         buttleData = ButtleDataSingleton().get()
         buttleData.updateMapAndViewer()
+        

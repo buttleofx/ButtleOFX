@@ -6,6 +6,15 @@ Item {
 
     property variant paramObject: model.object
 
+    // To fix binding loops
+    property bool mousePressed: false
+    function updateXcursor() {
+        return ((sliderInput.text - paramObject.minimum) * barSlider.width) / (paramObject.maximum - paramObject.minimum);
+    }
+    function updateTextValue() {
+        return (cursorSlider.x * (paramObject.maximum - paramObject.minimum)) / barSlider.width + paramObject.minimum;
+    }
+
     /* Title of the paramSlider */
     Row {
         spacing: 10
@@ -44,22 +53,24 @@ Item {
                 color: activeFocus ? "white" : "grey"
                 activeFocusOnPress : true
                 selectByMouse : true
-                onAccepted: {
-                    cursorSlider.x = ((sliderInput.text - paramObject.minimum) * barSlider.width) / (paramObject.maximum - paramObject.minimum);
-                    paramObject.pushValue((cursorSlider.x * (paramObject.maximum - paramObject.minimum)) / barSlider.width + paramObject.minimum);
-                }
-                onActiveFocusChanged: {
-                    if(acceptableInput){
-                        cursorSlider.x = ((sliderInput.text - paramObject.minimum) * barSlider.width) / (paramObject.maximum - paramObject.minimum);
-                        paramObject.pushValue((cursorSlider.x * (paramObject.maximum - paramObject.minimum)) / barSlider.width + paramObject.minimum);
-                    }
-                }
                 validator: DoubleValidator {
                     bottom: paramObject.minimum
                     top: paramObject.maximum
                 }
-            }
+                onAccepted: {
+                    cursorSlider.x = updateXcursor();
+                    paramObject.pushValue(updateTextValue());
+                }
+                Component.onCompleted: {
+                    cursorSlider.x = updateXcursor();
+                }
+                onTextChanged: {
+                    if (!mousePressed) {
+                        cursorSlider.x = updateXcursor();
+                    }
+                }
 
+            }
 
             // bar slider : one grey, one white
             Rectangle {
@@ -99,9 +110,17 @@ Item {
                     drag.minimumX: 0// - cursorSlider.width/2
                     drag.maximumX: barSlider.width// - cursorSlider.width/2
                     anchors.margins: -10 // allow to have an area around the cursor which allows to select the cursor even if we are not exactly on it
-                    onReleased: paramObject.pushValue((cursorSlider.x * (paramObject.maximum - paramObject.minimum)) / barSlider.width + paramObject.minimum)
+                    onPressed: mousePressed = true
+                    onReleased: {
+                        paramObject.pushValue(updateTextValue());
+                        mousePressed = false
+                    }
                 }
-                onXChanged: paramObject.value = (cursorSlider.x * (paramObject.maximum - paramObject.minimum)) / barSlider.width + paramObject.minimum
+                onXChanged: {
+                    if(mousePressed) {
+                        paramObject.value = updateTextValue();
+                    }
+                }
             }
         }
         // The max value (at the end of the bar slider)
@@ -113,5 +132,4 @@ Item {
             y: 5
         }
     }
-
 }

@@ -20,7 +20,7 @@ Rectangle {
         anchors.left: parent.left
         anchors.leftMargin: 15
         anchors.verticalCenter: parent.verticalCenter
-        color: type == "category" ? "#eee" : "#019fde"
+        color: type == "category" ? "#eee" : "#00b2a1"
         text: nodeMenuElement.labelElement
     }
     MouseArea {

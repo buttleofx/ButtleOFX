@@ -182,7 +182,7 @@ Item {
                                     radius: 3
                                     TextInput {
                                         id: nodeNameUserInput
-                                        text: currentParamNode.nameUser
+                                        text: currentParamNode ? currentParamNode.nameUser : ""
                                         anchors.left: parent.left
                                         width: parent.width - 10
                                         height: parent.height
@@ -237,7 +237,7 @@ Item {
                                     color: "transparent"
                                     Text{
                                         id: nodeTypeInput
-                                        text: currentParamNode.nodeType
+                                        text: currentParamNode ? currentParamNode.nodeType : ""
                                         anchors.left: parent.left
                                         anchors.leftMargin: 5
                                         color: "grey"
@@ -277,7 +277,7 @@ Item {
                                     radius: 3
                                     TextInput {
                                         id: nodeColorRGBInput
-                                        text: currentParamNode.color
+                                        text: currentParamNode ? currentParamNode.color : ""
                                         anchors.left: parent.left
                                         anchors.verticalCenter: parent.verticalCenter
                                         anchors.leftMargin: 5
@@ -332,7 +332,7 @@ Item {
                                     radius: 3
                                     TextInput {
                                         id: nodeCoordXInput
-                                        text: currentParamNode.coord.x
+                                        text: currentParamNode ? currentParamNode.coord.x : ""
                                         anchors.left: parent.left
                                         anchors.leftMargin: 5
                                         width: parent.width - 10
@@ -378,7 +378,7 @@ Item {
                                     radius: 3
                                     TextInput {
                                         id: nodeCoordYInput
-                                        text: currentParamNode.coord.y
+                                        text: currentParamNode ? currentParamNode.coord.y : ""
                                         anchors.left: parent.left
                                         anchors.leftMargin: 5
                                         width: parent.width - 10

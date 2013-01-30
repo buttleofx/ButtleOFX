@@ -101,7 +101,7 @@ Rectangle {
                 //Splitter.minimumWidth: 0 
                 width: 0.3*parent.width
                 params: _buttleData.currentParamNodeWrapper ? _buttleData.currentParamNodeWrapper.params : null
-                currentParamNode: _buttleData.currentParamNodeWrapper ? _buttleData.currentParamNodeWrapper : null
+                currentParamNode: _buttleData.currentParamNodeWrapper
             }
         }
     }

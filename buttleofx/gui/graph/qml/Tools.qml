@@ -6,19 +6,19 @@ Rectangle {
     height: 40
 
     // if the menu is open (= if "tools has children"), property children is the first list created. Else, null.
-    property variant children
+    property variant menuComponent
     property color gradian1: "#111111"
     property color gradian2: "#212121"
-
-    property int buttonSize : 20
 
     signal clickCreationNode(string nodeType)
 
     function doAction(buttonName) {
         switch (buttonName) {
             case "createNode":
-                var newComponent = Qt.createQmlObject('MenuList { parentName: "buttle/"; y: tools.height;}', parent);
-                tools.children = newComponent;
+                if (!tools.menuComponent) {
+                    var newComponent = Qt.createQmlObject('MenuList { parentName: "buttle/"; y: tools.height;}', parent);
+                    tools.menuComponent = newComponent;
+                }
                 break;
 
             case "deleteNode":
@@ -53,7 +53,6 @@ Rectangle {
         }
     }
 
-    z: 2000
     anchors.top: parent.top
     color: "#212121"
     gradient: Gradient {
@@ -70,7 +69,7 @@ Rectangle {
             id: modelButtonsTools
             ListElement { imageSource: "img/buttons/cut.png"; buttonName: "createNode"; buttonText: "Create a new node"; }
             ListElement { imageSource: "img/buttons/undo.png"; buttonName: "undo"; buttonText: "Undo"; }
-            ListElement { imageSource: "img/buttons/redo.png"; buttonName: "redo"; buttonText: "redo"; }
+            ListElement { imageSource: "img/buttons/redo.png"; buttonName: "redo"; buttonText: "Redo"; }
             ListElement { imageSource: "img/buttons/copy.png"; buttonName: "copy"; buttonText: "Copy"; }
             ListElement { imageSource: "img/buttons/cut.png"; buttonName: "cut"; buttonText: "Cut"; }
             ListElement { imageSource: "img/buttons/past.png"; buttonName: "past"; buttonText: "Paste"; }
@@ -80,20 +79,26 @@ Rectangle {
 
         ListView {
             anchors.fill: parent
+            anchors.leftMargin: 10
+            anchors.topMargin: -5
             model: modelButtonsTools
             orientation: ListView.Horizontal
             spacing: 15
+            interactive: false
             delegate {
                 Component {
-                    id: buttonTools
                     Rectangle {
+                        id: buttonTools
                         anchors.verticalCenter: parent.verticalCenter
-                        implicitWidth: buttonSize
-                        implicitHeight: buttonSize
+                        width: 26
+                        height: 26
                         color: "transparent"
+                        state: "normal"
+                        radius: 3
                         Image {
                             source: imageSource
                             anchors.verticalCenter: parent.verticalCenter
+                            anchors.horizontalCenter: parent.horizontalCenter
                         }
                         MouseArea {
                             id: buttonMouseArea
@@ -103,14 +108,45 @@ Rectangle {
                         }
                         Rectangle {
                             id: infoTools
-                            x: 20
-                            y: 15
+                            x: 15
+                            y: 35
                             color: "grey"
                             opacity: buttonMouseArea.containsMouse ? 1 : 0
                             Text {
                                 text: buttonText
-                                color: "white"
+                                color: "#bbbbbb"
                             }
+                        }
+
+                        StateGroup {
+                            id: stateButtonEvents
+                             states: [
+                                 State {
+                                     name: "normal"
+                                     when: !buttonMouseArea.containsMouse
+                                     PropertyChanges {
+                                         target: buttonTools
+                                         color:  "transparent"
+                                     }
+                                 },
+                                 State {
+                                     name: "pressed"
+                                     when: buttonMouseArea.containsMouse && buttonMouseArea.pressed
+                                     PropertyChanges {
+                                         target: buttonTools;
+                                         color:  "#00b2a1"
+                                     }
+                                 },
+                                 State {
+                                     name: "hover"
+                                     when: buttonMouseArea.containsMouse
+                                     PropertyChanges {
+                                         target: buttonTools;
+                                         color:  "#555555"
+                                     }
+                                 }
+
+                             ]
                         }
                     }
                 }

@@ -24,7 +24,7 @@ Rectangle {
         id: tools
         width : parent.width
         height: 40
-        children: null
+        menuComponent: null
 
         onClickCreationNode: {
             console.log("Node created clicking from Tools")

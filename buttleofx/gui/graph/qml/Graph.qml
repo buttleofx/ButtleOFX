@@ -23,8 +23,8 @@ Rectangle {
         anchors.fill: parent
         acceptedButtons: Qt.LeftButton
         onClicked: {
-            if (tools.children) {
-                tools.children.destroy();
+            if (tools.menuComponent) {
+                tools.menuComponent.destroy();
             }
         }
     }

@@ -1,7 +1,6 @@
 import QtQuick 1.1
 
 Rectangle {
-    //color: "#343434"
     property string labelElement
     property string idElement
     property string parentName
@@ -48,8 +47,8 @@ Rectangle {
             if (nodeMenuElement.type == "plugin") {
                 console.log("creation node")
                 clickFrom.clickCreationNode(nodeMenuElement.idElement);
-                if (tools.children) {
-                    tools.children.destroy();
+                if (tools.menuComponent) {
+                    tools.menuComponent.destroy();
                 }
             }
         }

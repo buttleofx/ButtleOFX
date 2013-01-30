@@ -60,10 +60,16 @@ class ParamDouble2D(object):
         self.setValue1(values[0])
         self.setValue2(values[1])
 
-    def setValue1(self, value1):
-        self._tuttleParam.setValue([float(value1), self.getValue2()])
+    def setValue1(self, value):
+        self._tuttleParam.setValue([int(value), self.getValue2()])
         self.changed()
+        from buttleofx.data import ButtleDataSingleton
+        buttleData = ButtleDataSingleton().get()
+        buttleData.updateMapAndViewer()
 
-    def setValue2(self, value2):
-        self._tuttleParam.setValue([self.getValue1(), float(value2)])
+    def setValue2(self, value):
+        self._tuttleParam.setValue([self.getValue1(), int(value)])
         self.changed()
+        from buttleofx.data import ButtleDataSingleton
+        buttleData = ButtleDataSingleton().get()
+        buttleData.updateMapAndViewer()

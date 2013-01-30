@@ -63,30 +63,19 @@ Rectangle {
         GradientStop { position: 1; color: gradian2 }
     }
 
-    // On mouse entered the tools area, we destroy the MenuList component if it exists.
-    MouseArea {
-        anchors.fill: parent
-        hoverEnabled: true
-        onEntered: {
-            if (tools.children) {
-                tools.children.destroy();
-            }
-        }
-    }
-
     Item {
         anchors.fill: parent
 
         ListModel {
             id: modelButtonsTools
-            ListElement { imageSource: "img/buttons/cut.png"; buttonName: "createNode"; text: "Create a new node"; }
-            ListElement { imageSource: "img/buttons/undo.png"; buttonName: "undo"; text: "Undo"; }
-            ListElement { imageSource: "img/buttons/redo.png"; buttonName: "redo"; text: "redo"; }
-            ListElement { imageSource: "img/buttons/copy.png"; buttonName: "copy"; text: "Copy"; }
-            ListElement { imageSource: "img/buttons/cut.png"; buttonName: "cut"; text: "Cut"; }
-            ListElement { imageSource: "img/buttons/past.png"; buttonName: "past"; text: "Paste"; }
-            ListElement { imageSource: "img/buttons/duplicate.png"; buttonName: "duplicate"; text: "Duplicate"; }
-            ListElement { imageSource: "img/buttons/cut.png"; buttonName: "deleteNode"; text: "Delete the node"; }
+            ListElement { imageSource: "img/buttons/cut.png"; buttonName: "createNode"; buttonText: "Create a new node"; }
+            ListElement { imageSource: "img/buttons/undo.png"; buttonName: "undo"; buttonText: "Undo"; }
+            ListElement { imageSource: "img/buttons/redo.png"; buttonName: "redo"; buttonText: "redo"; }
+            ListElement { imageSource: "img/buttons/copy.png"; buttonName: "copy"; buttonText: "Copy"; }
+            ListElement { imageSource: "img/buttons/cut.png"; buttonName: "cut"; buttonText: "Cut"; }
+            ListElement { imageSource: "img/buttons/past.png"; buttonName: "past"; buttonText: "Paste"; }
+            ListElement { imageSource: "img/buttons/duplicate.png"; buttonName: "duplicate"; buttonText: "Duplicate"; }
+            ListElement { imageSource: "img/buttons/cut.png"; buttonName: "deleteNode"; buttonText: "Delete the node"; }
         }
 
         ListView {
@@ -98,7 +87,6 @@ Rectangle {
                 Component {
                     id: buttonTools
                     Rectangle {
-                        id: undoButton
                         anchors.verticalCenter: parent.verticalCenter
                         implicitWidth: buttonSize
                         implicitHeight: buttonSize
@@ -108,8 +96,25 @@ Rectangle {
                             anchors.verticalCenter: parent.verticalCenter
                         }
                         MouseArea {
+                            id: buttonMouseArea
+                            hoverEnabled: true
                             anchors.fill: parent
                             onClicked: tools.doAction(buttonName);
+                        }
+                        Rectangle {
+                            id: infoTools
+                            x: 20
+                            y: 15
+                            height: 20
+                            //width: 150
+                            implicitWidth: buttonText.implicitWidth
+                            color: "grey"
+                            opacity: buttonMouseArea.containsMouse ? 1 : 0
+                            Text {
+                                text: buttonText
+                                color: "white"
+                                wrapMode: Text.WordWrap
+                            }
                         }
                     }
                 }

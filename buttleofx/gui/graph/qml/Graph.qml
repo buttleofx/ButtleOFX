@@ -139,9 +139,13 @@ Rectangle {
         hoverEnabled: true
         drag.target: connectnode
         drag.axis: Drag.XandYAxis
+    }
 
-        // When the menu is open and mouse enter the graph, we destroy the menu.
-        onEntered: {
+    MouseArea{
+        id: leftMouseArea
+        anchors.fill: parent
+        acceptedButtons: Qt.LeftButton
+        onClicked: {
             if (tools.children) {
                 tools.children.destroy();
             }
@@ -170,8 +174,8 @@ Rectangle {
     }
 
     /*  // NODE CREATION WITH RIGHT CLICK
-        MouseArea{
-        id: mouseArea
+        {
+        id: rightMouseArea
         anchors.fill: parent
         acceptedButtons: Qt.RightButton
         onClicked: {

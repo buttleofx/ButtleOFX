@@ -27,9 +27,9 @@ Item {
         Rectangle{
             id: stringInput
             height: 20
-            color: "#212121"
+            color: "#343434"
             border.width: 1
-            border.color: "#333"
+            border.color: "#444"
             radius: 3
             TextInput{
                 id: paramStringInput
@@ -102,11 +102,9 @@ Item {
             MouseArea {
                 id: buttonmousearea
                 anchors.fill: parent
-
                 onPressed: {
                     finder.browseFile(_buttleData.currentParamNodeWrapper);
                     paramObject.value = finder.propFile
-                    console.log(finder.propFile)
                 }
             }
         }

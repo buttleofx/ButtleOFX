@@ -178,104 +178,12 @@ Item {
                 
             }
 
-
-            /****************Timeline*******************/
-            Item {
-                id: timeline
-                width: parent.width
-                implicitHeight: 10
-                y: tabBar.height
-                property double endPosition : barTimeline.x + barTimeline.width - cursorTimeline.width
-
-                // Playing animation
-                NumberAnimation {
-                     id: playingAnimation
-                     target: cursorTimeline
-                     properties: "x"
-                     from: cursorTimeline.x
-                     to: timeline.endPosition
-                     duration : timeProperties.timeDuration - timeProperties.formerKeyTime
-                }
-
-                // main container
-                Rectangle {
-                    width: parent.width
-                    height: parent.height
-                    color: "transparent"
-
-                    Rectangle {
-                        id: barTimeline
-                        anchors.verticalCenter: parent.verticalCenter
-                        width: parent.width
-                        height: 2
-
-                        Rectangle{
-                            id: whiteBar
-                            x: barTimeline.x
-                            width: cursorTimeline.x - barTimeline.x
-                            height: parent.height
-                            color: "white"
-                        }
-                        Rectangle{
-                            id: greyBar
-                            x: barTimeline.x + cursorTimeline.x
-                            width: barTimeline.width - whiteBar.width
-                            height: parent.height
-                            color: "grey"
-                        }
-                        MouseArea {
-                            anchors.fill : parent
-                            anchors.margins: -10
-                            onPressed : {
-                                cursorTimeline.x = mouse.x
-                            }
-                            onReleased : {
-                                timeProperties.formerKeyTime = timeProperties.currentTime
-                            }
-                        }
-                    }
-
-                    // cursor timeline (little white rectangle)
-                    Rectangle {
-                        id: cursorTimeline
-                        anchors.verticalCenter: parent.verticalCenter
-                        x: (timeProperties.currentTime * (barTimeline.width - cursorTimeline.width)) / timeProperties.timeDuration
-                        height: 10
-                        width: 5
-                        radius: 1
-                        color: "white"
-
-                        onXChanged: {
-                            timeProperties.currentTime = (cursorTimeline.x * timeProperties.timeDuration) / (barTimeline.width - cursorTimeline.width);
-                         }
-
-                        MouseArea{
-                            anchors.fill: parent
-                            drag.target: parent
-                            drag.axis: Drag.XAxis
-                            drag.minimumX: barTimeline.x
-                            drag.maximumX: timeline.endPosition
-                            anchors.margins: -10 // allow to have an area around the cursor which allows to select the cursor even if we are not exactly on it
-                            onPressed: {
-                                playingAnimation.stop();
-                            }
-                            onReleased: {
-                                timeProperties.formerKeyTime = timeProperties.currentTime
-                            }
-                        }
-                    }
-                }
-            }
-
-
-
-
             /******************* ToolBar *************************************/
             Rectangle {
                 id: toolBarRegion
                 y: parent.height + tabBar.height
                 width: parent.width
-                implicitHeight: 40
+                implicitHeight: 25
                 color: "transparent"
                 Layout.verticalSizePolicy: Layout.Fixed
 
@@ -293,10 +201,9 @@ Item {
                     }
 
                     // zoomTools
-                    Row {
+/*                    Row {
                         id: zoomTools
-                        anchors.verticalCenter: parent.verticalCenter
-                        anchors.left: parent.left
+                        y: 15
                         spacing : 5
 
                         // Zoom +
@@ -351,8 +258,6 @@ Item {
                             id: magGlassOut
                             width: 22
                             height: 15
-                            //x: parent.height+2
-                            //y: 2
                             color: "transparent"
 
                             Image {
@@ -394,11 +299,15 @@ Item {
                             ]
                         }
                     }
-
-                    TimelineTools {}
+*/
+                    Item {
+                        anchors.verticalCenter: tools.verticalCenter
+                        x: tools.width/3
+                        TimelineTools {}
+                    }
 
                     // mosquitos
-                    Row {
+/*                    Row {
                         id: selectViewer
                         spacing: 5
                         anchors.right: parent.right
@@ -473,8 +382,96 @@ Item {
                             }
                         } // Repeater mosquito
                     } // Row (selectViewer = mosquitos )
+                    */
                 } // Tools Rectangle (zoom, timeline buttons, mosquitos)
             } // Rectangle (toolBarRegion)
+
+            /****************Timeline*******************/
+            Item {
+                id: timeline
+                width: parent.width
+                implicitHeight: 10
+                property double endPosition : barTimeline.x + barTimeline.width - cursorTimeline.width
+
+                // Playing animation
+                NumberAnimation {
+                     id: playingAnimation
+                     target: cursorTimeline
+                     properties: "x"
+                     from: cursorTimeline.x
+                     to: timeline.endPosition
+                     duration : timeProperties.timeDuration - timeProperties.formerKeyTime
+                }
+
+                // main container
+                Rectangle {
+                    width: parent.width
+                    color: "transparent"
+                    y: -25
+                    Rectangle {
+                        id: barTimeline
+                        anchors.verticalCenter: parent.verticalCenter
+                        width: parent.width
+                        height: 2
+
+                        Rectangle{
+                            id: whiteBar
+                            x: barTimeline.x
+                            width: cursorTimeline.x - barTimeline.x
+                            height: parent.height
+                            color: "white"
+                        }
+                        Rectangle{
+                            id: greyBar
+                            x: barTimeline.x + cursorTimeline.x
+                            width: barTimeline.width - whiteBar.width
+                            height: parent.height
+                            color: "grey"
+                        }
+                        MouseArea {
+                            anchors.fill : parent
+                            anchors.margins: -10
+                            onPressed : {
+                                cursorTimeline.x = mouse.x
+                            }
+                            onReleased : {
+                                timeProperties.formerKeyTime = timeProperties.currentTime
+                            }
+                        }
+                    }
+
+                    // cursor timeline (little white rectangle)
+                    Rectangle {
+                        id: cursorTimeline
+                        anchors.verticalCenter: parent.verticalCenter
+                        x: (timeProperties.currentTime * (barTimeline.width - cursorTimeline.width)) / timeProperties.timeDuration
+                        height: 10
+                        width: 5
+                        radius: 1
+                        color: "white"
+
+                        onXChanged: {
+                            timeProperties.currentTime = (cursorTimeline.x * timeProperties.timeDuration) / (barTimeline.width - cursorTimeline.width);
+                         }
+
+                        MouseArea{
+                            anchors.fill: parent
+                            drag.target: parent
+                            drag.axis: Drag.XAxis
+                            drag.minimumX: barTimeline.x
+                            drag.maximumX: timeline.endPosition
+                            anchors.margins: -10 // allow to have an area around the cursor which allows to select the cursor even if we are not exactly on it
+                            onPressed: {
+                                playingAnimation.stop();
+                            }
+                            onReleased: {
+                                timeProperties.formerKeyTime = timeProperties.currentTime
+                            }
+                        }
+                    }
+                }
+            }
+
         } //ColumnLayout
     } // Viewer & tools
 } // Item player

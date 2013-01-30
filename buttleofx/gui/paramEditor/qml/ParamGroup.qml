@@ -2,14 +2,14 @@ import QtQuick 1.1
 
 Item {
     implicitWidth: 100
-    implicitHeight: 20
+    implicitHeight: 30
 
     Row {
         spacing: 10
         Rectangle {
-            width: 60
+            width: 100
             height: 1
-            color: "white"
+            color: "grey"
             y: 8
         }
 
@@ -18,13 +18,13 @@ Item {
             id: paramGroupTitle
             text: object.label
             color: "white"
-            font.pointSize: 12
+            font.pointSize: 11
         }
 
         Rectangle {
-            width: 60
+            width: 100
             height: 1
-            color: "white"
+            color: "grey"
             y: 8
         }
     }

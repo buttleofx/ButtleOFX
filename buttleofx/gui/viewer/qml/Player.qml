@@ -16,9 +16,7 @@ Item {
         //for video
         property real fps: node ? node.fps : 1
         property int nbFrames: node ? node.nbFrames : 1
-        property int currentFrame: 0
         property real timeDuration : node ? nbFrames/fps*1000 : 0
-        /*node ? nbFrames/fps : 5000// total duration of the time (milliseconds) */
     }
 
 

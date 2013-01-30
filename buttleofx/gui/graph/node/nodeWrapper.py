@@ -90,38 +90,31 @@ class NodeWrapper(QtCore.QObject):
 
     #for video
     def getFPS(self):
-        print "OUYAYAYAYAYAYYAYAYAYAYAYAYAYAYAIIIIIIIIII"
+        #import which need to be changed in the future
         from buttleofx.data import ButtleDataSingleton
         buttleData = ButtleDataSingleton().get()
-
-        if(self._node.getType() == "tuttle.ffmpegreader"):
-            graph = buttleData.getGraph().getGraphTuttle()
-            node = self._node.getTuttleNode().asImageEffectNode()
-            graph.setup()
-            framerate = node.getFrameRate()
-            print "framerate: ", framerate
-            print "identifiant : ", self._node.getType()
-            return framerate
-        else:
-            return 1
+        graph = buttleData.getGraph().getGraphTuttle()
+        node = self._node.getTuttleNode().asImageEffectNode()
+        graph.setup()
+        framerate = node.getFrameRate()
+        print "framerate: ", framerate
+        print "identifiant : ", self._node.getType()
+        return framerate
 
     def getNbFrames(self):
-        print "OUYAYAYAYAYAYYAYAYAYAYAYAYAYAYAIIIIIIIIII"
+        #import which need to be changed in the future
         from buttleofx.data import ButtleDataSingleton
         buttleData = ButtleDataSingleton().get()
-
-        if(self._node.getType() == "tuttle.ffmpegreader"):
-            graph = buttleData.getGraph().getGraphTuttle()
-            node = self._node.getTuttleNode().asImageEffectNode()
-            graph.setup()
-            timeDomain = node.getTimeDomain()
-            #getTimeDomain() returns first frame and last one
-            nbFrames = timeDomain.max - timeDomain.min
-            print "node nbFrames: ", nbFrames
-            return nbFrames
-        else:
-            return 1
-
+        graph = buttleData.getGraph().getGraphTuttle()
+        node = self._node.getTuttleNode().asImageEffectNode()
+        graph.setup()
+        timeDomain = node.getTimeDomain()
+        #getTimeDomain() returns first frame and last one
+        nbFrames = timeDomain.max - timeDomain.min
+        #not very elegant but allow to avoid a problem because an image returns a number of frames very high
+        if nbFrames > 100000000:
+            nbFrames = 1
+        return nbFrames
 
     ######## setters ########
     def setName(self, name):

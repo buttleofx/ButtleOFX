@@ -17,7 +17,6 @@ Rectangle {
         
         offset.x: 0.0
         offset.y: 0.0
-        //time: container.time
         frame: container.time/1000 * container.fps
         fittedMode: true
 

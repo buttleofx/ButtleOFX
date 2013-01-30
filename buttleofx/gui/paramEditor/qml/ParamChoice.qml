@@ -25,37 +25,56 @@ Item {
             width: 40
             height: 20
 
-            // First Item = item chosen
-            Rectangle {
-                id: firstElement
-                width: 120
-                height: 20
-                color: "#212121"
-                border.width: 1
-                border.color: "#333"
-                radius: 3
-
-                Text{
-                    id: intitule
-                    anchors.left: parent.left
-                    anchors.leftMargin: 5
-                    anchors.verticalCenter: parent.verticalCenter
-                    text: paramObject.value
-                    color: "white"
-
+            // Current value
+            Row{
+            spacing: 2
+                Rectangle {
+                    id: firstElement
+                    width: 150
+                    height: 20
+                    color: "#343434"
+                    border.width: 1
+                    border.color: "#444"
+                    Text{
+                        id: intitule
+                        anchors.left: parent.left
+                        anchors.leftMargin: 5
+                        anchors.verticalCenter: parent.verticalCenter
+                        text: paramObject.value
+                        color: "white"
+                    }
+                    MouseArea {
+                        anchors.fill: parent
+                        hoverEnabled: true
+                        onClicked: {         
+                            elements.state = ( elements.state == "hidden") ? "shown" : "hidden"
+                        }
+                    }
                 }
-        
-                MouseArea {
-                    anchors.fill: parent
-                    hoverEnabled: true
-                    onClicked: {         
-                        elements.state = ( elements.state == "hidden") ? "shown" : "hidden"
+                Rectangle {
+                    width: 20
+                    height: 20
+                    color: "#343434"
+                    border.width: 1
+                    border.color: "#444"
+                    Image {
+                        id: arrow
+                        source: "img/arrow.png"
+                        anchors.centerIn: parent
+                    }
+                    MouseArea {
+                        anchors.fill: parent
+                        hoverEnabled: true
+                        onClicked: {         
+                            elements.state = ( elements.state == "hidden") ? "shown" : "hidden"
+                        }
                     }
                 }
             }
 
+
         
-            // All the items available
+            // List of the values
             Rectangle {
                 id: elements
                 height: 20
@@ -63,7 +82,6 @@ Item {
                 state: "hidden"
                 x: firstElement.x
                 y: firstElement.y
-                //z: 150
 
                 Repeater {
                     id: repeater
@@ -71,18 +89,18 @@ Item {
 
                     Rectangle {
                         id: itemElement
-                        width: 120
+                        width: 150
                         height: 20
                         anchors.left: parent.left
                         y: parent.y + 20*index
                         color: "#343434"
                         border.width: 1
-                        border.color: "#333"
-                        //z: 15000
+                        border.color: "#444"
+
                         Text{
                             id: textElement
                             anchors.left: parent.left
-                            anchors.leftMargin: 10
+                            anchors.leftMargin: 5
                             anchors.verticalCenter: parent.verticalCenter
                             text: model.object
                             color: "white"

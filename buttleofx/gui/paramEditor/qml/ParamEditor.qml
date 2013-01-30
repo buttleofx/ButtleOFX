@@ -10,11 +10,11 @@ Item {
     property variant params 
     property variant currentParamNode
 
-    property color background: "#212121"
-    property color backgroundInput: "#141414"
-    property color gradian1: "#111111"
-    property color gradian2: "#212121"
-    property color borderInput: "#333"
+    property color background: "#141414"
+    property color backgroundInput: "#343434"
+    property color gradian1: "#010101"
+    property color gradian2: "#141414"
+    property color borderInput: "#444"
 
     property color textColor : "white"
     property color activeFocusOn : "white"
@@ -145,18 +145,17 @@ Item {
                         Item {
                             id: nodeNameUserItem
                             implicitWidth: 300
-                            implicitHeight: 40
+                            implicitHeight: 30
                             anchors.left: parent.left
                             anchors.leftMargin: 10
 
                             Row {
                                 id: nodeNameUserContainer
-                                spacing: 10
+                                spacing: 5
 
                                 /* Title */
                                 Text {
                                     id: nodeNameUserText
-                                    width: 80
                                     anchors.top: parent.top
                                     anchors.verticalCenter: parent.verticalCenter
                                     color: textColor
@@ -214,7 +213,6 @@ Item {
                                 /* Title */
                                 Text {
                                     id: nodeTypeText
-                                    width: 80
                                     text: "Type : "
                                     color: textColor
                                     anchors.top: parent.top
@@ -237,6 +235,55 @@ Item {
                             }
                         }
 
+                        /* Color of the node (Buttle data) */
+                        Item {
+                            id: nodecolorItem
+                            implicitWidth: 300
+                            implicitHeight: 30
+                            anchors.left: parent.left
+                            anchors.leftMargin: 10
+
+                            Row {
+                                id: nodeColorContainer
+                                spacing: 10
+
+                                /* Title */
+                                Text {
+                                    id: nodeColorText
+                                    text: "Color : "
+                                    color: textColor
+                                    anchors.top: parent.top
+                                    anchors.verticalCenter: parent.verticalCenter
+                                }
+
+                                /* Input field limited : rgb */
+                                Rectangle {
+                                    height: 20
+                                    implicitWidth: 80
+                                    color: paramEditor.backgroundInput
+                                    border.width: 1
+                                    border.color: paramEditor.borderInput
+                                    radius: 3
+                                    TextInput {
+                                        id: nodeColorRGBInput
+                                        text: currentParamNode.color
+                                        anchors.left: parent.left
+                                        anchors.verticalCenter: parent.verticalCenter
+                                        anchors.leftMargin: 5
+                                        maximumLength: 50
+                                        selectByMouse : true
+                                        color: activeFocus ? activeFocusOn : activeFocusOff
+
+                                        onAccepted: currentParamNode.color = nodeColorRGBInput.text
+                                        onActiveFocusChanged: currentParamNode.color = nodeColorRGBInput.text
+
+                                        KeyNavigation.backtab: nodeCoordYInput
+                                        KeyNavigation.tab: nodeNameUserInput
+                                    }//textinput
+                                }//rectangle of nodeColorContainer
+                            }//row nodeColorContainer
+                        }//item nodeColorItem
+
                         /* Coord of the node (Buttle data) */
                         Item {
                             id: nodecoordItem
@@ -248,16 +295,6 @@ Item {
                             Row {
                                 id: nodeCoordContainer
                                 spacing: 10
-
-                                /* Title */
-                                Text {
-                                    id: nodeCoordText
-                                    width: 80
-                                    text: "Coord : "
-                                    color: textColor
-                                    anchors.top: parent.top
-                                    anchors.verticalCenter: parent.verticalCenter
-                                }
 
                                 /* Input label : "x : " */
                                 Rectangle {
@@ -347,56 +384,6 @@ Item {
                                 }
                             }
                         }
-
-                        /* Color of the node (Buttle data) */
-                        Item {
-                            id: nodecolorItem
-                            implicitWidth: 300
-                            implicitHeight: 30
-                            anchors.left: parent.left
-                            anchors.leftMargin: 10
-
-                            Row {
-                                id: nodeColorContainer
-                                spacing: 10
-
-                                /* Title */
-                                Text {
-                                    id: nodeColorText
-                                    width: 80
-                                    text: "Color (Hex) : "
-                                    color: textColor
-                                    anchors.top: parent.top
-                                    anchors.verticalCenter: parent.verticalCenter
-                                }
-
-                                /* Input field limited : rgb */
-                                Rectangle {
-                                    height: 20
-                                    implicitWidth: 80
-                                    color: paramEditor.backgroundInput
-                                    border.width: 1
-                                    border.color: paramEditor.borderInput
-                                    radius: 3
-                                    TextInput {
-                                        id: nodeColorRGBInput
-                                        text: currentParamNode.color
-                                        anchors.left: parent.left
-                                        anchors.verticalCenter: parent.verticalCenter
-                                        anchors.leftMargin: 5
-                                        maximumLength: 50
-                                        selectByMouse : true
-                                        color: activeFocus ? activeFocusOn : activeFocusOff
-
-                                        onAccepted: currentParamNode.color = nodeColorRGBInput.text
-                                        onActiveFocusChanged: currentParamNode.color = nodeColorRGBInput.text
-
-                                        KeyNavigation.backtab: nodeCoordYInput
-                                        KeyNavigation.tab: nodeNameUserInput
-                                    }//textinput
-                                }//rectangle of nodeColorContainer
-                            }//row nodeColorContainer
-                        }//item nodeColorItem
                     }//column
                 }//component
             }//loader

@@ -66,7 +66,7 @@ Item {
                     x: 0
                     width: cursorSlider.x
                     height: parent.height
-                    color: "white"
+                    color: "#00b2a1"
                 }
                 Rectangle{
                     id: greyBar
@@ -84,7 +84,7 @@ Item {
                 y: 4
                 height: 10
                 width: 5
-                radius: 1
+                radius: 2
                 color: "white"
                 MouseArea{
                     anchors.fill: parent

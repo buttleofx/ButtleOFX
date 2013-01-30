@@ -179,9 +179,7 @@ class ButtleData(QtCore.QObject):
             Function called from the QML when we want to cut a node.
         """
         self.copyNode()
-        if self.getCurrentSelectedNodeWrapper() == None:
-            print "Can't cut"
-        else:
+        if self.getCurrentSelectedNodeWrapper() != None:
             self._currentCopiedNodeInfo.update({"mode": ""})
             self.destructionNode()
             if self._currentSelectedNodeName == self._currentViewerNodeName:
@@ -194,9 +192,7 @@ class ButtleData(QtCore.QObject):
         """
             Function called from the QML when we want to copy a node.
         """
-        if self.getCurrentSelectedNodeWrapper() == None:
-            print "Can't copy."
-        else:
+        if self.getCurrentSelectedNodeWrapper() != None:
             self._currentCopiedNodeInfo.update({"nodeType": self.getCurrentSelectedNodeWrapper().getNode().getType()})
             self._currentCopiedNodeInfo.update({"nameUser": self.getCurrentSelectedNodeWrapper().getNode().getNameUser()})
             self._currentCopiedNodeInfo.update({"color": self.getCurrentSelectedNodeWrapper().getNode().getColor()})
@@ -214,17 +210,13 @@ class ButtleData(QtCore.QObject):
             newNode.setColor(self._currentCopiedNodeInfo["color"][0], self._currentCopiedNodeInfo["color"][1], self._currentCopiedNodeInfo["color"][2])
             newNode.setNameUser(self._currentCopiedNodeInfo["nameUser"] + self._currentCopiedNodeInfo["mode"])
             newNode.getTuttleNode().getParamSet().copyParamsValues(self._currentCopiedNodeInfo["params"])
-        else:
-            print "Can't paste"
 
     @QtCore.Slot()
     def duplicationNode(self):
         """
             Function called from the QML when we want to duplicate a node.
         """
-        if self.getCurrentSelectedNodeWrapper() == None:
-            print "Can't duplicate."
-        else:
+        if self.getCurrentSelectedNodeWrapper() != None:
             # Create a node giving the current selected node's type, x and y
             nodeType = self.getCurrentSelectedNodeWrapper().getNode().getType()
             coord = self.getCurrentSelectedNodeWrapper().getNode().getCoord()

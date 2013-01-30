@@ -121,8 +121,6 @@ class CommandManager(Singleton):
         if self.canUndo():
             self.index -= 1
             self.commands[self.index].undoCmd()
-        else:
-            print "can't undo."
 
     def redo(self):
         """
@@ -131,8 +129,6 @@ class CommandManager(Singleton):
         if self.canRedo():
             self.commands[self.index].redoCmd()
             self.index += 1
-        else:
-            print "can't redo."
 
     def getIndex(self):
         """

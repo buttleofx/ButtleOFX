@@ -46,7 +46,7 @@ Rectangle {
                 break;
 
             case "duplicate":
-                _buttleData.duplicateNode();
+                _buttleData.duplicationNode();
                 break;
             default:
                 break;
@@ -72,7 +72,7 @@ Rectangle {
             ListElement { imageSource: "img/buttons/redo.png"; buttonName: "redo"; buttonText: "Redo"; }
             ListElement { imageSource: "img/buttons/copy.png"; buttonName: "copy"; buttonText: "Copy"; }
             ListElement { imageSource: "img/buttons/cut.png"; buttonName: "cut"; buttonText: "Cut"; }
-            ListElement { imageSource: "img/buttons/past.png"; buttonName: "past"; buttonText: "Paste"; }
+            ListElement { imageSource: "img/buttons/past.png"; buttonName: "paste"; buttonText: "Paste"; }
             ListElement { imageSource: "img/buttons/duplicate.png"; buttonName: "duplicate"; buttonText: "Duplicate"; }
             ListElement { imageSource: "img/buttons/cut.png"; buttonName: "deleteNode"; buttonText: "Delete the node"; }
         }

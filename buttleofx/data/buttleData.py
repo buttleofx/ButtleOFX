@@ -184,6 +184,10 @@ class ButtleData(QtCore.QObject):
         else:
             self._currentCopiedNodeInfo.update({"mode": ""})
             self.destructionNode()
+            if self._currentCopiedNodeInfo["name"] == self._currentViewerNodeName:
+                self._currentViewerNodeName = None
+            if self._currentCopiedNodeInfo["name"] == self._currentParamNodeName:
+                self._currentParamNodeName = None
 
     @QtCore.Slot()
     def copyNode(self):
@@ -210,16 +214,14 @@ class ButtleData(QtCore.QObject):
             newNode.setColor(self._currentCopiedNodeInfo["color"][0], self._currentCopiedNodeInfo["color"][1], self._currentCopiedNodeInfo["color"][2])
             newNode.setNameUser(self._currentCopiedNodeInfo["nameUser"] + self._currentCopiedNodeInfo["mode"])
             newNode.getTuttleNode().getParamSet().copyParamsValues(self._currentCopiedNodeInfo["params"])
-            self._currentCopiedNodeInfo.clear()
-            print "clear dict"
         else:
-            print "Can't past"
+            print "Can't paste"
 
     @QtCore.Slot()
     def duplicationNode(self):
         """
             Function called from the QML when we want to duplicate a node.
-        """ 
+        """
         if self.getCurrentSelectedNodeWrapper() == None:
             print "Can't duplicate."
         else:

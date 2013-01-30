@@ -12,7 +12,11 @@ Item {
         id: timeProperties
         property real currentTime : 0 // current position of the time (milliseconds)
         property real formerKeyTime : 0 // position of the time before animation starts
-        property real timeDuration : 5000 // total duration of the time (milliseconds)
+        
+        //for video
+        property real fps: node ? node.fps : 1
+        property int nbFrames: node ? node.nbFrames : 1
+        property real timeDuration : node ? nbFrames/fps*1000 : 0
     }
 
 
@@ -108,6 +112,7 @@ Item {
                     Viewer {
                         id: viewer
                         time: timeProperties.currentTime
+                        fps: timeProperties.fps
                         clip: true
                     }
                 }
@@ -314,7 +319,7 @@ Item {
                         anchors.right: parent.right
                         anchors.rightMargin: parent.height
 
-                        // Mosquito
+                       /* // Mosquito
                         Rectangle {
                             id: mosquitoTool
                             width: parent.height-5
@@ -381,9 +386,9 @@ Item {
                                       }
                                 ]
                             }
-                        } // Repeater mosquito
+                        } // Repeater mosquito 
                     } // Row (selectViewer = mosquitos )
-                    */
+*/
                 } // Tools Rectangle (zoom, timeline buttons, mosquitos)
             } // Rectangle (toolBarRegion)
 

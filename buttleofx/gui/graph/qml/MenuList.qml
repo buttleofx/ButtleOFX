@@ -6,13 +6,14 @@ Item {
     // parentName = the key for the python dictionary of plugins. Ex: 'tuttle/image/' or 'tuttle/image/process/filter/
     property string parentName
     property variant clickFrom: tools
+    property int heightElement: 22
+    property int widthElement: 160
 
     ListView {
-        height: 300
         width: 160
         id: nodeMenuView
         model: _buttleData.getQObjectPluginsIdentifiersByParentPath(menulist.parentName)
-
+        height: heightElement * model.count
         property variant nextMenu: null
         property variant currentElementLabel: ""
 
@@ -37,6 +38,8 @@ Item {
                     idElement: object[1]
                     parentName: menulist.parentName
                     menuListItem: nodeMenuView
+                    height: heightElement
+                    width: widthElement
                 }
             }
         }

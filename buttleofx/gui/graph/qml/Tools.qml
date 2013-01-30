@@ -14,6 +14,45 @@ Rectangle {
 
     signal clickCreationNode(string nodeType)
 
+    function doAction(buttonName) {
+        switch (buttonName) {
+            case "createNode":
+                var newComponent = Qt.createQmlObject('MenuList { parentName: "buttle/"; y: tools.height;}', parent);
+                tools.children = newComponent;
+                break;
+
+            case "deleteNode":
+                _buttleData.destructionNode();
+                break;
+
+            case "undo":
+                _buttleData.undo();
+                break;
+
+            case "redo":
+                _buttleData.redo();
+                break;
+
+            case "copy":
+                _buttleData.copyNode();
+                break;
+
+            case "paste":
+                _buttleData.pasteNode();
+                break;
+
+            case "cut":
+                _buttleData.cutNode();
+                break;
+
+            case "duplicate":
+                _buttleData.duplicateNode();
+                break;
+            default:
+                break;
+        }
+    }
+
     z: 2000
     anchors.top: parent.top
     color: "#212121"
@@ -24,186 +63,56 @@ Rectangle {
         GradientStop { position: 1; color: gradian2 }
     }
 
-    // On mouse entered the tools area, we destroy the MenuList component if it exists.
-    MouseArea {
+    Item {
         anchors.fill: parent
-        hoverEnabled: true
-        onEntered: {
-            if (tools.children) {
-                tools.children.destroy();
-            }
-        }
-    }
 
-    Row {
-        spacing: 15
-        y: 5
-        // create and delete node
-        Rectangle {
-            id: addNodeButton
-            anchors.verticalCenter: parent.verticalCenter
-            implicitWidth: buttonSize
-            implicitHeight: buttonSize
-            width: 7/10 * tools.height
-            height: width
-            color: "transparent"
-            Text {
-                anchors.centerIn: parent
-                text: "+"
-                font.pointSize: 16
-                color: "white"
-            }
-            MouseArea {
-                anchors.fill: parent
-
-                // On clicked, we create a MenuList component and add it to the tools' children.
-                onClicked: {
-                    var newComponent = Qt.createQmlObject('MenuList { parentName: "buttle/"; y: 30;}', parent);
-                    tools.children = newComponent;
-                }
-            }
+        ListModel {
+            id: modelButtonsTools
+            ListElement { imageSource: "img/buttons/cut.png"; buttonName: "createNode"; buttonText: "Create a new node"; }
+            ListElement { imageSource: "img/buttons/undo.png"; buttonName: "undo"; buttonText: "Undo"; }
+            ListElement { imageSource: "img/buttons/redo.png"; buttonName: "redo"; buttonText: "redo"; }
+            ListElement { imageSource: "img/buttons/copy.png"; buttonName: "copy"; buttonText: "Copy"; }
+            ListElement { imageSource: "img/buttons/cut.png"; buttonName: "cut"; buttonText: "Cut"; }
+            ListElement { imageSource: "img/buttons/past.png"; buttonName: "past"; buttonText: "Paste"; }
+            ListElement { imageSource: "img/buttons/duplicate.png"; buttonName: "duplicate"; buttonText: "Duplicate"; }
+            ListElement { imageSource: "img/buttons/cut.png"; buttonName: "deleteNode"; buttonText: "Delete the node"; }
         }
 
-        Rectangle {
-            id: delNodeButton
-            anchors.verticalCenter: parent.verticalCenter
-            implicitWidth: buttonSize
-            implicitHeight: buttonSize
-            width: 7/10 * tools.height
-            height: width
-            color: "transparent"
-            Text {
-                anchors.centerIn: parent
-                text: "-"
-                font.pointSize: 16
-                color: "white"
-            }
-            MouseArea {
-                anchors.fill: parent
-                onClicked: {
-                    _buttleData.destructionNode()
-                }
-            }
-        }
-
-        // undo redo
-        Rectangle {
-            id: undoButton
-            anchors.verticalCenter: parent.verticalCenter
-            implicitWidth: buttonSize
-            implicitHeight: buttonSize
-            width: 4/10 * tools.height
-            height: width
-            color: "transparent"
-            Image {
-                source: "img/buttons/undo.png"
-                anchors.verticalCenter: parent.verticalCenter
-            }
-            MouseArea {
-                anchors.fill: parent
-                onClicked: {
-                    _buttleData.undo();
-                }
-            }
-        }
-
-        Rectangle {
-            id: redoButton
-            anchors.verticalCenter: parent.verticalCenter
-            implicitWidth: buttonSize
-            implicitHeight: buttonSize
-            width: 4/10 * tools.height
-            height: width
-            color: "transparent"
-            Image {
-                source: "img/buttons/redo.png"
-                anchors.verticalCenter: parent.verticalCenter
-            }
-            MouseArea {
-                anchors.fill: parent
-                onClicked: {
-                    _buttleData.redo();
-                }
-            }
-        }
-
-        // copy / cut / past / duplicate
-        Rectangle {
-            id: copyButton
-            anchors.verticalCenter: parent.verticalCenter
-            implicitWidth: buttonSize
-            implicitHeight: buttonSize
-            width: 4/10 * tools.height
-            height: width
-            color: "transparent"
-            Image {
-                source: "img/buttons/copy.png"
-                anchors.verticalCenter: parent.verticalCenter
-            }
-            MouseArea {
-                anchors.fill: parent
-                onClicked: {
-                    _buttleData.copyNode();
-                }
-            }
-        }
-
-        Rectangle {
-            id: cutButton
-            anchors.verticalCenter: parent.verticalCenter
-            implicitWidth: buttonSize
-            implicitHeight: buttonSize
-            width: 4/10 * tools.height
-            height: width
-            color: "transparent"
-            Image {
-                source: "img/buttons/cut.png"
-                anchors.verticalCenter: parent.verticalCenter
-            }
-            MouseArea {
-                anchors.fill: parent
-                onClicked: {
-                    _buttleData.cutNode();
-                }
-            }
-        }
-
-        Rectangle {
-            id: pastButton
-            anchors.verticalCenter: parent.verticalCenter
-            implicitWidth: buttonSize
-            implicitHeight: buttonSize
-            width: 4/10 * tools.height
-            height: width
-            color: "transparent"
-            Image {
-                source: "img/buttons/past.png"
-                anchors.verticalCenter: parent.verticalCenter
-            }
-            MouseArea {
-                anchors.fill: parent
-                onClicked: {
-                    _buttleData.pasteNode();
-                }
-            }
-        }
-
-        Rectangle {
-            id: duplicateButton
-            anchors.verticalCenter: parent.verticalCenter
-            implicitWidth: buttonSize
-            implicitHeight: buttonSize
-            width: 4/10 * tools.height
-            height: width
-            color: "transparent"
-            Image {
-                source: "img/buttons/duplicate.png"
-                anchors.verticalCenter: parent.verticalCenter
-            }
-            MouseArea {
-                anchors.fill: parent
-                onClicked: {
-                    _buttleData.duplicationNode();
+        ListView {
+            anchors.fill: parent
+            model: modelButtonsTools
+            orientation: ListView.Horizontal
+            spacing: 15
+            delegate {
+                Component {
+                    id: buttonTools
+                    Rectangle {
+                        anchors.verticalCenter: parent.verticalCenter
+                        implicitWidth: buttonSize
+                        implicitHeight: buttonSize
+                        color: "transparent"
+                        Image {
+                            source: imageSource
+                            anchors.verticalCenter: parent.verticalCenter
+                        }
+                        MouseArea {
+                            id: buttonMouseArea
+                            hoverEnabled: true
+                            anchors.fill: parent
+                            onClicked: tools.doAction(buttonName);
+                        }
+                        Rectangle {
+                            id: infoTools
+                            x: 20
+                            y: 15
+                            color: "grey"
+                            opacity: buttonMouseArea.containsMouse ? 1 : 0
+                            Text {
+                                text: buttonText
+                                color: "white"
+                            }
+                        }
+                    }
                 }
             }
         }

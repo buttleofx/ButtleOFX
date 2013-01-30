@@ -7,7 +7,8 @@ Rectangle {
 
     property url imageFile
     property real time: 0
-
+    property int fps: 25
+    property int frame: 0
     color:"#111111"
 
     GLViewport {
@@ -16,7 +17,7 @@ Rectangle {
         
         offset.x: 0.0
         offset.y: 0.0
-        time: container.time
+        frame: container.time/1000 * container.fps
         fittedMode: true
 
         property real inWidth: 16

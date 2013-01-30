@@ -79,10 +79,10 @@ Rectangle {
                 text: colorFields.alphaColorText
 
                 onTextChanged: {
-                    paramObject ? paramObject.r = rInput.colorValueText : 255
-                    paramObject ? paramObject.g = gInput.colorValueText : 255
-                    paramObject ? paramObject.b = bInput.colorValueText : 255
-                    paramObject ? paramObject.a = aInput.colorValueText : 255
+                    paramObject.r = (paramObject ? rInput.colorValueText : paramObject.r)
+                    paramObject.g = (paramObject ? gInput.colorValueText : paramObject.g)
+                    paramObject.b = (paramObject ? bInput.colorValueText : paramObject.b)
+                    paramObject.a = (paramObject ? aInput.colorValueText : paramObject.a)
                 }
             }
         }

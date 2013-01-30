@@ -53,21 +53,31 @@ class ParamRGB(object):
         self.setValueB(values[2])
 
     def setValueR(self, value1):
-        self._tuttleParam.setValueAtIndex(0, float(value1))
+        self._tuttleParam.setValueAtIndex(0, value1)
         self.changed()
+
+        print "Rouge : ", self.getValueR()
+
         from buttleofx.data import ButtleDataSingleton
         buttleData = ButtleDataSingleton().get()
         buttleData.updateMapAndViewer()
 
     def setValueG(self, value2):
-        self._tuttleParam.setValueAtIndex(1, float(value2))
+        self._tuttleParam.setValueAtIndex(1, value2)
         self.changed()
+
+        print "Vert : ", self.getValueG()
+
         from buttleofx.data import ButtleDataSingleton
         buttleData = ButtleDataSingleton().get()
         buttleData.updateMapAndViewer()
 
     def setValueB(self, value3):
-        self._tuttleParam.setValueAtIndex(2, float(value3))
+        self._tuttleParam.setValueAtIndex(2, value3)
+        self.changed()
+
+        print "Blue : ", self.getValueB()
+
         from buttleofx.data import ButtleDataSingleton
         buttleData = ButtleDataSingleton().get()
         buttleData.updateMapAndViewer()

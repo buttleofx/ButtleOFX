@@ -10,7 +10,6 @@ Item{
     property color alphaColorText: ColorFunctions.fullColorString(colorPicker.colorValue, alphaSlider.value)
     property color colorSelectorValue: ColorFunctions.hsba(colorSlider.value, 1, 1, 1)
 
-
     implicitWidth: 267
     implicitHeight: 200
 
@@ -43,9 +42,9 @@ Item{
             AlphaSlider{
                 id: alphaSlider
                 height: colorPicker.height - titleColorPicker.height - 20
-                cursorAlphaPositionSlider: colorPicker.height - (colorInputs.cursorAlphaPositionInputs)/255 * colorPicker.height
+                cursorAlphaPositionSlider: alphaSlider.height - (colorInputs.cursorAlphaPositionInputs)/255 * alphaSlider.height
             }
-            ColorInputs{
+            ColorInputsRGBA{
                 id: colorInputs
                 height: colorPicker.height - titleColorPicker.height - 20
                 currentColor: colorPicker.colorValue
@@ -59,6 +58,5 @@ Item{
                 alphaValue: Math.ceil(alphaSlider.value*255)
             }
         }
- 
     }
 }

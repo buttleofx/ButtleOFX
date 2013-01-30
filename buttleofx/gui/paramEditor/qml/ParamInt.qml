@@ -48,6 +48,10 @@ Item {
                     cursorSlider.x = ((sliderInput.text - paramObject.minimum) * barSlider.width) / (paramObject.maximum - paramObject.minimum);
                     paramObject.pushValue((cursorSlider.x * (paramObject.maximum - paramObject.minimum)) / barSlider.width + paramObject.minimum);
                 }
+                onActiveFocusChanged: {
+                    cursorSlider.x = ((sliderInput.text - paramObject.minimum) * barSlider.width) / (paramObject.maximum - paramObject.minimum);
+                    paramObject.pushValue((cursorSlider.x * (paramObject.maximum - paramObject.minimum)) / barSlider.width + paramObject.minimum);
+                }
                 validator: IntValidator {
                     bottom: paramObject.minimum
                     top: paramObject.maximum

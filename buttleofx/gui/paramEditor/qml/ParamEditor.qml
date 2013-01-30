@@ -183,7 +183,8 @@ Item {
                                         id: nodeNameUserInput
                                         text: currentParamNode.nameUser
                                         anchors.left: parent.left
-                                        anchors.verticalCenter: parent.verticalCenter
+                                        width: parent.width - 10
+                                        height: parent.height
                                         anchors.leftMargin: 5
                                         maximumLength: 100
                                         selectByMouse : true
@@ -279,6 +280,8 @@ Item {
                                         anchors.left: parent.left
                                         anchors.verticalCenter: parent.verticalCenter
                                         anchors.leftMargin: 5
+                                        width: parent.width - 10
+                                        height: parent.height
                                         maximumLength: 50
                                         selectByMouse : true
                                         color: activeFocus ? activeFocusOn : activeFocusOff
@@ -331,6 +334,8 @@ Item {
                                         text: currentParamNode.coord.x
                                         anchors.left: parent.left
                                         anchors.leftMargin: 5
+                                        width: parent.width - 10
+                                        height: parent.height
                                         color: activeFocus ? activeFocusOn : activeFocusOff
                                         selectByMouse : true
 
@@ -375,6 +380,8 @@ Item {
                                         text: currentParamNode.coord.y
                                         anchors.left: parent.left
                                         anchors.leftMargin: 5
+                                        width: parent.width - 10
+                                        height: parent.height
                                         color: activeFocus ? activeFocusOn : activeFocusOff
                                         selectByMouse : true
 

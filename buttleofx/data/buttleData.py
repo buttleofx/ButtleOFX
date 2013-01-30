@@ -184,9 +184,9 @@ class ButtleData(QtCore.QObject):
         else:
             self._currentCopiedNodeInfo.update({"mode": ""})
             self.destructionNode()
-            if self._currentCopiedNodeInfo["name"] == self._currentViewerNodeName:
+            if self._currentSelectedNodeName == self._currentViewerNodeName:
                 self._currentViewerNodeName = None
-            if self._currentCopiedNodeInfo["name"] == self._currentParamNodeName:
+            if self._currentSelectedNodeName == self._currentParamNodeName:
                 self._currentParamNodeName = None
 
     @QtCore.Slot()

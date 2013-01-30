@@ -105,15 +105,11 @@ Rectangle {
                             id: infoTools
                             x: 20
                             y: 15
-                            height: 20
-                            //width: 150
-                            implicitWidth: buttonText.implicitWidth
                             color: "grey"
                             opacity: buttonMouseArea.containsMouse ? 1 : 0
                             Text {
                                 text: buttonText
                                 color: "white"
-                                wrapMode: Text.WordWrap
                             }
                         }
                     }

@@ -90,25 +90,40 @@ class NodeWrapper(QtCore.QObject):
 
     #for video
     def getFPS(self):
-        #print "OUYAYAYAYAYAYYAYAYAYAYAYAYAYAYAIIIIIIIIII" * 100
+        print "OUYAYAYAYAYAYYAYAYAYAYAYAYAYAYAIIIIIIIIII"
         from buttleofx.data import ButtleDataSingleton
         buttleData = ButtleDataSingleton().get()
 
-        graph = buttleData.getGraph().getGraphTuttle()
-        node = self._node.getTuttleNode().asImageEffectNode()
-        graph.setup()
-        td = node.getTimeDomain()
-        print "node timeDomain: ", td.min, td.max
-        framerate = node.getFrameRate()
-        print "framerate: ", framerate
+        if(self._node.getType() == "tuttle.ffmpegreader"):
+            graph = buttleData.getGraph().getGraphTuttle()
+            node = self._node.getTuttleNode().asImageEffectNode()
+            graph.setup()
+            framerate = node.getFrameRate()
+            print "framerate: ", framerate
+            print "identifiant : ", self._node.getType()
+            return framerate
+        else:
+            return 1
 
     def getNbFrames(self):
-        #print "OUYAYAYAYAYAYYAYAYAYAYAYAYAYAYAIIIIIIIIII" * 100
-        return "lol"
+        print "OUYAYAYAYAYAYYAYAYAYAYAYAYAYAYAIIIIIIIIII"
+        from buttleofx.data import ButtleDataSingleton
+        buttleData = ButtleDataSingleton().get()
+
+        if(self._node.getType() == "tuttle.ffmpegreader"):
+            graph = buttleData.getGraph().getGraphTuttle()
+            node = self._node.getTuttleNode().asImageEffectNode()
+            graph.setup()
+            timeDomain = node.getTimeDomain()
+            #getTimeDomain() returns first frame and last one
+            nbFrames = timeDomain.max - timeDomain.min
+            print "node nbFrames: ", nbFrames
+            return nbFrames
+        else:
+            return 1
 
 
     ######## setters ########
-
     def setName(self, name):
         self._node.setName(name)
 

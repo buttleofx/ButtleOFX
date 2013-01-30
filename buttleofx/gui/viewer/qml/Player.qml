@@ -12,11 +12,13 @@ Item {
         id: timeProperties
         property real currentTime : 0 // current position of the time (milliseconds)
         property real formerKeyTime : 0 // position of the time before animation starts
-        property real timeDuration : 5000//node ? nbFrames/fps : 5000// total duration of the time (milliseconds)
+        
         //for video
-        property real fps: node ? node.fps : 15
-        property int nbFrames: node ? node.nbFrames : 15
+        property real fps: node ? node.fps : 1
+        property int nbFrames: node ? node.nbFrames : 1
         property int currentFrame: 0
+        property real timeDuration : node ? nbFrames/fps*1000 : 0
+        /*node ? nbFrames/fps : 5000// total duration of the time (milliseconds) */
     }
 
 
@@ -115,9 +117,13 @@ Item {
                         fps: timeProperties.fps
                         clip: true
                         onTimeChanged: {
-                            console.log("TAAAAAAAAAAAAAAIIIIIIiiiIIIIOOOOOOOOOOOOOOOOOOO")
-                            fps: node.fps
+                            console.log("ICI, ICI, ICI, ICI, ICI, ICI, ICI")
+                            console.log("fps :::::::::")
                             console.log(timeProperties.fps)
+                            console.log("nbFrames ::::::")
+                            console.log(timeProperties.nbFrames)
+                            console.log("duration :::::::")
+                            console.log(timeProperties.timeDuration)
                         }
                     }
                 }

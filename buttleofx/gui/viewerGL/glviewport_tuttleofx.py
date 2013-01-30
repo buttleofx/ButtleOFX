@@ -18,8 +18,9 @@ class GLViewport_tuttleofx(GLViewport):
         self.recomputeOverlay = False
 
         self._timeHasChanged = False
-
         self._time = 0
+        self._frame = 0
+        self._frameHasChanged = False
 
         buttleData = ButtleDataSingleton().get()
         buttleData.currentViewerNodeChangedPython.connect(self.loadImage)
@@ -30,8 +31,8 @@ class GLViewport_tuttleofx(GLViewport):
         buttleData = ButtleDataSingleton().get()
         #imgRes = buttleData.computeNode(self._time)
 
-        imgRes = buttleData.retrieveImage(self._time, self._timeHasChanged)
-        self._timeHasChanged = False
+        imgRes = buttleData.retrieveImage(self._frame, self._frameHasChanged)
+        self._frameHasChanged = False
 
         self.img_data = imgRes.getNumpyArray()
 
@@ -79,3 +80,17 @@ class GLViewport_tuttleofx(GLViewport):
 
     timeChanged = QtCore.Signal()
     time = QtCore.Property(float, getTime, setTime, notify=timeChanged)
+
+    #frame management
+    def getFrame(self):
+        return self._frame
+
+    def setFrame(self, currentFrame):
+        self._frameHasChanged = True
+        self._frame = currentFrame
+        self.update()
+        self.frameChanged.emit()
+        self.loadImage()
+
+    frameChanged = QtCore.Signal()
+    frame = QtCore.Property(int, getFrame, setFrame, notify=frameChanged)

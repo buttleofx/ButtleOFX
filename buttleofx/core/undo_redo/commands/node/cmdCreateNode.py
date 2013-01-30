@@ -5,8 +5,6 @@ from pyTuttle import tuttle
 from buttleofx.core.undo_redo.manageTools import UndoableCommand
 # core
 from buttleofx.core.graph.node import Node
-# data
-#from buttleofx.data import ButtleDataSingleton
 
 
 class CmdCreateNode(UndoableCommand):
@@ -31,12 +29,15 @@ class CmdCreateNode(UndoableCommand):
         """
             Undo the creation of the node.
         """
+        # data
+        from buttleofx.data import ButtleDataSingleton
+
         # The tuttle node is not deleted. We keep it so we don't need to recreate it when the redo command is called.
         node = self._graphTarget.getNode(self._nodeName)
-        # buttleData = ButtleDataSingleton().get()
-        # if self._nodeName == buttleData.getCurrentParamNodeName():
-        #     buttleData._currentParamNodeName = None
-        #     buttleData.currentParamNodeChanged.emit()
+        buttleData = ButtleDataSingleton().get()
+        if self._nodeName == buttleData.getCurrentParamNodeName():
+            buttleData._currentParamNodeName = None
+            buttleData.currentParamNodeChanged.emit()
         self._graphTarget.getNodes().remove(node)
         self._graphTarget.nodesChanged()
 

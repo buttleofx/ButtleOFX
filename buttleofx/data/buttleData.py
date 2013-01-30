@@ -431,9 +431,9 @@ class ButtleData(QtCore.QObject):
     currentSelectedNodeWrapper = QtCore.Property(QtCore.QObject, getCurrentSelectedNodeWrapper, setCurrentSelectedNodeWrapper, notify=currentSelectedNodeChanged)
     paramChangedSignal = Signal()
 
+    # error display on the Viewer
     nodeErrorChanged = QtCore.Signal()
     nodeError = QtCore.Property(str, getNodeError, setNodeError, notify=nodeErrorChanged)
-
 
 # This class exists just because thre are problems when a class extends 2 other class (Singleton and QObject)
 class ButtleDataSingleton(Singleton):

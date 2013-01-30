@@ -1,4 +1,5 @@
 import QtQuick 1.1
+import FolderListViewItem 1.0
 
 /*ParamString is an input field*/
 
@@ -90,6 +91,7 @@ Item {
                 }
             ]
         }
+        FolderListView {id: finder}
         // hidden by default
         Image {
             id: folderforFileOrDirectory
@@ -100,7 +102,13 @@ Item {
             MouseArea {
                 id: buttonmousearea
                 anchors.fill: parent
+                onPressed: {
+                    finder.browseFile(_buttleData.currentParamNodeWrapper);
+                    paramObject.value = finder.propFile
+                }
             }
         }
     }
 }
+
+

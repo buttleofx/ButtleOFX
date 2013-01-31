@@ -68,11 +68,11 @@ Rectangle {
         ListModel {
             id: modelButtonsTools
             ListElement { imageSource: "img/buttons/cut.png"; buttonName: "createNode"; buttonText: "Create a new node"; }
-            ListElement { imageSource: "img/buttons/undo.png"; buttonName: "undo"; buttonText: "Undo"; }
+            ListElement { imageSource: "img/buttons/undo.png"; imageSourceLocked: "img/buttons/undo_locked.png"; buttonName: "undo"; buttonText: "Undo"; }
             ListElement { imageSource: "img/buttons/redo.png"; buttonName: "redo"; buttonText: "Redo"; }
             ListElement { imageSource: "img/buttons/copy.png"; buttonName: "copy"; buttonText: "Copy"; }
             ListElement { imageSource: "img/buttons/cut.png"; buttonName: "cut"; buttonText: "Cut"; }
-            ListElement { imageSource: "img/buttons/past.png"; buttonName: "paste"; buttonText: "Paste"; }
+            ListElement { imageSource: "img/buttons/paste.png"; buttonName: "paste"; buttonText: "Paste"; }
             ListElement { imageSource: "img/buttons/duplicate.png"; buttonName: "duplicate"; buttonText: "Duplicate"; }
             ListElement { imageSource: "img/buttons/cut.png"; buttonName: "deleteNode"; buttonText: "Delete the node"; }
         }
@@ -96,6 +96,7 @@ Rectangle {
                         state: "normal"
                         radius: 3
                         Image {
+                            id: imageButton
                             source: imageSource
                             anchors.verticalCenter: parent.verticalCenter
                             anchors.horizontalCenter: parent.horizontalCenter
@@ -121,12 +122,28 @@ Rectangle {
                         StateGroup {
                             id: stateButtonEvents
                              states: [
+//                                 State {
+//                                     name: "locked"
+//                                     when: !_buttleData.canUndo()
+//                                     PropertyChanges {
+//                                         target: buttonTools;
+//                                         color:  "transparent"
+//                                     }
+//                                     PropertyChanges {
+//                                        target: imageButton
+//                                        source: imageSourceLocked
+//                                     }
+//                                 },
                                  State {
                                      name: "normal"
                                      when: !buttonMouseArea.containsMouse
                                      PropertyChanges {
                                          target: buttonTools
                                          color:  "transparent"
+                                     }
+                                     PropertyChanges {
+                                        target: imageButton
+                                        source: imageSource
                                      }
                                  },
                                  State {
@@ -136,6 +153,10 @@ Rectangle {
                                          target: buttonTools;
                                          color:  "#00b2a1"
                                      }
+                                     PropertyChanges {
+                                        target: imageButton
+                                        source: imageSource
+                                     }
                                  },
                                  State {
                                      name: "hover"
@@ -144,8 +165,11 @@ Rectangle {
                                          target: buttonTools;
                                          color:  "#555555"
                                      }
+                                     PropertyChanges {
+                                        target: imageButton
+                                        source: imageSource
+                                     }
                                  }
-
                              ]
                         }
                     }

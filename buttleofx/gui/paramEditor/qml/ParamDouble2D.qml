@@ -10,7 +10,7 @@ Item {
     property variant paramObject: model.object
 
     /*Container of the two input field*/
-     Row{
+     Row {
         id: paramDouble2DInputContainer
         spacing : 10
 
@@ -22,14 +22,14 @@ Item {
         }
 
         /* First input */
-        Rectangle{
+        Rectangle {
             height: 20
             width:40
             color: "#343434"
             border.width: 1
             border.color: "#444"
             radius: 3
-            TextInput{
+            TextInput {
                 id: paramDouble2Dinput1
                 text: paramObject.value1
                 anchors.left: parent.left
@@ -38,9 +38,17 @@ Item {
                 color: activeFocus ? "white" : "grey"
                 width: 40
                 selectByMouse : true
-                onAccepted: paramObject.value1 = paramDouble2Dinput1.text
-                onActiveFocusChanged: paramObject.value1 = paramDouble2Dinput1.text
-                validator: DoubleValidator{
+                onAccepted: {
+                    if(acceptableInput){
+                        paramObject.value1 = paramDouble2Dinput1.text
+                    }
+                }
+                onActiveFocusChanged: {
+                    if(acceptableInput){
+                        paramObject.value1 = paramDouble2Dinput1.text
+                    }
+                }
+                validator: DoubleValidator {
                     bottom: paramObject.minimum1
                     top:  paramObject.maximum1
                 }
@@ -48,14 +56,14 @@ Item {
         }
 
         /* Second input */
-        Rectangle{
+        Rectangle {
             height: 20
             width:40
             color: "#343434"
             border.width: 1
             border.color: "#444"
             radius: 3
-            TextInput{
+            TextInput {
                 id: paramDouble2Dinput2
                 text: paramObject.value2
                 anchors.left: parent.left
@@ -64,13 +72,17 @@ Item {
                 color: activeFocus ? "white" : "grey"
                 width: 40
                 selectByMouse : true
-                onAccepted: paramObject.value2 = paramDouble2Dinput2.text
-                onActiveFocusChanged: {
-                    if(acceptableInput){
+                onAccepted: {
+                    if(acceptableInput) {
                         paramObject.value2 = paramDouble2Dinput2.text
                     }
                 }
-                validator: DoubleValidator{
+                onActiveFocusChanged: {
+                    if(acceptableInput) {
+                        paramObject.value2 = paramDouble2Dinput2.text
+                    }
+                }
+                validator: DoubleValidator {
                     bottom: paramObject.minimum2
                     top: paramObject.maximum2
                 }

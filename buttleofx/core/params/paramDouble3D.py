@@ -71,21 +71,21 @@ class ParamDouble3D(object):
         self.setValue3(values[2])
 
     def setValue1(self, value1):
-        self._tuttleParam.setValue([float(value1), self.getValue2(), self.getValue3()])
+        self._tuttleParam.setValueAtIndex(0, float(value))
         self.changed()
         from buttleofx.data import ButtleDataSingleton
         buttleData = ButtleDataSingleton().get()
         buttleData.updateMapAndViewer()
 
     def setValue2(self, value2):
-        self._tuttleParam.setValue([self.getValue1(), float(value2), self.getValue3()])
+        self._tuttleParam.setValueAtIndex(1, float(value))
         self.changed()
         from buttleofx.data import ButtleDataSingleton
         buttleData = ButtleDataSingleton().get()
         buttleData.updateMapAndViewer()
 
     def setValue3(self, value3):
-        self._tuttleParam.setValue([self.getValue1(), self.getValue2(), float(value3)])
+        self._tuttleParam.setValueAtIndex(2, float(value))
         self.changed()
         from buttleofx.data import ButtleDataSingleton
         buttleData = ButtleDataSingleton().get()

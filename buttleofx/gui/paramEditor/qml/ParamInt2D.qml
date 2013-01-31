@@ -9,7 +9,7 @@ Item {
     property variant paramObject: model.object
 
     /*Container of the textInput*/
-    Row{
+    Row {
         id: paramInt2DInputContainer
         spacing: 10
 
@@ -21,14 +21,14 @@ Item {
         }
 
         /* First Input */
-        Rectangle{
+        Rectangle {
             height: 20
             width:40
             color: "#343434"
             border.width: 1
             border.color: "#444"
             radius: 3
-            TextInput{
+            TextInput {
                 id: paramInt2DInput1
                 text: paramObject.value1
                 anchors.left: parent.left
@@ -37,9 +37,17 @@ Item {
                 color: activeFocus ? "white" : "grey"
                 width: 40
                 selectByMouse : true
-                onAccepted: paramObject.value1 = paramInt2DInput1.text
-                onActiveFocusChanged: paramObject.value1 = paramInt2DInput1.text
-                validator: IntValidator{
+                onAccepted: {
+                    if(acceptableInput) {
+                        paramObject.value1 = paramInt2DInput1.text
+                    }
+                }
+                onActiveFocusChanged: {
+                    if(acceptableInput) {
+                        paramObject.value1 = paramInt2DInput1.text
+                    }
+                }
+                validator: IntValidator {
                     bottom: model.object.minimum1
                     top:  model.object.maximum1
                 }
@@ -47,7 +55,7 @@ Item {
         }
 
         /* Second Input */
-        Rectangle{
+        Rectangle {
             height: 20
             width:40
             color: "#343434"
@@ -63,13 +71,17 @@ Item {
                 color: activeFocus ? "white" : "grey"
                 width: 40
                 selectByMouse : true
-                onAccepted: paramObject.value2 = paramInt2DInput2.text
-                onActiveFocusChanged: {
-                    if(acceptableInput){
+                onAccepted: {
+                    if(acceptableInput) {
                         paramObject.value2 = paramInt2DInput2.text
                     }
                 }
-                validator: IntValidator{
+                onActiveFocusChanged: {
+                    if(acceptableInput) {
+                        paramObject.value2 = paramInt2DInput2.text
+                    }
+                }
+                validator: IntValidator {
                     bottom: model.object.minimum2
                     top:  model.object.maximum2
                 }

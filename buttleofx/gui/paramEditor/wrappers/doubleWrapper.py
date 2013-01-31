@@ -49,8 +49,8 @@ class DoubleWrapper(QtCore.QObject):
 
     ################################################## DATA EXPOSED TO QML ##################################################
 
-    paramType = QtCore.Property(unicode, getParamType, notify=changed)
-    text = QtCore.Property(unicode, getText, notify=changed)
+    paramType = QtCore.Property(unicode, getParamType, constant=True)
+    text = QtCore.Property(unicode, getText, constant=True)
     value = QtCore.Property(float, getValue, setValue, notify=changed)
-    maximum = QtCore.Property(float, getMaximum, notify=changed)
-    minimum = QtCore.Property(float, getMinimum, notify=changed)
+    maximum = QtCore.Property(float, getMaximum, constant=True)
+    minimum = QtCore.Property(float, getMinimum, constant=True)

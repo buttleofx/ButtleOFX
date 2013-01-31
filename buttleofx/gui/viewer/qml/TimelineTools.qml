@@ -21,12 +21,12 @@ Item {
 
             case "stop":
                 playingAnimation.stop();
+                cursorTimeline.x = 0;
                 timeProperties.formerKeyTime = timeProperties.currentTime;
                 break;
 
             case "pause":
                 playingAnimation.stop();
-                cursorTimeline.x = 0;
                 timeProperties.formerKeyTime = timeProperties.currentTime;
                 break;
 

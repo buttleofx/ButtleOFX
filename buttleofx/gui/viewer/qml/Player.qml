@@ -307,7 +307,7 @@ Item {
 */
                     Item {
                         anchors.verticalCenter: tools.verticalCenter
-                        x: tools.width/3
+                        x: (barTimeline.width - 320) / 2
                         TimelineTools {}
                     }
 
@@ -443,6 +443,9 @@ Item {
                             onReleased : {
                                 timeProperties.formerKeyTime = timeProperties.currentTime
                             }
+                        }
+                        onWidthChanged: {
+                            cursorTimeline.x = (timeProperties.currentTime * (barTimeline.width - cursorTimeline.width)) / timeProperties.timeDuration
                         }
                     }
 

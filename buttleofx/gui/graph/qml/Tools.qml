@@ -90,8 +90,8 @@ Rectangle {
                     Rectangle {
                         id: buttonTools
                         anchors.verticalCenter: parent.verticalCenter
-                        width: 26
-                        height: 26
+                        width: 28
+                        height: 28
                         color: "transparent"
                         state: "normal"
                         radius: 3
@@ -165,10 +165,10 @@ Rectangle {
                                          target: buttonTools;
                                          color:  "#555555"
                                      }
-//                                     PropertyChanges {
-//                                        target: imageButton
-//                                        source: imageSourceHover
-//                                     }
+                                     PropertyChanges {
+                                        target: imageButton
+                                        source: imageSourceHover
+                                     }
                                  }
                              ]
                         }

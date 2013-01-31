@@ -81,9 +81,6 @@ class NodeWrapper(QtCore.QObject):
     def getInputTopMargin(self):
         return (self.getHeight() - self.getClipSize() * self.getNbInput() - self.getClipSpacing() * (self.getNbInput() - 1)) / 2
 
-    # def getImage(self):
-    #     return self._node.getImage()
-
     def getParams(self):
         paramEditorWrapper = ParamEditorWrapper(self._view, self._node.getParams())
         return paramEditorWrapper.paramElmts
@@ -126,10 +123,6 @@ class NodeWrapper(QtCore.QObject):
     def setType(self, nodeType):
         self._node.setType(nodeType)
 
-    # from 2 decimal values
-    # def setCoord(self, x, y):
-    #     self._node.setCoord(x, y)
-
     # from a QPoint
     def setCoord(self, point):
         self._node.setCoord(point.x(), point.y())
@@ -140,10 +133,6 @@ class NodeWrapper(QtCore.QObject):
 
     def setNbInput(self, nbInput):
         self._node.setNbInput(nbInput)
-
-    # def setImage(self, image):
-    #     self._node.setImage(image)
-
 
     ################################################## DATA EXPOSED TO QML ##################################################
 

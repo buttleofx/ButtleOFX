@@ -49,7 +49,6 @@ class ButtleData(QtCore.QObject):
     def init(self, view):
         self._graph = Graph()
         self._graphWrapper = GraphWrapper(self._graph, view)
-        self.currentViewerNodeChangedPython = Signal()
 
         return self
 
@@ -133,7 +132,7 @@ class ButtleData(QtCore.QObject):
             return
         self._currentViewerNodeName = nodeWrapper.getName()
         self.currentViewerNodeChanged.emit()
-        self.currentViewerNodeChangedPython()
+        self.viewerChangedSignal()
 
     def setNodeError(self, nodeName):
         self._nodeError = nodeName
@@ -426,11 +425,14 @@ class ButtleData(QtCore.QObject):
     currentViewerNodeWrapper = QtCore.Property(QtCore.QObject, getCurrentViewerNodeWrapper, setCurrentViewerNodeWrapper, notify=currentViewerNodeChanged)
     currentSelectedNodeChanged = QtCore.Signal()
     currentSelectedNodeWrapper = QtCore.Property(QtCore.QObject, getCurrentSelectedNodeWrapper, setCurrentSelectedNodeWrapper, notify=currentSelectedNodeChanged)
-    paramChangedSignal = Signal()
 
     # error display on the Viewer
     nodeErrorChanged = QtCore.Signal()
     nodeError = QtCore.Property(str, getNodeError, setNodeError, notify=nodeErrorChanged)
+
+    # python signals
+    paramChangedSignal = Signal()
+    viewerChangedSignal = Signal()
 
 # This class exists just because thre are problems when a class extends 2 other class (Singleton and QObject)
 class ButtleDataSingleton(Singleton):

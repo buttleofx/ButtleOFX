@@ -25,6 +25,42 @@ Rectangle {
     color: "transparent"
     focus: true
 
+    MouseArea {
+        id: nodeMouseArea
+        anchors.fill: parent
+        drag.target: parent
+        drag.axis: Drag.XandYAxis
+        acceptedButtons: Qt.LeftButton | Qt.RightButton
+        onPressed: {
+            // left button : we change the current selected node & we start moving
+            if (mouse.button == Qt.LeftButton) {
+                if(_buttleData.currentSelectedNodeWrapper != m.nodeModel) {
+                    _buttleData.currentSelectedNodeWrapper = m.nodeModel
+                    _buttleData.graphWrapper.zMax += 1
+                    parent.z = _buttleData.graphWrapper.zMax
+                }
+                stateMoving.state = "moving"
+                _buttleData.graphWrapper.updateConnectionsCoord()
+            }
+            // right button : we change the current param node
+           else if (mouse.button == Qt.RightButton) {
+                 _buttleData.currentParamNodeWrapper = m.nodeModel;
+            }
+        }
+        onReleased: {
+            // left button : we end moving
+            if (mouse.button == Qt.LeftButton) {
+                _buttleData.nodeMoved(m.nodeModel.name, parent.x, parent.y)
+                stateMoving.state = "normal"
+            }
+        }
+        // double click : we change the current viewer node
+        onDoubleClicked: {
+            _buttleData.currentViewerNodeWrapper = m.nodeModel;
+        }
+
+    }
+
     Rectangle {
         id: nodeBorder
         anchors.centerIn: parent
@@ -162,42 +198,6 @@ Rectangle {
             PropertyChanges { target: node; opacity: .5 }
             }
         ]
-    }
-
-    MouseArea {
-        id: nodeMouseArea
-        anchors.fill: parent
-        drag.target: parent
-        drag.axis: Drag.XandYAxis
-        acceptedButtons: Qt.LeftButton | Qt.RightButton
-        onPressed: {
-            // left button : we change the current selected node & we start moving
-            if (mouse.button == Qt.LeftButton) {
-                if(_buttleData.currentSelectedNodeWrapper != m.nodeModel) {
-                    _buttleData.currentSelectedNodeWrapper = m.nodeModel
-                    _buttleData.graphWrapper.zMax += 1
-                    parent.z = _buttleData.graphWrapper.zMax
-                }
-                stateMoving.state = "moving"
-                _buttleData.graphWrapper.updateConnectionsCoord()
-            }
-            // right button : we change the current param node
-           else if (mouse.button == Qt.RightButton) {
-                 _buttleData.currentParamNodeWrapper = m.nodeModel;
-            }
-        }
-        onReleased: {
-            // left button : we end moving
-            if (mouse.button == Qt.LeftButton) {
-                _buttleData.nodeMoved(m.nodeModel.name, parent.x, parent.y)
-                stateMoving.state = "normal"
-            }
-        }
-        // double click : we change the current viewer node
-        onDoubleClicked: {
-            _buttleData.currentViewerNodeWrapper = m.nodeModel;
-        }
-
     }
 
     onXChanged: {

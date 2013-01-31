@@ -67,14 +67,14 @@ Rectangle {
 
         ListModel {
             id: modelButtonsTools
-            ListElement { imageSource: "img/buttons/cut.png"; buttonName: "createNode"; buttonText: "Create a new node"; }
-            ListElement { imageSource: "img/buttons/undo.png"; imageSourceLocked: "img/buttons/undo_locked.png"; buttonName: "undo"; buttonText: "Undo"; }
-            ListElement { imageSource: "img/buttons/redo.png"; buttonName: "redo"; buttonText: "Redo"; }
-            ListElement { imageSource: "img/buttons/copy.png"; buttonName: "copy"; buttonText: "Copy"; }
-            ListElement { imageSource: "img/buttons/cut.png"; buttonName: "cut"; buttonText: "Cut"; }
-            ListElement { imageSource: "img/buttons/paste.png"; buttonName: "paste"; buttonText: "Paste"; }
-            ListElement { imageSource: "img/buttons/duplicate.png"; buttonName: "duplicate"; buttonText: "Duplicate"; }
-            ListElement { imageSource: "img/buttons/cut.png"; buttonName: "deleteNode"; buttonText: "Delete the node"; }
+            ListElement { imageSource: "img/buttons/plus.png"; imageSourceHover: "img/buttons/plus_hover.png"; buttonName: "createNode"; buttonText: "Create a new node"; }
+            ListElement { imageSource: "img/buttons/undo.png"; imageSourceHover: "img/buttons/undo_hover.png"; buttonName: "undo"; buttonText: "Undo"; }
+            ListElement { imageSource: "img/buttons/redo.png"; imageSourceHover: "img/buttons/redo_hover.png"; buttonName: "redo"; buttonText: "Redo"; }
+            ListElement { imageSource: "img/buttons/copy.png"; imageSourceHover: "img/buttons/copy_hover.png"; buttonName: "copy"; buttonText: "Copy"; }
+            ListElement { imageSource: "img/buttons/cut.png"; imageSourceHover: "img/buttons/cut_hover.png"; buttonName: "cut"; buttonText: "Cut"; }
+            ListElement { imageSource: "img/buttons/paste.png"; imageSourceHover: "img/buttons/paste_hover.png"; buttonName: "paste"; buttonText: "Paste"; }
+            ListElement { imageSource: "img/buttons/duplicate.png"; imageSourceHover: "img/buttons/duplicate_hover.png"; buttonName: "duplicate"; buttonText: "Duplicate"; }
+            ListElement { imageSource: "img/buttons/delete.png"; imageSourceHover: "img/buttons/delete_hover.png"; buttonName: "deleteNode"; buttonText: "Delete the node"; }
         }
 
         ListView {
@@ -124,7 +124,7 @@ Rectangle {
                              states: [
 //                                 State {
 //                                     name: "locked"
-//                                     when: !_buttleData.canUndo()
+//                                     when: !_buttleData.currentSelectedNodeWrapper
 //                                     PropertyChanges {
 //                                         target: buttonTools;
 //                                         color:  "transparent"
@@ -150,7 +150,7 @@ Rectangle {
                                      name: "pressed"
                                      when: buttonMouseArea.containsMouse && buttonMouseArea.pressed
                                      PropertyChanges {
-                                         target: buttonTools;
+                                         target: buttonTools
                                          color:  "#00b2a1"
                                      }
                                      PropertyChanges {
@@ -165,10 +165,10 @@ Rectangle {
                                          target: buttonTools;
                                          color:  "#555555"
                                      }
-                                     PropertyChanges {
-                                        target: imageButton
-                                        source: imageSource
-                                     }
+//                                     PropertyChanges {
+//                                        target: imageButton
+//                                        source: imageSourceHover
+//                                     }
                                  }
                              ]
                         }

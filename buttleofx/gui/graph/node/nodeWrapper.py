@@ -57,6 +57,12 @@ class NodeWrapper(QtCore.QObject):
     def getCoord(self):
         return QtCore.QPoint(self._node.getCoord()[0], self._node.getCoord()[1])
 
+    def getXCoord(self):
+        return self._node.getCoord()[0]
+
+    def getYCoord(self):
+        return self._node.getCoord()[1]
+
     def getColor(self):
         return QtGui.QColor(*self._node.getColor())
 
@@ -127,6 +133,12 @@ class NodeWrapper(QtCore.QObject):
     def setCoord(self, point):
         self._node.setCoord(point.x(), point.y())
 
+    def setXCoord(self, x):
+        self._node.setCoord(x, self.getYCoord())
+
+    def setYCoord(self, y):
+        self._node.setCoord(self.getXCoord(), y)
+
     # from a QColor
     def setColor(self, color):
         self._node.setColor(color.red(), color.green(), color.blue())
@@ -141,6 +153,10 @@ class NodeWrapper(QtCore.QObject):
     nameUser = QtCore.Property(str, getNameUser, setNameUser, notify=changed)
     nodeType = QtCore.Property(str, getType, setType, notify=changed)
     coord = QtCore.Property(QtCore.QPoint, getCoord, setCoord, notify=changed)
+
+    xCoord = QtCore.Property(int, getXCoord, setXCoord, notify=changed)
+    yCoord = QtCore.Property(int, getYCoord, setYCoord, notify=changed)
+
     color = QtCore.Property(QtGui.QColor, getColor, setColor, notify=changed)
     nbInput = QtCore.Property(int, getNbInput, setNbInput, notify=changed)
     # image = QtCore.Property(str, getImage, setImage, notify=changed)

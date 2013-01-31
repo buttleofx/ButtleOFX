@@ -331,7 +331,7 @@ Item {
                                     radius: 3
                                     TextInput {
                                         id: nodeCoordXInput
-                                        text: currentParamNode ? currentParamNode.coord.x : ""
+                                        text: currentParamNode ? currentParamNode.xCoord : ""
                                         anchors.left: parent.left
                                         anchors.leftMargin: 5
                                         width: parent.width - 10
@@ -340,11 +340,11 @@ Item {
                                         selectByMouse : true
 
                                         onAccepted: {
-                                            currentParamNode.coord.x = nodeCoordXInput.text
+                                            currentParamNode.xCoord = nodeCoordXInput.text
                                             _buttleData.graphWrapper.updateConnectionsCoord()
                                         }
                                         onActiveFocusChanged: {
-                                            currentParamNode.coord.x = nodeCoordXInput.text
+                                            currentParamNode.xCoord = nodeCoordXInput.text
                                             _buttleData.graphWrapper.updateConnectionsCoord()
                                         }
 
@@ -359,7 +359,7 @@ Item {
                                     height: 20
                                     implicitWidth: 15
                                     color: "transparent"
-                                    Text{
+                                    Text {
                                         id: nodeCoordYLabel
                                         text: "y :"
                                         anchors.left: parent.left
@@ -377,7 +377,7 @@ Item {
                                     radius: 3
                                     TextInput {
                                         id: nodeCoordYInput
-                                        text: currentParamNode ? currentParamNode.coord.y : ""
+                                        text: currentParamNode ? currentParamNode.yCoord : ""
                                         anchors.left: parent.left
                                         anchors.leftMargin: 5
                                         width: parent.width - 10
@@ -386,11 +386,11 @@ Item {
                                         selectByMouse : true
 
                                         onAccepted: {
-                                            currentParamNode.coord.y = nodeCoordYInput.text
+                                            currentParamNode.yCoord = nodeCoordYInput.text
                                             _buttleData.graphWrapper.updateConnectionsCoord()
                                         }
                                         onActiveFocusChanged: {
-                                            currentParamNode.coord.y = nodeCoordYInput.text
+                                            currentParamNode.yCoord = nodeCoordYInput.text
                                             _buttleData.graphWrapper.updateConnectionsCoord()
                                         }
 

@@ -55,7 +55,7 @@ class Node(object):
         self._coord = nodeCoord
         self._oldCoord = nodeCoord
         self._color = (0, 178, 161)
-        self._nbInput = self._tuttleNode.asImageEffectNode().getClipImageSet().getNbClips()
+        self._nbInput = self._tuttleNode.asImageEffectNode().getClipImageSet().getNbClips() - 1
         self._params = []
 
         # Filling the node's param list

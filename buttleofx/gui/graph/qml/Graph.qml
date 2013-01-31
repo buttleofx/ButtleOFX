@@ -29,6 +29,15 @@ Rectangle {
         }
     }
 
+    MouseArea{
+        id: middleMouseArea
+        anchors.fill: parent
+        acceptedButtons: Qt.MiddleButton
+        hoverEnabled: true
+        drag.target: connectnode
+        drag.axis: Drag.XandYAxis
+    }
+
     Rectangle {
         id: connectnode
         Item {
@@ -133,17 +142,6 @@ Rectangle {
 
         transform: Scale { id: scale; origin.x: graphArea.width/2; origin.y: graphArea.height/2; xScale: 1; yScale: 1}
     }
-    
-
-    MouseArea{
-        id: middleMouseArea
-        anchors.fill: parent
-        acceptedButtons: Qt.MiddleButton 
-        hoverEnabled: true
-        drag.target: connectnode
-        drag.axis: Drag.XandYAxis
-    }
-
 
     WheelArea {
         anchors.fill: parent

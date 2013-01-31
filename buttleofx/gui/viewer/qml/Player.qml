@@ -124,11 +124,11 @@ Item {
 
                 Rectangle {
                     id: titleErrorDisplay
-                    color: "red"
+                    color: "#00b2a1"
                     width: titleError.width + 20
                     height: titleError.lineCount * 20
                     border.width: 2
-                    border.color: "brown"
+                    border.color: "black"
                     state: "hidden"
                    Text {
                         id: titleError
@@ -139,7 +139,9 @@ Item {
                     }
                     Rectangle {
                         id: errorDisplay
-                        color: "red"
+                        color: "#00b2a1"
+                        border.width: 2
+                        border.color: "black"
                         anchors.top: parent.bottom
                         anchors.left: parent.left
                         width: errorMessage.width + 20

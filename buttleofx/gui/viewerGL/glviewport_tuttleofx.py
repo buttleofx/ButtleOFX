@@ -23,7 +23,7 @@ class GLViewport_tuttleofx(GLViewport):
         self._frameHasChanged = False
 
         buttleData = ButtleDataSingleton().get()
-        buttleData.currentViewerNodeChangedPython.connect(self.loadImage)
+        buttleData.viewerChangedSignal.connect(self.loadImage)
         buttleData.paramChangedSignal.connect(self.loadImage)
 
     def loadImage_tuttle(self):

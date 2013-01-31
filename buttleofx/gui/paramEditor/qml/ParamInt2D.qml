@@ -51,6 +51,9 @@ Item {
                     bottom: model.object.minimum1
                     top:  model.object.maximum1
                 }
+
+                KeyNavigation.backtab: paramInt2DInput2
+                KeyNavigation.tab: paramInt2DInput2
             }
         }
 
@@ -85,6 +88,9 @@ Item {
                     bottom: model.object.minimum2
                     top:  model.object.maximum2
                 }
+
+                KeyNavigation.backtab: paramInt2DInput1
+                KeyNavigation.tab: paramInt2DInput1
             }
         }
     }

@@ -53,6 +53,9 @@ Item {
                     bottom: paramObject.minimum1
                     top:  paramObject.maximum1
                 }
+
+                KeyNavigation.backtab: paramInt2DInput3
+                KeyNavigation.tab: paramInt2DInput2
             }
         }
 
@@ -87,6 +90,9 @@ Item {
                     bottom: paramObject.minimum2
                     top: paramObject.maximum2
                 }
+
+                KeyNavigation.backtab: paramInt2DInput1
+                KeyNavigation.tab: paramInt2DInput3
             }
         }
 
@@ -121,6 +127,9 @@ Item {
                     bottom: paramObject.minimum3
                     top: paramObject.maximum3
                 }
+
+                KeyNavigation.backtab: paramInt2DInput2
+                KeyNavigation.tab: paramInt2DInput1
             }
         }
     }

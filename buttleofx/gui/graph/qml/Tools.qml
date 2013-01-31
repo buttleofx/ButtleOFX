@@ -67,14 +67,14 @@ Rectangle {
 
         ListModel {
             id: modelButtonsTools
-            ListElement { imageSource: "img/buttons/cut.png"; buttonName: "createNode"; buttonText: "Create a new node"; locked: false; }
-            ListElement { imageSource: "img/buttons/undo.png"; imageSourceLocked: "img/buttons/undo_locked.png"; buttonName: "undo"; buttonText: "Undo"; locked: true; }
-            ListElement { imageSource: "img/buttons/redo.png"; buttonName: "redo"; buttonText: "Redo"; locked: true; }
-            ListElement { imageSource: "img/buttons/copy.png"; buttonName: "copy"; buttonText: "Copy"; locked: true; }
-            ListElement { imageSource: "img/buttons/cut.png"; buttonName: "cut"; buttonText: "Cut"; locked: true; }
-            ListElement { imageSource: "img/buttons/past.png"; buttonName: "paste"; buttonText: "Paste"; locked: true; }
-            ListElement { imageSource: "img/buttons/duplicate.png"; buttonName: "duplicate"; buttonText: "Duplicate"; locked: true; }
-            ListElement { imageSource: "img/buttons/cut.png"; buttonName: "deleteNode"; buttonText: "Delete the node"; locked: true; }
+            ListElement { imageSource: "img/buttons/cut.png"; buttonName: "createNode"; buttonText: "Create a new node"; }
+            ListElement { imageSource: "img/buttons/undo.png"; imageSourceLocked: "img/buttons/undo_locked.png"; buttonName: "undo"; buttonText: "Undo"; }
+            ListElement { imageSource: "img/buttons/redo.png"; buttonName: "redo"; buttonText: "Redo"; }
+            ListElement { imageSource: "img/buttons/copy.png"; buttonName: "copy"; buttonText: "Copy"; }
+            ListElement { imageSource: "img/buttons/cut.png"; buttonName: "cut"; buttonText: "Cut"; }
+            ListElement { imageSource: "img/buttons/paste.png"; buttonName: "paste"; buttonText: "Paste"; }
+            ListElement { imageSource: "img/buttons/duplicate.png"; buttonName: "duplicate"; buttonText: "Duplicate"; }
+            ListElement { imageSource: "img/buttons/cut.png"; buttonName: "deleteNode"; buttonText: "Delete the node"; }
         }
 
         ListView {
@@ -93,7 +93,7 @@ Rectangle {
                         width: 26
                         height: 26
                         color: "transparent"
-                        state: locked ? "locked" : "normal"
+                        state: "normal"
                         radius: 3
                         Image {
                             id: imageButton
@@ -122,18 +122,18 @@ Rectangle {
                         StateGroup {
                             id: stateButtonEvents
                              states: [
-                                 State {
-                                     name: "locked"
-                                     when: !_buttleData.canUndo()
-                                     PropertyChanges {
-                                         target: buttonTools;
-                                         color:  "transparent"
-                                     }
-                                     PropertyChanges {
-                                        target: imageButton
-                                        source: imageSourceLocked
-                                     }
-                                 },
+//                                 State {
+//                                     name: "locked"
+//                                     when: !_buttleData.canUndo()
+//                                     PropertyChanges {
+//                                         target: buttonTools;
+//                                         color:  "transparent"
+//                                     }
+//                                     PropertyChanges {
+//                                        target: imageButton
+//                                        source: imageSourceLocked
+//                                     }
+//                                 },
                                  State {
                                      name: "normal"
                                      when: !buttonMouseArea.containsMouse

@@ -7,7 +7,7 @@ from buttleofx.core.undo_redo.commands.params import CmdSetParamInt
 class ParamInt(object):
     """
         Core class, which represents an int parameter.
-        Contains : 
+        Contains :
             - _tuttleParam : link to the corresponding tuttleParam
     """
 

@@ -1,4 +1,7 @@
 from quickmamba.patterns import Signal
+# undo redo
+from buttleofx.core.undo_redo.manageTools import CommandManager
+from buttleofx.core.undo_redo.commands.params import CmdSetParamChoice
 
 
 class ParamChoice(object):
@@ -14,6 +17,7 @@ class ParamChoice(object):
 
     def __init__(self, tuttleParam):
         self._tuttleParam = tuttleParam
+        self._oldValue = self.getValue()
 
         self._listValue = []
         for choice in range(tuttleParam.getProperties().fetchProperty("OfxParamPropChoiceOption").getDimension()):
@@ -32,6 +36,9 @@ class ParamChoice(object):
     def getDefaultValue(self):
         return self._tuttleParam.getProperties().getStringProperty("OfxParamPropChoiceOption", 0)
 
+    def getOldValue(self):
+        return self._oldValue
+
     def getValue(self):
         return self._tuttleParam.getStringValue()
 
@@ -43,9 +50,17 @@ class ParamChoice(object):
 
     #################### setters ####################
 
+    def setOldValue(self, value):
+        self._oldValue = value
+
     def setValue(self, value):
         self._tuttleParam.setValue(str(value))
         self.changed()
         from buttleofx.data import ButtleDataSingleton
         buttleData = ButtleDataSingleton().get()
         buttleData.updateMapAndViewer()
+
+    def pushValue(self, newValue):
+        cmdUpdate = CmdSetParamChoice(self, newValue)
+        cmdManager = CommandManager()
+        cmdManager.push(cmdUpdate)

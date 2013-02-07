@@ -1,4 +1,7 @@
 from quickmamba.patterns import Signal
+# undo redo
+from buttleofx.core.undo_redo.manageTools import CommandManager
+from buttleofx.core.undo_redo.commands.params import CmdSetParamBoolean
 
 
 class ParamBoolean(object):
@@ -40,3 +43,8 @@ class ParamBoolean(object):
         from buttleofx.data import ButtleDataSingleton
         buttleData = ButtleDataSingleton().get()
         buttleData.updateMapAndViewer()
+
+    def pushValue(self, newValue):
+        cmdUpdate = CmdSetParamBoolean(self, newValue)
+        cmdManager = CommandManager()
+        cmdManager.push(cmdUpdate)

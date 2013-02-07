@@ -4,7 +4,7 @@ import "gui/graph/qml"
 import "gui/viewer/qml"
 import "gui/paramEditor/qml"
 
-Rectangle {
+Item {
     width: 1200
     height: 800
 

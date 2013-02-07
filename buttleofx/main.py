@@ -85,6 +85,8 @@ def main(argv):
     view.setSource(os.path.join(currentFilePath, "MainWindow.qml"))
     view.setResizeMode(QtDeclarative.QDeclarativeView.SizeRootObjectToView)
     view.setWindowTitle("ButtleOFX")
+    view.setWindowIcon(QtGui.QIcon("blackMosquito.png"))
+    view.setWindowIconText("ButtleOFX")
 
     # Declare we are using instant coding tool on this view
     qic = QmlInstantCoding(view, verbose=True)
@@ -93,3 +95,4 @@ def main(argv):
 
     view.show()
     app.exec_()
+

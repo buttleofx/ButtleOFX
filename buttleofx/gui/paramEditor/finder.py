@@ -6,7 +6,6 @@ import os,sys
 class Finder(QtDeclarative.QDeclarativeItem, QWidget, QtCore.QObject):
     def __init__(self, parent=None):
         QtDeclarative.QDeclarativeItem.__init__(self, parent)
-        QWidget.__init__(self)
 
         self._file = None
        

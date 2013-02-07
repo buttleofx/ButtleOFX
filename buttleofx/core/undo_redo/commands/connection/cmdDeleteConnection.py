@@ -1,7 +1,5 @@
 # undo_redo
 from buttleofx.core.undo_redo.manageTools import UndoableCommand
-# core
-from buttleofx.core.graph.connection import Connection
 
 
 class CmdDeleteConnection(UndoableCommand):
@@ -26,6 +24,10 @@ class CmdDeleteConnection(UndoableCommand):
         self._graphTarget.getConnections().append(self._connection)
         self._graphTarget.connectionsChanged()
         print "Undo delete connection : ", self._graphTarget.getGraphTuttle()
+
+        from buttleofx.data import ButtleDataSingleton
+        buttleData = ButtleDataSingleton().get()
+        buttleData.updateMapAndViewer()
 
     def redoCmd(self):
         """
@@ -55,3 +57,7 @@ class CmdDeleteConnection(UndoableCommand):
         self._graphTarget.getConnections().remove(self._connection)
         self._graphTarget.connectionsChanged()
         print "Delete connection : ", self._graphTarget.getGraphTuttle()
+
+        from buttleofx.data import ButtleDataSingleton
+        buttleData = ButtleDataSingleton().get()
+        buttleData.updateMapAndViewer()

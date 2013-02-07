@@ -115,6 +115,7 @@ Item {
                             onClicked: {           
                                 elements.state = "hidden" 
                                 paramObject.value = model.object 
+                                paramObject.pushValue(paramObject.value)
                             }
                         }
                     }

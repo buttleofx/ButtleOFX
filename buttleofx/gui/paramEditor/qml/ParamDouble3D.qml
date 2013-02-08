@@ -32,11 +32,12 @@ Item {
             TextInput {
                 id: paramDouble3Dinput1
                 text: paramObject.value1
+                width: parent.width - 2
                 anchors.left: parent.left
-                anchors.leftMargin: 5
-                maximumLength: 5
-                color: activeFocus ? "white" : "grey"
-                width: 40
+                anchors.leftMargin: 2
+                anchors.rightMargin: 2
+                anchors.verticalCenter: parent.verticalCenter
+                color: activeFocus ? "white" : "red"
                 selectByMouse : true
                 onAccepted: {
                     if(acceptableInput){
@@ -69,11 +70,12 @@ Item {
             TextInput {
                 id: paramDouble3Dinput2
                 text: paramObject.value2
+                width: parent.width - 2
                 anchors.left: parent.left
-                anchors.leftMargin: 5
-                maximumLength: 5
+                anchors.leftMargin: 2
+                anchors.rightMargin: 2
+                anchors.verticalCenter: parent.verticalCenter
                 color: activeFocus ? "white" : "grey"
-                width: 40
                 activeFocusOnPress : true
                 selectByMouse : true
                 onAccepted: {
@@ -107,11 +109,12 @@ Item {
             TextInput{
                 id: paramDouble3Dinput3
                 text: paramObject.value3
+                width: parent.width - 2
                 anchors.left: parent.left
-                anchors.leftMargin: 5
-                maximumLength: 5
+                anchors.leftMargin: 2
+                anchors.rightMargin: 2
+                anchors.verticalCenter: parent.verticalCenter
                 color: activeFocus ? "white" : "grey"
-                width: 40
                 activeFocusOnPress : true
                 selectByMouse : true
                 onAccepted: {

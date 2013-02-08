@@ -37,7 +37,7 @@ Item {
                 anchors.leftMargin: 2
                 anchors.rightMargin: 2
                 anchors.verticalCenter: parent.verticalCenter
-                color: activeFocus ? "white" : "red"
+                color: activeFocus ? "white" : "grey"
                 selectByMouse : true
                 onAccepted: {
                     if(acceptableInput){

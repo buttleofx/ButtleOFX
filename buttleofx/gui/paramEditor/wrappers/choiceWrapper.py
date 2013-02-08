@@ -60,5 +60,5 @@ class ChoiceWrapper(QtCore.QObject):
 
     paramType = QtCore.Property(unicode, getParamType, setParamType, notify=changed)
     text = QtCore.Property(unicode, getText, setText, notify=changed)
-    listValue = QtCore.Property("QVariant", getListValue, constant=True)
+    listValue = QtCore.Property(QtCore.QObject, getListValue, constant=True)
     value = QtCore.Property(unicode, getValue, setValue, notify=changed)

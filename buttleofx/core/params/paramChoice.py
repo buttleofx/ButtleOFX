@@ -34,7 +34,7 @@ class ParamChoice(object):
         return "ParamChoice"
 
     def getDefaultValue(self):
-        return self._tuttleParam.getProperties().getStringProperty("OfxParamPropChoiceOption", 0)
+        return self._tuttleParam.getProperties().getStringProperty("OfxParamPropChoiceOption")
 
     def getOldValue(self):
         return self._oldValue

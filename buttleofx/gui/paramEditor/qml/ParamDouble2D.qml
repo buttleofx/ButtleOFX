@@ -78,6 +78,8 @@ Item {
                 onAccepted: {
                     if(acceptableInput) {
                         paramObject.value2 = paramDouble2Dinput2.text
+                        console.log("Double 2D")
+                        console.log(paramDouble2Dinput2.z)
                     }
                 }
                 onActiveFocusChanged: {

@@ -24,7 +24,7 @@ Item {
         /* First input */
         Rectangle {
             height: 20
-            width:40
+            width: 40
             color: "#343434"
             border.width: 1
             border.color: "#444"
@@ -32,11 +32,12 @@ Item {
             TextInput {
                 id: paramDouble2Dinput1
                 text: paramObject.value1
+                width: parent.width - 2
                 anchors.left: parent.left
-                anchors.leftMargin: 5
-                maximumLength: 5
+                anchors.leftMargin: 2
+                anchors.rightMargin: 2
+                anchors.verticalCenter: parent.verticalCenter
                 color: activeFocus ? "white" : "grey"
-                width: 40
                 selectByMouse : true
                 onAccepted: {
                     if(acceptableInput){
@@ -61,7 +62,7 @@ Item {
         /* Second input */
         Rectangle {
             height: 20
-            width:40
+            width: 40
             color: "#343434"
             border.width: 1
             border.color: "#444"
@@ -69,17 +70,16 @@ Item {
             TextInput {
                 id: paramDouble2Dinput2
                 text: paramObject.value2
+                width: parent.width - 2
                 anchors.left: parent.left
-                anchors.leftMargin: 5
-                maximumLength: 5
+                anchors.verticalCenter: parent.verticalCenter
+                anchors.leftMargin: 2
+                anchors.rightMargin: 2
                 color: activeFocus ? "white" : "grey"
-                width: 40
                 selectByMouse : true
                 onAccepted: {
                     if(acceptableInput) {
                         paramObject.value2 = paramDouble2Dinput2.text
-                        console.log("Double 2D")
-                        console.log(paramDouble2Dinput2.z)
                     }
                 }
                 onActiveFocusChanged: {

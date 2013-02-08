@@ -27,7 +27,7 @@ class ParamDouble2D(object):
     def getDefaultValue2(self):
         return self._tuttleParam.getProperties().getDoubleProperty("OfxParamPropDefault", 1)
 
-    def getValue(self):
+    def getValues(self):
         return (self.getValue1(), self.getValue2())
 
     def getValue1(self):
@@ -56,7 +56,7 @@ class ParamDouble2D(object):
 
     #################### setters ####################
 
-    def setValue(self, values):
+    def setValues(self, values):
         self.setValue1(values[0])
         self.setValue2(values[1])
 

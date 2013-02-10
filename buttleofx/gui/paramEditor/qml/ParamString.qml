@@ -10,15 +10,13 @@ Item {
 
     property variant paramObject: model.object
 
+    FolderListView {id: finder}
+
     /*Container of the textInput*/
 
     Row{
         id: paramStringInputContainer
         spacing: 10
-
-        FolderListView {
-            id: finder
-        }
 
         /*Title of the paramString */
         Text {
@@ -139,8 +137,11 @@ Item {
                 id: buttonmousearea
                 anchors.fill: parent   
                 onPressed: {
-                    finder.browseFile(_buttleData.currentParamNodeWrapper);
-                    paramObject.value = finder.propFile
+                    finder.browseFile(_buttleData.currentParamNodeWrapper)
+                    if( finder.propFile )
+                    {
+                        paramObject.value = finder.propFile
+                    }
                 }
             }
         }

@@ -60,6 +60,7 @@ Item {
                 onAccepted: {
                     cursorSlider.x = updateXcursor();
                     paramObject.pushValue(updateTextValue());
+                    focus = false;
                 }
                 Component.onCompleted: {
                     cursorSlider.x = updateXcursor();

@@ -53,8 +53,8 @@ Item {
                     top:  paramObject.maximum1
                 }
 
-                KeyNavigation.backtab: paramDouble2Dinput3
-                KeyNavigation.tab: paramDouble2Dinput2
+                KeyNavigation.backtab: paramDouble3Dinput3
+                KeyNavigation.tab: paramDouble3Dinput2
             }
         }
 
@@ -91,8 +91,8 @@ Item {
                     top: paramObject.maximum2
                 }
 
-                KeyNavigation.backtab: paramDouble2Dinput1
-                KeyNavigation.tab: paramDouble2Dinput3
+                KeyNavigation.backtab: paramDouble3Dinput1
+                KeyNavigation.tab: paramDouble3Dinput3
             }
         }
 
@@ -129,8 +129,8 @@ Item {
                     top: paramObject.maximum3
                 }
 
-                KeyNavigation.backtab: paramDouble2Dinput2
-                KeyNavigation.tab: paramDouble2Dinput1
+                KeyNavigation.backtab: paramDouble3Dinput2
+                KeyNavigation.tab: paramDouble3Dinput1
             }
         }
     }

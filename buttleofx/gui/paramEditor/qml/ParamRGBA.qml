@@ -49,13 +49,14 @@ Item{
                 height: colorPicker.height - titleColorPicker.height - 20
                 currentColor: colorPicker.colorValue
                 alphaColorText: ColorFunctions.fullColorString(colorPicker.colorValue, alphaSlider.value)
-                redValue: ColorFunctions.getChannelStr(colorPicker.colorValue, 0)
-                greenValue: ColorFunctions.getChannelStr(colorPicker.colorValue, 1)
-                blueValue: ColorFunctions.getChannelStr(colorPicker.colorValue, 2)
+                //redValue: paramObject.r //ColorFunctions.getChannelStr(colorPicker.colorValue, 0)
+                //greenValue: paramObject.g //ColorFunctions.getChannelStr(colorPicker.colorValue, 1)
+                //blueValue: paramObject.b //ColorFunctions.getChannelStr(colorPicker.colorValue, 2)
+                alphaValue: Math.ceil(alphaSlider.value*255)
                 hValue: colorSlider.value.toFixed(2)
                 sValue: colorSelector.saturation.toFixed(2)
                 bValue: colorSelector.brightness.toFixed(2)
-                alphaValue: Math.ceil(alphaSlider.value*255)
+
             }
         }
     }

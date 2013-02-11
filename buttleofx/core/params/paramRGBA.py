@@ -38,15 +38,19 @@ class ParamRGBA(object):
         return (self.getValueR(), self.getValueG(), self.getValueB(), self.getValueA())
 
     def getValueR(self):
+        print "red value: ", self._tuttleParam.getDoubleValueAtIndex(0)
         return self._tuttleParam.getDoubleValueAtIndex(0)
 
     def getValueG(self):
+        print "green value: ", self._tuttleParam.getDoubleValueAtIndex(1)
         return self._tuttleParam.getDoubleValueAtIndex(1)
 
     def getValueB(self):
+        print "blue value: ", self._tuttleParam.getDoubleValueAtIndex(2)
         return self._tuttleParam.getDoubleValueAtIndex(2)
 
     def getValueA(self):
+        print "alpha value: ", self._tuttleParam.getDoubleValueAtIndex(3)
         return self._tuttleParam.getDoubleValueAtIndex(3)
 
     def getText(self):
@@ -64,7 +68,7 @@ class ParamRGBA(object):
         self._tuttleParam.setValueAtIndex(0, float(value1 / 255))
         self.changed()
 
-        print "Rouge : ", self.getValueR()
+        print "Red : ", self.getValueR()
 
         from buttleofx.data import ButtleDataSingleton
         buttleData = ButtleDataSingleton().get()
@@ -74,7 +78,7 @@ class ParamRGBA(object):
         self._tuttleParam.setValueAtIndex(1, float(value2 / 255))
         self.changed()
 
-        print "Vert : ", self.getValueG()
+        print "Green : ", self.getValueG()
         
         from buttleofx.data import ButtleDataSingleton
         buttleData = ButtleDataSingleton().get()

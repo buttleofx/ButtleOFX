@@ -1,4 +1,5 @@
 import QtQuick 1.1
+import "ColorFunctions.js" as ColorFunctions
 
 // group of inputs
 Rectangle {
@@ -10,9 +11,9 @@ Rectangle {
     // properties used to change the text int the boxes r, g, b and h, s, b
     property color currentColor: "white"
     property string alphaColorText: "#FFFFFFFF"
-    property int redValue : 0
-    property int greenValue : 0 
-    property int blueValue : 0
+    //property int redValue : 0
+    //property int greenValue : 0 
+    //property int blueValue : 0
     property real hValue: 0
     property real sValue: 0
     property real bValue: 0
@@ -77,6 +78,13 @@ Rectangle {
                 focus: true
                 selectByMouse: true
                 text: colorFields.alphaColorText
+                onTextChanged:{
+                    // trouver la fonction qui permette de ressortir r, g et b de genre #FF245123
+                    paramObject.r = ColorFunctions.getChannelStr(colorFields.currentColor, 0) //* 255 
+                    paramObject.g = ColorFunctions.getChannelStr(colorFields.currentColor, 1) //* 255
+                    paramObject.b = ColorFunctions.getChannelStr(colorFields.currentColor, 2) //* 255
+                    paramObject.a = colorFields.alphaValue
+                }
             }
         }
 
@@ -118,49 +126,49 @@ Rectangle {
             ColorInput {
                 id: rInput
                 colorName: "R:"
-                colorValueText: colorFields.redValue
+                colorValueText: paramObject.r * 255
                 minValue: 0
                 maxValue: 255
-                onColorValueTextChanged: {
-                     paramObject ? paramObject.r = colorValueText : 255
+                /*onColorValueTextChanged: {
+                     paramObject ? paramObject.r : 255
                     // test to adapt display of colorSlider in function of values enter in inputs
                     //cursorColorPosition = 120 * (rInput.colorValueText + gInput.colorValueText + bInput.colorValueText )/(3*255)
-                }
+                }*/
             }
             ColorInput {
                 id: gInput
                 colorName: "G:"
-                colorValueText: colorFields.greenValue
+                colorValueText: paramObject.g * 255
                 minValue: 0
                 maxValue: 255
-                onColorValueTextChanged: {
-                    paramObject ? paramObject.g = colorValueText : 255
+                /*onColorValueTextChanged: {
+                    paramObject ? paramObject.g : 255
                     // test to adapt display of colorSlider in function of values enter in inputs
                     //cursorColorPosition = 120 * (rInput.colorValueText + gInput.colorValueText + bInput.colorValueText )/(3*255)
-                }
+                }*/
             }
             ColorInput {
                 id: bInput
                 colorName: "B:"
-                colorValueText: colorFields.blueValue
+                colorValueText: paramObject.b * 255
                 minValue: 0 
                 maxValue: 255
-                onColorValueTextChanged: {
-                    paramObject ? paramObject.b = colorValueText : 255
+                /*onColorValueTextChanged: {
+                    paramObject ? paramObject.b : 255
                     // test to adapt display of colorSlider in function of values enter in inputs
                     //cursorColorPosition = 120 * (rInput.colorValueText + gInput.colorValueText + bInput.colorValueText )/(3*255)
-                }
+                }*/
             }
             // alpha value box
             ColorInput {
                 id: aInput
                 colorName: "A:";
-                colorValueText: colorFields.alphaValue
+                colorValueText: paramObject.a * 255
                 minValue: 0
                 maxValue: 255
-                onColorValueTextChanged: {
-                    paramObject ? paramObject.a = colorValueText : 255
-                }
+                /*onColorValueTextChanged: {
+                    paramObject ? paramObject.a = Math.ceil(colorFields.alphaValue*255) : 255
+                }*/
             }
         }
     }

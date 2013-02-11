@@ -45,6 +45,10 @@ class ChoiceWrapper(QtCore.QObject):
     def setText(self, text):
         self._param.setText(text)
 
+    @QtCore.Slot(str)
+    def pushValue(self, value):
+        self._param.pushValue(value)
+
     @QtCore.Signal
     def changed(self):
         pass
@@ -56,5 +60,5 @@ class ChoiceWrapper(QtCore.QObject):
 
     paramType = QtCore.Property(unicode, getParamType, setParamType, notify=changed)
     text = QtCore.Property(unicode, getText, setText, notify=changed)
-    listValue = QtCore.Property("QVariant", getListValue, constant=True)
+    listValue = QtCore.Property(QtCore.QObject, getListValue, constant=True)
     value = QtCore.Property(unicode, getValue, setValue, notify=changed)

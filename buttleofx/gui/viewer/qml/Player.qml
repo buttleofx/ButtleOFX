@@ -441,6 +441,7 @@ Item {
                             anchors.margins: -10
                             onPressed : {
                                 cursorTimeline.x = mouse.x
+                                barTimeline.forceActiveFocus()
                             }
                             onReleased : {
                                 timeProperties.formerKeyTime = timeProperties.currentTime
@@ -474,6 +475,7 @@ Item {
                             anchors.margins: -10 // allow to have an area around the cursor which allows to select the cursor even if we are not exactly on it
                             onPressed: {
                                 playingAnimation.stop();
+                                cursorTimeline.forceActiveFocus()
                             }
                             onReleased: {
                                 timeProperties.formerKeyTime = timeProperties.currentTime

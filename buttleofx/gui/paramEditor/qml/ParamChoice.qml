@@ -48,6 +48,7 @@ Item {
                         hoverEnabled: true
                         onClicked: {         
                             elements.state = ( elements.state == "hidden") ? "shown" : "hidden"
+                            container.forceActiveFocus()
                         }
                     }
                 }
@@ -67,6 +68,7 @@ Item {
                         hoverEnabled: true
                         onClicked: {         
                             elements.state = ( elements.state == "hidden") ? "shown" : "hidden"
+                            container.forceActiveFocus()
                         }
                     }
                 }
@@ -115,10 +117,10 @@ Item {
                             onClicked: {           
                                 elements.state = "hidden" 
                                 paramObject.value = model.object 
+                                container.forceActiveFocus()
                             }
                         }
                     }
-                    
                 }
 
                 states: [

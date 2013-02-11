@@ -94,7 +94,11 @@ Item {
                                 id: buttonTimelineMousearea
                                 hoverEnabled: true
                                 anchors.fill: parent
-                                onClicked: timelineTools.doAction(buttonName);
+                                onClicked: {
+                                    timelineTools.doAction(buttonName)
+                                    //take the focus of the mainWindow
+                                    imageButton.forceActiveFocus()
+                                }
                             }
                         }
 

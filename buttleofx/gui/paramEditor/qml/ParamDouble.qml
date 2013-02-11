@@ -1,6 +1,7 @@
 import QtQuick 1.1
 
 Item {
+    id: paramDouble
     implicitWidth : 300
     implicitHeight : 30
 
@@ -110,7 +111,11 @@ Item {
                     drag.minimumX: 0// - cursorSlider.width/2
                     drag.maximumX: barSlider.width// - cursorSlider.width/2
                     anchors.margins: -10 // allow to have an area around the cursor which allows to select the cursor even if we are not exactly on it
-                    onPressed: mousePressed = true
+                    onPressed: {
+                        mousePressed = true
+                        // take the focus
+                        paramDouble.forceActiveFocus()
+                    }
                     onReleased: {
                         paramObject.pushValue(updateTextValue());
                         mousePressed = false

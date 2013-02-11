@@ -1,6 +1,7 @@
 import QtQuick 1.1
 
 Item {
+    id: paramBoolean
     implicitWidth: 100
     implicitHeight: 30
 
@@ -54,6 +55,8 @@ Item {
                 onPressed: {
                     interiorBox.state = (interiorBox.state == "FOCUS_ON") ? "FOCUS_OFF" : "FOCUS_ON"
                     paramObject.value = (interiorBox.state == "FOCUS_ON") ? 1 : 0
+                    // take the focus
+                    paramBoolean.forceActiveFocus()
                 }
             }
         }

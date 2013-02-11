@@ -117,10 +117,11 @@ Rectangle {
         anchors.top: parent.top
         anchors.topMargin: node.inputTopMargin
         spacing: node.inputSpacing
-        property string port : "input"
         Repeater {
-            model: node.nbInput
-            Clip {}
+            model: m.nodeModel.srcClips
+            Clip {
+                property string port : "input"
+            }
         }
     }
     Column {
@@ -129,10 +130,10 @@ Rectangle {
         anchors.rightMargin: -node.inputSideMargin
         anchors.top: parent.verticalCenter
         spacing: 2
-        property string port : "output"
         Repeater {
-            model: 1
+            model: m.nodeModel.outputClips
             Clip {
+                property string port : "output"
             }
         }
     }

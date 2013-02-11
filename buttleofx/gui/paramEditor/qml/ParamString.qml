@@ -10,6 +10,8 @@ Item {
 
     property variant paramObject: model.object
 
+    FolderListView {id: finder}
+
     /*Container of the textInput*/
 
     Row{
@@ -38,17 +40,17 @@ Item {
                 anchors.left: parent.left
                 anchors.leftMargin: 5
                 anchors.rightMargin: 5
-                maximumLength: 100
+                //maximumLength: 100
                 width: (paramObject.stringType != "OfxParamStringIsMultiLine") ? parent.width - 10 : 0
                 height: parent.height
                 color: activeFocus ? "white" : "grey"
                 onAccepted: paramObject.value = paramStringInput.text
                 focus: true
             }
+
             // this text input is visible if we need multiline
             Flickable {
                 id: flick
-
                 width: (paramObject.stringType == "OfxParamStringIsMultiLine") ? parent.width - 10 : 0 
                 height: parent.height
                 contentWidth: paramStringMultilines.paintedWidth
@@ -71,13 +73,12 @@ Item {
                     id: paramStringMultilines
                     width: flick.width
                     height: flick.height
-                    text: paramObject.value
-                    focus: true
-                    color: "white"
+                    color: activeFocus ? "white" : "grey"
                     font.pointSize: 10
-                    wrapMode: TextEdit.Wrap
+                    //wrapMode: TextEdit.Wrap
                     onCursorRectangleChanged: flick.ensureVisible(cursorRectangle)
                     onTextChanged: paramObject.value = paramStringMultilines.text
+                    focus: true
                 }
             }
             // state which enable us to update display, depend on what type of String we have on TuttleOFX
@@ -125,21 +126,22 @@ Item {
                 }
             ]
         }
-        FolderListView {id: finder}
         // hidden by default
         Image {
             id: folderforFileOrDirectory
             source: "img/folder.png"
-            height: containerParamString.height - 8
-            width: (paramObject.stringType == "OfxParamStringIsFilePath" || paramObject.stringType == "OfxParamStringIsDirectoryPath") ? 25 : 0
+            width: (paramObject.stringType == "OfxParamStringIsFilePath" || paramObject.stringType == "OfxParamStringIsDirectoryPath") ? 20 : 0
+            y: 2
 
             MouseArea {
                 id: buttonmousearea
                 anchors.fill: parent   
                 onPressed: {
-                    finder.browseFile(_buttleData.currentParamNodeWrapper);
-                    paramObject.value = finder.propFile
-                    console.log(paramObject.stringType)
+                    finder.browseFile(_buttleData.currentParamNodeWrapper)
+                    if( finder.propFile )
+                    {
+                        paramObject.value = finder.propFile
+                    }
                 }
             }
         }

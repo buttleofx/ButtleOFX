@@ -26,7 +26,7 @@ class ParamDouble(object):
         return "ParamDouble"
 
     def getDefaultValue(self):
-        return self._tuttleParam.getProperties().getDoubleProperty("OfxParamPropDefault", 0)
+        return self._tuttleParam.getProperties().getDoubleProperty("OfxParamPropDefault")
 
     def getOldValue(self):
         return self._oldValue
@@ -35,10 +35,10 @@ class ParamDouble(object):
         return self._tuttleParam.getDoubleValue()
 
     def getMinimum(self):
-        return self._tuttleParam.getProperties().getDoubleProperty("OfxParamPropDisplayMin", 0)
+        return self._tuttleParam.getProperties().getDoubleProperty("OfxParamPropDisplayMin")
 
     def getMaximum(self):
-        return self._tuttleParam.getProperties().getDoubleProperty("OfxParamPropDisplayMax", 0)
+        return self._tuttleParam.getProperties().getDoubleProperty("OfxParamPropDisplayMax")
 
     def getText(self):
         return self._tuttleParam.getName()[0].capitalize() + self._tuttleParam.getName()[1:]

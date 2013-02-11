@@ -35,14 +35,15 @@ Item {
                 width: box.width/2 + 1
                 height: width
                 radius: 1
-                state: paramObject.value ? "FOCUS_ON" : "FOCUS_OFF"
 
                 states: [
                     State {
+                        when: paramObject.value == false
                         name: "FOCUS_OFF"
                         PropertyChanges { target: interiorBox; color: "#343434" }
                     },
                     State {
+                        when: paramObject.value == true
                         name: "FOCUS_ON"
                         PropertyChanges { target: interiorBox; color: "#00b2a1" }
                     }
@@ -52,8 +53,8 @@ Item {
             MouseArea{
                 anchors.fill: parent
                 onPressed: {
-                    interiorBox.state = (interiorBox.state == "FOCUS_ON") ? "FOCUS_OFF" : "FOCUS_ON"
-                    paramObject.value = (interiorBox.state == "FOCUS_ON") ? 1 : 0
+                    paramObject.value = (paramObject.value == false) ? true : false                    
+                    paramObject.pushValue(paramObject.value)
                 }
             }
         }

@@ -21,7 +21,7 @@ Item {
 
         /* Title of the paramSlider */
         Text {
-            id: paramIntTitle
+            id: paramDoubleTitle
             text: paramObject.text + " : "
             color: "white"
         }
@@ -49,7 +49,7 @@ Item {
                 text: paramObject.value
                 font.family: "Helvetica"
                 font.pointSize: 8
-                maximumLength: 5
+                maximumLength: 8
                 color: activeFocus ? "white" : "grey"
                 activeFocusOnPress : true
                 selectByMouse : true
@@ -66,10 +66,15 @@ Item {
                 }
                 onTextChanged: {
                     if (!mousePressed) {
-                        cursorSlider.x = updateXcursor();
+                        // the doubleValidator is not as good as intValidator, so we need this test.
+                        if (sliderInput.text <= paramObject.maximum && sliderInput.text >= paramObject.minimum) {
+                            cursorSlider.x = updateXcursor();
+                        }
                     }
                 }
-
+                onFocusChanged: {
+                    text = paramObject.value
+                }
             }
 
             // bar slider : one grey, one white

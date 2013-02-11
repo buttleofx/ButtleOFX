@@ -32,11 +32,12 @@ Item {
             TextInput {
                 id: paramDouble3Dinput1
                 text: paramObject.value1
+                width: parent.width - 2
                 anchors.left: parent.left
-                anchors.leftMargin: 5
-                maximumLength: 5
+                anchors.leftMargin: 2
+                anchors.rightMargin: 2
+                anchors.verticalCenter: parent.verticalCenter
                 color: activeFocus ? "white" : "grey"
-                width: 40
                 selectByMouse : true
                 onAccepted: {
                     if(acceptableInput){
@@ -53,8 +54,8 @@ Item {
                     top:  paramObject.maximum1
                 }
 
-                KeyNavigation.backtab: paramDouble2Dinput3
-                KeyNavigation.tab: paramDouble2Dinput2
+                KeyNavigation.backtab: paramDouble3Dinput3
+                KeyNavigation.tab: paramDouble3Dinput2
             }
         }
 
@@ -69,11 +70,12 @@ Item {
             TextInput {
                 id: paramDouble3Dinput2
                 text: paramObject.value2
+                width: parent.width - 2
                 anchors.left: parent.left
-                anchors.leftMargin: 5
-                maximumLength: 5
+                anchors.leftMargin: 2
+                anchors.rightMargin: 2
+                anchors.verticalCenter: parent.verticalCenter
                 color: activeFocus ? "white" : "grey"
-                width: 40
                 activeFocusOnPress : true
                 selectByMouse : true
                 onAccepted: {
@@ -91,8 +93,8 @@ Item {
                     top: paramObject.maximum2
                 }
 
-                KeyNavigation.backtab: paramDouble2Dinput1
-                KeyNavigation.tab: paramDouble2Dinput3
+                KeyNavigation.backtab: paramDouble3Dinput1
+                KeyNavigation.tab: paramDouble3Dinput3
             }
         }
 
@@ -107,11 +109,12 @@ Item {
             TextInput{
                 id: paramDouble3Dinput3
                 text: paramObject.value3
+                width: parent.width - 2
                 anchors.left: parent.left
-                anchors.leftMargin: 5
-                maximumLength: 5
+                anchors.leftMargin: 2
+                anchors.rightMargin: 2
+                anchors.verticalCenter: parent.verticalCenter
                 color: activeFocus ? "white" : "grey"
-                width: 40
                 activeFocusOnPress : true
                 selectByMouse : true
                 onAccepted: {
@@ -129,8 +132,8 @@ Item {
                     top: paramObject.maximum3
                 }
 
-                KeyNavigation.backtab: paramDouble2Dinput2
-                KeyNavigation.tab: paramDouble2Dinput1
+                KeyNavigation.backtab: paramDouble3Dinput2
+                KeyNavigation.tab: paramDouble3Dinput1
             }
         }
     }

@@ -199,8 +199,8 @@ Item {
                                             _buttleData.graphWrapper.updateConnectionsCoord()
                                         }
 
-                                        KeyNavigation.backtab: nodeColorRGBInput
-                                        KeyNavigation.tab: nodeCoordXInput
+                                        KeyNavigation.backtab: nodeCoordYInput
+                                        KeyNavigation.tab: nodeColorRGBInput
 
 
                                     }
@@ -289,8 +289,8 @@ Item {
                                         onAccepted: currentParamNode.color = nodeColorRGBInput.text
                                         onActiveFocusChanged: currentParamNode.color = nodeColorRGBInput.text
 
-                                        KeyNavigation.backtab: nodeCoordYInput
-                                        KeyNavigation.tab: nodeNameUserInput
+                                        KeyNavigation.backtab: nodeNameUserInput
+                                        KeyNavigation.tab: nodeCoordXInput
                                     }//textinput
                                 }//rectangle of nodeColorContainer
                             }//row nodeColorContainer
@@ -348,7 +348,7 @@ Item {
                                             _buttleData.graphWrapper.updateConnectionsCoord()
                                         }
 
-                                        KeyNavigation.backtab: nodeNameUserInput
+                                        KeyNavigation.backtab: nodeColorRGBInput
                                         KeyNavigation.tab: nodeCoordYInput
 
                                     }
@@ -395,7 +395,7 @@ Item {
                                         }
 
                                         KeyNavigation.backtab: nodeCoordXInput
-                                        KeyNavigation.tab: nodeColorRGBInput
+                                        KeyNavigation.tab: nodeNameUserInput
                                     }
                                 }
                             }

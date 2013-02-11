@@ -30,6 +30,9 @@ class NodeWrapper(QtCore.QObject):
 
         self._node.changed.connect(self.emitChanged)
 
+        _fpsError = ""
+        _frameError = ""
+
         print "Gui : nodeWrapper created"
 
     def __del__(self):
@@ -107,31 +110,59 @@ class NodeWrapper(QtCore.QObject):
 
     #for video
     def getFPS(self):
-        #import which need to be changed in the future
+        #import which needs to be changed in the future
         from buttleofx.data import ButtleDataSingleton
         buttleData = ButtleDataSingleton().get()
         graph = buttleData.getGraph().getGraphTuttle()
         node = self._node.getTuttleNode().asImageEffectNode()
-        graph.setup()
+        try:
+            self.setFpsError("")
+            graph.setup()
+        except Exception as e:
+            print "can't get fps of the node" + self._node.getName()
+            self.setFpsError(str(e))
+            return 1
+            raise
         framerate = node.getFrameRate()
+        #if (framerate == None):
+        #    framerate = 1
         print "framerate: ", framerate
-        print "identifiant : ", self._node.getType()
         return framerate
 
+    def getFpsError(self):
+        return self._fpsError
+
+    def setFpsError(self, nodeName):
+        self._fpsError = nodeName
+
     def getNbFrames(self):
-        #import which need to be changed in the future
+        #import which needs to be changed in the future
         from buttleofx.data import ButtleDataSingleton
         buttleData = ButtleDataSingleton().get()
         graph = buttleData.getGraph().getGraphTuttle()
         node = self._node.getTuttleNode().asImageEffectNode()
-        graph.setup()
+        try:
+            self.setFrameError("")
+            graph.setup()
+        except Exception as e:
+            print "can't get nbFrames of the node" + self._node.getName()
+            self.setFrameError(str(e))
+            return 0
+            raise
         timeDomain = node.getTimeDomain()
         #getTimeDomain() returns first frame and last one
         nbFrames = timeDomain.max - timeDomain.min
         #not very elegant but allow to avoid a problem because an image returns a number of frames very high
-        if nbFrames > 100000000:
+        if nbFrames > 100000000 or nbFrames < 0:
             nbFrames = 1
+        print "nbFrames: ", nbFrames
         return nbFrames
+
+    def getFrameError(self):
+        return self._frameError
+
+    def setFrameError(self, nodeName):
+        self._frameError = nodeName
 
     ######## setters ########
     def setName(self, name):

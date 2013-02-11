@@ -15,7 +15,7 @@ Item {
         
         //for video
         property real fps: node ? node.fps : 1
-        property int nbFrames: node ? node.nbFrames : 1
+        property int nbFrames: node ? node.nbFrames : 0
         property real timeDuration : node ? nbFrames/fps*1000 : 0
     }
 

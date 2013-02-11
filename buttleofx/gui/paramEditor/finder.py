@@ -3,13 +3,11 @@ from PySide.QtGui import QWidget, QFileDialog
 
 import os,sys
 
-class Finder(QtDeclarative.QDeclarativeItem, QWidget, QtCore.QObject):
+class Finder(QtDeclarative.QDeclarativeItem):
     def __init__(self, parent=None):
         QtDeclarative.QDeclarativeItem.__init__(self, parent)
-        QWidget.__init__(self)
 
         self._file = None
-       
 
     def getFile(self):
         return self._file
@@ -24,10 +22,10 @@ class Finder(QtDeclarative.QDeclarativeItem, QWidget, QtCore.QObject):
     def browseFile(self, currentParamNode):
         # if the current node is a reader
         if "read" in currentParamNode.getType().lower():
-            self._file = QFileDialog.getOpenFileName(self, "Ouvrir un fichier", "/home/")
+            self._file = QFileDialog.getOpenFileName(None, "Ouvrir un fichier", "/home/")
         # else it's a writer
         else :
-            self._file = QFileDialog.getSaveFileName(self, "Ouvrir un fichier", "/home/")
+            self._file = QFileDialog.getSaveFileName(None, "Ouvrir un fichier", "/home/")
         self._file = self._file[0]
 
     finder = QtCore.Property(QtCore.QObject, getFinder, constant=True)

@@ -54,7 +54,7 @@ Item {
                 anchors.fill: parent
                 onPressed: {
                     paramObject.value = (paramObject.value == false) ? true : false                    
-                    paramObject.pushValue(paramObject.value)
+                    //paramObject.pushValue(paramObject.value)
                 }
             }
         }

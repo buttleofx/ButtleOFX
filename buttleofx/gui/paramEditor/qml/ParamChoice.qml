@@ -9,6 +9,18 @@ Item {
     property variant paramObject: model.object
     //z: 1
 
+
+    // convert the qobjectlistmodel into a qml ListModel
+    ListModel {
+        id: menuItems
+    }
+    Component.onCompleted: {
+        for( var i=0; i < paramObject.listValue.count; i++ )
+        {
+            menuItems.append( {"text": paramObject.listValue.get(i)} )
+        }
+    }
+
     Row {
         id: paramChoiceInputContainer
         spacing: 10
@@ -20,15 +32,24 @@ Item {
             color: "white"
         }
 
-        // Container of the display
+        ComboBox {
+            model: menuItems
+            //width: 100
+            height: 20
+            onSelectedIndexChanged: console.debug("-> " + menuItems.get(selectedIndex).text + ", " + paramObject.listValue.get(selectedIndex))
+        }
+    
+        //
+
+        // Container of the diplay
         Item {
             id: container
             width: 40
             height: 20
 
             // Current value
-            Row{
-            spacing: 2
+            Row {
+                spacing: 2
                 Rectangle {
                     id: firstElement
                     //width: intitule.width + 10
@@ -161,5 +182,6 @@ Item {
                 ]  
             }
         }
+        //
     }
 }

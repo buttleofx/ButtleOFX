@@ -2,32 +2,60 @@ import QtQuick 1.1
 
 Rectangle {
     id: clip
-    property string port : parent.port
+    property string port
+
+    QtObject {
+        id: c
+        property variant clipModel: model.object
+    }
 
     height: clipSize
     width: clipSize
     color: "#bbbbbb"
     radius: 4
 
+    Rectangle {
+
+        id: clipName
+        color: "#333"
+        radius: 3
+        opacity: 0
+        height: 17
+        width: clipNameText.width + 10
+        x: port == "output" ? parent.x + clipNameText.width + 15 : parent.x - clipNameText.width - 15
+        y: -5
+
+        Text{
+            id: clipNameText
+            text: c.clipModel.name
+            font.pointSize: 8
+            color: "#999"
+            x: 7
+            y: 4
+        }
+    }
+
     MouseArea {
         id: clipMouseArea
         anchors.fill: parent
-        anchors.margins: -8
         hoverEnabled: true
         onPressed: {
-            color = "#018fff"
-            _buttleData.clipPressed(m.nodeModel.name, port, index) // we send all information needed to identify the clip : nodename, port and clip number
+            color = "#fff"
+            _buttleData.clipPressed(c.clipModel, index) // we send all information needed to identify the clip : nodename, port and clip number
+            // take the focus of the MainWindow
             clip.forceActiveFocus()
         }
         onReleased: {
-            color = "#bbbbbb"
-             _buttleData.clipReleased(m.nodeModel.name, port, index)
+            color = "#bbb"
+            _buttleData.clipReleased(c.clipModel, index)
         }
         onEntered: {
+            clipName.opacity = 1
             color = "#00b2a1"
         }
         onExited: {
-            color = "#bbbbbb"
+            clipName.opacity = 0
+            color = "#bbb"
         }
     }
 }

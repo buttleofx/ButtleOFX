@@ -22,8 +22,8 @@ class Double2DWrapper(QtCore.QObject):
     def getDefaultValue2(self):
         return self._param.getDefaultValue2()
 
-    def getValue(self):
-        return self._param.getValue()
+    def getValues(self):
+        return self._param.getValues()
 
     def getValue1(self):
         return self._param.getValue1()
@@ -48,8 +48,8 @@ class Double2DWrapper(QtCore.QObject):
 
     #################### setters ####################
 
-    def setValue(self, values):
-        self._param.setValue(values)
+    def setValues(self, values):
+        self._param.setValues(values)
 
     def setValue1(self, value1):
         self._param.setValue1(value1)

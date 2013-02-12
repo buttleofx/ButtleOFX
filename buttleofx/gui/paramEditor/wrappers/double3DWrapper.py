@@ -25,8 +25,8 @@ class Double3DWrapper(QtCore.QObject):
     def getDefaultValue3(self):
         return self._param.getDefaultValue3()
 
-    def getValue(self):
-        return self._param.getValue()
+    def getValues(self):
+        return self._param.getValues()
 
     def getValue1(self):
         return self._param.getValue1()
@@ -60,8 +60,8 @@ class Double3DWrapper(QtCore.QObject):
 
     #################### setters ####################
 
-    def setValue(self, values):
-        self._param.setValue(values)
+    def setValues(self, values):
+        self._param.setValues(values)
 
     def setValue1(self, value1):
         self._param.setValue1(value1)
@@ -85,7 +85,7 @@ class Double3DWrapper(QtCore.QObject):
     text = QtCore.Property(unicode, getText, notify=changed)
     value1 = QtCore.Property(float, getValue1, setValue1, notify=changed)
     value2 = QtCore.Property(float, getValue2, setValue2, notify=changed)
-    value3 = QtCore.Property(float, getValue3, setValue2, notify=changed)
+    value3 = QtCore.Property(float, getValue3, setValue3, notify=changed)
     maximum1 = QtCore.Property(float, getMaximum1, notify=changed)
     minimum1 = QtCore.Property(float, getMinimum1, notify=changed)
     maximum2 = QtCore.Property(float, getMaximum2, notify=changed)

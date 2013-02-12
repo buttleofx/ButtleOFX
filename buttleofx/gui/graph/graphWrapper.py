@@ -151,7 +151,7 @@ class GraphWrapper(QtCore.QObject):
 
     ################################################## CONNECTIONS MANAGEMENT ##################################################
 
-    def getPositionClip(self, nodeName, port, clipNumber):
+    def getPositionClip(self, nodeName, clipName, clipNumber):
         """
             Function called when a new idClip is created.
             Returns the position of the clip.
@@ -166,12 +166,12 @@ class GraphWrapper(QtCore.QObject):
         heightNode = node.getHeight()
         inputTopMargin = node.getInputTopMargin()
 
-        if (port == "input"):
-            xClip = nodeCoord.x() - clipSize / 2
-            yClip = nodeCoord.y() + inputTopMargin + (clipNumber) * (clipSpacing + clipSize) + clipSize / 2
-        elif (port == "output"):
+        if (clipName == "Output"):
             xClip = nodeCoord.x() + widthNode + clipSize / 2
             yClip = nodeCoord.y() + heightNode / 2 + clipSize / 2
+        else:
+            xClip = nodeCoord.x() - clipSize / 2
+            yClip = nodeCoord.y() + inputTopMargin + (clipNumber) * (clipSpacing + clipSize) + clipSize / 2
         return (xClip, yClip)
 
     def getConnectionByClips(self, clipOut, clipIn):

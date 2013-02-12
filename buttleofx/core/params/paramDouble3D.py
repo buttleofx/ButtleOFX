@@ -30,7 +30,7 @@ class ParamDouble3D(object):
     def getDefaultValue3(self):
         return self._tuttleParam.getProperties().getDoubleProperty("OfxParamPropDefault", 2)
 
-    def getValue(self):
+    def getValues(self):
         return (self.getValue1(), self.getValue2(), self.getValue3())
 
     def getValue1(self):
@@ -65,26 +65,26 @@ class ParamDouble3D(object):
 
     #################### setters ####################
 
-    def setValue(self, values):
+    def setValues(self, values):
         self.setValue1(values[0])
         self.setValue2(values[1])
         self.setValue3(values[2])
 
-    def setValue1(self, value1):
+    def setValue1(self, value):
         self._tuttleParam.setValueAtIndex(0, float(value))
         self.changed()
         from buttleofx.data import ButtleDataSingleton
         buttleData = ButtleDataSingleton().get()
         buttleData.updateMapAndViewer()
 
-    def setValue2(self, value2):
+    def setValue2(self, value):
         self._tuttleParam.setValueAtIndex(1, float(value))
         self.changed()
         from buttleofx.data import ButtleDataSingleton
         buttleData = ButtleDataSingleton().get()
         buttleData.updateMapAndViewer()
 
-    def setValue3(self, value3):
+    def setValue3(self, value):
         self._tuttleParam.setValueAtIndex(2, float(value))
         self.changed()
         from buttleofx.data import ButtleDataSingleton

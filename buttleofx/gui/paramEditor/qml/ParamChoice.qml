@@ -7,6 +7,7 @@ Item {
     implicitHeight: 30
     property alias title: paramChoiceTitle.text
     property variant paramObject: model.object
+    //z: 1
 
     Row {
         id: paramChoiceInputContainer
@@ -19,7 +20,7 @@ Item {
             color: "white"
         }
 
-        // Container of the diplay
+        // Container of the display
         Item {
             id: container
             width: 40
@@ -30,7 +31,8 @@ Item {
             spacing: 2
                 Rectangle {
                     id: firstElement
-                    width: intitule.width + 10
+                    //width: intitule.width + 10
+                    width: repeater.maxWidth
                     height: 20
                     color: "#343434"
                     border.width: 1
@@ -74,8 +76,6 @@ Item {
                 }
             }
 
-
-        
             // List of the values
             Rectangle {
                 id: elements
@@ -84,20 +84,27 @@ Item {
                 state: "hidden"
                 x: firstElement.x
                 y: firstElement.y
+                //z: firstElement.z + 10
 
                 Repeater {
                     id: repeater
+                    //z: 20
+
                     model: paramObject.listValue
+
+                    property int maxWidth: 0
 
                     Rectangle {
                         id: itemElement
-                        width: textElement.width + 10
+                        width: repeater.maxWidth
                         height: 20
                         anchors.left: parent.left
-                        y: parent.y + 20*index
+                        //y: parent.y + 20*index
+                        y: - parent.y - 20*index // we temporary display the list on the top of the current value : no problem of superposition...
                         color: "#343434"
                         border.width: 1
                         border.color: "#444"
+                        //z: elements.z + 1000
 
                         Text{
                             id: textElement
@@ -107,6 +114,11 @@ Item {
                             text: model.object
                             color: "white"
 
+                            onWidthChanged: {
+                                if (repeater.maxWidth < textElement.width) {
+                                    repeater.maxWidth = textElement.width + 10
+                                }
+                            }
                         }
                         
                         MouseArea {
@@ -115,8 +127,16 @@ Item {
                             onEntered: parent.color = "#bbb"
                             onExited: parent.color = "#343434"
                             onClicked: {           
-                                elements.state = "hidden" 
+                                elements.state = "hidden"
                                 paramObject.value = model.object 
+                                paramObject.pushValue(paramObject.value)
+                                //console.log("TEST")
+                                //console.log(elements.z)
+                                //console.log(itemElement.z)
+                                //console.log("REPEATER")
+                                //console.log(repeater.z)
+
+                                //take the focus of MainWindow
                                 container.forceActiveFocus()
                             }
                         }
@@ -141,6 +161,5 @@ Item {
                 ]  
             }
         }
-       
     }
 }

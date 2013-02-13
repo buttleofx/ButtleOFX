@@ -128,7 +128,7 @@ Rectangle {
         id: nodeOutputs
         anchors.right: parent.right
         anchors.rightMargin: -node.inputSideMargin
-        anchors.top: parent.verticalCenter
+        anchors.top : parent.verticalCenter
         spacing: 2
         Repeater {
             model: m.nodeModel.outputClips

@@ -123,18 +123,28 @@ Rectangle {
                         ctx.closePath()
                     }
 
-                    MouseArea {
-                        anchors.fill: parent
-                        onClicked: {
-                            for(var x = mouseX - 5; x< mouseX + 5; x++){
-                                for(var y = mouseY - 5; y< mouseY + 5; y++){
-                                    if(connection.getContext().isPointInPath(x, y)){
-                                        inPath = 1
-                                        return true;
-                                    }
+                    function intersectPath(mouseX, mouseY, margin){
+                        for(var x = mouseX - margin; x< mouseX + margin; x++){
+                            for(var y = mouseY - margin; y< mouseY + margin; y++){
+                                if(connection.getContext().isPointInPath(x, y)){
+                                    return true;
                                 }
                             }
                         }
+                        return false;
+                    }
+
+                    MouseArea {
+                        anchors.fill: parent
+                        hoverEnabled: true
+                        onPressed: mouse.accepted = intersectPath(mouseX, mouseY, 5)
+                        //onPositionChanged:{
+                        //    if(intersectPath(mouseX, mouseY, 5)){
+                        //        console.log("Sapristi !")
+                        //        connection.color = "yellow"
+                        //    }
+                        //}
+                        onClicked: console.log("Click" + index)
                     }
                 }
             }

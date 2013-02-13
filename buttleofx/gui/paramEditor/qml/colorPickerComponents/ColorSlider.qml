@@ -39,7 +39,6 @@ Rectangle {
         color: "transparent"
         border.color: "white"
         border.width: 2
-        y: cursorColorPositionSlider
         MouseArea{
             anchors.fill: parent
             drag.target: parent

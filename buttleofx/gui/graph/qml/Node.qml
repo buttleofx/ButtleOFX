@@ -46,6 +46,8 @@ Rectangle {
            else if (mouse.button == Qt.RightButton) {
                  _buttleData.currentParamNodeWrapper = m.nodeModel;
             }
+            // take the focus
+            node.forceActiveFocus()
         }
         onReleased: {
             // left button : we end moving

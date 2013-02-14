@@ -56,6 +56,7 @@ class Node(object):
         self._oldCoord = nodeCoord
         self._color = (0, 178, 161)
         self._nbInput = self._tuttleNode.asImageEffectNode().getClipImageSet().getNbClips() - 1
+        self._clips = [clip.getName() for clip in self._tuttleNode.asImageEffectNode().getClipImageSet().getClips()]
         self._params = []
 
         # Filling the node's param list
@@ -100,6 +101,9 @@ class Node(object):
     def getNbInput(self):
         return self._nbInput
 
+    def getClips(self):
+        return self._clips
+
     # def getImage(self):
     #     return self._image
 
@@ -138,6 +142,9 @@ class Node(object):
     def setNbInput(self, nbInput):
         self._nbInput = nbInput
         self.changed()
+
+    def setClips(self, clips):
+        self._clips = clips
 
     # def setImage(self, image):
     #     self._image = image

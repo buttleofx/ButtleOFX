@@ -1,7 +1,11 @@
 from PySide import QtCore, QtGui
 
+#quickmamba
+from quickmamba.models import QObjectListModel
+
 # wrappers
 from buttleofx.gui.paramEditor.wrappers import ParamEditorWrapper
+from buttleofx.gui.graph.connection import ClipWrapper
 
 
 class NodeWrapper(QtCore.QObject):
@@ -71,6 +75,16 @@ class NodeWrapper(QtCore.QObject):
 
     def getNbInput(self):
         return self._node.getNbInput()
+
+    def getSrcClips(self):
+        srcClips = QObjectListModel(self)
+        srcClips.setObjectList([ClipWrapper(clip, self.getName(), self._view) for clip in self._node.getClips() if not clip == "Output"])
+        return srcClips
+
+    def getOutputClips(self):
+        outputClips = QObjectListModel(self)
+        outputClips.setObjectList([ClipWrapper(clip, self.getName(), self._view) for clip in self._node.getClips() if clip == "Output"])
+        return outputClips
 
     def getWidth(self):
         return self._widthEmptyNode + 9 * len(self.getNameUser())
@@ -200,8 +214,9 @@ class NodeWrapper(QtCore.QObject):
     # for a clean display of connections
     width = QtCore.Property(int, getWidth, notify=changed)
     height = QtCore.Property(int, getHeight, constant=True)
+    srcClips = QtCore.Property(QtCore.QObject, getSrcClips, constant=True)
+    outputClips = QtCore.Property(QtCore.QObject, getOutputClips, constant=True)
     clipSpacing = QtCore.Property(int, getClipSpacing, constant=True)
     clipSize = QtCore.Property(int, getClipSize, constant=True)
     inputSideMargin = QtCore.Property(int, getInputSideMargin, constant=True)
     inputTopMargin = QtCore.Property(int, getInputTopMargin, constant=True)
-

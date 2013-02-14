@@ -3,14 +3,15 @@ class IdClip:
         Class usefull to identify a clip with :
         - the graph
         - the node name
-        - the port (input or output)
+        - the clipName
         - the clip number
     """
 
-    def __init__(self, nodeName, port, clipNumber, coord):
+    def __init__(self, nodeName, clipName, clipNumber, coord):
+        
         #self._graph = graph
         self._nodeName = nodeName
-        self._port = port
+        self._clipName = clipName
         self._clipNumber = clipNumber
 
         self._coord = coord
@@ -19,7 +20,7 @@ class IdClip:
         return self._nodeName
 
     def getPort(self):
-        return self._port
+        return self._clipName
 
     def getClipNumber(self):
         return self._clipNumber
@@ -30,8 +31,8 @@ class IdClip:
     def setNodeName(self, nodeName):
         self._nodeName = nodeName
 
-    def setPort(self, port):
-        self._port = port
+    def setPort(self, clipName):
+        self._clipName = clipName
 
     def setClipNumber(self, clipNumber):
         self._clipNumber = clipNumber
@@ -49,4 +50,4 @@ class IdClip:
         """
             Overloads the operator ==
         """
-        return (self._nodeName == otherClip._nodeName and self._port == otherClip._port and self._clipNumber == otherClip._clipNumber)
+        return (self._nodeName == otherClip._nodeName and self._clipName == otherClip._clipName and self._clipNumber == otherClip._clipNumber)

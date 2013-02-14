@@ -256,29 +256,41 @@ class ButtleData(QtCore.QObject):
         self.getGraph().deleteConnection(connection)
         self.getGraphWrapper().resetTmpClips()
 
-    @QtCore.Slot(str, str, int)
-    def clipPressed(self, nodeName, port, clipNumber):
+    @QtCore.Slot(QtCore.QObject, int)
+    def clipPressed(self, clip, clipNumber):
         """
             Function called when a clip is pressed (but not released yet).
             The function replace the tmpClipIn or tmpClipOut.
         """
-        position = self.getGraphWrapper().getPositionClip(nodeName, port, clipNumber)
-        idClip = IdClip(nodeName, port, clipNumber, position)
-        if (port == "input"):
-            self.getGraphWrapper().setTmpClipIn(idClip)
-        elif (port == "output"):
+        coord = self.getGraphWrapper().getPositionClip(clip.getNodeName(), clip.getName(), clipNumber)
+        idClip = IdClip(clip.getNodeName(), clip.getName(), clipNumber, coord)
+        if (clip.getName() == "Output"):
             self.getGraphWrapper().setTmpClipOut(idClip)
+        else:
+            self.getGraphWrapper().setTmpClipIn(idClip)
 
-    @QtCore.Slot(str, str, int)
-    def clipReleased(self, nodeName, port, clipNumber):
+    @QtCore.Slot(QtCore.QObject, int)
+    def clipReleased(self, clip, clipNumber):
         """
             Function called when a clip is released (after pressed).
         """
-        if (port == "input"):
+
+        if (clip.getName() == "Output"):
+            #if there is a tmpNodeIn
+            if (self.getGraphWrapper().getTmpClipIn() != None and self.getGraphWrapper().getTmpClipIn()._nodeName != clip.getNodeName()):
+                position = self.getGraphWrapper().getPositionClip(clip.getNodeName(), clip.getName(), clipNumber)
+                idClip = IdClip(clip.getNodeName(), clip.getName(), clipNumber, position)
+                if self.getGraphWrapper().canConnect(idClip, self.getGraphWrapper().getTmpClipIn()):
+                    self.connect(idClip, self.getGraphWrapper().getTmpClipIn())
+                elif self.getGraph().contains(self.getGraphWrapper().getTmpClipIn()) and self.getGraph().contains(idClip):
+                    self.disconnect(self.getGraphWrapper().getConnectionByClips(idClip, self.getGraphWrapper().getTmpClipIn()))
+                else:
+                    print "Unable to connect or delete the nodes."
+        else:
             #if there is a tmpNodeOut
-            if (self.getGraphWrapper().getTmpClipOut() != None and self.getGraphWrapper().getTmpClipOut()._nodeName != nodeName):
-                position = self.getGraphWrapper().getPositionClip(nodeName, port, clipNumber)
-                idClip = IdClip(nodeName, port, clipNumber, position)
+            if (self.getGraphWrapper().getTmpClipOut() != None and self.getGraphWrapper().getTmpClipOut()._nodeName != clip.getNodeName()):
+                position = self.getGraphWrapper().getPositionClip(clip.getNodeName(), clip.getName(), clipNumber)
+                idClip = IdClip(clip.getNodeName(), clip.getName(), clipNumber, position)
                 if self.getGraphWrapper().canConnect(self.getGraphWrapper().getTmpClipOut(), idClip):
                     self.connect(self.getGraphWrapper().getTmpClipOut(), idClip)
                 elif self.getGraph().contains(self.getGraphWrapper().getTmpClipOut()) and self.getGraph().contains(idClip):
@@ -286,17 +298,6 @@ class ButtleData(QtCore.QObject):
                 else:
                     print "Unable to connect or delete the nodes."
 
-        elif (port == "output"):
-            #if there is a tmpNodeIn
-            if (self.getGraphWrapper().getTmpClipIn() != None and self.getGraphWrapper().getTmpClipIn()._nodeName != nodeName):
-                position = self.getGraphWrapper().getPositionClip(nodeName, port, clipNumber)
-                idClip = IdClip(nodeName, port, clipNumber, position)
-                if self.getGraphWrapper().canConnect(idClip, self.getGraphWrapper().getTmpClipIn()):
-                    self.connect(idClip, self.getGraphWrapper().getTmpClipIn())
-                elif self.getGraph().contains(self.getGraphWrapper().getTmpClipIn()) and self.getGraph().contains(idClip):
-                    self.disconnect(self.getGraphWrapper().getConnectionByClips(idClip, self.getGraphWrapper().getTmpClipIn()))
-                else:
-                    print "Unable to connect or delete the nodes."
 
     ################################################## INTERACTIONS ##################################################
 

@@ -45,6 +45,8 @@ Item {
                 //pushButton.state = (pushButton.state == "FOCUS_ON") ? "FOCUS_OFF" : "FOCUS_ON"
                 paramObject.enabled = "True" //(pushButton.state == "FOCUS_ON") ? "True" : "False"
                 pushButton.state = "enabled"
+                // take the focus of the MainWindow
+                pushbutton.forceActiveFocus()
             }
         }
 

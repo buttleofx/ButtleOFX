@@ -1,5 +1,7 @@
 from cmdSetParamInt import CmdSetParamInt
+from cmdSetParamInt2D import CmdSetParamInt2D
 from cmdSetParamDouble import CmdSetParamDouble
 from cmdSetParamDouble2D import CmdSetParamDouble2D
+from cmdSetParamDouble3D import CmdSetParamDouble3D
 from cmdSetParamBoolean import CmdSetParamBoolean
 from cmdSetParamChoice import CmdSetParamChoice

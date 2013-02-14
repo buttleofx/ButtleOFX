@@ -150,12 +150,6 @@ Item {
                             onClicked: {           
                                 elements.state = "hidden"
                                 paramObject.value = model.object 
-                                paramObject.pushValue(paramObject.value)
-                                //console.log("TEST")
-                                //console.log(elements.z)
-                                //console.log(itemElement.z)
-                                //console.log("REPEATER")
-                                //console.log(repeater.z)
 
                                 //take the focus of MainWindow
                                 container.forceActiveFocus()

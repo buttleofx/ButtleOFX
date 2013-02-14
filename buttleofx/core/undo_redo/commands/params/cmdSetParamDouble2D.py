@@ -1,26 +1,28 @@
 from buttleofx.core.undo_redo.manageTools import UndoableCommand
 
 
-class CmdSetParamDouble(UndoableCommand):
+class CmdSetParamDouble2D(UndoableCommand):
     """
-        Command that update the value of a paramDouble.
+        Command that update the value of a paramDouble2D.
         Attributes :
         - param : the target param wich will be changed by the update
-        - newValue : the value wich will be mofidy in the target
-        - oldValue : the old value of the target param, wich will be used for reset the target in case of undo command
+        - newValues : the value wich will be mofidy in the target
+        - oldValues : the old value of the target param, wich will be used for reset the target in case of undo command
     """
 
-    def __init__(self, param, newValue):
+    def __init__(self, param, newValues, index):
         self._param = param
-        self._oldValue = param.getOldValue()
-        self._newValue = newValue
+        self._oldValues = (param.getOldValue1(), param.getOldValue2())
+        self._newValues = newValues
+        self._index = index
 
     def undoCmd(self):
         """
         Undoes the update of the param.
         """
-        self._param.getTuttleParam().setValue(float(self._oldValue))
-        self._param.setOldValue(float(self._oldValue))
+
+        self._param.getTuttleParam().setValue(self._oldValues)
+        self._param.setOldValueAt(float(self._oldValues[int(self._index)]), self._index)
         self._param.changed()
 
         from buttleofx.data import ButtleDataSingleton
@@ -31,14 +33,15 @@ class CmdSetParamDouble(UndoableCommand):
         """
         Redoes the update of the param.
         """
+
         return self.doCmd()
 
     def doCmd(self):
         """
         Executes the update of the param.
         """
-        self._param.getTuttleParam().setValue(float(self._newValue))
-        self._param.setOldValue(float(self._newValue))
+        self._param.getTuttleParam().setValue(self._newValues)
+        self._param.setOldValueAt(float(self._newValues[int(self._index)]), self._index)
         self._param.changed()
 
         from buttleofx.data import ButtleDataSingleton

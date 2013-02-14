@@ -42,6 +42,7 @@ Item {
                 onAccepted: {
                     if(acceptableInput){
                         paramObject.value1 = paramDouble2Dinput1.text
+                        paramObject.pushValue(paramObject.value1, 0)
                     }
                 }
                 onActiveFocusChanged: {
@@ -80,6 +81,7 @@ Item {
                 onAccepted: {
                     if(acceptableInput) {
                         paramObject.value2 = paramDouble2Dinput2.text
+                        paramObject.pushValue(paramObject.value2, 1)
                     }
                 }
                 onActiveFocusChanged: {

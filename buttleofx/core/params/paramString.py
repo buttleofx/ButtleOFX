@@ -54,6 +54,4 @@ class ParamString(object):
         cmdUpdate = CmdSetParamString(self, value)
         cmdManager = CommandManager()
         cmdManager.push(cmdUpdate)
-        print "Push command", value
-        print "Tuttle value : ", self.getValue()
         

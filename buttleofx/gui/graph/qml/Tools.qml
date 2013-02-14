@@ -15,6 +15,8 @@ Rectangle {
     function doAction(buttonName) {
         switch (buttonName) {
             case "createNode":
+                console.log(_buttleData.canUndo)
+                console.log(_buttleData.canRedo)
                 if (!tools.menuComponent) {
                     var newComponent = Qt.createQmlObject('MenuList { parentName: "buttle/"; y: tools.height;}', parent);
                     tools.menuComponent = newComponent;
@@ -64,119 +66,84 @@ Rectangle {
 
     Item {
         anchors.fill: parent
+        anchors.leftMargin: 10
+       anchors.topMargin: 3
 
-        ListModel {
-            id: modelButtonsTools
-            ListElement { imageSource: "img/buttons/plus.png"; imageSourceHover: "img/buttons/plus_hover.png"; buttonName: "createNode"; buttonText: "Create a new node"; }
-            ListElement { imageSource: "img/buttons/undo.png"; imageSourceHover: "img/buttons/undo_hover.png"; buttonName: "undo"; buttonText: "Undo"; }
-            ListElement { imageSource: "img/buttons/redo.png"; imageSourceHover: "img/buttons/redo_hover.png"; buttonName: "redo"; buttonText: "Redo"; }
-            ListElement { imageSource: "img/buttons/copy.png"; imageSourceHover: "img/buttons/copy_hover.png"; buttonName: "copy"; buttonText: "Copy"; }
-            ListElement { imageSource: "img/buttons/cut.png"; imageSourceHover: "img/buttons/cut_hover.png"; buttonName: "cut"; buttonText: "Cut"; }
-            ListElement { imageSource: "img/buttons/paste.png"; imageSourceHover: "img/buttons/paste_hover.png"; buttonName: "paste"; buttonText: "Paste"; }
-            ListElement { imageSource: "img/buttons/duplicate.png"; imageSourceHover: "img/buttons/duplicate_hover.png"; buttonName: "duplicate"; buttonText: "Duplicate"; }
-            ListElement { imageSource: "img/buttons/delete.png"; imageSourceHover: "img/buttons/delete_hover.png"; buttonName: "deleteNode"; buttonText: "Delete the node"; }
-        }
-
-        ListView {
-            anchors.fill: parent
-            anchors.leftMargin: 10
-            anchors.topMargin: -5
-            model: modelButtonsTools
-            orientation: ListView.Horizontal
+        Row {
             spacing: 15
-            interactive: false
-            delegate {
-                Component {
-                    Rectangle {
-                        id: buttonTools
-                        anchors.verticalCenter: parent.verticalCenter
-                        width: 28
-                        height: 28
-                        color: "transparent"
-                        state: "normal"
-                        radius: 3
-                        Image {
-                            id: imageButton
-                            source: imageSource
-                            anchors.verticalCenter: parent.verticalCenter
-                            anchors.horizontalCenter: parent.horizontalCenter
-                        }
-                        MouseArea {
-                            id: buttonMouseArea
-                            hoverEnabled: true
-                            anchors.fill: parent
-                            onClicked: tools.doAction(buttonName);
-                        }
-                        Rectangle {
-                            id: infoTools
-                            x: 15
-                            y: 35
-                            color: "grey"
-                            opacity: buttonMouseArea.containsMouse ? 1 : 0
-                            Text {
-                                text: buttonText
-                                color: "#bbbbbb"
-                            }
-                        }
 
-                        StateGroup {
-                            id: stateButtonEvents
-                             states: [
-//                                 State {
-//                                     name: "locked"
-//                                     when: !_buttleData.currentSelectedNodeWrapper
-//                                     PropertyChanges {
-//                                         target: buttonTools;
-//                                         color:  "transparent"
-//                                     }
-//                                     PropertyChanges {
-//                                        target: imageButton
-//                                        source: imageSourceLocked
-//                                     }
-//                                 },
-                                 State {
-                                     name: "normal"
-                                     when: !buttonMouseArea.containsMouse
-                                     PropertyChanges {
-                                         target: buttonTools
-                                         color:  "transparent"
-                                     }
-                                     PropertyChanges {
-                                        target: imageButton
-                                        source: imageSource
-                                     }
-                                 },
-                                 State {
-                                     name: "pressed"
-                                     when: buttonMouseArea.containsMouse && buttonMouseArea.pressed
-                                     PropertyChanges {
-                                         target: buttonTools
-                                         color:  "#00b2a1"
-                                     }
-                                     PropertyChanges {
-                                        target: imageButton
-                                        source: imageSource
-                                     }
-                                 },
-                                 State {
-                                     name: "hover"
-                                     when: buttonMouseArea.containsMouse
-                                     PropertyChanges {
-                                         target: buttonTools;
-                                         color:  "#555555"
-                                     }
-                                     PropertyChanges {
-                                        target: imageButton
-                                        source: imageSourceHover
-                                     }
-                                 }
-                             ]
-                        }
-                    }
-                }
+            ToolElement {
+                imageSource: "img/buttons/plus.png"
+                imageSourceHover: "img/buttons/plus_hover.png"
+                imageSourceLocked: "img/buttons/plus.png"
+                buttonName: "createNode"
+                buttonText: "Create a new node"
+                locked: false
+            }
+
+            ToolElement {
+                imageSource: "img/buttons/undo.png"
+                imageSourceHover: "img/buttons/undo_hover.png"
+                imageSourceLocked: "img/buttons/undo_locked.png"
+                buttonName: "undo"
+                buttonText: "Undo"
+                locked: _buttleData.canUndo ? false : true
+            }
+
+            ToolElement {
+                imageSource: "img/buttons/redo.png"
+                imageSourceHover: "img/buttons/redo_hover.png"
+                imageSourceLocked: "img/buttons/redo_locked.png"
+                buttonName: "redo"
+                buttonText: "Redo"
+                locked: _buttleData.canRedo ? false : true
+            }
+
+            ToolElement {
+                imageSource: "img/buttons/copy.png"
+                imageSourceHover: "img/buttons/copy_hover.png"
+                imageSourceLocked: "img/buttons/copy_locked.png"
+                buttonName: "copy"
+                buttonText: "Copy"
+                locked: _buttleData.currentSelectedNodeWrapper ? false : true
+            }
+
+            ToolElement {
+                imageSource: "img/buttons/cut.png"
+                imageSourceHover: "img/buttons/cut_hover.png"
+                imageSourceLocked: "img/buttons/cut_locked.png"
+                buttonName: "cut"
+                buttonText: "Cut"
+                locked: _buttleData.currentSelectedNodeWrapper ? false : true
+            }
+
+            ToolElement {
+                imageSource: "img/buttons/paste.png"
+                imageSourceHover: "img/buttons/paste_hover.png"
+                imageSourceLocked: "img/buttons/paste_locked.png"
+                buttonName: "paste"
+                buttonText: "Paste"
+                locked: _buttleData.canPaste ? false : true
+            }
+
+            ToolElement {
+                imageSource: "img/buttons/duplicate.png"
+                imageSourceHover: "img/buttons/duplicate_hover.png"
+                imageSourceLocked: "img/buttons/duplicate_locked.png"
+                buttonName: "duplicate"
+                buttonText: "Duplicate"
+                locked: _buttleData.currentSelectedNodeWrapper ? false : true
+            }
+
+            ToolElement {
+                id: deleteTool
+                imageSource: "img/buttons/delete.png"
+                imageSourceHover: "img/buttons/delete_hover.png"
+                imageSourceLocked: "img/buttons/delete_locked.png"
+                buttonName: "deleteNode"
+                buttonText: "Delete the node"
+                locked: _buttleData.currentSelectedNodeWrapper ? false : true
             }
         }
     }
 }
-
-

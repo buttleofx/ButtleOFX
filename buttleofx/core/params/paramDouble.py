@@ -9,6 +9,7 @@ class ParamDouble(object):
         Core class, which represents a double parameter.
         Contains :
             - _tuttleParam : link to the corresponding tuttleParam
+            - _oldValue : the old value of the param
     """
 
     def __init__(self, tuttleParam):

@@ -100,6 +100,7 @@ Rectangle {
                         ]
                     }
 
+                    // Drawing a curve for the connection
                     onPaint: {
                         var ctx = getContext();
                         var cHeight = height;
@@ -149,6 +150,7 @@ Rectangle {
                         ctx.closePath()
                     }
 
+                    // Returns true if we click on the curve
                     function intersectPath(mouseX, mouseY, margin){
                         for(var x = mouseX - margin; x< mouseX + margin; x++){
                             for(var y = mouseY - margin; y< mouseY + margin; y++){

@@ -178,6 +178,8 @@ class ButtleData(QtCore.QObject):
             # if a node is selected
             if self._currentSelectedNodeName != None:
                 self.getGraph().deleteNode(self.getCurrentSelectedNodeWrapper().getNode())
+                self._currentSelectedNodeName = None
+                self.currentSelectedNodeChanged.emit()
 
         # set the current nodes
         # if the params of the current node just deleted are display
@@ -214,6 +216,7 @@ class ButtleData(QtCore.QObject):
             self._currentCopiedNodeInfo.update({"color": self.getCurrentSelectedNodeWrapper().getNode().getColor()})
             self._currentCopiedNodeInfo.update({"params": self.getCurrentSelectedNodeWrapper().getNode().getTuttleNode().getParamSet()})
             self._currentCopiedNodeInfo.update({"mode": "_copy"})
+            self.pastePossibilityChanged.emit()
 
     @QtCore.Slot()
     def pasteNode(self):
@@ -226,6 +229,13 @@ class ButtleData(QtCore.QObject):
             newNode.setColor(self._currentCopiedNodeInfo["color"][0], self._currentCopiedNodeInfo["color"][1], self._currentCopiedNodeInfo["color"][2])
             newNode.setNameUser(self._currentCopiedNodeInfo["nameUser"] + self._currentCopiedNodeInfo["mode"])
             newNode.getTuttleNode().getParamSet().copyParamsValues(self._currentCopiedNodeInfo["params"])
+
+    def canPaste(self):
+        """
+            Returns true if we can paste (= if there was at least one node selected)
+        """
+        return self._currentCopiedNodeInfo != {}
+
 
     @QtCore.Slot()
     def duplicationNode(self):
@@ -341,7 +351,7 @@ class ButtleData(QtCore.QObject):
         self.getGraph().getNode(nodeName).setCoord(x, y)
         self.getGraph().connectionsCoordChanged()
 
-    ######################### UNDO & REDO ############################
+    ##### UNDO & REDO #####
 
     @QtCore.Slot()
     def undo(self):
@@ -350,6 +360,7 @@ class ButtleData(QtCore.QObject):
         """
         cmdManager = CommandManager()
         cmdManager.undo()
+        self.undoRedoChanged.emit()
 
     @QtCore.Slot()
     def redo(self):
@@ -358,6 +369,21 @@ class ButtleData(QtCore.QObject):
         """
         cmdManager = CommandManager()
         cmdManager.redo()
+        self.undoRedoChanged.emit()
+
+    def canUndo(self):
+        """
+            Calls the cmdManager to return if we can undo or not.
+        """
+        cmdManager = CommandManager()
+        return cmdManager.canUndo()
+
+    def canRedo(self):
+        """
+            Calls the cmdManager to return if we can redo or not.
+        """
+        cmdManager = CommandManager()
+        return cmdManager.canRedo()
 
     ##### Plugins' menu #####
 
@@ -445,6 +471,15 @@ class ButtleData(QtCore.QObject):
     currentSelectedNodeWrapper = QtCore.Property(QtCore.QObject, getCurrentSelectedNodeWrapper, setCurrentSelectedNodeWrapper, notify=currentSelectedNodeChanged)
     currentConnectionWrapperChanged = QtCore.Signal()
     currentConnectionWrapper = QtCore.Property(QtCore.QObject, getCurrentConnectionWrapper, setCurrentConnectionWrapper, notify=currentConnectionWrapperChanged)
+
+    # undo redo
+    undoRedoChanged = QtCore.Signal()
+    canUndo = QtCore.Property(bool, canUndo, notify=undoRedoChanged)
+    canRedo = QtCore.Property(bool, canRedo, notify=undoRedoChanged)
+
+    # paste possibility ?
+    pastePossibilityChanged = QtCore.Signal()
+    canPaste = QtCore.Property(bool, canPaste, notify=pastePossibilityChanged)
 
     # error display on the Viewer
     nodeErrorChanged = QtCore.Signal()

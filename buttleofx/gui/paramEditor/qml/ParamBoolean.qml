@@ -55,8 +55,8 @@ Item {
                 anchors.fill: parent
                 onPressed: {
                     paramObject.value = (paramObject.value == false) ? true : false                    
-                    paramObject.pushValue(paramObject.value)
-                    // take the focus of the MainWindow
+
+                    // Take the focus of the MainWindow
                     paramBoolean.forceActiveFocus()
                 }
             }

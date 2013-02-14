@@ -13,6 +13,58 @@ Item {
     FolderListView {id: finder}
 
     /*Container of the textInput*/
+    function createInput(paramObject)
+    {
+        // we need a multi line input
+        if (paramObject.stringType == "OfxParamStringIsMultiLine") {
+            var newObject = Qt.createQmlObject('import QtQuick 1.1;' +
+                'Flickable {' +
+                    'id: flick;' +
+                    'width: parent.width - 10;' +
+                    'height: parent.height;' +
+                    'contentWidth: paramStringMultilines.paintedWidth;' +
+                    'contentHeight: paramStringMultilines.paintedHeight;' +
+                    'clip: true;' +
+
+                    'function ensureVisible(r)' +
+                    '{' +
+                    '    if (contentX >= r.x)' +
+                    '        contentX = r.x;' +
+                    '    else if (contentX+width <= r.x+r.width)' +
+                    '        contentX = r.x+r.width-width;' +
+                    '    if (contentY >= r.y)' +
+                    '        contentY = r.y;' +
+                    '    else if (contentY+height <= r.y+r.height)' +
+                    '        contentY = r.y+r.height-height;' +
+                    '}' +
+
+                    'TextEdit {' +
+                    '    id: paramStringMultilines;' +
+                    '    text: paramObject.value;' +
+                    '    width: flick.width;' +
+                    '    height: flick.height;' +
+                    '    color: activeFocus ? "white" : "grey";' +
+                    '    font.pointSize: 10;' +
+                    '    onCursorRectangleChanged: flick.ensureVisible(cursorRectangle);' +
+                    '    onTextChanged: paramObject.value = paramStringMultilines.text;' +
+                    '    focus: true' +
+                    '}' +
+                '}', stringInput, "inputLine");
+        }
+        else {
+            var newObject = Qt.createQmlObject('import QtQuick 1.1;'+
+                'TextInput{' +
+                    'id: paramStringInput;' +
+                    'text: paramObject.value;' + 
+                    'anchors.left: parent.left; anchors.leftMargin: 5; anchors.rightMargin: 5;' +
+                    'width: parent.width - 10;' +
+                    'height: parent.height;' +
+                    'color: activeFocus ? "white" : "grey";' +
+                    'onAccepted: paramObject.value = paramStringInput.text;' +
+                    'focus: true'+
+                '}', stringInput, "inputLine");
+        }
+    }
 
     Row{
         id: paramStringInputContainer
@@ -33,54 +85,12 @@ Item {
             border.width: 1
             border.color: "#333"
             radius: 3
-            // this text input is hidden if we need multiline
-            TextInput{
-                id: paramStringInput
-                text: paramObject.value
-                anchors.left: parent.left
-                anchors.leftMargin: 5
-                anchors.rightMargin: 5
-                //maximumLength: 100
-                width: (paramObject.stringType != "OfxParamStringIsMultiLine") ? parent.width - 10 : 0
-                height: parent.height
-                color: activeFocus ? "white" : "grey"
-                onAccepted: paramObject.value = paramStringInput.text
-                focus: true
+
+            // create the right input, depend on the tuttle param
+            onWidthChanged: {
+                createInput(paramObject)
             }
 
-            // this text input is visible if we need multiline
-            Flickable {
-                id: flick
-                width: (paramObject.stringType == "OfxParamStringIsMultiLine") ? parent.width - 10 : 0 
-                height: parent.height
-                contentWidth: paramStringMultilines.paintedWidth
-                contentHeight: paramStringMultilines.paintedHeight
-                clip: true
-
-                function ensureVisible(r)
-                {
-                    if (contentX >= r.x)
-                        contentX = r.x;
-                    else if (contentX+width <= r.x+r.width)
-                        contentX = r.x+r.width-width;
-                    if (contentY >= r.y)
-                        contentY = r.y;
-                    else if (contentY+height <= r.y+r.height)
-                        contentY = r.y+r.height-height;
-                }
-
-                TextEdit {
-                    id: paramStringMultilines
-                    width: flick.width
-                    height: flick.height
-                    color: activeFocus ? "white" : "grey"
-                    font.pointSize: 10
-                    //wrapMode: TextEdit.Wrap
-                    onCursorRectangleChanged: flick.ensureVisible(cursorRectangle)
-                    onTextChanged: paramObject.value = paramStringMultilines.text
-                    focus: true
-                }
-            }
             // state which enable us to update display, depend on what type of String we have on TuttleOFX
             states: [
                 State {

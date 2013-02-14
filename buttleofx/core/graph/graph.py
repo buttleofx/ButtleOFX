@@ -1,3 +1,4 @@
+import logging
 # Tuttle
 from pyTuttle import tuttle
 #undo_redo
@@ -29,24 +30,25 @@ class Graph(object):
         self.connectionsChanged = Signal()
         self.connectionsCoordChanged = Signal()
 
-        print "Core : Graph created"
+        logging.info("Core : Graph created")
 
     def __str__(self):
         """
             Displays on terminal some data.
             Usefull to debug the class.
         """
-        print("=== Graph Buttle ===")
-        print("---- all nodes ----")
+        logging.info("=== Graph Buttle ===")
+
+        logging.info("---- all nodes ----")
         for node in self._nodes:
-            print node
+            node.__str__()
 
-        print("---- all connections ----")
+        logging.info("---- all connections ----")
         for con in self._connections:
-            print con
+            con.__str__()
 
-        print("=== Graph Tuttle ===")
-        print self._graphTuttle
+        #logging.info("=== Graph Tuttle ===")
+        #print self._graphTuttle
 
     ################################################## ACCESSORS ##################################################
 

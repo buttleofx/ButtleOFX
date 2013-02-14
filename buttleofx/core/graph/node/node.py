@@ -1,3 +1,4 @@
+import logging
 # Tuttle
 from buttleofx.data import tuttleTools
 # Quickmamba
@@ -67,13 +68,13 @@ class Node(object):
 
         self.changed = Signal()
 
-        print "Core : node created"
+        logging.info("Core : Node created")
 
     def __str__(self):
-        return 'Node "%s"' % (self._name)
+        logging.info('Node ' + self.getName())
 
     def __del__(self):
-        print "Core : Node deleted"
+        logging.info("Core : Node deleted")
 
     ######## getters ########
 

@@ -6,3 +6,4 @@ from cmdSetParamDouble2D import CmdSetParamDouble2D
 from cmdSetParamDouble3D import CmdSetParamDouble3D
 from cmdSetParamBoolean import CmdSetParamBoolean
 from cmdSetParamChoice import CmdSetParamChoice
+from cmdSetParamString import CmdSetParamString

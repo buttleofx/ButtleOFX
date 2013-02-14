@@ -40,7 +40,7 @@ class ButtleData(QtCore.QObject):
     _currentParamNodeName = None
     _currentSelectedNodeName = None
     _currentViewerNodeName = None
-    _currentConnectionWrapper = None
+    _currentConnectionId = None
     _currentCopiedNodeInfo = {}
 
     _computedImage = None
@@ -104,7 +104,7 @@ class ButtleData(QtCore.QObject):
         """
             Returns the current currentConnectionWrapper
         """
-        return self._currentConnectionWrapper
+        return self.getGraphWrapper().getConnectionWrapper(self._currentConnectionId)
 
     def getNodeError(self):
         """
@@ -146,9 +146,10 @@ class ButtleData(QtCore.QObject):
         """
         Changes the current conenctionWrapper and emits the change.
         """
-        if self._currentConnectionWrapper == connectionWrapper:
-            return
-        self._currentConnectionWrapper = connectionWrapper
+        if self._currentConnectionId == connectionWrapper.getId():
+            self._currentConnectionId = None
+        else:
+            self._currentConnectionId = connectionWrapper.getId()
         self.currentConnectionWrapperChanged.emit()
 
     def setNodeError(self, nodeName):
@@ -235,7 +236,6 @@ class ButtleData(QtCore.QObject):
             Returns true if we can paste (= if there was at least one node selected)
         """
         return self._currentCopiedNodeInfo != {}
-
 
     @QtCore.Slot()
     def duplicationNode(self):
@@ -324,7 +324,6 @@ class ButtleData(QtCore.QObject):
                     self.disconnect(self.getGraphWrapper().getConnectionByClips(self.getGraphWrapper().getTmpClipOut(), idClip))
                 else:
                     print "Unable to connect or delete the nodes."
-
 
     ################################################## INTERACTIONS ##################################################
 

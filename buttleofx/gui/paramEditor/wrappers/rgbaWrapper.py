@@ -10,6 +10,10 @@ class RGBAWrapper(QtCore.QObject):
         QtCore.QObject.__init__(self)
         self._param = param
         self._param.changed.connect(self.emitChanged)
+        self._positionColorSlider = 0
+        self._positionAlphaSlider = 0
+        self._positionXcolorSelector = 0
+        self._positionYcolorSelector = 0
 
     #################### getters ####################
 
@@ -46,6 +50,22 @@ class RGBAWrapper(QtCore.QObject):
     def getText(self):
         return self._param.getText()
 
+    def getPositionColorSlider(self):
+        print "colorSlider :", self._positionColorSlider
+        return self._positionColorSlider
+
+    def getPositionAlphaSlider(self):
+        print "alphaSlider :", self._positionAlphaSlider
+        return self._positionAlphaSlider
+
+    def getPositionXcolorSelector(self):
+        print "selectorX :", self._positionXcolorSelector
+        return self._positionXcolorSelector
+
+    def getPositionYcolorSelector(self):
+        print "selectorY :", self._positionYcolorSelector
+        return self._positionYcolorSelector
+
     #################### setters ####################
 
     def setValue(self, values):
@@ -66,6 +86,22 @@ class RGBAWrapper(QtCore.QObject):
     def setText(self, text):
         self._param.setText(text)
 
+    def setPositionColorSlider(self, position):
+        print "colorSlider: ", position
+        self._positionColorSlider = position
+
+    def setPositionAlphaSlider(self, position):
+        print "alphaSlider: ", position
+        self._positionAlphaSlider = position
+
+    def setPositionXcolorSelector(self, position):
+        print "colorSelectorX: ", position
+        self._positionXcolorSelector = position
+
+    def setPositionYcolorSelector(self, position):
+        print "colorSelectorY: ", position
+        self._positionYcolorSelector = position
+
     @QtCore.Signal
     def changed(self):
         pass
@@ -81,3 +117,7 @@ class RGBAWrapper(QtCore.QObject):
     g = QtCore.Property(float, getValueG, setValueG, notify=changed)
     b = QtCore.Property(float, getValueB, setValueB, notify=changed)
     a = QtCore.Property(float, getValueA, setValueA, notify=changed)
+    colorSlider = QtCore.Property(float, getPositionColorSlider, setPositionColorSlider, notify=changed)
+    alphaSlider = QtCore.Property(float, getPositionAlphaSlider, setPositionAlphaSlider, notify=changed)
+    colorSelectorX = QtCore.Property(float, getPositionXcolorSelector, setPositionXcolorSelector, notify=changed)
+    colorSelectorY = QtCore.Property(float, getPositionYcolorSelector, setPositionYcolorSelector, notify=changed)

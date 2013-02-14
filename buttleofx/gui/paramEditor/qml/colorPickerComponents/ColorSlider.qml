@@ -29,6 +29,7 @@ Rectangle {
             anchors.fill: parent
             onClicked: {
                 cursorColorSlider.y = mouseY
+                paramObject.colorSlider = cursorColorSlider.y
             }
         }
     }
@@ -39,6 +40,7 @@ Rectangle {
         color: "transparent"
         border.color: "white"
         border.width: 2
+        y: paramObject.colorSlider
         MouseArea{
             anchors.fill: parent
             drag.target: parent

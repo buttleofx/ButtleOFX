@@ -31,6 +31,7 @@ Rectangle {
             anchors.fill: parent
             onClicked: {
                 cursorAlphaSlider.y = mouseY
+                paramObject.alphaSlider = cursorAlphaSlider.y
             }
         }
     }
@@ -41,7 +42,7 @@ Rectangle {
         color: "transparent"
         border.color: "white"
         border.width: 2
-        y: cursorAlphaPositionSlider
+        y: paramObject.alphaSlider
         //radius: 1
         MouseArea{
             anchors.fill: parent

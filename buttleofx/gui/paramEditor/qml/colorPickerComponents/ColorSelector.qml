@@ -39,8 +39,10 @@ Item{
         id: cursorPicker
         property int r : 5
         Rectangle {
-            x: -parent.r; y: -parent.r
-            width: parent.r*2; height: parent.r*2
+            x: -parent.r + paramObject.colorSelectorX
+            y: -parent.r + paramObject.colorSelectorY
+            width: parent.r*2
+            height: parent.r*2
             radius: parent.r
             border.color: "black"
             border.width: 1
@@ -65,7 +67,15 @@ Item{
                     Math.min(height, mouse.y));
             }
         }
-        onPositionChanged: handleMouse(mouse)
-        onPressed: handleMouse(mouse)
+        onPositionChanged: {
+            handleMouse(mouse)
+            paramObject.colorSelectorX = cursorPicker.x
+            paramObject.colorSelectorY = cursorPicker.y
+        }
+        onPressed: {
+            handleMouse(mouse)
+            paramObject.colorSelectorX = cursorPicker.x
+            paramObject.colorSelectorY = cursorPicker.y
+        }
     }
 }

@@ -25,7 +25,8 @@ class ButtleData(QtCore.QObject):
         - _currentNodeViewer
         - _currentNodeParam
         - _currentNodeGraph
-        - soon : _currentNodeCopy
+        - _currentConnection
+        - _currentCopiedNodeInfo
         - _computedImage
 
         This class :
@@ -39,6 +40,7 @@ class ButtleData(QtCore.QObject):
     _currentParamNodeName = None
     _currentSelectedNodeName = None
     _currentViewerNodeName = None
+    _currentConnectionWrapper = None
     _currentCopiedNodeInfo = {}
 
     _computedImage = None
@@ -98,6 +100,12 @@ class ButtleData(QtCore.QObject):
         """
         return self.getGraphWrapper().getNodeWrapper(self.getCurrentViewerNodeName())
 
+    def getCurrentConnectionWrapper(self):
+        """
+            Returns the current currentConnectionWrapper
+        """
+        return self._currentConnectionWrapper
+
     def getNodeError(self):
         """
             Returns the name of the node that can't be displayed.
@@ -133,6 +141,15 @@ class ButtleData(QtCore.QObject):
         self._currentViewerNodeName = nodeWrapper.getName()
         self.currentViewerNodeChanged.emit()
         self.viewerChangedSignal()
+
+    def setCurrentConnectionWrapper(self, connectionWrapper):
+        """
+        Changes the current conenctionWrapper and emits the change.
+        """
+        if self._currentConnectionWrapper == connectionWrapper:
+            return
+        self._currentConnectionWrapper = connectionWrapper
+        self.currentConnectionWrapperChanged.emit()
 
     def setNodeError(self, nodeName):
         self._nodeError = nodeName
@@ -426,6 +443,8 @@ class ButtleData(QtCore.QObject):
     currentViewerNodeWrapper = QtCore.Property(QtCore.QObject, getCurrentViewerNodeWrapper, setCurrentViewerNodeWrapper, notify=currentViewerNodeChanged)
     currentSelectedNodeChanged = QtCore.Signal()
     currentSelectedNodeWrapper = QtCore.Property(QtCore.QObject, getCurrentSelectedNodeWrapper, setCurrentSelectedNodeWrapper, notify=currentSelectedNodeChanged)
+    currentConnectionWrapperChanged = QtCore.Signal()
+    currentConnectionWrapper = QtCore.Property(QtCore.QObject, getCurrentConnectionWrapper, setCurrentConnectionWrapper, notify=currentConnectionWrapperChanged)
 
     # error display on the Viewer
     nodeErrorChanged = QtCore.Signal()
@@ -434,6 +453,7 @@ class ButtleData(QtCore.QObject):
     # python signals
     paramChangedSignal = Signal()
     viewerChangedSignal = Signal()
+
 
 # This class exists just because thre are problems when a class extends 2 other class (Singleton and QObject)
 class ButtleDataSingleton(Singleton):

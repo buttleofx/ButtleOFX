@@ -1,4 +1,5 @@
 from PySide import QtCore
+import logging
 # core
 from buttleofx.core.graph.connection import IdClip
 # gui
@@ -48,28 +49,23 @@ class GraphWrapper(QtCore.QObject):
         self._graph.connectionsChanged.connect(self.updateConnectionWrappers)
         self._graph.connectionsCoordChanged.connect(self.updateConnectionsCoord)
 
-        print "Gui : GraphWrapper created"
+        logging.info("Gui : GraphWrapper created")
 
     def __str__(self):
         """
             Displays on terminal some data.
             Usefull to debug the class.
         """
-        print("---- all nodeWrappers ----")
+        logging.info("=== Graph Buttle Wrapper ===")
+        logging.info("---- all nodeWrappers ----")
         for nodeWrapper in self._nodeWrappers:
-            print nodeWrapper.getName()
+            nodeWrapper.__str__()
 
-        print("---- all nodes ----")
-        for node in self._graph._nodes:
-            print node._name
-
-        print("---- all connectionWrappers ----")
+        logging.info("---- all connectionWrappers ----")
         for con in self._connectionWrappers:
             con.__str__()
 
-        print("---- all connections ----")
-        for con in self._graph._connections:
-            con.__str__()
+        self.getGraphMapped().__str__()
 
     ################################################## ACCESSORS ##################################################
 

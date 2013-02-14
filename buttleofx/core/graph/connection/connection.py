@@ -1,3 +1,4 @@
+import logging
 from quickmamba.patterns import Signal
 
 
@@ -22,8 +23,13 @@ class Connection(object):
         self.changed = Signal()
         self.changed()
 
+        logging.info("Core : Connection created")
+
     def __str__(self):
-        print 'Connection between the clip "%s (%s %d)" and the clip "%s (%s %d)' % (self._clipOut._nodeName, self._clipOut._port, self._clipOut._clipNumber, self._clipIn._nodeName, self._clipIn._port, self._clipIn._clipNumber)
+        logging.info('Connection between the clip "%s (%s %d)" and the clip "%s (%s %d)' % (self._clipOut._nodeName, self._clipOut._port, self._clipOut._clipNumber, self._clipIn._nodeName, self._clipIn._port, self._clipIn._clipNumber))
+
+    def __del__(self):
+        logging.info("Core : Connection deleted")
 
     def getId(self):
         print "Connection Id : ", self._id

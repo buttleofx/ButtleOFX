@@ -4,6 +4,20 @@ from PySide import QtGui, QtDeclarative, QtOpenGL, QtCore
 import os, sys
 from OpenGL import GL
 
+import logging
+# fix thow to display our info
+    # from the lowest to the highest level : DEBUG - INFO - WARNING - ERROR - CRITICAL (default = WARNING)
+    # to use it :
+        # logging.debug("debug message")
+        # logging.info("info message")
+        # logging.warning("warning message")
+        # logging.error("error message")
+        # logging.critical("critical message")
+# print in a file
+logging.basicConfig(format='Buttle - %(levelname)s - %(message)s', filename='console.log', filemode='w', level=logging.DEBUG)
+# print in console
+#logging.basicConfig(format='Buttle - %(levelname)s - %(message)s', level=logging.DEBUG)
+
 from quickmamba.models import QObjectListModel
 
 # for glViewport
@@ -11,9 +25,9 @@ tuttleofx_installed = False
 try:
     import pyTuttle
     tuttleofx_installed = True
-    print('Use TuttleOFX.')
+    logging.debug('Use TuttleOFX.')
 except:
-    print('TuttleFX not installed, use Python Image Library instead.')
+    logging.debug('TuttleFX not installed, use Python Image Library instead.')
 
 if tuttleofx_installed:
     from buttleofx.gui.viewerGL.glviewport_tuttleofx import GLViewport_tuttleofx
@@ -39,10 +53,10 @@ class ButtleApp(QtGui.QApplication):
 
     def notify(self, receiver, event):
         try:
-            #print("QApp notify")
+            #logging.info("QApp notify")
             return QtGui.QApplication.notify(self, receiver, event)
         except Exception as e:
-            print("QApp notify exception: " + str(e))
+            logging.exception("QApp notify exception: " + str(e))
             import traceback
             traceback.print_exc()
             return False

@@ -82,7 +82,7 @@ Rectangle {
                     x: Math.min(model.object.clipOutPosX, model.object.clipInPosX) - canvasMargin
                     y: Math.min(model.object.clipOutPosY, model.object.clipInPosY) - canvasMargin
                     color: "transparent"
-                    state: m.connectionModel == _buttleData.currentConnectionWrapper ? "selectedConnection" :"notSelectedConnection"
+                    state: "normal"
 
                     StateGroup{
                         id: stateConnection
@@ -93,7 +93,7 @@ Rectangle {
                                 PropertyChanges { target: connection; r: 255; g: 255; b: 255 }
                             },
                             State {
-                                name: "notSelectedConnection"
+                                name: "normal"
                                 when: m.connectionModel != _buttleData.currentConnectionWrapper
                                 PropertyChanges { target: connection; r: 0; g: 178; b: 161 }
                             }

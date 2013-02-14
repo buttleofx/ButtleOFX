@@ -54,6 +54,7 @@ Rectangle {
             if (mouse.button == Qt.LeftButton) {
                 _buttleData.nodeMoved(m.nodeModel.name, parent.x, parent.y)
                 stateMoving.state = "normal"
+                console.log(_buttleData.currentConnectionWrapper)
             }
         }
         // double click : we change the current viewer node

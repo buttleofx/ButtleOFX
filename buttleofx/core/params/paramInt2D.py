@@ -78,26 +78,21 @@ class ParamInt2D(object):
         self._tuttleParam.setValueAtIndex(0, int(value))
         self.changed()
 
-        # Update Viewer
-        from buttleofx.data import ButtleDataSingleton
-        buttleData = ButtleDataSingleton().get()
-        buttleData.updateMapAndViewer()
-
     def setValue2(self, value):
         self._tuttleParam.setValueAtIndex(1, int(value))
         self.changed()
-
-        # Update Viewer
-        from buttleofx.data import ButtleDataSingleton
-        buttleData = ButtleDataSingleton().get()
-        buttleData.updateMapAndViewer()
 
     def pushValue(self, newValue, index):
         if index == 0:
             cmdUpdate = CmdSetParamInt2D(self, (newValue, self.getValue2()), 0)
             cmdManager = CommandManager()
             cmdManager.push(cmdUpdate)
-        else:
+        if index == 1:
             cmdUpdate = CmdSetParamInt2D(self, (self.getValue1(), newValue), 1)
             cmdManager = CommandManager()
             cmdManager.push(cmdUpdate)
+
+        # Update Viewer
+        from buttleofx.data import ButtleDataSingleton
+        buttleData = ButtleDataSingleton().get()
+        buttleData.updateMapAndViewer()

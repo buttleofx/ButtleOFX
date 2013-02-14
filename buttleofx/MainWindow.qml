@@ -1,5 +1,7 @@
 import QtQuick 1.1
 import QtDesktop 0.1
+import QuickMamba 1.0
+
 import "gui/graph/qml"
 import "gui/viewer/qml"
 import "gui/paramEditor/qml"
@@ -7,6 +9,10 @@ import "gui/paramEditor/qml"
 Item {
     width: 1200
     height: 800
+
+    TopFocusHandler {
+        //anchors.fill: parent
+    }
 
     Keys.onPressed: {
         if (event.key == Qt.Key_Delete) {

@@ -39,12 +39,13 @@ class ParamBoolean(object):
     def setValue(self, value):
         self._tuttleParam.setValue(value)
         self.changed()
-        # data
+
+        # Push the command
+        cmdUpdate = CmdSetParamBoolean(self, value)
+        cmdManager = CommandManager()
+        cmdManager.push(cmdUpdate)
+
+        # Update the viewer
         from buttleofx.data import ButtleDataSingleton
         buttleData = ButtleDataSingleton().get()
         buttleData.updateMapAndViewer()
-
-    def pushValue(self, newValue):
-        cmdUpdate = CmdSetParamBoolean(self, newValue)
-        cmdManager = CommandManager()
-        cmdManager.push(cmdUpdate)

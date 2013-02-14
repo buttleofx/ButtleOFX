@@ -13,20 +13,20 @@ class ChoiceWrapper(QtCore.QObject):
         self._param = param
         self._param.changed.connect(self.emitChanged)
 
+        self._listValue = QObjectListModel()
+        for value in self._param.getListValue():
+            self._listValue.append(value)
+
     #################### getters ####################
 
     def getParamType(self):
         return self._param.getParamType()
 
     def getListValue(self):
-        tmp = self._param.getListValue()
-        self._param._listValue = QObjectListModel()
-        for value in tmp:
-            self._param._listValue.append(value)
-        return self._param._listValue
+        return self._listValue
 
     def getValue(self):
-            return self._param.getValue()
+        return self._param.getValue()
 
     def getText(self):
         return self._param.getText()
@@ -35,9 +35,6 @@ class ChoiceWrapper(QtCore.QObject):
 
     def setParamType(self, paramType):
         self._param.setParamType(paramType)
-
-    def setListValue(self, listValue):
-        self._param.setListValue(listValue)
 
     def setValue(self, value):
         self._param.setValue(value)

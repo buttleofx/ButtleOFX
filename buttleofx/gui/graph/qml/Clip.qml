@@ -42,6 +42,8 @@ Rectangle {
         onPressed: {
             color = "#fff"
             _buttleData.clipPressed(c.clipModel, index) // we send all information needed to identify the clip : nodename, port and clip number
+            // take the focus of the MainWindow
+            clip.forceActiveFocus()
         }
         onReleased: {
             color = "#bbb"

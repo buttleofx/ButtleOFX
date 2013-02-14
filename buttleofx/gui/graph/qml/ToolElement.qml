@@ -25,7 +25,12 @@ Rectangle {
         id: buttonMouseArea
         hoverEnabled: true
         anchors.fill: parent
-        onClicked: tools.doAction(buttonName);
+        onClicked: {
+
+            tools.doAction(buttonName);
+            //take the focus of the mainWindow
+            parent.forceActiveFocus();
+        }
     }
     Rectangle {
         id: infoTools

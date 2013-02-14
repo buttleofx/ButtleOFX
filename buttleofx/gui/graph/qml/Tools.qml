@@ -143,6 +143,7 @@ Rectangle {
                 buttonName: "deleteNode"
                 buttonText: "Delete the node"
                 locked: _buttleData.currentSelectedNodeWrapper ? false : true
+
             }
         }
     }

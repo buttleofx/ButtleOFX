@@ -1,6 +1,7 @@
 import QtQuick 1.1
 
 Item {
+    id: paramBoolean
     implicitWidth: 100
     implicitHeight: 30
 
@@ -54,7 +55,9 @@ Item {
                 anchors.fill: parent
                 onPressed: {
                     paramObject.value = (paramObject.value == false) ? true : false                    
-                    paramObject.pushValue(paramObject.value)
+
+                    // Take the focus of the MainWindow
+                    paramBoolean.forceActiveFocus()
                 }
             }
         }

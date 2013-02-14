@@ -1,7 +1,7 @@
+from PySide import QtCore
 # Tuttle
 from buttleofx.data import tuttleTools
 from pyTuttle import tuttle
-from PySide import QtCore
 # quickmamba
 from quickmamba.patterns import Singleton, Signal
 from quickmamba.models import QObjectListModel

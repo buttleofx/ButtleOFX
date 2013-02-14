@@ -1,8 +1,7 @@
 from PySide import QtCore, QtGui
-
+import logging
 #quickmamba
 from quickmamba.models import QObjectListModel
-
 # wrappers
 from buttleofx.gui.paramEditor.wrappers import ParamEditorWrapper
 from buttleofx.gui.graph.connection import ClipWrapper
@@ -33,10 +32,13 @@ class NodeWrapper(QtCore.QObject):
         _fpsError = ""
         _frameError = ""
 
-        print "Gui : nodeWrapper created"
+        logging.info("Gui : NodeWrapper created")
+
+    def __str__(self):
+        logging.info("Node Wrapper : " + self.getName())
 
     def __del__(self):
-        print "Gui : NodeWrapper deleted"
+        logging.info("Gui : NodeWrapper deleted")
 
     # We can't connect the two signals because self.changed() is a QML signal.
     # So, we use the function self.emitChanged() to solve the problem

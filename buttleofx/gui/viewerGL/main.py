@@ -1,10 +1,12 @@
+import logging
+
 tuttleofx_installed = False
 try:
     import pyTuttle
     tuttleofx_installed = True
-    print('Use TuttleOFX.')
+    logging.debug('Use TuttleOFX.')
 except:
-    print('TuttleFX not installed, use Python Image Library instead.')
+    logging.debug('TuttleFX not installed, use Python Image Library instead.')
 
 if tuttleofx_installed:
     from glviewport_tuttleofx import GLViewport_tuttleofx

@@ -12,6 +12,8 @@ class Connection(object):
     def __init__(self, clipOut, clipIn, tuttleConnection):
         super(Connection, self).__init__()
 
+        self._id = clipOut.getId() + "_" + clipIn.getId()
+
         self._clipOut = clipOut
         self._clipIn = clipIn
 
@@ -22,6 +24,10 @@ class Connection(object):
 
     def __str__(self):
         print 'Connection between the clip "%s (%s %d)" and the clip "%s (%s %d)' % (self._clipOut._nodeName, self._clipOut._port, self._clipOut._clipNumber, self._clipIn._nodeName, self._clipIn._port, self._clipIn._clipNumber)
+
+    def getId(self):
+        print "Connection Id : ", self._id
+        return self._id
 
     def getClipOut(self):
         return self._clipOut

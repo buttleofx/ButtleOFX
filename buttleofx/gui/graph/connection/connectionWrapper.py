@@ -22,6 +22,9 @@ class ConnectionWrapper(QtCore.QObject):
     def emitChanged(self):
         self.changed.emit()
 
+    def getConnection(self):
+        return self._connection
+
     def getClipOutPosX(self):
         return self._connection.getClipOut().getCoord()[0]
 

@@ -74,6 +74,12 @@ class Graph(object):
                 return connection
         return None
 
+    def getConnectionById(self, connectionId):
+        for connection in self._connections:
+            if connection.getId() == connectionId:
+                return connection
+        return None
+
     def getGraphTuttle(self):
         """
             Return the Tuttle's graph.

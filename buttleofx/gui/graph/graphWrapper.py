@@ -102,13 +102,13 @@ class GraphWrapper(QtCore.QObject):
         """
         return self._connectionWrappers
 
-    def getConnectionWrapper(self, clipOut, clipIn):
+    def getConnectionWrapper(self, connectionId):
         """
-            Returns a connectionWrapper given a clipOut and a clipIn.
+            Returns a connectionWrapper given a connection id.
         """
-        for connectionWrapper in self._connectionWrappers:
-            if connectionWrapper.getClipOut() == clipOut and connectionWrapper.getClipIn() == clipIn:
-                return connectionWrapper
+        for connection in self._connectionWrappers:
+            if connection.getId() == connectionId:
+                return connection
         return None
 
     def getTmpClipOut(self):

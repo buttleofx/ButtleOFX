@@ -10,10 +10,6 @@ class RGBAWrapper(QtCore.QObject):
         QtCore.QObject.__init__(self)
         self._param = param
         self._param.changed.connect(self.emitChanged)
-        self._positionColorSlider = 0
-        self._positionAlphaSlider = 0
-        self._positionXcolorSelector = 0
-        self._positionYcolorSelector = 0
 
     #################### getters ####################
 
@@ -51,20 +47,16 @@ class RGBAWrapper(QtCore.QObject):
         return self._param.getText()
 
     def getPositionColorSlider(self):
-        print "colorSlider :", self._positionColorSlider
-        return self._positionColorSlider
+        return self._param.getPositionColorSlider()
 
     def getPositionAlphaSlider(self):
-        print "alphaSlider :", self._positionAlphaSlider
-        return self._positionAlphaSlider
+        return self._param.getPositionAlphaSlider()
 
     def getPositionXcolorSelector(self):
-        print "selectorX :", self._positionXcolorSelector
-        return self._positionXcolorSelector
+        return self._param.getPositionXcolorSelector()
 
     def getPositionYcolorSelector(self):
-        print "selectorY :", self._positionYcolorSelector
-        return self._positionYcolorSelector
+        return self._param.getPositionYcolorSelector()
 
     #################### setters ####################
 
@@ -87,20 +79,20 @@ class RGBAWrapper(QtCore.QObject):
         self._param.setText(text)
 
     def setPositionColorSlider(self, position):
-        print "colorSlider: ", position
-        self._positionColorSlider = position
+        print "setcolorSlider: ", position
+        self._param.setPositionColorSlider(position)
 
     def setPositionAlphaSlider(self, position):
-        print "alphaSlider: ", position
-        self._positionAlphaSlider = position
+        print "setalphaSlider: ", position
+        self._param.setPositionAlphaSlider(position)
 
     def setPositionXcolorSelector(self, position):
-        print "colorSelectorX: ", position
-        self._positionXcolorSelector = position
+        print "setcolorSelectorX: ", position
+        self._param.setPositionXcolorSelector(position)
 
     def setPositionYcolorSelector(self, position):
-        print "colorSelectorY: ", position
-        self._positionYcolorSelector = position
+        print "setcolorSelectorY: ", position
+        self._param.setPositionYcolorSelector(position)
 
     @QtCore.Signal
     def changed(self):

@@ -13,6 +13,11 @@ class ParamRGBA(object):
 
         self.changed = Signal()
 
+        self._positionColorSlider = 0
+        self._positionAlphaSlider = 0
+        self._positionXcolorSelector = 0
+        self._positionYcolorSelector = 0
+
     #################### getters ####################
 
     def getTuttleParam(self):
@@ -55,6 +60,22 @@ class ParamRGBA(object):
 
     def getText(self):
         return self._tuttleParam.getName()[0].capitalize() + self._tuttleParam.getName()[1:]
+
+    def getPositionColorSlider(self):
+        print "colorSlider :", self._positionColorSlider
+        return self._positionColorSlider
+
+    def getPositionAlphaSlider(self):
+        print "alphaSlider :", self._positionAlphaSlider
+        return self._positionAlphaSlider
+
+    def getPositionXcolorSelector(self):
+        print "getColorselectorX :", self._positionXcolorSelector
+        return self._positionXcolorSelector
+
+    def getPositionYcolorSelector(self):
+        print "getColorSelectorY :", self._positionYcolorSelector
+        return self._positionYcolorSelector
 
     #################### setters ####################
 
@@ -103,3 +124,20 @@ class ParamRGBA(object):
         from buttleofx.data import ButtleDataSingleton
         buttleData = ButtleDataSingleton().get()
         buttleData.updateMapAndViewer()
+
+    def setPositionColorSlider(self, position):
+        print "setcolorSlider: ", position
+        self._positionColorSlider = position
+
+    def setPositionAlphaSlider(self, position):
+        print "setalphaSlider: ", position
+        self._positionAlphaSlider = position
+
+    def setPositionXcolorSelector(self, position):
+        print "setcolorSelectorX: ", position
+        self._positionXcolorSelector = position
+
+    def setPositionYcolorSelector(self, position):
+        print "setcolorSelectorY: ", position
+        self._positionYcolorSelector = position
+

@@ -11,18 +11,13 @@ Rectangle {
     // properties used to change the text int the boxes r, g, b and h, s, b
     property color currentColor: "white"
     property string alphaColorText: "#FFFFFFFF"
-    //property int redValue : 0
-    //property int greenValue : 0 
-    //property int blueValue : 0
+    property int redValue : 0
+    property int greenValue : 0 
+    property int blueValue : 0
     property real hValue: 0
     property real sValue: 0
     property real bValue: 0
     property int alphaValue: 0
-
-    // test for enter colors values in inputs and adapt display
-    //property real cursorColorPositionInputs: rInput.cursorPositionInput + gInput.cursorPositionInput + bInput.cursorPositionInput
-    //property real cursorAlphaPositionInputs: aInput.cursorPositionInput
-
 
     // column containing the inputs colors 
     Column {
@@ -79,45 +74,13 @@ Rectangle {
                 selectByMouse: true
                 text: colorFields.alphaColorText
                 onTextChanged:{
-                    // trouver la fonction qui permette de ressortir r, g et b de genre #FF245123
-                    paramObject.r = ColorFunctions.getChannelStr(colorFields.currentColor, 0) //* 255 
-                    paramObject.g = ColorFunctions.getChannelStr(colorFields.currentColor, 1) //* 255
-                    paramObject.b = ColorFunctions.getChannelStr(colorFields.currentColor, 2) //* 255
+                    paramObject.r = colorFields.redValue
+                    paramObject.g = colorFields.greenValue
+                    paramObject.b = colorFields.blueValue 
                     paramObject.a = colorFields.alphaValue
                 }
             }
         }
-
-        // H, S, B color values boxes
-        /*Column {
-            width: parent.width
-            spacing: 4
-            ColorInput { 
-                id: "hInput"
-                anchors.horizontalCenter: parent.horizontalCenter
-                colorName: "H:"
-                colorValue: colorFields.hValue 
-            }
-            ColorInput { 
-                id: "sInput"
-                anchors.horizontalCenter: parent.horizontalCenter
-                colorName: "S:"
-                colorValue: colorFields.sValue
-             }
-            ColorInput { 
-                id: "bInput"
-                anchors.horizontalCenter: parent.horizontalCenter
-                colorName: "B:"
-                colorValue: colorFields.bValue
-            }
-        }
-
-        // just for little space between HSB and RGBA boxes
-        Rectangle {
-            width: parent.width
-            height: 2
-            color: "transparent"
-        }*/
 
         // R, G, B color values boxes
         Column {
@@ -126,49 +89,31 @@ Rectangle {
             ColorInput {
                 id: rInput
                 colorName: "R:"
-                colorValueText: paramObject.r * 255
+                colorValueText: colorFields.redValue
                 minValue: 0
                 maxValue: 255
-                /*onColorValueTextChanged: {
-                     paramObject ? paramObject.r : 255
-                    // test to adapt display of colorSlider in function of values enter in inputs
-                    //cursorColorPosition = 120 * (rInput.colorValueText + gInput.colorValueText + bInput.colorValueText )/(3*255)
-                }*/
             }
             ColorInput {
                 id: gInput
                 colorName: "G:"
-                colorValueText: paramObject.g * 255
+                colorValueText: colorFields.greenValue
                 minValue: 0
                 maxValue: 255
-                /*onColorValueTextChanged: {
-                    paramObject ? paramObject.g : 255
-                    // test to adapt display of colorSlider in function of values enter in inputs
-                    //cursorColorPosition = 120 * (rInput.colorValueText + gInput.colorValueText + bInput.colorValueText )/(3*255)
-                }*/
             }
             ColorInput {
                 id: bInput
                 colorName: "B:"
-                colorValueText: paramObject.b * 255
+                colorValueText: colorFields.blueValue 
                 minValue: 0 
                 maxValue: 255
-                /*onColorValueTextChanged: {
-                    paramObject ? paramObject.b : 255
-                    // test to adapt display of colorSlider in function of values enter in inputs
-                    //cursorColorPosition = 120 * (rInput.colorValueText + gInput.colorValueText + bInput.colorValueText )/(3*255)
-                }*/
             }
             // alpha value box
             ColorInput {
                 id: aInput
                 colorName: "A:";
-                colorValueText: paramObject.a * 255
+                colorValueText: colorFields.alphaValue
                 minValue: 0
                 maxValue: 255
-                /*onColorValueTextChanged: {
-                    paramObject ? paramObject.a = Math.ceil(colorFields.alphaValue*255) : 255
-                }*/
             }
         }
     }

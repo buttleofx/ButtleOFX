@@ -1,4 +1,5 @@
 import QtQuick 1.1
+import "ColorFunctions.js" as ColorFunctions
 
 // group of inputs
 Rectangle {
@@ -17,11 +18,6 @@ Rectangle {
     property real sValue: 0
     property real bValue: 0
     property int alphaValue: 0
-
-    // test for enter colors values in inputs and adapt display
-    //property real cursorColorPositionInputs: rInput.cursorPositionInput + gInput.cursorPositionInput + bInput.cursorPositionInput
-    //property real cursorAlphaPositionInputs: aInput.cursorPositionInput
-
 
     // column containing the inputs colors 
     Column {
@@ -77,39 +73,14 @@ Rectangle {
                 focus: true
                 selectByMouse: true
                 text: colorFields.alphaColorText
+                onTextChanged:{
+                    paramObject.r = colorFields.redValue
+                    paramObject.g = colorFields.greenValue
+                    paramObject.b = colorFields.blueValue 
+                    paramObject.a = colorFields.alphaValue
+                }
             }
         }
-
-        // H, S, B color values boxes
-        /*Column {
-            width: parent.width
-            spacing: 4
-            ColorInput { 
-                id: "hInput"
-                anchors.horizontalCenter: parent.horizontalCenter
-                colorName: "H:"
-                colorValue: colorFields.hValue 
-            }
-            ColorInput { 
-                id: "sInput"
-                anchors.horizontalCenter: parent.horizontalCenter
-                colorName: "S:"
-                colorValue: colorFields.sValue
-             }
-            ColorInput { 
-                id: "bInput"
-                anchors.horizontalCenter: parent.horizontalCenter
-                colorName: "B:"
-                colorValue: colorFields.bValue
-            }
-        }
-
-        // just for little space between HSB and RGBA boxes
-        Rectangle {
-            width: parent.width
-            height: 2
-            color: "transparent"
-        }*/
 
         // R, G, B color values boxes
         Column {
@@ -121,11 +92,6 @@ Rectangle {
                 colorValueText: colorFields.redValue
                 minValue: 0
                 maxValue: 255
-                onColorValueTextChanged: {
-                     paramObject ? paramObject.r = colorValueText : 255
-                    // test to adapt display of colorSlider in function of values enter in inputs
-                    //cursorColorPosition = 120 * (rInput.colorValueText + gInput.colorValueText + bInput.colorValueText )/(3*255)
-                }
             }
             ColorInput {
                 id: gInput
@@ -133,23 +99,13 @@ Rectangle {
                 colorValueText: colorFields.greenValue
                 minValue: 0
                 maxValue: 255
-                onColorValueTextChanged: {
-                    paramObject ? paramObject.g = colorValueText : 255
-                    // test to adapt display of colorSlider in function of values enter in inputs
-                    //cursorColorPosition = 120 * (rInput.colorValueText + gInput.colorValueText + bInput.colorValueText )/(3*255)
-                }
             }
             ColorInput {
                 id: bInput
                 colorName: "B:"
-                colorValueText: colorFields.blueValue
+                colorValueText: colorFields.blueValue 
                 minValue: 0 
                 maxValue: 255
-                onColorValueTextChanged: {
-                    paramObject ? paramObject.b = colorValueText : 255
-                    // test to adapt display of colorSlider in function of values enter in inputs
-                    //cursorColorPosition = 120 * (rInput.colorValueText + gInput.colorValueText + bInput.colorValueText )/(3*255)
-                }
             }
             // alpha value box
             ColorInput {
@@ -158,9 +114,6 @@ Rectangle {
                 colorValueText: colorFields.alphaValue
                 minValue: 0
                 maxValue: 255
-                onColorValueTextChanged: {
-                    paramObject ? paramObject.a = colorValueText : 255
-                }
             }
         }
     }

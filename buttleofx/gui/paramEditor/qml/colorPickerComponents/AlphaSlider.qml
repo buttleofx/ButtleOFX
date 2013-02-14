@@ -9,8 +9,6 @@ Rectangle {
 
     // property used to compute the value of the color
     property real value: (1 - cursorAlphaSlider.y/height)
-
-    property real cursorAlphaPositionSlider: 0
     
     SquaresGrid { 
         height: parent.height
@@ -21,8 +19,6 @@ Rectangle {
     Rectangle {
         anchors.fill: parent
         border.color: "black"
-        /*border.width: 1
-        radius: 2*/
         gradient: Gradient {
             GradientStop { position: 0.0; color: "#FF000000" }
             GradientStop { position: 1.0; color: "#00000000" }
@@ -31,6 +27,7 @@ Rectangle {
             anchors.fill: parent
             onClicked: {
                 cursorAlphaSlider.y = mouseY
+                paramObject.alphaSlider = cursorAlphaSlider.y
             }
         }
     }
@@ -41,7 +38,7 @@ Rectangle {
         color: "transparent"
         border.color: "white"
         border.width: 2
-        y: cursorAlphaPositionSlider
+        y: paramObject.alphaSlider
         //radius: 1
         MouseArea{
             anchors.fill: parent

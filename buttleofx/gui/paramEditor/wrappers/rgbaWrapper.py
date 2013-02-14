@@ -46,6 +46,18 @@ class RGBAWrapper(QtCore.QObject):
     def getText(self):
         return self._param.getText()
 
+    def getPositionColorSlider(self):
+        return self._param.getPositionColorSlider()
+
+    def getPositionAlphaSlider(self):
+        return self._param.getPositionAlphaSlider()
+
+    def getPositionXcolorSelector(self):
+        return self._param.getPositionXcolorSelector()
+
+    def getPositionYcolorSelector(self):
+        return self._param.getPositionYcolorSelector()
+
     #################### setters ####################
 
     def setValue(self, values):
@@ -66,6 +78,22 @@ class RGBAWrapper(QtCore.QObject):
     def setText(self, text):
         self._param.setText(text)
 
+    def setPositionColorSlider(self, position):
+        print "setcolorSlider: ", position
+        self._param.setPositionColorSlider(position)
+
+    def setPositionAlphaSlider(self, position):
+        print "setalphaSlider: ", position
+        self._param.setPositionAlphaSlider(position)
+
+    def setPositionXcolorSelector(self, position):
+        print "setcolorSelectorX: ", position
+        self._param.setPositionXcolorSelector(position)
+
+    def setPositionYcolorSelector(self, position):
+        print "setcolorSelectorY: ", position
+        self._param.setPositionYcolorSelector(position)
+
     @QtCore.Signal
     def changed(self):
         pass
@@ -81,3 +109,7 @@ class RGBAWrapper(QtCore.QObject):
     g = QtCore.Property(float, getValueG, setValueG, notify=changed)
     b = QtCore.Property(float, getValueB, setValueB, notify=changed)
     a = QtCore.Property(float, getValueA, setValueA, notify=changed)
+    colorSlider = QtCore.Property(float, getPositionColorSlider, setPositionColorSlider, notify=changed)
+    alphaSlider = QtCore.Property(float, getPositionAlphaSlider, setPositionAlphaSlider, notify=changed)
+    colorSelectorX = QtCore.Property(float, getPositionXcolorSelector, setPositionXcolorSelector, notify=changed)
+    colorSelectorY = QtCore.Property(float, getPositionYcolorSelector, setPositionYcolorSelector, notify=changed)

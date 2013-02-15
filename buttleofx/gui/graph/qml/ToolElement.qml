@@ -26,10 +26,11 @@ Rectangle {
         hoverEnabled: true
         anchors.fill: parent
         onClicked: {
-
-            tools.doAction(buttonName);
-            //take the focus of the mainWindow
-            parent.forceActiveFocus();
+            if(!locked) {
+                tools.doAction(buttonName);
+                //take the focus of the mainWindow
+                parent.forceActiveFocus();
+            }
         }
     }
     Rectangle {

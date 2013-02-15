@@ -1,19 +1,20 @@
 from quickmamba.patterns import Signal
+# undo redo
+from buttleofx.core.undo_redo.manageTools import CommandManager
+from buttleofx.core.undo_redo.commands.params import CmdSetParamString
 
 
 class ParamString(object):
     """
         Core class, which represents a string parameter.
         Contains :
-            - _paramType : the name of the type of this parameter
-            - _defaultValue : the default value for the input
-            - _value : the value contained by the input
-            - _stringType : the type of the string (url, path...)
-            - _text : the label of the input
+            - _tuttleParam : link to the corresponding tuttleParam
+            - _oldValue : the old value of the param
     """
 
     def __init__(self, tuttleParam):
         self._tuttleParam = tuttleParam
+        self._oldValue = self.getValue()
 
         self.changed = Signal()
 
@@ -31,6 +32,9 @@ class ParamString(object):
     def getValue(self):
         return self._tuttleParam.getStringValue()
 
+    def getOldValue(self):
+        return self._oldValue
+
     def getStringType(self):
         return self._tuttleParam.getProperties().fetchProperty("OfxParamPropStringMode").getStringValue(0)
 
@@ -39,10 +43,15 @@ class ParamString(object):
 
     #################### setters ####################
 
+    def setOldValue(self, value):
+        self._oldValue = value
+
     def setValue(self, value):
+        # set the model
         self._tuttleParam.setValue(str(value))
         self.changed()
-        from buttleofx.data import ButtleDataSingleton
-        buttleData = ButtleDataSingleton().get()
-        buttleData.updateMapAndViewer()
+        # push command
+        cmdUpdate = CmdSetParamString(self, value)
+        cmdManager = CommandManager()
+        cmdManager.push(cmdUpdate)
         

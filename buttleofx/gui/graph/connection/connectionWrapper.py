@@ -1,3 +1,4 @@
+import logging
 from PySide import QtCore
 
 
@@ -12,6 +13,14 @@ class ConnectionWrapper(QtCore.QObject):
         self._connection = connection
         self._connection.changed.connect(self.emitChanged)
 
+        logging.info("Gui : ConnectionWrapper created")
+
+    def __str__(self):
+        logging.info('Connection between the clip "%s (%s %d)" and the clip "%s (%s %d)' % (self._connection._clipOut._nodeName, self._connection._clipOut._port, self._connection._clipOut._clipNumber, self._connection._clipIn._nodeName, self._connection._clipIn._port, self._connection._clipIn._clipNumber))
+
+    def __del__(self):
+        logging.info("Gui : ConnectionWrapper deleted")
+
     @QtCore.Signal
     def changed(self):
         pass
@@ -21,6 +30,12 @@ class ConnectionWrapper(QtCore.QObject):
 
     def emitChanged(self):
         self.changed.emit()
+
+    def getConnection(self):
+        return self._connection
+
+    def getId(self):
+        return self._connection.getId()
 
     def getClipOutPosX(self):
         return self._connection.getClipOut().getCoord()[0]
@@ -50,6 +65,3 @@ class ConnectionWrapper(QtCore.QObject):
     clipOutPosY = QtCore.Property(int, getClipOutPosY, setClipOutPosX, notify=changed)
     clipInPosX = QtCore.Property(int, getClipInPosX, getClipInPosX, notify=changed)
     clipInPosY = QtCore.Property(int, getClipInPosY, setClipInPosX, notify=changed)
-
-    def __str__(self):
-        print 'Connection between the clip "%s (%s %d)" and the clip "%s (%s %d)' % (self._connection._clipOut._nodeName, self._connection._clipOut._port, self._connection._clipOut._clipNumber, self._connection._clipIn._nodeName, self._connection._clipIn._port, self._connection._clipIn._clipNumber)

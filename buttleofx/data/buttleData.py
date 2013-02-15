@@ -1,7 +1,7 @@
+from PySide import QtCore
 # Tuttle
 from buttleofx.data import tuttleTools
 from pyTuttle import tuttle
-from PySide import QtCore
 # quickmamba
 from quickmamba.patterns import Singleton, Signal
 from quickmamba.models import QObjectListModel
@@ -25,7 +25,8 @@ class ButtleData(QtCore.QObject):
         - _currentNodeViewer
         - _currentNodeParam
         - _currentNodeGraph
-        - soon : _currentNodeCopy
+        - _currentConnection
+        - _currentCopiedNodeInfo
         - _computedImage
 
         This class :
@@ -39,6 +40,7 @@ class ButtleData(QtCore.QObject):
     _currentParamNodeName = None
     _currentSelectedNodeName = None
     _currentViewerNodeName = None
+    _currentConnectionId = None
     _currentCopiedNodeInfo = {}
 
     _computedImage = None
@@ -98,6 +100,12 @@ class ButtleData(QtCore.QObject):
         """
         return self.getGraphWrapper().getNodeWrapper(self.getCurrentViewerNodeName())
 
+    def getCurrentConnectionWrapper(self):
+        """
+            Returns the current currentConnectionWrapper
+        """
+        return self.getGraphWrapper().getConnectionWrapper(self._currentConnectionId)
+
     def getNodeError(self):
         """
             Returns the name of the node that can't be displayed.
@@ -133,6 +141,16 @@ class ButtleData(QtCore.QObject):
         self._currentViewerNodeName = nodeWrapper.getName()
         self.currentViewerNodeChanged.emit()
         self.viewerChangedSignal()
+
+    def setCurrentConnectionWrapper(self, connectionWrapper):
+        """
+        Changes the current conenctionWrapper and emits the change.
+        """
+        if self._currentConnectionId == connectionWrapper.getId():
+            self._currentConnectionId = None
+        else:
+            self._currentConnectionId = connectionWrapper.getId()
+        self.currentConnectionWrapperChanged.emit()
 
     def setNodeError(self, nodeName):
         self._nodeError = nodeName
@@ -218,7 +236,6 @@ class ButtleData(QtCore.QObject):
             Returns true if we can paste (= if there was at least one node selected)
         """
         return self._currentCopiedNodeInfo != {}
-
 
     @QtCore.Slot()
     def duplicationNode(self):
@@ -307,7 +324,6 @@ class ButtleData(QtCore.QObject):
                     self.disconnect(self.getGraphWrapper().getConnectionByClips(self.getGraphWrapper().getTmpClipOut(), idClip))
                 else:
                     print "Unable to connect or delete the nodes."
-
 
     ################################################## INTERACTIONS ##################################################
 
@@ -452,6 +468,8 @@ class ButtleData(QtCore.QObject):
     currentViewerNodeWrapper = QtCore.Property(QtCore.QObject, getCurrentViewerNodeWrapper, setCurrentViewerNodeWrapper, notify=currentViewerNodeChanged)
     currentSelectedNodeChanged = QtCore.Signal()
     currentSelectedNodeWrapper = QtCore.Property(QtCore.QObject, getCurrentSelectedNodeWrapper, setCurrentSelectedNodeWrapper, notify=currentSelectedNodeChanged)
+    currentConnectionWrapperChanged = QtCore.Signal()
+    currentConnectionWrapper = QtCore.Property(QtCore.QObject, getCurrentConnectionWrapper, setCurrentConnectionWrapper, notify=currentConnectionWrapperChanged)
 
     # undo redo
     undoRedoChanged = QtCore.Signal()

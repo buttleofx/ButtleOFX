@@ -11,7 +11,8 @@ Item{
     property real saturation : cursorPicker.x/colorPicker.width
     property real brightness : 1 - cursorPicker.y/colorPicker.height
 
-
+    // used to place the cursor at the good position the first time
+    property bool alreadyPassed: false
 
     SquaresGrid { 
         height: parent.height
@@ -39,8 +40,10 @@ Item{
         id: cursorPicker
         property int r : 5
         Rectangle {
-            x: -parent.r; y: -parent.r
-            width: parent.r*2; height: parent.r*2
+            x: alreadyPassed ? - parent.r : -parent.r + paramObject.colorSelectorX
+            y: alreadyPassed ? -parent.r : -parent.r + paramObject.colorSelectorY
+            width: parent.r*2
+            height: parent.r*2
             radius: parent.r
             border.color: "black"
             border.width: 1
@@ -59,13 +62,18 @@ Item{
         //handleMouse used to manage the displacement of the little circle cursor in the square
         function handleMouse(mouse) {
             if (mouse.buttons & Qt.LeftButton) {
-                cursorPicker.x = Math.max(0, 
-                    Math.min(width,  mouse.x));
-                cursorPicker.y = Math.max(0, 
-                    Math.min(height, mouse.y));
+                alreadyPassed = true
+                paramObject.colorSelectorX = Math.max(0, Math.min(width,  mouse.x));
+                cursorPicker.x =  Math.max(0, Math.min(width,  mouse.x));
+                paramObject.colorSelectorY = Math.max(0, Math.min(height, mouse.y));
+                cursorPicker.y = Math.max(0, Math.min(height, mouse.y));
             }
         }
-        onPositionChanged: handleMouse(mouse)
-        onPressed: handleMouse(mouse)
+        onPositionChanged: {
+            handleMouse(mouse)
+        }
+        onPressed: {
+            handleMouse(mouse)
+        }
     }
 }

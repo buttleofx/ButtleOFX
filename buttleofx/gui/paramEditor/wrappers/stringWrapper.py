@@ -42,7 +42,7 @@ class StringWrapper(QtCore.QObject):
 
     ################################################## DATA EXPOSED TO QML ##################################################
 
-    paramType = QtCore.Property(unicode, getParamType, notify=changed)
+    paramType = QtCore.Property(unicode, getParamType, constant=True)
     value = QtCore.Property(str, getValue, setValue, notify=changed)
-    stringType = QtCore.Property(str, getStringType, notify=changed)
-    text = QtCore.Property(unicode, getText, notify=changed)
+    stringType = QtCore.Property(str, getStringType, constant=True)
+    text = QtCore.Property(unicode, getText, constant=True)

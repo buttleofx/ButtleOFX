@@ -8,11 +8,7 @@ Rectangle {
 
     //property used to compute the value of the color
     property real value: (1 - cursorColorSlider.y/colorSlider.height)
-
-    // test for enter colors values in inputs and adapt display
-    //property real cursorColorPositionSlider: 0
-
-
+    
     //alpha intensity gradient 
     Rectangle {
         anchors.fill: parent
@@ -29,6 +25,7 @@ Rectangle {
             anchors.fill: parent
             onClicked: {
                 cursorColorSlider.y = mouseY
+                paramObject.colorSlider = cursorColorSlider.y
             }
         }
     }
@@ -39,6 +36,7 @@ Rectangle {
         color: "transparent"
         border.color: "white"
         border.width: 2
+        y: paramObject.colorSlider
         MouseArea{
             anchors.fill: parent
             drag.target: parent

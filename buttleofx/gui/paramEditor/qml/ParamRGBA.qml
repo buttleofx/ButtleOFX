@@ -36,13 +36,10 @@ Item{
             ColorSlider{
                 id: colorSlider
                 height: colorPicker.height - titleColorPicker.height - 20
-                // test for enter colors values in inputs and adapt display
-                // cursorColorPositionSlider: (colorInputs.cursorColorPositionInputs)/765 * colorPicker.height
             }
             AlphaSlider{
                 id: alphaSlider
                 height: colorPicker.height - titleColorPicker.height - 20
-                cursorAlphaPositionSlider: alphaSlider.height - (colorInputs.cursorAlphaPositionInputs)/255 * alphaSlider.height
             }
             ColorInputsRGBA{
                 id: colorInputs
@@ -52,10 +49,10 @@ Item{
                 redValue: ColorFunctions.getChannelStr(colorPicker.colorValue, 0)
                 greenValue: ColorFunctions.getChannelStr(colorPicker.colorValue, 1)
                 blueValue: ColorFunctions.getChannelStr(colorPicker.colorValue, 2)
+                alphaValue: Math.ceil(alphaSlider.value*255)
                 hValue: colorSlider.value.toFixed(2)
                 sValue: colorSelector.saturation.toFixed(2)
                 bValue: colorSelector.brightness.toFixed(2)
-                alphaValue: Math.ceil(alphaSlider.value*255)
             }
         }
     }

@@ -54,6 +54,7 @@ Rectangle {
             if (mouse.button == Qt.LeftButton) {
                 _buttleData.nodeMoved(m.nodeModel.name, parent.x, parent.y)
                 stateMoving.state = "normal"
+                console.log(_buttleData.currentConnectionWrapper)
             }
         }
         // double click : we change the current viewer node
@@ -130,7 +131,7 @@ Rectangle {
         id: nodeOutputs
         anchors.right: parent.right
         anchors.rightMargin: -node.inputSideMargin
-        anchors.top: parent.verticalCenter
+        anchors.top : parent.verticalCenter
         spacing: 2
         Repeater {
             model: m.nodeModel.outputClips

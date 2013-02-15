@@ -22,7 +22,7 @@ Rectangle {
         opacity: 0
         height: 17
         width: clipNameText.width + 10
-        x: port == "output" ? parent.x + clipNameText.width + 15 : parent.x - clipNameText.width - 15
+        x: clip.port == "output" ? parent.x + 15 : parent.x - clipNameText.width - 15
         y: -5
 
         Text{

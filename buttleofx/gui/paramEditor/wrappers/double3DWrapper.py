@@ -72,6 +72,10 @@ class Double3DWrapper(QtCore.QObject):
     def setValue3(self, value3):
         self._param.setValue3(value3)
 
+    @QtCore.Slot(float, int)
+    def pushValue(self, value, index):
+        self._param.pushValue(value, index)
+
     @QtCore.Signal
     def changed(self):
         pass

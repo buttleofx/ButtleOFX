@@ -9,12 +9,15 @@ class IdClip:
 
     def __init__(self, nodeName, clipName, clipNumber, coord):
         
-        #self._graph = graph
+        self._id = nodeName + clipName
         self._nodeName = nodeName
         self._clipName = clipName
         self._clipNumber = clipNumber
 
         self._coord = coord
+
+    def getId(self):
+        return self._id
 
     def getNodeName(self):
         return self._nodeName

@@ -1,4 +1,7 @@
 from quickmamba.patterns import Signal
+# undo redo
+from buttleofx.core.undo_redo.manageTools import CommandManager
+from buttleofx.core.undo_redo.commands.params import CmdSetParamDouble3D
 
 
 class ParamDouble3D(object):
@@ -10,6 +13,9 @@ class ParamDouble3D(object):
 
     def __init__(self, tuttleParam):
         self._tuttleParam = tuttleParam
+        self._oldValue1 = self.getValue1()
+        self._oldValue2 = self.getValue2()
+        self._oldValue3 = self.getValue3()
 
         self.changed = Signal()
 
@@ -32,6 +38,15 @@ class ParamDouble3D(object):
 
     def getValues(self):
         return (self.getValue1(), self.getValue2(), self.getValue3())
+
+    def getOldValue1(self):
+        return self._oldValue1
+
+    def getOldValue2(self):
+        return self._oldValue2
+
+    def getOldValue3(self):
+        return self._oldValue3
 
     def getValue1(self):
         return self._tuttleParam.getDoubleValueAtIndex(0)
@@ -70,23 +85,41 @@ class ParamDouble3D(object):
         self.setValue2(values[1])
         self.setValue3(values[2])
 
+    def setOldValueAt(self, value, index):
+        if index == 0:
+            self._oldValue1 = value
+        if index == 1:
+            self._oldValue2 = value
+        if index == 2:
+            self._oldValue3 = value
+
     def setValue1(self, value):
         self._tuttleParam.setValueAtIndex(0, float(value))
         self.changed()
-        from buttleofx.data import ButtleDataSingleton
-        buttleData = ButtleDataSingleton().get()
-        buttleData.updateMapAndViewer()
 
     def setValue2(self, value):
         self._tuttleParam.setValueAtIndex(1, float(value))
         self.changed()
-        from buttleofx.data import ButtleDataSingleton
-        buttleData = ButtleDataSingleton().get()
-        buttleData.updateMapAndViewer()
 
     def setValue3(self, value):
         self._tuttleParam.setValueAtIndex(2, float(value))
         self.changed()
+
+    def pushValue(self, newValue, index):
+        if index == 0:
+            cmdUpdate = CmdSetParamDouble3D(self, (newValue, self.getValue2(), self.getValue3()), 0)
+            cmdManager = CommandManager()
+            cmdManager.push(cmdUpdate)
+        if index == 1:
+            cmdUpdate = CmdSetParamDouble3D(self, (self.getValue1(), newValue, self.getValue3()), 1)
+            cmdManager = CommandManager()
+            cmdManager.push(cmdUpdate)
+        if index == 2:
+            cmdUpdate = CmdSetParamDouble3D(self, (self.getValue1(), self.getValue2(), newValue), 2)
+            cmdManager = CommandManager()
+            cmdManager.push(cmdUpdate)
+
+        # Update the viewer
         from buttleofx.data import ButtleDataSingleton
         buttleData = ButtleDataSingleton().get()
         buttleData.updateMapAndViewer()

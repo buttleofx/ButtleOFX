@@ -1,9 +1,9 @@
 from buttleofx.core.undo_redo.manageTools import UndoableCommand
 
 
-class CmdSetParamDouble(UndoableCommand):
+class CmdSetParamString(UndoableCommand):
     """
-        Command that update the value of a paramDouble.
+        Command that update the value of a paramString.
         Attributes :
         - param : the target param wich will be changed by the update
         - newValue : the value wich will be mofidy in the target
@@ -19,10 +19,11 @@ class CmdSetParamDouble(UndoableCommand):
         """
         Undoes the update of the param.
         """
-        self._param.getTuttleParam().setValue(float(self._oldValue))
-        self._param.setOldValue(float(self._oldValue))
+        # set tuttle value
+        self._param.getTuttleParam().setValue(str(self._oldValue))
+        self._param.setOldValue(str(self._oldValue))
         self._param.changed()
-
+        # update viewer
         from buttleofx.data import ButtleDataSingleton
         buttleData = ButtleDataSingleton().get()
         buttleData.updateMapAndViewer()
@@ -37,10 +38,11 @@ class CmdSetParamDouble(UndoableCommand):
         """
         Executes the update of the param.
         """
-        self._param.getTuttleParam().setValue(float(self._newValue))
-        self._param.setOldValue(float(self._newValue))
+        # set tuttle value
+        self._param.getTuttleParam().setValue(str(self._newValue))
+        self._param.setOldValue(str(self._newValue))
         self._param.changed()
-
+        # update viewer
         from buttleofx.data import ButtleDataSingleton
         buttleData = ButtleDataSingleton().get()
         buttleData.updateMapAndViewer()

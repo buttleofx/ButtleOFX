@@ -52,30 +52,39 @@ Item {
                 font.pointSize: 8
                 maximumLength: 8
                 color: activeFocus ? "white" : "grey"
-                activeFocusOnPress : true
                 selectByMouse : true
-                validator: DoubleValidator {
+                /*validator: DoubleValidator {
                     bottom: paramObject.minimum
                     top: paramObject.maximum
-                }
+                }*/
                 onAccepted: {
-                    cursorSlider.x = updateXcursor();
-                    paramObject.pushValue(updateTextValue());
-                    focus = false;
+                    if (sliderInput.text <= paramObject.maximum && sliderInput.text >= paramObject.minimum) {
+                        paramObject.value = updateTextValue()
+                        paramObject.pushValue(paramObject.value);
+                    } 
+                    else {
+                        paramObject.value = paramObject.getOldValue();
+                    } 
                 }
                 Component.onCompleted: {
                     cursorSlider.x = updateXcursor();
                 }
                 onTextChanged: {
                     if (!mousePressed) {
-                        // the doubleValidator is not as good as intValidator, so we need this test.
+                        // The doubleValidator is not as good as intValidator, so we need this test.
                         if (sliderInput.text <= paramObject.maximum && sliderInput.text >= paramObject.minimum) {
                             cursorSlider.x = updateXcursor();
                         }
                     }
                 }
-                onFocusChanged: {
-                    text = paramObject.value
+                onActiveFocusChanged: {
+                    if (sliderInput.text <= paramObject.maximum && sliderInput.text >= paramObject.minimum) {
+                        paramObject.value = updateTextValue();
+                        paramObject.pushValue(paramObject.value); 
+                    }  
+                    else {
+                        paramObject.value = paramObject.getOldValue();
+                    } 
                 }
             }
 
@@ -123,7 +132,8 @@ Item {
                         paramDouble.forceActiveFocus()
                     }
                     onReleased: {
-                        paramObject.pushValue(updateTextValue());
+                        paramObject.value = updateTextValue();
+                        paramObject.pushValue(paramObject.value);
                         mousePressed = false
                     }
                 }

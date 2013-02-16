@@ -57,10 +57,6 @@ class Double2DWrapper(QtCore.QObject):
     def setValue2(self, value2):
         self._param.setValue2(value2)
 
-    @QtCore.Slot(float, int)
-    def pushValue(self, value, index):
-        self._param.pushValue(value, index)
-
     @QtCore.Signal
     def changed(self):
         pass

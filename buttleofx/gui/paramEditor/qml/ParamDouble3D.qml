@@ -40,20 +40,26 @@ Item {
                 color: activeFocus ? "white" : "grey"
                 selectByMouse : true
                 onAccepted: {
-                    if(acceptableInput){
-                        paramObject.value1 = paramDouble3Dinput1.text
-                        paramObject.pushValue(paramObject.value1, 0)
+                    if(text <= paramObject.maximum1 && text >= paramObject.minimum1){
+                        paramObject.value1 = paramDouble3Dinput1.text;
+                    }
+                    else {
+                        text = paramObject.value1;
                     }
                 }
                 onActiveFocusChanged: {
-                    if(acceptableInput){
-                        paramObject.value1 = paramDouble3Dinput1.text
+                    if(text <= paramObject.maximum1 && text >= paramObject.minimum1){
+                        paramObject.value1 = paramDouble3Dinput1.text;
+                    }
+                    else {
+                        text = paramObject.value1;
                     }
                 }
-                validator: DoubleValidator{
+
+                /*validator: DoubleValidator{
                     bottom: paramObject.minimum1
                     top:  paramObject.maximum1
-                }
+                }*/
 
                 KeyNavigation.backtab: paramDouble3Dinput3
                 KeyNavigation.tab: paramDouble3Dinput2
@@ -80,20 +86,26 @@ Item {
                 activeFocusOnPress : true
                 selectByMouse : true
                 onAccepted: {
-                    if(acceptableInput) {
-                        paramObject.value2 = paramDouble3Dinput2.text
-                        paramObject.pushValue(paramObject.value2, 1)
+                    if(text <= paramObject.maximum2 && text >= paramObject.minimum2){
+                        paramObject.value2 = paramDouble3Dinput2.text;
+                    }
+                    else {
+                        text = paramObject.value2;
                     }
                 }
                 onActiveFocusChanged: {
-                    if(acceptableInput) {
-                        paramObject.value2 = paramDouble3Dinput2.text
+                    if(text <= paramObject.maximum2 && text >= paramObject.minimum2){
+                        paramObject.value2 = paramDouble3Dinput2.text;
+                    }
+                    else {
+                        text = paramObject.value2;
                     }
                 }
-                validator: DoubleValidator{
+                
+                /*validator: DoubleValidator{
                     bottom: paramObject.minimum2
                     top: paramObject.maximum2
-                }
+                }*/
 
                 KeyNavigation.backtab: paramDouble3Dinput1
                 KeyNavigation.tab: paramDouble3Dinput3
@@ -120,20 +132,26 @@ Item {
                 activeFocusOnPress : true
                 selectByMouse : true
                 onAccepted: {
-                    if(acceptableInput) {
-                        paramObject.value3 = paramDouble3Dinput3.text
-                        paramObject.pushValue(paramObject.value3, 2)
+                    if(text <= paramObject.maximum3 && text >= paramObject.minimum3){
+                        paramObject.value3 = paramDouble3Dinput3.text;
+                    }
+                    else {
+                        text = paramObject.value3;
                     }
                 }
                 onActiveFocusChanged: {
-                    if(acceptableInput) {
-                        paramObject.value3 = paramDouble3Dinput3.text
+                    if(text <= paramObject.maximum3 && text >= paramObject.minimum3){
+                        paramObject.value3 = paramDouble3Dinput3.text;
+                    }
+                    else {
+                        text = paramObject.value3;
                     }
                 }
-                validator: DoubleValidator{
+                
+                /*validator: DoubleValidator{
                     bottom: paramObject.minimum3
                     top: paramObject.maximum3
-                }
+                }*/
 
                 KeyNavigation.backtab: paramDouble3Dinput2
                 KeyNavigation.tab: paramDouble3Dinput1

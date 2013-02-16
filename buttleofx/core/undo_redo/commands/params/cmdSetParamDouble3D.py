@@ -20,8 +20,6 @@ class CmdSetParamDouble3D(UndoableCommand):
         """
         Undoes the update of the param.
         """
-
-        print "UNDO Double3D : ", self._index
         self._param.getTuttleParam().setValue(self._oldValues)
         self._param.setOldValueAt(float(self._oldValues[int(self._index)]), self._index)
         self._param.changed()
@@ -34,8 +32,6 @@ class CmdSetParamDouble3D(UndoableCommand):
         """
         Redoes the update of the param.
         """
-
-        print "REDO Double3D : ", self._index
         return self.doCmd()
 
     def doCmd(self):
@@ -43,7 +39,6 @@ class CmdSetParamDouble3D(UndoableCommand):
         Executes the update of the param.
         """
 
-        print "DO Double3D : ", self._index
         self._param.getTuttleParam().setValue(self._newValues)
         self._param.setOldValueAt(float(self._newValues[int(self._index)]), self._index)
         self._param.changed()

@@ -22,6 +22,10 @@ class DoubleWrapper(QtCore.QObject):
     def getValue(self):
         return self._param.getValue()
 
+    @QtCore.Slot(result=float)
+    def getOldValue(self):
+        return self._param.getOldValue()
+
     def getMaximum(self):
         return self._param.getMaximum()
 

@@ -54,6 +54,13 @@ class ParamDouble(object):
         self.changed()
 
     def pushValue(self, newValue):
-        cmdUpdate = CmdSetParamDouble(self, newValue)
-        cmdManager = CommandManager()
-        cmdManager.push(cmdUpdate)
+        if newValue != self.getOldValue():
+            # Push the command
+            cmdUpdate = CmdSetParamDouble(self, newValue)
+            cmdManager = CommandManager()
+            cmdManager.push(cmdUpdate)
+
+            # Update the viewer
+            from buttleofx.data import ButtleDataSingleton
+            buttleData = ButtleDataSingleton().get()
+            buttleData.updateMapAndViewer()

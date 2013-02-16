@@ -20,8 +20,6 @@ class CmdSetParamInt3D(UndoableCommand):
         """
         Undoes the update of the param.
         """
-
-        print "UNDO Int3D : ", self._index
         self._param.getTuttleParam().setValue(self._oldValues)
         self._param.setOldValueAt(int(self._oldValues[int(self._index)]), self._index)
         self._param.changed()
@@ -34,14 +32,12 @@ class CmdSetParamInt3D(UndoableCommand):
         """
         Redoes the update of the param.
         """
-        print "REDO Int3D : ", self._index
         return self.doCmd()
 
     def doCmd(self):
         """
         Executes the update of the param.
         """
-        print "UNDO Int3D : ", self._index
         self._param.getTuttleParam().setValue(self._newValues)
         self._param.setOldValueAt(int(self._newValues[int(self._index)]), self._index)
         self._param.changed()

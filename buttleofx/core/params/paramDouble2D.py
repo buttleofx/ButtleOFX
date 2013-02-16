@@ -78,24 +78,33 @@ class ParamDouble2D(object):
             self._oldValue2 = value
 
     def setValue1(self, value):
-        self._tuttleParam.setValueAtIndex(0, float(value))
-        self.changed()
+        if value != self.getValue1():
+            # Set the value
+            self._tuttleParam.setValueAtIndex(0, float(value))
+            self.changed()
+
+             # Push the command
+            cmdUpdate = CmdSetParamDouble2D(self, (value, self.getValue2()), 0)
+            cmdManager = CommandManager()
+            cmdManager.push(cmdUpdate)
+
+             # Update the viewer
+            from buttleofx.data import ButtleDataSingleton
+            buttleData = ButtleDataSingleton().get()
+            buttleData.updateMapAndViewer()
 
     def setValue2(self, value):
-        self._tuttleParam.setValueAtIndex(1, float(value))
-        self.changed()
+        if value != self.getValue2():
+            self._tuttleParam.setValueAtIndex(1, float(value))
+            self.changed()
 
-    def pushValue(self, newValue, index):
-        if index == 0:
-            cmdUpdate = CmdSetParamDouble2D(self, (newValue, self.getValue2()), 0)
-            cmdManager = CommandManager()
-            cmdManager.push(cmdUpdate)
-        if index == 1:
-            cmdUpdate = CmdSetParamDouble2D(self, (self.getValue1(), newValue), 1)
+            # Set the command
+            cmdUpdate = CmdSetParamDouble2D(self, (self.getValue1(), value), 1)
             cmdManager = CommandManager()
             cmdManager.push(cmdUpdate)
 
-        # Update the viewer
-        from buttleofx.data import ButtleDataSingleton
-        buttleData = ButtleDataSingleton().get()
-        buttleData.updateMapAndViewer()
+            # Update the viewer
+            from buttleofx.data import ButtleDataSingleton
+            buttleData = ButtleDataSingleton().get()
+            buttleData.updateMapAndViewer()
+

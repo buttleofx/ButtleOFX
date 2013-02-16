@@ -40,20 +40,25 @@ Item {
                 color: activeFocus ? "white" : "grey"
                 selectByMouse : true
                 onAccepted: {
-                    if(acceptableInput){
-                        paramObject.value1 = paramDouble2Dinput1.text
-                        paramObject.pushValue(paramObject.value1, 0)
+                    if(text <= paramObject.maximum1 && text >= paramObject.minimum1){
+                        paramObject.value1 = paramDouble2Dinput1.text;
+                    }
+                    else {
+                        text = paramObject.value1;
                     }
                 }
                 onActiveFocusChanged: {
-                    if(acceptableInput){
-                        paramObject.value1 = paramDouble2Dinput1.text
+                    if(text <= paramObject.maximum1 && text >= paramObject.minimum1){
+                        paramObject.value1 = paramDouble2Dinput1.text;
+                    }
+                    else {
+                        text = paramObject.value1;
                     }
                 }
-                validator: DoubleValidator {
+                /*validator: DoubleValidator {
                     bottom: paramObject.minimum1
                     top:  paramObject.maximum1
-                }
+                }*/
 
                 KeyNavigation.backtab: paramDouble2Dinput2
                 KeyNavigation.tab: paramDouble2Dinput2
@@ -79,20 +84,25 @@ Item {
                 color: activeFocus ? "white" : "grey"
                 selectByMouse : true
                 onAccepted: {
-                    if(acceptableInput) {
-                        paramObject.value2 = paramDouble2Dinput2.text
-                        paramObject.pushValue(paramObject.value2, 1)
+                     if(text <= paramObject.maximum2 && text >= paramObject.minimum2){
+                        paramObject.value2 = paramDouble2Dinput2.text;
+                    }
+                    else {
+                        text = paramObject.value2;
                     }
                 }
                 onActiveFocusChanged: {
-                    if(acceptableInput) {
-                        paramObject.value2 = paramDouble2Dinput2.text
+                    if(text <= paramObject.maximum2 && text >= paramObject.minimum2){
+                        paramObject.value1 = paramDouble2Dinput1.text;
+                    }
+                    else {
+                        text = paramObject.value2;
                     }
                 }
-                validator: DoubleValidator {
+                /*validator: DoubleValidator {
                     bottom: paramObject.minimum2
                     top: paramObject.maximum2
-                }
+                }*/
 
                 KeyNavigation.backtab: paramDouble2Dinput1
                 KeyNavigation.tab: paramDouble2Dinput1

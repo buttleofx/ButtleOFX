@@ -40,7 +40,6 @@ Item {
                 onAccepted: {
                     if(acceptableInput) {
                         paramObject.value1 = paramInt2DInput1.text
-                        paramObject.pushValue(paramObject.value1, 0)
                     }
                 }
                 onActiveFocusChanged: {
@@ -78,7 +77,6 @@ Item {
                 onAccepted: {
                     if(acceptableInput) {
                         paramObject.value2 = paramInt2DInput2.text
-                        paramObject.pushValue(paramObject.value2, 1)
                     }
                 }
                 onActiveFocusChanged: {

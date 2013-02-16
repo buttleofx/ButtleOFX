@@ -53,6 +53,7 @@ class ParamInt(object):
         self.changed()
 
     def pushValue(self, newValue):
-        cmdUpdate = CmdSetParamInt(self, newValue)
-        cmdManager = CommandManager()
-        cmdManager.push(cmdUpdate)
+        if newValue != self.getOldValue():
+            cmdUpdate = CmdSetParamInt(self, newValue)
+            cmdManager = CommandManager()
+            cmdManager.push(cmdUpdate)

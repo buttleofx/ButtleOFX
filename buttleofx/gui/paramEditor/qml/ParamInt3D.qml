@@ -42,8 +42,6 @@ Item {
                 onAccepted: {
                     if(acceptableInput) {
                         paramObject.value1 = paramDouble3Dinput1.text
-                        console.log("Accepted")
-                        paramObject.pushValue(paramObject.value1, 0)
                     }
                 }
                 onActiveFocusChanged: {
@@ -81,7 +79,6 @@ Item {
                 onAccepted: {
                     if(acceptableInput) {
                         paramObject.value2 = paramDouble3Dinput2.text
-                        paramObject.pushValue(paramObject.value2, 1)
                     }
                 }
                 onActiveFocusChanged: {
@@ -119,7 +116,6 @@ Item {
                 onAccepted: {
                     if(acceptableInput){
                         paramObject.value3 = paramDouble3Dinput3.text
-                        paramObject.pushValue(paramObject.value3, 2)
                     }
                 }
                 onActiveFocusChanged: {

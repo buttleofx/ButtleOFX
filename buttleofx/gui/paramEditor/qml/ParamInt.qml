@@ -52,15 +52,16 @@ Item {
                 font.pointSize: 8
                 maximumLength: 8
                 color: activeFocus ? "white" : "grey"
-                activeFocusOnPress : true
+                //activeFocusOnPress : true
                 selectByMouse : true
                 validator: IntValidator {
                     bottom: paramObject.minimum
                     top: paramObject.maximum
                 }
                 onAccepted: {
-                    cursorSlider.x = updateXcursor();
-                    paramObject.pushValue(updateTextValue());
+                    //cursorSlider.x = updateXcursor();
+                    paramObject.value = updateTextValue();
+                    paramObject.pushValue(paramObject.value);
                 }
                 Component.onCompleted: {
                     cursorSlider.x = updateXcursor();
@@ -70,8 +71,9 @@ Item {
                         cursorSlider.x = updateXcursor();
                     }
                 }
-                onFocusChanged: {
-                    text = paramObject.value
+                onActiveFocusChanged: {
+                    paramObject.value = updateTextValue();
+                    paramObject.pushValue(paramObject.value);
                 }
             }
 
@@ -118,7 +120,8 @@ Item {
                         paramInt.forceActiveFocus()
                     }
                     onReleased: {
-                        paramObject.pushValue(updateTextValue());
+                        paramObject.value = updateTextValue()
+                        paramObject.pushValue(paramObject.value);
                         mousePressed = false
                     }
                 }

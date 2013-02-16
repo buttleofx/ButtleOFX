@@ -72,10 +72,6 @@ class Int3DWrapper(QtCore.QObject):
     def setValue3(self, value):
         self._param.setValue3(value)
 
-    @QtCore.Slot(int, int)
-    def pushValue(self, value, index):
-        self._param.pushValue(value, index)
-
     @QtCore.Signal
     def changed(self):
         pass

@@ -94,32 +94,49 @@ class ParamInt3D(object):
             self._oldValue3 = value
 
     def setValue1(self, value):
-        self._tuttleParam.setValueAtIndex(0, int(value))
-        self.changed()
+        if value != self.getValue1():
+            # Set the value
+            self._tuttleParam.setValueAtIndex(0, int(value))
+            self.changed()
+
+            # Push the command
+            cmdUpdate = CmdSetParamInt3D(self, (value, self.getValue2(), self.getValue3()), 0)
+            cmdManager = CommandManager()
+            cmdManager.push(cmdUpdate)
+
+            # Update the viewer
+            from buttleofx.data import ButtleDataSingleton
+            buttleData = ButtleDataSingleton().get()
+            buttleData.updateMapAndViewer()
 
     def setValue2(self, value):
-        self._tuttleParam.setValueAtIndex(1, int(value))
-        self.changed()
+        if value != self.getValue2():
+            # Set the value
+            self._tuttleParam.setValueAtIndex(1, int(value))
+            self.changed()
+
+            # Push the command
+            cmdUpdate = CmdSetParamInt3D(self, (self.getValue1(), value, self.getValue3()), 1)
+            cmdManager = CommandManager()
+            cmdManager.push(cmdUpdate)
+
+            # Update the viewer
+            from buttleofx.data import ButtleDataSingleton
+            buttleData = ButtleDataSingleton().get()
+            buttleData.updateMapAndViewer()
 
     def setValue3(self, value):
-        self._tuttleParam.setValueAtIndex(2, int(value))
-        self.changed()
+        if value != self.getValue3():
+            # Set the value
+            self._tuttleParam.setValueAtIndex(2, int(value))
+            self.changed()
 
-    def pushValue(self, newValue, index):
-        if index == 0:
-            cmdUpdate = CmdSetParamInt3D(self, (newValue, self.getValue2(), self.getValue3()), 0)
-            cmdManager = CommandManager()
-            cmdManager.push(cmdUpdate)
-        if index == 1:
-            cmdUpdate = CmdSetParamInt3D(self, (self.getValue1(), newValue, self.getValue3()), 1)
-            cmdManager = CommandManager()
-            cmdManager.push(cmdUpdate)
-        if index == 2:
-            cmdUpdate = CmdSetParamInt3D(self, (self.getValue1(), self.getValue2(), newValue), 2)
+            # Push the command
+            cmdUpdate = CmdSetParamInt3D(self, (self.getValue1(), self.getValue2(), value), 2)
             cmdManager = CommandManager()
             cmdManager.push(cmdUpdate)
 
-        # Update the viewer
-        from buttleofx.data import ButtleDataSingleton
-        buttleData = ButtleDataSingleton().get()
-        buttleData.updateMapAndViewer()
+            # Update the viewer
+            from buttleofx.data import ButtleDataSingleton
+            buttleData = ButtleDataSingleton().get()
+            buttleData.updateMapAndViewer()

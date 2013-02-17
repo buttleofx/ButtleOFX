@@ -1,4 +1,5 @@
-from PySide import QtCore
+import logging
+from PySide import QtCore, QtGui
 # Tuttle
 from buttleofx.data import tuttleTools
 from pyTuttle import tuttle
@@ -295,6 +296,17 @@ class ButtleData(QtCore.QObject):
             self.getGraphWrapper().setTmpClipOut(idClip)
         else:
             self.getGraphWrapper().setTmpClipIn(idClip)
+
+        mimeData = QtCore.QMimeData()
+
+        mimeData.setText(str(clip.getNodeName()) + "/" + str(clip.getName()) + "/" + str(clipNumber))
+
+        widget = QtGui.QWidget()
+
+        drag = QtGui.QDrag(widget)
+        drag.setMimeData(mimeData)
+
+        drag.exec_(QtCore.Qt.MoveAction)
 
     @QtCore.Slot(QtCore.QObject, int)
     def clipReleased(self, clip, clipNumber):

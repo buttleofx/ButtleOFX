@@ -38,6 +38,16 @@ Rectangle {
         drag.axis: Drag.XandYAxis
     }
 
+    DropArea {
+        anchors.fill: parent
+        onDrop: {
+            if( hasUrls )
+            {
+                _buttleData.dropReaderNode(firstUrl, pos.x, pos.y)
+            }
+        }
+    }
+
     Rectangle {
         id: connectnode
         Item {
@@ -218,15 +228,4 @@ Rectangle {
              listmodel.menuState = (listmodel.menuState == "hidden") ? "shown" : "hidden"
         }
     } */
-
-    DropArea {
-        anchors.fill: parent
-        onDrop: {
-            if( hasUrls )
-            {
-                _buttleData.dropReaderNode(firstUrl, pos.x, pos.y)
-            }
-        }
-    }
-    
 }

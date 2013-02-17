@@ -1,4 +1,5 @@
 import QtQuick 1.1
+import QuickMamba 1.0
 
 Rectangle {
     id: clip
@@ -56,6 +57,14 @@ Rectangle {
         onExited: {
             clipName.opacity = 0
             color = "#bbb"
+        }
+    }
+
+    DropArea {
+        anchors.fill: parent
+        anchors.margins: -20
+        onDrop: {
+            _buttleData.clipReleased(c.clipModel, index)
         }
     }
 }

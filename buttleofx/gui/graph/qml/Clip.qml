@@ -52,7 +52,11 @@ Rectangle {
         anchors.fill: parent
         anchors.margins: -20
         onDrop: {
-            _buttleData.connectionDropEvent(c.clipModel, index)
+            if (hasText) {
+                console.log("hoho " + text)
+                //_buttleData.connectionDropEvent(c.clipModel, index)
+                _buttleData.connectionDropEvent(text, c.clipModel, index)
+            }
         }
     }
 }

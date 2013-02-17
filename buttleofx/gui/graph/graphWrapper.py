@@ -1,7 +1,5 @@
 from PySide import QtCore
 import logging
-# core
-from buttleofx.core.graph.connection import IdClip
 # gui
 from buttleofx.gui.graph.node import NodeWrapper
 from buttleofx.gui.graph.connection import ConnectionWrapper
@@ -18,8 +16,6 @@ class GraphWrapper(QtCore.QObject):
         - _nodeWrappers : list of node wrappers (the python objects we use to communicate with the QML)
         - _connectionWrappers : list of connections wrappers (the python objects we use to communicate with the QML)
 
-        - _tmpClip : the future connected clip when a connection is beeing created (drag & drop)
-
         - _zMax : to manage the depth of the graph (in QML)
 
         - _graph : the name of the graph mapped by the instance of this class.
@@ -35,8 +31,6 @@ class GraphWrapper(QtCore.QObject):
 
         self._nodeWrappers = QObjectListModel(self)
         self._connectionWrappers = QObjectListModel(self)
-
-        self._tmpClip = None
 
         self._zMax = 2
 
@@ -105,10 +99,6 @@ class GraphWrapper(QtCore.QObject):
                 return connection
         return None
 
-    def getTmpClip(self):
-        return self._tmpClip
-
-
     @QtCore.Slot(result="QVariant")
     def getLastCreatedNodeWrapper(self):
         return self._nodeWrappers[-1]
@@ -118,14 +108,6 @@ class GraphWrapper(QtCore.QObject):
 
     def setZMax(self, zMax):
         self._zMax = zMax
-
-    #################### setters ####################
-
-    def resetTmpClip(self):
-        self._tmpClip = None
-
-    def setTmpClip(self, idClip):
-        self._tmpClip = idClip
 
     ################################################## CREATIONS ##################################################
 

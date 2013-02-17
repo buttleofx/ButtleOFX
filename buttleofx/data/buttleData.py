@@ -286,15 +286,12 @@ class ButtleData(QtCore.QObject):
     def connectionDragEvent(self, clip, clipNumber):
         """
             Function called when a clip is pressed (but not released yet).
-            The function replace the tmpClip.
+            The function send mimeData to identify the clip.
         """
-        coord = self.getGraphWrapper().getPositionClip(clip.getNodeName(), clip.getName(), clipNumber)
-        idClip = IdClip(clip.getNodeName(), clip.getName(), clipNumber, coord)
-        self.getGraphWrapper().setTmpClip(idClip)
 
         mimeData = QtCore.QMimeData()
 
-        mimeData.setText(str(clip.getNodeName()) + "/" + str(clip.getName()) + "/" + str(clipNumber))
+        mimeData.setText("clip/" + str(clip.getNodeName()) + "/" + str(clip.getName()) + "/" + str(clipNumber))
 
         widget = QtGui.QWidget()
 
@@ -303,16 +300,23 @@ class ButtleData(QtCore.QObject):
 
         drag.exec_(QtCore.Qt.MoveAction)
 
-    @QtCore.Slot(QtCore.QObject, int)
-    def connectionDropEvent(self, clip, clipNumber):
+    # @QtCore.Slot(QtCore.QObject, int)
+    # def connectionDropEvent(self, clip, clipNumber):
+    @QtCore.Slot(str, QtCore.QObject, int)
+    def connectionDropEvent(self, dataTmpClip, clip, clipNumber):
         """
             Function called when a clip is released (after pressed).
         """
-        tmpClip = self.getGraphWrapper().getTmpClip()
+        infosTmpCLip = dataTmpClip.split("/")
+        if infosTmpCLip[0] != "clip" or len(infosTmpCLip) != 4:
+            return
+
+        positionTmpCLip = self.getGraphWrapper().getPositionClip(infosTmpCLip[1], infosTmpCLip[2], infosTmpCLip[3])
+        tmpClip = IdClip(infosTmpCLip[1], infosTmpCLip[2], infosTmpCLip[3], positionTmpCLip)
 
         if tmpClip:
-            position = self.getGraphWrapper().getPositionClip(clip.getNodeName(), clip.getName(), clipNumber)
-            newClip = IdClip(clip.getNodeName(), clip.getName(), clipNumber, position)
+            positionNewClip = self.getGraphWrapper().getPositionClip(clip.getNodeName(), clip.getName(), clipNumber)
+            newClip = IdClip(clip.getNodeName(), clip.getName(), clipNumber, positionNewClip)
 
             if self.getGraphWrapper().canConnect(tmpClip, newClip):
                 self.connect(tmpClip, newClip)
@@ -323,7 +327,6 @@ class ButtleData(QtCore.QObject):
                 return
 
         print "Unable to connect or delete the nodes."
-        self.getGraphWrapper().resetTmpClip()
 
     ################################################## INTERACTIONS ##################################################
 

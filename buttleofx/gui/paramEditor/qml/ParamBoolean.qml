@@ -53,12 +53,18 @@ Item {
 
             MouseArea{
                 anchors.fill: parent
+                acceptedButtons: Qt.LeftButton
                 onPressed: {
                     paramObject.value = (paramObject.value == false) ? true : false                    
 
                     // Take the focus of the MainWindow
                     paramBoolean.forceActiveFocus()
                 }
+            }
+            MouseArea {
+                anchors.fill: parent
+                acceptedButtons: Qt.RightButton
+                onClicked: paramObject.value = paramObject.getDefaultValue()
             }
         }
     }

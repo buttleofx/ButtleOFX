@@ -69,10 +69,16 @@ Item {
                     MouseArea {
                         anchors.fill: parent
                         hoverEnabled: true
+                        acceptedButtons: Qt.LeftButton
                         onClicked: {         
                             elements.state = ( elements.state == "hidden") ? "shown" : "hidden"
                             container.forceActiveFocus()
                         }
+                    }
+                    MouseArea {
+                        anchors.fill: parent
+                        acceptedButtons: Qt.RightButton
+                        onClicked: paramObject.value = paramObject.getDefaultValue()
                     }
                 }
                 Rectangle {

@@ -86,6 +86,11 @@ Item {
                         paramObject.value = paramObject.getOldValue();
                     } 
                 }
+                MouseArea {
+                    anchors.fill: parent
+                    acceptedButtons: Qt.RightButton
+                    onClicked: paramObject.value = paramObject.getDefaultValue()
+                }
             }
 
             // bar slider : one grey, one white

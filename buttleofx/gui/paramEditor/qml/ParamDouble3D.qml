@@ -64,6 +64,11 @@ Item {
                 KeyNavigation.backtab: paramDouble3Dinput3
                 KeyNavigation.tab: paramDouble3Dinput2
             }
+            MouseArea {
+                anchors.fill: parent
+                acceptedButtons: Qt.RightButton
+                onClicked: paramObject.value1 = paramObject.getDefaultValue1()
+            }
         }
 
         /* Second input */
@@ -109,6 +114,11 @@ Item {
 
                 KeyNavigation.backtab: paramDouble3Dinput1
                 KeyNavigation.tab: paramDouble3Dinput3
+            }
+            MouseArea {
+                anchors.fill: parent
+                acceptedButtons: Qt.RightButton
+                onClicked: paramObject.value2 = paramObject.getDefaultValue2()
             }
         }
 
@@ -156,6 +166,11 @@ Item {
                 KeyNavigation.backtab: paramDouble3Dinput2
                 KeyNavigation.tab: paramDouble3Dinput1
             }
+            MouseArea {
+                    anchors.fill: parent
+                    acceptedButtons: Qt.RightButton
+                    onClicked: paramObject.value3 = paramObject.getDefaultValue3()
+                }
         }
     }
 }

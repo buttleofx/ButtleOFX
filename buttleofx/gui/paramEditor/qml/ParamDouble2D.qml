@@ -55,6 +55,7 @@ Item {
                         text = paramObject.value1;
                     }
                 }
+        
                 /*validator: DoubleValidator {
                     bottom: paramObject.minimum1
                     top:  paramObject.maximum1
@@ -62,6 +63,11 @@ Item {
 
                 KeyNavigation.backtab: paramDouble2Dinput2
                 KeyNavigation.tab: paramDouble2Dinput2
+            }
+            MouseArea {
+                anchors.fill: parent
+                acceptedButtons: Qt.RightButton
+                onClicked: paramObject.value1 = paramObject.getDefaultValue1()
             }
         }
 
@@ -106,6 +112,11 @@ Item {
 
                 KeyNavigation.backtab: paramDouble2Dinput1
                 KeyNavigation.tab: paramDouble2Dinput1
+            }
+            MouseArea {
+                anchors.fill: parent
+                acceptedButtons: Qt.RightButton
+                onClicked: paramObject.value2 = paramObject.getDefaultValue2()
             }
         }
     }

@@ -201,8 +201,11 @@ Item {
 
                                         KeyNavigation.backtab: nodeCoordYInput
                                         KeyNavigation.tab: nodeColorRGBInput
-
-
+                                    }
+                                    MouseArea {
+                                        anchors.fill: parent
+                                        acceptedButtons: Qt.RightButton
+                                        onClicked: currentParamNode.nameUser = currentParamNode.getDefaultNameUser()
                                     }
                                 }
                             }
@@ -292,6 +295,14 @@ Item {
                                         KeyNavigation.backtab: nodeNameUserInput
                                         KeyNavigation.tab: nodeCoordXInput
                                     }//textinput
+                                    MouseArea {
+                                        anchors.fill: parent
+                                        acceptedButtons: Qt.RightButton
+                                        onClicked: {
+                                            currentParamNode.color = currentParamNode.getDefaultColor();
+                                            console.log("Clicked");
+                                        }
+                                    }
                                 }//rectangle of nodeColorContainer
                             }//row nodeColorContainer
                         }//item nodeColorItem

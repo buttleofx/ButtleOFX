@@ -16,6 +16,7 @@ class IntWrapper(QtCore.QObject):
     def getParamType(self):
         return self._param.getParamType()
 
+    @QtCore.Slot(result=int)
     def getDefaultValue(self):
         return self._param.getDefaultValue()
 

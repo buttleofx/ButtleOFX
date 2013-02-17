@@ -42,13 +42,13 @@ Rectangle {
         hoverEnabled: true
         onPressed: {
             color = "#fff"
-            _buttleData.clipPressed(c.clipModel, index) // we send all information needed to identify the clip : nodename, port and clip number
+            _buttleData.connectionDragEvent(c.clipModel, index) // we send all information needed to identify the clip : nodename, port and clip number
             // take the focus of the MainWindow
             clip.forceActiveFocus()
         }
         onReleased: {
             color = "#bbb"
-            _buttleData.clipReleased(c.clipModel, index)
+            _buttleData.connectionDropEvent(c.clipModel, index)
         }
         onEntered: {
             clipName.opacity = 1
@@ -64,7 +64,7 @@ Rectangle {
         anchors.fill: parent
         anchors.margins: -20
         onDrop: {
-            _buttleData.clipReleased(c.clipModel, index)
+            _buttleData.connectionDropEvent(c.clipModel, index)
         }
     }
 }

@@ -8,7 +8,6 @@ class IdClip:
     """
 
     def __init__(self, nodeName, clipName, clipNumber, coord):
-        
         self._id = nodeName + clipName
         self._nodeName = nodeName
         self._clipName = clipName
@@ -30,6 +29,9 @@ class IdClip:
 
     def getCoord(self):
         return self._coord
+
+    def getName(self):
+        return self._clipName
 
     def setNodeName(self, nodeName):
         self._nodeName = nodeName

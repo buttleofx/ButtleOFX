@@ -18,8 +18,7 @@ class GraphWrapper(QtCore.QObject):
         - _nodeWrappers : list of node wrappers (the python objects we use to communicate with the QML)
         - _connectionWrappers : list of connections wrappers (the python objects we use to communicate with the QML)
 
-        - _tmpClipOut : the future connected output clip when a connection is beeing created. It correspounds of the output clip which was beeing clicked and not connected for the moment.
-        - _tmpClipIn : the future connected input clip when a connection is beeing created. It correspounds of the input clip which was beeing clicked and not connected for the moment.
+        - _tmpClip : the future connected clip when a connection is beeing created (drag & drop)
 
         - _zMax : to manage the depth of the graph (in QML)
 
@@ -37,8 +36,7 @@ class GraphWrapper(QtCore.QObject):
         self._nodeWrappers = QObjectListModel(self)
         self._connectionWrappers = QObjectListModel(self)
 
-        self._tmpClipIn = None
-        self._tmpClipOut = None
+        self._tmpClip = None
 
         self._zMax = 2
 
@@ -107,11 +105,9 @@ class GraphWrapper(QtCore.QObject):
                 return connection
         return None
 
-    def getTmpClipOut(self):
-        return self._tmpClipOut
+    def getTmpClip(self):
+        return self._tmpClip
 
-    def getTmpClipIn(self):
-        return self._tmpClipIn
 
     @QtCore.Slot(result="QVariant")
     def getLastCreatedNodeWrapper(self):
@@ -125,15 +121,11 @@ class GraphWrapper(QtCore.QObject):
 
     #################### setters ####################
 
-    def resetTmpClips(self):
-        self._tmpClipIn = None
-        self._tmpClipOut = None
+    def resetTmpClip(self):
+        self._tmpClip = None
 
-    def setTmpClipOut(self, idClip):
-        self._tmpClipOut = idClip
-
-    def setTmpClipIn(self, idClip):
-        self._tmpClipIn = idClip
+    def setTmpClip(self, idClip):
+        self._tmpClip = idClip
 
     ################################################## CREATIONS ##################################################
 
@@ -188,19 +180,26 @@ class GraphWrapper(QtCore.QObject):
                 return connection
         return None
 
-    def canConnect(self, clipOut, clipIn):
+    def canConnect(self, clip1, clip2):
         """
             Returns True if the connection between the nodes is possible, else False.
             A connection is possible if the clip isn't already taken, and if the clips are from 2 different nodes, not already connected.
         """
+
         # if the clips are from the same node : False
-        if (clipOut.getNodeName() == clipIn.getNodeName()):
+        if (clip1.getNodeName() == clip2.getNodeName()):
             return False
+
+        # if the clips are 2 inputs or 2 outputs : False
+        if (clip1.getName() == "Output" and clip2.getName() == "Output") or (clip1.getName() != "Output" and clip2.getName() != "Output"):
+            return False
+
         # if the input clip is already taken : False
-        if (self._graph.contains(clipIn)):
+        if (clip1.getName() != "Output" and self._graph.contains(clip1)) or (clip2.getName() != "Output" and self._graph.contains(clip2)):
             return False
+
         # if the nodes containing the clips are already connected : False
-        if(self._graph.nodesConnected(clipOut, clipIn)):
+        if(self._graph.nodesConnected(clip2, clip1)):
             return False
 
         return True

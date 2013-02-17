@@ -275,27 +275,22 @@ class ButtleData(QtCore.QObject):
             Adds a connection between 2 clips.
         """
         self.getGraph().createConnection(clipOut, clipIn)
-        self.getGraphWrapper().resetTmpClips()
 
     def disconnect(self, connection):
         """
             Removes a connection between 2 clips.
         """
         self.getGraph().deleteConnection(connection)
-        self.getGraphWrapper().resetTmpClips()
 
     @QtCore.Slot(QtCore.QObject, int)
-    def clipPressed(self, clip, clipNumber):
+    def connectionDragEvent(self, clip, clipNumber):
         """
             Function called when a clip is pressed (but not released yet).
-            The function replace the tmpClipIn or tmpClipOut.
+            The function replace the tmpClip.
         """
         coord = self.getGraphWrapper().getPositionClip(clip.getNodeName(), clip.getName(), clipNumber)
         idClip = IdClip(clip.getNodeName(), clip.getName(), clipNumber, coord)
-        if (clip.getName() == "Output"):
-            self.getGraphWrapper().setTmpClipOut(idClip)
-        else:
-            self.getGraphWrapper().setTmpClipIn(idClip)
+        self.getGraphWrapper().setTmpClip(idClip)
 
         mimeData = QtCore.QMimeData()
 
@@ -309,33 +304,26 @@ class ButtleData(QtCore.QObject):
         drag.exec_(QtCore.Qt.MoveAction)
 
     @QtCore.Slot(QtCore.QObject, int)
-    def clipReleased(self, clip, clipNumber):
+    def connectionDropEvent(self, clip, clipNumber):
         """
             Function called when a clip is released (after pressed).
         """
+        tmpClip = self.getGraphWrapper().getTmpClip()
 
-        if (clip.getName() == "Output"):
-            #if there is a tmpNodeIn
-            if (self.getGraphWrapper().getTmpClipIn() != None and self.getGraphWrapper().getTmpClipIn()._nodeName != clip.getNodeName()):
-                position = self.getGraphWrapper().getPositionClip(clip.getNodeName(), clip.getName(), clipNumber)
-                idClip = IdClip(clip.getNodeName(), clip.getName(), clipNumber, position)
-                if self.getGraphWrapper().canConnect(idClip, self.getGraphWrapper().getTmpClipIn()):
-                    self.connect(idClip, self.getGraphWrapper().getTmpClipIn())
-                elif self.getGraph().contains(self.getGraphWrapper().getTmpClipIn()) and self.getGraph().contains(idClip):
-                    self.disconnect(self.getGraphWrapper().getConnectionByClips(idClip, self.getGraphWrapper().getTmpClipIn()))
-                else:
-                    print "Unable to connect or delete the nodes."
-        else:
-            #if there is a tmpNodeOut
-            if (self.getGraphWrapper().getTmpClipOut() != None and self.getGraphWrapper().getTmpClipOut()._nodeName != clip.getNodeName()):
-                position = self.getGraphWrapper().getPositionClip(clip.getNodeName(), clip.getName(), clipNumber)
-                idClip = IdClip(clip.getNodeName(), clip.getName(), clipNumber, position)
-                if self.getGraphWrapper().canConnect(self.getGraphWrapper().getTmpClipOut(), idClip):
-                    self.connect(self.getGraphWrapper().getTmpClipOut(), idClip)
-                elif self.getGraph().contains(self.getGraphWrapper().getTmpClipOut()) and self.getGraph().contains(idClip):
-                    self.disconnect(self.getGraphWrapper().getConnectionByClips(self.getGraphWrapper().getTmpClipOut(), idClip))
-                else:
-                    print "Unable to connect or delete the nodes."
+        if tmpClip:
+            position = self.getGraphWrapper().getPositionClip(clip.getNodeName(), clip.getName(), clipNumber)
+            newClip = IdClip(clip.getNodeName(), clip.getName(), clipNumber, position)
+
+            if self.getGraphWrapper().canConnect(tmpClip, newClip):
+                self.connect(tmpClip, newClip)
+                return
+
+            elif self.getGraph().contains(tmpClip) and self.getGraph().contains(newClip):
+                self.disconnect(self.getGraphWrapper().getConnectionByClips(tmpClip, newClip))
+                return
+
+        print "Unable to connect or delete the nodes."
+        self.getGraphWrapper().resetTmpClip()
 
     ################################################## INTERACTIONS ##################################################
 

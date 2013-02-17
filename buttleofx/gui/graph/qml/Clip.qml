@@ -12,7 +12,7 @@ Rectangle {
 
     height: clipSize
     width: clipSize
-    color: "#bbbbbb"
+    color:  clipMouseArea.containsMouse ? "#00b2a1" : "#bbbbbb"
     radius: 4
 
     Rectangle {
@@ -20,7 +20,7 @@ Rectangle {
         id: clipName
         color: "#333"
         radius: 3
-        opacity: 0
+        opacity: clipMouseArea.containsMouse ? 1 : 0
         height: 17
         width: clipNameText.width + 10
         x: clip.port == "output" ? parent.x + 15 : parent.x - clipNameText.width - 15
@@ -45,18 +45,6 @@ Rectangle {
             _buttleData.connectionDragEvent(c.clipModel, index) // we send all information needed to identify the clip : nodename, port and clip number
             // take the focus of the MainWindow
             clip.forceActiveFocus()
-        }
-        onReleased: {
-            color = "#bbb"
-            _buttleData.connectionDropEvent(c.clipModel, index)
-        }
-        onEntered: {
-            clipName.opacity = 1
-            color = "#00b2a1"
-        }
-        onExited: {
-            clipName.opacity = 0
-            color = "#bbb"
         }
     }
 

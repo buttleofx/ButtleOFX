@@ -1,5 +1,5 @@
 import QtQuick 1.1
-
+import QuickMamba 1.0
 
 Rectangle {
     id: node
@@ -44,8 +44,9 @@ Rectangle {
             }
             // right button : we change the current param node
            else if (mouse.button == Qt.RightButton) {
-                 _buttleData.currentParamNodeWrapper = m.nodeModel;
+                // here display contextual menu
             }
+
             // take the focus
             node.forceActiveFocus()
         }
@@ -54,14 +55,25 @@ Rectangle {
             if (mouse.button == Qt.LeftButton) {
                 _buttleData.nodeMoved(m.nodeModel.name, parent.x, parent.y)
                 stateMoving.state = "normal"
-                console.log(_buttleData.currentConnectionWrapper)
+                //console.log(_buttleData.currentConnectionWrapper)
             }
         }
-        // double click : we change the current viewer node
+        // double click : we change the current param node
         onDoubleClicked: {
-            _buttleData.currentViewerNodeWrapper = m.nodeModel;
+            _buttleData.currentParamNodeWrapper = m.nodeModel;
         }
 
+    }
+
+    DropArea {
+        anchors.fill: parent
+        onDrop: {
+            if (hasText) {
+                if(text=="mosquito_of_the_dead") {
+                    _buttleData.currentViewerNodeWrapper = m.nodeModel;
+                }
+            }
+        }
     }
 
     Rectangle {

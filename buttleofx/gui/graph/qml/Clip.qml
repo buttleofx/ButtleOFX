@@ -53,8 +53,6 @@ Rectangle {
         anchors.margins: -20
         onDrop: {
             if (hasText) {
-                console.log("hoho " + text)
-                //_buttleData.connectionDropEvent(c.clipModel, index)
                 _buttleData.connectionDropEvent(text, c.clipModel, index)
             }
         }

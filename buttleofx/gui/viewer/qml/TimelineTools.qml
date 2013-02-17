@@ -66,7 +66,6 @@ Item {
         id: textTimeline
         color: "#bbbbbb"
         text: getTimePosition()//define in player
-        y: 2
     }
     Item {
         width: 200

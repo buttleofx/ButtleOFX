@@ -309,33 +309,48 @@ Item {
 */
                     Item {
                         anchors.verticalCenter: tools.verticalCenter
+                        // 320 = approximative width of TimelineTools
                         x: (barTimeline.width - 320) / 2
                         TimelineTools {}
                     }
 
+
                     // WILL BE USED LATER
                     // Mosquitos
-/*                    Row {
+                   Row {
                         id: selectViewer
                         spacing: 5
                         anchors.right: parent.right
                         anchors.rightMargin: parent.height
+                        y: 8
 
-                       /* // Mosquito
+                        // Mosquito
                         Rectangle {
                             id: mosquitoTool
-                            width: parent.height-5
-                            height: parent.height-5
-                            color: "transparent"
-                            y: 9
+                            width: 28
+                            height: 28
+                            color : mosquitoMouseArea.containsMouse ? "#343434" : "transparent"
+                            radius: 3
 
                             Image {
                                 id: mosquito
                                 source: "../img/mosquito.png"
                                 anchors.centerIn: parent
                             }
+
+                            MouseArea {
+                                hoverEnabled: true
+                                id: mosquitoMouseArea
+                                anchors.fill: parent
+
+                                onPressed: {
+                                    _buttleData.mosquitoDragEvent()
+                                }
+                            }
                         }
 
+
+                        /*
                         // mosquitos numbers
                         Repeater {
                             id: number
@@ -389,8 +404,9 @@ Item {
                                 ]
                             }
                         } // Repeater mosquito 
-                    } // Row (selectViewer = mosquitos )
 */
+                    } // Row (selectViewer = mosquitos )
+
                 } // Tools Rectangle (zoom, timeline buttons, mosquitos)
             } // Rectangle (toolBarRegion)
 

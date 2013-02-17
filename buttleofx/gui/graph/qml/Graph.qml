@@ -93,7 +93,7 @@ Rectangle {
             if(scale.xScale > 0.3 ) {
                 //scale.origin.x = middleMouseArea.mouseX
                 //scale.origin.y = middleMouseArea.mouseY
-                console.log(connectnode.width)
+                //console.log(connectnode.width)
                 if(delta < 0 && scale.xScale - 0.2 > 0.3 && scale.yScale - 0.2 > 0.3 ) {
                     scale.xScale -= 0.1 
                     scale.yScale -= 0.1             

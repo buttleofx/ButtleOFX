@@ -300,18 +300,17 @@ class ButtleData(QtCore.QObject):
 
         drag.exec_(QtCore.Qt.MoveAction)
 
-    # @QtCore.Slot(QtCore.QObject, int)
-    # def connectionDropEvent(self, clip, clipNumber):
     @QtCore.Slot(str, QtCore.QObject, int)
     def connectionDropEvent(self, dataTmpClip, clip, clipNumber):
         """
             Function called when a clip is released (after pressed).
         """
+
         infosTmpCLip = dataTmpClip.split("/")
         if infosTmpCLip[0] != "clip" or len(infosTmpCLip) != 4:
             return
 
-        positionTmpCLip = self.getGraphWrapper().getPositionClip(infosTmpCLip[1], infosTmpCLip[2], infosTmpCLip[3])
+        positionTmpCLip = self.getGraphWrapper().getPositionClip(infosTmpCLip[1], infosTmpCLip[2], int(infosTmpCLip[3]))
         tmpClip = IdClip(infosTmpCLip[1], infosTmpCLip[2], infosTmpCLip[3], positionTmpCLip)
 
         if tmpClip:
@@ -329,6 +328,26 @@ class ButtleData(QtCore.QObject):
         print "Unable to connect or delete the nodes."
 
     ################################################## INTERACTIONS ##################################################
+
+    ##### Mosquito's drag event #####
+
+    @QtCore.Slot()
+    def mosquitoDragEvent(self):
+        """
+            Function called when the viewer's mosquito is dragged.
+            The function send the mimeData and launch a drag event.
+        """
+
+        mimeData = QtCore.QMimeData()
+
+        mimeData.setText("mosquito_of_the_dead")
+
+        widget = QtGui.QWidget()
+
+        drag = QtGui.QDrag(widget)
+        drag.setMimeData(mimeData)
+
+        drag.exec_(QtCore.Qt.MoveAction)
 
     ##### Node #####
 

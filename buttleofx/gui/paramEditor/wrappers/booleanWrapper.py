@@ -16,6 +16,7 @@ class BooleanWrapper(QtCore.QObject):
     def getParamType(self):
         return self._param.getParamType()
 
+    @QtCore.Slot(result=bool)
     def getDefaultValue(self):
         return self._param.getDefaultValue()
 

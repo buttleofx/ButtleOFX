@@ -16,6 +16,7 @@ class DoubleWrapper(QtCore.QObject):
     def getParamType(self):
         return self._param.getParamType()
 
+    @QtCore.Slot(result=float)
     def getDefaultValue(self):
         return self._param.getDefaultValue()
 

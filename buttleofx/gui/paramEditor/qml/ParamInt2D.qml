@@ -47,6 +47,7 @@ Item {
                         paramObject.value1 = paramInt2DInput1.text
                     }
                 }
+
                 validator: IntValidator {
                     bottom: model.object.minimum1
                     top:  model.object.maximum1
@@ -54,6 +55,11 @@ Item {
 
                 KeyNavigation.backtab: paramInt2DInput2
                 KeyNavigation.tab: paramInt2DInput2
+            }
+            MouseArea {
+                anchors.fill: parent
+                acceptedButtons: Qt.RightButton
+                onClicked: paramObject.value1 = paramObject.getDefaultValue1()
             }
         }
 
@@ -91,6 +97,11 @@ Item {
 
                 KeyNavigation.backtab: paramInt2DInput1
                 KeyNavigation.tab: paramInt2DInput1
+            }
+            MouseArea {
+                anchors.fill: parent
+                acceptedButtons: Qt.RightButton
+                onClicked: paramObject.value2 = paramObject.getDefaultValue2()
             }
         }
     }

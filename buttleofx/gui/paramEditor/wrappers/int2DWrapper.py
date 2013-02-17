@@ -16,9 +16,11 @@ class Int2DWrapper(QtCore.QObject):
     def getParamType(self):
         return self._param.getParamType()
 
+    @QtCore.Slot(result=int)
     def getDefaultValue1(self):
         return self._param.getDefaultValue1()
 
+    @QtCore.Slot(result=int)
     def getDefaultValue2(self):
         return self._param.getDefaultValue2()
 

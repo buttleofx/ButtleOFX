@@ -16,6 +16,7 @@ class StringWrapper(QtCore.QObject):
     def getParamType(self):
         return self._param.getParamType()
 
+    @QtCore.Slot(result=unicode)
     def getDefaultValue(self):
         return self._param.getDefaultValue()
 

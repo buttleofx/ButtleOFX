@@ -60,6 +60,10 @@ class NodeWrapper(QtCore.QObject):
     def getNameUser(self):
         return self._node.getNameUser()
 
+    @QtCore.Slot(result=unicode)
+    def getDefaultNameUser(self):
+        return self._node.getName().strip('tuttle.')
+
     def getType(self):
         return self._node.getType()
 
@@ -74,6 +78,10 @@ class NodeWrapper(QtCore.QObject):
 
     def getColor(self):
         return QtGui.QColor(*self._node.getColor())
+
+    @QtCore.Slot(result=QtGui.QColor)
+    def getDefaultColor(self):
+        return QtGui.QColor(0, 178, 161)
 
     def getNbInput(self):
         return self._node.getNbInput()

@@ -75,6 +75,11 @@ Item {
                     paramObject.value = updateTextValue();
                     paramObject.pushValue(paramObject.value);
                 }
+                MouseArea {
+                    anchors.fill: parent
+                    acceptedButtons: Qt.RightButton
+                    onClicked: paramObject.value = paramObject.getDefaultValue()
+                }
             }
 
             // bar slider : one grey, one white

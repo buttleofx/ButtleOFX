@@ -91,6 +91,12 @@ Item {
                 createInput(paramObject)
             }
 
+            MouseArea {
+                anchors.fill: parent
+                acceptedButtons: Qt.RightButton
+                onClicked: paramObject.value = paramObject.getDefaultValue()
+            }
+
             // state which enable us to update display, depend on what type of String we have on TuttleOFX
             states: [
                 State {

@@ -73,121 +73,12 @@ Rectangle {
             z: 0
             Repeater {
                 model : _buttleData.graphWrapper.connectionWrappers
-                Canvas {
-                    id: connection
-
-                    QtObject {
-                        id: m
-                        property variant connectionModel: model.object
-                    }
-
-                    property int canvasMargin: 20
-                    property int inPath: 0
-                    property int r: 0
-                    property int g: 178
-                    property int b: 161
-
-                    width: Math.abs(model.object.clipOutPosX - model.object.clipInPosX) + 2*canvasMargin
-                    height: Math.abs(model.object.clipOutPosY - model.object.clipInPosY) + 2*canvasMargin
-                    x: Math.min(model.object.clipOutPosX, model.object.clipInPosX) - canvasMargin
-                    y: Math.min(model.object.clipOutPosY, model.object.clipInPosY) - canvasMargin
-                    color: "transparent"
-                    state: "normal"
-
-                    StateGroup{
-                        id: stateConnection
-                        states: [
-                            State {
-                                name: "selectedConnection"
-                                when: m.connectionModel == _buttleData.currentConnectionWrapper
-                                PropertyChanges { target: connection; r: 255; g: 255; b: 255 }
-                            },
-                            State {
-                                name: "normal"
-                                when: m.connectionModel != _buttleData.currentConnectionWrapper
-                                PropertyChanges { target: connection; r: 0; g: 178; b: 161 }
-                            }
-                        ]
-                    }
-
-                    // Drawing a curve for the connection
-                    onPaint: {
-                        var ctx = getContext();
-                        var cHeight = height;
-                        var cWidth = width;
-                        var startX = 0
-                        var startY = 0
-                        var endX = 0
-                        var endY = 0
-                        var controlPointXOffset = 40;
-                        ctx.strokeStyle = "rgb("+r+", "+g+", "+b+")";
-                        ctx.lineWidth = 2;
-
-                        ctx.beginPath()
-
-                        if(model.object.clipOutPosX <= model.object.clipInPosX
-                        && model.object.clipOutPosY <= model.object.clipInPosY){
-                            startX = canvasMargin
-                            startY = canvasMargin
-                            endX = width - canvasMargin
-                            endY = height - canvasMargin
-                        }
-                        if(model.object.clipOutPosX <= model.object.clipInPosX
-                        && model.object.clipOutPosY > model.object.clipInPosY){
-                            startX = canvasMargin
-                            startY = height - canvasMargin
-                            endX = width - canvasMargin
-                            endY = canvasMargin
-                        }
-                        if(model.object.clipOutPosX > model.object.clipInPosX
-                        && model.object.clipOutPosY <= model.object.clipInPosY){
-                            startX = width - canvasMargin
-                            startY = canvasMargin
-                            endX = canvasMargin
-                            endY = height - canvasMargin
-                        }
-                        if(model.object.clipOutPosX > model.object.clipInPosX
-                        && model.object.clipOutPosY > model.object.clipInPosY){
-                            startX = width - canvasMargin
-                            startY = height - canvasMargin
-                            endX = canvasMargin
-                            endY = canvasMargin
-                        }
-
-                        ctx.moveTo(startX , startY)
-                        ctx.bezierCurveTo(startX + controlPointXOffset, startY, endX - controlPointXOffset, endY, endX, endY)
-                        ctx.stroke()
-                        ctx.closePath()
-                    }
-
-                    // Returns true if we click on the curve
-                    function intersectPath(mouseX, mouseY, margin){
-                        for(var x = mouseX - margin; x< mouseX + margin; x++){
-                            for(var y = mouseY - margin; y< mouseY + margin; y++){
-                                if(connection.getContext().isPointInPath(x, y)){
-                                    return true;
-                                }
-                            }
-                        }
-                        return false;
-                    }
-
-                    MouseArea {
-                        anchors.fill: parent
-                        hoverEnabled: true
-
-                        //Propagate the event to the connections below
-                        onPressed: mouse.accepted = intersectPath(mouseX, mouseY, 5)
-                        onClicked: {
-                            _buttleData.currentConnectionWrapper = m.connectionModel
-                            connection.requestPaint()
-                        }
-                        // The accepted property of the MouseEvent parameter is ignored in this handler.
-                        //onPositionChanged: {
-                        //    mouse.accepted = intersectPath(mouseX, mouseY, 5)
-                        //    console.log("Mouse accepted : " + mouse.accepted)
-                        //}
-                    }
+                Connection {
+                    connectionModel: model.object
+                    x1: model.object.clipOutPosX
+                    y1: model.object.clipOutPosY
+                    x2: model.object.clipInPosX
+                    y2: model.object.clipInPosY
                 }
             }
         }

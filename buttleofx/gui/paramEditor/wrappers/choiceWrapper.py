@@ -28,7 +28,6 @@ class ChoiceWrapper(QtCore.QObject):
     def getValue(self):
         return self._param.getValue()
 
-    @QtCore.Slot(result=unicode)
     def getDefaultValue(self):
         return self._param.getDefaultValue()
 
@@ -37,18 +36,8 @@ class ChoiceWrapper(QtCore.QObject):
 
     #################### setters ####################
 
-    def setParamType(self, paramType):
-        self._param.setParamType(paramType)
-
     def setValue(self, value):
         self._param.setValue(value)
-
-    def setText(self, text):
-        self._param.setText(text)
-
-    @QtCore.Slot(str)
-    def pushValue(self, value):
-        self._param.pushValue(value)
 
     @QtCore.Signal
     def changed(self):
@@ -59,7 +48,8 @@ class ChoiceWrapper(QtCore.QObject):
 
     ################################################## DATA EXPOSED TO QML ##################################################
 
-    paramType = QtCore.Property(unicode, getParamType, setParamType, notify=changed)
-    text = QtCore.Property(unicode, getText, setText, notify=changed)
+    paramType = QtCore.Property(unicode, getParamType, constant=True)
+    text = QtCore.Property(str, getText, constant=True)
     listValue = QtCore.Property(QtCore.QObject, getListValue, constant=True)
-    value = QtCore.Property(unicode, getValue, setValue, notify=changed)
+    value = QtCore.Property(str, getValue, setValue, notify=changed)
+    

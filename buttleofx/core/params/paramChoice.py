@@ -1,3 +1,4 @@
+# quickmamba
 from quickmamba.patterns import Signal
 # undo redo
 from buttleofx.core.undo_redo.manageTools import CommandManager
@@ -54,16 +55,7 @@ class ParamChoice(object):
         self._oldValue = value
 
     def setValue(self, value):
-        #Set the model value
-        self._tuttleParam.setValue(str(value))
-        self.changed()
-
         #Push the command
         cmdUpdate = CmdSetParamChoice(self, value)
         cmdManager = CommandManager()
         cmdManager.push(cmdUpdate)
-
-        #Update the viewer
-        from buttleofx.data import ButtleDataSingleton
-        buttleData = ButtleDataSingleton().get()
-        buttleData.updateMapAndViewer()

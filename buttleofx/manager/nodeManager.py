@@ -21,23 +21,29 @@ class NodeManager(Singleton):
             Delete the current node(s).
         """
         buttleData = ButtleDataSingleton().get()
+        
+        # if the params of the current node deleted are display
+        if buttleData.getCurrentParamNodeName() == buttleData.getCurrentSelectedNodeName():
+            buttleData.setCurrentParamNodeName(None)
+
+        # if the viewer of the current node deleted is display
+        if buttleData.getCurrentViewerNodeName() == buttleData.getCurrentSelectedNodeName():
+            buttleData.setCurrentViewerNodeName(None)
+        # if the viewer display a node affected by the destruction
+        if buttleData.getCurrentViewerNodeName() in buttleData._mapNodeNameToComputedImage:
+            buttleData.setCurrentViewerNodeName(None)
+
         # if at least one node in the graph
         if len(buttleData.getGraphWrapper().getNodeWrappers()) > 0 and len(buttleData.getGraph().getNodes()) > 0:
             # if a node is selected
             if buttleData.getCurrentSelectedNodeName() != None:
                 buttleData.getGraph().deleteNode(buttleData.getCurrentSelectedNodeWrapper().getNode())
                 buttleData.setCurrentSelectedNodeName(None)
-                buttleData.currentSelectedNodeChanged.emit()
 
-        # set the current nodes
-        # if the params of the current node just deleted are display
-        if buttleData.getCurrentSelectedNodeName() == buttleData.getCurrentParamNodeName():
-            buttleData.setCurrentParamNodeName(None)
-            buttleData.currentParamNodeChanged.emit()
-        # if the viewer of the current node just deleted is display
-        if buttleData.getCurrentSelectedNodeName == buttleData.getCurrentViewerNodeName():
-            buttleData.setCurrentViewerNodeName(None)
-            buttleData.currentViewerNodeChanged.emit()
+        # emit signals
+        buttleData.currentParamNodeChanged.emit()
+        buttleData.currentViewerNodeChanged.emit()
+        buttleData.currentSelectedNodeChanged.emit()
 
     def cutNode(self):
         """

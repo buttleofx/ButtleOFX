@@ -23,10 +23,6 @@ class CmdSetParamDouble(UndoableCommand):
         self._param.setOldValue(float(self._oldValue))
         self._param.changed()
 
-        from buttleofx.data import ButtleDataSingleton
-        buttleData = ButtleDataSingleton().get()
-        buttleData.updateMapAndViewer()
-
     def redoCmd(self):
         """
         Redoes the update of the param.
@@ -40,7 +36,3 @@ class CmdSetParamDouble(UndoableCommand):
         self._param.getTuttleParam().setValue(float(self._newValue))
         self._param.setOldValue(float(self._newValue))
         self._param.changed()
-
-        from buttleofx.data import ButtleDataSingleton
-        buttleData = ButtleDataSingleton().get()
-        buttleData.updateMapAndViewer()

@@ -1,5 +1,6 @@
 from PySide import QtCore
 
+#from buttleofx.data import ButtleDataSingleton
 
 class StringWrapper(QtCore.QObject):
     """

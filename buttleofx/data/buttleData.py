@@ -37,11 +37,13 @@ class ButtleData(QtCore.QObject):
     _currentParamNodeName = None
     _currentSelectedNodeName = None
     _currentViewerNodeName = None
+
     _currentConnectionId = None
+
     _currentCopiedNodeInfo = {}
 
     _mapNodeNameToComputedImage = {}
-    #_tuttleImageCache = None
+    _tuttleImageCache = None
     _computedImage = None
     _nodeError = ""
 
@@ -113,6 +115,12 @@ class ButtleData(QtCore.QObject):
         """
         return self.getGraphWrapper().getConnectionWrapper(self._currentConnectionId)
 
+    def getNodeError(self):
+        """
+            Returns the name of the node that can't be displayed.
+        """
+        return self._nodeError
+
     ### flag ###
 
     def canPaste(self):
@@ -133,6 +141,8 @@ class ButtleData(QtCore.QObject):
 
     def setCurrentViewerNodeName(self, newValue):
         self._currentViewerNodeName = newValue
+        # update viewer
+        self.updateMapAndViewer()
 
     ### current data wrapper ###
 
@@ -174,17 +184,11 @@ class ButtleData(QtCore.QObject):
             self._currentConnectionId = connectionWrapper.getId()
         self.currentConnectionWrapperChanged.emit()
 
-    ################################################## NEED TO CHANGE #####################################################
-
-    def getNodeError(self):
-        """
-            Returns the name of the node that can't be displayed.
-        """
-        return self._nodeError
-
     def setNodeError(self, nodeName):
         self._nodeError = nodeName
         self.nodeErrorChanged.emit()
+
+    ################################################## VIEWER #####################################################
 
     def computeNode(self, frame):
         """
@@ -213,7 +217,6 @@ class ButtleData(QtCore.QObject):
         """
         #Get the name of the currentNode of the viewer
         node = self.getCurrentViewerNodeName()
-
         #Get the map
         mapNodeToImage = self._mapNodeNameToComputedImage
 
@@ -235,13 +238,11 @@ class ButtleData(QtCore.QObject):
     def updateMapAndViewer(self):
         # Clear the map
         self._mapNodeNameToComputedImage.clear()
-
         # Emit the signal to load the new image
         self.paramChangedSignal()
 
-    ##################################################  #####################################################
 
-    ##### Plugins' menu #####
+    ################################################## PLUGIN LIST #####################################################
 
     @QtCore.Slot(str, result="QVariant")
     def getQObjectPluginsIdentifiersByParentPath(self, pathname):

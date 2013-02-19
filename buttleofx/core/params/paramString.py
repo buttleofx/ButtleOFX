@@ -54,4 +54,3 @@ class ParamString(object):
         cmdUpdate = CmdSetParamString(self, value)
         cmdManager = CommandManager()
         cmdManager.push(cmdUpdate)
-        

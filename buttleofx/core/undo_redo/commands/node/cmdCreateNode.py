@@ -29,15 +29,8 @@ class CmdCreateNode(UndoableCommand):
         """
             Undo the creation of the node.
         """
-        # data
-        from buttleofx.data import ButtleDataSingleton
-
         # The tuttle node is not deleted. We keep it so we don't need to recreate it when the redo command is called.
         node = self._graphTarget.getNode(self._nodeName)
-        buttleData = ButtleDataSingleton().get()
-        if self._nodeName == buttleData.getCurrentParamNodeName():
-            buttleData._currentParamNodeName = None
-            buttleData.currentParamNodeChanged.emit()
         self._graphTarget.getNodes().remove(node)
         self._graphTarget.nodesChanged()
 
@@ -55,11 +48,9 @@ class CmdCreateNode(UndoableCommand):
         """
         # We create a new Tuttle node and rename it so it has the same name as the Node
         tuttleNode = self._graphTarget.getGraphTuttle().createNode(str(self._nodeType))
-        #self._nodeName = tuttleNode.getName().replace('Tuttle', '', 1)
         self._nodeName = tuttleNode.getName()
 
         # New Buttle node
         self._node = Node(self._nodeName, self._nodeType, self._nodeCoord, tuttleNode)
         self._graphTarget._nodes.append(self._node)
         self._graphTarget.nodesChanged()
-        print "Create node : ", self._graphTarget.getGraphTuttle()

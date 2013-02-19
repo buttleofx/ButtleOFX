@@ -24,10 +24,6 @@ class CmdSetParamInt3D(UndoableCommand):
         self._param.setOldValueAt(int(self._oldValues[int(self._index)]), self._index)
         self._param.changed()
 
-        from buttleofx.data import ButtleDataSingleton
-        buttleData = ButtleDataSingleton().get()
-        buttleData.updateMapAndViewer()
-
     def redoCmd(self):
         """
         Redoes the update of the param.
@@ -41,7 +37,3 @@ class CmdSetParamInt3D(UndoableCommand):
         self._param.getTuttleParam().setValue(self._newValues)
         self._param.setOldValueAt(int(self._newValues[int(self._index)]), self._index)
         self._param.changed()
-
-        from buttleofx.data import ButtleDataSingleton
-        buttleData = ButtleDataSingleton().get()
-        buttleData.updateMapAndViewer()

@@ -6,9 +6,10 @@ from quickmamba.patterns import Singleton, Signal
 # 'little' manager
 from nodeManager import NodeManager
 from connectionManager import ConnectionManager
-#from viewerManager import ViewerManager
 # undo_redo
 from buttleofx.core.undo_redo.manageTools import CommandManager
+# data
+from buttleofx.data import ButtleDataSingleton
 
 
 class ButtleManager(QtCore.QObject):
@@ -20,7 +21,6 @@ class ButtleManager(QtCore.QObject):
     def init(self):
         self._nodeManager = NodeManager()
         self._connectionManager = ConnectionManager()
-        #self._viewerManager = ViewerManager()
 
         return self
 
@@ -48,6 +48,7 @@ class ButtleManager(QtCore.QObject):
             Function called from the QML when we want to cut a node.
         """
         self._nodeManager.cutNode()
+        self.undoRedoChanged.emit()
 
     @QtCore.Slot()
     def copyNode(self):
@@ -55,6 +56,7 @@ class ButtleManager(QtCore.QObject):
             Function called from the QML when we want to copy a node.
         """
         self._nodeManager.copyNode()
+        self.undoRedoChanged.emit()
 
     @QtCore.Slot()
     def pasteNode(self):
@@ -62,6 +64,7 @@ class ButtleManager(QtCore.QObject):
             Function called from the QML when we want to paste a node.
         """
         self._nodeManager.pasteNode()
+        self.undoRedoChanged.emit()
 
     @QtCore.Slot()
     def duplicationNode(self):
@@ -69,6 +72,7 @@ class ButtleManager(QtCore.QObject):
             Function called from the QML when we want to duplicate a node.
         """
         self._nodeManager.duplicationNode()
+        self.undoRedoChanged.emit()
 
     @QtCore.Slot(str, int, int)
     def dropReaderNode(self, url, x, y):
@@ -76,6 +80,7 @@ class ButtleManager(QtCore.QObject):
             Function called when an image is dropped in the graph.
         """
         self._nodeManager.dropReaderNode(url, x, y)
+        self.undoRedoChanged.emit()
 
     @QtCore.Slot(str, int, int)
     def nodeMoved(self, nodeName, x, y):
@@ -83,6 +88,7 @@ class ButtleManager(QtCore.QObject):
             Fonction called when a node has moved.
         """
         self._nodeManager.nodeMoved(nodeName, x, y)
+        self.undoRedoChanged.emit()
 
     @QtCore.Slot(str, int, int)
     def nodeIsMoving(self, nodeName, x, y):
@@ -90,6 +96,7 @@ class ButtleManager(QtCore.QObject):
             Fonction called when a node is moving.
         """
         self._nodeManager.nodeIsMoving(nodeName, x, y)
+        self.undoRedoChanged.emit()
 
     ############### ConnectionManager ###############
 
@@ -115,6 +122,7 @@ class ButtleManager(QtCore.QObject):
             Function called when a clip is released (after pressed).
         """
         self._connectionManager.connectionDropEvent(dataTmpClip, clip, clipNumber)
+        self.undoRedoChanged.emit()
 
     ############### UNDO & REDO ###############
 
@@ -127,6 +135,11 @@ class ButtleManager(QtCore.QObject):
         cmdManager.undo()
         self.undoRedoChanged.emit()
 
+        # if we need to update params or viewer
+        buttleData = ButtleDataSingleton().get()
+        buttleData.currentParamNodeChanged.emit()
+        buttleData.currentViewerNodeChanged.emit()
+
     @QtCore.Slot()
     def redo(self):
         """
@@ -135,6 +148,11 @@ class ButtleManager(QtCore.QObject):
         cmdManager = CommandManager()
         cmdManager.redo()
         self.undoRedoChanged.emit()
+
+        # if we need to update params or viewer
+        buttleData = ButtleDataSingleton().get()
+        buttleData.currentParamNodeChanged.emit()
+        buttleData.currentViewerNodeChanged.emit()
 
     def canUndo(self):
         """
@@ -169,7 +187,6 @@ class ButtleManager(QtCore.QObject):
         drag.setMimeData(mimeData)
 
         drag.exec_(QtCore.Qt.MoveAction)
-
 
     ################################################## DATA EXPOSED TO QML ##################################################
 

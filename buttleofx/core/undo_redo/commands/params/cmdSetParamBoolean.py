@@ -17,16 +17,11 @@ class CmdSetParamBoolean(UndoableCommand):
         """
         Undoes the update of the param.
         """
-
         if self._param.getTuttleParam().getBoolValue() == True:
             self._param.getTuttleParam().setValue(False)
         else:
             self._param.getTuttleParam().setValue(True)
         self._param.changed()
-
-        from buttleofx.data import ButtleDataSingleton
-        buttleData = ButtleDataSingleton().get()
-        buttleData.updateMapAndViewer()
 
     def redoCmd(self):
         """
@@ -42,7 +37,3 @@ class CmdSetParamBoolean(UndoableCommand):
         """
         self._param.getTuttleParam().setValue((bool)(self._newValue))
         self._param.changed()
-
-        from buttleofx.data import ButtleDataSingleton
-        buttleData = ButtleDataSingleton().get()
-        buttleData.updateMapAndViewer()

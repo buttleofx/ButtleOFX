@@ -36,7 +36,9 @@ else:
 
 
 # data
-from buttleofx.data import ButtleData, ButtleDataSingleton
+from buttleofx.data import ButtleDataSingleton
+# manager
+from buttleofx.manager import ButtleManagerSingleton
 # new QML type
 from buttleofx.gui.paramEditor import Finder
 # undo_redo
@@ -89,11 +91,13 @@ def main(argv):
 
    # data
     buttleData = ButtleDataSingleton().get().init(view)
+    buttleManager = ButtleManagerSingleton().get().init()
 
     # expose data to QML
     rc = view.rootContext()
-    rc.setContextProperty("_buttleData", buttleData)
     rc.setContextProperty("_buttleApp", app)
+    rc.setContextProperty("_buttleData", buttleData)
+    rc.setContextProperty("_buttleManager", buttleManager)
 
     # set the view
     view.setSource(os.path.join(currentFilePath, "MainWindow.qml"))

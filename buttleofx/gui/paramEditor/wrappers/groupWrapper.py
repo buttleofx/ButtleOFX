@@ -20,6 +20,9 @@ class GroupWrapper(QtCore.QObject):
 
     def getName(self):
         return self._param.getName()
+        
+    def isSecret(self):
+        return self._param.isSecret()
 
     @QtCore.Signal
     def changed(self):

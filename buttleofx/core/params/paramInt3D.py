@@ -80,6 +80,9 @@ class ParamInt3D(object):
 
     def getText(self):
         return self._tuttleParam.getName()[0].capitalize() + self._tuttleParam.getName()[1:]
+        
+    def isSecret(self):
+        return self._tuttleParam.getSecret()
 
     #################### setters ####################
 

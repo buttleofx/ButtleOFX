@@ -57,6 +57,9 @@ class RGBAWrapper(QtCore.QObject):
 
     def getPositionYcolorSelector(self):
         return self._param.getPositionYcolorSelector()
+    
+    def isSecret(self):
+        return self._param.isSecret()
 
     #################### setters ####################
 

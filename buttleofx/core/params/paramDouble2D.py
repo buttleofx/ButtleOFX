@@ -68,6 +68,9 @@ class ParamDouble2D(object):
     def getParent(self):
         return self._tuttleParam.getProperties().fetchProperty("OfxParamPropParent").getStringValue(0)
 
+    def isSecret(self):
+        return self._tuttleParam.getSecret()
+
     #################### setters ####################
 
     def setValues(self, values):

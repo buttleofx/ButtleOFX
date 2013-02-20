@@ -235,12 +235,13 @@ class ButtleData(QtCore.QObject):
             self.setNodeError(str(e))
             raise
 
+    ################################################## UPDATE #####################################################
+
     def updateMapAndViewer(self):
         # Clear the map
         self._mapNodeNameToComputedImage.clear()
         # Emit the signal to load the new image
         self.paramChangedSignal()
-
 
     ################################################## PLUGIN LIST #####################################################
 

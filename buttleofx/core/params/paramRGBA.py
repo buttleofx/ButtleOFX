@@ -79,6 +79,12 @@ class ParamRGBA(object):
         print "getColorSelectorY :", self._positionYcolorSelector
         return self._positionYcolorSelector
 
+    def isSecret(self):
+        return self._tuttleParam.getSecret()
+        
+    def isSecret(self):
+        return self._tuttleParam.getSecret()
+        
     #################### setters ####################
 
     def setValue(self, values):

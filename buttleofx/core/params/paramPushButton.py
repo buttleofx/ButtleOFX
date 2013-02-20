@@ -33,6 +33,9 @@ class ParamPushButton(object):
 
     def getEnabled(self):
         return self._tuttleParam.getProperties().fetchProperty("OfxParamPropEnabled").getStringValue(0)
+        
+    def isSecret(self):
+        return self._tuttleParam.getSecret()
 
     #################### setters ####################
 

@@ -19,6 +19,7 @@ class NodeManager(Singleton):
         for param in node.getParams():
             if param.changed is not None:
                 param.changed.connect(buttleData.updateMapAndViewer)
+                #param.changed.connect(buttleData.updateCurrentParams)
 
     def destructionNode(self):
         """

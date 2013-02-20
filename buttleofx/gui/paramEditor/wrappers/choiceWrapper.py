@@ -34,6 +34,9 @@ class ChoiceWrapper(QtCore.QObject):
     def getText(self):
         return self._param.getText()
 
+    def isSecret(self):
+        return self._param.isSecret()
+
     #################### setters ####################
 
     def setValue(self, value):
@@ -52,4 +55,3 @@ class ChoiceWrapper(QtCore.QObject):
     text = QtCore.Property(str, getText, constant=True)
     listValue = QtCore.Property(QtCore.QObject, getListValue, constant=True)
     value = QtCore.Property(str, getValue, setValue, notify=changed)
-    

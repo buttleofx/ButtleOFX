@@ -9,17 +9,17 @@ class ParamChoice(object):
     """
         Core class, which represents a choice parameter.
         Contains :
-            - _paramType : the name of the type of this parameter
-            - _defaultValue : the default value for the input
-            - _value : the value selected in the list the input
-            - _listValue : the list of possible values
-            - _text : the label of the input
+            - _tuttleParam : link to the corresponding tuttleParam.
+            - _oldValue : the old value of the param.
+            - _listValue : the list of possible choices.
+            - changed : signal emitted when we set value(s) of the param.
     """
 
     def __init__(self, tuttleParam):
         self._tuttleParam = tuttleParam
-        self._oldValue = self.getValue()
 
+        self._oldValue = self.getValue()
+        
         self._listValue = []
         for choice in range(tuttleParam.getProperties().fetchProperty("OfxParamPropChoiceOption").getDimension()):
             self._listValue.append(tuttleParam.getProperties().fetchProperty("OfxParamPropChoiceOption").getStringValue(choice))

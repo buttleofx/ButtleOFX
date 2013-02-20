@@ -5,16 +5,12 @@ class ParamPushButton(object):
     """
         Core class, which represents a pushButton parameter.
         Contains : 
-            - _paramType : the name of the type of this parameter
-            - _label : the label display on the push button
-            - _trigger : the function launch when the push button is clicked
-            - _enabled : flag to see if the push button is clickable or not 
+            - _tuttleParam : link to the corresponding tuttleParam.
+            - changed : signal emitted when we set value(s) of the param.
     """
 
     def __init__(self, tuttleParam):
         self._tuttleParam = tuttleParam
-
-        print "PUSH BUTTON / ", tuttleParam
 
         self.changed = Signal()
 
@@ -46,6 +42,3 @@ class ParamPushButton(object):
     def setEnabled(self, enabled):
         self._tuttleParam.setValue(enabled)
         self.changed()
-        from buttleofx.data import ButtleDataSingleton
-        buttleData = ButtleDataSingleton().get()
-        buttleData.updateMapAndViewer()

@@ -54,3 +54,6 @@ class CmdCreateNode(UndoableCommand):
         self._node = Node(self._nodeName, self._nodeType, self._nodeCoord, tuttleNode)
         self._graphTarget._nodes.append(self._node)
         self._graphTarget.nodesChanged()
+
+        # return the buttleNode
+        return self._node

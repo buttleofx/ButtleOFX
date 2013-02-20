@@ -8,11 +8,14 @@ class ParamInt(object):
     """
         Core class, which represents an int parameter.
         Contains :
-            - _tuttleParam : link to the corresponding tuttleParam
+            - _tuttleParam : link to the corresponding tuttleParam.
+            - _oldValue : the old value of the param.
+            - changed : signal emitted when we set value(s) of the param.
     """
 
     def __init__(self, tuttleParam):
         self._tuttleParam = tuttleParam
+
         self._oldValue = self.getValue()
 
         self.changed = Signal()
@@ -48,12 +51,14 @@ class ParamInt(object):
     def setOldValue(self, value):
         self._oldValue = value
 
+    # distinction between setValue and pushValue, because it's a slider : we do not push a command until the user don't release the cursor (but we update the model).
+
     def setValue(self, value):
         self._tuttleParam.setValue(int(value))
         self.changed()
 
     def pushValue(self, newValue):
         if newValue != self.getOldValue():
-            cmdUpdate = CmdSetParamInt(self, newValue)
+            cmdUpdate = CmdSetParamInt(self, int(newValue))
             cmdManager = CommandManager()
             cmdManager.push(cmdUpdate)

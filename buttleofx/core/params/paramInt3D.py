@@ -1,18 +1,21 @@
 from quickmamba.patterns import Signal
 # undo redo
 from buttleofx.core.undo_redo.manageTools import CommandManager
-from buttleofx.core.undo_redo.commands.params import CmdSetParamInt3D
+from buttleofx.core.undo_redo.commands.params import CmdSetParamND
 
 
 class ParamInt3D(object):
     """
         Core class, which represents a int3D parameter.
         Contains :
-            - _paramType : the name of the type of this parameter
+            - _tuttleParam : link to the corresponding tuttleParam.
+            - _oldValue1, _oldValue2, _oldValue3 : the old values of the param.
+            - changed : signal emitted when we set value(s) of the param.
     """
 
     def __init__(self, tuttleParam):
         self._tuttleParam = tuttleParam
+
         self._oldValue1 = self.getValue1()
         self._oldValue2 = self.getValue2()
         self._oldValue3 = self.getValue3()
@@ -85,58 +88,34 @@ class ParamInt3D(object):
         self.setValue2(values[1])
         self.setValue3(values[2])
 
-    def setOldValueAt(self, value, index):
-        if index == 0:
-            self._oldValue1 = value
-        if index == 1:
-            self._oldValue2 = value
-        if index == 2:
-            self._oldValue3 = value
+    def setOldValues(self, values):
+        index = 0
+        for value in values:
+            if index == 0:
+                self._oldValue1 = value
+            elif index == 1:
+                self._oldValue2 = value
+            elif index == 2:
+                self._oldValue3 = value
+            index += 1
 
     def setValue1(self, value):
         if value != self.getValue1():
-            # Set the value
-            self._tuttleParam.setValueAtIndex(0, int(value))
-            self.changed()
-
             # Push the command
-            cmdUpdate = CmdSetParamInt3D(self, (value, self.getValue2(), self.getValue3()), 0)
+            cmdUpdate = CmdSetParamND(self, (value, self.getValue2(), self.getValue3()))
             cmdManager = CommandManager()
             cmdManager.push(cmdUpdate)
-
-            # Update the viewer
-            from buttleofx.data import ButtleDataSingleton
-            buttleData = ButtleDataSingleton().get()
-            buttleData.updateMapAndViewer()
 
     def setValue2(self, value):
         if value != self.getValue2():
-            # Set the value
-            self._tuttleParam.setValueAtIndex(1, int(value))
-            self.changed()
-
             # Push the command
-            cmdUpdate = CmdSetParamInt3D(self, (self.getValue1(), value, self.getValue3()), 1)
+            cmdUpdate = CmdSetParamND(self, (self.getValue1(), value, self.getValue3()))
             cmdManager = CommandManager()
             cmdManager.push(cmdUpdate)
-
-            # Update the viewer
-            from buttleofx.data import ButtleDataSingleton
-            buttleData = ButtleDataSingleton().get()
-            buttleData.updateMapAndViewer()
 
     def setValue3(self, value):
         if value != self.getValue3():
-            # Set the value
-            self._tuttleParam.setValueAtIndex(2, int(value))
-            self.changed()
-
             # Push the command
-            cmdUpdate = CmdSetParamInt3D(self, (self.getValue1(), self.getValue2(), value), 2)
+            cmdUpdate = CmdSetParamND(self, (self.getValue1(), self.getValue2(), value))
             cmdManager = CommandManager()
             cmdManager.push(cmdUpdate)
-
-            # Update the viewer
-            from buttleofx.data import ButtleDataSingleton
-            buttleData = ButtleDataSingleton().get()
-            buttleData.updateMapAndViewer()

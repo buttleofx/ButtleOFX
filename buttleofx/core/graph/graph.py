@@ -96,7 +96,7 @@ class Graph(object):
         """
         cmdCreateNode = CmdCreateNode(self, nodeType, x, y)
         cmdManager = CommandManager()
-        cmdManager.push(cmdCreateNode)
+        return cmdManager.push(cmdCreateNode)
 
     def createReaderNode(self, url, x, y):
         """

@@ -5,9 +5,9 @@ class CmdSetParamInt(UndoableCommand):
     """
         Command that update the value of a paramInt.
         Attributes :
-        - param : the target param wich will be changed by the update
-        - newValue : the value wich will be mofidy in the target
-        - oldValue : the old value of the target param, wich will be used for reset the target in case of undo command
+        - _param : the target buttle param which will be changed by the update.
+        - _oldValue : the old value of the target param, which will be used for reset the target in case of undo command.
+        - _newValue : the value which will be mofidied.
     """
 
     def __init__(self, param, newValue):
@@ -19,8 +19,8 @@ class CmdSetParamInt(UndoableCommand):
         """
         Undoes the update of the param.
         """
-        self._param.getTuttleParam().setValue(int(self._oldValue))
-        self._param.setOldValue(int(self._oldValue))
+        self._param.getTuttleParam().setValue(self._oldValue)
+        self._param.setOldValue(self._oldValue)
         self._param.changed()
 
     def redoCmd(self):
@@ -33,6 +33,6 @@ class CmdSetParamInt(UndoableCommand):
         """
         Executes the update of the param.
         """
-        self._param.getTuttleParam().setValue(int(self._newValue))
-        self._param.setOldValue(int(self._newValue))
+        self._param.getTuttleParam().setValue(self._newValue)
+        self._param.setOldValue(self._newValue)
         self._param.changed()

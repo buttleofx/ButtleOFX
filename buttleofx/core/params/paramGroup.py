@@ -1,4 +1,3 @@
-from quickmamba.patterns import Signal
 
 
 class ParamGroup(object):
@@ -11,7 +10,7 @@ class ParamGroup(object):
     def __init__(self, tuttleParam):
         self._tuttleParam = tuttleParam
 
-        self.changed = Signal()
+        self.changed = None # important for the nodeManager -> creationNode() function.
 
     # #################### getters ####################
 

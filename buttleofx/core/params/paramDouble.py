@@ -8,12 +8,14 @@ class ParamDouble(object):
     """
         Core class, which represents a double parameter.
         Contains :
-            - _tuttleParam : link to the corresponding tuttleParam
-            - _oldValue : the old value of the param
+            - _tuttleParam : link to the corresponding tuttleParam.
+            - _oldValue : the old value of the param.
+            - changed : signal emitted when we set value(s) of the param.
     """
 
     def __init__(self, tuttleParam):
         self._tuttleParam = tuttleParam
+
         self._oldValue = self.getValue()
 
         self.changed = Signal()
@@ -49,6 +51,8 @@ class ParamDouble(object):
     def setOldValue(self, value):
         self._oldValue = value
 
+    # distinction between setValue and pushValue, because it's a slider : we do not push a command until the user don't release the cursor (but we update the model).
+
     def setValue(self, value):
         self._tuttleParam.setValue(float(value))
         self.changed()
@@ -56,11 +60,6 @@ class ParamDouble(object):
     def pushValue(self, newValue):
         if newValue != self.getOldValue():
             # Push the command
-            cmdUpdate = CmdSetParamDouble(self, newValue)
+            cmdUpdate = CmdSetParamDouble(self, float(newValue))
             cmdManager = CommandManager()
             cmdManager.push(cmdUpdate)
-
-            # Update the viewer
-            from buttleofx.data import ButtleDataSingleton
-            buttleData = ButtleDataSingleton().get()
-            buttleData.updateMapAndViewer()

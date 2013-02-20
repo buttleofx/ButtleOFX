@@ -111,8 +111,10 @@ class CommandManager(Singleton):
         self.commands.append(newCommand)
 
         # do the command
-        newCommand.doCmd()
+        res = newCommand.doCmd()
         self.index += 1
+
+        return res
 
     def undo(self):
         """

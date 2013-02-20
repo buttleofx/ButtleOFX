@@ -5,18 +5,20 @@ class ParamRGBA(object):
     """
         Core class, which represents a RGBA parameter.
         Contains :
-            - _paramType : the name of the type of this parameter
+            - _tuttleParam : link to the corresponding tuttleParam.
+            - _positionColorSlider, _positionAlphaSlider, _positionXcolorSelector, _positionYcolorSelector : the old values of the param.
+            - changed : signal emitted when we set value(s) of the param.
     """
 
     def __init__(self, tuttleParam):
         self._tuttleParam = tuttleParam
 
-        self.changed = Signal()
-
         self._positionColorSlider = 0
         self._positionAlphaSlider = 0
         self._positionXcolorSelector = 0
         self._positionYcolorSelector = 0
+
+        self.changed = Signal()
 
     #################### getters ####################
 
@@ -91,39 +93,23 @@ class ParamRGBA(object):
 
         print "Red : ", self.getValueR()
 
-        from buttleofx.data import ButtleDataSingleton
-        buttleData = ButtleDataSingleton().get()
-        buttleData.updateMapAndViewer()
-
     def setValueG(self, value2):
         self._tuttleParam.setValueAtIndex(1, float(value2 / 255))
         self.changed()
 
         print "Green : ", self.getValueG()
-        
-        from buttleofx.data import ButtleDataSingleton
-        buttleData = ButtleDataSingleton().get()
-        buttleData.updateMapAndViewer()
 
     def setValueB(self, value3):
         self._tuttleParam.setValueAtIndex(2, float(value3 / 255))
         self.changed()
 
         print "Blue : ", self.getValueB()
-        
-        from buttleofx.data import ButtleDataSingleton
-        buttleData = ButtleDataSingleton().get()
-        buttleData.updateMapAndViewer()
 
     def setValueA(self, value4):
         self._tuttleParam.setValueAtIndex(3, float(value4 / 255))
         self.changed()
 
         print "Alpha : ", self.getValueA()
-        
-        from buttleofx.data import ButtleDataSingleton
-        buttleData = ButtleDataSingleton().get()
-        buttleData.updateMapAndViewer()
 
     def setPositionColorSlider(self, position):
         print "setcolorSlider: ", position

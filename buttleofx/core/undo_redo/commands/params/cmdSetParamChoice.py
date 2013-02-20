@@ -6,9 +6,9 @@ class CmdSetParamChoice(UndoableCommand):
     """
         Command that update the value of a paramInt.
         Attributes :
-        - param : the target param wich will be changed by the update
-        - newValue : the value wich will be mofidy in the target
-        - oldValue : the old value of the target param, wich will be used for reset the target in case of undo command
+        - _param : the target buttle param which will be changed by the update.
+        - _oldValue : the old value of the target param, which will be used for reset the target in case of undo command.
+        - _newValue : the value which will be mofidied.
     """
 
     def __init__(self, param, newValue):

@@ -5,9 +5,9 @@ class CmdSetParamString(UndoableCommand):
     """
         Command that update the value of a paramString.
         Attributes :
-        - param : the target param wich will be changed by the update
-        - newValue : the value wich will be mofidy in the target
-        - oldValue : the old value of the target param, wich will be used for reset the target in case of undo command
+        - _param : the target buttle param which will be changed by the update.
+        - _oldValue : the old value of the target param, which will be used for reset the target in case of undo command.
+        - _newValue : the value which will be mofidied.
     """
 
     def __init__(self, param, newValue):
@@ -20,13 +20,9 @@ class CmdSetParamString(UndoableCommand):
         Undoes the update of the param.
         """
         # set tuttle value
-        self._param.getTuttleParam().setValue(str(self._oldValue))
-        self._param.setOldValue(str(self._oldValue))
+        self._param.getTuttleParam().setValue(self._oldValue)
+        self._param.setOldValue(self._oldValue)
         self._param.changed()
-        # update viewer
-        from buttleofx.data import ButtleDataSingleton
-        buttleData = ButtleDataSingleton().get()
-        buttleData.updateMapAndViewer()
 
     def redoCmd(self):
         """
@@ -39,10 +35,6 @@ class CmdSetParamString(UndoableCommand):
         Executes the update of the param.
         """
         # set tuttle value
-        self._param.getTuttleParam().setValue(str(self._newValue))
-        self._param.setOldValue(str(self._newValue))
+        self._param.getTuttleParam().setValue(self._newValue)
+        self._param.setOldValue(self._newValue)
         self._param.changed()
-        # update viewer
-        from buttleofx.data import ButtleDataSingleton
-        buttleData = ButtleDataSingleton().get()
-        buttleData.updateMapAndViewer()

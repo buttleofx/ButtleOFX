@@ -8,14 +8,14 @@ class ParamBoolean(object):
     """
         Core class, which represents a boolean parameter.
         Contains :
-            - _tuttleParam : link to the corresponding tuttleParam
+            - _tuttleParam : link to the corresponding tuttleParam.
+            - changed : signal emitted when we set value(s) of the param.
     """
 
     def __init__(self, tuttleParam):
         self._tuttleParam = tuttleParam
-        #buttleData = ButtleDataSingleton().get()
+
         self.changed = Signal()
-        #self.changed.connect(buttleData.paramChanged)
 
     #################### getters ####################
 
@@ -34,18 +34,13 @@ class ParamBoolean(object):
     def getText(self):
         return self._tuttleParam.getName()[0].capitalize() + self._tuttleParam.getName()[1:]
 
+    def isSecret(self):
+        return self._tuttleParam.getSecret()
+
     #################### setters ####################
 
     def setValue(self, value):
-        self._tuttleParam.setValue(value)
-        self.changed()
-
         # Push the command
         cmdUpdate = CmdSetParamBoolean(self, value)
         cmdManager = CommandManager()
         cmdManager.push(cmdUpdate)
-
-        # Update the viewer
-        from buttleofx.data import ButtleDataSingleton
-        buttleData = ButtleDataSingleton().get()
-        buttleData.updateMapAndViewer()

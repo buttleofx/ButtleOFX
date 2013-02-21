@@ -1,5 +1,6 @@
 from PySide import QtCore
 
+#from buttleofx.data import ButtleDataSingleton
 
 class StringWrapper(QtCore.QObject):
     """
@@ -28,6 +29,9 @@ class StringWrapper(QtCore.QObject):
 
     def getText(self):
         return self._param.getText()
+        
+    def isSecret(self):
+        return self._param.isSecret()
 
     #################### setters ####################
 

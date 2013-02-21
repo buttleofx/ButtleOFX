@@ -45,7 +45,6 @@ Rectangle {
         // On mouse clicked, we call the creationNode fonction if the element is a plugin. Then we destroy the menu.
         onClicked: {
             if (nodeMenuElement.type == "plugin") {
-                console.log("creation node")
                 clickFrom.clickCreationNode(nodeMenuElement.idElement);
                 if (tools.menuComponent) {
                     tools.menuComponent.destroy();

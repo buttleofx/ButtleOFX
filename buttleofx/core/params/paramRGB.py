@@ -5,7 +5,8 @@ class ParamRGB(object):
     """
         Core class, which represents a RGB parameter.
         Contains :
-            - _paramType : the name of the type of this parameter
+            - _tuttleParam : link to the corresponding tuttleParam.
+            - changed : signal emitted when we set value(s) of the param.
     """
 
     def __init__(self, tuttleParam):
@@ -44,6 +45,9 @@ class ParamRGB(object):
 
     def getText(self):
         return self._tuttleParam.getName()[0].capitalize() + self._tuttleParam.getName()[1:]
+        
+    def isSecret(self):
+        return self._tuttleParam.getSecret()
 
     #################### setters ####################
 
@@ -58,26 +62,14 @@ class ParamRGB(object):
 
         print "Rouge : ", self.getValueR()
 
-        from buttleofx.data import ButtleDataSingleton
-        buttleData = ButtleDataSingleton().get()
-        buttleData.updateMapAndViewer()
-
     def setValueG(self, value2):
         self._tuttleParam.setValueAtIndex(1, float(value2 / 255))
         self.changed()
 
         print "Vert : ", self.getValueG()
 
-        from buttleofx.data import ButtleDataSingleton
-        buttleData = ButtleDataSingleton().get()
-        buttleData.updateMapAndViewer()
-
     def setValueB(self, value3):
         self._tuttleParam.setValueAtIndex(2, float(value3 / 255))
         self.changed()
 
         print "Blue : ", self.getValueB()
-
-        from buttleofx.data import ButtleDataSingleton
-        buttleData = ButtleDataSingleton().get()
-        buttleData.updateMapAndViewer()

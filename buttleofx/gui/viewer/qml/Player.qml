@@ -344,7 +344,7 @@ Item {
                                 anchors.fill: parent
 
                                 onPressed: {
-                                    _buttleData.mosquitoDragEvent()
+                                    _buttleManager.mosquitoDragEvent()
                                 }
                             }
                         }

@@ -1,12 +1,12 @@
 import logging
 # Tuttle
 from pyTuttle import tuttle
-#undo_redo
-from buttleofx.core.undo_redo.manageTools import CommandManager
-from buttleofx.core.undo_redo.commands.node import CmdCreateNode, CmdDeleteNode, CmdCreateReaderNode
-from buttleofx.core.undo_redo.commands.connection import CmdCreateConnection, CmdDeleteConnection
 # quickmamba
 from quickmamba.patterns import Signal
+#undo_redo
+from buttleofx.core.undo_redo.manageTools import CommandManager
+from buttleofx.core.undo_redo.commands.node import CmdCreateNode, CmdDeleteNode, CmdCreateReaderNode, CmdSetCoord
+from buttleofx.core.undo_redo.commands.connection import CmdCreateConnection, CmdDeleteConnection
 
 
 class Graph(object):
@@ -96,7 +96,7 @@ class Graph(object):
         """
         cmdCreateNode = CmdCreateNode(self, nodeType, x, y)
         cmdManager = CommandManager()
-        cmdManager.push(cmdCreateNode)
+        return cmdManager.push(cmdCreateNode)
 
     def createReaderNode(self, url, x, y):
         """
@@ -158,6 +158,18 @@ class Graph(object):
         # We can't use a for loop. We have to rebuild the list, based on the current values.
         self._connections = [connection for connection in self._connections if not (connection.getClipOut().getNodeName() == nodeName or connection.getClipIn().getNodeName() == nodeName)]
         self.connectionsChanged()
+
+    ############################################### INTERACTION ###############################################
+
+    def nodeMoved(self, nodeName, x, y):
+        """
+            This fonction push a cmdMoved in the CommandManager.
+        """
+        # only push a cmd if the node truly moved
+        if self.getNode(nodeName).getOldCoord() != (x, y):
+            cmdMoved = CmdSetCoord(self, nodeName, (x, y))
+            cmdManager = CommandManager()
+            cmdManager.push(cmdMoved)
 
     ################################################## FLAGS ##################################################
 

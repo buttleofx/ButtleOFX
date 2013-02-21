@@ -34,9 +34,6 @@ class CmdDeleteNode(UndoableCommand):
 
         self._graphTarget.nodesChanged()
         self._graphTarget.connectionsChanged()
-        from buttleofx.data import ButtleDataSingleton
-        buttleData = ButtleDataSingleton().get()
-        buttleData.updateMapAndViewer()
 
     def redoCmd(self):
         """
@@ -60,9 +57,3 @@ class CmdDeleteNode(UndoableCommand):
         # Emit signals
         self._graphTarget.nodesChanged()
         self._graphTarget.connectionsChanged()
-
-        from buttleofx.data import ButtleDataSingleton
-        buttleData = ButtleDataSingleton().get()
-        buttleData.updateMapAndViewer()
-
-        print "Delete node : ", self._graphTarget.getGraphTuttle()

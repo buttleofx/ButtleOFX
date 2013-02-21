@@ -26,6 +26,10 @@ class GLViewport_tuttleofx(GLViewport):
         buttleData.viewerChangedSignal.connect(self.loadImage)
         buttleData.paramChangedSignal.connect(self.loadImage)
 
+    def __del__(self):
+        # to debug "internal C++ error"
+        print "Delete GLViewport_tuttleofx"
+
     def loadImage_tuttle(self):
         print "--------------------------------- loadImage_tuttle ---------------------------"
         buttleData = ButtleDataSingleton().get()

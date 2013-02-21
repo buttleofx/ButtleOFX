@@ -15,8 +15,6 @@ Rectangle {
     function doAction(buttonName) {
         switch (buttonName) {
             case "createNode":
-                console.log(_buttleData.canUndo)
-                console.log(_buttleData.canRedo)
                 if (!tools.menuComponent) {
                     var newComponent = Qt.createQmlObject('MenuList { parentName: "buttle/"; y: tools.height;}', parent);
                     tools.menuComponent = newComponent;
@@ -24,31 +22,31 @@ Rectangle {
                 break;
 
             case "deleteNode":
-                _buttleData.destructionNode();
+                _buttleManager.destructionNode();
                 break;
 
             case "undo":
-                _buttleData.undo();
+                _buttleManager.undo();
                 break;
 
             case "redo":
-                _buttleData.redo();
+                _buttleManager.redo();
                 break;
 
             case "copy":
-                _buttleData.copyNode();
+                _buttleManager.copyNode();
                 break;
 
             case "paste":
-                _buttleData.pasteNode();
+                _buttleManager.pasteNode();
                 break;
 
             case "cut":
-                _buttleData.cutNode();
+                _buttleManager.cutNode();
                 break;
 
             case "duplicate":
-                _buttleData.duplicationNode();
+                _buttleManager.duplicationNode();
                 break;
             default:
                 break;
@@ -87,7 +85,7 @@ Rectangle {
                 imageSourceLocked: "img/buttons/undo_locked.png"
                 buttonName: "undo"
                 buttonText: "Undo"
-                locked: _buttleData.canUndo ? false : true
+                locked: _buttleManager.canUndo ? false : true
             }
 
             ToolElement {
@@ -96,7 +94,7 @@ Rectangle {
                 imageSourceLocked: "img/buttons/redo_locked.png"
                 buttonName: "redo"
                 buttonText: "Redo"
-                locked: _buttleData.canRedo ? false : true
+                locked: _buttleManager.canRedo ? false : true
             }
 
             ToolElement {

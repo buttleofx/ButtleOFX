@@ -1,17 +1,16 @@
-from quickmamba.patterns import Signal
 
 
 class ParamPage(object):
     """
         Core class, which represents a page parameter.
         Contains :
-            - _tuttleParam : link to the corresponding tuttleParam
+            - _tuttleParam : link to the corresponding tuttleParam.
     """
 
     def __init__(self, tuttleParam):
         self._tuttleParam = tuttleParam
 
-        self.changed = Signal()
+        self.changed = None # important for the nodeManager -> creationNode() function.
 
     # #################### getters ####################
 
@@ -26,3 +25,6 @@ class ParamPage(object):
 
     def getName(self):
         return self._tuttleParam.getName()[0].capitalize() + self._tuttleParam.getName()[1:]
+        
+    def isSecret(self):
+        return self._tuttleParam.getSecret()

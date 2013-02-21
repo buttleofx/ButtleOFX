@@ -9,7 +9,6 @@ class PageWrapper(QtCore.QObject):
     def __init__(self, param):
         QtCore.QObject.__init__(self)
         self._param = param
-        self._param.changed.connect(self.emitChanged)
 
     # #################### getters ####################
 
@@ -21,13 +20,13 @@ class PageWrapper(QtCore.QObject):
 
     def getName(self):
         return self._param.getName()
+        
+    def isSecret(self):
+        return self._param.isSecret()
 
     @QtCore.Signal
     def changed(self):
         pass
-
-    def emitChanged(self):
-        self.changed.emit()
 
     # ################################################## DATA EXPOSED TO QML ##################################################
 

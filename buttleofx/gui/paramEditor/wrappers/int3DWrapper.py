@@ -60,6 +60,9 @@ class Int3DWrapper(QtCore.QObject):
 
     def getText(self):
         return self._param.getText()
+        
+    def isSecret(self):
+        return self._param.isSecret()
 
     #################### setters ####################
 

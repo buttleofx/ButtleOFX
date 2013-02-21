@@ -111,13 +111,10 @@ class CommandManager(Singleton):
         self.commands.append(newCommand)
 
         # do the command
-        newCommand.doCmd()
+        res = newCommand.doCmd()
         self.index += 1
 
-        # usefull to update to buttons'states (toolbar)
-        from buttleofx.data import ButtleDataSingleton
-        buttleData = ButtleDataSingleton().get()
-        buttleData.undoRedoChanged.emit()
+        return res
 
     def undo(self):
         """

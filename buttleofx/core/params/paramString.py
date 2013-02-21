@@ -8,8 +8,9 @@ class ParamString(object):
     """
         Core class, which represents a string parameter.
         Contains :
-            - _tuttleParam : link to the corresponding tuttleParam
-            - _oldValue : the old value of the param
+            - _tuttleParam : link to the corresponding tuttleParam.
+            - _oldValue : the old value of the param.
+            - changed : signal emitted when we set value(s) of the param.
     """
 
     def __init__(self, tuttleParam):
@@ -40,6 +41,9 @@ class ParamString(object):
 
     def getText(self):
         return self._tuttleParam.getName()[0].capitalize() + self._tuttleParam.getName()[1:]
+        
+    def isSecret(self):
+        return self._tuttleParam.getSecret()
 
     #################### setters ####################
 
@@ -47,11 +51,7 @@ class ParamString(object):
         self._oldValue = value
 
     def setValue(self, value):
-        # set the model
-        self._tuttleParam.setValue(str(value))
-        self.changed()
         # push command
-        cmdUpdate = CmdSetParamString(self, value)
+        cmdUpdate = CmdSetParamString(self, str(value))
         cmdManager = CommandManager()
         cmdManager.push(cmdUpdate)
-        

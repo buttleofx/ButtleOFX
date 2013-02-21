@@ -27,6 +27,9 @@ class PushButtonWrapper(QtCore.QObject):
 
     def getEnabled(self):
         return self._param.getEnabled()
+        
+    def isSecret(self):
+        return self._param.isSecret()
 
     #################### setters ####################
 

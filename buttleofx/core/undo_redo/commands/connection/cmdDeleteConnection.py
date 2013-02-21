@@ -40,8 +40,8 @@ class CmdDeleteConnection(UndoableCommand):
             Delete a connection.
         """
         # Get the output clip and the source clip of the tuttle connection
-        tuttleNodeSource = self._graphTarget.getNode(self._connection.getClipOut().getNodeName()).getTuttleNode()
-        tuttleNodeOutput = self._graphTarget.getNode(self._connection.getClipIn().getNodeName()).getTuttleNode()
+        tuttleNodeSource = self._graphTarget.getNode(str(self._connection.getClipOut().getNodeName())).getTuttleNode()
+        tuttleNodeOutput = self._graphTarget.getNode(str(self._connection.getClipIn().getNodeName())).getTuttleNode()
         outputClip = tuttleNodeSource.getClip("Output")
         for clip in tuttleNodeOutput.getClipImageSet().getClips():
             # We tried to use clip.isConnected(), to connect the output clip with the sourceB clip if sourceA is already connected

@@ -28,15 +28,22 @@ class ConnectionManager(Singleton):
             positionNewClip = buttleData.getGraphWrapper().getPositionClip(clip.getNodeName(), clip.getName(), clipNumber)
             newClip = IdClip(clip.getNodeName(), clip.getName(), clipNumber, positionNewClip)
 
-            if buttleData.getGraphWrapper().canConnect(tmpClip, newClip):
-                self.connect(tmpClip, newClip)
+            if tmpClip.getName() == "Output":
+                clipOut = tmpClip
+                clipIn = newClip
+            else:
+                clipOut = newClip
+                clipIn = tmpClip
+
+            if buttleData.getGraphWrapper().canConnect(clipOut, clipIn):
+                    self.connect(clipOut, clipIn)
+                    return
+
+            elif buttleData.getGraph().contains(clipOut) and buttleData.getGraph().contains(clipIn):
+                self.disconnect(buttleData.getGraphWrapper().getConnectionByClips(clipOut, clipIn))
                 return
 
-            elif buttleData.getGraph().contains(tmpClip) and buttleData.getGraph().contains(newClip):
-                self.disconnect(buttleData.getGraphWrapper().getConnectionByClips(tmpClip, newClip))
-                return
-
-        print "Unable to connect or delete the nodes."
+        print "Unable to connect or disconnect the nodes."
 
     def connect(self, clipOut, clipIn):
         """

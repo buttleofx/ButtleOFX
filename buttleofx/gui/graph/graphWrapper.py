@@ -150,7 +150,7 @@ class GraphWrapper(QtCore.QObject):
             yClip = nodeCoord.y() + heightNode / 2 + clipSize / 2
         else:
             xClip = nodeCoord.x() - clipSize / 2
-            yClip = nodeCoord.y() + inputTopMargin + (clipNumber) * (clipSpacing + clipSize) + clipSize / 2
+            yClip = nodeCoord.y() + inputTopMargin + int(clipNumber) * (clipSpacing + clipSize) + clipSize / 2
         return (xClip, yClip)
 
     def getConnectionByClips(self, clipOut, clipIn):

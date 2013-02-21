@@ -50,7 +50,7 @@ Rectangle {
 
     DropArea {
         anchors.fill: parent
-        anchors.margins: -20
+        anchors.margins: -7
         onDrop: {
             if (hasText) {
                 _buttleManager.connectionDropEvent(text, c.clipModel, index)

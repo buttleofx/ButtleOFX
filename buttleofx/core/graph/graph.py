@@ -22,6 +22,7 @@ class Graph(object):
 
     def __init__(self):
         self._graphTuttle = tuttle.Graph()
+        #self._graphTuttle.setup()
 
         self._nodes = []
         self._connections = []

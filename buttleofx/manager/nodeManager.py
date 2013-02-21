@@ -3,7 +3,6 @@ from quickmamba.patterns import Singleton
 # data
 from buttleofx.data import ButtleDataSingleton
 
-
 class NodeManager(Singleton):
     """
         This class manages actions about nodes.

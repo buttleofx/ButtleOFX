@@ -1,13 +1,13 @@
-from glviewport import GLViewport
-
-from tuttleOverlayInteract import TuttleOverlayInteract
-
-from pyTuttle import tuttle
-
 from PySide import QtCore
-
+# tuttle
+from pyTuttle import tuttle
+# for the viewer
+from tuttleOverlayInteract import TuttleOverlayInteract
+from glviewport import GLViewport
 # data
 from buttleofx.data import ButtleDataSingleton
+# manager 
+from buttleofx.manager import ViewerManager
 
 
 class GLViewport_tuttleofx(GLViewport):
@@ -32,10 +32,10 @@ class GLViewport_tuttleofx(GLViewport):
 
     def loadImage_tuttle(self):
         print "--------------------------------- loadImage_tuttle ---------------------------"
-        buttleData = ButtleDataSingleton().get()
-        #imgRes = buttleData.computeNode(self._time)
+        viewerManager = ViewerManager()
+        #imgRes = viewerManager.computeNode(self._time)
 
-        imgRes = buttleData.retrieveImage(self._frame, self._frameHasChanged)
+        imgRes = viewerManager.retrieveImage(self._frame, self._frameHasChanged)
         self._frameHasChanged = False
 
         self.img_data = imgRes.getNumpyArray()

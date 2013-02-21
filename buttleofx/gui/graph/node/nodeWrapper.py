@@ -40,15 +40,6 @@ class NodeWrapper(QtCore.QObject):
     def __del__(self):
         logging.info("Gui : NodeWrapper deleted")
 
-    # We can't connect the two signals because self.changed() is a QML signal.
-    # So, we use the function self.emitChanged() to solve the problem
-    @QtCore.Signal
-    def changed(self):
-        pass
-
-    def emitChanged(self):
-        self.changed.emit()
-
     ######## getters ########
 
     def getNode(self):
@@ -116,6 +107,7 @@ class NodeWrapper(QtCore.QObject):
 
     def getParams(self):
         paramEditorWrapper = ParamEditorWrapper(self._view, self._node.getParams())
+
         return paramEditorWrapper.paramElmts
 
     #for video
@@ -201,6 +193,15 @@ class NodeWrapper(QtCore.QObject):
     def setNbInput(self, nbInput):
         self._node.setNbInput(nbInput)
 
+    # We can't connect the two signals because self.changed() is a QML signal.
+    # So, we use the function self.emitChanged() to solve the problem
+    @QtCore.Signal
+    def changed(self):
+        pass
+
+    def emitChanged(self):
+        self.changed.emit()
+
     ################################################## DATA EXPOSED TO QML ##################################################
 
     # params from Buttle
@@ -217,7 +218,7 @@ class NodeWrapper(QtCore.QObject):
     # image = QtCore.Property(str, getImage, setImage, notify=changed)
     # params from Tuttle
     params = QtCore.Property(QtCore.QObject, getParams, constant=True)
-    #video
+    # #video
     fps = QtCore.Property(float, getFPS, notify=changed)
     nbFrames = QtCore.Property(int, getNbFrames, notify=changed)
 

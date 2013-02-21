@@ -74,10 +74,12 @@ Rectangle {
                 selectByMouse: true
                 text: colorFields.alphaColorText
                 onTextChanged:{
-                    paramObject.r = colorFields.redValue
-                    paramObject.g = colorFields.greenValue
-                    paramObject.b = colorFields.blueValue 
-                    paramObject.a = colorFields.alphaValue
+                    if(paramObject) {
+                        paramObject.r = colorFields.redValue
+                        paramObject.g = colorFields.greenValue
+                        paramObject.b = colorFields.blueValue 
+                        paramObject.a = colorFields.alphaValue
+                    }
                 }
             }
         }

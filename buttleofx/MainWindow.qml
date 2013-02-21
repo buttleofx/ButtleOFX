@@ -16,7 +16,7 @@ Item {
 
     Keys.onPressed: {
         if (event.key == Qt.Key_Delete) {
-            _buttleData.destructionNode();
+            _buttleManager.destructionNode();
         }
         if ((event.key == Qt.Key_Z) && (event.modifiers & Qt.ControlModifier)) {
             _buttleData.undo();

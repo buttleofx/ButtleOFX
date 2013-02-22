@@ -1,18 +1,18 @@
-from quickmamba.patterns import Signal
+# common
+from buttleofx.core.params import Param
 
 
-class ParamPushButton(object):
+class ParamPushButton(Param):
     """
         Core class, which represents a pushButton parameter.
         Contains : 
             - _tuttleParam : link to the corresponding tuttleParam.
-            - changed : signal emitted when we set value(s) of the param.
     """
 
     def __init__(self, tuttleParam):
+        Param.__init__(self)
+        
         self._tuttleParam = tuttleParam
-
-        self.changed = Signal()
 
     #################### getters ####################
 
@@ -33,9 +33,6 @@ class ParamPushButton(object):
 
     def getEnabled(self):
         return self._tuttleParam.getProperties().fetchProperty("OfxParamPropEnabled").getStringValue(0)
-        
-    def isSecret(self):
-        return self._tuttleParam.getSecret()
 
     #################### setters ####################
 

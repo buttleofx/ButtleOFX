@@ -1,25 +1,25 @@
-from quickmamba.patterns import Signal
+# common
+from buttleofx.core.params import Param
 # undo redo
 from buttleofx.core.undo_redo.manageTools import CommandManager
 from buttleofx.core.undo_redo.commands.params import CmdSetParamND
 
 
-class ParamDouble2D(object):
+class ParamDouble2D(Param):
     """
         Core class, which represents a double2D parameter.
         Contains :
             - _tuttleParam : link to the corresponding tuttleParam.
             - _oldValue1, _oldValue2 : the old values of the param.
-            - changed : signal emitted when we set value(s) of the param.
     """
 
     def __init__(self, tuttleParam):
+        Param.__init__(self)
+        
         self._tuttleParam = tuttleParam
 
         self._oldValue1 = self.getValue1()
         self._oldValue2 = self.getValue2()
-
-        self.changed = Signal()
 
     #################### getters ####################
 
@@ -68,14 +68,7 @@ class ParamDouble2D(object):
     def getParent(self):
         return self._tuttleParam.getProperties().fetchProperty("OfxParamPropParent").getStringValue(0)
 
-    def isSecret(self):
-        return self._tuttleParam.getSecret()
-
     #################### setters ####################
-
-    def setValues(self, values):
-        self.setValue1(values[0])
-        self.setValue2(values[1])
 
     def setOldValues(self, values):
         index = 0

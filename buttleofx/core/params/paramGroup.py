@@ -1,6 +1,8 @@
+# common
+from buttleofx.core.params import Param
 
 
-class ParamGroup(object):
+class ParamGroup(Param):
     """
         Core class, which represents a group parameter.
         Contains :
@@ -8,6 +10,8 @@ class ParamGroup(object):
     """
 
     def __init__(self, tuttleParam):
+        Param.__init__(self)
+        
         self._tuttleParam = tuttleParam
 
         self.changed = None # important for the nodeManager -> creationNode() function.
@@ -25,6 +29,3 @@ class ParamGroup(object):
 
     def getName(self):
         return self._tuttleParam.getName()[0].capitalize() + self._tuttleParam.getName()[1:]
-        
-    def isSecret(self):
-        return self._tuttleParam.getSecret()

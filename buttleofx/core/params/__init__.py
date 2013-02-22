@@ -1,3 +1,4 @@
+from param import Param
 from paramInt import ParamInt
 from paramInt2D import ParamInt2D
 from paramInt3D import ParamInt3D

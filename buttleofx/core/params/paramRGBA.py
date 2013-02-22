@@ -82,9 +82,6 @@ class ParamRGBA(object):
     def isSecret(self):
         return self._tuttleParam.getSecret()
         
-    def isSecret(self):
-        return self._tuttleParam.getSecret()
-        
     #################### setters ####################
 
     def setValue(self, values):

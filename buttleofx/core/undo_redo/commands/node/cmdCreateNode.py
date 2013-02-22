@@ -1,6 +1,5 @@
 # Tuttle
 from pyTuttle import tuttle
-
 # undo_redo
 from buttleofx.core.undo_redo.manageTools import UndoableCommand
 # core

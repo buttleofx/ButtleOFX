@@ -1,8 +1,6 @@
 from PySide import QtGui, QtCore, QtDeclarative
 from PySide.QtGui import QWidget, QFileDialog
 
-import os,sys
-
 class Finder(QtDeclarative.QDeclarativeItem):
     def __init__(self, parent=None):
         QtDeclarative.QDeclarativeItem.__init__(self, parent)

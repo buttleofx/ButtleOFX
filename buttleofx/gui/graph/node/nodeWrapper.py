@@ -29,8 +29,8 @@ class NodeWrapper(QtCore.QObject):
 
         self._node.changed.connect(self.emitChanged)
 
-        _fpsError = ""
-        _frameError = ""
+        self._fpsError = ""
+        self._frameError = ""
 
         logging.info("Gui : NodeWrapper created")
 

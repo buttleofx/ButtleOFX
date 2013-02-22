@@ -1,9 +1,9 @@
-from pyTuttle import tuttle
-
-from PySide import QtGui, QtDeclarative, QtOpenGL, QtCore
 import os, sys
 from OpenGL import GL
+# PySide
+from PySide import QtGui, QtDeclarative, QtOpenGL, QtCore
 
+# Logging (see console.log)
 import logging
 # fix thow to display our info
     # from the lowest to the highest level : DEBUG - INFO - WARNING - ERROR - CRITICAL (default = WARNING)
@@ -18,7 +18,13 @@ logging.basicConfig(format='Buttle - %(levelname)s - %(message)s', filename='con
 # print in console
 #logging.basicConfig(format='Buttle - %(levelname)s - %(message)s', level=logging.DEBUG)
 
+# Tuttle
+from pyTuttle import tuttle
+# quickmamba
 from quickmamba.models import QObjectListModel
+from quickmamba.utils import QmlInstantCoding
+# PyCheck
+#import pychecker.checker
 
 # for glViewport
 tuttleofx_installed = False
@@ -34,7 +40,6 @@ if tuttleofx_installed:
 else:
     from buttleofx.gui.viewerGL.glviewport_pil import GLViewport_pil
 
-
 # data
 from buttleofx.data import ButtleDataSingleton
 # manager
@@ -43,8 +48,7 @@ from buttleofx.manager import ButtleManagerSingleton
 from buttleofx.gui.paramEditor import Finder
 # undo_redo
 from buttleofx.core.undo_redo.manageTools import CommandManager
-# quickmamba
-from quickmamba.utils import QmlInstantCoding
+
 
 currentFilePath = os.path.dirname(os.path.abspath(__file__))
 

@@ -188,13 +188,20 @@ class ButtleData(QtCore.QObject):
 
     ################################################## UPDATE #####################################################
 
-    def updateMapAndViewer(self):
-        # Clear the map
-        self._mapNodeNameToComputedImage.clear()
-        # Emit the signal to load the new image
+    def emitParamChangedSignal(self):
+        """
+            Emit paramChangedSignal.
+        """
         self.paramChangedSignal()
 
-        #self.currentParamNodeChanged.emit()
+    def emitViewerChangedSignal(self):
+        """
+            Emit viewerChangedSignal.
+        """
+        self.viewerChangedSignal()
+
+    def updateParams(self):
+        self.currentParamNodeChanged.emit()
 
     ################################################## PLUGIN LIST #####################################################
 

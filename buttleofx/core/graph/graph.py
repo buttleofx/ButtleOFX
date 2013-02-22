@@ -142,7 +142,7 @@ class Graph(object):
         """
         cmdCreateConnection = CmdCreateConnection(self, clipOut, clipIn)
         cmdManager = CommandManager()
-        cmdManager.push(cmdCreateConnection)
+        return cmdManager.push(cmdCreateConnection)
 
     def deleteConnection(self, connection):
         """

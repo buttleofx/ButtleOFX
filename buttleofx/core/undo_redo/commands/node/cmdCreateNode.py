@@ -55,5 +55,5 @@ class CmdCreateNode(UndoableCommand):
         self._graphTarget._nodes.append(self._node)
         self._graphTarget.nodesChanged()
 
-        # return the buttleNode
+        # return the buttle node
         return self._node

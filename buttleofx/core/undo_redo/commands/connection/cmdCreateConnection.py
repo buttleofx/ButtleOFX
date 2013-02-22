@@ -36,7 +36,7 @@ class CmdCreateConnection(UndoableCommand):
         # Delete the buttle connection
         self._graphTarget.getConnections().remove(self._graphTarget.getConnectionByClips(self._clipOut, self._clipIn))
         self._graphTarget.connectionsChanged()
-        print "Undo create connection : ", self._graphTarget.getGraphTuttle()
+        #print "Undo create connection : ", self._graphTarget.getGraphTuttle()
 
     def redoCmd(self):
         """
@@ -66,4 +66,7 @@ class CmdCreateConnection(UndoableCommand):
         self._connection = Connection(self._clipOut, self._clipIn, tuttleConnection)
         self._graphTarget.getConnections().append(self._connection)
         self._graphTarget.connectionsChanged()
-        print "Create connection : ", self._graphTarget.getGraphTuttle()
+        #print "Create connection : ", self._graphTarget.getGraphTuttle()
+
+        # return the buttle connection
+        return self._connection

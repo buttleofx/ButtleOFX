@@ -35,7 +35,7 @@ class ParamEditorWrapper(QtCore.QObject):
         
         self._paramElmts.setObjectList(paramListModel)
 
-        #print "EDITOR WRAPPER CREATED"
+        print "EDITOR WRAPPER CREATED"
 
     def getParamElts(self):
         return self._paramElmts

@@ -17,12 +17,15 @@ class ConnectionManager(Singleton):
         """
         buttleData = ButtleDataSingleton().get()
 
-        infosTmpCLip = dataTmpClip.split("/")
-        if infosTmpCLip[0] != "clip" or len(infosTmpCLip) != 4:
-            return
+        infosTmpClip = dataTmpClip.split("/")
 
-        positionTmpCLip = buttleData.getGraphWrapper().getPositionClip(infosTmpCLip[1], infosTmpCLip[2], int(infosTmpCLip[3]))
-        tmpClip = IdClip(infosTmpCLip[1], infosTmpCLip[2], infosTmpCLip[3], positionTmpCLip)
+        if infosTmpClip[0] != "clip" or len(infosTmpClip) != 4:
+            return
+        else:
+            tmpClipNodeName, tmpClipName, tmpClipNumber = infosTmpClip[1], infosTmpClip[2], int(infosTmpClip[3])
+
+        positionTmpClip = buttleData.getGraphWrapper().getPositionClip(tmpClipNodeName, tmpClipName, tmpClipNumber)
+        tmpClip = IdClip(tmpClipNodeName, tmpClipName, tmpClipNumber, positionTmpClip)
 
         if tmpClip:
             positionNewClip = buttleData.getGraphWrapper().getPositionClip(clip.getNodeName(), clip.getName(), clipNumber)
@@ -39,9 +42,11 @@ class ConnectionManager(Singleton):
                     self.connect(clipOut, clipIn)
                     return
 
-            elif buttleData.getGraph().contains(clipOut) and buttleData.getGraph().contains(clipIn):
-                self.disconnect(buttleData.getGraphWrapper().getConnectionByClips(clipOut, clipIn))
-                return
+            else:
+                connection = buttleData.getGraphWrapper().getConnectionByClips(clipOut, clipIn)
+                if connection:
+                    self.disconnect(connection)
+                    return
 
         print "Unable to connect or disconnect the nodes."
 

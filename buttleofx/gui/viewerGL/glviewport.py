@@ -4,8 +4,6 @@ from OpenGL import GL
 
 import numpy
 
-import os
-
 
 def nbChannelsToGlPixelType(nbChannels):
     if nbChannels == 1:
@@ -182,6 +180,7 @@ class GLViewport(QtDeclarative.QDeclarativeItem):
             #self.drawRegions()
 
     def paint(self, painter, option, widget):
+        #def paint(self, painter, widget):
         #print "GLViewport.paint"
 
         painter.beginNativePainting()

@@ -1,23 +1,24 @@
-from quickmamba.patterns import Signal
+# common
+from buttleofx.core.params import Param
 # undo redo
 from buttleofx.core.undo_redo.manageTools import CommandManager
 from buttleofx.core.undo_redo.commands.params import CmdSetParamString
 
 
-class ParamString(object):
+class ParamString(Param):
     """
         Core class, which represents a string parameter.
         Contains :
             - _tuttleParam : link to the corresponding tuttleParam.
             - _oldValue : the old value of the param.
-            - changed : signal emitted when we set value(s) of the param.
     """
 
     def __init__(self, tuttleParam):
+        Param.__init__(self)
+        
         self._tuttleParam = tuttleParam
+        
         self._oldValue = self.getValue()
-
-        self.changed = Signal()
 
     #################### getters ####################
 
@@ -41,9 +42,6 @@ class ParamString(object):
 
     def getText(self):
         return self._tuttleParam.getName()[0].capitalize() + self._tuttleParam.getName()[1:]
-        
-    def isSecret(self):
-        return self._tuttleParam.getSecret()
 
     #################### setters ####################
 

@@ -55,7 +55,9 @@ class ConnectionManager(Singleton):
             Adds a connection between 2 clips.
         """
         buttleData = ButtleDataSingleton().get()
-        buttleData.getGraph().createConnection(clipOut, clipIn)
+        connection = buttleData.getGraph().createConnection(clipOut, clipIn)
+        # link signal changed of the connection to a global signal ViewerChangedSignal
+        connection.changed.connect(buttleData.emitViewerChangedSignal)
 
     def disconnect(self, connection):
         """

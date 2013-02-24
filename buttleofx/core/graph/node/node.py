@@ -93,9 +93,6 @@ class Node(object):
     def getOldCoord(self):
         return self._oldCoord
 
-    def getDesc(self):
-        return self._desc
-
     def getColor(self):
         return self._color
 

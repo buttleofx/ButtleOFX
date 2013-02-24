@@ -6,6 +6,7 @@ from quickmamba.patterns import Singleton, Signal
 # 'little' manager
 from nodeManager import NodeManager
 from connectionManager import ConnectionManager
+from viewerManager import ViewerManager
 # undo_redo
 from buttleofx.core.undo_redo.manageTools import CommandManager
 # data
@@ -153,6 +154,9 @@ class ButtleManager(QtCore.QObject):
         buttleData = ButtleDataSingleton().get()
         buttleData.currentParamNodeChanged.emit()
         buttleData.currentViewerNodeChanged.emit()
+
+    def signalUndoRedo(self):
+        self.undoRedoChanged.emit()
 
     def canUndo(self):
         """

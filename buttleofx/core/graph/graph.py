@@ -22,6 +22,7 @@ class Graph(object):
 
     def __init__(self):
         self._graphTuttle = tuttle.Graph()
+        #self._graphTuttle.setup()
 
         self._nodes = []
         self._connections = []
@@ -141,7 +142,7 @@ class Graph(object):
         """
         cmdCreateConnection = CmdCreateConnection(self, clipOut, clipIn)
         cmdManager = CommandManager()
-        cmdManager.push(cmdCreateConnection)
+        return cmdManager.push(cmdCreateConnection)
 
     def deleteConnection(self, connection):
         """

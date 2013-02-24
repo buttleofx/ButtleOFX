@@ -1,18 +1,18 @@
-from quickmamba.patterns import Signal
+# common
+from buttleofx.core.params import Param
 
 
-class ParamRGB(object):
+class ParamRGB(Param):
     """
         Core class, which represents a RGB parameter.
         Contains :
             - _tuttleParam : link to the corresponding tuttleParam.
-            - changed : signal emitted when we set value(s) of the param.
     """
 
     def __init__(self, tuttleParam):
+        Param.__init__(self)
+        
         self._tuttleParam = tuttleParam
-
-        self.changed = Signal()
 
     #################### getters ####################
 
@@ -45,16 +45,8 @@ class ParamRGB(object):
 
     def getText(self):
         return self._tuttleParam.getName()[0].capitalize() + self._tuttleParam.getName()[1:]
-        
-    def isSecret(self):
-        return self._tuttleParam.getSecret()
 
     #################### setters ####################
-
-    def setValue(self, values):
-        self.setValueR(values[0])
-        self.setValueG(values[1])
-        self.setValueB(values[2])
 
     def setValueR(self, value1):
         self._tuttleParam.setValueAtIndex(0, float(value1 / 255))

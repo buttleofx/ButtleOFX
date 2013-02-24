@@ -3,7 +3,6 @@ from quickmamba.patterns import Singleton
 # data
 from buttleofx.data import ButtleDataSingleton
 
-
 class NodeManager(Singleton):
     """
         This class manages actions about nodes.
@@ -15,22 +14,17 @@ class NodeManager(Singleton):
         """
         buttleData = ButtleDataSingleton().get()
         node = buttleData.getGraph().createNode(nodeType, x, y)
-        # link signal from params to updateMapAndViewer
+        # link signal changed of all params to a global signal ParamChangedSignal
         for param in node.getParams():
             if param.changed is not None:
-                param.changed.connect(buttleData.updateMapAndViewer)
-                #param.changed.connect(buttleData.updateCurrentParams)
+                param.changed.connect(buttleData.emitParamChangedSignal)
+                #param.changed.connect(buttleData.updateParams) # why there is a segmentation fault with this ??
 
     def destructionNode(self):
         """
             Delete the current node(s).
         """
         buttleData = ButtleDataSingleton().get()
-
-        # unlink signal from params to updateMapAndViewer
-        # node = buttleData.getCurrentSelectedNodeWrapper().getNode()
-        # for param in node.getParams():
-        #     param.changed.disconnect(buttleData.updateMapAndViewer)
         
         # if the params of the current node deleted are display
         if buttleData.getCurrentParamNodeName() == buttleData.getCurrentSelectedNodeName():

@@ -1,13 +1,13 @@
-from glviewport import GLViewport
-
-from tuttleOverlayInteract import TuttleOverlayInteract
-
-from pyTuttle import tuttle
-
 from PySide import QtCore
-
+# tuttle
+from pyTuttle import tuttle
+# for the viewer
+from tuttleOverlayInteract import TuttleOverlayInteract
+from glviewport import GLViewport
 # data
 from buttleofx.data import ButtleDataSingleton
+# manager 
+from buttleofx.manager import ViewerManager
 
 
 class GLViewport_tuttleofx(GLViewport):
@@ -23,7 +23,10 @@ class GLViewport_tuttleofx(GLViewport):
         self._frameHasChanged = False
 
         buttleData = ButtleDataSingleton().get()
+        # connct viewerChanged to load image
         buttleData.viewerChangedSignal.connect(self.loadImage)
+        # connct paramChanged to clearMap and load image
+        buttleData.paramChangedSignal.connect(self.clearMapOfImageAlreadyCalculated)
         buttleData.paramChangedSignal.connect(self.loadImage)
 
     def __del__(self):
@@ -32,10 +35,10 @@ class GLViewport_tuttleofx(GLViewport):
 
     def loadImage_tuttle(self):
         print "--------------------------------- loadImage_tuttle ---------------------------"
-        buttleData = ButtleDataSingleton().get()
-        #imgRes = buttleData.computeNode(self._time)
+        viewerManager = ViewerManager()
+        #imgRes = viewerManager.computeNode(self._time)
 
-        imgRes = buttleData.retrieveImage(self._frame, self._frameHasChanged)
+        imgRes = viewerManager.retrieveImage(self._frame, self._frameHasChanged)
         self._frameHasChanged = False
 
         self.img_data = imgRes.getNumpyArray()
@@ -62,6 +65,10 @@ class GLViewport_tuttleofx(GLViewport):
 
         if self._fittedModeValue:
             self.fitImage()
+
+    def clearMapOfImageAlreadyCalculated(self):
+        buttleData = ButtleDataSingleton().get()
+        buttleData._mapNodeNameToComputedImage.clear()
 
     def internPaintGL(self, widget):
         super(GLViewport_tuttleofx, self).internPaintGL(widget)

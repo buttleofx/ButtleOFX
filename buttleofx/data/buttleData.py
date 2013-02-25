@@ -201,6 +201,7 @@ class ButtleData(QtCore.QObject):
         self.viewerChangedSignal()
 
     def updateParams(self):
+        self.getGraph().nodesChanged()
         self.currentParamNodeChanged.emit()
 
     ################################################## PLUGIN LIST #####################################################

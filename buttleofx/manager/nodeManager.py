@@ -3,6 +3,7 @@ from quickmamba.patterns import Singleton
 # data
 from buttleofx.data import ButtleDataSingleton
 
+
 class NodeManager(Singleton):
     """
         This class manages actions about nodes.
@@ -17,8 +18,8 @@ class NodeManager(Singleton):
         # link signal changed of all params to a global signal ParamChangedSignal
         for param in node.getParams():
             if param.changed is not None:
+                param.changed.connect(node.setParams)
                 param.changed.connect(buttleData.emitParamChangedSignal)
-                #param.changed.connect(buttleData.updateParams) # why there is a segmentation fault with this ??
 
     def destructionNode(self):
         """

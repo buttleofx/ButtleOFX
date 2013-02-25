@@ -342,7 +342,7 @@ Item {
                                     radius: 3
                                     TextInput {
                                         id: nodeCoordXInput
-                                        text: currentParamNode ? currentParamNode.xCoord : ""
+                                        text: currentParamNode ? currentParamNode.coord.x : ""
                                         anchors.left: parent.left
                                         anchors.leftMargin: 5
                                         width: parent.width - 10
@@ -388,7 +388,7 @@ Item {
                                     radius: 3
                                     TextInput {
                                         id: nodeCoordYInput
-                                        text: currentParamNode ? currentParamNode.yCoord : ""
+                                        text: currentParamNode ? currentParamNode.coord.y : ""
                                         anchors.left: parent.left
                                         anchors.leftMargin: 5
                                         width: parent.width - 10

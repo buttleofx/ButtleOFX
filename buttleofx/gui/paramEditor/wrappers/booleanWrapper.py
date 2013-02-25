@@ -31,13 +31,13 @@ class BooleanWrapper(ParamWrapper, QtCore.QObject):
     def getHasChanged(self):
         return self._param.getHasChanged()
 
-    def setHasChanged(self, changed):
-        self._param.setHasChanged(changed)
-
     #################### setters ####################
 
     def setValue(self, value):
         self._param.setValue(value)
+
+    def setHasChanged(self, changed):
+        self._param.setHasChanged(changed)
 
     @QtCore.Slot(bool)
     def pushValue(self, value):

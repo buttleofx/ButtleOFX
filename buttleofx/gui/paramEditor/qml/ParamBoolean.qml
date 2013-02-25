@@ -17,11 +17,13 @@ Item {
             id: paramBooleanTitle
             text: paramObject.text + " : "
             color: "white"
+            // if param has been modified, title in bold font
             font.bold: paramObject.hasChanged ? true : false
             MouseArea {
                 anchors.fill: parent
                 acceptedButtons: Qt.RightButton
                 onClicked: {
+                    // reinitialise the value of the param to her default value
                     paramObject.hasChanged = false
                     paramObject.value = paramObject.getDefaultValue()
                 }
@@ -74,8 +76,8 @@ Item {
                 anchors.fill: parent
                 acceptedButtons: Qt.RightButton
                 onClicked: {
-                    paramObject.hasChanged = false;
-                    paramObject.value = paramObject.getDefaultValue();
+                    paramObject.hasChanged = false
+                    paramObject.value = paramObject.getDefaultValue()
                 }
             }
         }

@@ -15,7 +15,7 @@ class ParamDouble(Param):
 
     def __init__(self, tuttleParam):
         Param.__init__(self)
-        
+
         self._tuttleParam = tuttleParam
 
         self._oldValue = self.getValue()

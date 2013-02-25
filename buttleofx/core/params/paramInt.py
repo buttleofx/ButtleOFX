@@ -15,7 +15,7 @@ class ParamInt(Param):
 
     def __init__(self, tuttleParam):
         Param.__init__(self)
-        
+
         self._tuttleParam = tuttleParam
 
         self._oldValue = self.getValue()
@@ -57,7 +57,6 @@ class ParamInt(Param):
         # used to know if bold font or not
         if(self.getDefaultValue() != value):
             self._hasChanged = True
-        print "here i am"
         self._tuttleParam.setValue(int(value))
         self.changed()
 

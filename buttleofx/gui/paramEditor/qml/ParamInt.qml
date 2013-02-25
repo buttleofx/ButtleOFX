@@ -25,6 +25,16 @@ Item {
             id: paramIntTitle
             text: paramObject.text + " : "
             color: "white"
+            font.bold: paramObject.hasChanged ? true : false
+            MouseArea {
+                anchors.fill: parent
+                acceptedButtons: Qt.RightButton
+                onClicked: {
+                    // reinitialise the param to its default value
+                    paramObject.hasChanged = false
+                    paramObject.value = paramObject.getDefaultValue()
+                }
+            }
         }
 
         // The min value (at the beginning of the bar slider)
@@ -32,14 +42,8 @@ Item {
             id: minValue
             text: paramObject.minimum
             font.pointSize: 8
-            font.bold: paramObject.hasChanged ? true : false
             color: "white"
             y: 5
-            onClicked: {
-                // reinitialise the param to its default value
-                paramObject.hasChanged = false
-                paramObject.value = paramObject.getDefaultValue()
-            }
         }
         //The slider
         Item {

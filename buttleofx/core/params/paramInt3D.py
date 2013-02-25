@@ -119,7 +119,6 @@ class ParamInt3D(Param):
             cmdManager.push(cmdUpdate)
 
     def setValue2(self, value):
-        print "trolololo"
         # used to know if bold font or not
         if(self.getDefaultValue2() != value):
             self._value2HasChanged = True

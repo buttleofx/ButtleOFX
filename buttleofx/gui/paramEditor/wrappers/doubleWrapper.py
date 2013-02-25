@@ -35,7 +35,7 @@ class DoubleWrapper(QtCore.QObject):
 
     def getText(self):
         return self._param.getText()
-        
+
     def isSecret(self):
         return self._param.isSecret()
 

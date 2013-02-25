@@ -36,7 +36,7 @@ Item {
                 State {
                     name: "selectedConnection"
                     when: m.connectionModel == _buttleData.currentConnectionWrapper
-                    PropertyChanges { target: connection; r: 255; g: 255; b: 255 }
+                    PropertyChanges { target: connection; r: 187; g: 187; b: 187 }
                 },
                 State {
                     name: "normal"
@@ -44,6 +44,10 @@ Item {
                     PropertyChanges { target: connection; r: 0; g: 178; b: 161 }
                 }
             ]
+            // Need to re-paint the connection after each change of state.
+            onStateChanged: {
+                connection.requestPaint()
+            }
         }
 
         // Drawing a curve for the connection
@@ -96,33 +100,29 @@ Item {
             ctx.closePath()
         }
 
-        // Returns true if we click on the curve
-        function intersectPath(mouseX, mouseY, margin){
-            for(var x = mouseX - margin; x< mouseX + margin; x++){
-                for(var y = mouseY - margin; y< mouseY + margin; y++){
-                    if(connection.getContext().isPointInPath(x, y)){
-                        return true;
+        MouseArea {
+            // Returns true if we click on the curve
+            function intersectPath(mouseX, mouseY, margin){
+                for(var x = mouseX - margin; x< mouseX + margin; x++){
+                    for(var y = mouseY - margin; y< mouseY + margin; y++){
+                        if(connection.getContext().isPointInPath(x, y)){
+                            return true;
+                        }
                     }
                 }
+                return false;
             }
-            return false;
-        }
 
-        MouseArea {
             anchors.fill: parent
             hoverEnabled: true
 
             //Propagate the event to the connections below
             onPressed: mouse.accepted = intersectPath(mouseX, mouseY, 5)
-            onClicked: {
-                _buttleData.currentConnectionWrapper = m.connectionModel
-                connection.requestPaint()
-            }
+            onClicked: _buttleData.currentConnectionWrapper = m.connectionModel
             // The accepted property of the MouseEvent parameter is ignored in this handler.
-            //onPositionChanged: {
-            //    mouse.accepted = intersectPath(mouseX, mouseY, 5)
-            //    console.log("Mouse accepted : " + mouse.accepted)
-            //}
+            onPositionChanged: {
+                mouse.accepted = intersectPath(mouseX, mouseY, 5)
+            }
         }
     }
 }

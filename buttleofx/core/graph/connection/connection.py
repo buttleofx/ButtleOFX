@@ -32,7 +32,6 @@ class Connection(object):
         logging.info("Core : Connection deleted")
 
     def getId(self):
-        print "Connection Id : ", self._id
         return self._id
 
     def getClipOut(self):

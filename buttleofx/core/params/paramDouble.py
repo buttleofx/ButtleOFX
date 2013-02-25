@@ -54,6 +54,7 @@ class ParamDouble(Param):
     # distinction between setValue and pushValue, because it's a slider : we do not push a command until the user don't release the cursor (but we update the model).
 
     def setValue(self, value):
+        # used to know if bold font or not
         if(self.getDefaultValue() != value):
             self._hasChanged = True
         self._tuttleParam.setValue(float(value))

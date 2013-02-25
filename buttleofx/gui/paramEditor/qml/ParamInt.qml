@@ -32,8 +32,14 @@ Item {
             id: minValue
             text: paramObject.minimum
             font.pointSize: 8
+            font.bold: paramObject.hasChanged ? true : false
             color: "white"
             y: 5
+            onClicked: {
+                // reinitialise the param to its default value
+                paramObject.hasChanged = false
+                paramObject.value = paramObject.getDefaultValue()
+            }
         }
         //The slider
         Item {
@@ -50,6 +56,7 @@ Item {
                 text: paramObject.value
                 font.family: "Helvetica"
                 font.pointSize: 8
+                font.bold: paramObject.hasChanged ? true : false
                 maximumLength: 8
                 color: activeFocus ? "white" : "grey"
                 //activeFocusOnPress : true
@@ -78,7 +85,11 @@ Item {
                 MouseArea {
                     anchors.fill: parent
                     acceptedButtons: Qt.RightButton
-                    onClicked: paramObject.value = paramObject.getDefaultValue()
+                    onClicked: {
+                        // reinitialise the param to its default value
+                        paramObject.hasChanged = false
+                        paramObject.value = paramObject.getDefaultValue()
+                    }
                 }
             }
 

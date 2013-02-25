@@ -21,7 +21,7 @@ class ParamDouble2D(Param):
         self._oldValue1 = self.getValue1()
         self._oldValue2 = self.getValue2()
 
-        #used to know if we display the param in font bold or not
+        # used to know if we display the param in font bold or not
         self._value1HasChanged = False
         self._value2HasChanged = False
 

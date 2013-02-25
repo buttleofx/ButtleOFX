@@ -59,6 +59,8 @@ Item {
                 text: paramObject.value
                 font.family: "Helvetica"
                 font.pointSize: 8
+                //font bold if param has been modified
+                font.bold: paramObject.hasChanged ? true : false
                 maximumLength: 8
                 color: activeFocus ? "white" : "grey"
                 selectByMouse : true

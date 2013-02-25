@@ -16,14 +16,14 @@ class ParamDouble3D(Param):
 
     def __init__(self, tuttleParam):
         Param.__init__(self)
-        
+
         self._tuttleParam = tuttleParam
 
         self._oldValue1 = self.getValue1()
         self._oldValue2 = self.getValue2()
         self._oldValue3 = self.getValue3()
 
-        #used to know if we display the param in font bold or not
+        # used to know if we display the param in font bold or not
         self._value1HasChanged = False
         self._value2HasChanged = False
         self._value3HasChanged = False

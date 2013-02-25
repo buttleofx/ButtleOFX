@@ -59,7 +59,7 @@ class CmdCreateConnection(UndoableCommand):
         tuttleNodeSource = self._graphTarget.getNode(self._clipOut.getNodeName()).getTuttleNode()
         tuttleNodeOutput = self._graphTarget.getNode(self._clipIn.getNodeName()).getTuttleNode()
         outputClip = tuttleNodeSource.getClip("Output")
-        srcClip = tuttleNodeOutput.getClip(self._clipIn.getPort())
+        srcClip = tuttleNodeOutput.getClip(str(self._clipIn.getName()))
         tuttleConnection = self._graphTarget.getGraphTuttle().connect(outputClip, srcClip)
 
         # Creation of the buttle connection

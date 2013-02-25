@@ -25,6 +25,15 @@ Item {
             id: paramDoubleTitle
             text: paramObject.text + " : "
             color: "white"
+            font.bold: paramObject.hasChanged ? true : false
+            MouseArea {
+                anchors.fill: parent
+                acceptedButtons: Qt.RightButton
+                onClicked: {
+                    paramObject.hasChanged = false
+                    paramObject.value = paramObject.getDefaultValue()
+                }
+            }
         }
 
         // The min value (at the beginning of the bar slider)
@@ -89,7 +98,10 @@ Item {
                 MouseArea {
                     anchors.fill: parent
                     acceptedButtons: Qt.RightButton
-                    onClicked: paramObject.value = paramObject.getDefaultValue()
+                    onClicked: {
+                        paramObject.hasChanged = false
+                        paramObject.value = paramObject.getDefaultValue()
+                    }
                 }
             }
 

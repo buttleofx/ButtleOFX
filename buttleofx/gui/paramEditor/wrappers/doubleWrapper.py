@@ -39,10 +39,16 @@ class DoubleWrapper(QtCore.QObject):
     def isSecret(self):
         return self._param.isSecret()
 
+    def getHasChanged(self):
+        return self._param.getHasChanged()
+
     #################### setters ####################
 
     def setValue(self, value):
         self._param.setValue(value)
+
+    def setHasChanged(self, changed):
+        self._param.setHasChanged(changed)
 
     @QtCore.Slot(float)
     def pushValue(self, value):
@@ -62,3 +68,4 @@ class DoubleWrapper(QtCore.QObject):
     value = QtCore.Property(float, getValue, setValue, notify=changed)
     maximum = QtCore.Property(float, getMaximum, constant=True)
     minimum = QtCore.Property(float, getMinimum, constant=True)
+    hasChanged = QtCore.Property(bool, getHasChanged, setHasChanged, notify=changed)

@@ -16,10 +16,9 @@ class ParamBoolean(Param):
         Param.__init__(self)
 
         self._tuttleParam = tuttleParam
-        self._hasChanged = False
+
 
     #################### getters ####################
-
     def getTuttleParam(self):
         return self._tuttleParam
 

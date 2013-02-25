@@ -22,8 +22,8 @@ Item {
                 anchors.fill: parent
                 acceptedButtons: Qt.RightButton
                 onClicked: {
-                    paramObject.hasChanged = false;
-                    paramObject.value = paramObject.getDefaultValue();
+                    paramObject.hasChanged = false
+                    paramObject.value = paramObject.getDefaultValue()
                 }
             } 
         }

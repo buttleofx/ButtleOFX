@@ -28,6 +28,7 @@ class ChoiceWrapper(QtCore.QObject):
     def getValue(self):
         return self._param.getValue()
 
+    @QtCore.Slot(result=str)
     def getDefaultValue(self):
         return self._param.getDefaultValue()
 

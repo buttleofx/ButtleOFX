@@ -28,6 +28,11 @@ Item {
             id: paramChoiceTitle
             text: paramObject.text + " : "
             color: "white"
+            MouseArea {
+                anchors.fill: parent
+                acceptedButtons: Qt.RightButton
+                onClicked: paramObject.value = paramObject.getDefaultValue()
+            }
         }
 
         ComboBox {

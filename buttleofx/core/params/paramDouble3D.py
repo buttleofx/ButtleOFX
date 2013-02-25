@@ -23,6 +23,11 @@ class ParamDouble3D(Param):
         self._oldValue2 = self.getValue2()
         self._oldValue3 = self.getValue3()
 
+        #used to know if we display the param in font bold or not
+        self._value1HasChanged = False
+        self._value2HasChanged = False
+        self._value3HasChanged = False
+
     #################### getters ####################
 
     def getTuttleParam(self):
@@ -82,6 +87,15 @@ class ParamDouble3D(Param):
     def getText(self):
         return self._tuttleParam.getName()[0].capitalize() + self._tuttleParam.getName()[1:]
 
+    def getValue1HasChanged(self):
+        return self._value1HasChanged
+
+    def getValue2HasChanged(self):
+        return self._value2HasChanged
+
+    def getValue3HasChanged(self):
+        return self._value3HasChanged
+
     #################### setters ####################
 
     def setOldValues(self, values):
@@ -96,6 +110,9 @@ class ParamDouble3D(Param):
             index += 1
 
     def setValue1(self, value):
+        # used to know if bold font or not
+        if(self.getDefaultValue1() != value):
+            self._value1HasChanged = True
         if value != self.getValue1():
             # Push the command
             cmdUpdate = CmdSetParamND(self, (value, self.getValue2(), self.getValue3()))
@@ -103,6 +120,9 @@ class ParamDouble3D(Param):
             cmdManager.push(cmdUpdate)
 
     def setValue2(self, value):
+        # used to know if bold font or not
+        if(self.getDefaultValue2() != value):
+            self._value2HasChanged = True
         if value != self.getValue2():
             # Push the command
             cmdUpdate = CmdSetParamND(self, (self.getValue1(), value, self.getValue3()))
@@ -110,8 +130,20 @@ class ParamDouble3D(Param):
             cmdManager.push(cmdUpdate)
 
     def setValue3(self, value):
+        # used to know if bold font or not
+        if(self.getDefaultValue3() != value):
+            self._value3HasChanged = True
         if value != self.getValue3():
             # Push the command
             cmdUpdate = CmdSetParamND(self, (self.getValue1(), self.getValue2(), value))
             cmdManager = CommandManager()
             cmdManager.push(cmdUpdate)
+
+    def setValue1HasChanged(self, changed):
+        self._value1HasChanged = changed
+
+    def setValue2HasChanged(self, changed):
+        self._value2HasChanged = changed
+
+    def setValue3HasChanged(self, changed):
+        self._value3HasChanged = changed

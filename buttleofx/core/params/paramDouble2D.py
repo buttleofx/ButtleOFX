@@ -21,6 +21,7 @@ class ParamDouble2D(Param):
         self._oldValue1 = self.getValue1()
         self._oldValue2 = self.getValue2()
 
+        #used to know if we display the param in font bold or not
         self._value1HasChanged = False
         self._value2HasChanged = False
 
@@ -79,12 +80,6 @@ class ParamDouble2D(Param):
 
     #################### setters ####################
 
-    def setValue1HasChanged(self, changed):
-        self._value1HasChanged = changed
-
-    def setValue2HasChanged(self, changed):
-        self._value2HasChanged = changed
-
     def setOldValues(self, values):
         index = 0
         for value in values:
@@ -111,3 +106,9 @@ class ParamDouble2D(Param):
             cmdUpdate = CmdSetParamND(self, (self.getValue1(), value))
             cmdManager = CommandManager()
             cmdManager.push(cmdUpdate)
+
+    def setValue1HasChanged(self, changed):
+        self._value1HasChanged = changed
+
+    def setValue2HasChanged(self, changed):
+        self._value2HasChanged = changed

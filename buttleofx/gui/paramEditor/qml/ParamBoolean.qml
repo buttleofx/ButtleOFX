@@ -17,6 +17,15 @@ Item {
             id: paramBooleanTitle
             text: paramObject.text + " : "
             color: "white"
+            font.bold: paramObject.hasChanged ? true : false
+            MouseArea {
+                anchors.fill: parent
+                acceptedButtons: Qt.RightButton
+                onClicked: {
+                    paramObject.hasChanged = false;
+                    paramObject.value = paramObject.getDefaultValue();
+                }
+            } 
         }
 
         /*Black square we can check*/
@@ -64,7 +73,10 @@ Item {
             MouseArea {
                 anchors.fill: parent
                 acceptedButtons: Qt.RightButton
-                onClicked: paramObject.value = paramObject.getDefaultValue()
+                onClicked: {
+                    paramObject.hasChanged = false;
+                    paramObject.value = paramObject.getDefaultValue();
+                }
             }
         }
     }

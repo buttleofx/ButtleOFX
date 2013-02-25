@@ -10,6 +10,13 @@ class Param:
     """
     def __init__(self):
         self.changed = Signal()
+        self._hasChanged = False
 
     def isSecret(self):
         return self._tuttleParam.getSecret()
+
+    def getHasChanged(self):
+        return self._hasChanged
+
+    def setHasChanged(self, changed):
+        self._hasChanged = changed

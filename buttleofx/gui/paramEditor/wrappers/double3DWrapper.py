@@ -64,6 +64,15 @@ class Double3DWrapper(QtCore.QObject):
     def isSecret(self):
         return self._param.isSecret()
 
+    def getValue1HasChanged(self):
+        return self._param.getValue1HasChanged()
+
+    def getValue2HasChanged(self):
+        return self._param.getValue2HasChanged()
+
+    def getValue3HasChanged(self):
+        return self._param.getValue3HasChanged()
+
     #################### setters ####################
 
     def setValues(self, values):
@@ -77,6 +86,15 @@ class Double3DWrapper(QtCore.QObject):
 
     def setValue3(self, value3):
         self._param.setValue3(value3)
+
+    def setValue1HasChanged(self, changed):
+        self._param.setValue1HasChanged(changed)
+
+    def setValue2HasChanged(self, changed):
+        self._param.setValue2HasChanged(changed)
+
+    def setValue3HasChanged(self, changed):
+        self._param.setValue3HasChanged(changed)
 
     @QtCore.Signal
     def changed(self):
@@ -98,3 +116,6 @@ class Double3DWrapper(QtCore.QObject):
     minimum2 = QtCore.Property(float, getMinimum2, notify=changed)
     maximum3 = QtCore.Property(float, getMaximum3, notify=changed)
     minimum3 = QtCore.Property(float, getMinimum3, notify=changed)
+    value1HasChanged = QtCore.Property(bool, getValue1HasChanged, setValue1HasChanged, notify=changed)
+    value2HasChanged = QtCore.Property(bool, getValue2HasChanged, setValue2HasChanged, notify=changed)
+    value3HasChanged = QtCore.Property(bool, getValue3HasChanged, setValue3HasChanged, notify=changed)

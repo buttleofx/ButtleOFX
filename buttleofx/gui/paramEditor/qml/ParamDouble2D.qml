@@ -19,6 +19,19 @@ Item {
             id: paramDouble2DTitle
             text: paramObject.text + " : "
             color: "white"
+            // if param has been modified, title in bold font
+            font.bold: (paramObject.value1HasChanged || paramObject.value2HasChanged) ? true : false
+            MouseArea {
+                anchors.fill: parent
+                acceptedButtons: Qt.RightButton
+                // reinitialise the value of the param to her default value
+                onClicked: {
+                    paramObject.value1HasChanged = false
+                    paramObject.value2HasChanged = false
+                    paramObject.value1 = paramObject.getDefaultValue1()
+                    paramObject.value2 = paramObject.getDefaultValue2()
+                }
+            }
         }
 
         /* First input */
@@ -37,6 +50,7 @@ Item {
                 anchors.leftMargin: 2
                 anchors.rightMargin: 2
                 anchors.verticalCenter: parent.verticalCenter
+                font.bold: paramObject.value1HasChanged ? true : false
                 color: activeFocus ? "white" : "grey"
                 selectByMouse : true
                 onAccepted: {
@@ -67,7 +81,11 @@ Item {
             MouseArea {
                 anchors.fill: parent
                 acceptedButtons: Qt.RightButton
-                onClicked: paramObject.value1 = paramObject.getDefaultValue1()
+                onClicked: {
+                    // reinitialise the value of the value1 to her default value
+                    paramObject.value1HasChanged = false
+                    paramObject.value1 = paramObject.getDefaultValue1()
+                }
             }
         }
 
@@ -88,6 +106,7 @@ Item {
                 anchors.leftMargin: 2
                 anchors.rightMargin: 2
                 color: activeFocus ? "white" : "grey"
+                font.bold: paramObject.value2HasChanged ? true : false
                 selectByMouse : true
                 onAccepted: {
                      if(text <= paramObject.maximum2 && text >= paramObject.minimum2){
@@ -116,7 +135,11 @@ Item {
             MouseArea {
                 anchors.fill: parent
                 acceptedButtons: Qt.RightButton
-                onClicked: paramObject.value2 = paramObject.getDefaultValue2()
+                onClicked: {
+                    // reinitialise the value of the value2 to her default value
+                    paramObject.value2HasChanged = false
+                    paramObject.value2 = paramObject.getDefaultValue2()
+                }
             }
         }
     }

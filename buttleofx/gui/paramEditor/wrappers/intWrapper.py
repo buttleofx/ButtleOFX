@@ -31,14 +31,20 @@ class IntWrapper(QtCore.QObject):
 
     def getText(self):
         return self._param.getText()
-        
+
     def isSecret(self):
         return self._param.isSecret()
+
+    def getHasChanged(self):
+        return self._param.getHasChanged()
 
     #################### setters ####################
 
     def setValue(self, value):
         self._param.setValue(value)
+
+    def setHasChanged(self, changed):
+        self._param.setHasChanged(changed)
 
     @QtCore.Slot(int)
     def pushValue(self, value):
@@ -58,3 +64,4 @@ class IntWrapper(QtCore.QObject):
     value = QtCore.Property(int, getValue, setValue, notify=changed)
     maximum = QtCore.Property(int, getMaximum, notify=changed)
     minimum = QtCore.Property(int, getMinimum, notify=changed)
+    hasChanged = QtCore.Property(bool, getHasChanged, setHasChanged, notify=changed)

@@ -38,7 +38,6 @@ class ParamRGBA(Param):
         return self._tuttleParam.getDoubleValueAtIndex(2)
 
     def getDefaultA(self):
-        print "fguhdgvgjhc", self._tuttleParam.getDoubleValueAtIndex(3)
         return self._tuttleParam.getDoubleValueAtIndex(3)
 
     def getValue(self):

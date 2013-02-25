@@ -14,3 +14,5 @@ from groupWrapper import GroupWrapper
 from pageWrapper import PageWrapper
 
 from paramEditorWrapper import ParamEditorWrapper
+
+from paramWrapper import ParamWrapper

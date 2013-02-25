@@ -14,11 +14,11 @@ class ParamBoolean(Param):
 
     def __init__(self, tuttleParam):
         Param.__init__(self)
-        
+
         self._tuttleParam = tuttleParam
 
-    #################### getters ####################
 
+    #################### getters ####################
     def getTuttleParam(self):
         return self._tuttleParam
 
@@ -37,6 +37,10 @@ class ParamBoolean(Param):
     #################### setters ####################
 
     def setValue(self, value):
+        # if the value of the param changed, we put the boolean to True but the only way to put in to false is when the user reinitialises
+        # the value with right click so it is in QML
+        if(self.getDefaultValue() != value):
+            self._hasChanged = True
         # Push the command
         cmdUpdate = CmdSetParamBoolean(self, value)
         cmdManager = CommandManager()

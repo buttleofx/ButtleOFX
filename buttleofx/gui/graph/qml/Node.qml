@@ -34,14 +34,18 @@ Rectangle {
         onPressed: {
             // left button : we change the current selected node & we start moving
             if (mouse.button == Qt.LeftButton) {
-                if(_buttleData.currentSelectedNodeWrapper != m.nodeModel) {
-                    _buttleData.currentSelectedNodeWrapper = m.nodeModel
-                    _buttleData.graphWrapper.zMax += 1
-                    parent.z = _buttleData.graphWrapper.zMax
+                if(mouse.modifiers & Qt.ControlModifier){
+                    _buttleData.setCurrentSelectedNodeWrappers(1, m.nodeModel)
                 }
+                else{
+                    _buttleData.setCurrentSelectedNodeWrappers(0, m.nodeModel)
+                }
+                _buttleData.graphWrapper.zMax += 1
+                parent.z = _buttleData.graphWrapper.zMax
                 stateMoving.state = "moving"
                 _buttleData.graphWrapper.updateConnectionsCoord()
             }
+
             // right button : we change the current param node
            else if (mouse.button == Qt.RightButton) {
                 // here display contextual menu
@@ -122,7 +126,7 @@ Rectangle {
             anchors.centerIn: parent
             text: m.nodeModel.nameUser
             font.pointSize: 10
-            color: (m.nodeModel == _buttleData.currentSelectedNodeWrapper) ? m.nodeModel.color : "black"
+            color: _buttleData.nodeInCurrentSelectedNodeNames(m.nodeModel) ? m.nodeModel.color : "black"
         }
     }
     Column {

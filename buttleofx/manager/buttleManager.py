@@ -35,11 +35,11 @@ class ButtleManager(QtCore.QObject):
         self.undoRedoChanged.emit()
 
     @QtCore.Slot()
-    def destructionNode(self):
+    def destructionNodes(self):
         """
             Function called when we want to delete a node from the QML.
         """
-        self._nodeManager.destructionNode()
+        self._nodeManager.destructionNodes()
         self.undoRedoChanged.emit()
 
     @QtCore.Slot()
@@ -195,7 +195,7 @@ class ButtleManager(QtCore.QObject):
     canUndo = QtCore.Property(bool, canUndo, notify=undoRedoChanged)
     canRedo = QtCore.Property(bool, canRedo, notify=undoRedoChanged)
 
-    
+
 # This class exists just because thre are problems when a class extends 2 other class (Singleton and QObject)
 class ButtleManagerSingleton(Singleton):
 

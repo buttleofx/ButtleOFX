@@ -28,19 +28,18 @@ class ButtleData(QtCore.QObject):
         - _computedImage
 
         This class containts all data we need to manage the application.
-           
     """
 
     _graph = None
     _graphWrapper = None
 
     _currentParamNodeName = None
-    _currentSelectedNodeName = None
+    _currentSelectedNodeNames = []
     _currentViewerNodeName = None
 
     _currentConnectionId = None
 
-    _currentCopiedNodeInfo = {}
+    _currentCopiedNodesInfo = {}
 
     _mapNodeNameToComputedImage = {}
     _tuttleImageCache = None
@@ -71,11 +70,11 @@ class ButtleData(QtCore.QObject):
         """
         return self._currentParamNodeName
 
-    def getCurrentSelectedNodeName(self):
+    def getCurrentSelectedNodeNames(self):
         """
-            Returns the name of the current selected node.
+            Returns the names of the current selected nodes.
         """
-        return self._currentSelectedNodeName
+        return self._currentSelectedNodeNames
 
     def getCurrentViewerNodeName(self):
         """
@@ -83,11 +82,11 @@ class ButtleData(QtCore.QObject):
         """
         return self._currentViewerNodeName
 
-    def getCurrentCopiedNodeInfo(self):
+    def getCurrentCopiedNodesInfo(self):
         """
-            Return the list of buttle info for the current node(s) copied. 
+            Returns the list of buttle info for the current node(s) copied.
         """
-        return self._currentCopiedNodeInfo
+        return self._currentCopiedNodesInfo
 
     ### current data wrapper ###
 
@@ -97,11 +96,11 @@ class ButtleData(QtCore.QObject):
         """
         return self.getGraphWrapper().getNodeWrapper(self.getCurrentParamNodeName())
 
-    def getCurrentSelectedNodeWrapper(self):
+    def getCurrentSelectedNodeWrappers(self):
         """
             Returns the current selected nodeWrapper.
         """
-        return self.getGraphWrapper().getNodeWrapper(self.getCurrentSelectedNodeName())
+        return [self.getGraphWrapper().getNodeWrapper(nodeName) for nodeName in self.getCurrentSelectedNodeNames()]
 
     def getCurrentViewerNodeWrapper(self):
         """
@@ -127,22 +126,26 @@ class ButtleData(QtCore.QObject):
         """
             Returns true if we can paste (= if there was at least one node selected)
         """
-        return self._currentCopiedNodeInfo != {}
+        return self._currentCopiedNodesInfo != {}
 
     #################### setters ####################
 
     ### current data ###
 
-    def setCurrentParamNodeName(self, newValue):
-        self._currentParamNodeName = newValue
+    def setCurrentParamNodeName(self, nodeName):
+        self._currentParamNodeName = nodeName
 
-    def setCurrentSelectedNodeName(self, newValue):
-        self._currentSelectedNodeName = newValue
+    def setCurrentSelectedNodeNames(self, nodeNames):
+        self._currentSelectedNodeNames = nodeNames
+        self.nodesChangedSignal()
 
-    def setCurrentViewerNodeName(self, newValue):
-        self._currentViewerNodeName = newValue
+    def setCurrentViewerNodeName(self, nodeName):
+        self._currentViewerNodeName = nodeName
         # update viewer
         self.updateMapAndViewer()
+
+    def setCurrentCopiedNodesInfo(self, nodesInfo):
+        self._currentCopiedNodesInfo = nodesInfo
 
     ### current data wrapper ###
 
@@ -155,14 +158,22 @@ class ButtleData(QtCore.QObject):
         self._currentParamNodeName = nodeWrapper.getName()
         self.currentParamNodeChanged.emit()
 
-    def setCurrentSelectedNodeWrapper(self, nodeWrapper):
+    @QtCore.Slot(int, "QVariant")
+    def setCurrentSelectedNodeWrappers(self, append, nodeWrapper):
         """
         Changes the current selected node and emits the change.
         """
-        if self._currentSelectedNodeName == nodeWrapper.getName():
-            return
-        self._currentSelectedNodeName = nodeWrapper.getName()
-        self.currentSelectedNodeChanged.emit()
+        if not append:
+            self._currentSelectedNodeNames = []
+            self._currentSelectedNodeNames.append(nodeWrapper.getName())
+        else:
+            if nodeWrapper.getName() in self._currentSelectedNodeNames:
+                self._currentSelectedNodeNames.remove(nodeWrapper.getName())
+            else:
+                self._currentSelectedNodeNames.append(nodeWrapper.getName())
+        print self._currentSelectedNodeNames
+        self.currentSelectedNodesChanged.emit()
+        #self.nodesChangedSignal()
 
     def setCurrentViewerNodeWrapper(self, nodeWrapper):
         """
@@ -187,6 +198,19 @@ class ButtleData(QtCore.QObject):
     def setNodeError(self, nodeName):
         self._nodeError = nodeName
         self.nodeErrorChanged.emit()
+
+    @QtCore.Slot("QVariant", result=bool)
+    def nodeInCurrentSelectedNodeNames(self, nodeWrapper):
+        for nodeName in self._currentSelectedNodeNames:
+            if nodeName == nodeWrapper.getName():
+                return True
+        return False
+
+    def clearCurrentSelectedNodeNames(self):
+        self._currentSelectedNodeNames[:] = []
+
+    def clearCurrentCopiedNodesInfo(self):
+        self._currentCopiedNodesInfo.clear()
 
     ################################################## VIEWER #####################################################
 
@@ -269,13 +293,13 @@ class ButtleData(QtCore.QObject):
     # current param, view, and selected node
     currentParamNodeChanged = QtCore.Signal()
     currentParamNodeWrapper = QtCore.Property(QtCore.QObject, getCurrentParamNodeWrapper, setCurrentParamNodeWrapper, notify=currentParamNodeChanged)
-    
+
     currentViewerNodeChanged = QtCore.Signal()
     currentViewerNodeWrapper = QtCore.Property(QtCore.QObject, getCurrentViewerNodeWrapper, setCurrentViewerNodeWrapper, notify=currentViewerNodeChanged)
-    
-    currentSelectedNodeChanged = QtCore.Signal()
-    currentSelectedNodeWrapper = QtCore.Property(QtCore.QObject, getCurrentSelectedNodeWrapper, setCurrentSelectedNodeWrapper, notify=currentSelectedNodeChanged)
-    
+
+    currentSelectedNodesChanged = QtCore.Signal()
+    currentSelectedNodeWrappers = QtCore.Property(QtCore.QObject, getCurrentSelectedNodeWrappers, notify=currentSelectedNodesChanged)
+
     currentConnectionWrapperChanged = QtCore.Signal()
     currentConnectionWrapper = QtCore.Property(QtCore.QObject, getCurrentConnectionWrapper, setCurrentConnectionWrapper, notify=currentConnectionWrapperChanged)
 
@@ -288,6 +312,7 @@ class ButtleData(QtCore.QObject):
     nodeError = QtCore.Property(str, getNodeError, setNodeError, notify=nodeErrorChanged)
 
     # python signals
+    nodesChangedSignal = Signal()
     paramChangedSignal = Signal()
     viewerChangedSignal = Signal()
 

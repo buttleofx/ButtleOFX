@@ -17,33 +17,47 @@ class ConnectionManager(Singleton):
         """
         buttleData = ButtleDataSingleton().get()
 
-        infosTmpCLip = dataTmpClip.split("/")
-        if infosTmpCLip[0] != "clip" or len(infosTmpCLip) != 4:
-            return
+        infosTmpClip = dataTmpClip.split("/")
 
-        positionTmpCLip = buttleData.getGraphWrapper().getPositionClip(infosTmpCLip[1], infosTmpCLip[2], int(infosTmpCLip[3]))
-        tmpClip = IdClip(infosTmpCLip[1], infosTmpCLip[2], infosTmpCLip[3], positionTmpCLip)
+        if infosTmpClip[0] != "clip" or len(infosTmpClip) != 4:
+            return
+        else:
+            tmpClipNodeName, tmpClipName, tmpClipNumber = infosTmpClip[1], infosTmpClip[2], int(infosTmpClip[3])
+
+        positionTmpClip = buttleData.getGraphWrapper().getPositionClip(tmpClipNodeName, tmpClipName, tmpClipNumber)
+        tmpClip = IdClip(tmpClipNodeName, tmpClipName, tmpClipNumber, positionTmpClip)
 
         if tmpClip:
             positionNewClip = buttleData.getGraphWrapper().getPositionClip(clip.getNodeName(), clip.getName(), clipNumber)
             newClip = IdClip(clip.getNodeName(), clip.getName(), clipNumber, positionNewClip)
 
-            if buttleData.getGraphWrapper().canConnect(tmpClip, newClip):
-                self.connect(tmpClip, newClip)
-                return
+            if tmpClip.getName() == "Output":
+                clipOut = tmpClip
+                clipIn = newClip
+            else:
+                clipOut = newClip
+                clipIn = tmpClip
 
-            elif buttleData.getGraph().contains(tmpClip) and buttleData.getGraph().contains(newClip):
-                self.disconnect(buttleData.getGraphWrapper().getConnectionByClips(tmpClip, newClip))
-                return
+            if buttleData.getGraphWrapper().canConnect(clipOut, clipIn):
+                    self.connect(clipOut, clipIn)
+                    return
 
-        print "Unable to connect or delete the nodes."
+            else:
+                connection = buttleData.getGraphWrapper().getConnectionByClips(clipOut, clipIn)
+                if connection:
+                    self.disconnect(connection)
+                    return
+
+        print "Unable to connect or disconnect the nodes."
 
     def connect(self, clipOut, clipIn):
         """
             Adds a connection between 2 clips.
         """
         buttleData = ButtleDataSingleton().get()
-        buttleData.getGraph().createConnection(clipOut, clipIn)
+        connection = buttleData.getGraph().createConnection(clipOut, clipIn)
+        # link signal changed of the connection to a global signal ViewerChangedSignal
+        connection.changed.connect(buttleData.emitViewerChangedSignal)
 
     def disconnect(self, connection):
         """

@@ -1,26 +1,31 @@
-from quickmamba.patterns import Signal
+# common
+from buttleofx.core.params import Param
 # undo redo
 from buttleofx.core.undo_redo.manageTools import CommandManager
 from buttleofx.core.undo_redo.commands.params import CmdSetParamND
 
 
-class ParamInt3D(object):
+class ParamInt3D(Param):
     """
         Core class, which represents a int3D parameter.
         Contains :
             - _tuttleParam : link to the corresponding tuttleParam.
             - _oldValue1, _oldValue2, _oldValue3 : the old values of the param.
-            - changed : signal emitted when we set value(s) of the param.
     """
 
     def __init__(self, tuttleParam):
+        Param.__init__(self)
+
         self._tuttleParam = tuttleParam
 
         self._oldValue1 = self.getValue1()
         self._oldValue2 = self.getValue2()
         self._oldValue3 = self.getValue3()
 
-        self.changed = Signal()
+        # used to know if we display the param in font bold or not
+        self._value1HasChanged = False
+        self._value2HasChanged = False
+        self._value3HasChanged = False
 
     #################### getters ####################
 
@@ -80,16 +85,17 @@ class ParamInt3D(object):
 
     def getText(self):
         return self._tuttleParam.getName()[0].capitalize() + self._tuttleParam.getName()[1:]
-        
-    def isSecret(self):
-        return self._tuttleParam.getSecret()
+
+    def getValue1HasChanged(self):
+        return self._value1HasChanged
+
+    def getValue2HasChanged(self):
+        return self._value2HasChanged
+
+    def getValue3HasChanged(self):
+        return self._value3HasChanged
 
     #################### setters ####################
-
-    def setValues(self, values):
-        self.setValue1(values[0])
-        self.setValue2(values[1])
-        self.setValue3(values[2])
 
     def setOldValues(self, values):
         index = 0
@@ -103,6 +109,9 @@ class ParamInt3D(object):
             index += 1
 
     def setValue1(self, value):
+        # used to know if bold font or not
+        if(self.getDefaultValue1() != value):
+            self._value1HasChanged = True
         if value != self.getValue1():
             # Push the command
             cmdUpdate = CmdSetParamND(self, (value, self.getValue2(), self.getValue3()))
@@ -110,6 +119,9 @@ class ParamInt3D(object):
             cmdManager.push(cmdUpdate)
 
     def setValue2(self, value):
+        # used to know if bold font or not
+        if(self.getDefaultValue2() != value):
+            self._value2HasChanged = True
         if value != self.getValue2():
             # Push the command
             cmdUpdate = CmdSetParamND(self, (self.getValue1(), value, self.getValue3()))
@@ -117,8 +129,20 @@ class ParamInt3D(object):
             cmdManager.push(cmdUpdate)
 
     def setValue3(self, value):
+        # used to know if bold font or not
+        if(self.getDefaultValue3() != value):
+            self._value3HasChanged = True
         if value != self.getValue3():
             # Push the command
             cmdUpdate = CmdSetParamND(self, (self.getValue1(), self.getValue2(), value))
             cmdManager = CommandManager()
             cmdManager.push(cmdUpdate)
+
+    def setValue1HasChanged(self, changed):
+        self._value1HasChanged = changed
+
+    def setValue2HasChanged(self, changed):
+        self._value2HasChanged = changed
+
+    def setValue3HasChanged(self, changed):
+        self._value3HasChanged = changed

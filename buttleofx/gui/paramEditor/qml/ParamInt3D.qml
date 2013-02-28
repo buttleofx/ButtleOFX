@@ -19,6 +19,21 @@ Item {
             id: paramDouble3DTitle
             text: paramObject.text + " : "
             color: "white"
+            // if param has been modified, title in bold font
+            font.bold: (paramObject.value1HasChanged || paramObject.value2HasChanged || paramObject.value3HasChanged) ? true : false
+            MouseArea {
+                anchors.fill: parent
+                acceptedButtons: Qt.RightButton
+                //reinitialise the values of the params
+                onClicked: {
+                    paramObject.value1HasChanged = false
+                    paramObject.value2HasChanged = false
+                    paramObject.value3HasChanged = false
+                    paramObject.value1 = paramObject.getDefaultValue1()
+                    paramObject.value2 = paramObject.getDefaultValue2()
+                    paramObject.value3 = paramObject.getDefaultValue3() 
+                }
+            }
         }
 
         /* First input */
@@ -35,6 +50,7 @@ Item {
                 anchors.left: parent.left
                 anchors.leftMargin: 5
                 maximumLength: 5
+                font.bold: paramObject.value1HasChanged ? true : false
                 color: activeFocus ? "white" : "grey"
                 width: 40
                 activeFocusOnPress : true
@@ -60,7 +76,11 @@ Item {
             MouseArea {
                 anchors.fill: parent
                 acceptedButtons: Qt.RightButton
-                onClicked: paramObject.value1 = paramObject.getDefaultValue1()
+                onClicked: {
+                    // reinitialise the value of the value1 to her default value
+                    paramObject.value1HasChanged = false
+                    paramObject.value1 = paramObject.getDefaultValue1()
+                }
             }
         }
 
@@ -78,6 +98,7 @@ Item {
                 anchors.left: parent.left
                 anchors.leftMargin: 5
                 maximumLength: 5
+                font.bold: paramObject.value2HasChanged ? true : false
                 color: activeFocus ? "white" : "grey"
                 width: 40
                 selectByMouse : true
@@ -102,7 +123,11 @@ Item {
             MouseArea {
                 anchors.fill: parent
                 acceptedButtons: Qt.RightButton
-                onClicked: paramObject.value2 = paramObject.getDefaultValue2()
+                onClicked: {
+                    // reinitialise the value of the value2 to her default value
+                    paramObject.value2HasChanged = false
+                    paramObject.value2 = paramObject.getDefaultValue2()
+                }
             }
         }
 
@@ -120,6 +145,7 @@ Item {
                 anchors.left: parent.left
                 anchors.leftMargin: 5
                 maximumLength: 5
+                font.bold: paramObject.value3HasChanged ? true : false
                 color: activeFocus ? "white" : "grey"
                 width: 40
                 selectByMouse : true
@@ -144,7 +170,11 @@ Item {
             MouseArea {
                 anchors.fill: parent
                 acceptedButtons: Qt.RightButton
-                onClicked: paramObject.value3 = paramObject.getDefaultValue3()
+                onClicked: {
+                    // reinitialise the value of the value3 to her default value
+                    paramObject.value3HasChanged = false
+                    paramObject.value3 = paramObject.getDefaultValue3()
+                }
             }
         }
     }

@@ -1,4 +1,3 @@
-import logging
 from buttleofx.core.undo_redo.manageTools import UndoableCommand
 
 

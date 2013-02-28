@@ -1,7 +1,5 @@
 import logging
 from PySide import QtCore, QtGui
-# Tuttle
-from pyTuttle import tuttle
 # tools
 from buttleofx.data import tuttleTools
 # quickmamba
@@ -33,18 +31,20 @@ class ButtleData(QtCore.QObject):
     _graph = None
     _graphWrapper = None
 
+    # the current params
     _currentParamNodeName = None
     _currentSelectedNodeNames = []
     _currentViewerNodeName = None
 
+    # for the connections
     _currentConnectionId = None
 
+    # to eventually save current nodes data
     _currentCopiedNodesInfo = {}
 
-    _mapNodeNameToComputedImage = {}
-    _tuttleImageCache = None
-    _computedImage = None
+    # for the viewer
     _nodeError = ""
+    _mapNodeNameToComputedImage = {}
 
     def init(self, view):
         self._graph = Graph()
@@ -141,8 +141,6 @@ class ButtleData(QtCore.QObject):
 
     def setCurrentViewerNodeName(self, nodeName):
         self._currentViewerNodeName = nodeName
-        # update viewer
-        self.updateMapAndViewer()
 
     def setCurrentCopiedNodesInfo(self, nodesInfo):
         self._currentCopiedNodesInfo = nodesInfo
@@ -212,60 +210,22 @@ class ButtleData(QtCore.QObject):
     def clearCurrentCopiedNodesInfo(self):
         self._currentCopiedNodesInfo.clear()
 
-    ################################################## VIEWER #####################################################
-
-    def computeNode(self, frame):
-        """
-            Compute the node at the frame indicated
-        """
-        print "------- COMPUTE NODE -------"
-
-        #Get the name of the currentNode of the viewer
-        node = self.getCurrentViewerNodeName()
-
-        #Get the output where we save the result
-        self._tuttleImageCache = tuttle.MemoryCache()
-        #should replace 25 by the fps of the video (a sort of getFPS(node))
-        #should expose the duration of the video to the QML too
-        self.getGraph().getGraphTuttle().compute(self._tuttleImageCache, node, tuttle.ComputeOptions(int(frame)))
-        self._computedImage = self._tuttleImageCache.get(0)
-
-        #Add the computedImage to the map
-        self._mapNodeNameToComputedImage.update({node: self._computedImage})
-
-        return self._computedImage
-
-    def retrieveImage(self, frame, frameChanged):
-        """
-            Compute the node at the frame indicated if the frame has changed (if the time has changed)
-        """
-        #Get the name of the currentNode of the viewer
-        node = self.getCurrentViewerNodeName()
-        #Get the map
-        mapNodeToImage = self._mapNodeNameToComputedImage
-
-        try:
-            self.setNodeError("")
-            #If the image is already calculated
-            for element in mapNodeToImage:
-                if node == element and frameChanged is False:
-                    print "**************************Image already calculated**********************"
-                    return self._mapNodeNameToComputedImage[node]
-                # If it is not
-            print "************************Calcul of image***************************"
-            return self.computeNode(frame)
-        except Exception as e:
-            print "Can't display node : " + node
-            self.setNodeError(str(e))
-            raise
-
     ################################################## UPDATE #####################################################
 
-    def updateMapAndViewer(self):
-        # Clear the map
-        self._mapNodeNameToComputedImage.clear()
-        # Emit the signal to load the new image
+    def emitParamChangedSignal(self):
+        """
+            Emit paramChangedSignal.
+        """
         self.paramChangedSignal()
+
+    def emitViewerChangedSignal(self):
+        """
+            Emit viewerChangedSignal.
+        """
+        self.viewerChangedSignal()
+
+    def updateParams(self):
+        self.currentParamNodeChanged.emit()
 
     ################################################## PLUGIN LIST #####################################################
 

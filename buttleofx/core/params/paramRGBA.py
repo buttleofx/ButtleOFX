@@ -1,24 +1,24 @@
-from quickmamba.patterns import Signal
+# common
+from buttleofx.core.params import Param
 
 
-class ParamRGBA(object):
+class ParamRGBA(Param):
     """
         Core class, which represents a RGBA parameter.
         Contains :
             - _tuttleParam : link to the corresponding tuttleParam.
             - _positionColorSlider, _positionAlphaSlider, _positionXcolorSelector, _positionYcolorSelector : the old values of the param.
-            - changed : signal emitted when we set value(s) of the param.
     """
 
     def __init__(self, tuttleParam):
+        Param.__init__(self)
+        
         self._tuttleParam = tuttleParam
 
         self._positionColorSlider = 0
         self._positionAlphaSlider = 0
         self._positionXcolorSelector = 0
         self._positionYcolorSelector = 0
-
-        self.changed = Signal()
 
     #################### getters ####################
 
@@ -38,7 +38,6 @@ class ParamRGBA(object):
         return self._tuttleParam.getDoubleValueAtIndex(2)
 
     def getDefaultA(self):
-        print "fguhdgvgjhc", self._tuttleParam.getDoubleValueAtIndex(3)
         return self._tuttleParam.getDoubleValueAtIndex(3)
 
     def getValue(self):
@@ -78,20 +77,8 @@ class ParamRGBA(object):
     def getPositionYcolorSelector(self):
         print "getColorSelectorY :", self._positionYcolorSelector
         return self._positionYcolorSelector
-
-    def isSecret(self):
-        return self._tuttleParam.getSecret()
-        
-    def isSecret(self):
-        return self._tuttleParam.getSecret()
         
     #################### setters ####################
-
-    def setValue(self, values):
-        self.setValueR(values[0])
-        self.setValueG(values[1])
-        self.setValueB(values[2])
-        self.setValueA(values[3])
 
     def setValueR(self, value1):
         self._tuttleParam.setValueAtIndex(0, float(value1 / 255))

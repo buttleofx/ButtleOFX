@@ -17,7 +17,7 @@ class CmdSetParamBoolean(UndoableCommand):
         """
         Undoes the update of the param.
         """
-        if self._param.getTuttleParam().getBoolValue() == True:
+        if self._param.getTuttleParam().getBoolValue():
             self._param.getTuttleParam().setValue(False)
         else:
             self._param.getTuttleParam().setValue(True)

@@ -1,24 +1,24 @@
-from quickmamba.patterns import Signal
+# common
+from buttleofx.core.params import Param
 # undo redo
 from buttleofx.core.undo_redo.manageTools import CommandManager
 from buttleofx.core.undo_redo.commands.params import CmdSetParamInt
 
 
-class ParamInt(object):
+class ParamInt(Param):
     """
         Core class, which represents an int parameter.
         Contains :
             - _tuttleParam : link to the corresponding tuttleParam.
             - _oldValue : the old value of the param.
-            - changed : signal emitted when we set value(s) of the param.
     """
 
     def __init__(self, tuttleParam):
+        Param.__init__(self)
+
         self._tuttleParam = tuttleParam
 
         self._oldValue = self.getValue()
-
-        self.changed = Signal()
 
     #################### getters ####################
 
@@ -45,9 +45,6 @@ class ParamInt(object):
 
     def getText(self):
         return self._tuttleParam.getName()[0].capitalize() + self._tuttleParam.getName()[1:]
-        
-    def isSecret(self):
-        return self._tuttleParam.getSecret()
 
     #################### setters ####################
 
@@ -57,6 +54,9 @@ class ParamInt(object):
     # distinction between setValue and pushValue, because it's a slider : we do not push a command until the user don't release the cursor (but we update the model).
 
     def setValue(self, value):
+        # used to know if bold font or not
+        if(self.getDefaultValue() != value):
+            self._hasChanged = True
         self._tuttleParam.setValue(int(value))
         self.changed()
 

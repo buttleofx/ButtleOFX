@@ -1,24 +1,24 @@
-from quickmamba.patterns import Signal
+# common
+from buttleofx.core.params import Param
 # undo redo
 from buttleofx.core.undo_redo.manageTools import CommandManager
 from buttleofx.core.undo_redo.commands.params import CmdSetParamBoolean
 
 
-class ParamBoolean(object):
+class ParamBoolean(Param):
     """
         Core class, which represents a boolean parameter.
         Contains :
             - _tuttleParam : link to the corresponding tuttleParam.
-            - changed : signal emitted when we set value(s) of the param.
     """
 
     def __init__(self, tuttleParam):
+        Param.__init__(self)
+
         self._tuttleParam = tuttleParam
 
-        self.changed = Signal()
 
     #################### getters ####################
-
     def getTuttleParam(self):
         return self._tuttleParam
 
@@ -34,12 +34,13 @@ class ParamBoolean(object):
     def getText(self):
         return self._tuttleParam.getName()[0].capitalize() + self._tuttleParam.getName()[1:]
 
-    def isSecret(self):
-        return self._tuttleParam.getSecret()
-
     #################### setters ####################
 
     def setValue(self, value):
+        # if the value of the param changed, we put the boolean to True but the only way to put in to false is when the user reinitialises
+        # the value with right click so it is in QML
+        if(self.getDefaultValue() != value):
+            self._hasChanged = True
         # Push the command
         cmdUpdate = CmdSetParamBoolean(self, value)
         cmdManager = CommandManager()

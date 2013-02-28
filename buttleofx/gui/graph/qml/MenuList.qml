@@ -5,7 +5,7 @@ Item {
 
     // parentName = the key for the python dictionary of plugins. Ex: 'tuttle/image/' or 'tuttle/image/process/filter/
     property string parentName
-    property variant clickFrom: tools
+    property variant clickFrom: graph
     property int heightElement: 22
     property int widthElement: 160
 
@@ -23,10 +23,12 @@ Item {
                 nodeMenuView.nextMenu.destroy()
         }
 
-        function createNextMenu(parentName, labelElement, x, y)
+        function createNextMenu(parentName, labelElement, x, y, clickFromB)
         {
             destroyNextMenu()
-            var newComponent = Qt.createQmlObject('MenuList { parentName: "' + parentName + labelElement + '/"; x: ' + x + '; y: ' + y + '; }', nodeMenuView);
+            print("CreateNextMenu", clickFrom);
+            var newComponent = Qt.createQmlObject('MenuList { parentName: "' + parentName + labelElement + '/"; x: ' + x + '; y: ' + y +  '; clickFrom: ' + String(clickFromB) + '; }', nodeMenuView);
+            print("New  CreatedComponent : ", newComponent.clickFrom)
             nodeMenuView.nextMenu = newComponent
         }
 
@@ -40,6 +42,7 @@ Item {
                     menuListItem: nodeMenuView
                     height: heightElement
                     width: widthElement
+                    property variant clickFrom: menulist.clickFrom
                 }
             }
         }

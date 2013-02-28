@@ -16,7 +16,7 @@ Rectangle {
         switch (buttonName) {
             case "createNode":
                 if (!tools.menuComponent) {
-                    var newComponent = Qt.createQmlObject('MenuList { parentName: "buttle/"; y: tools.height;}', parent);
+                    var newComponent = Qt.createQmlObject('MenuList { parentName: "buttle/"; y: tools.height; clickFrom: "tools"}', parent);
                     tools.menuComponent = newComponent;
                 }
                 break;

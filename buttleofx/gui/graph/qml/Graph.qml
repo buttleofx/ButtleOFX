@@ -106,17 +106,31 @@ Rectangle {
         } 
     }
 
-    /*  // NODE CREATION WITH RIGHT CLICK
-        {
+    // NODE CREATION WITH RIGHT CLICK
+    MouseArea {
         id: rightMouseArea
         anchors.fill: parent
         acceptedButtons: Qt.RightButton
         onClicked: {
-             if (mouse.button == Qt.RightButton)
+            if (!tools.menuComponent) {
+                if(rightMouseArea.mouseX + 5*160 < graph.width) {
+                    var newComponent = Qt.createQmlObject('MenuList { parentName: "buttle/"; x: rightMouseArea.mouseX; y:  rightMouseArea.mouseY; clickFrom: graph;}', parent);
+                    console.log("clickFrom" + newComponent.clickFrom);
+                    tools.menuComponent = newComponent;
+                    
+                }
+                else {
+                    var newComponent = Qt.createQmlObject('MenuList { parentName: "buttle/"; x: graph.width - 5*160; y:  rightMouseArea.mouseY; clickFrom: graph;}', parent);
+                    console.log("graph : " + graph);
+                    console.log("ClickFrom : " + newComponent.clickFrom);
+                    tools.menuComponent = newComponent;
+                }
+             /*if (mouse.button == Qt.RightButton)
              listmodel.x = mouseX
              listmodel.y = mouseY - 30
              listmodel.clickFrom = graphArea
              listmodel.menuState = (listmodel.menuState == "hidden") ? "shown" : "hidden"
-        }
-    } */
+        */}
+        }   
+    }
 }

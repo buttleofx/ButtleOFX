@@ -49,6 +49,10 @@ class ParamString(Param):
         self._oldValue = value
 
     def setValue(self, value):
+        # if the value of the param changed, we put the boolean to True but the only way to put in to false is when the user reinitialises
+        # the value with right click (in QML)
+        if(self.getDefaultValue() != value):
+            self._hasChanged = True
         # push command
         cmdUpdate = CmdSetParamString(self, str(value))
         cmdManager = CommandManager()

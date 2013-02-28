@@ -54,6 +54,13 @@ class ParamChoice(Param):
         self._oldValue = value
 
     def setValue(self, value):
+        # if the value of the param changed, we put the boolean to True but the only way to put in to false is when the user reinitialises
+        # the value with right click (in QML)
+        if(self.getDefaultValue() != value):
+            self._hasChanged = True
+        # for the moment we consider that if the user chooses the default value, it's like he didn't modified it, so it's not in bold font
+        else:
+            self._hasChanged = False
         if value != self.getOldValue():
             #Push the command
             cmdUpdate = CmdSetParamChoice(self, value)

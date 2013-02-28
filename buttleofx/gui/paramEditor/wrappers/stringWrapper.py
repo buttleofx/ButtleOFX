@@ -33,10 +33,16 @@ class StringWrapper(QtCore.QObject):
     def isSecret(self):
         return self._param.isSecret()
 
+    def getHasChanged(self):
+        return self._param.getHasChanged()
+
     #################### setters ####################
 
     def setValue(self, value):
         self._param.setValue(value)
+
+    def setHasChanged(self, changed):
+        self._param.setHasChanged(changed)
 
     @QtCore.Signal
     def changed(self):
@@ -51,3 +57,4 @@ class StringWrapper(QtCore.QObject):
     value = QtCore.Property(str, getValue, setValue, notify=changed)
     stringType = QtCore.Property(str, getStringType, constant=True)
     text = QtCore.Property(unicode, getText, constant=True)
+    hasChanged = QtCore.Property(bool, getHasChanged, setHasChanged, notify=changed)

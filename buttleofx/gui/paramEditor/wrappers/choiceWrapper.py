@@ -38,10 +38,16 @@ class ChoiceWrapper(QtCore.QObject):
     def isSecret(self):
         return self._param.isSecret()
 
+    def getHasChanged(self):
+        return self._param.getHasChanged()
+
     #################### setters ####################
 
     def setValue(self, value):
         self._param.setValue(value)
+
+    def setHasChanged(self, changed):
+        self._param.setHasChanged(changed)
 
     @QtCore.Signal
     def changed(self):
@@ -56,3 +62,4 @@ class ChoiceWrapper(QtCore.QObject):
     text = QtCore.Property(str, getText, constant=True)
     listValue = QtCore.Property(QtCore.QObject, getListValue, constant=True)
     value = QtCore.Property(str, getValue, setValue, notify=changed)
+    hasChanged = QtCore.Property(bool, getHasChanged, setHasChanged, notify=changed)

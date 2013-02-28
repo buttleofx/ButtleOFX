@@ -22,7 +22,7 @@ Rectangle {
                 break;
 
             case "deleteNode":
-                _buttleManager.destructionNode();
+                _buttleManager.destructionNodes();
                 break;
 
             case "undo":

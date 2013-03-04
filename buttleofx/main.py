@@ -95,7 +95,7 @@ def main(argv):
 
    # data
     buttleData = ButtleDataSingleton().get().init(view)
-    buttleManager = ButtleManagerSingleton().get().init()
+    buttleManager = ButtleManagerSingleton().get().init(view)
 
     # expose data to QML
     rc = view.rootContext()

@@ -19,7 +19,8 @@ class ButtleManager(QtCore.QObject):
         It's like the front manager, which delegate to other manager.
     """
 
-    def init(self):
+    def init(self, view):
+        self._view = view
         self._nodeManager = NodeManager()
         self._connectionManager = ConnectionManager()
 
@@ -110,9 +111,7 @@ class ButtleManager(QtCore.QObject):
         mimeData = QtCore.QMimeData()
         mimeData.setText("clip/" + str(clip.getNodeName()) + "/" + str(clip.getName()) + "/" + str(clipNumber))
 
-        widget = QtGui.QWidget()
-
-        drag = QtGui.QDrag(widget)
+        drag = QtGui.QDrag(self._view)
         drag.setMimeData(mimeData)
 
         drag.exec_(QtCore.Qt.MoveAction)
@@ -182,12 +181,9 @@ class ButtleManager(QtCore.QObject):
         """
 
         mimeData = QtCore.QMimeData()
-
         mimeData.setText("mosquito_of_the_dead")
 
-        widget = QtGui.QWidget()
-
-        drag = QtGui.QDrag(widget)
+        drag = QtGui.QDrag(self._view)
         drag.setMimeData(mimeData)
 
         drag.exec_(QtCore.Qt.MoveAction)
@@ -199,7 +195,7 @@ class ButtleManager(QtCore.QObject):
     canUndo = QtCore.Property(bool, canUndo, notify=undoRedoChanged)
     canRedo = QtCore.Property(bool, canRedo, notify=undoRedoChanged)
 
-    
+
 # This class exists just because thre are problems when a class extends 2 other class (Singleton and QObject)
 class ButtleManagerSingleton(Singleton):
 

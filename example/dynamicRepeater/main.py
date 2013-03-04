@@ -58,7 +58,7 @@ class MainWrapper(QtCore.QObject):
         print "Python : end insertAt element"
 
     modelChanged = QtCore.Signal()
-    clips = QtCore.Property("QVariant", getClips, notify=modelChanged)
+    clips = QtCore.Property(QtCore.QObject, getClips, notify=modelChanged)
 
 
 def main():

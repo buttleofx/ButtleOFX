@@ -45,7 +45,7 @@ class DropArea(QtDeclarative.QDeclarativeItem):
         #print 'dragEnterEvent'
         #return
         if self._acceptDropValue:
-            print 'dragEnterEvent acceptDrop'
+            #print 'dragEnterEvent acceptDrop'
             event.setAccepted(True)
             event.acceptProposedAction()
             self.setCursor(QtCore.Qt.DragMoveCursor)
@@ -69,7 +69,7 @@ class DropArea(QtDeclarative.QDeclarativeItem):
         #print 'dragMoveEvent'
         #return
         if self._acceptDropValue:
-            print 'dragMoveEvent'
+            #print 'dragMoveEvent'
             urls = event.mimeData().urls()
             firstUrl = urls[0].toLocalFile() if len(urls) else ""
             self.internDragMove.emit(
@@ -89,7 +89,7 @@ class DropArea(QtDeclarative.QDeclarativeItem):
         #print 'dragLeaveEvent'
         #return
         if self._acceptDropValue:
-            print 'dragLeaveEvent'
+            #print 'dragLeaveEvent'
             urls = event.mimeData().urls()
             firstUrl = urls[0].toLocalFile() if len(urls) else ""
             self.internDragLeave.emit(
@@ -111,7 +111,7 @@ class DropArea(QtDeclarative.QDeclarativeItem):
         #print 'dropEvent'
         #return
         if self._acceptDropValue:
-            print 'dropEvent acceptDrop'
+            #print 'dropEvent acceptDrop'
             event.setAccepted(True)
             event.acceptProposedAction()
             #print 'text:', event.mimeData().hasText(), event.mimeData().text()

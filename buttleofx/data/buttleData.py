@@ -205,7 +205,7 @@ class ButtleData(QtCore.QObject):
 
     ################################################## PLUGIN LIST #####################################################
 
-    @QtCore.Slot(str, result="QVariant")
+    @QtCore.Slot(str, result=QtCore.QObject)
     def getQObjectPluginsIdentifiersByParentPath(self, pathname):
         """
             Returns a QObjectListModel

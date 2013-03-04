@@ -107,6 +107,7 @@ Item {
                 color: "transparent"
                 Layout.minimumHeight: 50
                 Layout.verticalSizePolicy: Layout.Expanding
+
                 Component {
                     id: viewer_component
                     Viewer {
@@ -120,7 +121,6 @@ Item {
                     sourceComponent: node ? viewer_component : undefined
                     anchors.fill: parent
                 }
-
 
                 Rectangle {
                     id: titleErrorDisplay

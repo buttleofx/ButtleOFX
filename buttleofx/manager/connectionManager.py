@@ -1,16 +1,40 @@
+from PySide import QtCore, QtGui
 # quickmamba
-from quickmamba.patterns import Singleton
+from quickmamba.patterns import Signal
 # data
 from buttleofx.data import ButtleDataSingleton
 # connection
 from buttleofx.core.graph.connection import IdClip
 
 
-class ConnectionManager(Singleton):
+class ConnectionManager(QtCore.QObject):
     """
         This class manages actions about connections.
     """
 
+    def __init__(self):
+        super(ConnectionManager, self).__init__()
+
+        self.undoRedoChanged = Signal()
+
+
+    @QtCore.Slot(QtCore.QObject, int)
+    def connectionDragEvent(self, clip, clipNumber):
+        """
+            Function called when a clip is pressed (but not released yet).
+            The function send mimeData to identify the clip.
+        """
+        mimeData = QtCore.QMimeData()
+        mimeData.setText("clip/" + str(clip.getNodeName()) + "/" + str(clip.getName()) + "/" + str(clipNumber))
+
+        widget = QtGui.QWidget()
+
+        drag = QtGui.QDrag(widget)
+        drag.setMimeData(mimeData)
+
+        drag.exec_(QtCore.Qt.MoveAction)
+
+    @QtCore.Slot(str, QtCore.QObject, int)
     def connectionDropEvent(self, dataTmpClip, clip, clipNumber):
         """
             Create or delete a connection between 2 nodes.
@@ -36,7 +60,8 @@ class ConnectionManager(Singleton):
                 self.disconnect(buttleData.getGraphWrapper().getConnectionByClips(tmpClip, newClip))
                 return
 
-        print "Unable to connect or delete the nodes."
+        # update undo/redo display
+        self.undoRedoChanged()
 
     def connect(self, clipOut, clipIn):
         """

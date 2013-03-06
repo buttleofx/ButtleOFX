@@ -9,7 +9,7 @@ class Param:
         - changed : signal emitted when we set value(s) of the param.
     """
     def __init__(self):
-        self.changed = Signal()
+        self.paramChanged = Signal()
 
     def isSecret(self):
         return self._tuttleParam.getSecret()

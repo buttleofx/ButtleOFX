@@ -30,6 +30,7 @@ class Graph(object):
         self._nodes = []
         self._connections = []
 
+        # signals
         self.nodesChanged = Signal()
         self.connectionsChanged = Signal()
         self.connectionsCoordChanged = Signal()

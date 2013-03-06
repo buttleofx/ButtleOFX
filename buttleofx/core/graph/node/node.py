@@ -107,9 +107,6 @@ class Node(object):
     def getClips(self):
         return self._clips
 
-    # def getImage(self):
-    #     return self._image
-
     def getParams(self):
         return self._params
 
@@ -134,7 +131,6 @@ class Node(object):
 
     def setOldCoord(self, x, y):
         self._oldCoord = (x, y)
-        #self.changed()
 
     def setColor(self, r, g, b):
         self._color = (r, g, b)

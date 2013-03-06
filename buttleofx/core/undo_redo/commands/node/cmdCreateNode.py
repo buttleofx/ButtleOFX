@@ -31,6 +31,7 @@ class CmdCreateNode(UndoableCommand):
         # The tuttle node is not deleted. We keep it so we don't need to recreate it when the redo command is called.
         node = self._graphTarget.getNode(self._nodeName)
         self._graphTarget.getNodes().remove(node)
+
         self._graphTarget.nodesChanged()
 
     def redoCmd(self):
@@ -39,6 +40,7 @@ class CmdCreateNode(UndoableCommand):
         """
         # We don't have to recreate the connections because when a node is created, it can't have connections !
         self._graphTarget.getNodes().append(self._node)
+        
         self._graphTarget.nodesChanged()
 
     def doCmd(self):
@@ -52,6 +54,7 @@ class CmdCreateNode(UndoableCommand):
         # New Buttle node
         self._node = Node(self._nodeName, self._nodeType, self._nodeCoord, tuttleNode)
         self._graphTarget._nodes.append(self._node)
+
         self._graphTarget.nodesChanged()
 
         # return the buttle node

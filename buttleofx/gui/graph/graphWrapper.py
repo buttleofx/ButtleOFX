@@ -224,12 +224,10 @@ class GraphWrapper(QtCore.QObject):
         pass
 
     # nodes changed
-    nodesChanged = QtCore.Signal()
-    nodes = QtCore.Property("QVariant", getNodeWrappers, notify=nodesChanged)
+    nodes = QtCore.Property("QVariant", getNodeWrappers, notify=changed)
 
     # connections changed
-    connectionWrappersChanged = QtCore.Signal()
-    connections = QtCore.Property("QVariant", getConnectionWrappers, notify=connectionWrappersChanged)
+    connections = QtCore.Property("QVariant", getConnectionWrappers, notify=changed)
 
     # nodeWrappers and connectionWrappers
     nodeWrappers = QtCore.Property(QtCore.QObject, getNodeWrappers, constant=True)

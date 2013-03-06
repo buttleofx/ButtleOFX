@@ -15,7 +15,7 @@ Rectangle {
 
         onClickCreationNode: {
             console.log("Node created clicking from Graph")
-            _buttleManager.creationNode(nodeType, -graph.originX + graph.mouseX, -graph.originY + graph.mouseY)
+            _buttleManager.nodeManager.creationNode(nodeType, -graph.originX + graph.mouseX, -graph.originY + graph.mouseY)
         }
     }
 
@@ -27,7 +27,7 @@ Rectangle {
 
         onClickCreationNode: {
             console.log("Node created clicking from Tools")
-            _buttleManager.creationNode(nodeType, -graph.originX + 20, -graph.originY + 20)
+            _buttleManager.nodeManager.creationNode(nodeType, -graph.originX + 20, -graph.originY + 20)
         }
     }
 

@@ -1,25 +1,38 @@
+from PySide import QtCore
 # quickmamba
-from quickmamba.patterns import Singleton
+from quickmamba.patterns import Signal
 # data
 from buttleofx.data import ButtleDataSingleton
 
-class NodeManager(Singleton):
+
+class NodeManager(QtCore.QObject):
     """
         This class manages actions about nodes.
     """
 
+    def __init__(self):
+        super(NodeManager, self).__init__()
+
+        self.undoRedoChanged = Signal()
+
+    @QtCore.Slot(str, int, int)
     def creationNode(self, nodeType, x, y):
         """
             Create a node.
         """
         buttleData = ButtleDataSingleton().get()
         node = buttleData.getGraph().createNode(nodeType, x, y)
+
         # link signal changed of all params to a global signal ParamChangedSignal
         for param in node.getParams():
-            if param.changed is not None:
-                param.changed.connect(buttleData.emitParamChangedSignal)
-                #param.changed.connect(buttleData.updateParams) # why there is a segmentation fault with this ??
+            if param.paramChanged is not None:
+                #param.paramChanged.connect(node.setParams)
+                param.paramChanged.connect(buttleData.emitParamChangedSignal) # to update the viewer
 
+        # update undo/redo display
+        self.undoRedoChanged()
+
+    @QtCore.Slot()
     def destructionNode(self):
         """
             Delete the current node(s).
@@ -49,6 +62,10 @@ class NodeManager(Singleton):
         buttleData.currentViewerNodeChanged.emit()
         buttleData.currentSelectedNodeChanged.emit()
 
+        # update undo/redo display
+        self.undoRedoChanged()
+
+    @QtCore.Slot()
     def cutNode(self):
         """
             Cut the current node(s).
@@ -63,6 +80,7 @@ class NodeManager(Singleton):
             if buttleData.getCurrentSelectedNodeName() == buttleData.getCurrentParamNodeName():
                 buttleData.setCurrentParamNodeName(None)
 
+    @QtCore.Slot()
     def copyNode(self):
         """
             Copy the current node(s).
@@ -76,6 +94,7 @@ class NodeManager(Singleton):
             buttleData.getCurrentCopiedNodeInfo().update({"mode": "_copy"})
             buttleData.pastePossibilityChanged.emit()
 
+    @QtCore.Slot()
     def pasteNode(self):
         """
             Past the current node(s).
@@ -88,6 +107,10 @@ class NodeManager(Singleton):
             newNode.setNameUser(buttleData.getCurrentCopiedNodeInfo()["nameUser"] + buttleData.getCurrentCopiedNodeInfo()["mode"])
             newNode.getTuttleNode().getParamSet().copyParamsValues(buttleData.getCurrentCopiedNodeInfo()["params"])
 
+        # update undo/redo display
+        self.undoRedoChanged()
+
+    @QtCore.Slot()
     def duplicationNode(self):
         """
             Duplicate the current node(s).
@@ -111,6 +134,10 @@ class NodeManager(Singleton):
             newNode.setColor(color[0], color[1], color[2])
             newNode.getTuttleNode().getParamSet().copyParamsValues(buttleData.getCurrentSelectedNodeWrapper().getNode().getTuttleNode().getParamSet())
 
+        # update undo/redo display
+        self.undoRedoChanged()
+
+    @QtCore.Slot(str, int, int)
     def dropReaderNode(self, url, x, y):
         """
             Drop an image or a video on the graph : create a reader node.
@@ -118,6 +145,10 @@ class NodeManager(Singleton):
         buttleData = ButtleDataSingleton().get()
         buttleData.getGraph().createReaderNode(url, x, y)
 
+        # update undo/redo display
+        self.undoRedoChanged()
+
+    @QtCore.Slot(str, int, int)
     def nodeMoved(self, nodeName, x, y):
         """
             This fonction push a cmdMoved in the CommandManager.
@@ -125,6 +156,10 @@ class NodeManager(Singleton):
         buttleData = ButtleDataSingleton().get()
         buttleData.getGraph().nodeMoved(nodeName, x, y)
 
+        # update undo/redo display
+        self.undoRedoChanged()
+
+    @QtCore.Slot(str, int, int)
     def nodeIsMoving(self, nodeName, x, y):
         """
             This fonction update the position of the connections.

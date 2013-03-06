@@ -21,7 +21,7 @@ class CmdSetParamChoice(UndoableCommand):
         """
         self._param.getTuttleParam().setValue(str(self._oldValue))
         self._param.setOldValue(str(self._oldValue))
-        self._param.changed()
+        self._param.paramChanged()
 
     def redoCmd(self):
         """
@@ -35,4 +35,4 @@ class CmdSetParamChoice(UndoableCommand):
         """
         self._param.getTuttleParam().setValue(str(self._newValue))
         self._param.setOldValue(str(self._newValue))
-        self._param.changed()
+        self._param.paramChanged()

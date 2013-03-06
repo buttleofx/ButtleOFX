@@ -1,19 +1,24 @@
+from PySide import QtCore, QtGui
 # quickmamba
-from quickmamba.patterns import Singleton
+from quickmamba.patterns import Signal
 # Tuttle
 from pyTuttle import tuttle
 # data
 from buttleofx.data import ButtleDataSingleton
 
 
-class ViewerManager(Singleton):
+class ViewerManager(QtCore.QObject):
     """
         This class manages actions about the viewer.
     """
 
     def __init__(self):
-	    self._tuttleImageCache = None
-	    self._computedImage = None
+        super(ViewerManager, self).__init__()
+
+        self._tuttleImageCache = None
+        self._computedImage = None
+
+        self.undoRedoChanged = Signal()
 
     def computeNode(self, frame):
         """
@@ -61,3 +66,21 @@ class ViewerManager(Singleton):
             print "Can't display node : " + node
             buttleData.setNodeError(str(e))
             raise
+
+    @QtCore.Slot()
+    def mosquitoDragEvent(self):
+        """
+            Function called when the viewer's mosquito is dragged.
+            The function send the mimeData and launch a drag event.
+        """
+
+        mimeData = QtCore.QMimeData()
+
+        mimeData.setText("mosquito_of_the_dead")
+
+        widget = QtGui.QWidget()
+
+        drag = QtGui.QDrag(widget)
+        drag.setMimeData(mimeData)
+
+        drag.exec_(QtCore.Qt.MoveAction)

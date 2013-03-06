@@ -12,16 +12,15 @@ class Connection(object):
 
     def __init__(self, clipOut, clipIn, tuttleConnection):
         super(Connection, self).__init__()
+        
+        self._tuttleConnection = tuttleConnection
 
         self._id = clipOut.getId() + "_" + clipIn.getId()
-
         self._clipOut = clipOut
         self._clipIn = clipIn
 
-        self._tuttleConnection = tuttleConnection
-
+        # signal
         self.changed = Signal()
-        self.changed()
 
         logging.info("Core : Connection created")
 
@@ -30,6 +29,8 @@ class Connection(object):
 
     def __del__(self):
         logging.info("Core : Connection deleted")
+
+    ######## getters ########
 
     def getId(self):
         return self._id
@@ -42,6 +43,8 @@ class Connection(object):
 
     def getTuttleConnection(self):
         return self._tuttleConnection
+
+    ######## setters ########
 
     def setClipOut(self, clipOut):
         self._clipOut = clipOut

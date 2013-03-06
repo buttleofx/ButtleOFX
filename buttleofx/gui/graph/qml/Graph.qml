@@ -43,7 +43,7 @@ Rectangle {
         onDrop: {
             if( hasUrls )
             {
-                _buttleManager.dropReaderNode(firstUrl, pos.x, pos.y)
+                _buttleManager.nodeManager.dropReaderNode(firstUrl, pos.x, pos.y)
             }
         }
     }

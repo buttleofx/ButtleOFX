@@ -22,7 +22,7 @@ Rectangle {
                 break;
 
             case "deleteNode":
-                _buttleManager.destructionNode();
+                _buttleManager.nodeManager.destructionNode();
                 break;
 
             case "undo":
@@ -34,19 +34,19 @@ Rectangle {
                 break;
 
             case "copy":
-                _buttleManager.copyNode();
+                _buttleManager.nodeManager.copyNode();
                 break;
 
             case "paste":
-                _buttleManager.pasteNode();
+                _buttleManager.nodeManager.pasteNode();
                 break;
 
             case "cut":
-                _buttleManager.cutNode();
+                _buttleManager.nodeManager.cutNode();
                 break;
 
             case "duplicate":
-                _buttleManager.duplicationNode();
+                _buttleManager.nodeManager.duplicationNode();
                 break;
             default:
                 break;

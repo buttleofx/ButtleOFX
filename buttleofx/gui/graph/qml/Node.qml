@@ -32,15 +32,16 @@ Rectangle {
         drag.axis: Drag.XandYAxis
         acceptedButtons: Qt.LeftButton | Qt.RightButton
         onPressed: {
-            // left button : we change the current selected node & we start moving
+            // left button : we change the current selected nodes & we start moving
             if (mouse.button == Qt.LeftButton) {
                 if(mouse.modifiers & Qt.ControlModifier){
-                    _buttleData.currentSelectedNodeWrappers = m.nodeModel
+                    _buttleData.appendToCurrentSelectedNodeWrappers(m.nodeModel)
                 }
                 else{
                     _buttleData.clearCurrentSelectedNodeNames()
-                    _buttleData.currentSelectedNodeWrappers = m.nodeModel
+                    _buttleData.appendToCurrentSelectedNodeWrappers(m.nodeModel)
                 }
+                _buttleData.clearCurrentConnectionId()
                 _buttleData.graphWrapper.zMax += 1
                 parent.z = _buttleData.graphWrapper.zMax
                 stateMoving.state = "moving"
@@ -60,7 +61,6 @@ Rectangle {
             if (mouse.button == Qt.LeftButton) {
                 _buttleManager.nodeMoved(m.nodeModel.name, parent.x, parent.y)
                 stateMoving.state = "normal"
-                //console.log(_buttleData.currentConnectionWrapper)
             }
         }
         // double click : we change the current param node
@@ -124,10 +124,19 @@ Rectangle {
         color: "#bbbbbb"
         radius: 8
         Text {
+            id: nodeText
             anchors.centerIn: parent
             text: m.nodeModel.nameUser
             font.pointSize: 10
-            color: _buttleData.nodeInCurrentSelectedNodeNames(m.nodeModel) ? m.nodeModel.color : "black"
+            property bool isSelected: _buttleData.nodeInCurrentSelectedNodeNames(m.nodeModel)
+            
+            Connections {
+                target: _buttleData
+                onCurrentSelectedNodeWrappersChanged: {
+                    nodeText.isSelected = _buttleData.nodeInCurrentSelectedNodeNames(m.nodeModel)
+                }
+            }
+            color: isSelected ? m.nodeModel.color : "black"
         }
     }
     Column {

@@ -96,12 +96,13 @@ class ButtleData(QtCore.QObject):
         """
         return self.getGraphWrapper().getNodeWrapper(self.getCurrentParamNodeName())
 
-    @QtCore.Slot()
     def getCurrentSelectedNodeWrappers(self):
         """
-            Returns the current selected nodeWrapper.
+            Returns the current selected nodeWrappers.
         """
-        return [self.getGraphWrapper().getNodeWrapper(nodeName) for nodeName in self.getCurrentSelectedNodeNames()]
+        currentSelectedNodeWrappers = QObjectListModel(self)
+        currentSelectedNodeWrappers.setObjectList([self.getGraphWrapper().getNodeWrapper(nodeName) for nodeName in self.getCurrentSelectedNodeNames()])
+        return currentSelectedNodeWrappers
 
     def getCurrentViewerNodeWrapper(self):
         """
@@ -157,7 +158,12 @@ class ButtleData(QtCore.QObject):
         self._currentParamNodeName = nodeWrapper.getName()
         self.currentParamNodeChanged.emit()
 
-    def setCurrentSelectedNodeWrappers(self, nodeWrapper):
+    def setCurrentSelectedNodeWrappers(self, nodeWrappers):
+        self.setCurrentSelectedNodeNames([nodeWrapper.getName() for nodeWrapper in nodeWrappers])
+        self.currentSelectedNodesChanged.emit()
+
+    @QtCore.Slot(QtCore.QObject)
+    def appendToCurrentSelectedNodeWrappers(self, nodeWrapper):
         if nodeWrapper.getName() in self._currentSelectedNodeNames:
             self._currentSelectedNodeNames.remove(nodeWrapper.getName())
         else:
@@ -198,6 +204,12 @@ class ButtleData(QtCore.QObject):
     @QtCore.Slot()
     def clearCurrentSelectedNodeNames(self):
         self._currentSelectedNodeNames[:] = []
+        self.currentSelectedNodesChanged.emit()
+
+    @QtCore.Slot()
+    def clearCurrentConnectionId(self):
+        self._currentConnectionId = None
+        self.currentConnectionWrapperChanged.emit()
 
     def clearCurrentCopiedNodesInfo(self):
         self._currentCopiedNodesInfo.clear()

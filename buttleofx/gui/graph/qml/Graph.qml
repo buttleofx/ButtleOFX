@@ -26,6 +26,9 @@ Rectangle {
             if (tools.menuComponent) {
                 tools.menuComponent.destroy();
             }
+            else {
+                _buttleData.clearCurrentSelectedNodeNames();
+            }
         }
     }
 

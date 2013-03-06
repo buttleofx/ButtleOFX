@@ -14,7 +14,6 @@ Rectangle {
         height: parent.height
 
         onClickCreationNode: {
-            console.log("Node created clicking from Graph")
             _buttleManager.creationNode(nodeType, -graph.originX + graph.mouseX , -graph.originY + graph.mouseY)
         }
     }
@@ -26,7 +25,6 @@ Rectangle {
         menuComponent: null
 
         onClickCreationNode: {
-            console.log("Node created clicking from Tools")
             _buttleManager.creationNode(nodeType, -graph.originX + 20, -graph.originY + 20)
         }
     }

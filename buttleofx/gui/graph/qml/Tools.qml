@@ -22,7 +22,12 @@ Rectangle {
                 break;
 
             case "deleteNode":
-                _buttleManager.destructionNodes();
+                if(_buttleData.currentConnectionWrapper) {
+                    _buttleManager.disconnect(_buttleData.currentConnectionWrapper);
+                }
+                else {
+                    _buttleManager.destructionNodes();
+                }
                 break;
 
             case "undo":
@@ -103,7 +108,7 @@ Rectangle {
                 imageSourceLocked: "img/buttons/copy_locked.png"
                 buttonName: "copy"
                 buttonText: "Copy"
-                locked: _buttleData.currentSelectedNodeWrapper ? false : true
+                locked: _buttleData.currentSelectedNodeWrappers.isEmpty() ? true : false
             }
 
             ToolElement {
@@ -112,7 +117,7 @@ Rectangle {
                 imageSourceLocked: "img/buttons/cut_locked.png"
                 buttonName: "cut"
                 buttonText: "Cut"
-                locked: _buttleData.currentSelectedNodeWrapper ? false : true
+                locked: _buttleData.currentSelectedNodeWrappers.isEmpty() ? true : false
             }
 
             ToolElement {
@@ -130,7 +135,7 @@ Rectangle {
                 imageSourceLocked: "img/buttons/duplicate_locked.png"
                 buttonName: "duplicate"
                 buttonText: "Duplicate"
-                locked: _buttleData.currentSelectedNodeWrapper ? false : true
+                locked: _buttleData.currentSelectedNodeWrappers.isEmpty() ? true : false
             }
 
             ToolElement {
@@ -140,8 +145,7 @@ Rectangle {
                 imageSourceLocked: "img/buttons/delete_locked.png"
                 buttonName: "deleteNode"
                 buttonText: "Delete the node"
-                locked: _buttleData.currentSelectedNodeWrapper ? false : true
-
+                locked: (!_buttleData.currentSelectedNodeWrappers.isEmpty() || _buttleData.currentConnectionWrapper)? false : true
             }
         }
     }

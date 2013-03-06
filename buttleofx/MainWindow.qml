@@ -16,7 +16,12 @@ Item {
 
     Keys.onPressed: {
         if (event.key == Qt.Key_Delete) {
-            _buttleManager.destructionNodes();
+            if(_buttleData.currentConnectionWrapper) {
+                _buttleManager.disconnect(_buttleData.currentConnectionWrapper);
+            }
+            else {
+                _buttleManager.destructionNodes();
+            }
         }
         if ((event.key == Qt.Key_Z) && (event.modifiers & Qt.ControlModifier)) {
             _buttleManager.undo();

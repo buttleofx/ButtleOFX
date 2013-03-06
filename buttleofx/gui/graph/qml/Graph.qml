@@ -12,8 +12,8 @@ Rectangle {
     property alias originX: connectnode.x
     property alias originY: connectnode.y
 
-    //property alias mouseX: mouseArea.mouseX
-    //property alias mouseY: mouseArea.mouseY
+    property alias mouseX: rightMouseArea.mouseX
+    property alias mouseY: rightMouseArea.mouseY
 
     signal clickCreationNode(string nodeType)
     color: "#212121"
@@ -115,14 +115,11 @@ Rectangle {
             if (!tools.menuComponent) {
                 if(rightMouseArea.mouseX + 5*160 < graph.width) {
                     var newComponent = Qt.createQmlObject('MenuList { parentName: "buttle/"; x: rightMouseArea.mouseX; y:  rightMouseArea.mouseY; clickFrom: graph;}', parent);
-                    console.log("clickFrom" + newComponent.clickFrom);
                     tools.menuComponent = newComponent;
                     
                 }
                 else {
                     var newComponent = Qt.createQmlObject('MenuList { parentName: "buttle/"; x: graph.width - 5*160; y:  rightMouseArea.mouseY; clickFrom: graph;}', parent);
-                    console.log("graph : " + graph);
-                    console.log("ClickFrom : " + newComponent.clickFrom);
                     tools.menuComponent = newComponent;
                 }
              /*if (mouse.button == Qt.RightButton)

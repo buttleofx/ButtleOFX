@@ -38,15 +38,13 @@ Rectangle {
             menuListItem.currentElementLabel = textMenuElement.text
             if(type=="category") {
                 menuListItem.destroyNextMenu();
-                menuListItem.createNextMenu(nodeMenuElement.parentName, nodeMenuElement.labelElement, nodeMenuElement.x + nodeMenuElement.width, nodeMenuElement.y, graph)
+                menuListItem.createNextMenu(nodeMenuElement.parentName, nodeMenuElement.labelElement, nodeMenuElement.x + nodeMenuElement.width, nodeMenuElement.y, nodeMenuElement.clickFrom);
             }
         }
 
         // On mouse clicked, we call the creationNode fonction if the element is a plugin. Then we destroy the menu.
         onClicked: {
             if (nodeMenuElement.type == "plugin") {
-                console.log("MenuElement  : " + nodeMenuElement.clickFrom)
-                console.log("ClickFrom : " +clickFrom);
                 clickFrom.clickCreationNode(nodeMenuElement.idElement);
 
                 if (tools.menuComponent) {

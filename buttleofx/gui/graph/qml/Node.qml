@@ -35,10 +35,11 @@ Rectangle {
             // left button : we change the current selected node & we start moving
             if (mouse.button == Qt.LeftButton) {
                 if(mouse.modifiers & Qt.ControlModifier){
-                    _buttleData.setCurrentSelectedNodeWrappers(1, m.nodeModel)
+                    _buttleData.currentSelectedNodeWrappers = m.nodeModel
                 }
                 else{
-                    _buttleData.setCurrentSelectedNodeWrappers(0, m.nodeModel)
+                    _buttleData.clearCurrentSelectedNodeNames()
+                    _buttleData.currentSelectedNodeWrappers = m.nodeModel
                 }
                 _buttleData.graphWrapper.zMax += 1
                 parent.z = _buttleData.graphWrapper.zMax

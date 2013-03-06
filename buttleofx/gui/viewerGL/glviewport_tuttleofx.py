@@ -22,6 +22,9 @@ class GLViewport_tuttleofx(GLViewport):
         self._frame = 0
         self._frameHasChanged = False
 
+        self.connectToButtleData()
+
+    def connectToButtleData(self):
         buttleData = ButtleDataSingleton().get()
         # connct viewerChanged to load image
         buttleData.viewerChangedSignal.connect(self.loadImage)
@@ -29,9 +32,18 @@ class GLViewport_tuttleofx(GLViewport):
         buttleData.paramChangedSignal.connect(self.clearMapOfImageAlreadyCalculated)
         buttleData.paramChangedSignal.connect(self.loadImage)
 
-    def __del__(self):
-        # to debug "internal C++ error"
-        print "Delete GLViewport_tuttleofx"
+    @QtCore.Slot()
+    def unconnectToButtleData(self):
+        buttleData = ButtleDataSingleton().get()
+        # connct viewerChanged to load image
+        buttleData.viewerChangedSignal.disconnect(self.loadImage)
+        # connct paramChanged to clearMap and load image
+        buttleData.paramChangedSignal.disconnect(self.clearMapOfImageAlreadyCalculated)
+        buttleData.paramChangedSignal.disconnect(self.loadImage)
+
+    #def __del__(self):
+    #    # to debug "internal C++ error"
+    #    print "Delete GLViewport_tuttleofx"
 
     def loadImage_tuttle(self):
         print "--------------------------------- loadImage_tuttle ---------------------------"

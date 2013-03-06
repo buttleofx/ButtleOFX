@@ -16,7 +16,7 @@ class Finder(QtDeclarative.QDeclarativeItem):
     def getFinder(self):
         return self
 
-    @QtCore.Slot("QVariant")
+    @QtCore.Slot(QtCore.QObject)
     def browseFile(self, currentParamNode):
         # if the current node is a reader
         if "read" in currentParamNode.getType().lower():

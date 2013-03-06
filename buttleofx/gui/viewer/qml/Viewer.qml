@@ -31,6 +31,10 @@ Rectangle {
         property real fitOnWidth: ratioWidth > ratioHeight
         property real fitRatio: fitOnWidth ? ratioWidth : ratioHeight
 
+        Component.onDestruction: {
+            viewport.unconnectToButtleData()
+        }
+
         MouseArea {
             anchors.fill: parent
             acceptedButtons: Qt.LeftButton | Qt.MiddleButton

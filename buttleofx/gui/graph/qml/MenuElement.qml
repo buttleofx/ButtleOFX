@@ -38,7 +38,7 @@ Rectangle {
             menuListItem.currentElementLabel = textMenuElement.text
             if(type=="category") {
                 menuListItem.destroyNextMenu();
-                menuListItem.createNextMenu(nodeMenuElement.parentName, nodeMenuElement.labelElement, nodeMenuElement.x + nodeMenuElement.width, nodeMenuElement.y)
+                menuListItem.createNextMenu(nodeMenuElement.parentName, nodeMenuElement.labelElement, nodeMenuElement.x + nodeMenuElement.width, nodeMenuElement.y, nodeMenuElement.clickFrom);
             }
         }
 
@@ -46,6 +46,7 @@ Rectangle {
         onClicked: {
             if (nodeMenuElement.type == "plugin") {
                 clickFrom.clickCreationNode(nodeMenuElement.idElement);
+
                 if (tools.menuComponent) {
                     tools.menuComponent.destroy();
                 }

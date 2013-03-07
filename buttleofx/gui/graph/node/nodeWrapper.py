@@ -40,7 +40,7 @@ class NodeWrapper(QtCore.QObject):
         logging.info("Gui : NodeWrapper created")
 
     def __str__(self):
-        logging.info("Node Wrapper : " + self.getName())
+        return "Node Wrapper : " + self.getName()
 
     def __del__(self):
         logging.info("Gui : NodeWrapper deleted")

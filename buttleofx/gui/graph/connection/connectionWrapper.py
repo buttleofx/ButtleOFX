@@ -10,7 +10,7 @@ class ConnectionWrapper(QtCore.QObject):
 
     def __init__(self, connection, view):
         super(ConnectionWrapper, self).__init__(view)
-        
+
         self._connection = connection
 
         # the link between the connection and the connectionWarpper
@@ -19,7 +19,7 @@ class ConnectionWrapper(QtCore.QObject):
         logging.info("Gui : ConnectionWrapper created")
 
     def __str__(self):
-        logging.info('Connection between the clip "%s (%s %d)" and the clip "%s (%s %d)' % (self._connection._clipOut._nodeName, self._connection._clipOut._port, self._connection._clipOut._clipNumber, self._connection._clipIn._nodeName, self._connection._clipIn._port, self._connection._clipIn._clipNumber))
+        return 'Connection between the clip "%s (%s %d)" and the clip "%s (%s %d)' % (self._connection._clipOut._nodeName, self._connection._clipOut._port, self._connection._clipOut._clipNumber, self._connection._clipIn._nodeName, self._connection._clipIn._port, self._connection._clipIn._clipNumber)
 
     def __del__(self):
         logging.info("Gui : ConnectionWrapper deleted")

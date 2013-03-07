@@ -118,7 +118,11 @@ Item {
 
             //Propagate the event to the connections below
             onPressed: mouse.accepted = intersectPath(mouseX, mouseY, 5)
-            onClicked: _buttleData.currentConnectionWrapper = m.connectionModel
+            onClicked: {
+                _buttleData.currentConnectionWrapper = m.connectionModel
+                _buttleData.clearCurrentSelectedNodeNames();
+            }
+
             // The accepted property of the MouseEvent parameter is ignored in this handler.
             onPositionChanged: {
                 mouse.accepted = intersectPath(mouseX, mouseY, 5)

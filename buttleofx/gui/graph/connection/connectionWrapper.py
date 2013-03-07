@@ -10,7 +10,10 @@ class ConnectionWrapper(QtCore.QObject):
 
     def __init__(self, connection, view):
         super(ConnectionWrapper, self).__init__(view)
+        
         self._connection = connection
+
+        # the link between the connection and the connectionWarpper
         self._connection.changed.connect(self.emitChanged)
 
         logging.info("Gui : ConnectionWrapper created")

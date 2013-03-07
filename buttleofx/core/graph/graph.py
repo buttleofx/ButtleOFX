@@ -5,15 +5,18 @@ from pyTuttle import tuttle
 from quickmamba.patterns import Signal
 #undo_redo
 from buttleofx.core.undo_redo.manageTools import CommandManager
-from buttleofx.core.undo_redo.commands.node import CmdCreateNode, CmdDeleteNode, CmdCreateReaderNode, CmdSetCoord
+from buttleofx.core.undo_redo.commands.node import CmdCreateNode, CmdDeleteNodes, CmdCreateReaderNode, CmdSetCoord
 from buttleofx.core.undo_redo.commands.connection import CmdCreateConnection, CmdDeleteConnection
 
 
 class Graph(object):
     """
-        Class Graph contains
+        Class Graph contains :
+        - _graphTuttle : the tuttle graph
+
         - _nodes : list of nodes (python objects, the core nodes)
         - _connections : list of connections (python objects, the core connections)
+
         - nodesChanged : the signal emited to the wrapper layer to update nodeWrappers
         - connectionChanged : the signal emited to the wrapper layer to update connectionWrappers
         - connectionsChanged : the signal emited to the wrapper layer to update connectionWrappers
@@ -22,11 +25,12 @@ class Graph(object):
 
     def __init__(self):
         self._graphTuttle = tuttle.Graph()
-        #self._graphTuttle.setup()
+        #self._graphTuttle.setup() # good idea ?
 
         self._nodes = []
         self._connections = []
 
+        # signals
         self.nodesChanged = Signal()
         self.connectionsChanged = Signal()
         self.connectionsCoordChanged = Signal()
@@ -128,13 +132,13 @@ class Graph(object):
         cmdManager = CommandManager()
         cmdManager.push(cmdCreateReaderNode)
 
-    def deleteNode(self, node):
+    def deleteNodes(self, nodes):
         """
             Removes a node in the node list when a node is deleted.
         """
-        cmdDeleteNode = CmdDeleteNode(self, node)
+        cmdDeleteNodes = CmdDeleteNodes(self, nodes)
         cmdManager = CommandManager()
-        cmdManager.push(cmdDeleteNode)
+        cmdManager.push(cmdDeleteNodes)
 
     def createConnection(self, clipOut, clipIn):
         """

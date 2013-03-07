@@ -16,25 +16,30 @@ Item {
 
     Keys.onPressed: {
         if (event.key == Qt.Key_Delete) {
-            _buttleManager.destructionNode();
+            if(_buttleData.currentConnectionWrapper) {
+                _buttleManager.connectionManager.disconnect(_buttleData.currentConnectionWrapper);
+            }
+            else {
+                _buttleManager.nodeManager.destructionNodes();
+            }
         }
         if ((event.key == Qt.Key_Z) && (event.modifiers & Qt.ControlModifier)) {
-            _buttleData.undo();
+            _buttleManager.undo();
         }
         if ((event.key == Qt.Key_Y) && (event.modifiers & Qt.ControlModifier)) {
-            _buttleData.redo();
+            _buttleManager.redo();
         }
         if ((event.key == Qt.Key_D) && (event.modifiers & Qt.ControlModifier)){
-            _buttleData.duplicationNode()
+            _buttleManager.nodeManager.duplicationNode()
         }
         if ((event.key == Qt.Key_C) && (event.modifiers & Qt.ControlModifier)){
-            _buttleData.copyNode()
+            _buttleManager.nodeManager.copyNode()
         }
         if ((event.key == Qt.Key_V) && (event.modifiers & Qt.ControlModifier)){
-            _buttleData.pasteNode()
+            _buttleManager.nodeManager.pasteNode()
         }
         if ((event.key == Qt.Key_X) && (event.modifiers & Qt.ControlModifier)){
-            _buttleData.cutNode()
+            _buttleManager.nodeManager.cutNode()
         }
     }
 

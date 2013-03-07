@@ -9,7 +9,7 @@ class Int2DWrapper(QtCore.QObject):
     def __init__(self, param):
         QtCore.QObject.__init__(self)
         self._param = param
-        self._param.changed.connect(self.emitChanged)
+        self._param.paramChanged.connect(self.emitChanged)
 
     #################### getters ####################
 

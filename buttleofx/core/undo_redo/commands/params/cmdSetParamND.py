@@ -30,7 +30,7 @@ class CmdSetParamND(UndoableCommand):
         """
         self._param.getTuttleParam().setValue(self._oldValues)
         self._param.setOldValues(self._oldValues)
-        self._param.changed()
+        self._param.paramChanged()
 
     def redoCmd(self):
         """
@@ -44,5 +44,5 @@ class CmdSetParamND(UndoableCommand):
         """
         self._param.getTuttleParam().setValue(self._newValues)
         self._param.setOldValues(self._newValues)
-        self._param.changed()
+        self._param.paramChanged()
         

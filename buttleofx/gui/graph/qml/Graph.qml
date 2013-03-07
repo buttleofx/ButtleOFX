@@ -26,6 +26,9 @@ Rectangle {
             if (tools.menuComponent) {
                 tools.menuComponent.destroy();
             }
+            else {
+                _buttleData.clearCurrentSelectedNodeNames();
+            }
         }
     }
 
@@ -43,7 +46,7 @@ Rectangle {
         onDrop: {
             if( hasUrls )
             {
-                _buttleManager.dropReaderNode(firstUrl, pos.x, pos.y)
+                _buttleManager.nodeManager.dropReaderNode(firstUrl, pos.x, pos.y)
             }
         }
     }

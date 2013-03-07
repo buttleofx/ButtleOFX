@@ -1,16 +1,40 @@
+from PySide import QtCore, QtGui
 # quickmamba
-from quickmamba.patterns import Singleton
+from quickmamba.patterns import Signal
 # data
 from buttleofx.data import ButtleDataSingleton
 # connection
 from buttleofx.core.graph.connection import IdClip
 
 
-class ConnectionManager(Singleton):
+class ConnectionManager(QtCore.QObject):
     """
         This class manages actions about connections.
     """
 
+    def __init__(self):
+        super(ConnectionManager, self).__init__()
+
+        self.undoRedoChanged = Signal()
+
+
+    @QtCore.Slot(QtCore.QObject, int)
+    def connectionDragEvent(self, clip, clipNumber):
+        """
+            Function called when a clip is pressed (but not released yet).
+            The function send mimeData to identify the clip.
+        """
+        mimeData = QtCore.QMimeData()
+        mimeData.setText("clip/" + str(clip.getNodeName()) + "/" + str(clip.getName()) + "/" + str(clipNumber))
+
+        widget = QtGui.QWidget()
+
+        drag = QtGui.QDrag(widget)
+        drag.setMimeData(mimeData)
+
+        drag.exec_(QtCore.Qt.MoveAction)
+
+    @QtCore.Slot(str, QtCore.QObject, int)
     def connectionDropEvent(self, dataTmpClip, clip, clipNumber):
         """
             Create or delete a connection between 2 nodes.
@@ -45,10 +69,11 @@ class ConnectionManager(Singleton):
             else:
                 connection = buttleData.getGraphWrapper().getConnectionByClips(clipOut, clipIn)
                 if connection:
-                    self.disconnect(connection)
+                    self.disconnect(buttleData.getGraphWrapper().getConnectionWrapper(connection.getId()))
                     return
 
-        print "Unable to connect or disconnect the nodes."
+        # update undo/redo display
+        self.undoRedoChanged()
 
     def connect(self, clipOut, clipIn):
         """
@@ -59,9 +84,10 @@ class ConnectionManager(Singleton):
         # link signal changed of the connection to a global signal ViewerChangedSignal
         connection.changed.connect(buttleData.emitViewerChangedSignal)
 
-    def disconnect(self, connection):
+    @QtCore.Slot(QtCore.QObject)
+    def disconnect(self, connectionWrapper):
         """
             Removes a connection between 2 clips.
         """
         buttleData = ButtleDataSingleton().get()
-        buttleData.getGraph().deleteConnection(connection)
+        buttleData.getGraph().deleteConnection(connectionWrapper.getConnection())

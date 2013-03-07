@@ -22,7 +22,12 @@ Rectangle {
                 break;
 
             case "deleteNode":
-                _buttleManager.destructionNode();
+                if(_buttleData.currentConnectionWrapper) {
+                    _buttleManager.connectionManager.disconnect(_buttleData.currentConnectionWrapper);
+                }
+                else {
+                    _buttleManager.nodeManager.destructionNodes();
+                }
                 break;
 
             case "undo":
@@ -34,19 +39,19 @@ Rectangle {
                 break;
 
             case "copy":
-                _buttleManager.copyNode();
+                _buttleManager.nodeManager.copyNode();
                 break;
 
             case "paste":
-                _buttleManager.pasteNode();
+                _buttleManager.nodeManager.pasteNode();
                 break;
 
             case "cut":
-                _buttleManager.cutNode();
+                _buttleManager.nodeManager.cutNode();
                 break;
 
             case "duplicate":
-                _buttleManager.duplicationNode();
+                _buttleManager.nodeManager.duplicationNode();
                 break;
             default:
                 break;
@@ -103,7 +108,7 @@ Rectangle {
                 imageSourceLocked: "img/buttons/copy_locked.png"
                 buttonName: "copy"
                 buttonText: "Copy"
-                locked: _buttleData.currentSelectedNodeWrapper ? false : true
+                locked: _buttleData.currentSelectedNodeWrappers.isEmpty() ? true : false
             }
 
             ToolElement {
@@ -112,7 +117,7 @@ Rectangle {
                 imageSourceLocked: "img/buttons/cut_locked.png"
                 buttonName: "cut"
                 buttonText: "Cut"
-                locked: _buttleData.currentSelectedNodeWrapper ? false : true
+                locked: _buttleData.currentSelectedNodeWrappers.isEmpty() ? true : false
             }
 
             ToolElement {
@@ -130,7 +135,7 @@ Rectangle {
                 imageSourceLocked: "img/buttons/duplicate_locked.png"
                 buttonName: "duplicate"
                 buttonText: "Duplicate"
-                locked: _buttleData.currentSelectedNodeWrapper ? false : true
+                locked: _buttleData.currentSelectedNodeWrappers.isEmpty() ? true : false
             }
 
             ToolElement {
@@ -140,8 +145,8 @@ Rectangle {
                 imageSourceLocked: "img/buttons/delete_locked.png"
                 buttonName: "deleteNode"
                 buttonText: "Delete the node"
-                locked: _buttleData.currentSelectedNodeWrapper ? false : true
-
+                locked: (!_buttleData.currentSelectedNodeWrappers.isEmpty() || _buttleData.currentConnectionWrapper)? false : true
+                //locked: _buttleData.currentSelectedNodeWrappers ? false : true
             }
         }
     }

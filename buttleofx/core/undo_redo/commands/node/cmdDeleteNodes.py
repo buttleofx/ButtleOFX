@@ -4,7 +4,7 @@ from buttleofx.core.undo_redo.manageTools import UndoableCommand
 from buttleofx.core.graph.node import Node
 
 
-class CmdDeleteNode(UndoableCommand):
+class CmdDeleteNodes(UndoableCommand):
     """
         Command that deletes a node.
         Attributes :
@@ -13,17 +13,18 @@ class CmdDeleteNode(UndoableCommand):
         - connections : list of the connections of the node, based on all the connections. We just keep the connections concerning our node.
     """
 
-    def __init__(self, graphTarget, node):
+    def __init__(self, graphTarget, nodes):
         self._graphTarget = graphTarget
-        self._node = node
-        self._connections = [connection for connection in self._graphTarget.getConnections() if (connection.getClipOut().getNodeName() == node.getName() or connection.getClipIn().getNodeName() == node.getName())]
+        self._nodes = nodes
+        self._connections = [connection for connection in self._graphTarget.getConnections() if (self._graphTarget.getNode(connection.getClipOut().getNodeName()) in nodes or self._graphTarget.getNode(connection.getClipIn().getNodeName()) in nodes)]
 
     def undoCmd(self):
         """
             Undo the suppression of the node <=> recreate the node.
         """
-        # we recreate the node
-        self._graphTarget.getNodes().append(self._node)
+        for node in self._nodes:
+            # we recreate the node
+            self._graphTarget.getNodes().append(node)
         # we recreate all the connections
         for connection in self._connections:
             tuttleNodeSource = self._graphTarget.getNode(connection.getClipOut().getNodeName()).getTuttleNode()
@@ -32,8 +33,8 @@ class CmdDeleteNode(UndoableCommand):
             connection.setTuttleConnection(tuttleConnection)
             self._graphTarget.getConnections().append(connection)
 
-        self._graphTarget.nodesChanged()
         self._graphTarget.connectionsChanged()
+        self._graphTarget.nodesChanged()
 
     def redoCmd(self):
         """
@@ -45,14 +46,14 @@ class CmdDeleteNode(UndoableCommand):
         """
             Delete a node.
         """
-        # Delete the tuttle connections
-        self._graphTarget.getGraphTuttle().unconnect(self._node.getTuttleNode())
 
-        # Delete the buttle conenctions
-        self._graphTarget.deleteNodeConnections(self._node.getName())
-
-        # Delete the node
-        self._graphTarget.getNodes().remove(self._node)
+        for node in self._nodes:
+            # Delete the tuttle connections
+            self._graphTarget.getGraphTuttle().unconnect(node.getTuttleNode())
+            # Delete the buttle connections
+            self._graphTarget.deleteNodeConnections(node.getName())
+            # Delete the node
+            self._graphTarget.getNodes().remove(node)
 
         # Emit signals
         self._graphTarget.nodesChanged()

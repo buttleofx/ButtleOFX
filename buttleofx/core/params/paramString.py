@@ -53,6 +53,7 @@ class ParamString(Param):
         # the value with right click (in QML)
         if(self.getDefaultValue() != value):
             self._hasChanged = True
+        
         # push command
         cmdUpdate = CmdSetParamString(self, str(value))
         cmdManager = CommandManager()

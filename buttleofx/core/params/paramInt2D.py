@@ -9,15 +9,13 @@ class ParamInt2D(Param):
     """
         Core class, which represents a int2D parameter.
         Contains :
-            - _tuttleParam : link to the corresponding tuttleParam.
             - _oldValue1, _oldValue2 : the old values of the param.
+            - _value1HasChanged, _value2HasChanged : to know if a value of the param is changed by the user (at least once).
     """
 
     def __init__(self, tuttleParam):
-        Param.__init__(self)
+        Param.__init__(self, tuttleParam)
         
-        self._tuttleParam = tuttleParam
-
         self._oldValue1 = self.getValue1()
         self._oldValue2 = self.getValue2()
 
@@ -27,9 +25,6 @@ class ParamInt2D(Param):
 
     #################### getters ####################
 
-    def getTuttleParam(self):
-        return self._tuttleParam
-
     def getParamType(self):
         return "ParamInt2D"
 
@@ -38,9 +33,6 @@ class ParamInt2D(Param):
 
     def getDefaultValue2(self):
         return self._tuttleParam.getProperties().getIntProperty("OfxParamPropDefault", 1)
-
-    def getValues(self):
-        return (self.getValue1(), self.getValue2())
 
     def getOldValue1(self):
         return self._oldValue1
@@ -66,15 +58,19 @@ class ParamInt2D(Param):
     def getMaximum2(self):
         return self._tuttleParam.getProperties().getIntProperty("OfxParamPropMax", 1)
 
-    def getText(self):
-        return self._tuttleParam.getName()[0].capitalize() + self._tuttleParam.getName()[1:]
-
     def getValue1HasChanged(self):
         return self._value1HasChanged
 
     def getValue2HasChanged(self):
         return self._value2HasChanged
+
     #################### setters ####################
+
+    def setValue1HasChanged(self, changed):
+        self._value1HasChanged = changed
+
+    def setValue2HasChanged(self, changed):
+        self._value2HasChanged = changed
 
     def setOldValues(self, values):
         index = 0
@@ -104,9 +100,3 @@ class ParamInt2D(Param):
             cmdUpdate = CmdSetParamND(self, (self.getValue1(), value))
             cmdManager = CommandManager()
             cmdManager.push(cmdUpdate)
-
-    def setValue1HasChanged(self, changed):
-        self._value1HasChanged = changed
-
-    def setValue2HasChanged(self, changed):
-        self._value2HasChanged = changed

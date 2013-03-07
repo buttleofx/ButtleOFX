@@ -5,20 +5,13 @@ from buttleofx.core.params import Param
 class ParamPushButton(Param):
     """
         Core class, which represents a pushButton parameter.
-        Contains : 
-            - _tuttleParam : link to the corresponding tuttleParam.
     """
 
     def __init__(self, tuttleParam):
-        Param.__init__(self)
+        Param.__init__(self, tuttleParam)
         
-        self._tuttleParam = tuttleParam
-
     #################### getters ####################
-
-    def getTuttleParam(self):
-        return self._tuttleParam
-
+    
     def getParamType(self):
         return "ParamPushButton"
 

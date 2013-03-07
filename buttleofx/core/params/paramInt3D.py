@@ -9,14 +9,12 @@ class ParamInt3D(Param):
     """
         Core class, which represents a int3D parameter.
         Contains :
-            - _tuttleParam : link to the corresponding tuttleParam.
             - _oldValue1, _oldValue2, _oldValue3 : the old values of the param.
+            - _value1HasChanged, _value2HasChanged, _value3HasChanged : to know if a value of the param is changed by the user (at least once).
     """
 
     def __init__(self, tuttleParam):
-        Param.__init__(self)
-
-        self._tuttleParam = tuttleParam
+        Param.__init__(self, tuttleParam)
 
         self._oldValue1 = self.getValue1()
         self._oldValue2 = self.getValue2()
@@ -29,9 +27,6 @@ class ParamInt3D(Param):
 
     #################### getters ####################
 
-    def getTuttleParam(self):
-        return self._tuttleParam
-
     def getParamType(self):
         return "ParamInt3D"
 
@@ -43,9 +38,6 @@ class ParamInt3D(Param):
 
     def getDefaultValue3(self):
         return self._tuttleParam.getProperties().getIntProperty("OfxParamPropDefault", 2)
-
-    def getValues(self):
-        return (self.getValue1(), self.getValue2(), self.getValue3())
 
     def getOldValue1(self):
         return self._oldValue1
@@ -82,9 +74,6 @@ class ParamInt3D(Param):
 
     def getMaximum3(self):
         return self._tuttleParam.getProperties().getIntProperty("OfxParamPropMax", 2)
-
-    def getText(self):
-        return self._tuttleParam.getName()[0].capitalize() + self._tuttleParam.getName()[1:]
 
     def getValue1HasChanged(self):
         return self._value1HasChanged

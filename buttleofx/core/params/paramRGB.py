@@ -5,19 +5,12 @@ from buttleofx.core.params import Param
 class ParamRGB(Param):
     """
         Core class, which represents a RGB parameter.
-        Contains :
-            - _tuttleParam : link to the corresponding tuttleParam.
     """
 
     def __init__(self, tuttleParam):
-        Param.__init__(self)
+        Param.__init__(self, tuttleParam)
         
-        self._tuttleParam = tuttleParam
-
     #################### getters ####################
-
-    def getTuttleParam(self):
-        return self._tuttleParam
 
     def getParamType(self):
         return "ParamRGBA"
@@ -31,7 +24,7 @@ class ParamRGB(Param):
     def getDefaultB(self):
         return self._tuttleParam.getDoubleValueAtIndex(2)
 
-    def getValue(self):
+    def getRGB(self):
         return (self.getValueR(), self.getValueG(), self.getValueB())
 
     def getValueR(self):

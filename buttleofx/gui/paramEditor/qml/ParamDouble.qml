@@ -107,7 +107,7 @@ Item {
                 }
             }
 
-            // bar slider : one grey, one white
+            // bar slider : one green, one white
             Rectangle {
                 id: barSlider
                 width: 100

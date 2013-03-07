@@ -1,20 +1,17 @@
 from PySide import QtCore
+# common
+from paramWrapper import ParamWrapper
 
 
-class RGBAWrapper(QtCore.QObject):
+class RGBAWrapper(ParamWrapper):
     """
         Gui class, which maps a ParamRGBA.
     """
 
     def __init__(self, param):
-        QtCore.QObject.__init__(self)
-        self._param = param
-        self._param.paramChanged.connect(self.emitChanged)
+        ParamWrapper.__init__(self, param)
 
     #################### getters ####################
-
-    def getParamType(self):
-        return self._param.getParamType()
 
     def getDefaultR(self):
         return self._param.getDefaultR()
@@ -28,9 +25,6 @@ class RGBAWrapper(QtCore.QObject):
     def getDefaultA(self):
         return self._param.getDefaultA()
 
-    def getValue(self):
-        return self._param.getValue()
-
     def getValueR(self):
         return self._param.getValueR()
 
@@ -43,9 +37,6 @@ class RGBAWrapper(QtCore.QObject):
     def getValueA(self):
         return self._param.getValueA()
 
-    def getText(self):
-        return self._param.getText()
-
     def getPositionColorSlider(self):
         return self._param.getPositionColorSlider()
 
@@ -57,14 +48,8 @@ class RGBAWrapper(QtCore.QObject):
 
     def getPositionYcolorSelector(self):
         return self._param.getPositionYcolorSelector()
-    
-    def isSecret(self):
-        return self._param.isSecret()
 
     #################### setters ####################
-
-    def setValue(self, values):
-        self._param.setValue(values)
 
     def setValueR(self, value):
         self._param.setValueR(value)
@@ -77,9 +62,6 @@ class RGBAWrapper(QtCore.QObject):
 
     def setValueA(self, value):
         self._param.setValueA(value)
-
-    def setText(self, text):
-        self._param.setText(text)
 
     def setPositionColorSlider(self, position):
         print "setcolorSlider: ", position
@@ -101,17 +83,13 @@ class RGBAWrapper(QtCore.QObject):
     def changed(self):
         pass
 
-    def emitChanged(self):
-        self.changed.emit()
-
     ################################################## DATA EXPOSED TO QML ##################################################
 
-    paramType = QtCore.Property(unicode, getParamType, notify=changed)
-    text = QtCore.Property(unicode, getText, setText, notify=changed)
     r = QtCore.Property(float, getValueR, setValueR, notify=changed)
     g = QtCore.Property(float, getValueG, setValueG, notify=changed)
     b = QtCore.Property(float, getValueB, setValueB, notify=changed)
     a = QtCore.Property(float, getValueA, setValueA, notify=changed)
+
     colorSlider = QtCore.Property(float, getPositionColorSlider, setPositionColorSlider, notify=changed)
     alphaSlider = QtCore.Property(float, getPositionAlphaSlider, setPositionAlphaSlider, notify=changed)
     colorSelectorX = QtCore.Property(float, getPositionXcolorSelector, setPositionXcolorSelector, notify=changed)

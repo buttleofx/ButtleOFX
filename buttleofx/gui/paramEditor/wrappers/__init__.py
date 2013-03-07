@@ -1,3 +1,5 @@
+from paramWrapper import ParamWrapper
+
 from intWrapper import IntWrapper
 from int2DWrapper import Int2DWrapper
 from int3DWrapper import Int3DWrapper
@@ -14,5 +16,3 @@ from groupWrapper import GroupWrapper
 from pageWrapper import PageWrapper
 
 from paramEditorWrapper import ParamEditorWrapper
-
-from paramWrapper import ParamWrapper

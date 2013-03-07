@@ -113,15 +113,18 @@ Rectangle {
         acceptedButtons: Qt.RightButton
         onClicked: {
             if (!tools.menuComponent) {
-                if(rightMouseArea.mouseX + 5*160 < graph.width) {
+                if(rightMouseArea.mouseX + 500 < graph.width) {
                     var newComponent = Qt.createQmlObject('MenuList { parentName: "buttle/"; x: rightMouseArea.mouseX; y:  rightMouseArea.mouseY; clickFrom: graph;}', parent);
                     tools.menuComponent = newComponent;
                     
                 }
                 else {
-                    var newComponent = Qt.createQmlObject('MenuList { parentName: "buttle/"; x: graph.width - 5*160; y:  rightMouseArea.mouseY; clickFrom: graph;}', parent);
+                    //var newComponent = Qt.createQmlObject('MenuList { parentName: "buttle/"; x: graph.width - 500; y:  rightMouseArea.mouseY; clickFrom: graph;}', parent);
+                    var newComponent = Qt.createQmlObject('MenuList { parentName: "buttle/"; x: rightMouseArea.mouseX; y:  rightMouseArea.mouseY; clickFrom: graph;}', parent);                    
                     tools.menuComponent = newComponent;
+                    newComponent.side = "left"
                 }
+
              /*if (mouse.button == Qt.RightButton)
              listmodel.x = mouseX
              listmodel.y = mouseY - 30

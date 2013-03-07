@@ -1,10 +1,11 @@
 class IdClip:
     """
         Class usefull to identify a clip with :
-        - the graph
+        - the clipId
         - the node name
         - the clipName
         - the clip number
+        - the clip's coords
     """
 
     def __init__(self, nodeName, clipName, clipNumber, coord):

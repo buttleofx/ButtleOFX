@@ -17,7 +17,7 @@ Item {
     Keys.onPressed: {
         if (event.key == Qt.Key_Delete) {
             if(_buttleData.currentConnectionWrapper) {
-                _buttleManager.connnectionManager.disconnect(_buttleData.currentConnectionWrapper);
+                _buttleManager.connectionManager.disconnect(_buttleData.currentConnectionWrapper);
             }
             else {
                 _buttleManager.nodeManager.destructionNodes();

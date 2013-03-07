@@ -69,7 +69,7 @@ class ConnectionManager(QtCore.QObject):
             else:
                 connection = buttleData.getGraphWrapper().getConnectionByClips(clipOut, clipIn)
                 if connection:
-                    self.disconnect(connection)
+                    self.disconnect(buttleData.getGraphWrapper().getConnectionWrapper(connection.getId()))
                     return
 
         # update undo/redo display
@@ -84,9 +84,10 @@ class ConnectionManager(QtCore.QObject):
         # link signal changed of the connection to a global signal ViewerChangedSignal
         connection.changed.connect(buttleData.emitViewerChangedSignal)
 
-    def disconnect(self, connection):
+    @QtCore.Slot(QtCore.QObject)
+    def disconnect(self, connectionWrapper):
         """
             Removes a connection between 2 clips.
         """
         buttleData = ButtleDataSingleton().get()
-        buttleData.getGraph().deleteConnection(connection)
+        buttleData.getGraph().deleteConnection(connectionWrapper.getConnection())

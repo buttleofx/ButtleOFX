@@ -42,14 +42,6 @@ class ButtleManager(QtCore.QObject):
     def getViewerManager(self):
         return self._viewerManager
 
-    @QtCore.Slot(QtCore.QObject)
-    def disconnect(self, connectionWrapper):
-        """
-            Function called when the user presses de Delete key and a connection is selected.
-        """
-        self._connectionManager.disconnect(connectionWrapper.getConnection())
-        self.undoRedoChanged.emit()
-
     ############### UNDO & REDO ###############
 
     @QtCore.Slot()
@@ -59,7 +51,7 @@ class ButtleManager(QtCore.QObject):
         """
         cmdManager = CommandManager()
         cmdManager.undo()
-        
+
         # emit undo/redo display
         self.emitUndoRedoChanged()
 

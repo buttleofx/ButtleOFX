@@ -67,9 +67,9 @@ class ConnectionManager(QtCore.QObject):
                     return
 
             else:
-                connection = buttleData.getGraphWrapper().getConnectionByClips(clipOut, clipIn)
-                if connection:
-                    self.disconnect(connection)
+                connectionWrapper = buttleData.getGraphWrapper().getConnectionWrapper(buttleData.getGraphWrapper().getConnectionByClips(clipOut, clipIn).getId())
+                if connectionWrapper:
+                    self.disconnect(connectionWrapper)
                     return
 
         # update undo/redo display

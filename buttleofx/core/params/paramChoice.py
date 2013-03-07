@@ -9,26 +9,23 @@ class ParamChoice(Param):
     """
         Core class, which represents a choice parameter.
         Contains :
-            - _tuttleParam : link to the corresponding tuttleParam.
             - _oldValue : the old value of the param.
             - _listValue : the list of possible choices.
+            - _hasChanged : to know if the value of the param is changed by the user (at least once).
     """
 
     def __init__(self, tuttleParam):
-        Param.__init__(self)
+        Param.__init__(self, tuttleParam)
         
-        self._tuttleParam = tuttleParam
-
         self._oldValue = self.getValue()
         
         self._listValue = []
         for choice in range(tuttleParam.getProperties().fetchProperty("OfxParamPropChoiceOption").getDimension()):
             self._listValue.append(tuttleParam.getProperties().fetchProperty("OfxParamPropChoiceOption").getStringValue(choice))
 
-    #################### getters ####################
+        self._hasChanged = False
 
-    def getTuttleParam(self):
-        return self._tuttleParam
+    #################### getters ####################
 
     def getParamType(self):
         return "ParamChoice"
@@ -45,13 +42,16 @@ class ParamChoice(Param):
     def getListValue(self):
         return self._listValue
 
-    def getText(self):
-        return self._tuttleParam.getName()[0].capitalize() + self._tuttleParam.getName()[1:]
+    def getHasChanged(self):
+        return self._hasChanged
 
     #################### setters ####################
 
     def setOldValue(self, value):
         self._oldValue = value
+
+    def setHasChanged(self, changed):
+        self._hasChanged = changed
 
     def setValue(self, value):
         # if the value of the param changed, we put the boolean to True but the only way to put in to false is when the user reinitialises

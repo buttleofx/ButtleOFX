@@ -1,20 +1,17 @@
 from PySide import QtCore
+# common
+from paramWrapper import ParamWrapper
 
 
-class DoubleWrapper(QtCore.QObject):
+class DoubleWrapper(ParamWrapper):
     """
         Gui class, which maps a ParamDouble.
     """
 
     def __init__(self, param):
-        QtCore.QObject.__init__(self)
-        self._param = param
-        self._param.paramChanged.connect(self.emitChanged)
+        ParamWrapper.__init__(self, param)
 
     #################### getters ####################
-
-    def getParamType(self):
-        return self._param.getParamType()
 
     @QtCore.Slot(result=float)
     def getDefaultValue(self):
@@ -32,12 +29,6 @@ class DoubleWrapper(QtCore.QObject):
 
     def getMinimum(self):
         return self._param.getMinimum()
-
-    def getText(self):
-        return self._param.getText()
-
-    def isSecret(self):
-        return self._param.isSecret()
 
     def getHasChanged(self):
         return self._param.getHasChanged()
@@ -58,14 +49,11 @@ class DoubleWrapper(QtCore.QObject):
     def changed(self):
         pass
 
-    def emitChanged(self):
-        self.changed.emit()
-
     ################################################## DATA EXPOSED TO QML ##################################################
 
-    paramType = QtCore.Property(unicode, getParamType, constant=True)
-    text = QtCore.Property(unicode, getText, constant=True)
     value = QtCore.Property(float, getValue, setValue, notify=changed)
+
     maximum = QtCore.Property(float, getMaximum, constant=True)
     minimum = QtCore.Property(float, getMinimum, constant=True)
+
     hasChanged = QtCore.Property(bool, getHasChanged, setHasChanged, notify=changed)

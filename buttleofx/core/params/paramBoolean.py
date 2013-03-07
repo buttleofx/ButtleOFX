@@ -9,17 +9,15 @@ class ParamBoolean(Param):
     """
         Core class, which represents a boolean parameter.
         Contains :
-            - _tuttleParam : link to the corresponding tuttleParam.
+            - _hasChanged : to know if the value of the param is changed by the user (at least once).
     """
 
     def __init__(self, tuttleParam):
-        Param.__init__(self)
+        Param.__init__(self, tuttleParam)
 
-        self._tuttleParam = tuttleParam
+        self._hasChanged = False
 
     #################### getters ####################
-    def getTuttleParam(self):
-        return self._tuttleParam
 
     def getParamType(self):
         return "ParamBoolean"
@@ -30,10 +28,13 @@ class ParamBoolean(Param):
     def getValue(self):
         return self._tuttleParam.getBoolValue()
 
-    def getText(self):
-        return self._tuttleParam.getName()[0].capitalize() + self._tuttleParam.getName()[1:]
+    def getHasChanged(self):
+        return self._hasChanged
 
     #################### setters ####################
+
+    def setHasChanged(self, changed):
+        self._hasChanged = changed
 
     def setValue(self, value):
         # if the value of the param changed, we put the boolean to True but the only way to put in to false is when the user reinitialises

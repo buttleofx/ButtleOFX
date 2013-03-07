@@ -1,20 +1,17 @@
 from PySide import QtCore
+# common
+from paramWrapper import ParamWrapper
 
 
-class IntWrapper(QtCore.QObject):
+class IntWrapper(ParamWrapper):
     """
         Gui class, which maps a ParamInt.
     """
 
     def __init__(self, param):
-        QtCore.QObject.__init__(self)
-        self._param = param
-        self._param.paramChanged.connect(self.emitChanged)
+        ParamWrapper.__init__(self, param)
 
     #################### getters ####################
-
-    def getParamType(self):
-        return self._param.getParamType()
 
     @QtCore.Slot(result=int)
     def getDefaultValue(self):
@@ -28,12 +25,6 @@ class IntWrapper(QtCore.QObject):
 
     def getMinimum(self):
         return self._param.getMinimum()
-
-    def getText(self):
-        return self._param.getText()
-
-    def isSecret(self):
-        return self._param.isSecret()
 
     def getHasChanged(self):
         return self._param.getHasChanged()
@@ -54,14 +45,11 @@ class IntWrapper(QtCore.QObject):
     def changed(self):
         pass
 
-    def emitChanged(self):
-        self.changed.emit()
-
     ################################################## DATA EXPOSED TO QML ##################################################
 
-    paramType = QtCore.Property(unicode, getParamType, notify=changed)
-    text = QtCore.Property(unicode, getText, notify=changed)
     value = QtCore.Property(int, getValue, setValue, notify=changed)
-    maximum = QtCore.Property(int, getMaximum, notify=changed)
-    minimum = QtCore.Property(int, getMinimum, notify=changed)
+
+    maximum = QtCore.Property(int, getMaximum, constant=True)
+    minimum = QtCore.Property(int, getMinimum, constant=True)
+
     hasChanged = QtCore.Property(bool, getHasChanged, setHasChanged, notify=changed)

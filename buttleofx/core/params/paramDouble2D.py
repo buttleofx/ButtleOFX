@@ -9,15 +9,13 @@ class ParamDouble2D(Param):
     """
         Core class, which represents a double2D parameter.
         Contains :
-            - _tuttleParam : link to the corresponding tuttleParam.
             - _oldValue1, _oldValue2 : the old values of the param.
+            - _value1HasChanged, _value2HasChanged : to know if a value of the param is changed by the user (at least once).
     """
 
     def __init__(self, tuttleParam):
-        Param.__init__(self)
+        Param.__init__(self, tuttleParam)
         
-        self._tuttleParam = tuttleParam
-
         self._oldValue1 = self.getValue1()
         self._oldValue2 = self.getValue2()
 
@@ -27,9 +25,6 @@ class ParamDouble2D(Param):
 
     #################### getters ####################
 
-    def getTuttleParam(self):
-        return self._tuttleParam
-
     def getParamType(self):
         return "ParamDouble2D"
 
@@ -38,9 +33,6 @@ class ParamDouble2D(Param):
 
     def getDefaultValue2(self):
         return self._tuttleParam.getProperties().getDoubleProperty("OfxParamPropDefault", 1)
-
-    def getValues(self):
-        return (self.getValue1(), self.getValue2())
 
     def getOldValue1(self):
         return self._oldValue1
@@ -65,9 +57,6 @@ class ParamDouble2D(Param):
 
     def getMaximum2(self):
         return self._tuttleParam.getProperties().getDoubleProperty("OfxParamPropDisplayMax", 1)
-
-    def getText(self):
-        return self._tuttleParam.getName()[0].capitalize() + self._tuttleParam.getName()[1:]
 
     def getParent(self):
         return self._tuttleParam.getProperties().fetchProperty("OfxParamPropParent").getStringValue(0)

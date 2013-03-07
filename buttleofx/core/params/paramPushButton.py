@@ -41,4 +41,3 @@ class ParamPushButton(Param):
 
     def setEnabled(self, enabled):
         self._tuttleParam.setValue(enabled)
-        self.changed()

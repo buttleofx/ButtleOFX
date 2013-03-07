@@ -47,9 +47,15 @@ class Int2DWrapper(QtCore.QObject):
 
     def getText(self):
         return self._param.getText()
-        
+
     def isSecret(self):
         return self._param.isSecret()
+
+    def getValue1HasChanged(self):
+        return self._param.getValue1HasChanged()
+
+    def getValue2HasChanged(self):
+        return self._param.getValue2HasChanged()
 
     #################### setters ####################
 
@@ -61,6 +67,12 @@ class Int2DWrapper(QtCore.QObject):
 
     def setValue2(self, value):
         self._param.setValue2(value)
+
+    def setValue1HasChanged(self, changed):
+        self._param.setValue1HasChanged(changed)
+
+    def setValue2HasChanged(self, changed):
+        self._param.setValue2HasChanged(changed)
 
     @QtCore.Signal
     def changed(self):
@@ -79,3 +91,5 @@ class Int2DWrapper(QtCore.QObject):
     minimum1 = QtCore.Property(int, getMinimum1, notify=changed)
     maximum2 = QtCore.Property(int, getMaximum2, notify=changed)
     minimum2 = QtCore.Property(int, getMinimum2, notify=changed)
+    value1HasChanged = QtCore.Property(bool, getValue1HasChanged, setValue1HasChanged, notify=changed)
+    value2HasChanged = QtCore.Property(bool, getValue2HasChanged, setValue2HasChanged, notify=changed)

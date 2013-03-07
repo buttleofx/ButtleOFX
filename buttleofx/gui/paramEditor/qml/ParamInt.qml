@@ -25,6 +25,16 @@ Item {
             id: paramIntTitle
             text: paramObject.text + " : "
             color: "white"
+            font.bold: paramObject.hasChanged ? true : false
+            MouseArea {
+                anchors.fill: parent
+                acceptedButtons: Qt.RightButton
+                onClicked: {
+                    // reinitialise the param to its default value
+                    paramObject.hasChanged = false
+                    paramObject.value = paramObject.getDefaultValue()
+                }
+            }
         }
 
         // The min value (at the beginning of the bar slider)
@@ -50,6 +60,7 @@ Item {
                 text: paramObject.value
                 font.family: "Helvetica"
                 font.pointSize: 8
+                font.bold: paramObject.hasChanged ? true : false
                 maximumLength: 8
                 color: activeFocus ? "white" : "grey"
                 //activeFocusOnPress : true
@@ -78,7 +89,11 @@ Item {
                 MouseArea {
                     anchors.fill: parent
                     acceptedButtons: Qt.RightButton
-                    onClicked: paramObject.value = paramObject.getDefaultValue()
+                    onClicked: {
+                        // reinitialise the param to its default value
+                        paramObject.hasChanged = false
+                        paramObject.value = paramObject.getDefaultValue()
+                    }
                 }
             }
 

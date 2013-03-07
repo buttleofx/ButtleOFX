@@ -82,7 +82,7 @@ class GraphWrapper(QtCore.QObject):
         for nodeWrapper in self._nodeWrappers:
             if nodeWrapper.getName() == nodeName:
                 return nodeWrapper
-        return None
+        return None  # QtCore.QObject(self)
 
     def getConnectionWrappers(self):
         """
@@ -99,7 +99,7 @@ class GraphWrapper(QtCore.QObject):
                 return connection
         return None
 
-    @QtCore.Slot(result="QVariant")
+    @QtCore.Slot(result=QtCore.QObject)
     def getLastCreatedNodeWrapper(self):
         return self._nodeWrappers[-1]
 
@@ -117,7 +117,7 @@ class GraphWrapper(QtCore.QObject):
         """
         # search the right node in the node list
         node = self._graph.getNode(nodeName)
-        if (node != None):
+        if node:
             nodeWrapper = NodeWrapper(node, self._view)
             self._nodeWrappers.append(nodeWrapper)
 

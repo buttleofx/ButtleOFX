@@ -42,5 +42,10 @@ class ParamEditorWrapper(QtCore.QObject):
     #     self._paramElmts = node._params
     #     self.paramsChanged.emit()
 
-    # paramsChanged = QtCore.Signal()
-    # #paramElmts = QtCore.Property("QVariant", getParamElts, notify=paramsChanged)
+# <<<<<<< HEAD
+#     # paramsChanged = QtCore.Signal()
+#     # #paramElmts = QtCore.Property("QVariant", getParamElts, notify=paramsChanged)
+# =======
+#     modelChanged = QtCore.Signal()
+#     paramElmts = QtCore.Property(QtCore.QObject, getParamElts, notify=modelChanged)
+# >>>>>>> d269b00801b0c48719e442efab11bb474d194cc3

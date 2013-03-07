@@ -75,6 +75,16 @@ Item {
             id: paramStringTitle
             text: paramObject.text + " : "
             color: "white"
+            // if param has been modified, title in bold font
+            font.bold: paramObject.hasChanged ? true : false
+            MouseArea {
+                anchors.fill: parent
+                acceptedButtons: Qt.RightButton
+                onClicked: {
+                    paramObject.hasChanged = false
+                    paramObject.value = paramObject.getDefaultValue()
+                }
+            }
         }
 
         /*Input field limited to 50 characters*/
@@ -94,7 +104,10 @@ Item {
             MouseArea {
                 anchors.fill: parent
                 acceptedButtons: Qt.RightButton
-                onClicked: paramObject.value = paramObject.getDefaultValue()
+                onClicked: {
+                    paramObject.hasChanged = false
+                    paramObject.value = paramObject.getDefaultValue()
+                }
             }
 
             // state which enable us to update display, depend on what type of String we have on TuttleOFX

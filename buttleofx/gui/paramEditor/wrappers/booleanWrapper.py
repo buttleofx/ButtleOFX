@@ -1,15 +1,17 @@
 from PySide import QtCore
 
+# common
+from buttleofx.gui.paramEditor.wrappers.paramWrapper import ParamWrapper
 
-class BooleanWrapper(QtCore.QObject):
+
+class BooleanWrapper(ParamWrapper, QtCore.QObject):
     """
         Gui class, which maps a ParamBoolean.
     """
 
     def __init__(self, param):
         QtCore.QObject.__init__(self)
-        self._param = param
-        self._param.paramChanged.connect(self.emitChanged)
+        ParamWrapper.__init__(self, param)
 
     #################### getters ####################
 
@@ -25,14 +27,17 @@ class BooleanWrapper(QtCore.QObject):
 
     def getText(self):
         return self._param.getText()
-        
-    def isSecret(self):
-        return self._param.isSecret()
+
+    def getHasChanged(self):
+        return self._param.getHasChanged()
 
     #################### setters ####################
 
     def setValue(self, value):
         self._param.setValue(value)
+
+    def setHasChanged(self, changed):
+        self._param.setHasChanged(changed)
 
     @QtCore.Slot(bool)
     def pushValue(self, value):
@@ -47,6 +52,7 @@ class BooleanWrapper(QtCore.QObject):
 
     ################################################## DATA EXPOSED TO QML ##################################################
 
-    paramType = QtCore.Property(unicode, getParamType, notify=changed)
+    paramType = QtCore.Property(unicode, getParamType, constant=True)
     value = QtCore.Property(bool, getValue, setValue, notify=changed)
-    text = QtCore.Property(unicode, getText, notify=changed)
+    text = QtCore.Property(unicode, getText, constant=True)
+    hasChanged = QtCore.Property(bool, getHasChanged, setHasChanged, notify=changed)

@@ -38,7 +38,6 @@ class ParamRGBA(Param):
         return self._tuttleParam.getDoubleValueAtIndex(2)
 
     def getDefaultA(self):
-        print "fguhdgvgjhc", self._tuttleParam.getDoubleValueAtIndex(3)
         return self._tuttleParam.getDoubleValueAtIndex(3)
 
     def getValue(self):
@@ -83,25 +82,25 @@ class ParamRGBA(Param):
 
     def setValueR(self, value1):
         self._tuttleParam.setValueAtIndex(0, float(value1 / 255))
-        self.changed()
+        self.paramChanged()
 
         print "Red : ", self.getValueR()
 
     def setValueG(self, value2):
         self._tuttleParam.setValueAtIndex(1, float(value2 / 255))
-        self.changed()
+        self.paramChanged()
 
         print "Green : ", self.getValueG()
 
     def setValueB(self, value3):
         self._tuttleParam.setValueAtIndex(2, float(value3 / 255))
-        self.changed()
+        self.paramChanged()
 
         print "Blue : ", self.getValueB()
 
     def setValueA(self, value4):
         self._tuttleParam.setValueAtIndex(3, float(value4 / 255))
-        self.changed()
+        self.paramChanged()
 
         print "Alpha : ", self.getValueA()
 

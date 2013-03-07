@@ -16,13 +16,13 @@ Rectangle {
         switch (buttonName) {
             case "createNode":
                 if (!tools.menuComponent) {
-                    var newComponent = Qt.createQmlObject('MenuList { parentName: "buttle/"; y: tools.height;}', parent);
+                    var newComponent = Qt.createQmlObject('MenuList { parentName: "buttle/"; y: tools.height; clickFrom: tools}', parent);
                     tools.menuComponent = newComponent;
                 }
                 break;
 
             case "deleteNode":
-                _buttleManager.nodeManager.destructionNode();
+                _buttleManager.nodeManager.destructionNodes();
                 break;
 
             case "undo":
@@ -103,7 +103,7 @@ Rectangle {
                 imageSourceLocked: "img/buttons/copy_locked.png"
                 buttonName: "copy"
                 buttonText: "Copy"
-                locked: _buttleData.currentSelectedNodeWrapper ? false : true
+                locked: _buttleData.currentSelectedNodeWrappers ? false : true
             }
 
             ToolElement {
@@ -112,7 +112,7 @@ Rectangle {
                 imageSourceLocked: "img/buttons/cut_locked.png"
                 buttonName: "cut"
                 buttonText: "Cut"
-                locked: _buttleData.currentSelectedNodeWrapper ? false : true
+                locked: _buttleData.currentSelectedNodeWrappers ? false : true
             }
 
             ToolElement {
@@ -130,7 +130,7 @@ Rectangle {
                 imageSourceLocked: "img/buttons/duplicate_locked.png"
                 buttonName: "duplicate"
                 buttonText: "Duplicate"
-                locked: _buttleData.currentSelectedNodeWrapper ? false : true
+                locked: _buttleData.currentSelectedNodeWrappers ? false : true
             }
 
             ToolElement {
@@ -140,7 +140,7 @@ Rectangle {
                 imageSourceLocked: "img/buttons/delete_locked.png"
                 buttonName: "deleteNode"
                 buttonText: "Delete the node"
-                locked: _buttleData.currentSelectedNodeWrapper ? false : true
+                locked: _buttleData.currentSelectedNodeWrappers ? false : true
 
             }
         }

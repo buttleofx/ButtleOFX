@@ -21,6 +21,10 @@ class ParamDouble2D(Param):
         self._oldValue1 = self.getValue1()
         self._oldValue2 = self.getValue2()
 
+        # used to know if we display the param in font bold or not
+        self._value1HasChanged = False
+        self._value2HasChanged = False
+
     #################### getters ####################
 
     def getTuttleParam(self):
@@ -68,6 +72,12 @@ class ParamDouble2D(Param):
     def getParent(self):
         return self._tuttleParam.getProperties().fetchProperty("OfxParamPropParent").getStringValue(0)
 
+    def getValue1HasChanged(self):
+        return self._value1HasChanged
+
+    def getValue2HasChanged(self):
+        return self._value2HasChanged
+
     #################### setters ####################
 
     def setOldValues(self, values):
@@ -80,6 +90,9 @@ class ParamDouble2D(Param):
             index += 1
 
     def setValue1(self, value):
+        if(self.getDefaultValue1() != value):
+            self._value1HasChanged = True
+
         if value != self.getValue1():
             # Push the command
             cmdUpdate = CmdSetParamND(self, (value, self.getValue2()))
@@ -87,8 +100,17 @@ class ParamDouble2D(Param):
             cmdManager.push(cmdUpdate)
 
     def setValue2(self, value):
+        if(self.getDefaultValue2() != value):
+            self._value2HasChanged = True
+        
         if value != self.getValue2():
             # Set the command
             cmdUpdate = CmdSetParamND(self, (self.getValue1(), value))
             cmdManager = CommandManager()
             cmdManager.push(cmdUpdate)
+
+    def setValue1HasChanged(self, changed):
+        self._value1HasChanged = changed
+
+    def setValue2HasChanged(self, changed):
+        self._value2HasChanged = changed

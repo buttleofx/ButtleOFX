@@ -23,10 +23,11 @@ Item {
                 nodeMenuView.nextMenu.destroy()
         }
 
-        function createNextMenu(parentName, labelElement, x, y)
+        function createNextMenu(parentName, labelElement, x, y, clickFrom)
         {
             destroyNextMenu()
-            var newComponent = Qt.createQmlObject('MenuList { parentName: "' + parentName + labelElement + '/"; x: ' + x + '; y: ' + y + '; }', nodeMenuView);
+            var newComponent = Qt.createQmlObject('MenuList { parentName: "' + parentName + labelElement + '/"; x: ' + x + '; y: ' + y +  ';}', nodeMenuView);
+            newComponent.clickFrom = clickFrom;
             nodeMenuView.nextMenu = newComponent
         }
 
@@ -40,6 +41,7 @@ Item {
                     menuListItem: nodeMenuView
                     height: heightElement
                     width: widthElement
+                    property variant clickFrom: menulist.clickFrom
                 }
             }
         }

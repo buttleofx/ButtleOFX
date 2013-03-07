@@ -7,7 +7,6 @@ Item {
     implicitHeight: 30
     property variant paramObject: model.object
 
-
     // convert the qobjectlistmodel into a qml ListModel
     ListModel {
         id: menuItems
@@ -28,10 +27,15 @@ Item {
             id: paramChoiceTitle
             text: paramObject.text + " : "
             color: "white"
+            // if param has been modified, title in bold font
+            font.bold: paramObject.hasChanged ? true : false
             MouseArea {
                 anchors.fill: parent
                 acceptedButtons: Qt.RightButton
-                onClicked: paramObject.value = paramObject.getDefaultValue()
+                onClicked: {
+                    paramObject.hasChanged = false
+                    paramObject.value = paramObject.getDefaultValue()
+                }
             }
         }
 
@@ -51,6 +55,8 @@ Item {
                 if (!charged) {
                     //console.debug("-> " + menuItems.get(selectedIndex).text + ", " + paramObject.listValue.get(selectedIndex))
                     charged = 1
+                    //first value displayed is the default value
+                    paramObject.value = paramObject.getDefaultValue()
                 }
                 else {
                     paramObject.value = menuItems.get(selectedIndex).text

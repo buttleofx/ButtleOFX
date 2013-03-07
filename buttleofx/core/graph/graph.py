@@ -5,7 +5,7 @@ from pyTuttle import tuttle
 from quickmamba.patterns import Signal
 #undo_redo
 from buttleofx.core.undo_redo.manageTools import CommandManager
-from buttleofx.core.undo_redo.commands.node import CmdCreateNode, CmdDeleteNode, CmdCreateReaderNode, CmdSetCoord
+from buttleofx.core.undo_redo.commands.node import CmdCreateNode, CmdDeleteNodes, CmdCreateReaderNode, CmdSetCoord
 from buttleofx.core.undo_redo.commands.connection import CmdCreateConnection, CmdDeleteConnection
 
 
@@ -132,13 +132,13 @@ class Graph(object):
         cmdManager = CommandManager()
         cmdManager.push(cmdCreateReaderNode)
 
-    def deleteNode(self, node):
+    def deleteNodes(self, nodes):
         """
             Removes a node in the node list when a node is deleted.
         """
-        cmdDeleteNode = CmdDeleteNode(self, node)
+        cmdDeleteNodes = CmdDeleteNodes(self, nodes)
         cmdManager = CommandManager()
-        cmdManager.push(cmdDeleteNode)
+        cmdManager.push(cmdDeleteNodes)
 
     def createConnection(self, clipOut, clipIn):
         """

@@ -59,6 +59,8 @@ class ParamDouble(Param):
             self._hasChanged = True
 
         self._tuttleParam.setValue(float(value))
+        # emit signal to update the display of the slider
+        self.paramChanged()
 
     def pushValue(self, newValue):
         if newValue != self.getOldValue():

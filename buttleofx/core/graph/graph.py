@@ -42,18 +42,22 @@ class Graph(object):
             Displays on terminal some data.
             Usefull to debug the class.
         """
-        logging.info("=== Graph Buttle ===")
 
-        logging.info("---- all nodes ----")
+        str_list = []
+
+        str_list.append("=== Graph Buttle === \n")
+        str_list.append("---- all nodes ---- \n")
+
         for node in self._nodes:
-            node.__str__()
+            str_list.append(node.__str__())
+            str_list.append("\n")
 
-        logging.info("---- all connections ----")
+        str_list.append("---- all connections ----")
         for con in self._connections:
-            con.__str__()
+            str_list.append(con.__str__())
+            str_list.append("\n")
 
-        #logging.info("=== Graph Tuttle ===")
-        #print self._graphTuttle
+        return "".join(str_list)
 
     ################################################## ACCESSORS ##################################################
 

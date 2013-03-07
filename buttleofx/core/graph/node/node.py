@@ -76,7 +76,7 @@ class Node(object):
         logging.info("Core : Node created")
 
     def __str__(self):
-        logging.info('Node ' + self.getName())
+        return 'Node ' + self.getName()
 
     def __del__(self):
         logging.info("Core : Node deleted")

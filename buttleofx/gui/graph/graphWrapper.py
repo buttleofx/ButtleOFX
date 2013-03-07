@@ -48,16 +48,23 @@ class GraphWrapper(QtCore.QObject):
             Displays on terminal some data.
             Usefull to debug the class.
         """
-        logging.info("=== Graph Buttle Wrapper ===")
-        logging.info("---- all nodeWrappers ----")
+        str_list = []
+
+        str_list.append("=== Graph Buttle Wrapper === \n")
+        str_list.append("---- all nodeWrappers ---- \n")
+
         for nodeWrapper in self._nodeWrappers:
-            nodeWrapper.__str__()
+            str_list.append(nodeWrapper.__str__())
+            str_list.append("\n")
 
-        logging.info("---- all connectionWrappers ----")
+        str_list.append("---- all connectionWrappers ---- \n")
         for con in self._connectionWrappers:
-            con.__str__()
+            str_list.append(con.__str__())
+            str_list.append("\n")
 
-        self.getGraphMapped().__str__()
+        str_list.append((self.getGraphMapped()).__str__())
+
+        return ''.join(str_list)
 
     ################################################## ACCESSORS ##################################################
 

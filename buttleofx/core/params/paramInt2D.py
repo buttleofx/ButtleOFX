@@ -88,6 +88,7 @@ class ParamInt2D(Param):
     def setValue1(self, value):
         if(self.getDefaultValue1() != value):
             self._value1HasChanged = True
+
         if value != self.getValue1():
             # Push the command
             cmdUpdate = CmdSetParamND(self, (value, self.getValue2()))
@@ -97,6 +98,7 @@ class ParamInt2D(Param):
     def setValue2(self, value):
         if(self.getDefaultValue2() != value):
             self._value2HasChanged = True
+        
         if value != self.getValue2():
             # Push the command
             cmdUpdate = CmdSetParamND(self, (self.getValue1(), value))

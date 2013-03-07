@@ -23,10 +23,10 @@ Rectangle {
 
             case "deleteNode":
                 if(_buttleData.currentConnectionWrapper) {
-                    _buttleManager.disconnect(_buttleData.currentConnectionWrapper);
+                    _buttleManager.connectionManager.disconnect(_buttleData.currentConnectionWrapper);
                 }
                 else {
-                    _buttleManager.destructionNodes();
+                    _buttleManager.nodeManager.destructionNodes();
                 }
                 break;
 
@@ -39,19 +39,19 @@ Rectangle {
                 break;
 
             case "copy":
-                _buttleManager.copyNode();
+                _buttleManager.nodeManager.copyNode();
                 break;
 
             case "paste":
-                _buttleManager.pasteNode();
+                _buttleManager.nodeManager.pasteNode();
                 break;
 
             case "cut":
-                _buttleManager.cutNode();
+                _buttleManager.nodeManager.cutNode();
                 break;
 
             case "duplicate":
-                _buttleManager.duplicationNode();
+                _buttleManager.nodeManager.duplicationNode();
                 break;
             default:
                 break;
@@ -146,6 +146,7 @@ Rectangle {
                 buttonName: "deleteNode"
                 buttonText: "Delete the node"
                 locked: (!_buttleData.currentSelectedNodeWrappers.isEmpty() || _buttleData.currentConnectionWrapper)? false : true
+                //locked: _buttleData.currentSelectedNodeWrappers ? false : true
             }
         }
     }

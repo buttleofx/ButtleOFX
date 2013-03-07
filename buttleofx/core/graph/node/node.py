@@ -45,6 +45,7 @@ class Node(object):
 
         Signal :
         - changed : a signal emited to the wrapper layer
+        - paramsChanged : a signal emited when a param had changed.
     """
 
     def __init__(self, nodeName, nodeType, nodeCoord, tuttleNode):
@@ -66,7 +67,11 @@ class Node(object):
             tuttleParam = self._tuttleNode.asImageEffectNode().getParam(param)
             self._params.append(mapTuttleParamToButtleParam[tuttleParam.getProperties().fetchProperty("OfxParamPropType").getStringValue(0)](tuttleParam))
 
-        self.changed = Signal()
+        # signals
+        self.nameUserChanged = Signal()
+        self.coordChanged = Signal()
+        self.colorChanged = Signal()
+        self.paramsChanged = Signal()
 
         logging.info("Core : Node created")
 
@@ -102,9 +107,6 @@ class Node(object):
     def getClips(self):
         return self._clips
 
-    # def getImage(self):
-    #     return self._image
-
     def getParams(self):
         return self._params
 
@@ -115,43 +117,40 @@ class Node(object):
 
     def setName(self, name):
         self._name = name
-        self.changed()
 
     def setNameUser(self, nameUser):
         self._nameUser = nameUser
-        self.changed()
+        self.nameUserChanged()
 
     def setType(self, nodeType):
         self._type = nodeType
-        self.changed()
 
     def setCoord(self, x, y):
         self._coord = (x, y)
-        self.changed()
+        self.coordChanged()
 
     def setOldCoord(self, x, y):
         self._oldCoord = (x, y)
-        self.changed()
 
     def setColor(self, r, g, b):
         self._color = (r, g, b)
-        self.changed()
+        self.colorChanged()
 
     def setNbInput(self, nbInput):
         self._nbInput = nbInput
-        self.changed()
 
     def setClips(self, clips):
         self._clips = clips
 
-    # def setImage(self, image):
-    #     self._image = image
-    #     self.changed()
+    def setParams(self):
+        # self._params = []
+        # # Filling the node's param list
+        # for param in range(self._tuttleNode.asImageEffectNode().getNbParams()):
 
-    def setParams(self, params):
-        self._params = params
-        self.changed()
+        #     tuttleParam = self._tuttleNode.asImageEffectNode().getParam(param)
+        #     self._params.append(mapTuttleParamToButtleParam[tuttleParam.getProperties().fetchProperty("OfxParamPropType").getStringValue(0)](tuttleParam))
+
+        self.paramsChanged()
 
     def setTuttleNode(self, tuttleNode):
         self._tuttleNode = tuttleNode
-        self.changed()

@@ -61,6 +61,7 @@ class ParamChoice(Param):
         # for the moment we consider that if the user chooses the default value, it's like he didn't modified it, so it's not in bold font
         else:
             self._hasChanged = False
+        
         if value != self.getOldValue():
             #Push the command
             cmdUpdate = CmdSetParamChoice(self, value)

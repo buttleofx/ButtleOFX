@@ -121,6 +121,7 @@ Item {
             onClicked: {
                 _buttleData.currentConnectionWrapper = m.connectionModel
                 _buttleData.clearCurrentSelectedNodeNames();
+            }
 
             // The accepted property of the MouseEvent parameter is ignored in this handler.
             onPositionChanged: {

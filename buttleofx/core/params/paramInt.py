@@ -57,8 +57,8 @@ class ParamInt(Param):
         # used to know if bold font or not
         if(self.getDefaultValue() != value):
             self._hasChanged = True
+
         self._tuttleParam.setValue(int(value))
-        self.changed()
 
     def pushValue(self, newValue):
         if newValue != self.getOldValue():

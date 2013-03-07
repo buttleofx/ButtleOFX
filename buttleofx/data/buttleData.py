@@ -46,6 +46,11 @@ class ButtleData(QtCore.QObject):
     _nodeError = ""
     _mapNodeNameToComputedImage = {}
 
+    # signals
+    paramChangedSignal = Signal()
+    viewerChangedSignal = Signal()
+
+
     def init(self, view):
         self._graph = Graph()
         self._graphWrapper = GraphWrapper(self._graph, view)
@@ -139,7 +144,7 @@ class ButtleData(QtCore.QObject):
 
     def setCurrentSelectedNodeNames(self, nodeNames):
         self._currentSelectedNodeNames = nodeNames
-        self.nodesChangedSignal()
+        #self.nodesChangedSignal()
 
     def setCurrentViewerNodeName(self, nodeName):
         self._currentViewerNodeName = nodeName
@@ -156,7 +161,9 @@ class ButtleData(QtCore.QObject):
         if self._currentParamNodeName == nodeWrapper.getName():
             return
         self._currentParamNodeName = nodeWrapper.getName()
+        # emit signals
         self.currentParamNodeChanged.emit()
+        #self.paramChangedSignal()
 
     def setCurrentSelectedNodeWrappers(self, nodeWrappers):
         self.setCurrentSelectedNodeNames([nodeWrapper.getName() for nodeWrapper in nodeWrappers])
@@ -168,6 +175,7 @@ class ButtleData(QtCore.QObject):
             self._currentSelectedNodeNames.remove(nodeWrapper.getName())
         else:
             self._currentSelectedNodeNames.append(nodeWrapper.getName())
+        # emit signal
         self.currentSelectedNodesChanged.emit()
 
     def setCurrentViewerNodeWrapper(self, nodeWrapper):
@@ -177,6 +185,7 @@ class ButtleData(QtCore.QObject):
         if self._currentViewerNodeName == nodeWrapper.getName():
             return
         self._currentViewerNodeName = nodeWrapper.getName()
+        # emit signals
         self.currentViewerNodeChanged.emit()
         self.viewerChangedSignal()
 
@@ -228,8 +237,9 @@ class ButtleData(QtCore.QObject):
         """
         self.viewerChangedSignal()
 
-    def updateParams(self):
-        self.currentParamNodeChanged.emit()
+    #def updateParams(self):
+    #    self.getGraph().nodesChanged()
+    #    self.currentParamNodeChanged.emit()
 
     ################################################## PLUGIN LIST #####################################################
 
@@ -262,7 +272,7 @@ class ButtleData(QtCore.QObject):
     currentViewerNodeWrapper = QtCore.Property(QtCore.QObject, getCurrentViewerNodeWrapper, setCurrentViewerNodeWrapper, notify=currentViewerNodeChanged)
 
     currentSelectedNodesChanged = QtCore.Signal()
-    currentSelectedNodeWrappers = QtCore.Property(QtCore.QObject, getCurrentSelectedNodeWrappers, setCurrentSelectedNodeWrappers, notify=currentSelectedNodesChanged)
+    currentSelectedNodeWrappers = QtCore.Property("QVariant", getCurrentSelectedNodeWrappers, setCurrentSelectedNodeWrappers, notify=currentSelectedNodesChanged)
 
     currentConnectionWrapperChanged = QtCore.Signal()
     currentConnectionWrapper = QtCore.Property(QtCore.QObject, getCurrentConnectionWrapper, setCurrentConnectionWrapper, notify=currentConnectionWrapperChanged)
@@ -274,10 +284,6 @@ class ButtleData(QtCore.QObject):
     # error display on the Viewer
     nodeErrorChanged = QtCore.Signal()
     nodeError = QtCore.Property(str, getNodeError, setNodeError, notify=nodeErrorChanged)
-
-    # python signals
-    paramChangedSignal = Signal()
-    viewerChangedSignal = Signal()
 
 
 # This class exists just because thre are problems when a class extends 2 other class (Singleton and QObject)

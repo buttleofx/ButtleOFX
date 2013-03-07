@@ -112,6 +112,7 @@ class ParamInt3D(Param):
         # used to know if bold font or not
         if(self.getDefaultValue1() != value):
             self._value1HasChanged = True
+
         if value != self.getValue1():
             # Push the command
             cmdUpdate = CmdSetParamND(self, (value, self.getValue2(), self.getValue3()))
@@ -122,6 +123,7 @@ class ParamInt3D(Param):
         # used to know if bold font or not
         if(self.getDefaultValue2() != value):
             self._value2HasChanged = True
+
         if value != self.getValue2():
             # Push the command
             cmdUpdate = CmdSetParamND(self, (self.getValue1(), value, self.getValue3()))
@@ -132,6 +134,7 @@ class ParamInt3D(Param):
         # used to know if bold font or not
         if(self.getDefaultValue3() != value):
             self._value3HasChanged = True
+        
         if value != self.getValue3():
             # Push the command
             cmdUpdate = CmdSetParamND(self, (self.getValue1(), self.getValue2(), value))

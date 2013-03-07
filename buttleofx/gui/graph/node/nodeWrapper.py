@@ -27,10 +27,15 @@ class NodeWrapper(QtCore.QObject):
         self._clipSize = 8
         self._inputSideMargin = 6
 
-        self._node.changed.connect(self.emitChanged)
-
         self._fpsError = ""
         self._frameError = ""
+
+        # the link between the node and the node wrapper
+        self._node.nameUserChanged.connect(self.emitChanged)
+        self._node.coordChanged.connect(self.emitChanged)
+        self._node.colorChanged.connect(self.emitChanged)
+        # separate signal paramsChanged, because it's a too big process
+        self._node.paramsChanged.connect(self.getParams)
 
         logging.info("Gui : NodeWrapper created")
 
@@ -106,9 +111,10 @@ class NodeWrapper(QtCore.QObject):
         return (self.getHeight() - self.getClipSize() * self.getNbInput() - self.getClipSpacing() * (self.getNbInput() - 1)) / 2
 
     def getParams(self):
+        #self._node.paramsChanged.clear()
         paramEditorWrapper = ParamEditorWrapper(self._view, self._node.getParams())
-
-        return paramEditorWrapper.paramElmts
+        print "getParams()"
+        return paramEditorWrapper.getParamElts()
 
     #for video
     def getFPS(self):
@@ -176,7 +182,7 @@ class NodeWrapper(QtCore.QObject):
     def setType(self, nodeType):
         self._node.setType(nodeType)
 
-    # from a QPoint
+    #from a QPoint
     def setCoord(self, point):
         self._node.setCoord(point.x(), point.y())
 
@@ -202,25 +208,28 @@ class NodeWrapper(QtCore.QObject):
     def emitChanged(self):
         self.changed.emit()
 
+    @QtCore.Signal
+    def paramsChanged(self):
+        pass
+
     ################################################## DATA EXPOSED TO QML ##################################################
 
     # params from Buttle
-    name = QtCore.Property(str, getName, setName, notify=changed)
+    name = QtCore.Property(str, getName, constant=True)
     nameUser = QtCore.Property(str, getNameUser, setNameUser, notify=changed)
-    nodeType = QtCore.Property(str, getType, setType, notify=changed)
-    coord = QtCore.Property(QtCore.QPoint, getCoord, setCoord, notify=changed)
-
+    nodeType = QtCore.Property(str, getType, constant=True)
+    coord = QtCore.Property(QtCore.QPoint, getCoord, setCoord, notify=changed) # problem to access to x property with QPoint !
     xCoord = QtCore.Property(int, getXCoord, setXCoord, notify=changed)
     yCoord = QtCore.Property(int, getYCoord, setYCoord, notify=changed)
-
     color = QtCore.Property(QtGui.QColor, getColor, setColor, notify=changed)
-    nbInput = QtCore.Property(int, getNbInput, setNbInput, notify=changed)
-    # image = QtCore.Property(str, getImage, setImage, notify=changed)
+    nbInput = QtCore.Property(int, getNbInput, constant=True)
+
     # params from Tuttle
-    params = QtCore.Property(QtCore.QObject, getParams, constant=True)
+    params = QtCore.Property("QVariant", getParams, notify=paramsChanged)
+
     # #video
-    fps = QtCore.Property(float, getFPS, notify=changed)
-    nbFrames = QtCore.Property(int, getNbFrames, notify=changed)
+    fps = QtCore.Property(float, getFPS, constant=True)
+    nbFrames = QtCore.Property(int, getNbFrames, constant=True)
 
     # for a clean display of connections
     width = QtCore.Property(int, getWidth, notify=changed)

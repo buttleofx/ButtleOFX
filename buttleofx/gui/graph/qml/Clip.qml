@@ -42,7 +42,7 @@ Rectangle {
         hoverEnabled: true
         onPressed: {
             color = "#fff"
-            _buttleManager.connectionDragEvent(c.clipModel, index) // we send all information needed to identify the clip : nodename, port and clip number
+            _buttleManager.connectionManager.connectionDragEvent(c.clipModel, index) // we send all information needed to identify the clip : nodename, port and clip number
             // take the focus of the MainWindow
             clip.forceActiveFocus()
         }
@@ -53,7 +53,7 @@ Rectangle {
         anchors.margins: -7
         onDrop: {
             if (hasText) {
-                _buttleManager.connectionDropEvent(text, c.clipModel, index)
+                _buttleManager.connectionManager.connectionDropEvent(text, c.clipModel, index)
             }
         }
     }

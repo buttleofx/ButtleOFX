@@ -57,8 +57,8 @@ class ParamDouble(Param):
         # used to know if bold font or not
         if(self.getDefaultValue() != value):
             self._hasChanged = True
+
         self._tuttleParam.setValue(float(value))
-        self.changed()
 
     def pushValue(self, newValue):
         if newValue != self.getOldValue():

@@ -171,10 +171,13 @@ class ButtleData(QtCore.QObject):
 
     @QtCore.Slot(QtCore.QObject)
     def appendToCurrentSelectedNodeWrappers(self, nodeWrapper):
-        if nodeWrapper.getName() in self._currentSelectedNodeNames:
-            self._currentSelectedNodeNames.remove(nodeWrapper.getName())
+        self.appendToCurrentSelectedNodeNames(nodeWrapper.getName())
+
+    def appendToCurrentSelectedNodeNames(self, nodeName):
+        if nodeName in self._currentSelectedNodeNames:
+            self._currentSelectedNodeNames.remove(nodeName)
         else:
-            self._currentSelectedNodeNames.append(nodeWrapper.getName())
+            self._currentSelectedNodeNames.append(nodeName)
         # emit signal
         self.currentSelectedNodesChanged.emit()
 
@@ -209,6 +212,13 @@ class ButtleData(QtCore.QObject):
             if nodeName == nodeWrapper.getName():
                 return True
         return False
+
+    @QtCore.Slot(int, int, int, int)
+    def addNodeWrappersInRectangleSelection(self, x, y, width, height):
+        for node in self.getGraph().getNodes():
+            if node.getCoord()[0] >= x and node.getCoord()[0] <= x + width:
+                if node.getCoord()[1] >= y and node.getCoord()[1] <= y + height:
+                    self.appendToCurrentSelectedNodeNames(node.getName())
 
     @QtCore.Slot()
     def clearCurrentSelectedNodeNames(self):

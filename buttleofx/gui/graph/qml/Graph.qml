@@ -16,20 +16,61 @@ Rectangle {
     property alias mouseY: rightMouseArea.mouseY
 
     signal clickCreationNode(string nodeType)
+    signal drawSelection(int selectionX, int selectionY, int selectionWidth, int selectionHeight)
+
     color: "#212121"
 
-    MouseArea{
+    // Selection area
+
+    MouseArea {
         id: leftMouseArea
+        property int xStart
+        property int yStart
+        property bool drawingSelection : false
+
         anchors.fill: parent
+        hoverEnabled: true
         acceptedButtons: Qt.LeftButton
         onClicked: {
             if (tools.menuComponent) {
                 tools.menuComponent.destroy();
             }
+        }
+        onPressed: {
+            xStart = mouse.x;
+            yStart = mouse.y;
+            rectangleSelection.x = mouse.x;
+            rectangleSelection.y = mouse.y;
+            rectangleSelection.width = 1;
+            rectangleSelection.height = 1;
+            rectangleSelection.visible = true;
+            drawingSelection: true;
+        }
+        onReleased: {
+            rectangleSelection.visible = false;
+            _buttleData.clearCurrentSelectedNodeNames();
+            graphArea.drawSelection(rectangleSelection.x, rectangleSelection.y, rectangleSelection.width, rectangleSelection.height)
+        }
+
+        onMousePositionChanged: {
+            if(mouse.x < xStart){
+                rectangleSelection.x = mouse.x
+                rectangleSelection.width = xStart - mouse.x;
+            }
             else {
-                _buttleData.clearCurrentSelectedNodeNames();
+                rectangleSelection.width = mouse.x - xStart;
+            }
+            if(mouse.y < yStart){
+                rectangleSelection.y = mouse.y
+                rectangleSelection.height = yStart - mouse.y;
+            }
+            else {
+                rectangleSelection.height = mouse.y - yStart;
             }
         }
+    }
+    onDrawSelection: {
+        _buttleData.addNodeWrappersInRectangleSelection(selectionX, selectionY, selectionWidth, selectionHeight);
     }
 
     MouseArea{
@@ -87,6 +128,15 @@ Rectangle {
         }
 
         transform: Scale { id: scale; origin.x: graphArea.width/2; origin.y: graphArea.height/2; xScale: 1; yScale: 1}
+    }
+
+    // Rectangle selection is placed here so it is drawn over the nodes
+    Rectangle {
+        id: rectangleSelection
+        color: "white"
+        border.color: "#00b2a1"
+        opacity: 0.25
+        visible: false
     }
 
     WheelArea {

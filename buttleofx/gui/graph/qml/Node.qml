@@ -22,6 +22,8 @@ Rectangle {
     property int inputTopMargin: m.nodeModel.inputTopMargin
     property int inputSideMargin: m.nodeModel.inputSideMargin
 
+    signal drawSelection(int x, int y, int width, int height)
+
     color: "transparent"
     focus: true
 
@@ -34,14 +36,6 @@ Rectangle {
         onPressed: {
             // left button : we change the current selected nodes & we start moving
             if (mouse.button == Qt.LeftButton) {
-                if(mouse.modifiers & Qt.ControlModifier){
-                    _buttleData.appendToCurrentSelectedNodeWrappers(m.nodeModel)
-                }
-                else{
-                    _buttleData.clearCurrentSelectedNodeNames()
-                    _buttleData.appendToCurrentSelectedNodeWrappers(m.nodeModel)
-                }
-                _buttleData.clearCurrentConnectionId()
                 _buttleData.graphWrapper.zMax += 1
                 parent.z = _buttleData.graphWrapper.zMax
                 stateMoving.state = "moving"
@@ -61,6 +55,16 @@ Rectangle {
             if (mouse.button == Qt.LeftButton) {
                 _buttleManager.nodeManager.nodeMoved(m.nodeModel.name, parent.x, parent.y)
                 stateMoving.state = "normal"
+            }
+            if (mouse.button == Qt.LeftButton) {
+                _buttleData.clearCurrentConnectionId()
+                if(mouse.modifiers & Qt.ControlModifier){
+                    _buttleData.appendToCurrentSelectedNodeWrappers(m.nodeModel)
+                }
+                else{
+                    _buttleData.clearCurrentSelectedNodeNames()
+                    _buttleData.appendToCurrentSelectedNodeWrappers(m.nodeModel)
+                }
             }
         }
         // double click : we change the current param node

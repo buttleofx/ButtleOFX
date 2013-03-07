@@ -16,9 +16,7 @@ class CmdDeleteNodes(UndoableCommand):
     def __init__(self, graphTarget, nodes):
         self._graphTarget = graphTarget
         self._nodes = nodes
-        self._nodesInfo = {}
-        for node in nodes:
-            self._nodesInfo[node.getName()] = [connection for connection in self._graphTarget.getConnections() if (connection.getClipOut().getNodeName() == node.getName() or connection.getClipIn().getNodeName() == node.getName())]
+        self._connections = [connection for connection in self._graphTarget.getConnections() if (self._graphTarget.getNode(connection.getClipOut().getNodeName()) in nodes or self._graphTarget.getNode(connection.getClipIn().getNodeName()) in nodes)]
 
     def undoCmd(self):
         """
@@ -28,14 +26,12 @@ class CmdDeleteNodes(UndoableCommand):
             # we recreate the node
             self._graphTarget.getNodes().append(node)
         # we recreate all the connections
-        for node in self._nodesInfo:
-            if self._nodesInfo[node] != []:
-                for connection in self._nodesInfo[node]:
-                    tuttleNodeSource = self._graphTarget.getNode(connection.getClipOut().getNodeName()).getTuttleNode()
-                    tuttleNodeOutput = self._graphTarget.getNode(connection.getClipIn().getNodeName()).getTuttleNode()
-                    tuttleConnection = self._graphTarget.getGraphTuttle().connect(tuttleNodeSource, tuttleNodeOutput)
-                    connection.setTuttleConnection(tuttleConnection)
-                    self._graphTarget.getConnections().append(connection)
+        for connection in self._connections:
+            tuttleNodeSource = self._graphTarget.getNode(connection.getClipOut().getNodeName()).getTuttleNode()
+            tuttleNodeOutput = self._graphTarget.getNode(connection.getClipIn().getNodeName()).getTuttleNode()
+            tuttleConnection = self._graphTarget.getGraphTuttle().connect(tuttleNodeSource, tuttleNodeOutput)
+            connection.setTuttleConnection(tuttleConnection)
+            self._graphTarget.getConnections().append(connection)
 
         self._graphTarget.connectionsChanged()
         self._graphTarget.nodesChanged()

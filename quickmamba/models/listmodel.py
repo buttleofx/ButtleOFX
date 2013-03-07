@@ -196,6 +196,7 @@ class QObjectListModel(QtCore.QAbstractListModel):
         """ Returns the number of items in the model. """
         return len(self._objects)
 
+    @QtCore.Slot(result=bool)
     def isEmpty(self):
         """ Returns true if the model contains no items; otherwise returns false. """
         return len(self._objects) == 0

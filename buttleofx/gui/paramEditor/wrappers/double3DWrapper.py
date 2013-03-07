@@ -1,20 +1,17 @@
 from PySide import QtCore
+# common
+from paramWrapper import ParamWrapper
 
 
-class Double3DWrapper(QtCore.QObject):
+class Double3DWrapper(ParamWrapper):
     """
         Gui class, which maps a ParamDouble3D.
     """
 
     def __init__(self, param):
-        QtCore.QObject.__init__(self)
-        self._param = param
-        self._param.paramChanged.connect(self.emitChanged)
+        ParamWrapper.__init__(self, param)
 
     #################### getters ####################
-
-    def getParamType(self):
-        return self._param.getParamType()
 
     @QtCore.Slot(result=float)
     def getDefaultValue1(self):
@@ -27,9 +24,6 @@ class Double3DWrapper(QtCore.QObject):
     @QtCore.Slot(result=float)
     def getDefaultValue3(self):
         return self._param.getDefaultValue3()
-
-    def getValues(self):
-        return self._param.getValues()
 
     def getValue1(self):
         return self._param.getValue1()
@@ -58,12 +52,6 @@ class Double3DWrapper(QtCore.QObject):
     def getMinimum3(self):
         return self._param.getMinimum3()
 
-    def getText(self):
-        return self._param.getText()
-        
-    def isSecret(self):
-        return self._param.isSecret()
-
     def getValue1HasChanged(self):
         return self._param.getValue1HasChanged()
 
@@ -74,9 +62,6 @@ class Double3DWrapper(QtCore.QObject):
         return self._param.getValue3HasChanged()
 
     #################### setters ####################
-
-    def setValues(self, values):
-        self._param.setValues(values)
 
     def setValue1(self, value1):
         self._param.setValue1(value1)
@@ -100,22 +85,19 @@ class Double3DWrapper(QtCore.QObject):
     def changed(self):
         pass
 
-    def emitChanged(self):
-        self.changed.emit()
-
     ################################################## DATA EXPOSED TO QML ##################################################
 
-    paramType = QtCore.Property(unicode, getParamType, notify=changed)
-    text = QtCore.Property(unicode, getText, notify=changed)
     value1 = QtCore.Property(float, getValue1, setValue1, notify=changed)
     value2 = QtCore.Property(float, getValue2, setValue2, notify=changed)
     value3 = QtCore.Property(float, getValue3, setValue3, notify=changed)
-    maximum1 = QtCore.Property(float, getMaximum1, notify=changed)
-    minimum1 = QtCore.Property(float, getMinimum1, notify=changed)
-    maximum2 = QtCore.Property(float, getMaximum2, notify=changed)
-    minimum2 = QtCore.Property(float, getMinimum2, notify=changed)
-    maximum3 = QtCore.Property(float, getMaximum3, notify=changed)
-    minimum3 = QtCore.Property(float, getMinimum3, notify=changed)
+
+    maximum1 = QtCore.Property(float, getMaximum1, constant=True)
+    minimum1 = QtCore.Property(float, getMinimum1, constant=True)
+    maximum2 = QtCore.Property(float, getMaximum2, constant=True)
+    minimum2 = QtCore.Property(float, getMinimum2, constant=True)
+    maximum3 = QtCore.Property(float, getMaximum3, constant=True)
+    minimum3 = QtCore.Property(float, getMinimum3, constant=True)
+
     value1HasChanged = QtCore.Property(bool, getValue1HasChanged, setValue1HasChanged, notify=changed)
     value2HasChanged = QtCore.Property(bool, getValue2HasChanged, setValue2HasChanged, notify=changed)
     value3HasChanged = QtCore.Property(bool, getValue3HasChanged, setValue3HasChanged, notify=changed)

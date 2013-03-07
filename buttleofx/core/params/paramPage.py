@@ -10,22 +10,12 @@ class ParamPage(Param):
     """
 
     def __init__(self, tuttleParam):
-        Param.__init__(self)
-        
-        self._tuttleParam = tuttleParam
-
-        self.changed = None # important for the nodeManager -> creationNode() function.
+        Param.__init__(self, tuttleParam)
 
     # #################### getters ####################
-
-    def getTuttleParam(self):
-        return self._tuttleParam
 
     def getParamType(self):
         return "ParamPage"
 
     def getLabel(self):
         return self._tuttleParam.getProperties().fetchProperty("OfxPropLabel").getStringValue(0)
-
-    def getName(self):
-        return self._tuttleParam.getName()[0].capitalize() + self._tuttleParam.getName()[1:]

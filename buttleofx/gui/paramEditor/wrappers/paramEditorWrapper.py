@@ -30,8 +30,8 @@ class ParamEditorWrapper(QtCore.QObject):
             ParamPage: PageWrapper,
         }
 
-        paramListModel = [self.mapTypeToWrapper[paramElt.__class__](paramElt) for paramElt in paramList if not paramElt.isSecret()]
-        #paramListModel = [self.mapTypeToWrapper[paramElt.__class__](paramElt) for paramElt in paramList]
+        #paramListModel = [self.mapTypeToWrapper[paramElt.__class__](paramElt) for paramElt in paramList if not paramElt.isSecret()]
+        paramListModel = [self.mapTypeToWrapper[paramElt.__class__](paramElt) for paramElt in paramList]
         
         self._paramElmts.setObjectList(paramListModel)
 

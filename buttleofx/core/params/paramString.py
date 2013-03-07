@@ -9,21 +9,18 @@ class ParamString(Param):
     """
         Core class, which represents a string parameter.
         Contains :
-            - _tuttleParam : link to the corresponding tuttleParam.
             - _oldValue : the old value of the param.
+            - _hasChanged : to know if the value of the param is changed by the user (at least once).
     """
 
     def __init__(self, tuttleParam):
-        Param.__init__(self)
-        
-        self._tuttleParam = tuttleParam
+        Param.__init__(self, tuttleParam)
         
         self._oldValue = self.getValue()
 
-    #################### getters ####################
+        self._hasChanged = False
 
-    def getTuttleParam(self):
-        return self._tuttleParam
+    #################### getters ####################
 
     def getParamType(self):
         return "ParamString"
@@ -40,10 +37,13 @@ class ParamString(Param):
     def getStringType(self):
         return self._tuttleParam.getProperties().fetchProperty("OfxParamPropStringMode").getStringValue(0)
 
-    def getText(self):
-        return self._tuttleParam.getName()[0].capitalize() + self._tuttleParam.getName()[1:]
+    def getHasChanged(self):
+        return self._hasChanged
 
     #################### setters ####################
+
+    def setHasChanged(self, changed):
+        self._hasChanged = changed
 
     def setOldValue(self, value):
         self._oldValue = value

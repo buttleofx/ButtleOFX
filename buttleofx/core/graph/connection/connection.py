@@ -12,7 +12,7 @@ class Connection(object):
 
     def __init__(self, clipOut, clipIn, tuttleConnection):
         super(Connection, self).__init__()
-        
+
         self._tuttleConnection = tuttleConnection
 
         self._id = clipOut.getId() + "_" + clipIn.getId()
@@ -25,7 +25,7 @@ class Connection(object):
         logging.info("Core : Connection created")
 
     def __str__(self):
-        logging.info('Connection between the clip "%s (%s %d)" and the clip "%s (%s %d)' % (self._clipOut._nodeName, self._clipOut._port, self._clipOut._clipNumber, self._clipIn._nodeName, self._clipIn._port, self._clipIn._clipNumber))
+        return 'Connection between the clip "%s (%s %d)" and the clip "%s (%s %d)' % (self._clipOut._nodeName, self._clipOut._port, self._clipOut._clipNumber, self._clipIn._nodeName, self._clipIn._port, self._clipIn._clipNumber)
 
     def __del__(self):
         logging.info("Core : Connection deleted")

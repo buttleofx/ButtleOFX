@@ -9,21 +9,18 @@ class ParamDouble(Param):
     """
         Core class, which represents a double parameter.
         Contains :
-            - _tuttleParam : link to the corresponding tuttleParam.
             - _oldValue : the old value of the param.
+            - _hasChanged : to know if the value of the param is changed by the user (at least once).
     """
 
     def __init__(self, tuttleParam):
-        Param.__init__(self)
-
-        self._tuttleParam = tuttleParam
+        Param.__init__(self, tuttleParam)
 
         self._oldValue = self.getValue()
 
-    #################### getters ####################
+        self._hasChanged = False
 
-    def getTuttleParam(self):
-        return self._tuttleParam
+    #################### getters ####################
 
     def getParamType(self):
         return "ParamDouble"
@@ -43,10 +40,13 @@ class ParamDouble(Param):
     def getMaximum(self):
         return self._tuttleParam.getProperties().getDoubleProperty("OfxParamPropDisplayMax")
 
-    def getText(self):
-        return self._tuttleParam.getName()[0].capitalize() + self._tuttleParam.getName()[1:]
+    def getHasChanged(self):
+        return self._hasChanged
 
     #################### setters ####################
+
+    def setHasChanged(self, changed):
+        self._hasChanged = changed
 
     def setOldValue(self, value):
         self._oldValue = value
@@ -59,6 +59,8 @@ class ParamDouble(Param):
             self._hasChanged = True
 
         self._tuttleParam.setValue(float(value))
+        # emit signal to update the display of the slider
+        self.paramChanged()
 
     def pushValue(self, newValue):
         if newValue != self.getOldValue():

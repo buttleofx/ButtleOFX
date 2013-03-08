@@ -33,6 +33,7 @@ Item {
                     // reinitialise the param to its default value
                     paramObject.hasChanged = false
                     paramObject.value = paramObject.getDefaultValue()
+                    paramObject.pushValue(paramObject.value)
                 }
             }
         }
@@ -93,6 +94,7 @@ Item {
                         // reinitialise the param to its default value
                         paramObject.hasChanged = false
                         paramObject.value = paramObject.getDefaultValue()
+                        paramObject.pushValue(paramObject.value)
                     }
                 }
             }

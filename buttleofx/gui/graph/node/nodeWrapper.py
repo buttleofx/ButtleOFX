@@ -9,10 +9,11 @@ from buttleofx.gui.graph.connection import ClipWrapper
 
 class NodeWrapper(QtCore.QObject):
     """
-        Class NodeWrapper defined by:
-        - _node : the node data
-
-        Creates a QObject from a given python object Node.
+        Class NodeWrapper defined by :
+            - _node : the buttle node
+            - _view : the view (necessary for all wrapper, to construct a QtCore.QObject)
+            - _widthEmptyNode, _heightEmptyNode , _clipSpacing, _clipSize, _inputSideMargin : data given to QML to have nodes with good looking
+            - _fpsError, _frameError : potential errors that we need to displayed.
     """
 
     def __init__(self, node, view):
@@ -21,21 +22,21 @@ class NodeWrapper(QtCore.QObject):
         self._node = node
         self._view = view
 
+        # data given to QML to have nodes with good looking
         self._widthEmptyNode = 15
         self._heightEmptyNode = 35
         self._clipSpacing = 7
         self._clipSize = 8
         self._inputSideMargin = 6
 
+        # potential errors
         self._fpsError = ""
         self._frameError = ""
 
-        # the link between the node and the node wrapper
-        self._node.nameUserChanged.connect(self.emitChanged)
-        self._node.coordChanged.connect(self.emitChanged)
-        self._node.colorChanged.connect(self.emitChanged)
-        # separate signal paramsChanged, because it's a too big process
-        self._node.paramsChanged.connect(self.getParams)
+        # link signals of the node and the corresponding node wrapper
+        self._node.nodeLookChanged.connect(self.emitNodeLookChanged)
+        self._node.nodePositionChanged.connect(self.emitNodePositionChanged)
+        self._node.nodeContentChanged.connect(self.emitNodeContentChanged)
 
         logging.info("Gui : NodeWrapper created")
 
@@ -173,14 +174,9 @@ class NodeWrapper(QtCore.QObject):
         self._frameError = nodeName
 
     ######## setters ########
-    def setName(self, name):
-        self._node.setName(name)
 
     def setNameUser(self, nameUser):
         self._node.setNameUser(nameUser)
-
-    def setType(self, nodeType):
-        self._node.setType(nodeType)
 
     #from a QPoint
     def setCoord(self, point):
@@ -199,40 +195,50 @@ class NodeWrapper(QtCore.QObject):
     def setNbInput(self, nbInput):
         self._node.setNbInput(nbInput)
 
-    # We can't connect the two signals because self.changed() is a QML signal.
-    # So, we use the function self.emitChanged() to solve the problem
-    @QtCore.Signal
-    def changed(self):
-        pass
-
-    def emitChanged(self):
-        self.changed.emit()
+    ################################################## LINK WRAPPER LAYER TO QML ##################################################
 
     @QtCore.Signal
-    def paramsChanged(self):
+    def nodeLookChanged(self):
         pass
+
+    def emitNodeLookChanged(self):
+        self.nodeLookChanged.emit()
+
+    @QtCore.Signal
+    def nodePositionChanged(self):
+        pass
+
+    def emitNodePositionChanged(self):
+        self.nodePositionChanged.emit()
+
+    @QtCore.Signal
+    def nodeContentChanged(self):
+        pass
+
+    def emitNodeContentChanged(self):
+        self.nodeContentChanged.emit()
 
     ################################################## DATA EXPOSED TO QML ##################################################
 
     # params from Buttle
     name = QtCore.Property(str, getName, constant=True)
-    nameUser = QtCore.Property(str, getNameUser, setNameUser, notify=changed)
+    nameUser = QtCore.Property(str, getNameUser, setNameUser, notify=nodeLookChanged)
     nodeType = QtCore.Property(str, getType, constant=True)
-    coord = QtCore.Property(QtCore.QPoint, getCoord, setCoord, notify=changed) # problem to access to x property with QPoint !
-    xCoord = QtCore.Property(int, getXCoord, setXCoord, notify=changed)
-    yCoord = QtCore.Property(int, getYCoord, setYCoord, notify=changed)
-    color = QtCore.Property(QtGui.QColor, getColor, setColor, notify=changed)
+    coord = QtCore.Property(QtCore.QPoint, getCoord, setCoord, notify=nodePositionChanged) # problem to access to x property with QPoint !
+    xCoord = QtCore.Property(int, getXCoord, setXCoord, notify=nodePositionChanged)
+    yCoord = QtCore.Property(int, getYCoord, setYCoord, notify=nodePositionChanged)
+    color = QtCore.Property(QtGui.QColor, getColor, setColor, notify=nodeLookChanged)
     nbInput = QtCore.Property(int, getNbInput, constant=True)
 
     # params from Tuttle
-    params = QtCore.Property("QVariant", getParams, notify=paramsChanged)
+    params = QtCore.Property("QVariant", getParams, notify=nodeContentChanged)
 
     # #video
     fps = QtCore.Property(float, getFPS, constant=True)
     nbFrames = QtCore.Property(int, getNbFrames, constant=True)
 
     # for a clean display of connections
-    width = QtCore.Property(int, getWidth, notify=changed)
+    width = QtCore.Property(int, getWidth, notify=nodeLookChanged)
     height = QtCore.Property(int, getHeight, constant=True)
     srcClips = QtCore.Property(QtCore.QObject, getSrcClips, constant=True)
     outputClips = QtCore.Property(QtCore.QObject, getOutputClips, constant=True)

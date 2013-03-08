@@ -45,7 +45,6 @@ Rectangle {
                 _buttleData.graphWrapper.zMax += 1
                 parent.z = _buttleData.graphWrapper.zMax
                 stateMoving.state = "moving"
-                _buttleData.graphWrapper.updateConnectionsCoord()
             }
 
             // right button : we change the current param node

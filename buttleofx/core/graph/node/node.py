@@ -1,9 +1,9 @@
 import logging
+from PySide import QtGui
 # Tuttle
 from buttleofx.data import tuttleTools
 # Quickmamba
 from quickmamba.patterns import Signal
-from PySide import QtGui
 # paramEditor
 from buttleofx.core.params import ParamInt, ParamInt2D, ParamInt3D, ParamString, ParamDouble, ParamDouble2D, ParamBoolean, ParamDouble3D, ParamChoice, ParamPushButton, ParamRGBA, ParamRGB, ParamGroup, ParamPage
 
@@ -32,25 +32,32 @@ class Node(object):
         Creates a python object Node.
 
         Class Node defined by:
-        - params from Buttle :
-            - _name
-            - _nameUser
-            - _type
-            - _coord
-            - _oldCoord : when a node is being dragged, we need to remember its old coordinates for the undo/redo
-            - _color
-            - _nbInput
-            - _image
-            - _params : params from Tuttle (depend on the node type)
+            - data from tuttle :
+                - _tuttleNode : the corresponding tuttle node
+            - data from Buttle :
+                - _name
+                - _nameUser
+                - _type
+                - _coord
+                - _oldCoord : when a node is being dragged, we need to remember its old coordinates for the undo/redo
+                - _color
+                - _nbInput
+                - _image
+                - _params : buttle params (based on the tuttle params)
 
-        Signal :
-        - changed : a signal emited to the wrapper layer
-        - paramsChanged : a signal emited when a param had changed.
+        Signals :
+            - nodeLookChanged : a signal emited when the apparence of the node changed (name, color...)
+            - nodePositionChanged : a signal emited when the coordinates of the node changed (x, y)
+            - nodeContentChanged : a signal emited when one of the params of the node changed
     """
 
-    def __init__(self, nodeName, nodeType, nodeCoord, tuttleNode):
+    def __init__(self, nodeName, nodeType, nodeCoord, tuttleNode):    
+        super(Node, self).__init__()
+
+        # tuttle node
         self._tuttleNode = tuttleNode
 
+        # buttle data
         self._name = nodeName  # useful for us inside buttle (same id as tuttle)
         self._nameUser = nodeName.strip('tuttle.')  # the name visible for the user
         self._type = nodeType
@@ -59,19 +66,17 @@ class Node(object):
         self._color = (0, 178, 161)
         self._nbInput = self._tuttleNode.asImageEffectNode().getClipImageSet().getNbClips() - 1
         self._clips = [clip.getName() for clip in self._tuttleNode.asImageEffectNode().getClipImageSet().getClips()]
+
+        # buttle params
         self._params = []
-
-        # Filling the node's param list
         for param in range(self._tuttleNode.asImageEffectNode().getNbParams()):
-
             tuttleParam = self._tuttleNode.asImageEffectNode().getParam(param)
             self._params.append(mapTuttleParamToButtleParam[tuttleParam.getProperties().fetchProperty("OfxParamPropType").getStringValue(0)](tuttleParam))
 
         # signals
-        self.nameUserChanged = Signal()
-        self.coordChanged = Signal()
-        self.colorChanged = Signal()
-        self.paramsChanged = Signal()
+        self.nodeLookChanged = Signal()
+        self.nodePositionChanged = Signal()
+        self.nodeContentChanged = Signal()
 
         logging.info("Core : Node created")
 
@@ -120,37 +125,21 @@ class Node(object):
 
     def setNameUser(self, nameUser):
         self._nameUser = nameUser
-        self.nameUserChanged()
-
-    def setType(self, nodeType):
-        self._type = nodeType
+        self.nodeLookChanged()
 
     def setCoord(self, x, y):
         self._coord = (x, y)
-        self.coordChanged()
+        self.nodePositionChanged()
 
     def setOldCoord(self, x, y):
         self._oldCoord = (x, y)
 
     def setColor(self, r, g, b):
         self._color = (r, g, b)
-        self.colorChanged()
-
-    def setNbInput(self, nbInput):
-        self._nbInput = nbInput
+        self.nodeLookChanged()
 
     def setClips(self, clips):
         self._clips = clips
 
     def setParams(self):
-        # self._params = []
-        # # Filling the node's param list
-        # for param in range(self._tuttleNode.asImageEffectNode().getNbParams()):
-
-        #     tuttleParam = self._tuttleNode.asImageEffectNode().getParam(param)
-        #     self._params.append(mapTuttleParamToButtleParam[tuttleParam.getProperties().fetchProperty("OfxParamPropType").getStringValue(0)](tuttleParam))
-
-        self.paramsChanged()
-
-    def setTuttleNode(self, tuttleNode):
-        self._tuttleNode = tuttleNode
+        self.nodeContentChanged()

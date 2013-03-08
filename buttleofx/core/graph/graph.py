@@ -12,15 +12,15 @@ from buttleofx.core.undo_redo.commands.connection import CmdCreateConnection, Cm
 class Graph(object):
     """
         Class Graph contains :
-        - _graphTuttle : the tuttle graph
+            - _graphTuttle : the tuttle graph
 
-        - _nodes : list of nodes (python objects, the core nodes)
-        - _connections : list of connections (python objects, the core connections)
+            - _nodes : list of buttle nodes (python objects, the core nodes)
+            - _connections : list of buttle connections (python objects, the core connections)
 
-        - nodesChanged : the signal emited to the wrapper layer to update nodeWrappers
-        - connectionChanged : the signal emited to the wrapper layer to update connectionWrappers
-        - connectionsChanged : the signal emited to the wrapper layer to update connectionWrappers
-        - connectionsCoordChanged : the signal emited to the wrapper layer to update coord of connectionWrappers (it's a trick in QML)
+            Signals :
+                - nodesChanged : the signal emited when a node changed
+                - connectionsChanged : the signal emited when a connection changed
+                - connectionsCoordChanged : the signal emited when the coords of a connection changed (it's a trick in QML)
     """
 
     def __init__(self):
@@ -42,7 +42,6 @@ class Graph(object):
             Displays on terminal some data.
             Usefull to debug the class.
         """
-
         str_list = []
 
         str_list.append("=== Graph Buttle === \n")
@@ -132,9 +131,14 @@ class Graph(object):
             #use exception !
 
         # create the node
+        #########################
+        # use a group of command : 
+        # - create node
+        # - setParamString
+        #########################
         cmdCreateReaderNode = CmdCreateReaderNode(self, nodeType, x, y, url)
         cmdManager = CommandManager()
-        cmdManager.push(cmdCreateReaderNode)
+        return cmdManager.push(cmdCreateReaderNode)
 
     def deleteNodes(self, nodes):
         """
@@ -164,9 +168,8 @@ class Graph(object):
         """
             Removes all the connections of the node.
         """
-        # We can't use a for loop. We have to rebuild the list, based on the current values.
+        # We have to rebuild the list of connections, based on the current values.
         self._connections = [connection for connection in self._connections if not (connection.getClipOut().getNodeName() == nodeName or connection.getClipIn().getNodeName() == nodeName)]
-        self.connectionsChanged()
 
     ############################################### INTERACTION ###############################################
 

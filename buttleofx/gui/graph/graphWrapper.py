@@ -10,17 +10,17 @@ from quickmamba.models import QObjectListModel
 class GraphWrapper(QtCore.QObject):
     """
         Class GraphWrapper defined by:
-        - _view : to have the view object
-        - _rootObject : to have the root object
+            - _view : to have the view object
+            - _rootObject : to have the root object
 
-        - _nodeWrappers : list of node wrappers (the python objects we use to communicate with the QML)
-        - _connectionWrappers : list of connections wrappers (the python objects we use to communicate with the QML)
+            - _nodeWrappers : list of node wrappers (the python objects we use to communicate with the QML)
+            - _connectionWrappers : list of connections wrappers (the python objects we use to communicate with the QML)
 
-        - _zMax : to manage the depth of the graph (in QML)
+            - _zMax : to manage the depth of the graph (in QML)
 
-        - _graph : the name of the graph mapped by the instance of this class.
+            - _graph : the name of the graph mapped by the instance of this class.
 
-        This class is a view, a map, of a graph.
+        This class is a view (= a map) of a graph.
     """
 
     def __init__(self, graph, view):
@@ -35,11 +35,6 @@ class GraphWrapper(QtCore.QObject):
         self._zMax = 2
 
         self._graph = graph
-
-        # the links between the graph and this graphWrapper
-        self._graph.nodesChanged.connect(self.updateNodeWrappers)
-        self._graph.connectionsChanged.connect(self.updateConnectionWrappers)
-        self._graph.connectionsCoordChanged.connect(self.updateConnectionsCoord)
 
         logging.info("Gui : GraphWrapper created")
 
@@ -135,111 +130,16 @@ class GraphWrapper(QtCore.QObject):
         conWrapper = ConnectionWrapper(connection, self._view)
         self._connectionWrappers.append(conWrapper)
 
-    ################################################## CONNECTIONS MANAGEMENT ##################################################
-
-    def getPositionClip(self, nodeName, clipName, clipNumber):
-        """
-            Function called when a new idClip is created.
-            Returns the position of the clip.
-            The calculation is the same as in the QML file (Node.qml).
-        """
-        node = self.getNodeWrapper(nodeName)
-
-        nodeCoord = node.getCoord()
-        widthNode = node.getWidth()
-        clipSpacing = node.getClipSpacing()
-        clipSize = node.getClipSize()
-        heightNode = node.getHeight()
-        inputTopMargin = node.getInputTopMargin()
-
-        if (clipName == "Output"):
-            xClip = nodeCoord.x() + widthNode + clipSize / 2
-            yClip = nodeCoord.y() + heightNode / 2 + clipSize / 2
-        else:
-            xClip = nodeCoord.x() - clipSize / 2
-            yClip = nodeCoord.y() + inputTopMargin + int(clipNumber) * (clipSpacing + clipSize) + clipSize / 2
-        return (xClip, yClip)
-
-    def getConnectionByClips(self, clipOut, clipIn):
-        """
-            Return the connection, from a clipIn and a clipOut.
-        """
-        for connection in self.getGraphMapped().getConnections():
-            if connection.getClipOut() == clipOut and connection.getClipIn() == clipIn:
-                return connection
-        return None
-
-    def canConnect(self, clip1, clip2):
-        """
-            Returns True if the connection between the nodes is possible, else False.
-            A connection is possible if the clip isn't already taken, and if the clips are from 2 different nodes, not already connected.
-        """
-
-        # if the clips are from the same node : False
-        if (clip1.getNodeName() == clip2.getNodeName()):
-            return False
-
-        # if the clips are 2 inputs or 2 outputs : False
-        if (clip1.getName() == "Output" and clip2.getName() == "Output") or (clip1.getName() != "Output" and clip2.getName() != "Output"):
-            return False
-
-        # if the input clip is already taken : False
-        if (clip1.getName() != "Output" and self._graph.contains(clip1)) or (clip2.getName() != "Output" and self._graph.contains(clip2)):
-            return False
-
-        # if the nodes containing the clips are already connected : False
-        if(self._graph.nodesConnected(clip2, clip1)):
-            return False
-
-        return True
-
-    ################################################## UPDATE ##################################################
-
-    def updateNodeWrappers(self):
-        """
-            Updates the nodeWrappers when the signal nodesChanged has been emitted.
-        """
-        # we clear the list
-        self._nodeWrappers.clear()
-        # and we fill with the new data
-        for node in self._graph.getNodes():
-            self.createNodeWrapper(node.getName())
-
-    def updateConnectionWrappers(self):
-        """
-            Updates the connectionWrappers when the signal connectionsChanged has been emitted.
-        """
-        # we clear the list
-        self._connectionWrappers.clear()
-        # and we fill with the new data
-        for connection in self._graph.getConnections():
-            self.createConnectionWrapper(connection)
-
-    @QtCore.Slot()
-    def updateConnectionsCoord(self):
-        for connection in self._graph.getConnections():
-            clipOut = connection.getClipOut()
-            clipIn = connection.getClipIn()
-            clipOut.setCoord(self.getPositionClip(clipOut.getNodeName(), clipOut.getPort(), clipOut.getClipNumber()))
-            clipIn.setCoord(self.getPositionClip(clipIn.getNodeName(), clipIn.getPort(), clipIn.getClipNumber()))
-        self.updateConnectionWrappers()
-
     ################################################## DATA EXPOSED TO QML ##################################################
 
-    @QtCore.Signal
-    def changed(self):
-        pass
-
-    # nodes changed
-    nodes = QtCore.Property("QVariant", getNodeWrappers, notify=changed)
-
-    # connections changed
-    connections = QtCore.Property("QVariant", getConnectionWrappers, notify=changed)
+    # nodes and connections
+    nodes = QtCore.Property("QVariant", getNodeWrappers, constant=True)
+    connections = QtCore.Property("QVariant", getConnectionWrappers, constant=True)
 
     # nodeWrappers and connectionWrappers
     nodeWrappers = QtCore.Property(QtCore.QObject, getNodeWrappers, constant=True)
     connectionWrappers = QtCore.Property(QtCore.QObject, getConnectionWrappers, constant=True)
 
-    # z index for QML
+    # z index for QML (good superposition of nodes in the graph)
     zMaxChanged = QtCore.Signal()
     zMax = QtCore.Property(int, getZMax, setZMax, notify=zMaxChanged)

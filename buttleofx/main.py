@@ -44,6 +44,8 @@ else:
 from buttleofx.data import ButtleDataSingleton
 # manager
 from buttleofx.manager import ButtleManagerSingleton
+# event
+from buttleofx.event import ButtleEventSingleton
 # new QML type
 from buttleofx.gui.paramEditor import Finder
 # undo_redo
@@ -93,15 +95,19 @@ def main(argv):
     view.setViewport(QtOpenGL.QGLWidget())
     view.setViewportUpdateMode(QtDeclarative.QDeclarativeView.FullViewportUpdate)
 
-   # data
+    # data
     buttleData = ButtleDataSingleton().get().init(view)
-    buttleManager = ButtleManagerSingleton().get().init(view)
+    # manager
+    buttleManager = ButtleManagerSingleton().get().init()
+    # event
+    buttleEvent = ButtleEventSingleton().get()
 
     # expose data to QML
     rc = view.rootContext()
     rc.setContextProperty("_buttleApp", app)
     rc.setContextProperty("_buttleData", buttleData)
     rc.setContextProperty("_buttleManager", buttleManager)
+    rc.setContextProperty("_buttleEvent", buttleEvent)
 
     # set the view
     view.setSource(os.path.join(currentFilePath, "MainWindow.qml"))

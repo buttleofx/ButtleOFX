@@ -14,6 +14,7 @@ class ParamWrapper(QtCore.QObject):
         # link buttle param to the paramWrapper
         self._param.paramChanged.connect(self.emitChanged)
 
+    #################### getters ####################
 
     def getParamType(self):
         return self._param.getParamType()

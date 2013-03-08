@@ -1,11 +1,11 @@
 class IdClip:
     """
         Class usefull to identify a clip with :
-        - the clipId
-        - the node name
-        - the clipName
-        - the clip number
-        - the clip's coords
+        - _id : the clipId
+        - _nodeName : the node name
+        - _clipName : the clipName
+        - _clipNumber : the clip number
+        - _coord : the clip's coords
     """
 
     def __init__(self, nodeName, clipName, clipNumber, coord):
@@ -13,8 +13,15 @@ class IdClip:
         self._nodeName = nodeName
         self._clipName = clipName
         self._clipNumber = clipNumber
-
         self._coord = coord
+
+    def __eq__(self, otherClip):
+        """
+            Overloads the operator ==
+        """
+        return (self._nodeName == otherClip._nodeName and self._clipName == otherClip._clipName and self._clipNumber == otherClip._clipNumber)
+
+    ######## getters ########
 
     def getId(self):
         return self._id
@@ -22,7 +29,7 @@ class IdClip:
     def getNodeName(self):
         return self._nodeName
 
-    def getPort(self):
+    def getClipName(self):
         return self._clipName
 
     def getClipNumber(self):
@@ -31,17 +38,7 @@ class IdClip:
     def getCoord(self):
         return self._coord
 
-    def getName(self):
-        return self._clipName
-
-    def setNodeName(self, nodeName):
-        self._nodeName = nodeName
-
-    def setPort(self, clipName):
-        self._clipName = clipName
-
-    def setClipNumber(self, clipNumber):
-        self._clipNumber = clipNumber
+    ######## setters ########
 
     def setCoord(self, coord):
         self._coord = coord
@@ -51,9 +48,3 @@ class IdClip:
 
     def setYCoord(self, yCoord):
         self._coord[1] = yCoord
-
-    def __eq__(self, otherClip):
-        """
-            Overloads the operator ==
-        """
-        return (self._nodeName == otherClip._nodeName and self._clipName == otherClip._clipName and self._clipNumber == otherClip._clipNumber)

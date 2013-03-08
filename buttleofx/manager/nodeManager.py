@@ -3,6 +3,8 @@ from PySide import QtCore
 from quickmamba.patterns import Signal
 # data
 from buttleofx.data import ButtleDataSingleton
+# event
+from buttleofx.event import ButtleEventSingleton
 
 
 class NodeManager(QtCore.QObject):
@@ -15,19 +17,26 @@ class NodeManager(QtCore.QObject):
 
         self.undoRedoChanged = Signal()
 
+        buttleData = ButtleDataSingleton().get()
+        buttleData.getGraph().nodesChanged.connect(self.updateNodeWrappers)
+
+    ############### EVENTS FROM QML ###############
+
     @QtCore.Slot(str, int, int)
     def creationNode(self, nodeType, x, y):
         """
             Create a node.
         """
         buttleData = ButtleDataSingleton().get()
+        buttleEvent = ButtleEventSingleton().get()
+        
         node = buttleData.getGraph().createNode(nodeType, x, y)
 
         # link signal changed of all params to a global signal ParamChangedSignal
         for param in node.getParams():
             if param.paramChanged is not None:
                 #param.paramChanged.connect(node.setParams)
-                param.paramChanged.connect(buttleData.emitParamChangedSignal) # to update the viewer
+                param.paramChanged.connect(buttleEvent.emitParamChangedSignal) # to update the viewer
 
         # update undo/redo display
         self.undoRedoChanged()
@@ -187,5 +196,19 @@ class NodeManager(QtCore.QObject):
             This fonction update the position of the connections.
         """
         buttleData = ButtleDataSingleton().get()
-        buttleData.getGraph().getNode(nodeName).setCoord(x, y)
-        buttleData.getGraph().connectionsCoordChanged()
+        node = buttleData.getGraph().getNode(nodeName)
+        node.setCoord(x, y)
+        buttleData.getGraph().connectionsCoordChanged(node)
+
+    ################################################ UPDATE WRAPPER LAYER ################################################
+
+    def updateNodeWrappers(self):
+        """
+            Updates the nodeWrappers when the signal nodesChanged has been emitted.
+        """
+        buttleData = ButtleDataSingleton().get()
+        # we clear the list
+        buttleData.getGraphWrapper().getNodeWrappers().clear()
+        # and we fill with the new data
+        for node in buttleData.getGraph().getNodes():
+            buttleData.getGraphWrapper().createNodeWrapper(node.getName())

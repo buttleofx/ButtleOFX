@@ -1,4 +1,3 @@
-import logging
 from PySide import QtCore, QtGui
 # tools
 from buttleofx.data import tuttleTools
@@ -11,6 +10,8 @@ from buttleofx.core.graph.node import Node
 # gui : graphWrapper
 from buttleofx.gui.graph import GraphWrapper
 from buttleofx.gui.graph.node import NodeWrapper
+# events
+from buttleofx.event.buttleEvent import ButtleEvent
 
 
 class ButtleData(QtCore.QObject):
@@ -43,13 +44,7 @@ class ButtleData(QtCore.QObject):
     _currentCopiedNodesInfo = {}
 
     # for the viewer
-    _nodeError = ""
     _mapNodeNameToComputedImage = {}
-
-    # signals
-    paramChangedSignal = Signal()
-    viewerChangedSignal = Signal()
-
 
     def init(self, view):
         self._graph = Graph()
@@ -121,20 +116,6 @@ class ButtleData(QtCore.QObject):
         """
         return self.getGraphWrapper().getConnectionWrapper(self._currentConnectionId)
 
-    def getNodeError(self):
-        """
-            Returns the name of the node that can't be displayed.
-        """
-        return self._nodeError
-
-    ### flag ###
-
-    def canPaste(self):
-        """
-            Returns true if we can paste (= if there was at least one node selected)
-        """
-        return self._currentCopiedNodesInfo != {}
-
     #################### setters ####################
 
     ### current data ###
@@ -144,7 +125,6 @@ class ButtleData(QtCore.QObject):
 
     def setCurrentSelectedNodeNames(self, nodeNames):
         self._currentSelectedNodeNames = nodeNames
-        #self.nodesChangedSignal()
 
     def setCurrentViewerNodeName(self, nodeName):
         self._currentViewerNodeName = nodeName
@@ -163,7 +143,6 @@ class ButtleData(QtCore.QObject):
         self._currentParamNodeName = nodeWrapper.getName()
         # emit signals
         self.currentParamNodeChanged.emit()
-        #self.paramChangedSignal()
 
     def setCurrentSelectedNodeWrappers(self, nodeWrappers):
         self.setCurrentSelectedNodeNames([nodeWrapper.getName() for nodeWrapper in nodeWrappers])
@@ -185,9 +164,8 @@ class ButtleData(QtCore.QObject):
         if self._currentViewerNodeName == nodeWrapper.getName():
             return
         self._currentViewerNodeName = nodeWrapper.getName()
-        # emit signals
+        # emit signal
         self.currentViewerNodeChanged.emit()
-        self.viewerChangedSignal()
 
     def setCurrentConnectionWrapper(self, connectionWrapper):
         """
@@ -198,10 +176,6 @@ class ButtleData(QtCore.QObject):
         else:
             self._currentConnectionId = connectionWrapper.getId()
         self.currentConnectionWrapperChanged.emit()
-
-    def setNodeError(self, nodeName):
-        self._nodeError = nodeName
-        self.nodeErrorChanged.emit()
 
     @QtCore.Slot("QVariant", result=bool)
     def nodeInCurrentSelectedNodeNames(self, nodeWrapper):
@@ -222,24 +196,6 @@ class ButtleData(QtCore.QObject):
 
     def clearCurrentCopiedNodesInfo(self):
         self._currentCopiedNodesInfo.clear()
-
-    ################################################## UPDATE #####################################################
-
-    def emitParamChangedSignal(self):
-        """
-            Emit paramChangedSignal.
-        """
-        self.paramChangedSignal()
-
-    def emitViewerChangedSignal(self):
-        """
-            Emit viewerChangedSignal.
-        """
-        self.viewerChangedSignal()
-
-    #def updateParams(self):
-    #    self.getGraph().nodesChanged()
-    #    self.currentParamNodeChanged.emit()
 
     ################################################## PLUGIN LIST #####################################################
 
@@ -276,15 +232,6 @@ class ButtleData(QtCore.QObject):
 
     currentConnectionWrapperChanged = QtCore.Signal()
     currentConnectionWrapper = QtCore.Property(QtCore.QObject, getCurrentConnectionWrapper, setCurrentConnectionWrapper, notify=currentConnectionWrapperChanged)
-
-    # paste possibility ?
-    pastePossibilityChanged = QtCore.Signal()
-    canPaste = QtCore.Property(bool, canPaste, notify=pastePossibilityChanged)
-
-    # error display on the Viewer
-    nodeErrorChanged = QtCore.Signal()
-    nodeError = QtCore.Property(str, getNodeError, setNodeError, notify=nodeErrorChanged)
-
 
 # This class exists just because thre are problems when a class extends 2 other class (Singleton and QObject)
 class ButtleDataSingleton(Singleton):

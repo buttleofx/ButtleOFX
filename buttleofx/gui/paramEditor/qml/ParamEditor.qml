@@ -192,11 +192,9 @@ Item {
 
                                         onAccepted: {
                                             currentParamNode.nameUser = nodeNameUserInput.text
-                                            _buttleData.graphWrapper.updateConnectionsCoord()
                                         }
                                         onActiveFocusChanged: {
                                             currentParamNode.nameUser = nodeNameUserInput.text
-                                            _buttleData.graphWrapper.updateConnectionsCoord()
                                         }
 
                                         KeyNavigation.backtab: nodeCoordYInput
@@ -352,11 +350,9 @@ Item {
 
                                         onAccepted: {
                                             currentParamNode.xCoord = nodeCoordXInput.text
-                                            _buttleData.graphWrapper.updateConnectionsCoord()
                                         }
                                         onActiveFocusChanged: {
                                             currentParamNode.xCoord = nodeCoordXInput.text
-                                            _buttleData.graphWrapper.updateConnectionsCoord()
                                         }
 
                                         KeyNavigation.backtab: nodeColorRGBInput
@@ -398,11 +394,9 @@ Item {
 
                                         onAccepted: {
                                             currentParamNode.yCoord = nodeCoordYInput.text
-                                            _buttleData.graphWrapper.updateConnectionsCoord()
                                         }
                                         onActiveFocusChanged: {
                                             currentParamNode.yCoord = nodeCoordYInput.text
-                                            _buttleData.graphWrapper.updateConnectionsCoord()
                                         }
 
                                         KeyNavigation.backtab: nodeCoordXInput

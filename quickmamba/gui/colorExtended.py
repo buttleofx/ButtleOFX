@@ -60,20 +60,21 @@ class ColorExtended(QtDeclarative.QDeclarativeItem):
         self.colorChanged.emit()
 
     def getAlpha(self):
-        return self._color.alpha()
+        # alpha returns the value of alpha between 0 and 255 and alphaF between 0 and 1
+        return self._color.alphaF()
 
     def setAlpha(self, alpha):
-        self._color.setAlpha(alpha)
+        self._color.setAlphaF(alpha)
         self.colorChanged.emit()
 
     colorChanged = QtCore.Signal()
-    colorValue = QtCore.Property(QtGui.QColor, getColor, setColor, notify=colorChanged)
-    red = QtCore.Property(int, getRed, setRed, notify=colorChanged)
-    green = QtCore.Property(int, getGreen, setGreen, notify=colorChanged)
-    blue = QtCore.Property(int, getBlue, setBlue, notify=colorChanged)
-    hue = QtCore.Property(int, getHue, setHue, notify=colorChanged)
-    saturation = QtCore.Property(int, getSaturation, setSaturation, notify=colorChanged)
-    brightness = QtCore.Property(int, getBrightness, setBrightness, notify=colorChanged)
-    alpha = QtCore.Property(int, getAlpha, setAlpha, notify=colorChanged)
+    value = QtCore.Property(QtGui.QColor, getColor, setColor, notify=colorChanged)
+    red = QtCore.Property(float, getRed, setRed, notify=colorChanged)
+    green = QtCore.Property(float, getGreen, setGreen, notify=colorChanged)
+    blue = QtCore.Property(float, getBlue, setBlue, notify=colorChanged)
+    hue = QtCore.Property(float, getHue, setHue, notify=colorChanged)
+    saturation = QtCore.Property(float, getSaturation, setSaturation, notify=colorChanged)
+    brightness = QtCore.Property(float, getBrightness, setBrightness, notify=colorChanged)
+    alpha = QtCore.Property(float, getAlpha, setAlpha, notify=colorChanged)
 
 

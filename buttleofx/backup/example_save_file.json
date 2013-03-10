@@ -16,27 +16,29 @@
         [
             {
                 "name": "TuttleDpxWriter_1",
-                "nameUser": "Barbapapa",
-                "type": "tuttle.dpxwriter",
-                "x": "118", 
-                "y": "218",
-                "color": "#00b2a1",
+                "pluginIdentifier": "tuttle.dpxwriter",
+                "pluginVersion": "1.0",
+                "uiParams":
+                {
+                    "nameUser": "Barbapapa",
+                    "x": 118, 
+                    "y": 218,
+                    "color": "#00b2a1"
+                },
+                
                 "params":
                 [
                     { 
-                        "type": "paramInt",
-                        "value": "5"
+                        "name": "filename",
+                        "value": "/home/Images/img.dpx"
                     },
                     {
-                        "type": "paramString",
-                        "stringType": "filename",
-                        "value": "oui je veux etre un biiisouuuu"
+                        "name": "channel",
+                        "value": "compositeVideo"
                     },
                     {
-                        "type": "paramRGB",
-                        "valueR": "23",
-                        "valueG": "42",
-                        "valueB": "169"
+                        "name": "example_paramRGB",
+                        "value": [23, 42, 169]
                     },
                     // etc...
                 ]
@@ -44,11 +46,15 @@
 
             {
                 "name": "S_ChannelSwitcher_1",
-                "nameUser": "Miou miou",
-                "type": "com.genarts.sapphire.adjust.s_channelswitcher",
-                "x": "4", 
-                "y": "4",
-                "color": "#021f8c",
+                "pluginIdentifier": "com.genarts.sapphire.adjust.s_channelswitcher",
+                "pluginVersion": "1.0",
+                "uiParams":
+                {
+                    "nameUser": "Miou miou",
+                    "x": 4, 
+                    "y": 4,
+                    "color": "#021f8c"
+                },
                 "params":
                 [
                     // etc...
@@ -65,14 +71,12 @@
                 "clipOut":
                 {
                     "nodeName": "TuttleDpxWriter_1",
-                    "clipName": "Ouput",
-                    "clipNumber": "0"
+                    "clipName": "Output"
                 },
                 "clipIn":
                 {
                     "nodeName": "S_ChannelSwitcher_1",
-                    "clipName": "Source",
-                    "clipNumber": "0"
+                    "clipName": "Source"
                 },
             },
             {
@@ -80,14 +84,12 @@
                 "clipOut":
                 {
                     "nodeName": "TuttleDpxWriter_1",
-                    "clipName": "Ouput",
-                    "clipNumber": "0"
+                    "clipName": "Output"
                 },
                 "clipIn":
                 {
                     "nodeName": "TuttleFlip_1",
-                    "clipName": "Source",
-                    "clipNumber": "0"
+                    "clipName": "Source"
                 },
             }
 
@@ -124,7 +126,7 @@
         "viewer7": "S_ChannelSwitcher_1",
         "viewer8": "None",
         "viewer9": "None",
-        "currentViewer": "2"
+        "currentViewer": 2
     }
 }
 

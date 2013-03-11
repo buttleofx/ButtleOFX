@@ -35,11 +35,6 @@ class NodeManager(QtCore.QObject):
         """
         buttleData = ButtleDataSingleton().get()
 
-        # unlink signal from params to updateMapAndViewer
-        # node = buttleData.getCurrentSelectedNodeWrapper().getNode()
-        # for param in node.getParams():
-        #     param.changed.disconnect(buttleData.updateMapAndViewer)
-
         # if the params of the current node deleted are display
         if buttleData.getCurrentParamNodeName() in buttleData.getCurrentSelectedNodeNames():
             buttleData.setCurrentParamNodeName(None)

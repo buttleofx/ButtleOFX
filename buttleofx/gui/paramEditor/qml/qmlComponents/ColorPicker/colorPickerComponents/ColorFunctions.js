@@ -16,3 +16,4 @@ function fullColorString(clr, a) {
 function getChannelStr(clr, channelIdx) {
     return parseInt(clr.toString().substr(channelIdx*2 + 1, 2), 16);
 }
+

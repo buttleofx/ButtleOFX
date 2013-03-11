@@ -10,8 +10,6 @@ from buttleofx.core.graph.node import Node
 # gui : graphWrapper
 from buttleofx.gui.graph import GraphWrapper
 from buttleofx.gui.graph.node import NodeWrapper
-# events
-from buttleofx.event.buttleEvent import ButtleEvent
 
 
 class ButtleData(QtCore.QObject):

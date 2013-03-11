@@ -1,10 +1,10 @@
 from PySide import QtCore
 import logging
+# quickmamba
+from quickmamba.models import QObjectListModel
 # gui
 from buttleofx.gui.graph.node import NodeWrapper
 from buttleofx.gui.graph.connection import ConnectionWrapper
-# quickmamba
-from quickmamba.models import QObjectListModel
 
 
 class GraphWrapper(QtCore.QObject):
@@ -35,6 +35,11 @@ class GraphWrapper(QtCore.QObject):
         self._zMax = 2
 
         self._graph = graph
+
+        # link core signals to wrapper layer 
+        self._graph.nodesChanged.connect(self.updateNodeWrappers)
+        self._graph.connectionsCoordChanged.connect(self.updateConnectionsCoord)
+        self._graph.connectionsChanged.connect(self.updateConnectionWrappers)
 
         logging.info("Gui : GraphWrapper created")
 
@@ -108,6 +113,31 @@ class GraphWrapper(QtCore.QObject):
     def getZMax(self):
         return self._zMax
 
+    def getPositionClip(self, nodeName, clipName, clipNumber):
+        """
+            Function called when a new idClip is created.
+            Returns the position of the clip.
+            The calculation is the same as in the QML file (Node.qml).
+        """
+        node = self.getNodeWrapper(nodeName)
+
+        nodeCoord = node.getCoord()
+        widthNode = node.getWidth()
+        clipSpacing = node.getClipSpacing()
+        clipSize = node.getClipSize()
+        heightNode = node.getHeight()
+        inputTopMargin = node.getInputTopMargin()
+
+        if (clipName == "Output"):
+            xClip = nodeCoord.x() + widthNode + clipSize / 2
+            yClip = nodeCoord.y() + heightNode / 2 + clipSize / 2
+        else:
+            xClip = nodeCoord.x() - clipSize / 2
+            yClip = nodeCoord.y() + inputTopMargin + int(clipNumber) * (clipSpacing + clipSize) + clipSize / 2
+        return (xClip, yClip)
+
+    #################### setters ####################
+
     def setZMax(self, zMax):
         self._zMax = zMax
 
@@ -129,6 +159,40 @@ class GraphWrapper(QtCore.QObject):
         """
         conWrapper = ConnectionWrapper(connection, self._view)
         self._connectionWrappers.append(conWrapper)
+
+    ################################################ UPDATE WRAPPER LAYER ################################################
+
+    def updateNodeWrappers(self):
+        """
+            Updates the nodeWrappers when the signal nodesChanged has been emitted.
+        """
+        # we clear the list
+        self.getNodeWrappers().clear()
+        # and we fill with the new data
+        for node in self._graph.getNodes():
+            self.createNodeWrapper(node.getName())
+
+    def updateConnectionWrappers(self):
+        """
+            Updates the connectionWrappers when the signal connectionsChanged has been emitted.
+        """
+        # we clear the list
+        self.getConnectionWrappers().clear()
+        # and we fill with the new data
+        for connection in self._graph.getConnections():
+            self.createConnectionWrapper(connection)
+
+    def updateConnectionsCoord(self, node):
+        # for each connection of the graph
+        for connection in self._graph.getConnections():
+            # if the connection conerns the node we've just moved
+            if node.getName() in connection.getConcernedNodes():
+                clipOut = connection.getClipOut()
+                clipIn = connection.getClipIn()
+                # update clipOut and clipIn coords
+                clipOut.setCoord(self.getPositionClip(clipOut.getNodeName(), clipOut.getClipName(), clipOut.getClipNumber()))
+                clipIn.setCoord(self.getPositionClip(clipIn.getNodeName(), clipIn.getClipName(), clipIn.getClipNumber()))
+        self.updateConnectionWrappers()
 
     ################################################## DATA EXPOSED TO QML ##################################################
 

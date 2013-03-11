@@ -9,6 +9,10 @@ Item {
 
     property variant paramObject: model.object
 
+    // Is this param secret ?
+    visible: !paramObject.isSecret
+    height: paramObject.isSecret ? 0 : implicitHeight
+
     /*Container of the two input field*/
      Row {
         id: paramDouble2DInputContainer

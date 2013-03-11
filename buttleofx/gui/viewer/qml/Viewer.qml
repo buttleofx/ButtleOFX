@@ -32,7 +32,7 @@ Rectangle {
         property real fitRatio: fitOnWidth ? ratioWidth : ratioHeight
 
         Component.onDestruction: {
-            viewport.unconnectToButtleData()
+            viewport.unconnectToButtleEvent()
         }
 
         MouseArea {

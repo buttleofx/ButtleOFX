@@ -7,6 +7,10 @@ Item {
 
     property variant paramObject: model.object
 
+    // Is this param secret ?
+    visible: !paramObject.isSecret
+    height: paramObject.isSecret ? 0 : implicitHeight
+
     // To fix binding loops
     property bool mousePressed: false
     function updateXcursor() {

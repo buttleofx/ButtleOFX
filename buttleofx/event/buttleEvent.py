@@ -15,7 +15,7 @@ class ButtleEvent(QtCore.QObject):
     """
 
     # signals
-    paramChangedSignal = Signal()
+    oneParamChangedSignal = Signal()
     viewerChangedSignal = Signal()
 
     ### flag ###
@@ -28,11 +28,11 @@ class ButtleEvent(QtCore.QObject):
 
     ### emit signals ###
 
-    def emitParamChangedSignal(self):
+    def emitOneParamChangedSignal(self):
         """
             Emit paramChangedSignal.
         """
-        self.paramChangedSignal()
+        self.oneParamChangedSignal()
 
     def emitViewerChangedSignal(self):
         """

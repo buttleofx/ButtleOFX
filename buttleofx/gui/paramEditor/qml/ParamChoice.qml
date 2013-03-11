@@ -5,7 +5,12 @@ Item {
     id: choiceList
     implicitWidth: 300
     implicitHeight: 30
+
     property variant paramObject: model.object
+
+    // Is this param secret ?
+    visible: !paramObject.isSecret
+    height: paramObject.isSecret ? 0 : implicitHeight
 
     // convert the qobjectlistmodel into a qml ListModel
     ListModel {
@@ -46,20 +51,17 @@ Item {
             height: 30
             y: -7
 
-            // to check if the comboxbox is charged for the first time in qml
-            property int charged : 0
+            // usefull to avoid setting paramObject.value when loaded the comboBox
+            property int comboBoxCharged: 0
 
             selectedText: paramObject.value
 
             onSelectedIndexChanged: {
-                if (!charged) {
-                    //console.debug("-> " + menuItems.get(selectedIndex).text + ", " + paramObject.listValue.get(selectedIndex))
-                    charged = 1
-                    //first value displayed is the default value
-                    paramObject.value = paramObject.getDefaultValue()
+                if (comboBoxCharged) {
+                    paramObject.value = menuItems.get(selectedIndex).text
                 }
                 else {
-                    paramObject.value = menuItems.get(selectedIndex).text
+                    comboBoxCharged = 1
                 }
             }
         }

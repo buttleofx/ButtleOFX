@@ -10,6 +10,10 @@ Item {
 
     property variant paramObject: model.object
 
+    // Is this param secret ?
+    visible: !paramObject.isSecret
+    height: paramObject.isSecret ? 0 : implicitHeight
+
     FolderListView {id: finder}
 
     /*Container of the textInput*/

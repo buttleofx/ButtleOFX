@@ -12,6 +12,7 @@ class NodeWrapper(QtCore.QObject):
         Class NodeWrapper defined by :
             - _node : the buttle node
             - _view : the view (necessary for all wrapper, to construct a QtCore.QObject)
+            - _paramWrappers : the paramWrappers (it's a ParamEditorWrapper object)
             - _widthEmptyNode, _heightEmptyNode , _clipSpacing, _clipSize, _inputSideMargin : data given to QML to have nodes with good looking
             - _fpsError, _frameError : potential errors that we need to displayed.
     """
@@ -21,6 +22,9 @@ class NodeWrapper(QtCore.QObject):
 
         self._node = node
         self._view = view
+
+        # paramWrappers
+        self._paramWrappers = ParamEditorWrapper(self._view, self._node.getParams())
 
         # data given to QML to have nodes with good looking
         self._widthEmptyNode = 15
@@ -112,10 +116,7 @@ class NodeWrapper(QtCore.QObject):
         return (self.getHeight() - self.getClipSize() * self.getNbInput() - self.getClipSpacing() * (self.getNbInput() - 1)) / 2
 
     def getParams(self):
-        #self._node.paramsChanged.clear()
-        paramEditorWrapper = ParamEditorWrapper(self._view, self._node.getParams())
-        print "getParams()"
-        return paramEditorWrapper.getParamElts()
+        return self._paramWrappers.getParamElts()
 
     #for video
     def getFPS(self):
@@ -216,6 +217,10 @@ class NodeWrapper(QtCore.QObject):
         pass
 
     def emitNodeContentChanged(self):
+        # warn other param of the node that something just happened
+        for paramW in self.getParams():
+            paramW.emitOtherParamOfTheNodeChanged()
+        # emit signal
         self.nodeContentChanged.emit()
 
     ################################################## DATA EXPOSED TO QML ##################################################
@@ -231,7 +236,7 @@ class NodeWrapper(QtCore.QObject):
     nbInput = QtCore.Property(int, getNbInput, constant=True)
 
     # params from Tuttle
-    params = QtCore.Property("QVariant", getParams, notify=nodeContentChanged)
+    params = QtCore.Property(QtCore.QObject, getParams, notify=nodeContentChanged)
 
     # #video
     fps = QtCore.Property(float, getFPS, constant=True)

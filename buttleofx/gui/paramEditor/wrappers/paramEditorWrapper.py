@@ -10,9 +10,11 @@ from quickmamba.models import QObjectListModel
 class ParamEditorWrapper(QtCore.QObject):
     def __init__(self, parent, paramList):
         super(ParamEditorWrapper, self).__init__(parent)
-        # QtCore.QObject.__init__(self)
+
+        # the QObjectListModel
         self._paramElmts = QObjectListModel(self)
 
+        # the map : correspondances between core params and wrapper params
         self.mapTypeToWrapper = {
             ParamInt: IntWrapper,
             ParamInt2D: Int2DWrapper,
@@ -30,22 +32,14 @@ class ParamEditorWrapper(QtCore.QObject):
             ParamPage: PageWrapper,
         }
 
-        #paramListModel = [self.mapTypeToWrapper[paramElt.__class__](paramElt) for paramElt in paramList if not paramElt.isSecret()]
-        paramListModel = [self.mapTypeToWrapper[paramElt.__class__](paramElt) for paramElt in paramList]
+        # the list of param wrappers
+        self._paramListModel = [self.mapTypeToWrapper[paramElt.__class__](paramElt) for paramElt in paramList]
+
+        # convert wrappers to qObject (for the listView)
+        self._paramElmts.setObjectList(self._paramListModel)
         
-        self._paramElmts.setObjectList(paramListModel)
-
     def getParamElts(self):
+        """
+            Returns the list of params, ready for QML (QObjectListModel)
+        """
         return self._paramElmts
-
-    # def setNodeForParam(self, node):
-    #     self._paramElmts = node._params
-    #     self.paramsChanged.emit()
-
-# <<<<<<< HEAD
-#     # paramsChanged = QtCore.Signal()
-#     # #paramElmts = QtCore.Property("QVariant", getParamElts, notify=paramsChanged)
-# =======
-#     modelChanged = QtCore.Signal()
-#     paramElmts = QtCore.Property(QtCore.QObject, getParamElts, notify=modelChanged)
-# >>>>>>> d269b00801b0c48719e442efab11bb474d194cc3

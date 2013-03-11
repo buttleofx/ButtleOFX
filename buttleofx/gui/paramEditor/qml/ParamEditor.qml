@@ -56,7 +56,7 @@ Item {
                     frameWidth: 0
                     ListView {
                         id: tuttleParam
-                        height: getListViewContentHeight()
+                        height: count ? contentHeight : 0
                         y: parent.y + 10
                         spacing: 6
 
@@ -70,16 +70,6 @@ Item {
                                 source : model.object.paramType + ".qml"
                                 width: parent.width
                                 x: 15 // here is the distance to the left of the listview
-                            }
-                        }
-
-                        // Function returning contentHeight if elements exists
-                        function getListViewContentHeight() {
-                            if(count > 0) {
-                                return contentHeight;
-                            }
-                            else {
-                                return 0
                             }
                         }
                     }//Listview

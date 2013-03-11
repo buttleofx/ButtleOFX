@@ -24,24 +24,24 @@ class GLViewport_tuttleofx(GLViewport):
         self._frame = 0
         self._frameHasChanged = False
 
-        self.connectToButtleData()
+        self.connectToButtleEvent()
 
-    def connectToButtleData(self):
-        # connect viewerChanged to load image
+    def connectToButtleEvent(self):
         buttleEvent = ButtleEventSingleton().get()
+        # connect viewerChanged to load image
         buttleEvent.viewerChangedSignal.connect(self.loadImage)
-        # connect paramChanged to clearMap and load image
-        buttleEvent.paramChangedSignal.connect(self.clearMapOfImageAlreadyCalculated)
-        buttleEvent.paramChangedSignal.connect(self.loadImage)
+        # connect oneParamChangedSignal to clearMap and load image
+        buttleEvent.oneParamChangedSignal.connect(self.clearMapOfImageAlreadyCalculated)
+        buttleEvent.oneParamChangedSignal.connect(self.loadImage)
 
     @QtCore.Slot()
-    def unconnectToButtleData(self):
-        # connct viewerChanged to load image
+    def unconnectToButtleEvent(self):
         buttleEvent = ButtleEventSingleton().get()
+        # connct viewerChanged to load image
         buttleEvent.viewerChangedSignal.disconnect(self.loadImage)
-        # connect paramChanged to clearMap and load image
-        buttleEvent.paramChangedSignal.disconnect(self.clearMapOfImageAlreadyCalculated)
-        buttleEvent.paramChangedSignal.disconnect(self.loadImage)
+        # connect oneParamChangedSignal to clearMap and load image
+        buttleEvent.oneParamChangedSignal.disconnect(self.clearMapOfImageAlreadyCalculated)
+        buttleEvent.oneParamChangedSignal.disconnect(self.loadImage)
 
     def loadImage_tuttle(self):
         print "--------------------------------- loadImage_tuttle ---------------------------"

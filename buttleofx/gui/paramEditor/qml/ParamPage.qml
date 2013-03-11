@@ -3,6 +3,12 @@ import QtQuick 1.1
 Item {
     implicitWidth: 100
     implicitHeight: 20
+    
+    property variant paramObject: model.object
+
+    // Is this param secret ?
+    visible: !paramObject.isSecret
+    height: paramObject.isSecret ? 0 : implicitHeight
 
     Row {
         spacing: 10
@@ -16,7 +22,7 @@ Item {
         /*Title of the param*/
         Text {
             id: paramGroupTitle
-            text: object.label
+            text: paramObject.label
             color: "white"
             font.pointSize: 15
         }

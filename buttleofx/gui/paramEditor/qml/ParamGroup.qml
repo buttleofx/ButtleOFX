@@ -4,6 +4,12 @@ Item {
     implicitWidth: 100
     implicitHeight: 30
 
+    property variant paramObject: model.object
+
+    // Is this param secret ?
+    visible: !paramObject.isSecret
+    height: paramObject.isSecret ? 0 : implicitHeight
+
     Row {
         spacing: 10
         Rectangle {
@@ -16,7 +22,7 @@ Item {
         /*Title of the param*/
         Text {
             id: paramGroupTitle
-            text: object.label
+            text: paramObject.label
             color: "white"
             font.pointSize: 11
         }

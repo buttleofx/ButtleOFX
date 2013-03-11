@@ -15,6 +15,10 @@ Item{
 
     property variant paramObject: model.object
 
+    // Is this param secret ?
+    visible: !paramObject.isSecret
+    height: paramObject.isSecret ? 0 : implicitHeight
+
     Column {
         spacing: 10
         Text {

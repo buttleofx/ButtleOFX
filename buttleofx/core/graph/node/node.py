@@ -6,7 +6,8 @@ from buttleofx.data import tuttleTools
 from quickmamba.patterns import Signal
 # paramEditor
 from buttleofx.core.params import ParamInt, ParamInt2D, ParamInt3D, ParamString, ParamDouble, ParamDouble2D, ParamBoolean, ParamDouble3D, ParamChoice, ParamPushButton, ParamRGBA, ParamRGB, ParamGroup, ParamPage
-
+# event
+from buttleofx.event import ButtleEventSingleton
 
 mapTuttleParamToButtleParam = {
     "OfxParamTypeInteger": ParamInt,
@@ -141,5 +142,15 @@ class Node(object):
     def setClips(self, clips):
         self._clips = clips
 
-    def setParams(self):
+    ######## emit signal ########
+
+    def emitNodeContentChanged(self):
+        """
+            Emit nodeContentChanged signal, to warn the node wrapper that a param just changed.
+            Also call emitOneParamChangedSignal, to warn buttleEvent that a param just changed (to update the viewer)
+        """
+        # to buttleEvent
+        buttleEvent = ButtleEventSingleton().get()
+        buttleEvent.emitOneParamChangedSignal()
+        # to the node wrapper
         self.nodeContentChanged()

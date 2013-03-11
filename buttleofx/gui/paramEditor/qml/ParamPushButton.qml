@@ -6,6 +6,9 @@ Item {
 
     property variant paramObject: model.object
 
+    // Is this param secret ?
+    visible: !paramObject.isSecret
+    height: paramObject.isSecret ? 0 : implicitHeight
 
     Rectangle {
         id: pushButton

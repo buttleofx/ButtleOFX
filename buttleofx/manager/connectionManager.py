@@ -3,8 +3,6 @@ from PySide import QtCore, QtGui
 from quickmamba.patterns import Signal
 # data
 from buttleofx.data import ButtleDataSingleton
-# event
-from buttleofx.event import ButtleEventSingleton
 # connection
 from buttleofx.core.graph.connection import IdClip
 
@@ -19,35 +17,7 @@ class ConnectionManager(QtCore.QObject):
 
         self.undoRedoChanged = Signal()
 
-        buttleData = ButtleDataSingleton().get()
-        buttleData.getGraph().connectionsCoordChanged.connect(self.updateConnectionsCoord)
-        buttleData.getGraph().connectionsChanged.connect(self.updateConnectionWrappers)
-
-    ############### getters & flags ###############
-
-    def getPositionClip(self, nodeName, clipName, clipNumber):
-        """
-            Function called when a new idClip is created.
-            Returns the position of the clip.
-            The calculation is the same as in the QML file (Node.qml).
-        """
-        buttleData = ButtleDataSingleton().get()
-        node = buttleData.getGraphWrapper().getNodeWrapper(nodeName)
-
-        nodeCoord = node.getCoord()
-        widthNode = node.getWidth()
-        clipSpacing = node.getClipSpacing()
-        clipSize = node.getClipSize()
-        heightNode = node.getHeight()
-        inputTopMargin = node.getInputTopMargin()
-
-        if (clipName == "Output"):
-            xClip = nodeCoord.x() + widthNode + clipSize / 2
-            yClip = nodeCoord.y() + heightNode / 2 + clipSize / 2
-        else:
-            xClip = nodeCoord.x() - clipSize / 2
-            yClip = nodeCoord.y() + inputTopMargin + int(clipNumber) * (clipSpacing + clipSize) + clipSize / 2
-        return (xClip, yClip)
+    ############### flags ###############
 
     def canConnect(self, clip1, clip2):
         """
@@ -107,11 +77,11 @@ class ConnectionManager(QtCore.QObject):
         else:
             tmpClipNodeName, tmpClipName, tmpClipNumber = infosTmpClip[1], infosTmpClip[2], int(infosTmpClip[3])
 
-        positionTmpClip = self.getPositionClip(tmpClipNodeName, tmpClipName, tmpClipNumber)
+        positionTmpClip = buttleData.getGraphWrapper().getPositionClip(tmpClipNodeName, tmpClipName, tmpClipNumber)
         tmpClip = IdClip(tmpClipNodeName, tmpClipName, tmpClipNumber, positionTmpClip)
 
         if tmpClip:
-            positionNewClip = self.getPositionClip(clip.getNodeName(), clip.getClipName(), clipNumber)
+            positionNewClip = buttleData.getGraphWrapper().getPositionClip(clip.getNodeName(), clip.getClipName(), clipNumber)
             newClip = IdClip(clip.getNodeName(), clip.getClipName(), clipNumber, positionNewClip)
 
             if tmpClip.getClipName() == "Output":
@@ -150,29 +120,3 @@ class ConnectionManager(QtCore.QObject):
         """
         buttleData = ButtleDataSingleton().get()
         buttleData.getGraph().deleteConnection(connectionWrapper.getConnection())
-
-    ################################################## WRAPPER LAYER ##################################################
-
-    def updateConnectionWrappers(self):
-        """
-            Updates the connectionWrappers when the signal connectionsChanged has been emitted.
-        """
-        buttleData = ButtleDataSingleton().get()
-        # we clear the list
-        buttleData.getGraphWrapper().getConnectionWrappers().clear()
-        # and we fill with the new data
-        for connection in buttleData.getGraph().getConnections():
-            buttleData.getGraphWrapper().createConnectionWrapper(connection)
-
-    def updateConnectionsCoord(self, node):
-        buttleData = ButtleDataSingleton().get()
-        # for each connection of the graph
-        for connection in buttleData.getGraph().getConnections():
-            # if the connection conerns the node we've just moved
-            if node.getName() in connection.getConcernedNodes():
-                clipOut = connection.getClipOut()
-                clipIn = connection.getClipIn()
-                # update clipOut and clipIn coords
-                clipOut.setCoord(self.getPositionClip(clipOut.getNodeName(), clipOut.getClipName(), clipOut.getClipNumber()))
-                clipIn.setCoord(self.getPositionClip(clipIn.getNodeName(), clipIn.getClipName(), clipIn.getClipNumber()))
-        self.updateConnectionWrappers()

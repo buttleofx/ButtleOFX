@@ -3,12 +3,15 @@ import QtQuick 1.1
 // an input field with a title
 Row {
     property alias  colorName: colorName.text
-    property alias  colorValueText: colorValue.text
     property alias  minValue: numValidator.bottom
     property alias  maxValue: numValidator.top
     property alias  decimals: numValidator.decimals
-    // test for enter colors values in inputs and adapt display
-    property real cursorPositionInput: 255
+
+    // property used to take or give the value of Input from ColorInputsRGBA
+    property real valueInput 
+
+    // used for the update of the current color
+    property real newValueInput
 
     width: 80
     height: 14
@@ -36,7 +39,7 @@ Row {
         color: "transparent"
         clip: true
         TextInput {
-            id: colorValue
+            id: input
             anchors.leftMargin: 4
             anchors.topMargin: 0 
             anchors.fill: parent
@@ -45,6 +48,7 @@ Row {
             focus: true
             selectByMouse: true
             color: "white"
+            text: valueInput
             validator: DoubleValidator {
                 id: numValidator
                 //default values
@@ -52,8 +56,8 @@ Row {
                 notation: DoubleValidator.StandardNotation
             }
             onAccepted: {
-                cursorPositionInput = colorValue.text
-                console.log(cursorPositionInput)
+                // every time the user confirms the entry we save the value in newValueInput and we recup it in colorInputsRGBA.qml
+                newValueInput = parseInt(input.text)
             }
         }
     }

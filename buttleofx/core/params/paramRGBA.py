@@ -6,17 +6,10 @@ from buttleofx.core.params import Param
 class ParamRGBA(Param):
     """
         Core class, which represents a RGBA parameter.
-        Contains :
-            - _positionColorSlider, _positionAlphaSlider, _positionXcolorSelector, _positionYcolorSelector : the old values of the param.
     """
 
     def __init__(self, tuttleParam):
         Param.__init__(self, tuttleParam)
-
-        self._positionColorSlider = 0
-        self._positionAlphaSlider = 0
-        self._positionXcolorSelector = 0
-        self._positionYcolorSelector = 0
 
     #################### getters ####################
 

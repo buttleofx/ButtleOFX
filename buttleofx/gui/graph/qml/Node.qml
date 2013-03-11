@@ -14,13 +14,15 @@ Rectangle {
     z: _buttleData.graphWrapper.zMax
 
     height: m.nodeModel.height
-    width: m.nodeModel.width
+    //width: m.nodeModel.width
+    width: nodeText.width + 20
 
     property int inputSpacing : m.nodeModel.clipSpacing
     property int clipSize: m.nodeModel.clipSize
     property int nbInput: m.nodeModel.nbInput
     property int inputTopMargin: m.nodeModel.inputTopMargin
-    property int inputSideMargin: m.nodeModel.inputSideMargin
+    property int outputTopMargin: m.nodeModel.outputTopMargin
+    property int sideMargin: m.nodeModel.sideMargin
 
     signal drawSelection(int x, int y, int width, int height)
 
@@ -142,10 +144,11 @@ Rectangle {
             color: isSelected ? m.nodeModel.color : "black"
         }
     }
+    //inputClips
     Column {
         id: nodeInputs
         anchors.left: parent.left
-        anchors.leftMargin: -node.inputSideMargin
+        anchors.leftMargin: -node.sideMargin
         anchors.top: parent.top
         anchors.topMargin: node.inputTopMargin
         spacing: node.inputSpacing
@@ -156,17 +159,16 @@ Rectangle {
             }
         }
     }
+    //outputClip
     Column {
         id: nodeOutputs
         anchors.right: parent.right
-        anchors.rightMargin: -node.inputSideMargin
-        anchors.top : parent.verticalCenter
-        spacing: 2
-        Repeater {
-            model: m.nodeModel.outputClips
-            Clip {
-                property string port : "output"
-            }
+        anchors.rightMargin: -node.sideMargin
+        anchors.top : parent.top
+        anchors.topMargin: node.outputTopMargin
+        // always only one outputClip
+        Clip {
+            property string port : "output"
         }
     }
 

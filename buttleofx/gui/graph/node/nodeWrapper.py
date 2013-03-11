@@ -13,7 +13,7 @@ class NodeWrapper(QtCore.QObject):
             - _node : the buttle node
             - _view : the view (necessary for all wrapper, to construct a QtCore.QObject)
             - _paramWrappers : the paramWrappers (it's a ParamEditorWrapper object)
-            - _widthEmptyNode, _heightEmptyNode , _clipSpacing, _clipSize, _inputSideMargin : data given to QML to have nodes with good looking
+            - _heightEmptyNode , _clipSpacing, _clipSize, _inputSideMargin : data given to QML to have nodes with good looking
             - _fpsError, _frameError : potential errors that we need to displayed.
     """
 
@@ -26,12 +26,11 @@ class NodeWrapper(QtCore.QObject):
         # paramWrappers
         self._paramWrappers = ParamEditorWrapper(self._view, self._node.getParams())
 
-        # data given to QML to have nodes with good looking
-        self._widthEmptyNode = 15
+        # data given to QML to have clips with good looking
         self._heightEmptyNode = 35
         self._clipSpacing = 7
         self._clipSize = 8
-        self._inputSideMargin = 6
+        self._sideMargin = 6
 
         # potential errors
         self._fpsError = ""
@@ -97,9 +96,6 @@ class NodeWrapper(QtCore.QObject):
         outputClips.setObjectList([ClipWrapper(clip, self.getName(), self._view) for clip in self._node.getClips() if clip == "Output"])
         return outputClips
 
-    def getWidth(self):
-        return self._widthEmptyNode + 9 * len(self.getNameUser())
-
     def getHeight(self):
         return int(self._heightEmptyNode + self._clipSpacing * self.getNbInput())
 
@@ -109,11 +105,14 @@ class NodeWrapper(QtCore.QObject):
     def getClipSize(self):
         return self._clipSize
 
-    def getInputSideMargin(self):
-        return self._inputSideMargin
+    def getSideMargin(self):
+        return self._sideMargin
 
     def getInputTopMargin(self):
         return (self.getHeight() - self.getClipSize() * self.getNbInput() - self.getClipSpacing() * (self.getNbInput() - 1)) / 2
+
+    def getOutputTopMargin(self):
+        return (self.getHeight() - self.getClipSize()) / 2
 
     def getParams(self):
         return self._paramWrappers.getParamElts()
@@ -177,6 +176,8 @@ class NodeWrapper(QtCore.QObject):
     ######## setters ########
 
     def setNameUser(self, nameUser):
+        if(nameUser == ''):
+            nameUser = 'Undefined name'
         self._node.setNameUser(nameUser)
 
     #from a QPoint
@@ -238,16 +239,16 @@ class NodeWrapper(QtCore.QObject):
     # params from Tuttle
     params = QtCore.Property(QtCore.QObject, getParams, notify=nodeContentChanged)
 
-    # #video
+    # video
     fps = QtCore.Property(float, getFPS, constant=True)
     nbFrames = QtCore.Property(int, getNbFrames, constant=True)
 
-    # for a clean display of connections
-    width = QtCore.Property(int, getWidth, notify=nodeLookChanged)
+    # for a clean display of  connections
     height = QtCore.Property(int, getHeight, constant=True)
     srcClips = QtCore.Property(QtCore.QObject, getSrcClips, constant=True)
     outputClips = QtCore.Property(QtCore.QObject, getOutputClips, constant=True)
     clipSpacing = QtCore.Property(int, getClipSpacing, constant=True)
     clipSize = QtCore.Property(int, getClipSize, constant=True)
-    inputSideMargin = QtCore.Property(int, getInputSideMargin, constant=True)
+    sideMargin = QtCore.Property(int, getSideMargin, constant=True)
     inputTopMargin = QtCore.Property(int, getInputTopMargin, constant=True)
+    outputTopMargin = QtCore.Property(int, getOutputTopMargin, constant=True)

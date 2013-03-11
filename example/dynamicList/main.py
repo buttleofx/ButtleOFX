@@ -33,7 +33,7 @@ class MainWrapper(QtCore.QObject):
         return self._clips
 
     modelChanged = QtCore.Signal()
-    clips = QtCore.Property("QVariant", getClips, notify=modelChanged)
+    clips = QtCore.Property(QtCore.QObject, getClips, notify=modelChanged)
 
 
 def main():

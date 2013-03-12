@@ -95,8 +95,8 @@ class ViewerManager(QtCore.QObject):
         mimeData.setText("mosquito_of_the_dead")
         drag.setMimeData(mimeData)
 
-        currentFilePath = os.path.dirname(os.path.abspath(__file__))
-        imgPath = os.path.join(currentFilePath, "mosquito.png")
+        filePath = ButtleDataSingleton().get().getButtlePath()
+        imgPath = filePath + "/gui/img/mosquito/mosquito.png"
         drag.setPixmap(QtGui.QPixmap(imgPath))
 
         drag.exec_(QtCore.Qt.MoveAction)

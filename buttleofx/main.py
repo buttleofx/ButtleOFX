@@ -96,11 +96,12 @@ def main(argv):
     view.setViewportUpdateMode(QtDeclarative.QDeclarativeView.FullViewportUpdate)
 
     # data
-    buttleData = ButtleDataSingleton().get().init(view)
+    buttleData = ButtleDataSingleton().get().init(view, currentFilePath)
     # manager
     buttleManager = ButtleManagerSingleton().get().init()
     # event
     buttleEvent = ButtleEventSingleton().get()
+
 
     # expose data to QML
     rc = view.rootContext()

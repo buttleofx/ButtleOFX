@@ -53,13 +53,13 @@ Item {
 
     ListModel {
         id: modelButtonsTimeline
-        ListElement { buttonName: "begin"; imageSource: "../img/begin.png"; imageSourceLocked: "../img/begin_locked.png"; imageSourceHover: "../img/begin_hover.png"; state: "normal"}
-        ListElement { buttonName: "previous"; imageSource: "../img/previous.png"; imageSourceLocked: "../img/previous_locked.png"; imageSourceHover: "../img/previous_hover.png"; state: "normal" }
-        ListElement { buttonName: "stop"; imageSource: "../img/stop.png"; imageSourceLocked: "../img/stop_locked.png"; imageSourceHover: "../img/stop_hover.png"; state: "normal" }
-        ListElement { buttonName: "pause"; imageSource: "../img/pause.png"; imageSourceLocked: "../img/pause_locked.png"; imageSourceHover: "../img/pause_hover.png"; state: "normal" }
-        ListElement {  buttonName: "play"; imageSource: "../img/play.png"; imageSourceLocked: "../img/playlocked.png"; imageSourceHover: "../img/play_hover.png"; state: "normal" }
-        ListElement { buttonName: "next"; imageSource: "../img/next.png"; imageSourceLocked: "../img/next_locked.png"; imageSourceHover: "../img/next_hover.png"; state: "normal" }
-        ListElement { buttonName: "end"; imageSource: "../img/end.png"; imageSourceLocked: "../img/end_locked.png"; imageSourceHover: "../img/end_hover.png"; state: "normal" }
+        ListElement { buttonName: "begin"; imageSource: "begin.png"; imageSourceLocked: "begin_locked.png"; imageSourceHover: "begin_hover.png"; state: "normal"}
+        ListElement { buttonName: "previous"; imageSource: "previous.png"; imageSourceLocked: "previous_locked.png"; imageSourceHover: "previous_hover.png"; state: "normal" }
+        ListElement { buttonName: "stop"; imageSource: "stop.png"; imageSourceLocked: "stop_locked.png"; imageSourceHover: "stop_hover.png"; state: "normal" }
+        ListElement { buttonName: "pause"; imageSource: "pause.png"; imageSourceLocked: "pause_locked.png"; imageSourceHover: "pause_hover.png"; state: "normal" }
+        ListElement {  buttonName: "play"; imageSource: "play.png"; imageSourceLocked: "playlocked.png"; imageSourceHover: "play_hover.png"; state: "normal" }
+        ListElement { buttonName: "next"; imageSource: "next.png"; imageSourceLocked: "next_locked.png"; imageSourceHover: "next_hover.png"; state: "normal" }
+        ListElement { buttonName: "end"; imageSource: "end.png"; imageSourceLocked: "end_locked.png"; imageSourceHover: "end_hover.png"; state: "normal" }
     }
 
     Text {
@@ -81,6 +81,9 @@ Item {
                 Component {
                     Rectangle {
                         id: buttonTimeline
+
+                        property string imgPath: _buttleData.buttlePath + "/gui/img/buttons/viewer/"
+
                         width: 8
                         height: 8
                         y: 5
@@ -88,7 +91,7 @@ Item {
 
                         Image {
                             id: imageButton
-                            source: imageSource
+                            source: parent.imgPath + imageSource
                             MouseArea {
                                 id: buttonTimelineMousearea
                                 hoverEnabled: true
@@ -108,7 +111,7 @@ Item {
 //                                     name: "locked"
 //                                     PropertyChanges {
 //                                        target: imageButton
-//                                        source: imageSourceLocked
+//                                        source: parent.imgPath + imageSourceLocked
 //                                     }
 //                                 },
                                  State {
@@ -116,7 +119,7 @@ Item {
                                      when: !buttonTimelineMousearea.containsMouse
                                      PropertyChanges {
                                         target: imageButton
-                                        source: imageSource
+                                        source: parent.imgPath + imageSource
                                      }
                                  },
                                  State {
@@ -124,7 +127,7 @@ Item {
                                      when: buttonTimelineMousearea.containsMouse
                                      PropertyChanges {
                                         target: imageButton
-                                        source: imageSourceHover
+                                        source: parent.imgPath + imageSourceHover
                                      }
                                  }
                              ]

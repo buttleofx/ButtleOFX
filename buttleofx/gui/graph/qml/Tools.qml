@@ -72,67 +72,70 @@ Rectangle {
         anchors.leftMargin: 10
        anchors.topMargin: 3
 
+
+
         Row {
             spacing: 15
+            property string imgPath: _buttleData.buttlePath + "/gui/img/buttons/tools/"
 
             ToolElement {
-                imageSource: "img/buttons/plus.png"
-                imageSourceHover: "img/buttons/plus_hover.png"
-                imageSourceLocked: "img/buttons/plus.png"
+                imageSource: parent.imgPath + "plus.png"
+                imageSourceHover: parent.imgPath + "plus_hover.png"
+                imageSourceLocked: parent.imgPath + "plus.png"
                 buttonName: "createNode"
                 buttonText: "Create a new node"
                 locked: false
             }
 
             ToolElement {
-                imageSource: "img/buttons/undo.png"
-                imageSourceHover: "img/buttons/undo_hover.png"
-                imageSourceLocked: "img/buttons/undo_locked.png"
+                imageSource: parent.imgPath + "undo.png"
+                imageSourceHover: parent.imgPath + "undo_hover.png"
+                imageSourceLocked: parent.imgPath + "undo_locked.png"
                 buttonName: "undo"
                 buttonText: "Undo"
                 locked: _buttleManager.canUndo ? false : true
             }
 
             ToolElement {
-                imageSource: "img/buttons/redo.png"
-                imageSourceHover: "img/buttons/redo_hover.png"
-                imageSourceLocked: "img/buttons/redo_locked.png"
+                imageSource: parent.imgPath + "redo.png"
+                imageSourceHover: parent.imgPath + "redo_hover.png"
+                imageSourceLocked: parent.imgPath + "redo_locked.png"
                 buttonName: "redo"
                 buttonText: "Redo"
                 locked: _buttleManager.canRedo ? false : true
             }
 
             ToolElement {
-                imageSource: "img/buttons/copy.png"
-                imageSourceHover: "img/buttons/copy_hover.png"
-                imageSourceLocked: "img/buttons/copy_locked.png"
+                imageSource: parent.imgPath + "copy.png"
+                imageSourceHover: parent.imgPath + "copy_hover.png"
+                imageSourceLocked: parent.imgPath + "copy_locked.png"
                 buttonName: "copy"
                 buttonText: "Copy"
                 locked: _buttleData.currentSelectedNodeWrappers.isEmpty() ? true : false
             }
 
             ToolElement {
-                imageSource: "img/buttons/cut.png"
-                imageSourceHover: "img/buttons/cut_hover.png"
-                imageSourceLocked: "img/buttons/cut_locked.png"
+                imageSource: parent.imgPath + "cut.png"
+                imageSourceHover: parent.imgPath + "cut_hover.png"
+                imageSourceLocked: parent.imgPath + "cut_locked.png"
                 buttonName: "cut"
                 buttonText: "Cut"
                 locked: _buttleData.currentSelectedNodeWrappers.isEmpty() ? true : false
             }
 
             ToolElement {
-                imageSource: "img/buttons/paste.png"
-                imageSourceHover: "img/buttons/paste_hover.png"
-                imageSourceLocked: "img/buttons/paste_locked.png"
+                imageSource: parent.imgPath + "paste.png"
+                imageSourceHover: parent.imgPath + "paste_hover.png"
+                imageSourceLocked: parent.imgPath + "paste_locked.png"
                 buttonName: "paste"
                 buttonText: "Paste"
                 locked: _buttleData.canPaste ? false : true
             }
 
             ToolElement {
-                imageSource: "img/buttons/duplicate.png"
-                imageSourceHover: "img/buttons/duplicate_hover.png"
-                imageSourceLocked: "img/buttons/duplicate_locked.png"
+                imageSource: parent.imgPath + "duplicate.png"
+                imageSourceHover: parent.imgPath + "duplicate_hover.png"
+                imageSourceLocked: parent.imgPath + "duplicate_locked.png"
                 buttonName: "duplicate"
                 buttonText: "Duplicate"
                 locked: _buttleData.currentSelectedNodeWrappers.isEmpty() ? true : false
@@ -140,9 +143,9 @@ Rectangle {
 
             ToolElement {
                 id: deleteTool
-                imageSource: "img/buttons/delete.png"
-                imageSourceHover: "img/buttons/delete_hover.png"
-                imageSourceLocked: "img/buttons/delete_locked.png"
+                imageSource: parent.imgPath + "delete.png"
+                imageSourceHover: parent.imgPath + "delete_hover.png"
+                imageSourceLocked: parent.imgPath + "delete_locked.png"
                 buttonName: "deleteNode"
                 buttonText: "Delete the node"
                 locked: (!_buttleData.currentSelectedNodeWrappers.isEmpty() || _buttleData.currentConnectionWrapper)? false : true

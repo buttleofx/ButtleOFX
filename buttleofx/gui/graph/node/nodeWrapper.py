@@ -93,12 +93,9 @@ class NodeWrapper(QtCore.QObject):
         return srcClips
 
     def getOutputClip(self):
-        #outputClips = QObjectListModel(self)
-        #outputClips.setObjectList([ClipWrapper(clip, self.getName(), self._view) for clip in self._node.getClips() if clip == "Output"])
         for clip in self._node.getClips():
             if clip == "Output":
                 return ClipWrapper(clip, self.getName(), self._view)
-
 
     def getHeight(self):
         return int(self._heightEmptyNode + self._clipSpacing * self.getNbInput())

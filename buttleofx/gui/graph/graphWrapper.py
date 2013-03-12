@@ -125,12 +125,12 @@ class GraphWrapper(QtCore.QObject):
         widthNode = node.getWidth()
         clipSpacing = node.getClipSpacing()
         clipSize = node.getClipSize()
-        heightNode = node.getHeight()
         inputTopMargin = node.getInputTopMargin()
+        outputTopMargin = node.getOutputTopMargin()
 
         if (clipName == "Output"):
             xClip = nodeCoord.x() + widthNode + clipSize / 2
-            yClip = nodeCoord.y() + heightNode / 2 + clipSize / 2
+            yClip = nodeCoord.y() + outputTopMargin + clipSize / 2
         else:
             xClip = nodeCoord.x() - clipSize / 2
             yClip = nodeCoord.y() + inputTopMargin + int(clipNumber) * (clipSpacing + clipSize) + clipSize / 2

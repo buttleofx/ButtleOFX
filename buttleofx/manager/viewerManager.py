@@ -1,4 +1,5 @@
 from PySide import QtCore, QtGui
+import os
 # quickmamba
 from quickmamba.patterns import Signal
 # Tuttle
@@ -74,13 +75,15 @@ class ViewerManager(QtCore.QObject):
             The function send the mimeData and launch a drag event.
         """
 
-        mimeData = QtCore.QMimeData()
-
-        mimeData.setText("mosquito_of_the_dead")
-
         widget = QtGui.QWidget()
-
         drag = QtGui.QDrag(widget)
+
+        mimeData = QtCore.QMimeData()
+        mimeData.setText("mosquito_of_the_dead")
         drag.setMimeData(mimeData)
+
+        currentFilePath = os.path.dirname(os.path.abspath(__file__))
+        imgPath = os.path.join(currentFilePath, "mosquito.png")
+        drag.setPixmap(QtGui.QPixmap(imgPath))
 
         drag.exec_(QtCore.Qt.MoveAction)

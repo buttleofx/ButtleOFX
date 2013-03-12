@@ -84,6 +84,7 @@ Rectangle {
 
     DropArea {
         anchors.fill: parent
+        acceptedData: "urls"
         onDrop: {
             if( hasUrls )
             {

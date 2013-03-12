@@ -15,14 +15,9 @@ Rectangle {
 
     height: m.nodeModel.height
     width: m.nodeModel.width
-    //width: nodeText.width + 20
-
-    function fitWidth() {
-        node.width = nodeText.width + 20
-    }
 
     Component.onCompleted: {
-        node.fitWidth();
+        m.nodeModel.fitWidth(nodeText.width);
     }
 
     property int inputSpacing : m.nodeModel.clipSpacing
@@ -144,7 +139,7 @@ Rectangle {
             property bool isSelected: _buttleData.nodeInCurrentSelectedNodeNames(m.nodeModel)
             
             onTextChanged: {
-                node.fitWidth();
+                m.nodeModel.fitWidth(nodeText.width);
             }
 
             Connections {
@@ -167,7 +162,8 @@ Rectangle {
         Repeater {
             model: m.nodeModel.srcClips
             Clip {
-                property string port : "input"
+                clipWrapper: model.object
+                port : "input"
             }
         }
     }
@@ -178,9 +174,9 @@ Rectangle {
         anchors.rightMargin: -node.sideMargin
         anchors.top : parent.top
         anchors.topMargin: node.outputTopMargin
-        // always only one outputClip
         Clip {
-            property string port : "output"
+            clipWrapper: m.nodeModel.outputClip
+            port : "output"
         }
     }
 

@@ -4,10 +4,11 @@ import QuickMamba 1.0
 Rectangle {
     id: clip
     property string port
+    property variant clipWrapper
 
     QtObject {
         id: c
-        property variant clipModel: model.object
+        property variant clipModel: clipWrapper
     }
 
     height: clipSize

@@ -80,6 +80,7 @@ Rectangle {
 
     DropArea {
         anchors.fill: parent
+        acceptedData: "mosquito"
         onDrop: {
             if (hasText) {
                 if(text=="mosquito_of_the_dead") {

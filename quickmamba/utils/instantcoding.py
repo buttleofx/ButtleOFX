@@ -1,7 +1,6 @@
-from PySide import QtCore, QtDeclarative
-
 import os
 import time
+from PySide import QtCore, QtDeclarative
 
 
 class QmlInstantCoding(QtCore.QObject):
@@ -12,22 +11,22 @@ class QmlInstantCoding(QtCore.QObject):
     """
     def __init__(self, attachedView, watching=True, watchSource=False, verbose=False):
         """
-        Build a QmlFileWatcher instance.
+        Build a QmlInstantCoding instance.
 
-        attachedView -- the QDeclarativeView on which this QmlFileWatcher is applied
+        attachedView -- the QDeclarativeView on which this QmlInstantCoding is applied
         watching -- if True, file watching is enable (default: True)
         watchSource -- watch the attached QDeclarativeView source file if it already has one (default: False)
         verbose -- if True, output log infos (default: False)
         """
-        super(QmlFileWatcher, self).__init__()
+        super(QmlInstantCoding, self).__init__()
 
         if not isinstance(attachedView, QtDeclarative.QDeclarativeView):
-            raise TypeError("QmlFileWatcher: attachedView must be a QDeclarativeView.")
+            raise TypeError("QmlInstantCoding: attachedView must be a QDeclarativeView.")
 
         self._fileWatcher = QtCore.QFileSystemWatcher()     # Internal Qt File Watcher
         self._attachedView = attachedView                   # Declarative view attached to our watcher
         self._watchedFiles = []                             # Internal watched files list
-        self._verbose = False                               # Verbose bool
+        self._verbose = verbose                             # Verbose bool
         self._watching = False                              # Defines whether the watcher is active
         self._extensions = ["qml", "js"]                    # File extensions that defines files to watch when adding a folder
 
@@ -164,10 +163,10 @@ class QmlInstantCoding(QtCore.QObject):
         #       creates a new one when saving
         while not os.path.exists(sourceFile) and cptTry < 10:
             time.sleep(0.1)
+            cptTry += 1
 
+        print "Reloading ", sourceFile
         # To reload the view, re-set the source
         self._attachedView.setSource(source)
         # Finally, readd the modified file to the watch system
         self.addFile(sourceFile)
-        
-        

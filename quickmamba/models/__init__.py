@@ -1,0 +1,1 @@
+from listmodel import QObjectListModel

@@ -1,0 +1,2 @@
+from instantcoding import QmlInstantCoding
+

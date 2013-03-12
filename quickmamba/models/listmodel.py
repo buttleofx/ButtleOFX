@@ -11,7 +11,7 @@ class QObjectListModel(QtCore.QAbstractListModel):
 
     This class is the Python port of the C++ QObjectListModel class.
     """
-    def __init__(self, parent):
+    def __init__(self, parent=None):
         """ Constructs an object list model with the given parent. """
         super(QObjectListModel, self).__init__(parent)
 
@@ -30,6 +30,10 @@ class QObjectListModel(QtCore.QAbstractListModel):
 
     def __nonzero__(self):
         return self.size() > 0
+
+    def __getitem__(self, index):
+        """ Enables the [] operator """
+        return self._objects[index]
 
     def data(self, index, role):
         """ Returns data for the specified role, from the item with the
@@ -60,10 +64,13 @@ class QObjectListModel(QtCore.QAbstractListModel):
         """ Sets the model's internal objects list to objects. The model will
         notify any attached views that its underlying data has changed.
         """
+        oldSize = self.size()
         self.beginResetModel()
         self._objects = objects
         self.endResetModel()
-        self.dataChanged.emit(self.index(0), self.index(self.size()))
+        self.dataChanged.emit(self.index(0), self.index(self.size() - 1))
+        if self.size() != oldSize:
+            self.countChanged.emit()
 
     ############
     # List API #
@@ -74,7 +81,7 @@ class QObjectListModel(QtCore.QAbstractListModel):
         """
         if not isinstance(toAppend, list):
             toAppend = [toAppend]
-        self.beginInsertRows(QtCore.QModelIndex(), self.size(), self.size() + len(toAppend))
+        self.beginInsertRows(QtCore.QModelIndex(), self.size(), self.size() + len(toAppend) - 1)
         self._objects.extend(toAppend)
         self.endInsertRows()
         self.countChanged.emit()
@@ -87,13 +94,14 @@ class QObjectListModel(QtCore.QAbstractListModel):
         """
         if not isinstance(toInsert, list):
             toInsert = [toInsert]
-        self.beginInsertRows(QtCore.QModelIndex(), i, i + len(toInsert))
+        self.beginInsertRows(QtCore.QModelIndex(), i, i + len(toInsert) - 1)
         for obj in reversed(toInsert):
             self._objects.insert(i, obj)
         self.endInsertRows()
         self.countChanged.emit()
 
     def at(self, i):
+        """ Use [] instead - Return the object at index i. """
         return self._objects[i]
 
     def replace(self, i, obj):
@@ -102,7 +110,7 @@ class QObjectListModel(QtCore.QAbstractListModel):
         (i.e., 0 <= i < size()).
         """
         self._objects[i] = obj
-        self.countChanged.emit()
+        self.dataChanged.emit(self.index(i), self.index(i))
 
     def move(self, fromIndex, toIndex):
         """ Moves the item at index position from to index position to
@@ -122,13 +130,19 @@ class QObjectListModel(QtCore.QAbstractListModel):
     def removeAt(self, i, count=1):
         """  Removes count number of items from index position i and notifies any views.
         i must be a valid index position in the model (i.e., 0 <= i < size()), as
-        must \c{i + count - 1}.
+        must as i + count - 1.
         """
-        self.beginRemoveRows(QtCore.QModelIndex(), i, i + count)
+        self.beginRemoveRows(QtCore.QModelIndex(), i, i + count - 1)
         for cpt in range(count):
             self._objects.pop(i)
         self.endRemoveRows()
         self.countChanged.emit()
+
+    def remove(self, obj):
+        """ Removes the first occurrence of the given object. Raises a ValueError if not in list. """
+        if not self.contains(obj):
+            raise ValueError("QObjectListModel.remove(obj) : obj not in list")
+        self.removeAt(self.indexOf(obj))
 
     def takeAt(self, i):
         """  Removes the item at index position i (notifying any views) and returns it.
@@ -142,7 +156,9 @@ class QObjectListModel(QtCore.QAbstractListModel):
 
     def clear(self):
         """ Removes all items from the model and notifies any views. """
-        self.beginRemoveRows(QtCore.QModelIndex(), 0, self.size())
+        if not self._objects:
+            return
+        self.beginRemoveRows(QtCore.QModelIndex(), 0, self.size() - 1)
         self._objects = []
         self.endRemoveRows()
         self.countChanged.emit()
@@ -153,32 +169,43 @@ class QObjectListModel(QtCore.QAbstractListModel):
         """
         return obj in self._objects
 
-    def indexOf(self, matchObj, fromIndex=0):
+    def indexOf(self, matchObj, fromIndex=0, positive=True):
         """ Returns the index position of the first occurrence of object in
         the model, searching forward from index position from.
+        If positive is True, will always return a positive index.
         """
-        return self._objects[fromIndex:].index(matchObj) + fromIndex
+        index = self._objects[fromIndex:].index(matchObj) + fromIndex
+        if positive and index < 0:
+            index += self.size()
+        return index
 
-    def lastIndexOf(self, matchObj, fromIndex=-1):
+    def lastIndexOf(self, matchObj, fromIndex=-1, positive=True):
         """    Returns the index position of the last occurrence of object in
         the list, searching backward from index position from. If
         from is -1 (the default), the search starts at the last item.
+        If positive is True, will always return a positive index.
         """
         r = list(self._objects)
         r.reverse()
-        return - r[-fromIndex - 1:].index(matchObj) + fromIndex
+        index = - r[-fromIndex - 1:].index(matchObj) + fromIndex
+        if positive and index < 0:
+            index += self.size()
+        return index
 
     def size(self):
         """ Returns the number of items in the model. """
         return len(self._objects)
 
+    @QtCore.Slot(result=bool)
     def isEmpty(self):
         """ Returns true if the model contains no items; otherwise returns false. """
         return len(self._objects) == 0
 
-    @QtCore.Slot(int)
+    @QtCore.Slot(int, result="QVariant")
     def get(self, i):
-        """ For usage from QML. """
+        """ For usage from QML.
+        Note: return param is mandatory to mimic Q_INVOKABLE C++ method behavior
+        """
         return self._objects[i]
 
     countChanged = QtCore.Signal()

@@ -48,6 +48,7 @@ class DropArea(QtDeclarative.QDeclarativeItem):
             event.setAccepted(False)
 
         elif self._acceptDropValue:
+
             #print 'dragEnterEvent acceptDrop'
             event.setAccepted(True)
             event.acceptProposedAction()
@@ -76,6 +77,7 @@ class DropArea(QtDeclarative.QDeclarativeItem):
 
         elif self._acceptDropValue:
             event.setAccepted(True)
+
             urls = event.mimeData().urls()
             firstUrl = urls[0].toLocalFile() if len(urls) else ""
             self.internDragMove.emit(
@@ -99,6 +101,7 @@ class DropArea(QtDeclarative.QDeclarativeItem):
 
         elif self._acceptDropValue:
             event.setAccepted(True)
+
             urls = event.mimeData().urls()
             firstUrl = urls[0].toLocalFile() if len(urls) else ""
             self.internDragLeave.emit(
@@ -123,6 +126,7 @@ class DropArea(QtDeclarative.QDeclarativeItem):
             event.setAccepted(False)
 
         if self._acceptDropValue:
+
             event.setAccepted(True)
             event.acceptProposedAction()
             #print 'text:', event.mimeData().hasText(), event.mimeData().text()
@@ -189,3 +193,4 @@ class DropArea(QtDeclarative.QDeclarativeItem):
     _acceptedData = "urls"
     acceptDrop = QtCore.Property(bool, getAcceptDrop, setAcceptDrop, notify=acceptDropChanged)
     acceptedData = QtCore.Property(str, getAcceptedData, setAcceptedData, notify=acceptedDataChanged)
+

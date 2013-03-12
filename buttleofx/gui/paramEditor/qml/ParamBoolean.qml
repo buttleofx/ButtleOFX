@@ -28,8 +28,8 @@ Item {
                 acceptedButtons: Qt.RightButton
                 onClicked: {
                     // reinitialise the value of the param to her default value
-                    paramObject.hasChanged = false
                     paramObject.value = paramObject.getDefaultValue()
+                    paramObject.pushValue(paramObject.value)
                 }
             } 
         }
@@ -70,7 +70,8 @@ Item {
                 anchors.fill: parent
                 acceptedButtons: Qt.LeftButton
                 onPressed: {
-                    paramObject.value = (paramObject.value == false) ? true : false                    
+                    paramObject.value = (paramObject.value == false) ? true : false
+                    paramObject.pushValue(paramObject.value);           
                     // Take the focus of the MainWindow
                     paramBoolean.forceActiveFocus()
                 }
@@ -79,8 +80,8 @@ Item {
                 anchors.fill: parent
                 acceptedButtons: Qt.RightButton
                 onClicked: {                  
-                    paramObject.hasChanged = false
                     paramObject.value = paramObject.getDefaultValue()
+                    paramObject.pushValue(paramObject.value)
                 }
             }
         }

@@ -26,7 +26,7 @@ class NodeWrapper(QtCore.QObject):
         # paramWrappers
         self._paramWrappers = ParamEditorWrapper(self._view, self._node.getParams())
 
-        # data given to QML to have clips with good looking
+        # data given to QML to have nodes and clips with good looking
         self._width = 0  # will be setted by QML
         self._heightEmptyNode = 35
         self._clipSpacing = 7
@@ -183,6 +183,10 @@ class NodeWrapper(QtCore.QObject):
         if(nameUser == ''):
             nameUser = 'Undefined name'
         self._node.setNameUser(nameUser)
+
+    @QtCore.Slot(int)
+    def setWidth(self, newWidth):
+        self._width = newWidth
 
     #from a QPoint
     def setCoord(self, point):

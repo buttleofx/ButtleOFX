@@ -1,5 +1,7 @@
 import logging
 from PySide import QtGui
+# to parse
+import json
 # Tuttle
 from buttleofx.data import tuttleTools
 # Quickmamba
@@ -119,6 +121,9 @@ class Node(object):
     def getTuttleNode(self):
         return self._tuttleNode
 
+    def getPluginVersion(self):
+        return self._tuttleNode.getVersionStr()
+
     ######## setters ########
 
     def setName(self, name):
@@ -139,6 +144,10 @@ class Node(object):
         self._color = (r, g, b)
         self.nodeLookChanged()
 
+    def setColor(self, color):
+        self._color = color
+        self.nodeLookChanged()
+
     def setClips(self, clips):
         self._clips = clips
 
@@ -154,3 +163,42 @@ class Node(object):
         buttleEvent.emitOneParamChangedSignal()
         # to the node wrapper
         self.nodeContentChanged()
+
+    ######## SAVE / LOAD ########
+
+    def object_to_dict(self):
+        """
+            Convert the node to a dictionary of his representation.
+        """
+        res = {
+            "name": self._name,
+            "pluginIdentifier": self._type,
+            "pluginVersion": self.getPluginVersion(),
+            "uiParams": {
+                "nameUser": self._nameUser,
+                "coord": self._coord,
+                "color": self._color
+            },
+            "params": []
+        }
+        for param in self.getParams():
+            tmpDict = {
+                "name": param.getName(),
+                "value": param.getValue()
+            }
+            res["params"].append(tmpDict)
+        return res
+
+    def dict_to_object(self, nodeData):
+        """
+            Set all values of the node, from a dictionary.
+        """
+        # uiParams
+        self.setColor(nodeData["uiParams"]["color"])
+        self.setNameUser(nodeData["uiParams"]["nameUser"])
+
+        # params
+        for param in self.getParams():
+            for paramData in nodeData["params"]:
+                if param.getName() == paramData["name"]:
+                    param.setValue(paramData["value"])

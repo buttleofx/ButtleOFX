@@ -174,6 +174,7 @@ Rectangle {
         anchors.rightMargin: -node.sideMargin
         anchors.top : parent.top
         anchors.topMargin: node.outputTopMargin
+        // always only one outputClip
         Clip {
             clipWrapper: m.nodeModel.outputClip
             port : "output"

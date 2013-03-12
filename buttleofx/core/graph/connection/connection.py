@@ -27,7 +27,7 @@ class Connection(object):
         self._tuttleConnection = tuttleConnection
 
         # buttle data
-        self._id = clipOut.getId() + "_" + clipIn.getId()
+        self._id = clipOut.getId() + " => " + clipIn.getId()
         self._clipOut = clipOut
         self._clipIn = clipIn
 
@@ -75,3 +75,22 @@ class Connection(object):
     def setClipIn(self, clipIn):
         self._clipIn = clipIn
         self.connectionClipInChanged()
+
+    ######## SAVE / LOAD ########
+
+    def object_to_dict(self):
+        """
+            Convert the connection to a dictionary of his representation.
+        """
+        res = {
+            "id": self._id,
+            "clipOut": {
+                "nodeName": self._clipOut.getNodeName(),
+                "clipName": self._clipOut.getClipName()
+            },
+            "clipIn": {
+                "nodeName": self._clipIn.getNodeName(),
+                "clipName": self._clipIn.getClipName()
+            }
+        }
+        return res

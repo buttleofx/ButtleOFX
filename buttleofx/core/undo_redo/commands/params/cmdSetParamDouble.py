@@ -27,7 +27,7 @@ class CmdSetParamDouble(UndoableCommand):
         """
         Redoes the update of the param.
         """
-        return self.doCmd()
+        self.doCmd()
 
     def doCmd(self):
         """

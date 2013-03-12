@@ -50,7 +50,10 @@ Item {
                     '    color: activeFocus ? "white" : "grey";' +
                     '    font.pointSize: 10;' +
                     '    onCursorRectangleChanged: flick.ensureVisible(cursorRectangle);' +
-                    '    onTextChanged: paramObject.value = paramStringMultilines.text;' +
+                    '    onTextChanged: {' +
+                    '       paramObject.value = paramStringMultilines.text;' +
+                    '       paramObject.pushValue(paramObject.value);' +
+                    '    }' +
                     '    focus: true' +
                     '}' +
                 '}', stringInput, "inputLine");
@@ -64,7 +67,10 @@ Item {
                     'width: parent.width - 10;' +
                     'height: parent.height;' +
                     'color: activeFocus ? "white" : "grey";' +
-                    'onAccepted: paramObject.value = paramStringInput.text;' +
+                    'onAccepted: {' +
+                    '   paramObject.value = paramStringInput.text;' +
+                    '   paramObject.pushValue(paramObject.value);' +
+                    '}' +
                     'focus: true'+
                 '}', stringInput, "inputLine");
         }
@@ -85,7 +91,6 @@ Item {
                 anchors.fill: parent
                 acceptedButtons: Qt.RightButton
                 onClicked: {
-                    paramObject.hasChanged = false
                     paramObject.value = paramObject.getDefaultValue()
                 }
             }
@@ -109,8 +114,8 @@ Item {
                 anchors.fill: parent
                 acceptedButtons: Qt.RightButton
                 onClicked: {
-                    paramObject.hasChanged = false
                     paramObject.value = paramObject.getDefaultValue()
+                    paramObject.pushValue(paramObject.value)
                 }
             }
 
@@ -174,6 +179,7 @@ Item {
                     if( finder.propFile )
                     {
                         paramObject.value = finder.propFile
+                        paramObject.pushValue(paramObject.value)
                     }
                 }
             }

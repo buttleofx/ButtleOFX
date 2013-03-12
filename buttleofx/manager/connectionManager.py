@@ -73,16 +73,16 @@ class ConnectionManager(QtCore.QObject):
         infosTmpClip = dataTmpClip.split("/")
 
         if infosTmpClip[0] != "clip" or len(infosTmpClip) != 4:
-            return
+            return # exception !
         else:
             tmpClipNodeName, tmpClipName, tmpClipNumber = infosTmpClip[1], infosTmpClip[2], int(infosTmpClip[3])
 
         positionTmpClip = buttleData.getGraphWrapper().getPositionClip(tmpClipNodeName, tmpClipName, tmpClipNumber)
-        tmpClip = IdClip(tmpClipNodeName, tmpClipName, tmpClipNumber, positionTmpClip)
+        tmpClip = IdClip(tmpClipNodeName, tmpClipName, positionTmpClip)
 
         if tmpClip:
             positionNewClip = buttleData.getGraphWrapper().getPositionClip(clip.getNodeName(), clip.getClipName(), clipNumber)
-            newClip = IdClip(clip.getNodeName(), clip.getClipName(), clipNumber, positionNewClip)
+            newClip = IdClip(clip.getNodeName(), clip.getClipName(), positionNewClip)
 
             if tmpClip.getClipName() == "Output":
                 clipOut = tmpClip

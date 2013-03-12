@@ -35,13 +35,15 @@ class ParamBoolean(Param):
 
     def setHasChanged(self, changed):
         self._hasChanged = changed
+        self.paramChanged()
 
     def setValue(self, value):
-        # if the value of the param changed, we put the boolean to True but the only way to put in to false is when the user reinitialises
-        # the value with right click (in QML)
         if(self.getDefaultValue() != value):
-            self._hasChanged = True
+            self.setHasChanged(True)
         
+        self._tuttleParam.setValue(bool(value))
+
+    def pushValue(self, value):
         # Push the command
         cmdUpdate = CmdSetParamBoolean(self, value)
         cmdManager = CommandManager()

@@ -34,7 +34,6 @@ Item {
                 anchors.fill: parent
                 acceptedButtons: Qt.RightButton
                 onClicked: {
-                    paramObject.hasChanged = false
                     paramObject.value = paramObject.getDefaultValue()
                     paramObject.pushValue(paramObject.value)
                 }
@@ -76,7 +75,7 @@ Item {
                 onAccepted: {
                     if (sliderInput.text <= paramObject.maximum && sliderInput.text >= paramObject.minimum) {
                         paramObject.value = updateTextValue()
-                        paramObject.pushValue(paramObject.value);
+                        paramObject.pushValue(paramObject.value)
                     } 
                     else {
                         paramObject.value = paramObject.getOldValue();
@@ -106,7 +105,6 @@ Item {
                     anchors.fill: parent
                     acceptedButtons: Qt.RightButton
                     onClicked: {
-                        paramObject.hasChanged = false
                         paramObject.value = paramObject.getDefaultValue()
                         paramObject.pushValue(paramObject.value)
                     }

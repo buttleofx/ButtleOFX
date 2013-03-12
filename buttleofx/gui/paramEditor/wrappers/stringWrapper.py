@@ -15,6 +15,7 @@ class StringWrapper(ParamWrapper):
 
     @QtCore.Slot(result=unicode)
     def getDefaultValue(self):
+        self.setHasChanged(False)
         return self._param.getDefaultValue()
 
     def getValue(self):
@@ -34,6 +35,10 @@ class StringWrapper(ParamWrapper):
     def setHasChanged(self, changed):
         self._param.setHasChanged(changed)
 
+    @QtCore.Slot(str)
+    def pushValue(self, value):
+        self._param.pushValue(value)
+
     @QtCore.Signal
     def changed(self):
         pass
@@ -42,4 +47,5 @@ class StringWrapper(ParamWrapper):
 
     value = QtCore.Property(str, getValue, setValue, notify=changed)
     stringType = QtCore.Property(str, getStringType, constant=True)
+    
     hasChanged = QtCore.Property(bool, getHasChanged, setHasChanged, notify=changed)

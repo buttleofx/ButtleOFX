@@ -49,6 +49,14 @@ class ParamRGBA(Param):
 
     #################### setters ####################
 
+    def setValue(self, values):
+        self._tuttleParam.setValueAtIndex(0, values[0])
+        self._tuttleParam.setValueAtIndex(1, values[1])
+        self._tuttleParam.setValueAtIndex(2, values[2])
+        self._tuttleParam.setValueAtIndex(3, values[3])
+
+        self.paramChanged()
+
     def setValueR(self, value1):
         self._tuttleParam.setValueAtIndex(0, value1)
         self.paramChanged()

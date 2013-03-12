@@ -16,7 +16,7 @@ class ParamPushButton(Param):
         return "ParamPushButton"
 
     def getValue(self):
-        self.getLabel()
+        return self.getLabel()
 
     def getName(self):
         return self._tuttleParam.getName()[0].capitalize() + self._tuttleParam.getName()[1:]
@@ -29,8 +29,8 @@ class ParamPushButton(Param):
 
     #################### setters ####################
 
-    # def setValue(self, value):
-    #     self.setEnabled()
+    def setValue(self, value):
+         self.setEnabled()
 
     def setEnabled(self, enabled):
         self._tuttleParam.setValue(enabled)

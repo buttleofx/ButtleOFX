@@ -1,0 +1,144 @@
+{
+  "date": {
+    "creation": "Tuesday, 12. March 2013 05:19PM"
+  }, 
+  "graph": {
+    "connections": [
+      {
+        "clipIn": {
+          "clipName": "Source", 
+          "nodeName": "TuttleResize_1"
+        }, 
+        "clipOut": {
+          "clipName": "Output", 
+          "nodeName": "TuttlePngReader_1"
+        }, 
+        "id": "TuttlePngReader_1Output => TuttleResize_1Source"
+      }
+    ], 
+    "currentSelectedNodes": [
+      "TuttleResize_1"
+    ], 
+    "nodes": [
+      {
+        "name": "TuttlePngReader_1", 
+        "params": [
+          {
+            "name": "filename", 
+            "value": "/home/yuki/mosquito.png"
+          }, 
+          {
+            "name": "channel", 
+            "value": "auto"
+          }, 
+          {
+            "name": "bitDepth", 
+            "value": "auto"
+          }
+        ], 
+        "pluginIdentifier": "tuttle.pngreader", 
+        "pluginVersion": "1.0", 
+        "uiParams": {
+          "color": [
+            0, 
+            178, 
+            161
+          ], 
+          "coord": [
+            20, 
+            20
+          ], 
+          "nameUser": "TuttlePngReader_1"
+        }
+      }, 
+      {
+        "name": "TuttleResize_1", 
+        "params": [
+          {
+            "name": "mode", 
+            "value": "size"
+          }, 
+          {
+            "name": "format", 
+            "value": "2K-Cinemascope"
+          }, 
+          {
+            "name": "scale", 
+            "value": [
+              1.0, 
+              1.0
+            ]
+          }, 
+          {
+            "name": "keepRatio", 
+            "value": true
+          }, 
+          {
+            "name": "size", 
+            "value": [
+              1310, 
+              200
+            ]
+          }, 
+          {
+            "name": "orientation", 
+            "value": "width"
+          }, 
+          {
+            "name": "width", 
+            "value": 1310
+          }, 
+          {
+            "name": "height", 
+            "value": 200
+          }, 
+          {
+            "name": "filter", 
+            "value": "bicubic"
+          }, 
+          {
+            "name": "b", 
+            "value": 1.0
+          }, 
+          {
+            "name": "c", 
+            "value": 0.0
+          }, 
+          {
+            "name": "filterSize", 
+            "value": 3
+          }, 
+          {
+            "name": "filterSigma", 
+            "value": 1.0
+          }, 
+          {
+            "name": "filterSharpen", 
+            "value": 2.0
+          }, 
+          {
+            "name": "outOfImage", 
+            "value": "copy"
+          }
+        ], 
+        "pluginIdentifier": "tuttle.resize", 
+        "pluginVersion": "1.0", 
+        "uiParams": {
+          "color": [
+            0, 
+            178, 
+            161
+          ], 
+          "coord": [
+            284, 
+            87
+          ], 
+          "nameUser": "TuttleResize_1"
+        }
+      }
+    ]
+  }, 
+  "paramEditor": "TuttleResize_1", 
+  "viewer": "TuttlePngReader_1", 
+  "window": {}
+}

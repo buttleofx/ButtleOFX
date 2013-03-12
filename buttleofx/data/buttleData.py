@@ -1,4 +1,9 @@
 from PySide import QtCore, QtGui
+# to parse data
+import json
+# to save and load data
+import io
+from datetime import datetime
 # tools
 from buttleofx.data import tuttleTools
 # quickmamba
@@ -7,6 +12,7 @@ from quickmamba.models import QObjectListModel
 # core : graph
 from buttleofx.core.graph import Graph
 from buttleofx.core.graph.node import Node
+from buttleofx.core.graph.connection import IdClip
 # gui : graphWrapper
 from buttleofx.gui.graph import GraphWrapper
 from buttleofx.gui.graph.node import NodeWrapper
@@ -231,6 +237,95 @@ class ButtleData(QtCore.QObject):
             Returns if a string is a plugin identifier.
         """
         return pluginId in tuttleTools.getPluginsIdentifiers()
+
+    ################################################## SAVE / LOAD ##################################################
+
+    @QtCore.Slot()
+    def saveData(self):
+        """
+            Save all data in a json file : buttleofx/backup/data.json
+        """
+        with io.open('buttleofx/backup/data.json', 'w', encoding='utf-8') as f:
+            dictJson = {
+                "date": {},
+                "window": {},
+                "graph": {
+                    "nodes": [],
+                    "connections": [],
+                    "currentSelectedNodes": []
+                },
+                "paramEditor": {},
+                "viewer": {}
+            }
+            # date
+            today = datetime.today().strftime("%A, %d. %B %Y %I:%M%p")
+            dictJson["date"]["creation"] = today
+
+            # nodes
+            for node in self._graph.getNodes():
+                dictJson["graph"]["nodes"].append(node.object_to_dict())
+                if node.getName() in self.getCurrentSelectedNodeNames():
+                    dictJson["graph"]["currentSelectedNodes"].append(node.getName())
+
+            # connections
+            for con in self._graph.getConnections():
+                dictJson["graph"]["connections"].append(con.object_to_dict())
+
+            # paramEditor
+            dictJson["paramEditor"] = self.getCurrentParamNodeName()
+
+            # viewer
+            dictJson["viewer"] = self.getCurrentViewerNodeName()
+
+            # write dictJson in a file
+            f.write(unicode(json.dumps(dictJson, sort_keys=True, indent=2, ensure_ascii=False)))
+        f.closed
+
+    @QtCore.Slot()
+    def loadData(self):
+        """
+            Load all data from a json file : buttleofx/backup/data.json
+        """
+        with open('buttleofx/backup/data.json', 'r') as f:
+            read_data = f.read()
+            decoded = json.loads(read_data)
+
+            # create the nodes
+            for nodeData in decoded["graph"]["nodes"]:
+                tmpType = nodeData["pluginIdentifier"]
+                tmpX = nodeData["uiParams"]["coord"][0]
+                tmpY = nodeData["uiParams"]["coord"][1]
+                node = self.getGraph().createNode(tmpType, tmpX, tmpY)
+                node.dict_to_object(nodeData)
+
+            # create the connections
+            for connectionData in decoded["graph"]["connections"]:
+                clipIn_nodeName = connectionData["clipIn"]["nodeName"]
+                clipIn_clipName = connectionData["clipIn"]["clipName"]
+                clipIn_nbClip = 0 # why ? => self.getGraph().getNode(clipIn_nodeName).getNbInput()
+                clipIn_positionClip = self.getGraphWrapper().getPositionClip(clipIn_nodeName, clipIn_clipName, clipIn_nbClip)
+                clipIn = IdClip(clipIn_nodeName, clipIn_clipName, clipIn_positionClip)
+
+                clipOut_nodeName = connectionData["clipOut"]["nodeName"]
+                clipOut_clipName = connectionData["clipOut"]["clipName"]
+                clipOut_nbClip = 0 # strange too
+                clipOut_positionClip = self.getGraphWrapper().getPositionClip(clipOut_nodeName, clipOut_clipName, clipOut_nbClip)
+                clipOut = IdClip(clipOut_nodeName, clipOut_clipName, clipOut_positionClip)
+
+                connection = self.getGraph().createConnection(clipIn, clipOut)
+
+            # selected nodes
+            # in paramEditor
+            self.setCurrentParamNodeName(decoded["paramEditor"])
+            self.currentParamNodeChanged.emit()
+            # in viewer
+            self.setCurrentViewerNodeName(decoded["viewer"])
+            self.currentViewerNodeChanged.emit()
+            # in graph
+            self.setCurrentSelectedNodeNames(decoded["graph"]["currentSelectedNodes"])
+            self.currentSelectedNodesChanged.emit()
+
+        f.closed
 
     ################################################## DATA EXPOSED TO QML ##################################################
 

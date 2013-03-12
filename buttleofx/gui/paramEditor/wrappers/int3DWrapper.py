@@ -15,14 +15,17 @@ class Int3DWrapper(ParamWrapper):
 
     @QtCore.Slot(result=int)
     def getDefaultValue1(self):
+        self.setValue1HasChanged(False)
         return self._param.getDefaultValue1()
 
     @QtCore.Slot(result=int)
     def getDefaultValue2(self):
+        self.setValue2HasChanged(False)
         return self._param.getDefaultValue2()
 
     @QtCore.Slot(result=int)
     def getDefaultValue3(self):
+        self.setValue3HasChanged(False)
         return self._param.getDefaultValue3()
 
     def getValue1(self):

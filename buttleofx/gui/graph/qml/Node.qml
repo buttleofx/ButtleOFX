@@ -14,8 +14,11 @@ Rectangle {
     z: _buttleData.graphWrapper.zMax
 
     height: m.nodeModel.height
-    //width: m.nodeModel.width
     width: nodeText.width + 20
+
+    onWidthChanged: {
+        model.object.setWidth(node.width)
+    }
 
     property int inputSpacing : m.nodeModel.clipSpacing
     property int clipSize: m.nodeModel.clipSize
@@ -166,9 +169,13 @@ Rectangle {
         anchors.rightMargin: -node.sideMargin
         anchors.top : parent.top
         anchors.topMargin: node.outputTopMargin
+        spacing: node.inputSpacing
         // always only one outputClip
-        Clip {
-            property string port : "output"
+        Repeater {
+            model: m.nodeModel.outputClips
+            Clip {
+                property string port : "output"
+            }
         }
     }
 

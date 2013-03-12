@@ -40,6 +40,12 @@ class ParamDouble2D(Param):
     def getOldValue2(self):
         return self._oldValue2
 
+    def getValue(self):
+        return (self.getValue1(), self.getValue2())
+    
+    def getValue(self):
+        return (self.getValue1(), self.getValue2())
+
     def getValue1(self):
         return self._tuttleParam.getDoubleValueAtIndex(0)
 
@@ -69,6 +75,14 @@ class ParamDouble2D(Param):
 
     #################### setters ####################
 
+    def setValue1HasChanged(self, changed):
+        self._value1HasChanged = changed
+        self.paramChanged()
+
+    def setValue2HasChanged(self, changed):
+        self._value2HasChanged = changed
+        self.paramChanged()
+
     def setOldValues(self, values):
         index = 0
         for value in values:
@@ -78,10 +92,15 @@ class ParamDouble2D(Param):
                 self._oldValue2 = value
             index += 1
 
-    def setValue1(self, value):
-        if(self.getDefaultValue1() != value):
-            self._value1HasChanged = True
+    def setValue(self, values):
+        if(self.getDefaultValue1() != values[0]):
+            self.setValue1HasChanged(True)
+        if(self.getDefaultValue2() != values[1]):
+            self.setValue2HasChanged(True)
 
+        self.getTuttleParam().setValue(values)
+
+    def setValue1(self, value):
         if value != self.getValue1():
             # Push the command
             cmdUpdate = CmdSetParamND(self, (value, self.getValue2()))
@@ -89,17 +108,8 @@ class ParamDouble2D(Param):
             cmdManager.push(cmdUpdate)
 
     def setValue2(self, value):
-        if(self.getDefaultValue2() != value):
-            self._value2HasChanged = True
-        
         if value != self.getValue2():
             # Set the command
             cmdUpdate = CmdSetParamND(self, (self.getValue1(), value))
             cmdManager = CommandManager()
             cmdManager.push(cmdUpdate)
-
-    def setValue1HasChanged(self, changed):
-        self._value1HasChanged = changed
-
-    def setValue2HasChanged(self, changed):
-        self._value2HasChanged = changed

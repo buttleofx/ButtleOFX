@@ -97,6 +97,7 @@ def main(argv):
 
     # data
     buttleData = ButtleDataSingleton().get().init(view)
+    #buttleData.loadData()
     # manager
     buttleManager = ButtleManagerSingleton().get().init()
     # event

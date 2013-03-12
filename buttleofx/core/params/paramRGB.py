@@ -24,7 +24,7 @@ class ParamRGB(Param):
     def getDefaultB(self):
         return self._tuttleParam.getDoubleValueAtIndex(2)
 
-    def getRGB(self):
+    def getValue(self):
         return (self.getValueR(), self.getValueG(), self.getValueB())
 
     def getValueR(self):
@@ -40,6 +40,13 @@ class ParamRGB(Param):
         return self._tuttleParam.getName()[0].capitalize() + self._tuttleParam.getName()[1:]
 
     #################### setters ####################
+
+    def setValue(self, values):
+        self._tuttleParam.setValueAtIndex(0, values[0])
+        self._tuttleParam.setValueAtIndex(1, values[1])
+        self._tuttleParam.setValueAtIndex(2, values[2])
+
+        self.paramChanged()
 
     def setValueR(self, value1):
         self._tuttleParam.setValueAtIndex(0, float(value1 / 255))

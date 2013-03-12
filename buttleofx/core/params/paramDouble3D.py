@@ -48,6 +48,9 @@ class ParamDouble3D(Param):
     def getOldValue3(self):
         return self._oldValue3
 
+    def getValue(self):
+        return (self.getValue1(), self.getValue2(), self.getValue3())
+
     def getValue1(self):
         return self._tuttleParam.getDoubleValueAtIndex(0)
 
@@ -86,6 +89,18 @@ class ParamDouble3D(Param):
 
     #################### setters ####################
 
+    def setValue1HasChanged(self, changed):
+        self._value1HasChanged = changed
+        self.paramChanged()
+
+    def setValue2HasChanged(self, changed):
+        self._value2HasChanged = changed
+        self.paramChanged()
+
+    def setValue3HasChanged(self, changed):
+        self._value3HasChanged = changed
+        self.paramChanged()
+
     def setOldValues(self, values):
         index = 0
         for value in values:
@@ -97,11 +112,17 @@ class ParamDouble3D(Param):
                 self._oldValue3 = value
             index += 1
 
-    def setValue1(self, value):
-        # used to know if bold font or not
-        if(self.getDefaultValue1() != value):
-            self._value1HasChanged = True
+    def setValue(self, values):
+        if(self.getDefaultValue1() != values[0]):
+            self.setValue1HasChanged(True)
+        if(self.getDefaultValue2() != values[1]):
+            self.setValue2HasChanged(True)
+        if(self.getDefaultValue3() != values[2]):
+            self.setValue3HasChanged(True)
 
+        self.getTuttleParam().setValue(values)
+
+    def setValue1(self, value):
         if value != self.getValue1():
             # Push the command
             cmdUpdate = CmdSetParamND(self, (value, self.getValue2(), self.getValue3()))
@@ -109,10 +130,6 @@ class ParamDouble3D(Param):
             cmdManager.push(cmdUpdate)
 
     def setValue2(self, value):
-        # used to know if bold font or not
-        if(self.getDefaultValue2() != value):
-            self._value2HasChanged = True
-
         if value != self.getValue2():
             # Push the command
             cmdUpdate = CmdSetParamND(self, (self.getValue1(), value, self.getValue3()))
@@ -120,21 +137,8 @@ class ParamDouble3D(Param):
             cmdManager.push(cmdUpdate)
 
     def setValue3(self, value):
-        # used to know if bold font or not
-        if(self.getDefaultValue3() != value):
-            self._value3HasChanged = True
-        
         if value != self.getValue3():
             # Push the command
             cmdUpdate = CmdSetParamND(self, (self.getValue1(), self.getValue2(), value))
             cmdManager = CommandManager()
             cmdManager.push(cmdUpdate)
-
-    def setValue1HasChanged(self, changed):
-        self._value1HasChanged = changed
-
-    def setValue2HasChanged(self, changed):
-        self._value2HasChanged = changed
-
-    def setValue3HasChanged(self, changed):
-        self._value3HasChanged = changed

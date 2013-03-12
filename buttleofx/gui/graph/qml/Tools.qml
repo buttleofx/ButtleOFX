@@ -70,7 +70,7 @@ Rectangle {
     Item {
         anchors.fill: parent
         anchors.leftMargin: 10
-       anchors.topMargin: 3
+        anchors.topMargin: 3
 
         Row {
             spacing: 15
@@ -146,7 +146,53 @@ Rectangle {
                 buttonName: "deleteNode"
                 buttonText: "Delete the node"
                 locked: (!_buttleData.currentSelectedNodeWrappers.isEmpty() || _buttleData.currentConnectionWrapper)? false : true
-                //locked: _buttleData.currentSelectedNodeWrappers ? false : true
+            }
+
+            // to save the graph
+            Rectangle {
+                id: buttonSave
+                anchors.verticalCenter: parent.verticalCenter
+                width: textSaveGraph.width
+                height: 28
+                color: "transparent"
+                radius: 3
+                Text {
+                    id: textSaveGraph
+                    color: "#00b2a1"
+                    text: "Save Graph"
+                    y: 7
+                    font.pointSize: 12
+                }
+                MouseArea {
+                    hoverEnabled: true
+                    anchors.fill: parent
+                    onClicked: {
+                        _buttleData.saveData()
+                    }
+                }
+            }
+            // to load the graph
+            Rectangle {
+                id: buttonLoad
+                anchors.verticalCenter: parent.verticalCenter
+                width: textSaveGraph.width
+                height: 28
+                color: "transparent"
+                radius: 3
+                Text {
+                    id: textLoadGraph
+                    color: "#00b2a1"
+                    text: "Load Graph"
+                    y: 7
+                    font.pointSize: 12
+                }
+                MouseArea {
+                    hoverEnabled: true
+                    anchors.fill: parent
+                    onClicked: {
+                        _buttleData.loadData()
+                    }
+                }
             }
         }
     }

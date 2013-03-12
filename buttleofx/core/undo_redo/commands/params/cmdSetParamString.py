@@ -19,7 +19,6 @@ class CmdSetParamString(UndoableCommand):
         """
         Undoes the update of the param.
         """
-        # set tuttle value
         self._param.getTuttleParam().setValue(self._oldValue)
         self._param.setOldValue(self._oldValue)
         self._param.paramChanged()
@@ -28,13 +27,12 @@ class CmdSetParamString(UndoableCommand):
         """
         Redoes the update of the param.
         """
-        return self.doCmd()
+        self.doCmd()
 
     def doCmd(self):
         """
         Executes the update of the param.
         """
-        # set tuttle value
         self._param.getTuttleParam().setValue(self._newValue)
         self._param.setOldValue(self._newValue)
         self._param.paramChanged()

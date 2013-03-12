@@ -44,7 +44,7 @@ Item {
     }
 
     Rectangle {
-        id:mainMenu
+        id: mainMenu
         width: parent.width
         height: 32
         color: "#141414"

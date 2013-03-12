@@ -47,6 +47,7 @@ class ParamDouble(Param):
 
     def setHasChanged(self, changed):
         self._hasChanged = changed
+        self.paramChanged()
 
     def setOldValue(self, value):
         self._oldValue = value
@@ -56,13 +57,13 @@ class ParamDouble(Param):
     def setValue(self, value):
         # used to know if bold font or not
         if(self.getDefaultValue() != value):
-            self._hasChanged = True
+            self.setHasChanged(True)
 
         self._tuttleParam.setValue(float(value))
 
     def pushValue(self, newValue):
         if newValue != self.getOldValue():
-            # Push the command
+            # push the command
             cmdUpdate = CmdSetParamDouble(self, float(newValue))
             cmdManager = CommandManager()
             cmdManager.push(cmdUpdate)

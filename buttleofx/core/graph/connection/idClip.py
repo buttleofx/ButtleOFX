@@ -18,7 +18,7 @@ class IdClip:
         """
             Overloads the operator ==
         """
-        return (self._nodeName == otherClip._nodeName and self._clipName == otherClip._clipName and self._clipNumber == otherClip._clipNumber)
+        return (self._nodeName == otherClip._nodeName and self._clipName == otherClip._clipName)
 
     ######## getters ########
 

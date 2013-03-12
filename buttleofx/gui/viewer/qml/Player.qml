@@ -149,7 +149,7 @@ Item {
                         opacity: 0
                         Text {
                             id: errorMessage
-                            text: _buttleData.nodeError
+                            text: _buttleManager.viewerManager.nodeError
                             anchors.left: parent.left
                             anchors.leftMargin: 10
                         }
@@ -166,7 +166,7 @@ Item {
                     states: [
                         State {
                             name: "hidden"
-                            when: _buttleData.nodeError == ""
+                            when: _buttleManager.viewerManager.nodeError == ""
                             PropertyChanges {
                                 target: titleErrorDisplay
                                 opacity: 0
@@ -174,7 +174,7 @@ Item {
                         }, 
                         State {
                             name: "shown"
-                            when: _buttleData.nodeError != ""
+                            when: _buttleManager.viewerManager.nodeError != ""
                             PropertyChanges {
                                 target: titleErrorDisplay
                                 opacity: 1

@@ -7,6 +7,10 @@ Item {
 
     property variant paramObject: model.object
 
+    // Is this param secret ?
+    visible: !paramObject.isSecret
+    height: paramObject.isSecret ? 0 : implicitHeight
+
     // To fix binding loops
     property bool mousePressed: false
     function updateXcursor() {
@@ -32,6 +36,7 @@ Item {
                 onClicked: {
                     paramObject.hasChanged = false
                     paramObject.value = paramObject.getDefaultValue()
+                    paramObject.pushValue(paramObject.value)
                 }
             }
         }
@@ -103,6 +108,7 @@ Item {
                     onClicked: {
                         paramObject.hasChanged = false
                         paramObject.value = paramObject.getDefaultValue()
+                        paramObject.pushValue(paramObject.value)
                     }
                 }
             }

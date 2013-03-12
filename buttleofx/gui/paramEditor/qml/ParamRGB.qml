@@ -14,7 +14,11 @@ Item{
     implicitHeight: 140
     //color: "transparent"
 
-    //property variant paramObject: model.object
+    property variant paramObject: model.object
+
+    // Is this param secret ?
+    visible: !paramObject.isSecret
+    height: paramObject.isSecret ? 0 : implicitHeight
 
     Column {
         Text {

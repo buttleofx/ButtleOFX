@@ -1,5 +1,7 @@
 # undo_redo
 from buttleofx.core.undo_redo.manageTools import UndoableCommand
+# vent
+from buttleofx.event import ButtleEventSingleton
 # core
 from buttleofx.core.graph.connection import Connection
 
@@ -28,7 +30,7 @@ class CmdCreateConnection(UndoableCommand):
         tuttleNodeSource = self._graphTarget.getNode(self._connection.getClipOut().getNodeName()).getTuttleNode()
         tuttleNodeOutput = self._graphTarget.getNode(self._connection.getClipIn().getNodeName()).getTuttleNode()
         outputClip = tuttleNodeSource.getClip("Output")
-        srcClip = tuttleNodeOutput.getClip(str(self._clipIn.getName()))
+        srcClip = tuttleNodeOutput.getClip(str(self._clipIn.getClipName()))
 
         # Delete the tuttle connection
         self._graphTarget.getGraphTuttle().unconnect(outputClip, srcClip)
@@ -58,13 +60,18 @@ class CmdCreateConnection(UndoableCommand):
         tuttleNodeSource = self._graphTarget.getNode(self._clipOut.getNodeName()).getTuttleNode()
         tuttleNodeOutput = self._graphTarget.getNode(self._clipIn.getNodeName()).getTuttleNode()
         outputClip = tuttleNodeSource.getClip("Output")
-        srcClip = tuttleNodeOutput.getClip(str(self._clipIn.getName()))
+        srcClip = tuttleNodeOutput.getClip(str(self._clipIn.getClipName()))
         tuttleConnection = self._graphTarget.getGraphTuttle().connect(outputClip, srcClip)
 
         # Creation of the buttle connection
         self._connection = Connection(self._clipOut, self._clipIn, tuttleConnection)
         self._graphTarget.getConnections().append(self._connection)
         self._graphTarget.connectionsChanged()
+
+        # link signals of the connection to a global signal ViewerChangedSignal
+        buttleEvent = ButtleEventSingleton().get()
+        self._connection.connectionClipOutChanged.connect(buttleEvent.emitViewerChangedSignal)
+        self._connection.connectionClipInChanged.connect(buttleEvent.emitViewerChangedSignal)
 
         # return the buttle connection
         return self._connection

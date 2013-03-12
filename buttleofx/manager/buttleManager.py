@@ -20,8 +20,7 @@ class ButtleManager(QtCore.QObject):
         This class also catches events from QML about undo / redo.
     """
 
-    def init(self, view):
-        self._view = view
+    def init(self):
         self._nodeManager = NodeManager()
         self._connectionManager = ConnectionManager()
         self._viewerManager = ViewerManager()
@@ -32,6 +31,8 @@ class ButtleManager(QtCore.QObject):
         self._viewerManager.undoRedoChanged.connect(self.emitUndoRedoChanged)
 
         return self
+
+    ############### getters ###############
 
     def getNodeManager(self):
         return self._nodeManager

@@ -32,6 +32,7 @@ class CmdCreateNode(UndoableCommand):
         node = self._graphTarget.getNode(self._nodeName)
         self._graphTarget.getNodes().remove(node)
 
+        # emit nodesChanged signal
         self._graphTarget.nodesChanged()
 
     def redoCmd(self):
@@ -40,7 +41,8 @@ class CmdCreateNode(UndoableCommand):
         """
         # We don't have to recreate the connections because when a node is created, it can't have connections !
         self._graphTarget.getNodes().append(self._node)
-        
+
+        # emit nodesChanged signal
         self._graphTarget.nodesChanged()
 
     def doCmd(self):
@@ -55,6 +57,13 @@ class CmdCreateNode(UndoableCommand):
         self._node = Node(self._nodeName, self._nodeType, self._nodeCoord, tuttleNode)
         self._graphTarget._nodes.append(self._node)
 
+        # connect each param to the node
+        for param in self._node.getParams():
+            if param.paramChanged is not None:
+                # warn the node that one of his param just changed
+                param.paramChanged.connect(self._node.emitNodeContentChanged)
+
+        # emit nodesChanged signal
         self._graphTarget.nodesChanged()
 
         # return the buttle node

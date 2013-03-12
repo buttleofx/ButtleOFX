@@ -15,7 +15,9 @@ class CmdDeleteNodes(UndoableCommand):
 
     def __init__(self, graphTarget, nodes):
         self._graphTarget = graphTarget
+        # keep tuttle nodes
         self._nodes = nodes
+        # keep tuttle connection (no duplicate connection)
         self._connections = [connection for connection in self._graphTarget.getConnections() if (self._graphTarget.getNode(connection.getClipOut().getNodeName()) in nodes or self._graphTarget.getNode(connection.getClipIn().getNodeName()) in nodes)]
 
     def undoCmd(self):
@@ -25,6 +27,12 @@ class CmdDeleteNodes(UndoableCommand):
         for node in self._nodes:
             # we recreate the node
             self._graphTarget.getNodes().append(node)
+            # connect each param to the node
+            for param in node.getParams():
+                if param.paramChanged is not None:
+                    # warn the node that one of his param just changed
+                    param.paramChanged.connect(node.emitNodeContentChanged)
+
         # we recreate all the connections
         for connection in self._connections:
             tuttleNodeSource = self._graphTarget.getNode(connection.getClipOut().getNodeName()).getTuttleNode()
@@ -33,7 +41,7 @@ class CmdDeleteNodes(UndoableCommand):
             connection.setTuttleConnection(tuttleConnection)
             self._graphTarget.getConnections().append(connection)
 
-        self._graphTarget.connectionsChanged()
+        # Emit signal
         self._graphTarget.nodesChanged()
 
     def redoCmd(self):
@@ -46,15 +54,18 @@ class CmdDeleteNodes(UndoableCommand):
         """
             Delete a node.
         """
-
         for node in self._nodes:
             # Delete the tuttle connections
             self._graphTarget.getGraphTuttle().unconnect(node.getTuttleNode())
             # Delete the buttle connections
             self._graphTarget.deleteNodeConnections(node.getName())
+            # disconnect each param of the node
+            for param in node.getParams():
+                if param.paramChanged is not None:
+                    # warn the node that one of his param just changed
+                    param.paramChanged.disconnect(node.emitNodeContentChanged)
             # Delete the node
             self._graphTarget.getNodes().remove(node)
 
-        # Emit signals
+        # Emit signal
         self._graphTarget.nodesChanged()
-        self._graphTarget.connectionsChanged()

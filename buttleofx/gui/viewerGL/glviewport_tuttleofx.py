@@ -8,6 +8,8 @@ from glviewport import GLViewport
 from buttleofx.data import ButtleDataSingleton
 # manager 
 from buttleofx.manager import ButtleManagerSingleton
+# event 
+from buttleofx.event import ButtleEventSingleton
 
 
 class GLViewport_tuttleofx(GLViewport):
@@ -22,37 +24,31 @@ class GLViewport_tuttleofx(GLViewport):
         self._frame = 0
         self._frameHasChanged = False
 
-        self.connectToButtleData()
+        self.connectToButtleEvent()
 
-    def connectToButtleData(self):
-        buttleData = ButtleDataSingleton().get()
+    def connectToButtleEvent(self):
+        buttleEvent = ButtleEventSingleton().get()
         # connect viewerChanged to load image
-        buttleData.viewerChangedSignal.connect(self.loadImage)
-        # connect paramChanged to clearMap and load image
-        buttleData.paramChangedSignal.connect(self.clearMapOfImageAlreadyCalculated)
-        buttleData.paramChangedSignal.connect(self.loadImage)
+        buttleEvent.viewerChangedSignal.connect(self.loadImage)
+        # connect oneParamChangedSignal to clearMap and load image
+        buttleEvent.oneParamChangedSignal.connect(self.clearMapOfImageAlreadyCalculated)
+        buttleEvent.oneParamChangedSignal.connect(self.loadImage)
 
     @QtCore.Slot()
-    def unconnectToButtleData(self):
-        buttleData = ButtleDataSingleton().get()
+    def unconnectToButtleEvent(self):
+        buttleEvent = ButtleEventSingleton().get()
         # connct viewerChanged to load image
-        buttleData.viewerChangedSignal.disconnect(self.loadImage)
-        # connct paramChanged to clearMap and load image
-        buttleData.paramChangedSignal.disconnect(self.clearMapOfImageAlreadyCalculated)
-        buttleData.paramChangedSignal.disconnect(self.loadImage)
-
-    #def __del__(self):
-    #    # to debug "internal C++ error"
-    #    print "Delete GLViewport_tuttleofx"
+        buttleEvent.viewerChangedSignal.disconnect(self.loadImage)
+        # connect oneParamChangedSignal to clearMap and load image
+        buttleEvent.oneParamChangedSignal.disconnect(self.clearMapOfImageAlreadyCalculated)
+        buttleEvent.oneParamChangedSignal.disconnect(self.loadImage)
 
     def loadImage_tuttle(self):
         print "--------------------------------- loadImage_tuttle ---------------------------"
         buttleManager = ButtleManagerSingleton().get()
         #imgRes = buttleManager.getViewerManager().computeNode(self._time)
 
-        print "uygouyg"
         imgRes = buttleManager.getViewerManager().retrieveImage(self._frame, self._frameHasChanged)
-        print "end"
         self._frameHasChanged = False
 
         self.img_data = imgRes.getNumpyArray()

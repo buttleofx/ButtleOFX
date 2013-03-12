@@ -15,6 +15,8 @@ class NodeManager(QtCore.QObject):
 
         self.undoRedoChanged = Signal()
 
+    ############### EVENTS FROM QML ###############
+
     @QtCore.Slot(str, int, int)
     def creationNode(self, nodeType, x, y):
         """
@@ -22,12 +24,6 @@ class NodeManager(QtCore.QObject):
         """
         buttleData = ButtleDataSingleton().get()
         node = buttleData.getGraph().createNode(nodeType, x, y)
-
-        # link signal changed of all params to a global signal ParamChangedSignal
-        for param in node.getParams():
-            if param.paramChanged is not None:
-                #param.paramChanged.connect(node.setParams)
-                param.paramChanged.connect(buttleData.emitParamChangedSignal) # to update the viewer
 
         # update undo/redo display
         self.undoRedoChanged()
@@ -38,11 +34,6 @@ class NodeManager(QtCore.QObject):
             Delete the current node(s).
         """
         buttleData = ButtleDataSingleton().get()
-
-        # unlink signal from params to updateMapAndViewer
-        # node = buttleData.getCurrentSelectedNodeWrapper().getNode()
-        # for param in node.getParams():
-        #     param.changed.disconnect(buttleData.updateMapAndViewer)
 
         # if the params of the current node deleted are display
         if buttleData.getCurrentParamNodeName() in buttleData.getCurrentSelectedNodeNames():
@@ -187,5 +178,6 @@ class NodeManager(QtCore.QObject):
             This fonction update the position of the connections.
         """
         buttleData = ButtleDataSingleton().get()
-        buttleData.getGraph().getNode(nodeName).setCoord(x, y)
-        buttleData.getGraph().connectionsCoordChanged()
+        node = buttleData.getGraph().getNode(nodeName)
+        node.setCoord(x, y)
+        buttleData.getGraph().connectionsCoordChanged(node)

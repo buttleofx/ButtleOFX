@@ -22,8 +22,9 @@ class CmdDeleteConnection(UndoableCommand):
         tuttleNodeOutput = self._graphTarget.getNode(self._connection.getClipIn().getNodeName()).getTuttleNode()
         self._graphTarget.getGraphTuttle().connect(tuttleNodeSource, tuttleNodeOutput)
         self._graphTarget.getConnections().append(self._connection)
+
+        # emit signal
         self._graphTarget.connectionsChanged()
-        #print "Undo delete connection : ", self._graphTarget.getGraphTuttle()
 
     def redoCmd(self):
         """
@@ -51,5 +52,6 @@ class CmdDeleteConnection(UndoableCommand):
 
         # Delete the buttle connection
         self._graphTarget.getConnections().remove(self._connection)
+
+        # emit signal
         self._graphTarget.connectionsChanged()
-        #print "Delete connection : ", self._graphTarget.getGraphTuttle()

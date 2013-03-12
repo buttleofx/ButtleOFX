@@ -1,26 +1,39 @@
 import logging
+# quickmamba
 from quickmamba.patterns import Signal
 
 
 class Connection(object):
-
     """
-        Class Connection usefull to identify a connection between 2 clips :
-        - clipOut : the IdClip of the first clip
-        - clipIn : the IdClip of the second clip
+        Creates a python object Connection. This class is usefull to identify a connection between 2 clips.
+
+        Class Connection defined by:
+        - data from tuttle :
+            - _tuttleConnection : the corresponding tuttle connection
+        - data from Buttle :
+            - _id : a string which follow the pattern : "idClipOut_idClipIn"
+            - _clipOut : the IdClip of the first clip
+            - _clipIn : the IdClip of the second clip
+
+        Signals :
+            - connectionClipOutChanged : a signal emited when the clipOut od the connection changed
+            - connectionClipInChanged : a signal emited when the clipIn od the connection changed
     """
 
     def __init__(self, clipOut, clipIn, tuttleConnection):
         super(Connection, self).__init__()
 
+        # tuttle connection
         self._tuttleConnection = tuttleConnection
 
+        # buttle data
         self._id = clipOut.getId() + "_" + clipIn.getId()
         self._clipOut = clipOut
         self._clipIn = clipIn
 
         # signal
-        self.changed = Signal()
+        self.connectionClipOutChanged = Signal()
+        self.connectionClipInChanged = Signal()
 
         logging.info("Core : Connection created")
 
@@ -32,6 +45,9 @@ class Connection(object):
 
     ######## getters ########
 
+    def getTuttleConnection(self):
+        return self._tuttleConnection
+
     def getId(self):
         return self._id
 
@@ -41,19 +57,21 @@ class Connection(object):
     def getClipIn(self):
         return self._clipIn
 
-    def getTuttleConnection(self):
-        return self._tuttleConnection
+    def getConcernedNodes(self):
+        """
+            Returns a list, which is the name of the the concerned nodes about this Connection.
+        """
+        nameOfConcernedNodes = []
+        nameOfConcernedNodes.append(self._clipOut.getNodeName())
+        nameOfConcernedNodes.append(self._clipIn.getNodeName())
+        return nameOfConcernedNodes
 
     ######## setters ########
 
     def setClipOut(self, clipOut):
         self._clipOut = clipOut
-        self.changed()
+        self.connectionClipOutChanged()
 
     def setClipIn(self, clipIn):
         self._clipIn = clipIn
-        self.changed()
-
-    def setTuttleConnection(self, tuttleConnection):
-        self._tuttleConnection = tuttleConnection
-        self.changed()
+        self.connectionClipInChanged()

@@ -17,6 +17,35 @@ class ConnectionManager(QtCore.QObject):
 
         self.undoRedoChanged = Signal()
 
+    ############### flags ###############
+
+    def canConnect(self, clip1, clip2):
+        """
+            Returns True if the connection between the nodes is possible, else False.
+            A connection is possible if the clip isn't already taken, and if the clips are from 2 different nodes, not already connected.
+        """
+        buttleData = ButtleDataSingleton().get()
+        graph = buttleData.getGraph()
+
+        # if the clips are from the same node : False
+        if (clip1.getNodeName() == clip2.getNodeName()):
+            return False
+
+        # if the clips are 2 inputs or 2 outputs : False
+        if (clip1.getClipName() == "Output" and clip2.getClipName() == "Output") or (clip1.getClipName() != "Output" and clip2.getClipName() != "Output"):
+            return False
+
+        # if the input clip is already taken : False
+        if (clip1.getClipName() != "Output" and graph.contains(clip1)) or (clip2.getClipName() != "Output" and graph.contains(clip2)):
+            return False
+
+        # if the nodes containing the clips are already connected : False
+        if(graph.nodesConnected(clip2, clip1)):
+            return False
+
+        return True
+
+    ############### EVENTS FROM QML ###############
 
     @QtCore.Slot(QtCore.QObject, int)
     def connectionDragEvent(self, clip, clipNumber):
@@ -25,7 +54,7 @@ class ConnectionManager(QtCore.QObject):
             The function send mimeData to identify the clip.
         """
         mimeData = QtCore.QMimeData()
-        mimeData.setText("clip/" + str(clip.getNodeName()) + "/" + str(clip.getName()) + "/" + str(clipNumber))
+        mimeData.setText("clip/" + str(clip.getNodeName()) + "/" + str(clip.getClipName()) + "/" + str(clipNumber))
 
         widget = QtGui.QWidget()
 
@@ -52,22 +81,22 @@ class ConnectionManager(QtCore.QObject):
         tmpClip = IdClip(tmpClipNodeName, tmpClipName, tmpClipNumber, positionTmpClip)
 
         if tmpClip:
-            positionNewClip = buttleData.getGraphWrapper().getPositionClip(clip.getNodeName(), clip.getName(), clipNumber)
-            newClip = IdClip(clip.getNodeName(), clip.getName(), clipNumber, positionNewClip)
+            positionNewClip = buttleData.getGraphWrapper().getPositionClip(clip.getNodeName(), clip.getClipName(), clipNumber)
+            newClip = IdClip(clip.getNodeName(), clip.getClipName(), clipNumber, positionNewClip)
 
-            if tmpClip.getName() == "Output":
+            if tmpClip.getClipName() == "Output":
                 clipOut = tmpClip
                 clipIn = newClip
             else:
                 clipOut = newClip
                 clipIn = tmpClip
 
-            if buttleData.getGraphWrapper().canConnect(clipOut, clipIn):
+            if self.canConnect(clipOut, clipIn):
                     self.connect(clipOut, clipIn)
                     return
 
             else:
-                connection = buttleData.getGraphWrapper().getConnectionByClips(clipOut, clipIn)
+                connection = buttleData.getGraph().getConnectionByClips(clipOut, clipIn)
                 if connection:
                     self.disconnect(buttleData.getGraphWrapper().getConnectionWrapper(connection.getId()))
                     return
@@ -75,14 +104,14 @@ class ConnectionManager(QtCore.QObject):
         # update undo/redo display
         self.undoRedoChanged()
 
+    ############### CREATION AND DESTRUCTION ###############
+
     def connect(self, clipOut, clipIn):
         """
             Adds a connection between 2 clips.
         """
         buttleData = ButtleDataSingleton().get()
         connection = buttleData.getGraph().createConnection(clipOut, clipIn)
-        # link signal changed of the connection to a global signal ViewerChangedSignal
-        connection.changed.connect(buttleData.emitViewerChangedSignal)
 
     @QtCore.Slot(QtCore.QObject)
     def disconnect(self, connectionWrapper):

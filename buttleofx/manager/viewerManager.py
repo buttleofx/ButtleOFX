@@ -19,7 +19,20 @@ class ViewerManager(QtCore.QObject):
         self._tuttleImageCache = None
         self._computedImage = None
 
+        # for the viewer
+        self._nodeError = ""
+
         self.undoRedoChanged = Signal()
+
+    def getNodeError(self):
+        """
+            Returns the name of the node that can't be displayed.
+        """
+        return self._nodeError
+
+    def setNodeError(self, nodeName):
+        self._nodeError = nodeName
+        self.nodeErrorChanged.emit()
 
     def computeNode(self, frame):
         """
@@ -54,7 +67,7 @@ class ViewerManager(QtCore.QObject):
         mapNodeToImage = buttleData._mapNodeNameToComputedImage
 
         try:
-            buttleData.setNodeError("")
+            self.setNodeError("")
             #If the image is already calculated
             for element in mapNodeToImage:
                 if node == element and frameChanged is False:
@@ -87,3 +100,7 @@ class ViewerManager(QtCore.QObject):
         drag.setPixmap(QtGui.QPixmap(imgPath))
 
         drag.exec_(QtCore.Qt.MoveAction)
+
+    # error display on the Viewer
+    nodeErrorChanged = QtCore.Signal()
+    nodeError = QtCore.Property(str, getNodeError, setNodeError, notify=nodeErrorChanged)

@@ -27,7 +27,7 @@ class NodeWrapper(QtCore.QObject):
         self._paramWrappers = ParamEditorWrapper(self._view, self._node.getParams())
 
         # data given to QML to have nodes and clips with good looking
-        self._width = 0
+        self._width = 0  # will be setted by QML
         self._heightEmptyNode = 35
         self._clipSpacing = 7
         self._clipSize = 8
@@ -92,16 +92,22 @@ class NodeWrapper(QtCore.QObject):
         srcClips.setObjectList([ClipWrapper(clip, self.getName(), self._view) for clip in self._node.getClips() if not clip == "Output"])
         return srcClips
 
-    def getOutputClips(self):
-        outputClips = QObjectListModel(self)
-        outputClips.setObjectList([ClipWrapper(clip, self.getName(), self._view) for clip in self._node.getClips() if clip == "Output"])
-        return outputClips
+    def getOutputClip(self):
+        #outputClips = QObjectListModel(self)
+        #outputClips.setObjectList([ClipWrapper(clip, self.getName(), self._view) for clip in self._node.getClips() if clip == "Output"])
+        for clip in self._node.getClips():
+            if clip == "Output":
+                return ClipWrapper(clip, self.getName(), self._view)
+
 
     def getWidth(self):
         return self._width
 
     def getHeight(self):
         return int(self._heightEmptyNode + self._clipSpacing * self.getNbInput())
+
+    def getWidth(self):
+        return self._width
 
     def getClipSpacing(self):
         return self._clipSpacing
@@ -205,6 +211,10 @@ class NodeWrapper(QtCore.QObject):
     def setNbInput(self, nbInput):
         self._node.setNbInput(nbInput)
 
+    def setWidth(self, width):
+        self._width = width
+        self.nodeLookChanged.emit()
+
     ################################################## LINK WRAPPER LAYER TO QML ##################################################
 
     @QtCore.Signal
@@ -232,6 +242,13 @@ class NodeWrapper(QtCore.QObject):
         # emit signal
         self.nodeContentChanged.emit()
 
+    ##### SLot #####
+
+    @QtCore.Slot(int)
+    def fitWidth(self, textWidth):
+        self.setWidth(textWidth + 20)
+
+
     ################################################## DATA EXPOSED TO QML ##################################################
 
     # params from Buttle
@@ -253,8 +270,9 @@ class NodeWrapper(QtCore.QObject):
 
     # for a clean display of  connections
     height = QtCore.Property(int, getHeight, constant=True)
+    width = QtCore.Property(int, getWidth, setWidth, notify=nodeLookChanged)
     srcClips = QtCore.Property(QtCore.QObject, getSrcClips, constant=True)
-    outputClips = QtCore.Property(QtCore.QObject, getOutputClips, constant=True)
+    outputClip = QtCore.Property(QtCore.QObject, getOutputClip, constant=True)
     clipSpacing = QtCore.Property(int, getClipSpacing, constant=True)
     clipSize = QtCore.Property(int, getClipSize, constant=True)
     sideMargin = QtCore.Property(int, getSideMargin, constant=True)

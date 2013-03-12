@@ -14,10 +14,10 @@ Rectangle {
     z: _buttleData.graphWrapper.zMax
 
     height: m.nodeModel.height
-    width: nodeText.width + 20
+    width: m.nodeModel.width
 
-    onWidthChanged: {
-        model.object.setWidth(node.width)
+    Component.onCompleted: {
+        m.nodeModel.fitWidth(nodeText.width);
     }
 
     property int inputSpacing : m.nodeModel.clipSpacing
@@ -138,6 +138,10 @@ Rectangle {
             font.pointSize: 10
             property bool isSelected: _buttleData.nodeInCurrentSelectedNodeNames(m.nodeModel)
             
+            onTextChanged: {
+                m.nodeModel.fitWidth(nodeText.width);
+            }
+
             Connections {
                 target: _buttleData
                 onCurrentSelectedNodeWrappersChanged: {
@@ -158,7 +162,8 @@ Rectangle {
         Repeater {
             model: m.nodeModel.srcClips
             Clip {
-                property string port : "input"
+                clipWrapper: model.object
+                port : "input"
             }
         }
     }
@@ -169,13 +174,10 @@ Rectangle {
         anchors.rightMargin: -node.sideMargin
         anchors.top : parent.top
         anchors.topMargin: node.outputTopMargin
-        spacing: node.inputSpacing
         // always only one outputClip
-        Repeater {
-            model: m.nodeModel.outputClips
-            Clip {
-                property string port : "output"
-            }
+        Clip {
+            clipWrapper: m.nodeModel.outputClip
+            port : "output"
         }
     }
 

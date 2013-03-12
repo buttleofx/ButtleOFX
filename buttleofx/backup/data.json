@@ -1,23 +1,23 @@
 {
   "date": {
-    "creation": "Tuesday, 12. March 2013 05:19PM"
+    "creation": "Tuesday, 12. March 2013 05:31PM"
   }, 
   "graph": {
     "connections": [
       {
         "clipIn": {
           "clipName": "Source", 
-          "nodeName": "TuttleResize_1"
+          "nodeName": "TuttleInvert_1"
         }, 
         "clipOut": {
           "clipName": "Output", 
           "nodeName": "TuttlePngReader_1"
         }, 
-        "id": "TuttlePngReader_1Output => TuttleResize_1Source"
+        "id": "TuttlePngReader_1Output => TuttleInvert_1Source"
       }
     ], 
     "currentSelectedNodes": [
-      "TuttleResize_1"
+      "TuttleInvert_1"
     ], 
     "nodes": [
       {
@@ -52,76 +52,34 @@
         }
       }, 
       {
-        "name": "TuttleResize_1", 
+        "name": "TuttleInvert_1", 
         "params": [
           {
-            "name": "mode", 
-            "value": "size"
+            "name": "channelGroup", 
+            "value": null
           }, 
           {
-            "name": "format", 
-            "value": "2K-Cinemascope"
-          }, 
-          {
-            "name": "scale", 
-            "value": [
-              1.0, 
-              1.0
-            ]
-          }, 
-          {
-            "name": "keepRatio", 
+            "name": "gray", 
             "value": true
           }, 
           {
-            "name": "size", 
-            "value": [
-              1310, 
-              200
-            ]
+            "name": "r", 
+            "value": true
           }, 
           {
-            "name": "orientation", 
-            "value": "width"
-          }, 
-          {
-            "name": "width", 
-            "value": 1310
-          }, 
-          {
-            "name": "height", 
-            "value": 200
-          }, 
-          {
-            "name": "filter", 
-            "value": "bicubic"
+            "name": "g", 
+            "value": false
           }, 
           {
             "name": "b", 
-            "value": 1.0
+            "value": true
           }, 
           {
-            "name": "c", 
-            "value": 0.0
-          }, 
-          {
-            "name": "filterSize", 
-            "value": 3
-          }, 
-          {
-            "name": "filterSigma", 
-            "value": 1.0
-          }, 
-          {
-            "name": "filterSharpen", 
-            "value": 2.0
-          }, 
-          {
-            "name": "outOfImage", 
-            "value": "copy"
+            "name": "a", 
+            "value": false
           }
         ], 
-        "pluginIdentifier": "tuttle.resize", 
+        "pluginIdentifier": "tuttle.invert", 
         "pluginVersion": "1.0", 
         "uiParams": {
           "color": [
@@ -130,15 +88,15 @@
             161
           ], 
           "coord": [
-            284, 
-            87
+            192, 
+            134
           ], 
-          "nameUser": "TuttleResize_1"
+          "nameUser": "TuttleInvert_1"
         }
       }
     ]
   }, 
-  "paramEditor": "TuttleResize_1", 
-  "viewer": "TuttlePngReader_1", 
+  "paramEditor": "TuttleInvert_1", 
+  "viewer": "TuttleInvert_1", 
   "window": {}
 }

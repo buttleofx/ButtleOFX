@@ -20,11 +20,20 @@ class Param:
 
     def getTuttleParam(self):
         return self._tuttleParam
+    
+    def getParamType(self):
+        """
+            Virtual function.
+            Returns the type of the param.
+        """
 
     def getName(self):
         return self._tuttleParam.getName()
 
     def getText(self):
+        """
+            Same as getName, but with the first letter in capital.
+        """
         return self._tuttleParam.getName()[0].capitalize() + self._tuttleParam.getName()[1:]
 
     def isSecret(self):
@@ -34,12 +43,6 @@ class Param:
         """
             Virtual function.
             Returns the value(s) of the param.
-        """
-
-    def getParamType(self):
-        """
-            Virtual function.
-            Returns the type of the param.
         """
 
     def setValue(self, values):

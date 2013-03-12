@@ -14,8 +14,16 @@ Rectangle {
     z: _buttleData.graphWrapper.zMax
 
     height: m.nodeModel.height
-    //width: m.nodeModel.width
-    width: nodeText.width + 20
+    width: m.nodeModel.width
+    //width: nodeText.width + 20
+
+    function fitWidth() {
+        node.width = nodeText.width + 20
+    }
+
+    Component.onCompleted: {
+        node.fitWidth();
+    }
 
     property int inputSpacing : m.nodeModel.clipSpacing
     property int clipSize: m.nodeModel.clipSize
@@ -135,6 +143,10 @@ Rectangle {
             font.pointSize: 10
             property bool isSelected: _buttleData.nodeInCurrentSelectedNodeNames(m.nodeModel)
             
+            onTextChanged: {
+                node.fitWidth();
+            }
+
             Connections {
                 target: _buttleData
                 onCurrentSelectedNodeWrappersChanged: {

@@ -27,6 +27,7 @@ class NodeWrapper(QtCore.QObject):
         self._paramWrappers = ParamEditorWrapper(self._view, self._node.getParams())
 
         # data given to QML to have clips with good looking
+        self._width = 0  # will be setted by QML
         self._heightEmptyNode = 35
         self._clipSpacing = 7
         self._clipSize = 8
@@ -98,6 +99,9 @@ class NodeWrapper(QtCore.QObject):
 
     def getHeight(self):
         return int(self._heightEmptyNode + self._clipSpacing * self.getNbInput())
+
+    def getWidth(self):
+        return self._width
 
     def getClipSpacing(self):
         return self._clipSpacing
@@ -197,6 +201,10 @@ class NodeWrapper(QtCore.QObject):
     def setNbInput(self, nbInput):
         self._node.setNbInput(nbInput)
 
+    def setWidth(self, width):
+        self._width = width
+        self.nodeLookChanged.emit()
+
     ################################################## LINK WRAPPER LAYER TO QML ##################################################
 
     @QtCore.Signal
@@ -245,6 +253,7 @@ class NodeWrapper(QtCore.QObject):
 
     # for a clean display of  connections
     height = QtCore.Property(int, getHeight, constant=True)
+    width = QtCore.Property(int, getWidth, setWidth, notify=nodeLookChanged)
     srcClips = QtCore.Property(QtCore.QObject, getSrcClips, constant=True)
     outputClips = QtCore.Property(QtCore.QObject, getOutputClips, constant=True)
     clipSpacing = QtCore.Property(int, getClipSpacing, constant=True)

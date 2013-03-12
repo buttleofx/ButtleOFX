@@ -60,7 +60,7 @@ Item {
                 y: 4
                 Image {
                     id: mosquito
-                    source: "gui/graph/img/mosquito.png"
+                    source: _buttleData.buttlePath + "/gui/img/mosquito/mosquito.png"
                     x: 2
                 }
             }

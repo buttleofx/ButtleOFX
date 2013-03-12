@@ -51,9 +51,10 @@ class ButtleData(QtCore.QObject):
     viewerChangedSignal = Signal()
 
 
-    def init(self, view):
+    def init(self, view, filePath):
         self._graph = Graph()
         self._graphWrapper = GraphWrapper(self._graph, view)
+        self._buttlePath = filePath
 
         return self
 
@@ -66,6 +67,9 @@ class ButtleData(QtCore.QObject):
 
     def getGraphWrapper(self):
         return self._graphWrapper
+
+    def getButtlePath(self):
+        return self._buttlePath
 
     ### current data ###
 
@@ -273,6 +277,9 @@ class ButtleData(QtCore.QObject):
 
     # graphWrapper
     graphWrapper = QtCore.Property(QtCore.QObject, getGraphWrapper, constant=True)
+
+    # filePath
+    buttlePath = QtCore.Property(str, getButtlePath, constant=True)
 
     # current param, view, and selected node
     currentParamNodeChanged = QtCore.Signal()

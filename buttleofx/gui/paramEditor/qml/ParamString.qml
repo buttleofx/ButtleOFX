@@ -158,7 +158,7 @@ Item {
         // hidden by default
         Image {
             id: folderforFileOrDirectory
-            source: "img/folder.png"
+            source: _buttleData.buttlePath + "/gui/img/buttons/params/folder.png"
             width: (paramObject.stringType == "OfxParamStringIsFilePath" || paramObject.stringType == "OfxParamStringIsDirectoryPath") ? 20 : 0
             y: 2
 

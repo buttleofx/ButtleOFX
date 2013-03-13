@@ -80,12 +80,12 @@ Rectangle {
 
     DropArea {
         anchors.fill: parent
-        acceptedData: "mosquito"
+        onDragEnter: {
+            acceptDrop = hasText && text=="mosquito_of_the_dead";
+        }
         onDrop: {
-            if (hasText) {
-                if(text=="mosquito_of_the_dead") {
+            if (acceptDrop) {
                     _buttleData.currentViewerNodeWrapper = m.nodeModel;
-                }
             }
         }
     }

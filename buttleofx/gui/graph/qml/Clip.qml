@@ -52,9 +52,11 @@ Rectangle {
     DropArea {
         anchors.fill: parent
         anchors.margins: -7
-        acceptedData: "connection"
+        onDragEnter: {
+            acceptDrop = hasText && text.substring(0, 5) == "clip/";
+        }
         onDrop: {
-            if (hasText) {
+            if (acceptDrop) {
                 _buttleManager.connectionManager.connectionDropEvent(text, c.clipModel, index)
             }
         }

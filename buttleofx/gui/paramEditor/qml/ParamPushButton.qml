@@ -19,16 +19,15 @@ Item {
         border.width: 1
         border.color: "#444"
 
-        property string label: paramObject.label
+        property string name: paramObject.name
         property bool enabled:  paramObject.enabled
 
-        // state: paramObject.enabled ? "enabled" : "disabled"
-        state: "disabled"
+        state: paramObject.enabled ? "enabled" : "disabled"
 
         Text {
             id: buttonid
             color: "white"
-            text: parent.label
+            text: parent.name
             anchors.horizontalCenter: parent.horizontalCenter
             y: 3
             font.pixelSize: 14
@@ -45,11 +44,9 @@ Item {
 
             onPressed:
             {
-                //pushButton.state = (pushButton.state == "FOCUS_ON") ? "FOCUS_OFF" : "FOCUS_ON"
-                paramObject.enabled = "True" //(pushButton.state == "FOCUS_ON") ? "True" : "False"
-                pushButton.state = "enabled"
+                pushButton.state = (pushButton.state == "enabled" ? "disabled" : "enabled")
                 // take the focus of the MainWindow
-                pushbutton.forceActiveFocus()
+                pushButton.forceActiveFocus()
             }
         }
 

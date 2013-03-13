@@ -184,10 +184,6 @@ class NodeWrapper(QtCore.QObject):
             nameUser = 'Undefined name'
         self._node.setNameUser(nameUser)
 
-    @QtCore.Slot(int)
-    def setWidth(self, newWidth):
-        self._width = newWidth
-
     #from a QPoint
     def setCoord(self, point):
         self._node.setCoord(point.x(), point.y())
@@ -207,7 +203,7 @@ class NodeWrapper(QtCore.QObject):
 
     def setWidth(self, width):
         self._width = width
-        self.nodeLookChanged.emit()
+        self.nodeWidthChanged.emit()
 
     ################################################## LINK WRAPPER LAYER TO QML ##################################################
 
@@ -227,6 +223,10 @@ class NodeWrapper(QtCore.QObject):
 
     @QtCore.Signal
     def nodeContentChanged(self):
+        pass
+
+    @QtCore.Signal
+    def nodeWidthChanged(self):
         pass
 
     def emitNodeContentChanged(self):
@@ -263,7 +263,7 @@ class NodeWrapper(QtCore.QObject):
 
     # for a clean display of  connections
     height = QtCore.Property(int, getHeight, constant=True)
-    width = QtCore.Property(int, getWidth, setWidth, notify=nodeLookChanged)
+    width = QtCore.Property(int, getWidth, setWidth, notify=nodeWidthChanged)  # using nodeLookChanged creates a binding loop
     srcClips = QtCore.Property(QtCore.QObject, getSrcClips, constant=True)
     outputClip = QtCore.Property(QtCore.QObject, getOutputClip, constant=True)
     clipSpacing = QtCore.Property(int, getClipSpacing, constant=True)

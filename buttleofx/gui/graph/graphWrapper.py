@@ -182,6 +182,7 @@ class GraphWrapper(QtCore.QObject):
         for connection in self._graph.getConnections():
             self.createConnectionWrapper(connection)
 
+    @QtCore.Slot(QtCore.QObject)
     def updateConnectionsCoord(self, node):
         # for each connection of the graph
         for connection in self._graph.getConnections():

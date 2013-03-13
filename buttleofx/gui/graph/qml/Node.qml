@@ -18,6 +18,7 @@ Rectangle {
 
     Component.onCompleted: {
         m.nodeModel.fitWidth(nodeText.width);
+        _buttleData.graphWrapper.updateConnectionsCoord(m.nodeModel);
     }
 
     property int inputSpacing : m.nodeModel.clipSpacing
@@ -141,6 +142,7 @@ Rectangle {
             
             onTextChanged: {
                 m.nodeModel.fitWidth(nodeText.width);
+                _buttleData.graphWrapper.updateConnectionsCoord(m.nodeModel);
             }
 
             Connections {

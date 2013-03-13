@@ -242,7 +242,6 @@ class NodeWrapper(QtCore.QObject):
     def fitWidth(self, textWidth):
         self.setWidth(textWidth + 20)
 
-
     ################################################## DATA EXPOSED TO QML ##################################################
 
     # params from Buttle

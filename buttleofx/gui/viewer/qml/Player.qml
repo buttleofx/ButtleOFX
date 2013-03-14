@@ -309,8 +309,8 @@ Item {
 */
                     Item {
                         anchors.verticalCenter: tools.verticalCenter
-                        // 320 = approximative width of TimelineTools
-                        x: (barTimeline.width - 320) / 2
+                        anchors.left: parent.left
+                        anchors.leftMargin: 25
                         TimelineTools {}
                     }
 
@@ -319,7 +319,7 @@ Item {
                     // Mosquitos
                    Row {
                         id: selectViewer
-                        spacing: 5
+                        spacing: 2
                         anchors.right: parent.right
                         anchors.rightMargin: parent.height
                         y: 8
@@ -349,8 +349,6 @@ Item {
                             }
                         }
 
-
-                        /*
                         // mosquitos numbers
                         Repeater {
                             id: number
@@ -358,9 +356,8 @@ Item {
 
                             Rectangle {
                                 id: numberElement
-                                width: tools.height - 10
-                                height: tools.height - 10
-                                y: 8
+                                width: 28
+                                height: 28
                                 color: "#343434"
                                 radius: 3
                                 state: "unclicked"
@@ -368,11 +365,10 @@ Item {
                                 Text {
                                     text: model.index + 1
                                     color: "white"
-                                    anchors.verticalCenter: parent.verticalCenter
+                                    anchors.top: parent.top
+                                    anchors.topMargin: 6
                                     anchors.left: parent.left
-                                    anchors.leftMargin: 10
-
-                                    //anchors.verticalCenter: parent.verticalCenter
+                                    anchors.leftMargin: 12
                                 }
 
                                  MouseArea {
@@ -404,7 +400,7 @@ Item {
                                 ]
                             }
                         } // Repeater mosquito 
-*/
+
                     } // Row (selectViewer = mosquitos )
 
                 } // Tools Rectangle (zoom, timeline buttons, mosquitos)

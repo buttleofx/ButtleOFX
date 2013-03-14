@@ -336,17 +336,17 @@ class ButtleData(QtCore.QObject):
             for connectionData in decoded["graph"]["connections"]:
                 clipIn_nodeName = connectionData["clipIn"]["nodeName"]
                 clipIn_clipName = connectionData["clipIn"]["clipName"]
-                clipIn_nbClip = 0  # why ? => self.getGraph().getNode(clipIn_nodeName).getNbInput()
-                clipIn_positionClip = self.getGraphWrapper().getPositionClip(clipIn_nodeName, clipIn_clipName, clipIn_nbClip)
+                clipIn_clipNumber = 0  # why ?
+                clipIn_positionClip = self.getGraphWrapper().getPositionClip(clipIn_nodeName, clipIn_clipName, clipIn_clipNumber)
                 clipIn = IdClip(clipIn_nodeName, clipIn_clipName, clipIn_positionClip)
 
                 clipOut_nodeName = connectionData["clipOut"]["nodeName"]
                 clipOut_clipName = connectionData["clipOut"]["clipName"]
-                clipOut_nbClip = 0  # strange too
-                clipOut_positionClip = self.getGraphWrapper().getPositionClip(clipOut_nodeName, clipOut_clipName, clipOut_nbClip)
+                clipOut_clipNumber = 0  # strange too
+                clipOut_positionClip = self.getGraphWrapper().getPositionClip(clipOut_nodeName, clipOut_clipName, clipOut_clipNumber)
                 clipOut = IdClip(clipOut_nodeName, clipOut_clipName, clipOut_positionClip)
 
-                self.getGraph().createConnection(clipIn, clipOut)
+                self.getGraph().createConnection(clipOut, clipIn)
 
             # selected nodes
             # in paramEditor

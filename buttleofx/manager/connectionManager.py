@@ -48,13 +48,13 @@ class ConnectionManager(QtCore.QObject):
     ############### EVENTS FROM QML ###############
 
     @QtCore.Slot(QtCore.QObject, int)
-    def connectionDragEvent(self, clip, clipNumber):
+    def connectionDragEvent(self, clip, clipIndex):
         """
             Function called when a clip is pressed (but not released yet).
             The function send mimeData to identify the clip.
         """
         mimeData = QtCore.QMimeData()
-        mimeData.setText("clip/" + str(clip.getNodeName()) + "/" + str(clip.getClipName()) + "/" + str(clipNumber))
+        mimeData.setText("clip/" + str(clip.getNodeName()) + "/" + str(clip.getClipName()) + "/" + str(clipIndex))
 
         widget = QtGui.QWidget()
 
@@ -64,7 +64,7 @@ class ConnectionManager(QtCore.QObject):
         drag.exec_(QtCore.Qt.MoveAction)
 
     @QtCore.Slot(str, QtCore.QObject, int)
-    def connectionDropEvent(self, dataTmpClip, clip, clipNumber):
+    def connectionDropEvent(self, dataTmpClip, clip, clipIndex):
         """
             Create or delete a connection between 2 nodes.
         """
@@ -75,14 +75,14 @@ class ConnectionManager(QtCore.QObject):
         if infosTmpClip[0] != "clip" or len(infosTmpClip) != 4:
             return # exception !
         else:
-            tmpClipNodeName, tmpClipName, tmpClipNumber = infosTmpClip[1], infosTmpClip[2], int(infosTmpClip[3])
+            tmpClipNodeName, tmpClipName, tmpClipIndex = infosTmpClip[1], infosTmpClip[2], int(infosTmpClip[3])
 
-        positionTmpClip = buttleData.getGraphWrapper().getPositionClip(tmpClipNodeName, tmpClipName, tmpClipNumber)
-        tmpClip = IdClip(tmpClipNodeName, tmpClipName, positionTmpClip)
+        positionTmpClip = buttleData.getGraphWrapper().getPositionClip(tmpClipNodeName, tmpClipName, tmpClipIndex)
+        tmpClip = IdClip(tmpClipNodeName, tmpClipName, clipIndex, positionTmpClip)
 
         if tmpClip:
-            positionNewClip = buttleData.getGraphWrapper().getPositionClip(clip.getNodeName(), clip.getClipName(), clipNumber)
-            newClip = IdClip(clip.getNodeName(), clip.getClipName(), positionNewClip)
+            positionNewClip = buttleData.getGraphWrapper().getPositionClip(clip.getNodeName(), clip.getClipName(), clipIndex)
+            newClip = IdClip(clip.getNodeName(), clip.getClipName(), clipIndex, positionNewClip)
 
             if tmpClip.getClipName() == "Output":
                 clipOut = tmpClip

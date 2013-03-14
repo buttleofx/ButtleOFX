@@ -113,7 +113,7 @@ class GraphWrapper(QtCore.QObject):
     def getZMax(self):
         return self._zMax
 
-    def getPositionClip(self, nodeName, clipName, clipNumber):
+    def getPositionClip(self, nodeName, clipName, clipIndex):
         """
             Function called when a new idClip is created.
             Returns the position of the clip.
@@ -133,7 +133,7 @@ class GraphWrapper(QtCore.QObject):
             yClip = nodeCoord.y() + outputTopMargin + clipSize / 2
         else:
             xClip = nodeCoord.x() - clipSize / 2
-            yClip = nodeCoord.y() + inputTopMargin + int(clipNumber) * (clipSpacing + clipSize) + clipSize / 2
+            yClip = nodeCoord.y() + inputTopMargin + int(clipIndex) * (clipSpacing + clipSize) + clipSize / 2
         return (xClip, yClip)
 
     #################### setters ####################
@@ -191,8 +191,8 @@ class GraphWrapper(QtCore.QObject):
                 clipOut = connection.getClipOut()
                 clipIn = connection.getClipIn()
                 # update clipOut and clipIn coords
-                clipOut.setCoord(self.getPositionClip(clipOut.getNodeName(), clipOut.getClipName(), 0))  # clipOut.getClipNumber()
-                clipIn.setCoord(self.getPositionClip(clipIn.getNodeName(), clipIn.getClipName(), 0))  # clipOut.getClipNumber()
+                clipOut.setCoord(self.getPositionClip(clipOut.getNodeName(), clipOut.getClipName(), clipOut.getClipIndex()))
+                clipIn.setCoord(self.getPositionClip(clipIn.getNodeName(), clipIn.getClipName(), clipIn.getClipIndex()))
         self.updateConnectionWrappers()
 
     ################################################## DATA EXPOSED TO QML ##################################################

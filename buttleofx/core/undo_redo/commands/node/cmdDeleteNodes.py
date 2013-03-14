@@ -44,6 +44,7 @@ class CmdDeleteNodes(UndoableCommand):
             connection.setTuttleConnection(tuttleConnection)
             self._graphTarget.getConnections().append(connection)
 
+        # Emit signal
         self._graphTarget.connectionsChanged()
 
     def redoCmd(self):

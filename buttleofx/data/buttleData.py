@@ -193,6 +193,8 @@ class ButtleData(QtCore.QObject):
             self._currentConnectionId = connectionWrapper.getId()
         self.currentConnectionWrapperChanged.emit()
 
+    ############################################### ADDITIONAL FUNCTIONS ##################################################
+
     @QtCore.Slot("QVariant", result=bool)
     def nodeInCurrentSelectedNodeNames(self, nodeWrapper):
         for nodeName in self._currentSelectedNodeNames:
@@ -219,6 +221,12 @@ class ButtleData(QtCore.QObject):
 
     def clearCurrentCopiedNodesInfo(self):
         self._currentCopiedNodesInfo.clear()
+
+    def canPaste(self):
+        """
+            Returns true if we can paste (= if there was at least one node selected)
+        """
+        return self._currentCopiedNodesInfo != {}
 
     ################################################## PLUGIN LIST #####################################################
 
@@ -347,6 +355,10 @@ class ButtleData(QtCore.QObject):
 
     currentConnectionWrapperChanged = QtCore.Signal()
     currentConnectionWrapper = QtCore.Property(QtCore.QObject, getCurrentConnectionWrapper, setCurrentConnectionWrapper, notify=currentConnectionWrapperChanged)
+
+    # paste possibility
+    pastePossibilityChanged = QtCore.Signal()
+    canPaste = QtCore.Property(bool, canPaste, notify=pastePossibilityChanged)
 
 # This class exists just because thre are problems when a class extends 2 other class (Singleton and QObject)
 class ButtleDataSingleton(Singleton):

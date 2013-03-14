@@ -76,6 +76,9 @@ class Connection(object):
         self._clipIn = clipIn
         self.connectionClipInChanged()
 
+    def setTuttleConnection(self, tuttleConnection):
+        self._tuttleConnection = tuttleConnection
+
     ######## SAVE / LOAD ########
 
     def object_to_dict(self):

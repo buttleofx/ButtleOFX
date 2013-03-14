@@ -18,14 +18,6 @@ class ButtleEvent(QtCore.QObject):
     oneParamChangedSignal = Signal()
     viewerChangedSignal = Signal()
 
-    ### flag ###
-
-    def canPaste(self):
-        """
-            Returns true if we can paste (= if there was at least one node selected)
-        """
-        return self._currentCopiedNodesInfo != {}
-
     ### emit signals ###
 
     def emitOneParamChangedSignal(self):
@@ -42,9 +34,7 @@ class ButtleEvent(QtCore.QObject):
 
     ################################################## DATA EXPOSED TO QML ##################################################
 
-    # paste possibility
-    pastePossibilityChanged = QtCore.Signal()
-    canPaste = QtCore.Property(bool, canPaste, notify=pastePossibilityChanged)
+
 
 
 # This class exists just because thre are problems when a class extends 2 other class (Singleton and QObject)

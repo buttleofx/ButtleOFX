@@ -15,7 +15,7 @@ class ParamInt2D(Param):
 
     def __init__(self, tuttleParam):
         Param.__init__(self, tuttleParam)
-        
+
         self._oldValue1 = self.getValue1()
         self._oldValue2 = self.getValue2()
 
@@ -94,7 +94,7 @@ class ParamInt2D(Param):
     def setValue2(self, value):
         if(self.getDefaultValue2() != value):
             self._value2HasChanged = True
-        
+
         if value != self.getValue2():
             # Push the command
             cmdUpdate = CmdSetParamND(self, (self.getValue1(), value))

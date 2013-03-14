@@ -50,6 +50,7 @@ class ButtleData(QtCore.QObject):
 
     # for the viewer
     _currentViewerIndex = 1
+    _mapViewerIndextoNodeName = {}
     _mapNodeNameToComputedImage = {}
 
     # signals
@@ -173,6 +174,13 @@ class ButtleData(QtCore.QObject):
         self._currentViewerIndex = index
         # Emit signal
         self.currentViewerIndexChanged.emit()
+        if str(index) in self._mapViewerIndextoNodeName.keys():
+            print "Je suis dans la map !", self._mapViewerIndextoNodeName[str(index)]
+            self.setCurrentViewerNodeName(self._mapViewerIndextoNodeName[str(index)])
+        else:
+            print "Je suis pas dans la map :("
+            self.currentViewerNodeName = None
+        self.currentViewerNodeChanged.emit()
 
     def setCurrentViewerNodeWrapper(self, nodeWrapper):
         """
@@ -221,6 +229,11 @@ class ButtleData(QtCore.QObject):
             if node.getCoord()[0] >= x and node.getCoord()[0] <= x + width:
                 if node.getCoord()[1] >= y and node.getCoord()[1] <= y + height:
                     self.appendToCurrentSelectedNodeNames(node.getName())
+
+    @QtCore.Slot(QtCore.QObject)
+    def assignNodeToViewerIndex(self, nodeWrapper):
+        self._mapViewerIndextoNodeName.update({str(self._currentViewerIndex): nodeWrapper.getName()})
+        print self._mapViewerIndextoNodeName
 
     @QtCore.Slot()
     def clearCurrentSelectedNodeNames(self):
@@ -333,7 +346,7 @@ class ButtleData(QtCore.QObject):
                 clipOut_positionClip = self.getGraphWrapper().getPositionClip(clipOut_nodeName, clipOut_clipName, clipOut_nbClip)
                 clipOut = IdClip(clipOut_nodeName, clipOut_clipName, clipOut_positionClip)
 
-                connection = self.getGraph().createConnection(clipIn, clipOut)
+                self.getGraph().createConnection(clipIn, clipOut)
 
             # selected nodes
             # in paramEditor

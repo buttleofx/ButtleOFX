@@ -49,6 +49,7 @@ class ButtleData(QtCore.QObject):
     _currentCopiedNodesInfo = {}
 
     # for the viewer
+    _currentViewerIndex = 1
     _mapNodeNameToComputedImage = {}
 
     # signals
@@ -117,6 +118,12 @@ class ButtleData(QtCore.QObject):
         currentSelectedNodeWrappers.setObjectList([self.getGraphWrapper().getNodeWrapper(nodeName) for nodeName in self.getCurrentSelectedNodeNames()])
         return currentSelectedNodeWrappers
 
+    def getCurrentViewerIndex(self):
+        """
+            Returns the current viewer index.
+        """
+        return self._currentViewerIndex
+
     def getCurrentViewerNodeWrapper(self):
         """
             Returns the current viewer nodeWrapper.
@@ -154,24 +161,18 @@ class ButtleData(QtCore.QObject):
         if self._currentParamNodeName == nodeWrapper.getName():
             return
         self._currentParamNodeName = nodeWrapper.getName()
-        # emit signals
+        # Emit signal
         self.currentParamNodeChanged.emit()
 
     def setCurrentSelectedNodeWrappers(self, nodeWrappers):
         self.setCurrentSelectedNodeNames([nodeWrapper.getName() for nodeWrapper in nodeWrappers])
         self.currentSelectedNodesChanged.emit()
 
-    @QtCore.Slot(QtCore.QObject)
-    def appendToCurrentSelectedNodeWrappers(self, nodeWrapper):
-        self.appendToCurrentSelectedNodeNames(nodeWrapper.getName())
-
-    def appendToCurrentSelectedNodeNames(self, nodeName):
-        if nodeName in self._currentSelectedNodeNames:
-            self._currentSelectedNodeNames.remove(nodeName)
-        else:
-            self._currentSelectedNodeNames.append(nodeName)
-        # emit signal
-        self.currentSelectedNodesChanged.emit()
+    def setCurrentViewerIndex(self, index):
+        # Update value of the current viewer index
+        self._currentViewerIndex = index
+        # Emit signal
+        self.currentViewerIndexChanged.emit()
 
     def setCurrentViewerNodeWrapper(self, nodeWrapper):
         """
@@ -194,6 +195,18 @@ class ButtleData(QtCore.QObject):
         self.currentConnectionWrapperChanged.emit()
 
     ############################################### ADDITIONAL FUNCTIONS ##################################################
+
+    @QtCore.Slot(QtCore.QObject)
+    def appendToCurrentSelectedNodeWrappers(self, nodeWrapper):
+        self.appendToCurrentSelectedNodeNames(nodeWrapper.getName())
+
+    def appendToCurrentSelectedNodeNames(self, nodeName):
+        if nodeName in self._currentSelectedNodeNames:
+            self._currentSelectedNodeNames.remove(nodeName)
+        else:
+            self._currentSelectedNodeNames.append(nodeName)
+        # emit signal
+        self.currentSelectedNodesChanged.emit()
 
     @QtCore.Slot("QVariant", result=bool)
     def nodeInCurrentSelectedNodeNames(self, nodeWrapper):
@@ -310,13 +323,13 @@ class ButtleData(QtCore.QObject):
             for connectionData in decoded["graph"]["connections"]:
                 clipIn_nodeName = connectionData["clipIn"]["nodeName"]
                 clipIn_clipName = connectionData["clipIn"]["clipName"]
-                clipIn_nbClip = 0 # why ? => self.getGraph().getNode(clipIn_nodeName).getNbInput()
+                clipIn_nbClip = 0  # why ? => self.getGraph().getNode(clipIn_nodeName).getNbInput()
                 clipIn_positionClip = self.getGraphWrapper().getPositionClip(clipIn_nodeName, clipIn_clipName, clipIn_nbClip)
                 clipIn = IdClip(clipIn_nodeName, clipIn_clipName, clipIn_positionClip)
 
                 clipOut_nodeName = connectionData["clipOut"]["nodeName"]
                 clipOut_clipName = connectionData["clipOut"]["clipName"]
-                clipOut_nbClip = 0 # strange too
+                clipOut_nbClip = 0  # strange too
                 clipOut_positionClip = self.getGraphWrapper().getPositionClip(clipOut_nodeName, clipOut_clipName, clipOut_nbClip)
                 clipOut = IdClip(clipOut_nodeName, clipOut_clipName, clipOut_positionClip)
 
@@ -355,6 +368,9 @@ class ButtleData(QtCore.QObject):
 
     currentConnectionWrapperChanged = QtCore.Signal()
     currentConnectionWrapper = QtCore.Property(QtCore.QObject, getCurrentConnectionWrapper, setCurrentConnectionWrapper, notify=currentConnectionWrapperChanged)
+
+    currentViewerIndexChanged = QtCore.Signal()
+    currentViewerIndex = QtCore.Property("int", getCurrentViewerIndex, setCurrentViewerIndex, notify = currentViewerIndexChanged)
 
     # paste possibility
     pastePossibilityChanged = QtCore.Signal()

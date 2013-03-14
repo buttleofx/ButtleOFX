@@ -358,9 +358,8 @@ Item {
                                 id: numberElement
                                 width: 28
                                 height: 28
-                                color: "#343434"
+                                color: _buttleData.currentViewerIndex == index+1 ? "#343434" : "transparent"
                                 radius: 3
-                                state: "unclicked"
 
                                 Text {
                                     text: model.index + 1
@@ -374,15 +373,11 @@ Item {
                                  MouseArea {
                                     anchors.fill: parent
                                     onClicked: {
-                                        // from 1 to 9 because the first element of 'selectViewer is the mosquito image !
-                                        for(var i=1; i<10; ++i) {
-                                            selectViewer.children[i].state = "unclicked"
-                                        }
-                                        numberElement.state = "clicked"
+                                        _buttleData.currentViewerIndex = index + 1
                                     }
                                 }
 
-                                states: [
+                                /*states: [
                                     State {
                                         name: "clicked"
                                         PropertyChanges {
@@ -397,7 +392,7 @@ Item {
                                             color: "transparent"
                                         }
                                       }
-                                ]
+                                ]*/
                             }
                         } // Repeater mosquito 
 

@@ -40,7 +40,7 @@ class ParamBoolean(Param):
     def setValue(self, value):
         if(self.getDefaultValue() != value):
             self.setHasChanged(True)
-        
+
         self._tuttleParam.setValue(bool(value))
 
     def pushValue(self, value):

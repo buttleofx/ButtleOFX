@@ -76,3 +76,7 @@ class ParamRGBA(Param):
         self._tuttleParam.setValueAtIndex(3, value4)
         self.paramChanged()
         #print "Alpha : ", self.getValueA()
+
+    #setValue on rgba doesn't work ?
+    #def setValue(self, r, g, b, a):
+    #   self._tuttleParam.setValue(r, g, b, a)

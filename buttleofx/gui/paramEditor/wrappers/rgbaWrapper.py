@@ -51,6 +51,10 @@ class RGBAWrapper(ParamWrapper):
     def setValueA(self, value):
         self._param.setValueA(value)
 
+    #@QtCore.Slot(float, float, float, float)
+    #def setValue(self, r, g, b, a):
+    #    self._param.setValue(r, g, b, a)
+
     @QtCore.Signal
     def changed(self):
         pass

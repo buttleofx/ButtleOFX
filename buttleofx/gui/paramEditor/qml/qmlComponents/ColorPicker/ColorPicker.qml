@@ -7,7 +7,6 @@ import QuickMamba 1.0
 Item{
     id: colorPicker
 
-
     // creation of a signal used to prevent paramRGBA.qml when the color has changed
     signal mainColorChanged
 
@@ -15,10 +14,23 @@ Item{
 
     property alias title: titleColorPicker.text //defined in ParamRGBA
 
+    //property bool initialisationOfObject : true //first passage in the file
+    property real defaultValueRed
+    property real defaultValueGreen
+    property real defaultValueBlue
+    property real defaultValueAlpha
+
     ColorExtended {
         id: extendedColor
         entireColor: colorValue //entireColor is a property (a QColor) exposed in colorExtended from Quickmamba
         // others properties are accessible as hue, saturation, value, alpha
+        Component.onCompleted : {
+                red = defaultValueRed
+                green = defaultValueGreen
+                blue = defaultValueBlue
+                alpha = defaultValueAlpha
+        }
+        // Maybe it's better to divide the signal in 4 (onRedChanged, onGreenChanged...?)
         onEntireColorChanged: {
             // signal capted in paramRGBA.qml, meaning we send informations to Tuttle
             colorPicker.mainColorChanged()
@@ -83,7 +95,9 @@ Item{
             HueSlider{
                 id: hueSlider
                 height: colorPicker.height - titleColorPicker.height - 20
-                hue: currentHue
+                /* when the color is white hue value is -1.0 so to avoid that the cursor of hueSlider goes out the colorPicker, we put
+                the value to 0.0 */
+                hue: currentHue >= 0.0 ? currentHue : 0.0
                 onNewHueChanged: {
                     extendedColor.hue = newHue
                 }

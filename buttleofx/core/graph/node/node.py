@@ -155,12 +155,16 @@ class Node(object):
 
     def emitNodeContentChanged(self):
         """
-            Emit nodeContentChanged signal, to warn the node wrapper that a param just changed.
-            Also call emitOneParamChangedSignal, to warn buttleEvent that a param just changed (to update the viewer)
+            If necessary, call emitOneParamChangedSignal, to warn buttleEvent that a param just changed (to update the viewer)
+            Also emit nodeContentChanged signal, to warn the node wrapper that a param just changed (for property si secret of other params for example !)
         """
-        # to buttleEvent
-        buttleEvent = ButtleEventSingleton().get()
-        buttleEvent.emitOneParamChangedSignal()
+        from buttleofx.data import ButtleDataSingleton
+        buttleData = ButtleDataSingleton().get()
+        if (self._name == buttleData.getCurrentViewerNodeName()):
+            # to buttleEvent
+            buttleEvent = ButtleEventSingleton().get()
+            buttleEvent.emitOneParamChangedSignal()
+
         # to the node wrapper
         self.nodeContentChanged()
 

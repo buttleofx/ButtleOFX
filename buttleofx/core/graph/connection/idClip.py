@@ -8,17 +8,18 @@ class IdClip:
         - _coord : the clip's coords
     """
 
-    def __init__(self, nodeName, clipName, coord):
+    def __init__(self, nodeName, clipName, clipIndex, coord):
         self._id = nodeName + clipName
         self._nodeName = nodeName
         self._clipName = clipName
+        self._clipIndex = clipIndex
         self._coord = coord
 
     def __eq__(self, otherClip):
         """
             Overloads the operator ==
         """
-        return (self._nodeName == otherClip._nodeName and self._clipName == otherClip._clipName)
+        return (self._nodeName == otherClip._nodeName and self._clipName == otherClip._clipName and self._clipIndex == otherClip._clipIndex)
 
     ######## getters ########
 
@@ -33,6 +34,9 @@ class IdClip:
 
     def getCoord(self):
         return self._coord
+
+    def getClipIndex(self):
+        return self._clipIndex
 
     ######## setters ########
 

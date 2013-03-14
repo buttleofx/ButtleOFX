@@ -3,8 +3,6 @@ from PySide import QtCore
 from quickmamba.patterns import Signal
 # data
 from buttleofx.data import ButtleDataSingleton
-# event
-from buttleofx.event import ButtleEventSingleton
 
 
 class NodeManager(QtCore.QObject):
@@ -83,6 +81,8 @@ class NodeManager(QtCore.QObject):
                     buttleData.setCurrentViewerNodeName(None)
                 if buttleData.getCurrentParamNodeName() in buttleData.getCurrentSelectedNodeNames():
                     buttleData.setCurrentParamNodeName(None)
+                # Emit the change for the toolbar
+                buttleData.pastePossibilityChanged.emit()
 
     @QtCore.Slot()
     def copyNode(self):
@@ -90,7 +90,6 @@ class NodeManager(QtCore.QObject):
             Copy the current node(s).
         """
         buttleData = ButtleDataSingleton().get()
-        buttleEvent = ButtleEventSingleton().get()
         # Clear the info saved in currentCopiedNodesInfo
         buttleData.clearCurrentCopiedNodesInfo()
         # Save new data in currentCopiedNodesInfo for each selected node
@@ -104,7 +103,7 @@ class NodeManager(QtCore.QObject):
                 copyNode.update({"mode": "_copy"})
                 buttleData.getCurrentCopiedNodesInfo()[node.getName()] = copyNode
                 # Emit the change for the toolbar
-                buttleEvent.pastePossibilityChanged.emit()
+                buttleData.pastePossibilityChanged.emit()
 
     @QtCore.Slot()
     def pasteNode(self):

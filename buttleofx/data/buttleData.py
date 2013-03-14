@@ -312,7 +312,7 @@ class ButtleData(QtCore.QObject):
                 clipOut_positionClip = self.getGraphWrapper().getPositionClip(clipOut_nodeName, clipOut_clipName, clipOut_nbClip)
                 clipOut = IdClip(clipOut_nodeName, clipOut_clipName, clipOut_positionClip)
 
-                connection = self.getGraph().createConnection(clipIn, clipOut)
+                connection = self.getGraph().createConnection(clipOut, clipIn)
 
             # selected nodes
             # in paramEditor

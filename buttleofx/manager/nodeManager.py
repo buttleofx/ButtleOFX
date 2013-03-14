@@ -3,6 +3,8 @@ from PySide import QtCore
 from quickmamba.patterns import Signal
 # data
 from buttleofx.data import ButtleDataSingleton
+# event
+from buttleofx.event import ButtleEventSingleton
 
 
 class NodeManager(QtCore.QObject):
@@ -23,7 +25,7 @@ class NodeManager(QtCore.QObject):
             Create a node.
         """
         buttleData = ButtleDataSingleton().get()
-        node = buttleData.getGraph().createNode(nodeType, x, y)
+        buttleData.getGraph().createNode(nodeType, x, y)
 
         # update undo/redo display
         self.undoRedoChanged()
@@ -88,6 +90,7 @@ class NodeManager(QtCore.QObject):
             Copy the current node(s).
         """
         buttleData = ButtleDataSingleton().get()
+        buttleEvent = ButtleEventSingleton().get()
         # Clear the info saved in currentCopiedNodesInfo
         buttleData.clearCurrentCopiedNodesInfo()
         # Save new data in currentCopiedNodesInfo for each selected node
@@ -101,7 +104,7 @@ class NodeManager(QtCore.QObject):
                 copyNode.update({"mode": "_copy"})
                 buttleData.getCurrentCopiedNodesInfo()[node.getName()] = copyNode
                 # Emit the change for the toolbar
-                buttleData.pastePossibilityChanged.emit()
+                buttleEvent.pastePossibilityChanged.emit()
 
     @QtCore.Slot()
     def pasteNode(self):
@@ -115,7 +118,7 @@ class NodeManager(QtCore.QObject):
             for node in buttleData.getCurrentCopiedNodesInfo():
                 buttleData.getGraph().createNode(buttleData.getCurrentCopiedNodesInfo()[node]["nodeType"], 20, 20)
                 newNode = buttleData.getGraph().getNodes()[-1]
-                newNode.setColor(buttleData.getCurrentCopiedNodesInfo()[node]["color"][0], buttleData.getCurrentCopiedNodesInfo()[node]["color"][1], buttleData.getCurrentCopiedNodesInfo()[node]["color"][2])
+                newNode.setColor(buttleData.getCurrentCopiedNodesInfo()[node]["color"])
                 newNode.setNameUser(buttleData.getCurrentCopiedNodesInfo()[node]["nameUser"] + buttleData.getCurrentCopiedNodesInfo()[node]["mode"])
                 newNode.getTuttleNode().getParamSet().copyParamsValues(buttleData.getCurrentCopiedNodesInfo()[node]["params"])
 
@@ -144,7 +147,7 @@ class NodeManager(QtCore.QObject):
                 # Use the current selected node's properties to set the duplicated node's properties
                 newNode.setNameUser(nameUser)
                 newNode.setOldCoord(oldCoord[0], oldCoord[1])
-                newNode.setColor(color[0], color[1], color[2])
+                newNode.setColor(color)
                 newNode.getTuttleNode().getParamSet().copyParamsValues(node.getNode().getTuttleNode().getParamSet())
 
         # update undo/redo display

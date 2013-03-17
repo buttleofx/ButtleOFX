@@ -47,7 +47,7 @@ from buttleofx.manager import ButtleManagerSingleton
 # event
 from buttleofx.event import ButtleEventSingleton
 # new QML type
-from buttleofx.gui.paramEditor import Finder
+from buttleofx.data import Finder
 # undo_redo
 from buttleofx.core.undo_redo.manageTools import CommandManager
 

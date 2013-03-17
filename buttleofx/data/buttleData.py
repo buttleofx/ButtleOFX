@@ -248,12 +248,13 @@ class ButtleData(QtCore.QObject):
 
     ################################################## SAVE / LOAD ##################################################
 
+    @QtCore.Slot(str)
     @QtCore.Slot()
-    def saveData(self):
+    def saveData(self, url='buttleofx/backup/data.json'):
         """
-            Save all data in a json file : buttleofx/backup/data.json
+            Save all data in a json file (default file : buttleofx/backup/data.json)
         """
-        with io.open('buttleofx/backup/data.json', 'w', encoding='utf-8') as f:
+        with io.open(url, 'w', encoding='utf-8') as f:
             dictJson = {
                 "date": {},
                 "window": {},
@@ -289,12 +290,13 @@ class ButtleData(QtCore.QObject):
             f.write(unicode(json.dumps(dictJson, sort_keys=True, indent=2, ensure_ascii=False)))
         f.closed
 
+    @QtCore.Slot(str)
     @QtCore.Slot()
-    def loadData(self):
+    def loadData(self, url='buttleofx/backup/data.json'):
         """
-            Load all data from a json file : buttleofx/backup/data.json
+            Loads all data from a Json file (the default Json file if no url is given)
         """
-        with open('buttleofx/backup/data.json', 'r') as f:
+        with open(unicode(url), 'r') as f:
             read_data = f.read()
             decoded = json.loads(read_data)
 

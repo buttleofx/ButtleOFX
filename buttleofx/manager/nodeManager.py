@@ -158,7 +158,12 @@ class NodeManager(QtCore.QObject):
             Drop an image or a video on the graph : create a reader node.
         """
         buttleData = ButtleDataSingleton().get()
-        buttleData.getGraph().createReaderNode(url, x, y)
+
+        extension = url.split(".")[-1].lower()
+        if extension == 'json':
+            buttleData.loadData(url)  # also need to verify the json format
+        else:
+            buttleData.getGraph().createReaderNode(url, x, y)
 
         # update undo/redo display
         self.undoRedoChanged()

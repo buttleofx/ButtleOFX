@@ -111,7 +111,6 @@ class Graph(object):
             Creates a reader node when an image has been dropped in the graph.
         """
         extension = url.split(".")[-1].lower()
-        print extension
 
         if extension in ['jpeg', 'jpg', 'jpe', 'jfif', 'jfi']:
             nodeType = 'tuttle.jpegreader'

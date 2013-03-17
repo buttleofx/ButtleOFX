@@ -1,4 +1,5 @@
 import QtQuick 1.1
+import FolderListViewItem 1.0
 
 Rectangle {
     id: tools
@@ -159,6 +160,14 @@ Rectangle {
                 height: 28
                 color: "transparent"
                 radius: 3
+
+                FolderListView {
+                    id: finderSaveGraph
+                    typeDialog: "SaveFile"
+                    messageDialog: "Save the graph"
+                    directoryDialog: _buttleData.buttlePath
+                }
+
                 Text {
                     id: textSaveGraph
                     color: "#00b2a1"
@@ -170,10 +179,14 @@ Rectangle {
                     hoverEnabled: true
                     anchors.fill: parent
                     onClicked: {
-                        _buttleData.saveData()
+                        finderSaveGraph.browseFile()
+                        if (finderSaveGraph.propFile) {
+                            _buttleData.saveData(finderSaveGraph.propFile)
+                        }
                     }
                 }
             }
+
             // to load the graph
             Rectangle {
                 id: buttonLoad
@@ -182,6 +195,14 @@ Rectangle {
                 height: 28
                 color: "transparent"
                 radius: 3
+
+                FolderListView {
+                    id: finderLoadGraph
+                    typeDialog: "OpenFile"
+                    messageDialog: "Load a graph"
+                    directoryDialog: _buttleData.buttlePath
+                }
+
                 Text {
                     id: textLoadGraph
                     color: "#00b2a1"
@@ -193,7 +214,10 @@ Rectangle {
                     hoverEnabled: true
                     anchors.fill: parent
                     onClicked: {
-                        _buttleData.loadData()
+                        finderLoadGraph.browseFile();
+                        if (finderLoadGraph.propFile) {
+                            _buttleData.loadData(finderLoadGraph.propFile)
+                        }
                     }
                 }
             }

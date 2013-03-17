@@ -14,7 +14,12 @@ Item {
     visible: !paramObject.isSecret
     height: paramObject.isSecret ? 0 : implicitHeight
 
-    FolderListView {id: finder}
+    FolderListView {
+        id: finder
+        property bool isReader: _buttleData.currentParamNodeWrapper.nodeType.indexOf("reader") != -1
+        typeDialog: isReader ? "OpenFile" : "SaveFile"
+        messageDialog: isReader ? "Open file" : "Save file as"
+    }
 
     /*Container of the textInput*/
     function createInput(paramObject)
@@ -175,7 +180,8 @@ Item {
                 id: buttonmousearea
                 anchors.fill: parent   
                 onPressed: {
-                    finder.browseFile(_buttleData.currentParamNodeWrapper)
+//                    finder.browseFile(_buttleData.currentParamNodeWrapper)
+                    finder.browseFile()
                     if( finder.propFile )
                     {
                         paramObject.value = finder.propFile

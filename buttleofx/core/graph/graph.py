@@ -25,7 +25,6 @@ class Graph(object):
 
     def __init__(self):
         self._graphTuttle = tuttle.Graph()
-        #self._graphTuttle.setup() # good idea ?
 
         self._nodes = []
         self._connections = []
@@ -67,6 +66,9 @@ class Graph(object):
         return self._nodes
 
     def getNode(self, nodeName):
+        """
+            Returns the right node object given its name (None if no node found).
+        """
         for node in self._nodes:
             if node.getName() == nodeName:
                 return node
@@ -74,17 +76,24 @@ class Graph(object):
 
     def getConnections(self):
         """
-            Returns the connection List.
+            Returns the connection list.
         """
         return self._connections
 
     def getConnectionByClips(self, clipOut, clipIn):
+        """
+            Returns a connection, given the output clip and the input clip. (None if no connection found).
+            The order of the clips is important.
+        """
         for connection in self._connections:
             if connection.getClipOut() == clipOut and connection.getClipIn() == clipIn:
                 return connection
         return None
 
     def getConnectionById(self, connectionId):
+        """
+            Returns the right connection object given its id (None if no connection found).
+        """
         for connection in self._connections:
             if connection.getId() == connectionId:
                 return connection
@@ -92,7 +101,7 @@ class Graph(object):
 
     def getGraphTuttle(self):
         """
-            Return the Tuttle's graph.
+            Returns the Tuttle's graph.
         """
         return self._graphTuttle
 
@@ -131,7 +140,7 @@ class Graph(object):
 
         # create the node
         #########################
-        # use a group of command : 
+        # use a group of command :
         # - create node
         # - setParamString
         #########################

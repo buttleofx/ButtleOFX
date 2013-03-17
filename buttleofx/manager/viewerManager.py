@@ -1,5 +1,4 @@
 from PySide import QtCore, QtGui
-import os
 # quickmamba
 from quickmamba.patterns import Signal
 # Tuttle
@@ -19,7 +18,7 @@ class ViewerManager(QtCore.QObject):
         self._tuttleImageCache = None
         self._computedImage = None
 
-        # for the viewer
+        # for the viewer : name of the hypothetical node that can't be displayed.
         self._nodeError = ""
 
         self.undoRedoChanged = Signal()
@@ -31,12 +30,15 @@ class ViewerManager(QtCore.QObject):
         return self._nodeError
 
     def setNodeError(self, nodeName):
+        """
+            Sets the name of the node that can't be displayed.
+        """
         self._nodeError = nodeName
         self.nodeErrorChanged.emit()
 
     def computeNode(self, frame):
         """
-            Compute the node at the frame indicated
+            Computes the node at the frame indicated.
         """
         print "------- COMPUTE NODE -------"
 
@@ -58,7 +60,7 @@ class ViewerManager(QtCore.QObject):
 
     def retrieveImage(self, frame, frameChanged):
         """
-            Compute the node at the frame indicated if the frame has changed (if the time has changed)
+            Computes the node at the frame indicated if the frame has changed (if the time has changed).
         """
         buttleData = ButtleDataSingleton().get()
         #Get the name of the currentNode of the viewer
@@ -85,22 +87,25 @@ class ViewerManager(QtCore.QObject):
     def mosquitoDragEvent(self):
         """
             Function called when the viewer's mosquito is dragged.
-            The function send the mimeData and launch a drag event.
+            The function sends the mimeData and launches a drag event.
         """
 
         widget = QtGui.QWidget()
         drag = QtGui.QDrag(widget)
-
         mimeData = QtCore.QMimeData()
+
+        # set data (here it's just a text)
         mimeData.setText("mosquito_of_the_dead")
         drag.setMimeData(mimeData)
 
+        # sets the image of the mosquito in the pixmap
         filePath = ButtleDataSingleton().get().getButtlePath()
         imgPath = filePath + "/gui/img/mosquito/mosquito.png"
         drag.setPixmap(QtGui.QPixmap(imgPath))
 
+        # starts the drag
         drag.exec_(QtCore.Qt.MoveAction)
 
-    # error display on the Viewer
+    # error displayed on the Viewer
     nodeErrorChanged = QtCore.Signal()
     nodeError = QtCore.Property(str, getNodeError, setNodeError, notify=nodeErrorChanged)

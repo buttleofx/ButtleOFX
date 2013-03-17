@@ -22,13 +22,13 @@ class ButtleEvent(QtCore.QObject):
 
     def emitOneParamChangedSignal(self):
         """
-            Emit paramChangedSignal.
+            Emits the signal  paramChangedSignal.
         """
         self.oneParamChangedSignal()
 
     def emitViewerChangedSignal(self):
         """
-            Emit viewerChangedSignal.
+            Emits the signal viewerChangedSignal.
         """
         self.viewerChangedSignal()
 

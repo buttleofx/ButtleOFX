@@ -1,8 +1,6 @@
-from PySide import QtCore, QtGui
-# Tuttle
-from pyTuttle import tuttle
+from PySide import QtCore
 # quickmamba
-from quickmamba.patterns import Singleton, Signal
+from quickmamba.patterns import Singleton
 # 'little' managers
 from nodeManager import NodeManager
 from connectionManager import ConnectionManager
@@ -15,8 +13,8 @@ from buttleofx.data import ButtleDataSingleton
 
 class ButtleManager(QtCore.QObject):
     """
-        This class catches events from QML, and manages them by call the right manager or the right methods in core.
-        It's like the front manager, which delegate to other manager.
+        This class catches events from QML, and manages them by calling the right manager or the right methods in core.
+        It's like the front manager, which delegate to other managers.
         This class also catches events from QML about undo / redo.
     """
 

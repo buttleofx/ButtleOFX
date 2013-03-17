@@ -36,7 +36,7 @@ class GraphWrapper(QtCore.QObject):
 
         self._graph = graph
 
-        # link core signals to wrapper layer 
+        # links core signals to wrapper layer
         self._graph.nodesChanged.connect(self.updateNodeWrappers)
         self._graph.connectionsCoordChanged.connect(self.updateConnectionsCoord)
         self._graph.connectionsChanged.connect(self.updateConnectionWrappers)
@@ -108,9 +108,15 @@ class GraphWrapper(QtCore.QObject):
 
     @QtCore.Slot(result=QtCore.QObject)
     def getLastCreatedNodeWrapper(self):
+        """
+            Returns the wrapper of the last node created.
+        """
         return self._nodeWrappers[-1]
 
     def getZMax(self):
+        """
+            Returns the depth of the QML graph
+        """
         return self._zMax
 
     def getPositionClip(self, nodeName, clipName, clipIndex):
@@ -139,6 +145,9 @@ class GraphWrapper(QtCore.QObject):
     #################### setters ####################
 
     def setZMax(self, zMax):
+        """
+            Sets the depth of the QML graph
+        """
         self._zMax = zMax
 
     ################################################## CREATIONS ##################################################
@@ -147,7 +156,7 @@ class GraphWrapper(QtCore.QObject):
         """
             Creates a node wrapper and add it to the nodeWrappers list.
         """
-        # search the right node in the node list
+        # we search the right node in the node list
         node = self._graph.getNode(nodeName)
         if node:
             nodeWrapper = NodeWrapper(node, self._view)
@@ -184,9 +193,13 @@ class GraphWrapper(QtCore.QObject):
 
     @QtCore.Slot(QtCore.QObject)
     def updateConnectionsCoord(self, node):
+        """
+            Updates the coordinates of the connections when a node is beeing moved.
+            This update just affects the connections of the moving node.
+        """
         # for each connection of the graph
         for connection in self._graph.getConnections():
-            # if the connection conerns the node we've just moved
+            # if the connection concerns the node we're moving
             if node.getName() in connection.getConcernedNodes():
                 clipOut = connection.getClipOut()
                 clipIn = connection.getClipIn()
@@ -196,10 +209,6 @@ class GraphWrapper(QtCore.QObject):
         self.updateConnectionWrappers()
 
     ################################################## DATA EXPOSED TO QML ##################################################
-
-    # nodes and connections
-    nodes = QtCore.Property("QVariant", getNodeWrappers, constant=True)
-    connections = QtCore.Property("QVariant", getConnectionWrappers, constant=True)
 
     # nodeWrappers and connectionWrappers
     nodeWrappers = QtCore.Property(QtCore.QObject, getNodeWrappers, constant=True)

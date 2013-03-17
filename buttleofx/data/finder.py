@@ -10,7 +10,6 @@ class Finder(QtDeclarative.QDeclarativeItem):
         _type : the type of the finder : "OpenFile" or "SaveFile"
         _message :
         _directory :
-        -filters :
     """
 
     def __init__(self, parent=None):
@@ -27,13 +26,6 @@ class Finder(QtDeclarative.QDeclarativeItem):
 
     def setFile(self, newPath):
         self._file = newPath
-        self.changed.emit()
-
-    def getFilters(self):
-        return self._filters
-
-    def setFilters(self, filters):
-        self._filters = filters
         self.changed.emit()
 
     def getType(self):
@@ -63,8 +55,7 @@ class Finder(QtDeclarative.QDeclarativeItem):
     @QtCore.Slot()
     def browseFile(self):
         dialog = QFileDialog()
-        #dialog.setNameFilters(self._filters)
-        QtCore.QDir.setNameFilters(self._filters)
+
         # if the current node is a reader
         if self._type == "OpenFile":
             self._file = dialog.getOpenFileName(None, self._message, self._directory)
@@ -83,4 +74,3 @@ class Finder(QtDeclarative.QDeclarativeItem):
     typeDialog = QtCore.Property(str, getType, setType, notify=changed)
     messageDialog = QtCore.Property(str, getMessage, setMessage, notify=changed)
     directoryDialog = QtCore.Property(str, getDirectory, setDirectory, notify=changed)
-    filters = QtCore.Property(QtCore.QObject, getFilters, setFilters, notify=changed)

@@ -312,15 +312,15 @@ class ButtleData(QtCore.QObject):
             for connectionData in decoded["graph"]["connections"]:
                 clipIn_nodeName = connectionData["clipIn"]["nodeName"]
                 clipIn_clipName = connectionData["clipIn"]["clipName"]
-                clipIn_clipNumber = 0 # why ?
-                clipIn_positionClip = self.getGraphWrapper().getPositionClip(clipIn_nodeName, clipIn_clipName, clipIn_clipNumber)
-                clipIn = IdClip(clipIn_nodeName, clipIn_clipName, clipIn_positionClip)
+                clipIn_clipIndex = connectionData["clipIn"]["clipIndex"]
+                clipIn_positionClip = self.getGraphWrapper().getPositionClip(clipIn_nodeName, clipIn_clipName, clipIn_clipIndex)
+                clipIn = IdClip(clipIn_nodeName, clipIn_clipName, clipIn_clipIndex, clipIn_positionClip)
 
                 clipOut_nodeName = connectionData["clipOut"]["nodeName"]
                 clipOut_clipName = connectionData["clipOut"]["clipName"]
-                clipOut_clipNumber = 0 # strange too
-                clipOut_positionClip = self.getGraphWrapper().getPositionClip(clipOut_nodeName, clipOut_clipName, clipOut_clipNumber)
-                clipOut = IdClip(clipOut_nodeName, clipOut_clipName, clipOut_positionClip)
+                clipOut_clipIndex = connectionData["clipOut"]["clipIndex"]
+                clipOut_positionClip = self.getGraphWrapper().getPositionClip(clipOut_nodeName, clipOut_clipName, clipOut_clipIndex)
+                clipOut = IdClip(clipOut_nodeName, clipOut_clipName, clipOut_clipIndex, clipOut_positionClip)
 
                 connection = self.getGraph().createConnection(clipOut, clipIn)
 

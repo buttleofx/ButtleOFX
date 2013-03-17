@@ -79,7 +79,7 @@ class Connection(object):
     def setTuttleConnection(self, tuttleConnection):
         self._tuttleConnection = tuttleConnection
 
-    ######## SAVE / LOAD ########
+    ######## SAVE  ########
 
     def object_to_dict(self):
         """
@@ -87,13 +87,7 @@ class Connection(object):
         """
         res = {
             "id": self._id,
-            "clipOut": {
-                "nodeName": self._clipOut.getNodeName(),
-                "clipName": self._clipOut.getClipName()
-            },
-            "clipIn": {
-                "nodeName": self._clipIn.getNodeName(),
-                "clipName": self._clipIn.getClipName()
-            }
+            "clipOut": self._clipOut.object_to_dict(),
+            "clipIn": self._clipIn.object_to_dict()
         }
         return res

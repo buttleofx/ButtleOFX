@@ -48,3 +48,16 @@ class IdClip:
 
     def setYCoord(self, yCoord):
         self._coord[1] = yCoord
+
+    ######## SAVE  ########
+
+    def object_to_dict(self):
+        """
+            Convert the idClip to a dictionary of his representation.
+        """
+        res = {
+            "nodeName": self._nodeName,
+            "clipName": self._clipName,
+            "clipIndex": self._clipIndex
+        }
+        return res

@@ -32,10 +32,6 @@ class ButtleEvent(QtCore.QObject):
         """
         self.viewerChangedSignal()
 
-    ################################################## DATA EXPOSED TO QML ##################################################
-
-
-
 
 # This class exists just because thre are problems when a class extends 2 other class (Singleton and QObject)
 class ButtleEventSingleton(Singleton):

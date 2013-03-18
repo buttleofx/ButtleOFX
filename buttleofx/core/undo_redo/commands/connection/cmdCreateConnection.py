@@ -8,7 +8,7 @@ from buttleofx.core.graph.connection import Connection
 
 class CmdCreateConnection(UndoableCommand):
     """
-        Command that create a connection between 2 clips
+        Command that creates a connection between 2 clips
         Attributes :
         - graphTarget
         - connection : we save the buttle connection because we will need it for the redo
@@ -24,7 +24,7 @@ class CmdCreateConnection(UndoableCommand):
 
     def undoCmd(self):
         """
-            Undo the creation of the connection.
+            Undoes the creation of the connection.
         """
         # Get the output clip and the source clip of the tuttle connection
         tuttleNodeSource = self._graphTarget.getNode(self._connection.getClipOut().getNodeName()).getTuttleNode()
@@ -41,7 +41,7 @@ class CmdCreateConnection(UndoableCommand):
 
     def redoCmd(self):
         """
-            Redo the creation of the connection.
+            Redoes the creation of the connection.
         """
         # Creation of the tuttle connection
         tuttleNodeSource = self._graphTarget.getNode(self._clipOut.getNodeName()).getTuttleNode()
@@ -54,7 +54,7 @@ class CmdCreateConnection(UndoableCommand):
 
     def doCmd(self):
         """
-            Create a connection.
+            Creates a connection.
         """
         # Creation of the tuttle connection
         tuttleNodeSource = self._graphTarget.getNode(self._clipOut.getNodeName()).getTuttleNode()

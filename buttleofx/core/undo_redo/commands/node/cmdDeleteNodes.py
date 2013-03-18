@@ -22,7 +22,7 @@ class CmdDeleteNodes(UndoableCommand):
 
     def undoCmd(self):
         """
-            Undo the suppression of the node <=> recreate the node.
+            Undoes the suppression of the node <=> recreate the node.
         """
         for node in self._nodes:
             # we recreate the node
@@ -49,13 +49,14 @@ class CmdDeleteNodes(UndoableCommand):
 
     def redoCmd(self):
         """
-            Redo the suppression of the node.
+            Redoes the suppression of the node.
+            Just calls doCmd() function.
         """
         self.doCmd()
 
     def doCmd(self):
         """
-            Delete a node.
+            Deletes a node.
         """
         for node in self._nodes:
             # Delete the tuttle connections

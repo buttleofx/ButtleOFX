@@ -138,12 +138,10 @@ class Graph(object):
             return
             #use exception !
 
-        # create the node
-        #########################
-        # use a group of command :
-        # - create node
-        # - setParamString
-        #########################
+        # We create the node.
+        # We can't use a group of commands because we need the tuttle node to set the value, and this tuttle node is created in the function doCmd() of the cmdCreateNode.
+        # So we use a special command CmdCreateReaderNode which creates a new node and set its value with the correct url.
+        # See the definition of the class CmdCreateReaderNode.
         cmdCreateReaderNode = CmdCreateReaderNode(self, nodeType, x, y, url)
         cmdManager = CommandManager()
         return cmdManager.push(cmdCreateReaderNode)
@@ -151,6 +149,7 @@ class Graph(object):
     def deleteNodes(self, nodes):
         """
             Removes a node in the node list when a node is deleted.
+            Pushes a command in the CommandManager.
         """
         cmdDeleteNodes = CmdDeleteNodes(self, nodes)
         cmdManager = CommandManager()
@@ -159,6 +158,7 @@ class Graph(object):
     def createConnection(self, clipOut, clipIn):
         """
             Adds a connection in the connection list when a connection is created.
+            Pushes a command in the CommandManager.
         """
         cmdCreateConnection = CmdCreateConnection(self, clipOut, clipIn)
         cmdManager = CommandManager()
@@ -167,6 +167,7 @@ class Graph(object):
     def deleteConnection(self, connection):
         """
             Removes a connection.
+            Pushes a command in the CommandManager.
         """
         cmdDeleteConnection = CmdDeleteConnection(self, connection)
         cmdManager = CommandManager()
@@ -183,7 +184,7 @@ class Graph(object):
 
     def nodeMoved(self, nodeName, x, y):
         """
-            This fonction push a cmdMoved in the CommandManager.
+            This fonction pushes a cmdMoved in the CommandManager.
         """
         # only push a cmd if the node truly moved
         if self.getNode(nodeName).getOldCoord() != (x, y):

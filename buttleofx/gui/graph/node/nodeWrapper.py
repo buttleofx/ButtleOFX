@@ -10,7 +10,7 @@ from buttleofx.gui.graph.connection import ClipWrapper
 class NodeWrapper(QtCore.QObject):
     """
         Class NodeWrapper defined by :
-            - _node : the buttle node
+            - _node : the buttle node (core)
             - _view : the view (necessary for all wrapper, to construct a QtCore.QObject)
             - _paramWrappers : the paramWrappers (it's a ParamEditorWrapper object)
             - _width, _heightEmptyNode , _clipSpacing, _clipSize, _inputSideMargin : data given to QML to have nodes with good looking
@@ -93,7 +93,7 @@ class NodeWrapper(QtCore.QObject):
 
     def getOutputClip(self):
         """
-            Return the ClipWrapper of the output clip of this node.
+            Returns the ClipWrapper of the output clip of this node.
         """
         for clip in self._node.getClips():
             if clip == "Output":

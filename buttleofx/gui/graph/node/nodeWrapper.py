@@ -215,7 +215,8 @@ class NodeWrapper(QtCore.QObject):
 
     ################################################## LINK WRAPPER LAYER TO QML ##################################################
 
-    nodeLookChanged = nodePositionChanged = nodeContentChanged = nodeWidthChanged = QtCore.Signal()
+    nodeLookChanged = nodePositionChanged = nodeContentChanged = QtCore.Signal()
+    nodeWidthChanged = QtCore.Signal()
 
     def emitNodeLookChanged(self):
         """

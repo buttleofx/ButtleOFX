@@ -127,6 +127,12 @@ class ButtleData(QtCore.QObject):
         """
         return self._graphWrapper.getConnectionWrapper(self._currentConnectionId)
 
+    def getMapNodeNameToComputedImage(self):
+        """
+            Returns the map of images already computed.
+        """
+        return self._mapNodeNameToComputedImage
+
     #################### setters ####################
 
     ### current data ###

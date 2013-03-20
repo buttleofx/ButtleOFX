@@ -258,8 +258,7 @@ class NodeWrapper(QtCore.QObject):
     yCoord = QtCore.Property(int, getYCoord, setYCoord, notify=nodePositionChanged)
     color = QtCore.Property(QtGui.QColor, getColor, setColor, notify=nodeLookChanged)
     nbInput = QtCore.Property(int, getNbInput, constant=True)
-
-    # params from Tuttle
+    # params (wrappers)
     params = QtCore.Property(QtCore.QObject, getParams, notify=nodeContentChanged)
 
     # video

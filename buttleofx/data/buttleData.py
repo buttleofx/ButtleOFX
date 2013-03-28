@@ -61,6 +61,8 @@ class ButtleData(QtCore.QObject):
         self._graph = Graph()
         self._graphWrapper = GraphWrapper(self._graph, view)
         self._buttlePath = filePath
+        for index in range(1, 9):
+            self._mapViewerIndextoNodeName[str(index)] = None
 
         return self
 
@@ -125,6 +127,10 @@ class ButtleData(QtCore.QObject):
         """
         return self._currentViewerIndex
 
+    @QtCore.Slot(int, result=QtCore.QObject)
+    def getNodeWrapperByViewerIndex(self, index):
+        return self._graphWrapper.getNodeWrapper(self._mapViewerIndextoNodeName[str(index)])
+
     def getCurrentViewerNodeWrapper(self):
         """
             Returns the current viewer nodeWrapper.
@@ -170,22 +176,27 @@ class ButtleData(QtCore.QObject):
         self.currentSelectedNodesChanged.emit()
 
     def setCurrentViewerIndex(self, index):
+        """
+            Set the value of the current viewer index.
+        """
         # Update value of the current viewer index
         self._currentViewerIndex = index
         # Emit signal
         self.currentViewerIndexChanged.emit()
-        if str(index) in self._mapViewerIndextoNodeName.keys():
-            print "Je suis dans la map !", self._mapViewerIndextoNodeName[str(index)]
-            self.setCurrentViewerNodeName(self._mapViewerIndextoNodeName[str(index)])
-        else:
-            print "Je suis pas dans la map :("
-            self.currentViewerNodeName = None
-        self.currentViewerNodeChanged.emit()
+        # If a node is assigned to this viewer index, it becomes the currentViewerNode
+        # if str(index) in self._mapViewerIndextoNodeName.keys():
+        #     self.setCurrentViewerNodeName(self._mapViewerIndextoNodeName[str(index)])
+        # If no node is assigned to the viewer index, we set the currentViewerNode to None
+        # else:
+        #     self.currentViewerNodeName = None
+        # self.currentViewerNodeChanged.emit()
 
     def setCurrentViewerNodeWrapper(self, nodeWrapper):
         """
         Changes the current viewer node and emits the change.
         """
+        if nodeWrapper == None:
+            return
         if self._currentViewerNodeName == nodeWrapper.getName():
             return
         self._currentViewerNodeName = nodeWrapper.getName()

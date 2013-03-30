@@ -189,4 +189,13 @@ class NodeManager(QtCore.QObject):
         buttleData = ButtleDataSingleton().get()
         node = buttleData.getGraph().getNode(nodeName)
         node.setCoord(x, y)
-        buttleData.getGraph().connectionsCoordChanged(node)
+
+        # update the coords of connections only if the node has connections
+        buttleData = ButtleDataSingleton().get()
+        for con in buttleData.getGraph().getConnections():
+            if con.getClipOut().getNodeName() == nodeName:
+                buttleData.getGraph().connectionsCoordChanged(node)
+                return
+            if con.getClipIn().getNodeName() == nodeName:
+                buttleData.getGraph().connectionsCoordChanged(node)
+                return

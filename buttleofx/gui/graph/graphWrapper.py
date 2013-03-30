@@ -203,9 +203,12 @@ class GraphWrapper(QtCore.QObject):
             if node.getName() in connection.getConcernedNodes():
                 clipOut = connection.getClipOut()
                 clipIn = connection.getClipIn()
-                # update clipOut and clipIn coords
-                clipOut.setCoord(self.getPositionClip(clipOut.getNodeName(), clipOut.getClipName(), clipOut.getClipIndex()))
-                clipIn.setCoord(self.getPositionClip(clipIn.getNodeName(), clipIn.getClipName(), clipIn.getClipIndex()))
+                if self.getNodeWrapper(clipOut.getNodeName()) != None:
+                    # update clipOut coords
+                    clipOut.setCoord(self.getPositionClip(clipOut.getNodeName(), clipOut.getClipName(), clipOut.getClipIndex()))
+                if self.getNodeWrapper(clipIn.getNodeName()) != None:
+                    # update clipIn coords
+                    clipIn.setCoord(self.getPositionClip(clipIn.getNodeName(), clipIn.getClipName(), clipIn.getClipIndex()))
         self.updateConnectionWrappers()
 
     ################################################## DATA EXPOSED TO QML ##################################################

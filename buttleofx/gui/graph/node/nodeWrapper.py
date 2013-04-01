@@ -10,10 +10,10 @@ from buttleofx.gui.graph.connection import ClipWrapper
 class NodeWrapper(QtCore.QObject):
     """
         Class NodeWrapper defined by :
-            - _node : the buttle node
+            - _node : the buttle node (core)
             - _view : the view (necessary for all wrapper, to construct a QtCore.QObject)
             - _paramWrappers : the paramWrappers (it's a ParamEditorWrapper object)
-            - _heightEmptyNode , _clipSpacing, _clipSize, _inputSideMargin : data given to QML to have nodes with good looking
+            - _width, _heightEmptyNode , _clipSpacing, _clipSize, _inputSideMargin : data given to QML to have nodes with good looking
             - _fpsError, _frameError : potential errors that we need to displayed.
     """
 
@@ -26,7 +26,8 @@ class NodeWrapper(QtCore.QObject):
         # paramWrappers
         self._paramWrappers = ParamEditorWrapper(self._view, self._node.getParams())
 
-        # data given to QML to have clips with good looking
+        # data given to QML to have nodes and clips with good looking
+        self._width = 0  # will be setted by QML
         self._heightEmptyNode = 35
         self._clipSpacing = 7
         self._clipSize = 8
@@ -60,10 +61,6 @@ class NodeWrapper(QtCore.QObject):
     def getNameUser(self):
         return self._node.getNameUser()
 
-    @QtCore.Slot(result=unicode)
-    def getDefaultNameUser(self):
-        return self._node.getName().strip('tuttle.')
-
     def getType(self):
         return self._node.getType()
 
@@ -87,17 +84,26 @@ class NodeWrapper(QtCore.QObject):
         return self._node.getNbInput()
 
     def getSrcClips(self):
+        """
+            Returns a QObjectListModel of ClipWrappers of the input clips of this node.
+        """
         srcClips = QObjectListModel(self)
         srcClips.setObjectList([ClipWrapper(clip, self.getName(), self._view) for clip in self._node.getClips() if not clip == "Output"])
         return srcClips
 
-    def getOutputClips(self):
-        outputClips = QObjectListModel(self)
-        outputClips.setObjectList([ClipWrapper(clip, self.getName(), self._view) for clip in self._node.getClips() if clip == "Output"])
-        return outputClips
+    def getOutputClip(self):
+        """
+            Returns the ClipWrapper of the output clip of this node.
+        """
+        for clip in self._node.getClips():
+            if clip == "Output":
+                return ClipWrapper(clip, self.getName(), self._view)
 
     def getHeight(self):
         return int(self._heightEmptyNode + self._clipSpacing * self.getNbInput())
+
+    def getWidth(self):
+        return self._width
 
     def getClipSpacing(self):
         return self._clipSpacing
@@ -119,6 +125,9 @@ class NodeWrapper(QtCore.QObject):
 
     #for video
     def getFPS(self):
+        """
+            Returns the FPS of this node.
+        """
         #import which needs to be changed in the future
         from buttleofx.data import ButtleDataSingleton
         buttleData = ButtleDataSingleton().get()
@@ -145,6 +154,9 @@ class NodeWrapper(QtCore.QObject):
         self._fpsError = nodeName
 
     def getNbFrames(self):
+        """
+            Returns the number of frames of this node.
+        """
         #import which needs to be changed in the future
         from buttleofx.data import ButtleDataSingleton
         buttleData = ButtleDataSingleton().get()
@@ -197,32 +209,44 @@ class NodeWrapper(QtCore.QObject):
     def setNbInput(self, nbInput):
         self._node.setNbInput(nbInput)
 
+    def setWidth(self, width):
+        self._width = width
+        self.nodeWidthChanged.emit()
+
     ################################################## LINK WRAPPER LAYER TO QML ##################################################
 
-    @QtCore.Signal
-    def nodeLookChanged(self):
-        pass
+    nodeLookChanged = nodePositionChanged = nodeContentChanged = QtCore.Signal()
+    nodeWidthChanged = QtCore.Signal()
 
     def emitNodeLookChanged(self):
+        """
+            Emits the signal emitNodeLookChanged.
+        """
         self.nodeLookChanged.emit()
 
-    @QtCore.Signal
-    def nodePositionChanged(self):
-        pass
-
     def emitNodePositionChanged(self):
+        """
+            Emits the signal emitNodePositionChanged.
+        """
         self.nodePositionChanged.emit()
 
-    @QtCore.Signal
-    def nodeContentChanged(self):
-        pass
-
     def emitNodeContentChanged(self):
-        # warn other param of the node that something just happened
+        """
+            Emits the signal nodeContentChanged and warns the other params of the node that something just happened.
+        """
         for paramW in self.getParams():
             paramW.emitOtherParamOfTheNodeChanged()
         # emit signal
         self.nodeContentChanged.emit()
+
+    ##### SLot #####
+
+    @QtCore.Slot(int)
+    def fitWidth(self, textWidth):
+        """
+            Function called by Node.qml to fit the width of the node given the width of the text (with an horizontal margin).
+        """
+        self.setWidth(textWidth + 20)
 
     ################################################## DATA EXPOSED TO QML ##################################################
 
@@ -230,13 +254,12 @@ class NodeWrapper(QtCore.QObject):
     name = QtCore.Property(str, getName, constant=True)
     nameUser = QtCore.Property(str, getNameUser, setNameUser, notify=nodeLookChanged)
     nodeType = QtCore.Property(str, getType, constant=True)
-    coord = QtCore.Property(QtCore.QPoint, getCoord, setCoord, notify=nodePositionChanged) # problem to access to x property with QPoint !
+    coord = QtCore.Property(QtCore.QPoint, getCoord, setCoord, notify=nodePositionChanged)  # problem to access to x property with QPoint !
     xCoord = QtCore.Property(int, getXCoord, setXCoord, notify=nodePositionChanged)
     yCoord = QtCore.Property(int, getYCoord, setYCoord, notify=nodePositionChanged)
     color = QtCore.Property(QtGui.QColor, getColor, setColor, notify=nodeLookChanged)
     nbInput = QtCore.Property(int, getNbInput, constant=True)
-
-    # params from Tuttle
+    # params (wrappers)
     params = QtCore.Property(QtCore.QObject, getParams, notify=nodeContentChanged)
 
     # video
@@ -245,8 +268,9 @@ class NodeWrapper(QtCore.QObject):
 
     # for a clean display of  connections
     height = QtCore.Property(int, getHeight, constant=True)
+    width = QtCore.Property(int, getWidth, setWidth, notify=nodeWidthChanged)  # using nodeLookChanged creates a binding loop
     srcClips = QtCore.Property(QtCore.QObject, getSrcClips, constant=True)
-    outputClips = QtCore.Property(QtCore.QObject, getOutputClips, constant=True)
+    outputClip = QtCore.Property(QtCore.QObject, getOutputClip, constant=True)
     clipSpacing = QtCore.Property(int, getClipSpacing, constant=True)
     clipSize = QtCore.Property(int, getClipSize, constant=True)
     sideMargin = QtCore.Property(int, getSideMargin, constant=True)

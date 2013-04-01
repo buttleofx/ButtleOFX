@@ -14,8 +14,12 @@ Rectangle {
     z: _buttleData.graphWrapper.zMax
 
     height: m.nodeModel.height
-    //width: m.nodeModel.width
-    width: nodeText.width + 20
+    width: m.nodeModel.width
+
+    Component.onCompleted: {
+        m.nodeModel.fitWidth(nodeText.width);
+        _buttleData.graphWrapper.updateConnectionsCoord(m.nodeModel);
+    }
 
     property int inputSpacing : m.nodeModel.clipSpacing
     property int clipSize: m.nodeModel.clipSize
@@ -77,11 +81,12 @@ Rectangle {
 
     DropArea {
         anchors.fill: parent
+        onDragEnter: {
+            acceptDrop = hasText && text=="mosquito_of_the_dead";
+        }
         onDrop: {
-            if (hasText) {
-                if(text=="mosquito_of_the_dead") {
+            if (acceptDrop) {
                     _buttleData.currentViewerNodeWrapper = m.nodeModel;
-                }
             }
         }
     }
@@ -133,12 +138,17 @@ Rectangle {
             anchors.centerIn: parent
             text: m.nodeModel.nameUser
             font.pointSize: 10
-            property bool isSelected: _buttleData.nodeInCurrentSelectedNodeNames(m.nodeModel)
+            property bool isSelected: _buttleData.nodeIsSelected(m.nodeModel)
             
+            onTextChanged: {
+                m.nodeModel.fitWidth(nodeText.width);
+                _buttleData.graphWrapper.updateConnectionsCoord(m.nodeModel);
+            }
+
             Connections {
                 target: _buttleData
                 onCurrentSelectedNodeWrappersChanged: {
-                    nodeText.isSelected = _buttleData.nodeInCurrentSelectedNodeNames(m.nodeModel)
+                    nodeText.isSelected = _buttleData.nodeIsSelected(m.nodeModel)
                 }
             }
             color: isSelected ? m.nodeModel.color : "black"
@@ -155,7 +165,8 @@ Rectangle {
         Repeater {
             model: m.nodeModel.srcClips
             Clip {
-                property string port : "input"
+                clipWrapper: model.object
+                port : "input"
             }
         }
     }
@@ -168,7 +179,8 @@ Rectangle {
         anchors.topMargin: node.outputTopMargin
         // always only one outputClip
         Clip {
-            property string port : "output"
+            clipWrapper: m.nodeModel.outputClip
+            port : "output"
         }
     }
 

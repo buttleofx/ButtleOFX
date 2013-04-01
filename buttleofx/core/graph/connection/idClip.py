@@ -8,18 +8,21 @@ class IdClip:
         - _coord : the clip's coords
     """
 
-    def __init__(self, nodeName, clipName, clipNumber, coord):
+    def __init__(self, nodeName, clipName, clipIndex, coord):
         self._id = nodeName + clipName
         self._nodeName = nodeName
         self._clipName = clipName
-        self._clipNumber = clipNumber
+        self._clipIndex = clipIndex
         self._coord = coord
 
     def __eq__(self, otherClip):
         """
             Overloads the operator ==
         """
-        return (self._nodeName == otherClip._nodeName and self._clipName == otherClip._clipName and self._clipNumber == otherClip._clipNumber)
+        return (self._nodeName == otherClip._nodeName and self._clipName == otherClip._clipName and self._clipIndex == otherClip._clipIndex)
+
+    def __str__(self):
+        return 'Noeud  "%s" , Clip "%s" (index %d)' % (self._nodeName, self._clipName, self._clipIndex)
 
     ######## getters ########
 
@@ -32,11 +35,11 @@ class IdClip:
     def getClipName(self):
         return self._clipName
 
-    def getClipNumber(self):
-        return self._clipNumber
-
     def getCoord(self):
         return self._coord
+
+    def getClipIndex(self):
+        return self._clipIndex
 
     ######## setters ########
 
@@ -48,3 +51,16 @@ class IdClip:
 
     def setYCoord(self, yCoord):
         self._coord[1] = yCoord
+
+    ######## SAVE  ########
+
+    def object_to_dict(self):
+        """
+            Convert the idClip to a dictionary of his representation.
+        """
+        res = {
+            "nodeName": self._nodeName,
+            "clipName": self._clipName,
+            "clipIndex": self._clipIndex
+        }
+        return res

@@ -1,4 +1,9 @@
-from PySide import QtCore, QtGui
+from PySide import QtCore
+# to parse data
+import json
+# to save and load data
+import io
+from datetime import datetime
 # tools
 from buttleofx.data import tuttleTools
 # quickmamba
@@ -6,23 +11,22 @@ from quickmamba.patterns import Singleton, Signal
 from quickmamba.models import QObjectListModel
 # core : graph
 from buttleofx.core.graph import Graph
-from buttleofx.core.graph.node import Node
+from buttleofx.core.graph.connection import IdClip
 # gui : graphWrapper
 from buttleofx.gui.graph import GraphWrapper
-from buttleofx.gui.graph.node import NodeWrapper
 
 
 class ButtleData(QtCore.QObject):
     """
         Class ButtleData defined by:
-        - _graphWrapper
-        - _graph
-        - _currentNodeViewer
-        - _currentNodeParam
-        - _currentNodeGraph
-        - _currentConnection
-        - _currentCopiedNodeInfo
-        - _computedImage
+        - _graphWrapper : the graphWrapper
+        - _graph : the graph (core)
+        - _currentViewerNodeName : the name of the node currently in the viewer
+        - _currentSelectedNodeNames : list of the names of the nodes currently selected
+        - _currentParamNodeName : the name of the node currently displayed in the paramEditor
+        - _currentConnectionId : the list of the id of the connections currently selected
+        - _currentCopiedNodesInfo : the list of buttle info for the current node(s) copied
+        - _mapNodeNameToComputedImage
         - _buttlePath : the path of the root directory (usefull to import images)
 
         This class containts all data we need to manage the application.
@@ -101,11 +105,11 @@ class ButtleData(QtCore.QObject):
         """
             Returns the current param nodeWrapper.
         """
-        return self.getGraphWrapper().getNodeWrapper(self.getCurrentParamNodeName())
+        return self._graphWrapper.getNodeWrapper(self.getCurrentParamNodeName())
 
     def getCurrentSelectedNodeWrappers(self):
         """
-            Returns the current selected nodeWrappers.
+            Returns the current selected nodeWrappers as a QObjectListModel.
         """
         currentSelectedNodeWrappers = QObjectListModel(self)
         currentSelectedNodeWrappers.setObjectList([self.getGraphWrapper().getNodeWrapper(nodeName) for nodeName in self.getCurrentSelectedNodeNames()])
@@ -115,13 +119,19 @@ class ButtleData(QtCore.QObject):
         """
             Returns the current viewer nodeWrapper.
         """
-        return self.getGraphWrapper().getNodeWrapper(self.getCurrentViewerNodeName())
+        return self._graphWrapper.getNodeWrapper(self.getCurrentViewerNodeName())
 
     def getCurrentConnectionWrapper(self):
         """
-            Returns the current currentConnectionWrapper
+            Returns the current currentConnectionWrapper.
         """
-        return self.getGraphWrapper().getConnectionWrapper(self._currentConnectionId)
+        return self._graphWrapper.getConnectionWrapper(self._currentConnectionId)
+
+    def getMapNodeNameToComputedImage(self):
+        """
+            Returns the map of images already computed.
+        """
+        return self._mapNodeNameToComputedImage
 
     #################### setters ####################
 
@@ -169,7 +179,7 @@ class ButtleData(QtCore.QObject):
 
     def setCurrentViewerNodeWrapper(self, nodeWrapper):
         """
-        Changes the current viewer node and emits the change.
+            Changes the current viewer node and emits the change.
         """
         if self._currentViewerNodeName == nodeWrapper.getName():
             return
@@ -179,7 +189,7 @@ class ButtleData(QtCore.QObject):
 
     def setCurrentConnectionWrapper(self, connectionWrapper):
         """
-        Changes the current conenctionWrapper and emits the change.
+            Changes the current conenctionWrapper and emits the change.
         """
         if self._currentConnectionId == connectionWrapper.getId():
             self._currentConnectionId = None
@@ -187,8 +197,13 @@ class ButtleData(QtCore.QObject):
             self._currentConnectionId = connectionWrapper.getId()
         self.currentConnectionWrapperChanged.emit()
 
+    ############################################### ADDITIONAL FUNCTIONS ##################################################
+
     @QtCore.Slot("QVariant", result=bool)
-    def nodeInCurrentSelectedNodeNames(self, nodeWrapper):
+    def nodeIsSelected(self, nodeWrapper):
+        """
+            Returns True if the node is selected (=if nodeName is in the list _currentSelectedNodeNames), else False.
+        """
         for nodeName in self._currentSelectedNodeNames:
             if nodeName == nodeWrapper.getName():
                 return True
@@ -214,12 +229,18 @@ class ButtleData(QtCore.QObject):
     def clearCurrentCopiedNodesInfo(self):
         self._currentCopiedNodesInfo.clear()
 
+    def canPaste(self):
+        """
+            Returns True if we can paste (= if there is at least one node selected).
+        """
+        return self._currentCopiedNodesInfo != {}
+
     ################################################## PLUGIN LIST #####################################################
 
     @QtCore.Slot(str, result=QtCore.QObject)
     def getQObjectPluginsIdentifiersByParentPath(self, pathname):
         """
-            Returns a QObjectListModel
+            Returns a QObjectListModel of all the PluginsIdentifiers (String) we expect to find after the submenu 'pathname'.
         """
         pluginsIds = QObjectListModel(self)
         pluginsIds.setObjectList(tuttleTools.getPluginsIdentifiersByParentPath(pathname))
@@ -231,6 +252,97 @@ class ButtleData(QtCore.QObject):
             Returns if a string is a plugin identifier.
         """
         return pluginId in tuttleTools.getPluginsIdentifiers()
+
+    ################################################## SAVE / LOAD ##################################################
+
+    @QtCore.Slot(str)
+    @QtCore.Slot()
+    def saveData(self, url='buttleofx/backup/data.json'):
+        """
+            Saves all data in a json file (default file : buttleofx/backup/data.json)
+        """
+        with io.open(url, 'w', encoding='utf-8') as f:
+            dictJson = {
+                "date": {},
+                "window": {},
+                "graph": {
+                    "nodes": [],
+                    "connections": [],
+                    "currentSelectedNodes": []
+                },
+                "paramEditor": {},
+                "viewer": {}
+            }
+            # date
+            today = datetime.today().strftime("%A, %d. %B %Y %I:%M%p")
+            dictJson["date"]["creation"] = today
+
+            # nodes
+            for node in self._graph.getNodes():
+                dictJson["graph"]["nodes"].append(node.object_to_dict())
+                if node.getName() in self.getCurrentSelectedNodeNames():
+                    dictJson["graph"]["currentSelectedNodes"].append(node.getName())
+
+            # connections
+            for con in self._graph.getConnections():
+                dictJson["graph"]["connections"].append(con.object_to_dict())
+
+            # paramEditor
+            dictJson["paramEditor"] = self.getCurrentParamNodeName()
+
+            # viewer
+            dictJson["viewer"] = self.getCurrentViewerNodeName()
+
+            # write dictJson in a file
+            f.write(unicode(json.dumps(dictJson, sort_keys=True, indent=2, ensure_ascii=False)))
+        f.closed
+
+    @QtCore.Slot(str)
+    @QtCore.Slot()
+    def loadData(self, url='buttleofx/backup/data.json'):
+        """
+            Loads all data from a Json file (the default Json file if no url is given)
+        """
+        with open(unicode(url), 'r') as f:
+            read_data = f.read()
+            decoded = json.loads(read_data)
+
+            # create the nodes
+            for nodeData in decoded["graph"]["nodes"]:
+                tmpType = nodeData["pluginIdentifier"]
+                tmpX = nodeData["uiParams"]["coord"][0]
+                tmpY = nodeData["uiParams"]["coord"][1]
+                node = self.getGraph().createNode(tmpType, tmpX, tmpY)
+                node.dict_to_object(nodeData)
+
+            # create the connections
+            for connectionData in decoded["graph"]["connections"]:
+                clipIn_nodeName = connectionData["clipIn"]["nodeName"]
+                clipIn_clipName = connectionData["clipIn"]["clipName"]
+                clipIn_clipIndex = connectionData["clipIn"]["clipIndex"]
+                clipIn_positionClip = self.getGraphWrapper().getPositionClip(clipIn_nodeName, clipIn_clipName, clipIn_clipIndex)
+                clipIn = IdClip(clipIn_nodeName, clipIn_clipName, clipIn_clipIndex, clipIn_positionClip)
+
+                clipOut_nodeName = connectionData["clipOut"]["nodeName"]
+                clipOut_clipName = connectionData["clipOut"]["clipName"]
+                clipOut_clipIndex = connectionData["clipOut"]["clipIndex"]
+                clipOut_positionClip = self.getGraphWrapper().getPositionClip(clipOut_nodeName, clipOut_clipName, clipOut_clipIndex)
+                clipOut = IdClip(clipOut_nodeName, clipOut_clipName, clipOut_clipIndex, clipOut_positionClip)
+
+                connection = self.getGraph().createConnection(clipOut, clipIn)
+
+            # selected nodes
+            # in paramEditor
+            self.setCurrentParamNodeName(decoded["paramEditor"])
+            self.currentParamNodeChanged.emit()
+            # in viewer
+            self.setCurrentViewerNodeName(decoded["viewer"])
+            self.currentViewerNodeChanged.emit()
+            # in graph
+            self.setCurrentSelectedNodeNames(decoded["graph"]["currentSelectedNodes"])
+            self.currentSelectedNodesChanged.emit()
+
+        f.closed
 
     ################################################## DATA EXPOSED TO QML ##################################################
 
@@ -253,7 +365,12 @@ class ButtleData(QtCore.QObject):
     currentConnectionWrapperChanged = QtCore.Signal()
     currentConnectionWrapper = QtCore.Property(QtCore.QObject, getCurrentConnectionWrapper, setCurrentConnectionWrapper, notify=currentConnectionWrapperChanged)
 
-# This class exists just because thre are problems when a class extends 2 other class (Singleton and QObject)
+    # paste possibility
+    pastePossibilityChanged = QtCore.Signal()
+    canPaste = QtCore.Property(bool, canPaste, notify=pastePossibilityChanged)
+
+
+# This class exists just because there are problems when a class extends 2 other classes (Singleton and QObject)
 class ButtleDataSingleton(Singleton):
 
     _buttleData = ButtleData()

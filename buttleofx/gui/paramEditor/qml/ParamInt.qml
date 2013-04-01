@@ -35,7 +35,6 @@ Item {
                 acceptedButtons: Qt.RightButton
                 onClicked: {
                     // reinitialise the param to its default value
-                    paramObject.hasChanged = false
                     paramObject.value = paramObject.getDefaultValue()
                     paramObject.pushValue(paramObject.value)
                 }
@@ -96,7 +95,6 @@ Item {
                     acceptedButtons: Qt.RightButton
                     onClicked: {
                         // reinitialise the param to its default value
-                        paramObject.hasChanged = false
                         paramObject.value = paramObject.getDefaultValue()
                         paramObject.pushValue(paramObject.value)
                     }

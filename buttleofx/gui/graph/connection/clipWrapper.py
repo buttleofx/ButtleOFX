@@ -3,7 +3,9 @@ from PySide import QtCore
 
 class ClipWrapper(QtCore.QObject):
     """
-        Class ClipWrapper.
+        Class ClipWrapper defined by :
+        - _nodeName : the name of the node to wich belongs the clip.
+        - _clipName : the name of this clip.
     """
 
     def __init__(self, clipName, nodeName, view):

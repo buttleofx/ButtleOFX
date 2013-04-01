@@ -4,10 +4,11 @@ import QuickMamba 1.0
 Rectangle {
     id: clip
     property string port
+    property variant clipWrapper
 
     QtObject {
         id: c
-        property variant clipModel: model.object
+        property variant clipModel: clipWrapper
     }
 
     height: clipSize
@@ -51,8 +52,11 @@ Rectangle {
     DropArea {
         anchors.fill: parent
         anchors.margins: -7
+        onDragEnter: {
+            acceptDrop = hasText && text.substring(0, 5) == "clip/";
+        }
         onDrop: {
-            if (hasText) {
+            if (acceptDrop) {
                 _buttleManager.connectionManager.connectionDropEvent(text, c.clipModel, index)
             }
         }

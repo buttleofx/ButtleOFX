@@ -19,15 +19,16 @@ class ChoiceWrapper(ParamWrapper):
 
     #################### getters ####################
 
+    @QtCore.Slot(result=str)
+    def getDefaultValue(self):
+        self.setHasChanged(False)
+        return self._param.getDefaultValue()
+
     def getListValue(self):
         return self._listValue
 
     def getValue(self):
         return self._param.getValue()
-
-    @QtCore.Slot(result=str)
-    def getDefaultValue(self):
-        return self._param.getDefaultValue()
 
     def getHasChanged(self):
         return self._param.getHasChanged()
@@ -40,6 +41,10 @@ class ChoiceWrapper(ParamWrapper):
     def setHasChanged(self, changed):
         self._param.setHasChanged(changed)
 
+    @QtCore.Slot(str)
+    def pushValue(self, value):
+        self._param.pushValue(value)
+
     @QtCore.Signal
     def changed(self):
         pass
@@ -48,4 +53,5 @@ class ChoiceWrapper(ParamWrapper):
 
     listValue = QtCore.Property(QtCore.QObject, getListValue, constant=True)
     value = QtCore.Property(str, getValue, setValue, notify=changed)
+
     hasChanged = QtCore.Property(bool, getHasChanged, setHasChanged, notify=changed)

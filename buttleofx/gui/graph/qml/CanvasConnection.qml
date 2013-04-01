@@ -21,7 +21,6 @@ Canvas {
 
     // Drawing a curve for the connection
     onPaint: {
-        console.log("banzaaaaaaaaaaaaaaaaiii")
         var ctx = getContext();
         var cHeight = height;
         var cWidth = width;

@@ -84,10 +84,14 @@ Rectangle {
 
     DropArea {
         anchors.fill: parent
+        acceptDrop: false
+        onDragEnter: {
+            acceptDrop = hasUrls;
+        }
+
         onDrop: {
-            if( hasUrls )
-            {
-                _buttleManager.nodeManager.dropReaderNode(firstUrl, pos.x, pos.y)
+            if(acceptDrop) {
+                _buttleManager.nodeManager.dropFile(firstUrl, pos.x, pos.y)
             }
         }
     }

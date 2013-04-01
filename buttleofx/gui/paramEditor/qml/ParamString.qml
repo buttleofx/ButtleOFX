@@ -14,7 +14,12 @@ Item {
     visible: !paramObject.isSecret
     height: paramObject.isSecret ? 0 : implicitHeight
 
-    FolderListView {id: finder}
+    FolderListView {
+        id: finder
+        property bool isReader: _buttleData.currentParamNodeWrapper.nodeType.indexOf("reader") != -1
+        typeDialog: isReader ? "OpenFile" : "SaveFile"
+        messageDialog: isReader ? "Open file" : "Save file as"
+    }
 
     /*Container of the textInput*/
     function createInput(paramObject)
@@ -50,7 +55,10 @@ Item {
                     '    color: activeFocus ? "white" : "grey";' +
                     '    font.pointSize: 10;' +
                     '    onCursorRectangleChanged: flick.ensureVisible(cursorRectangle);' +
-                    '    onTextChanged: paramObject.value = paramStringMultilines.text;' +
+                    '    onTextChanged: {' +
+                    '       paramObject.value = paramStringMultilines.text;' +
+                    '       paramObject.pushValue(paramObject.value);' +
+                    '    }' +
                     '    focus: true' +
                     '}' +
                 '}', stringInput, "inputLine");
@@ -64,7 +72,10 @@ Item {
                     'width: parent.width - 10;' +
                     'height: parent.height;' +
                     'color: activeFocus ? "white" : "grey";' +
-                    'onAccepted: paramObject.value = paramStringInput.text;' +
+                    'onAccepted: {' +
+                    '   paramObject.value = paramStringInput.text;' +
+                    '   paramObject.pushValue(paramObject.value);' +
+                    '}' +
                     'focus: true'+
                 '}', stringInput, "inputLine");
         }
@@ -85,7 +96,6 @@ Item {
                 anchors.fill: parent
                 acceptedButtons: Qt.RightButton
                 onClicked: {
-                    paramObject.hasChanged = false
                     paramObject.value = paramObject.getDefaultValue()
                 }
             }
@@ -109,8 +119,8 @@ Item {
                 anchors.fill: parent
                 acceptedButtons: Qt.RightButton
                 onClicked: {
-                    paramObject.hasChanged = false
                     paramObject.value = paramObject.getDefaultValue()
+                    paramObject.pushValue(paramObject.value)
                 }
             }
 
@@ -170,10 +180,12 @@ Item {
                 id: buttonmousearea
                 anchors.fill: parent   
                 onPressed: {
-                    finder.browseFile(_buttleData.currentParamNodeWrapper)
+//                    finder.browseFile(_buttleData.currentParamNodeWrapper)
+                    finder.browseFile()
                     if( finder.propFile )
                     {
                         paramObject.value = finder.propFile
+                        paramObject.pushValue(paramObject.value)
                     }
                 }
             }

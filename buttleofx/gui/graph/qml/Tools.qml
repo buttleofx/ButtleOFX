@@ -1,4 +1,5 @@
 import QtQuick 1.1
+import FolderListViewItem 1.0
 
 Rectangle {
     id: tools
@@ -71,7 +72,7 @@ Rectangle {
     Item {
         anchors.fill: parent
         anchors.leftMargin: 10
-       anchors.topMargin: 3
+        anchors.topMargin: 3
 
 
 
@@ -150,7 +151,76 @@ Rectangle {
                 buttonName: "deleteNode"
                 buttonText: "Delete the node"
                 locked: (!_buttleData.currentSelectedNodeWrappers.isEmpty() || _buttleData.currentConnectionWrapper)? false : true
-                //locked: _buttleData.currentSelectedNodeWrappers ? false : true
+            }
+
+            // to save the graph
+            Rectangle {
+                id: buttonSave
+                anchors.verticalCenter: parent.verticalCenter
+                width: textSaveGraph.width
+                height: 28
+                color: "transparent"
+                radius: 3
+
+                FolderListView {
+                    id: finderSaveGraph
+                    typeDialog: "SaveFile"
+                    messageDialog: "Save the graph"
+                    directoryDialog: _buttleData.buttlePath
+                }
+
+                Text {
+                    id: textSaveGraph
+                    color: "#00b2a1"
+                    text: "Save Graph"
+                    y: 7
+                    font.pointSize: 12
+                }
+                MouseArea {
+                    hoverEnabled: true
+                    anchors.fill: parent
+                    onClicked: {
+                        finderSaveGraph.browseFile()
+                        if (finderSaveGraph.propFile) {
+                            _buttleData.saveData(finderSaveGraph.propFile)
+                        }
+                    }
+                }
+            }
+
+            // to load the graph
+            Rectangle {
+                id: buttonLoad
+                anchors.verticalCenter: parent.verticalCenter
+                width: textSaveGraph.width
+                height: 28
+                color: "transparent"
+                radius: 3
+
+                FolderListView {
+                    id: finderLoadGraph
+                    typeDialog: "OpenFile"
+                    messageDialog: "Load a graph"
+                    directoryDialog: _buttleData.buttlePath
+                }
+
+                Text {
+                    id: textLoadGraph
+                    color: "#00b2a1"
+                    text: "Load Graph"
+                    y: 7
+                    font.pointSize: 12
+                }
+                MouseArea {
+                    hoverEnabled: true
+                    anchors.fill: parent
+                    onClicked: {
+                        finderLoadGraph.browseFile();
+                        if (finderLoadGraph.propFile) {
+                            _buttleData.loadData(finderLoadGraph.propFile)
+                        }
+                    }
+                }
             }
         }
     }

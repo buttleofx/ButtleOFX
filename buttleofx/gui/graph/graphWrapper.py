@@ -36,7 +36,7 @@ class GraphWrapper(QtCore.QObject):
 
         self._graph = graph
 
-        # link core signals to wrapper layer 
+        # links core signals to wrapper layer
         self._graph.nodesChanged.connect(self.updateNodeWrappers)
         self._graph.connectionsCoordChanged.connect(self.updateConnectionsCoord)
         self._graph.connectionsChanged.connect(self.updateConnectionWrappers)
@@ -108,12 +108,18 @@ class GraphWrapper(QtCore.QObject):
 
     @QtCore.Slot(result=QtCore.QObject)
     def getLastCreatedNodeWrapper(self):
+        """
+            Returns the wrapper of the last node created.
+        """
         return self._nodeWrappers[-1]
 
     def getZMax(self):
+        """
+            Returns the depth of the QML graph
+        """
         return self._zMax
 
-    def getPositionClip(self, nodeName, clipName, clipNumber):
+    def getPositionClip(self, nodeName, clipName, clipIndex):
         """
             Function called when a new idClip is created.
             Returns the position of the clip.
@@ -125,20 +131,23 @@ class GraphWrapper(QtCore.QObject):
         widthNode = node.getWidth()
         clipSpacing = node.getClipSpacing()
         clipSize = node.getClipSize()
-        heightNode = node.getHeight()
         inputTopMargin = node.getInputTopMargin()
+        outputTopMargin = node.getOutputTopMargin()
 
         if (clipName == "Output"):
             xClip = nodeCoord.x() + widthNode + clipSize / 2
-            yClip = nodeCoord.y() + heightNode / 2 + clipSize / 2
+            yClip = nodeCoord.y() + outputTopMargin + clipSize / 2
         else:
             xClip = nodeCoord.x() - clipSize / 2
-            yClip = nodeCoord.y() + inputTopMargin + int(clipNumber) * (clipSpacing + clipSize) + clipSize / 2
+            yClip = nodeCoord.y() + inputTopMargin + int(clipIndex) * (clipSpacing + clipSize) + clipSize / 2
         return (xClip, yClip)
 
     #################### setters ####################
 
     def setZMax(self, zMax):
+        """
+            Sets the depth of the QML graph
+        """
         self._zMax = zMax
 
     ################################################## CREATIONS ##################################################
@@ -147,7 +156,7 @@ class GraphWrapper(QtCore.QObject):
         """
             Creates a node wrapper and add it to the nodeWrappers list.
         """
-        # search the right node in the node list
+        # we search the right node in the node list
         node = self._graph.getNode(nodeName)
         if node:
             nodeWrapper = NodeWrapper(node, self._view)
@@ -182,23 +191,27 @@ class GraphWrapper(QtCore.QObject):
         for connection in self._graph.getConnections():
             self.createConnectionWrapper(connection)
 
+    @QtCore.Slot(QtCore.QObject)
     def updateConnectionsCoord(self, node):
+        """
+            Updates the coordinates of the connections when a node is beeing moved.
+            This update just affects the connections of the moving node.
+        """
         # for each connection of the graph
         for connection in self._graph.getConnections():
-            # if the connection conerns the node we've just moved
+            # if the connection concerns the node we're moving
             if node.getName() in connection.getConcernedNodes():
                 clipOut = connection.getClipOut()
                 clipIn = connection.getClipIn()
-                # update clipOut and clipIn coords
-                clipOut.setCoord(self.getPositionClip(clipOut.getNodeName(), clipOut.getClipName(), clipOut.getClipNumber()))
-                clipIn.setCoord(self.getPositionClip(clipIn.getNodeName(), clipIn.getClipName(), clipIn.getClipNumber()))
+                if self.getNodeWrapper(clipOut.getNodeName()) != None:
+                    # update clipOut coords
+                    clipOut.setCoord(self.getPositionClip(clipOut.getNodeName(), clipOut.getClipName(), clipOut.getClipIndex()))
+                if self.getNodeWrapper(clipIn.getNodeName()) != None:
+                    # update clipIn coords
+                    clipIn.setCoord(self.getPositionClip(clipIn.getNodeName(), clipIn.getClipName(), clipIn.getClipIndex()))
         self.updateConnectionWrappers()
 
     ################################################## DATA EXPOSED TO QML ##################################################
-
-    # nodes and connections
-    nodes = QtCore.Property("QVariant", getNodeWrappers, constant=True)
-    connections = QtCore.Property("QVariant", getConnectionWrappers, constant=True)
 
     # nodeWrappers and connectionWrappers
     nodeWrappers = QtCore.Property(QtCore.QObject, getNodeWrappers, constant=True)

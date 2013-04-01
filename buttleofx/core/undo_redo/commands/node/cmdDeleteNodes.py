@@ -22,7 +22,7 @@ class CmdDeleteNodes(UndoableCommand):
 
     def undoCmd(self):
         """
-            Undo the suppression of the node <=> recreate the node.
+            Undoes the suppression of the node <=> recreate the node.
         """
         for node in self._nodes:
             # we recreate the node
@@ -33,6 +33,9 @@ class CmdDeleteNodes(UndoableCommand):
                     # warn the node that one of his param just changed
                     param.paramChanged.connect(node.emitNodeContentChanged)
 
+        # Emit signal
+        self._graphTarget.nodesChanged()
+
         # we recreate all the connections
         for connection in self._connections:
             tuttleNodeSource = self._graphTarget.getNode(connection.getClipOut().getNodeName()).getTuttleNode()
@@ -42,17 +45,18 @@ class CmdDeleteNodes(UndoableCommand):
             self._graphTarget.getConnections().append(connection)
 
         # Emit signal
-        self._graphTarget.nodesChanged()
+        self._graphTarget.connectionsChanged()
 
     def redoCmd(self):
         """
-            Redo the suppression of the node.
+            Redoes the suppression of the node.
+            Just calls doCmd() function.
         """
         self.doCmd()
 
     def doCmd(self):
         """
-            Delete a node.
+            Deletes a node.
         """
         for node in self._nodes:
             # Delete the tuttle connections
@@ -69,3 +73,4 @@ class CmdDeleteNodes(UndoableCommand):
 
         # Emit signal
         self._graphTarget.nodesChanged()
+        self._graphTarget.connectionsChanged()

@@ -22,11 +22,15 @@ class ParamWrapper(QtCore.QObject):
     def getParamType(self):
         return self._param.getParamType()
 
+    def getName(self):
+        return self._param.getName()
+        
+    def getText(self):
+        return self._param.getText()
+
     def isSecret(self):
         return self._param.isSecret()
 
-    def getText(self):
-        return self._param.getText()
 
     # ################################################## DATA EXPOSED TO QML ##################################################
 

@@ -27,7 +27,7 @@ class Connection(object):
         self._tuttleConnection = tuttleConnection
 
         # buttle data
-        self._id = clipOut.getId() + "_" + clipIn.getId()
+        self._id = clipOut.getId() + " => " + clipIn.getId()
         self._clipOut = clipOut
         self._clipIn = clipIn
 
@@ -38,7 +38,14 @@ class Connection(object):
         logging.info("Core : Connection created")
 
     def __str__(self):
-        return 'Connection between the clip "%s (%s %d)" and the clip "%s (%s %d)' % (self._clipOut._nodeName, self._clipOut._port, self._clipOut._clipNumber, self._clipIn._nodeName, self._clipIn._port, self._clipIn._clipNumber)
+        str_list = []
+
+        str_list.append("Connection : ")
+        str_list.append(self._clipOut.__str__())
+        str_list.append(" => ")
+        str_list.append(self._clipIn.__str__())
+
+        return "".join(str_list)
 
     def __del__(self):
         logging.info("Core : Connection deleted")
@@ -75,3 +82,19 @@ class Connection(object):
     def setClipIn(self, clipIn):
         self._clipIn = clipIn
         self.connectionClipInChanged()
+
+    def setTuttleConnection(self, tuttleConnection):
+        self._tuttleConnection = tuttleConnection
+
+    ######## SAVE  ########
+
+    def object_to_dict(self):
+        """
+            Convert the connection to a dictionary of his representation.
+        """
+        res = {
+            "id": self._id,
+            "clipOut": self._clipOut.object_to_dict(),
+            "clipIn": self._clipIn.object_to_dict()
+        }
+        return res

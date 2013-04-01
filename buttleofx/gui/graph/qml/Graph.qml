@@ -167,17 +167,20 @@ Rectangle {
         onClicked: {
             if (!tools.menuComponent) {
                 if(rightMouseArea.mouseX + 500 < graph.width) {
-                    var newComponent = Qt.createQmlObject('MenuList { parentName: "buttle/"; x: rightMouseArea.mouseX; y:  rightMouseArea.mouseY; clickFrom: graph;}', parent);
+                    var newComponent = Qt.createQmlObject('MenuList { parentName: "buttle/"; x: rightMouseArea.mouseX; y:  rightMouseArea.mouseY; clickFrom: graph; side: "right";}', parent);
+                    //newComponent.side = "right";
                     tools.menuComponent = newComponent;
+                    console.log(tools.menuComponent)
                     
                 }
                 else {
                     //var newComponent = Qt.createQmlObject('MenuList { parentName: "buttle/"; x: graph.width - 500; y:  rightMouseArea.mouseY; clickFrom: graph;}', parent);
-                    var newComponent = Qt.createQmlObject('MenuList { parentName: "buttle/"; x: rightMouseArea.mouseX; y:  rightMouseArea.mouseY; clickFrom: graph;}', parent);                    
-                    tools.menuComponent = newComponent;
-                    newComponent.side = "left"
+                    var newComponent = Qt.createQmlObject('MenuList { parentName: "buttle/"; x: rightMouseArea.mouseX; y:  rightMouseArea.mouseY; clickFrom: graph; side: "left";}', parent);                    
+                    //newComponent.side = "left";
+                    tools.menuComponent = newComponent;     
                 }
 
+                
              /*if (mouse.button == Qt.RightButton)
              listmodel.x = mouseX
              listmodel.y = mouseY - 30

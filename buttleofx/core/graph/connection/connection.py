@@ -38,7 +38,14 @@ class Connection(object):
         logging.info("Core : Connection created")
 
     def __str__(self):
-        return 'Connection between the clip "%s (%s %d)" and the clip "%s (%s %d)' % (self._clipOut._nodeName, self._clipOut._port, self._clipOut._clipNumber, self._clipIn._nodeName, self._clipIn._port, self._clipIn._clipNumber)
+        str_list = []
+
+        str_list.append("Connection : ")
+        str_list.append(self._clipOut.__str__())
+        str_list.append(" => ")
+        str_list.append(self._clipIn.__str__())
+
+        return "".join(str_list)
 
     def __del__(self):
         logging.info("Core : Connection deleted")
@@ -79,7 +86,7 @@ class Connection(object):
     def setTuttleConnection(self, tuttleConnection):
         self._tuttleConnection = tuttleConnection
 
-    ######## SAVE / LOAD ########
+    ######## SAVE  ########
 
     def object_to_dict(self):
         """
@@ -87,13 +94,7 @@ class Connection(object):
         """
         res = {
             "id": self._id,
-            "clipOut": {
-                "nodeName": self._clipOut.getNodeName(),
-                "clipName": self._clipOut.getClipName()
-            },
-            "clipIn": {
-                "nodeName": self._clipIn.getNodeName(),
-                "clipName": self._clipIn.getClipName()
-            }
+            "clipOut": self._clipOut.object_to_dict(),
+            "clipIn": self._clipIn.object_to_dict()
         }
         return res

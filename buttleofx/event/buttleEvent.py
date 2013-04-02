@@ -22,19 +22,15 @@ class ButtleEvent(QtCore.QObject):
 
     def emitOneParamChangedSignal(self):
         """
-            Emit paramChangedSignal.
+            Emits the signal  paramChangedSignal.
         """
         self.oneParamChangedSignal()
 
     def emitViewerChangedSignal(self):
         """
-            Emit viewerChangedSignal.
+            Emits the signal viewerChangedSignal.
         """
         self.viewerChangedSignal()
-
-    ################################################## DATA EXPOSED TO QML ##################################################
-
-
 
 
 # This class exists just because thre are problems when a class extends 2 other class (Singleton and QObject)

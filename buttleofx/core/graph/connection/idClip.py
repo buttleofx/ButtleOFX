@@ -21,6 +21,9 @@ class IdClip:
         """
         return (self._nodeName == otherClip._nodeName and self._clipName == otherClip._clipName and self._clipIndex == otherClip._clipIndex)
 
+    def __str__(self):
+        return 'Noeud  "%s" , Clip "%s" (index %d)' % (self._nodeName, self._clipName, self._clipIndex)
+
     ######## getters ########
 
     def getId(self):
@@ -48,3 +51,16 @@ class IdClip:
 
     def setYCoord(self, yCoord):
         self._coord[1] = yCoord
+
+    ######## SAVE  ########
+
+    def object_to_dict(self):
+        """
+            Convert the idClip to a dictionary of his representation.
+        """
+        res = {
+            "nodeName": self._nodeName,
+            "clipName": self._clipName,
+            "clipIndex": self._clipIndex
+        }
+        return res

@@ -8,7 +8,7 @@ from buttleofx.core.graph.node import Node
 
 class CmdCreateNode(UndoableCommand):
     """
-        Command that create a node.
+        Command that creates a node.
         Attributes :
         - graphTarget : the graph in which the node will be created.
         - node : we save the node's data because we will need it for the redo
@@ -26,7 +26,7 @@ class CmdCreateNode(UndoableCommand):
 
     def undoCmd(self):
         """
-            Undo the creation of the node.
+            Undoes the creation of the node.
         """
         # The tuttle node is not deleted. We keep it so we don't need to recreate it when the redo command is called.
         node = self._graphTarget.getNode(self._nodeName)
@@ -37,7 +37,7 @@ class CmdCreateNode(UndoableCommand):
 
     def redoCmd(self):
         """
-            Redo the creation of the node.
+            Redoes the creation of the node.
         """
         # We don't have to recreate the connections because when a node is created, it can't have connections !
         self._graphTarget.getNodes().append(self._node)
@@ -47,7 +47,7 @@ class CmdCreateNode(UndoableCommand):
 
     def doCmd(self):
         """
-            Create a node.
+            Creates a node.
         """
         # We create a new Tuttle node and rename it so it has the same name as the Node
         tuttleNode = self._graphTarget.getGraphTuttle().createNode(str(self._nodeType))

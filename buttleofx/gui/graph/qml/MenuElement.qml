@@ -28,11 +28,13 @@ Rectangle {
 
         // On mouse exited the element, we destroy its submenu if it exists.
          onExited: {
+            // Menu rolls out on the right
             if ( (mouseX <= nodeMenuElement.x + nodeMenuElement.width - 10) && (menulist.side == "right")) {
-                menuListItem.destroyNextMenu();
+                //menuListItem.destroyNextMenu();
             }
-            if( (mouseX >= nodeMenuElement.x + 10) && (nodeMenuElement.side =="left")) {
-                menuListItem.destroyNextMenu();
+            // Menu rolls out on the left
+            if( (mouseX >= nodeMenuElement.x + 10) && (menulist.side == "left")) {
+                //menuListItem.destroyNextMenu();
             }
         }
 
@@ -41,13 +43,15 @@ Rectangle {
             menuListItem.currentElementLabel = textMenuElement.text
             if(type=="category") {
                 menuListItem.destroyNextMenu();
+                // Menu rolls out on the right
                 if(menulist.side == "right") {
-                    menuListItem.createNextMenu(nodeMenuElement.parentName, nodeMenuElement.labelElement, nodeMenuElement.x + nodeMenuElement.width, nodeMenuElement.y, nodeMenuElement.clickFrom);
+                    menuListItem.createNextMenu(nodeMenuElement.parentName, nodeMenuElement.labelElement, nodeMenuElement.x + nodeMenuElement.width, nodeMenuElement.y, nodeMenuElement.clickFrom, "right");
                 }
+                // Menu rolls out on the left
                 else if(menulist.side == "left") {
-                    menuListItem.createNextMenu(nodeMenuElement.parentName, nodeMenuElement.labelElement, nodeMenuElement.x, nodeMenuElement.y, nodeMenuElement.clickFrom);
-                    menuListItem.nextMenu.x = menuListItem.nextMenu.x - nodeMenuElement.width;
-                }
+                    menuListItem.createNextMenu(nodeMenuElement.parentName, nodeMenuElement.labelElement, nodeMenuElement.x, nodeMenuElement.y, nodeMenuElement.clickFrom, "left");
+                    //menuListItem.nextMenu.x = menuListItem.nextMenu.x - menulist.width
+                 }
                 
             }
         }

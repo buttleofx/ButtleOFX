@@ -4,7 +4,7 @@ from buttleofx.core.undo_redo.manageTools import UndoableCommand
 
 class CmdDeleteConnection(UndoableCommand):
     """
-        Command that delete a connection between 2 clips.
+        Command that deletes a connection between 2 clips.
         Attributes :
         - graphTarget
         - connection : we save the buttle connection because we will need it for the redo
@@ -16,7 +16,7 @@ class CmdDeleteConnection(UndoableCommand):
 
     def undoCmd(self):
         """
-            Undo the delete of the connection <=> recreate the connection.
+            Undoes the delete of the connection <=> recreates the connection.
         """
         tuttleNodeSource = self._graphTarget.getNode(self._connection.getClipOut().getNodeName()).getTuttleNode()
         tuttleNodeOutput = self._graphTarget.getNode(self._connection.getClipIn().getNodeName()).getTuttleNode()
@@ -28,27 +28,23 @@ class CmdDeleteConnection(UndoableCommand):
 
     def redoCmd(self):
         """
-            Redo the delete of the connection.
+            Redoes the delete of the connection.
+            Just calls the doCmd() function.
         """
         self.doCmd()
 
     def doCmd(self):
         """
-            Delete a connection.
+            Deletes a connection.
         """
         # Get the output clip and the source clip of the tuttle connection
         tuttleNodeSource = self._graphTarget.getNode(str(self._connection.getClipOut().getNodeName())).getTuttleNode()
         tuttleNodeOutput = self._graphTarget.getNode(str(self._connection.getClipIn().getNodeName())).getTuttleNode()
         outputClip = tuttleNodeSource.getClip("Output")
-        for clip in tuttleNodeOutput.getClipImageSet().getClips():
-            # We tried to use clip.isConnected(), to connect the output clip with the sourceB clip if sourceA is already connected
-            # But this function returns false when sourceA is already connected with another node's output clip
-            if not clip.isOutput():
-                srcClip = tuttleNodeOutput.getClip(str(clip.getName()))
-                break
+        inputClip = tuttleNodeOutput.getClip(self._connection.getClipIn().getClipName())
 
         # Delete the tuttle connection
-        self._graphTarget.getGraphTuttle().unconnect(outputClip, srcClip)
+        self._graphTarget.getGraphTuttle().unconnect(outputClip, inputClip)
 
         # Delete the buttle connection
         self._graphTarget.getConnections().remove(self._connection)

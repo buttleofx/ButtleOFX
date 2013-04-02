@@ -1,23 +1,11 @@
 {
   "date": {
-    "creation": "Tuesday, 12. March 2013 05:31PM"
+    "creation": "Thursday, 14. March 2013 07:22PM"
   }, 
   "graph": {
-    "connections": [
-      {
-        "clipIn": {
-          "clipName": "Source", 
-          "nodeName": "TuttleInvert_1"
-        }, 
-        "clipOut": {
-          "clipName": "Output", 
-          "nodeName": "TuttlePngReader_1"
-        }, 
-        "id": "TuttlePngReader_1Output => TuttleInvert_1Source"
-      }
-    ], 
+    "connections": [], 
     "currentSelectedNodes": [
-      "TuttleInvert_1"
+      "TuttlePngReader_1"
     ], 
     "nodes": [
       {
@@ -50,53 +38,10 @@
           ], 
           "nameUser": "TuttlePngReader_1"
         }
-      }, 
-      {
-        "name": "TuttleInvert_1", 
-        "params": [
-          {
-            "name": "channelGroup", 
-            "value": null
-          }, 
-          {
-            "name": "gray", 
-            "value": true
-          }, 
-          {
-            "name": "r", 
-            "value": true
-          }, 
-          {
-            "name": "g", 
-            "value": false
-          }, 
-          {
-            "name": "b", 
-            "value": true
-          }, 
-          {
-            "name": "a", 
-            "value": false
-          }
-        ], 
-        "pluginIdentifier": "tuttle.invert", 
-        "pluginVersion": "1.0", 
-        "uiParams": {
-          "color": [
-            0, 
-            178, 
-            161
-          ], 
-          "coord": [
-            192, 
-            134
-          ], 
-          "nameUser": "TuttleInvert_1"
-        }
       }
     ]
   }, 
-  "paramEditor": "TuttleInvert_1", 
-  "viewer": "TuttleInvert_1", 
+  "paramEditor": "TuttlePngReader_1", 
+  "viewer": "TuttlePngReader_1", 
   "window": {}
 }

@@ -70,12 +70,11 @@ class ParamInt2D(Param):
     #################### setters ####################
 
     def setValue1HasChanged(self, changed):
+        # argument changed is a boolean
         self._value1HasChanged = changed
-        self.paramChanged()
 
     def setValue2HasChanged(self, changed):
         self._value2HasChanged = changed
-        self.paramChanged()
 
     def setValue(self, values):
         if(self.getDefaultValue1() != values[0]):
@@ -95,6 +94,8 @@ class ParamInt2D(Param):
             index += 1
 
     def setValue1(self, value):
+        if(self.getDefaultValue1() != value):
+            self.setValue1HasChanged(True)
         if value != self.getValue1():
             # Push the command
             cmdUpdate = CmdSetParamND(self, (value, self.getValue2()))
@@ -102,6 +103,8 @@ class ParamInt2D(Param):
             cmdManager.push(cmdUpdate)
 
     def setValue2(self, value):
+        if(self.getDefaultValue2() != value):
+            self.setValue2HasChanged(True)
         if value != self.getValue2():
             # Push the command
             cmdUpdate = CmdSetParamND(self, (self.getValue1(), value))

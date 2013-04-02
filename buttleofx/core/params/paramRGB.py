@@ -46,22 +46,11 @@ class ParamRGB(Param):
         self._tuttleParam.setValueAtIndex(1, values[1])
         self._tuttleParam.setValueAtIndex(2, values[2])
 
-        self.paramChanged()
-
     def setValueR(self, value1):
         self._tuttleParam.setValueAtIndex(0, float(value1 / 255))
-        self.paramChanged()
-
-        print "Rouge : ", self.getValueR()
 
     def setValueG(self, value2):
         self._tuttleParam.setValueAtIndex(1, float(value2 / 255))
-        self.paramChanged()
-
-        print "Vert : ", self.getValueG()
 
     def setValueB(self, value3):
         self._tuttleParam.setValueAtIndex(2, float(value3 / 255))
-        self.paramChanged()
-
-        print "Blue : ", self.getValueB()

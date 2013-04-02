@@ -28,6 +28,7 @@ Item {
                 acceptedButtons: Qt.RightButton
                 onClicked: {
                     // reinitialise the value of the param to her default value
+                    paramObject.hasChanged = false
                     paramObject.value = paramObject.getDefaultValue()
                     paramObject.pushValue(paramObject.value)
                 }

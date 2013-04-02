@@ -47,7 +47,6 @@ class ParamInt(Param):
 
     def setHasChanged(self, changed):
         self._hasChanged = changed
-        self.paramChanged()
 
     def setOldValue(self, value):
         self._oldValue = value

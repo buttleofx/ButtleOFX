@@ -35,7 +35,6 @@ class ParamBoolean(Param):
 
     def setHasChanged(self, changed):
         self._hasChanged = changed
-        self.paramChanged()
 
     def setValue(self, value):
         if(self.getDefaultValue() != value):

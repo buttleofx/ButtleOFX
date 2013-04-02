@@ -15,7 +15,6 @@ class IntWrapper(ParamWrapper):
 
     @QtCore.Slot(result=int)
     def getDefaultValue(self):
-        self.setHasChanged(False)
         return self._param.getDefaultValue()
 
     def getValue(self):

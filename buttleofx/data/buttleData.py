@@ -265,32 +265,28 @@ class ButtleData(QtCore.QObject):
             dictJson = {
                 "date": {},
                 "window": {},
-                "graph": {
-                    "nodes": [],
-                    "connections": [],
-                    "currentSelectedNodes": []
-                },
+                "graph": {},
                 "paramEditor": {},
                 "viewer": {}
             }
+
             # date
             today = datetime.today().strftime("%A, %d. %B %Y %I:%M%p")
             dictJson["date"]["creation"] = today
 
-            # nodes
-            for node in self._graph.getNodes():
-                dictJson["graph"]["nodes"].append(node.object_to_dict())
+            # graph
+            dictJson["graph"] = self.getGraph().object_to_dict()
+
+            # graph : currentSeletedNodes
+            for node in self.getGraph().getNodes():
                 if node.getName() in self.getCurrentSelectedNodeNames():
                     dictJson["graph"]["currentSelectedNodes"].append(node.getName())
 
-            # connections
-            for con in self._graph.getConnections():
-                dictJson["graph"]["connections"].append(con.object_to_dict())
 
-            # paramEditor
+            # paramEditor : currentParamNodeName
             dictJson["paramEditor"] = self.getCurrentParamNodeName()
 
-            # viewer
+            # viewer : currentViewerNodeName
             dictJson["viewer"] = self.getCurrentViewerNodeName()
 
             # write dictJson in a file
@@ -305,14 +301,12 @@ class ButtleData(QtCore.QObject):
         """
         with open(unicode(url), 'r') as f:
             read_data = f.read()
-            decoded = json.loads(read_data)
+            decoded = json.loads(read_data, object_hook=_decode_dict)
 
             # create the nodes
             for nodeData in decoded["graph"]["nodes"]:
-                tmpType = nodeData["pluginIdentifier"]
-                tmpX = nodeData["uiParams"]["coord"][0]
-                tmpY = nodeData["uiParams"]["coord"][1]
-                node = self.getGraph().createNode(tmpType, tmpX, tmpY)
+                node = self.getGraph().createNode(nodeData["pluginIdentifier"])
+                self.getGraph().getGraphTuttle().renameNode(node.getTuttleNode(), nodeData["name"])
                 node.dict_to_object(nodeData)
 
             # create the connections
@@ -331,16 +325,17 @@ class ButtleData(QtCore.QObject):
 
                 connection = self.getGraph().createConnection(clipOut, clipIn)
 
-            # selected nodes
-            # in paramEditor
+
+            # graph : currentSeletedNodes
+            for currentSeletedNode in decoded["graph"]["currentSelectedNodes"]:
+                self.appendToCurrentSelectedNodeNames(currentSeletedNode)
+            self.currentSelectedNodesChanged.emit()
+            # paramEditor : currentParamNodeName
             self.setCurrentParamNodeName(decoded["paramEditor"])
             self.currentParamNodeChanged.emit()
-            # in viewer
+            # viewer : currentViewerNodeName
             self.setCurrentViewerNodeName(decoded["viewer"])
             self.currentViewerNodeChanged.emit()
-            # in graph
-            self.setCurrentSelectedNodeNames(decoded["graph"]["currentSelectedNodes"])
-            self.currentSelectedNodesChanged.emit()
 
         f.closed
 
@@ -377,3 +372,15 @@ class ButtleDataSingleton(Singleton):
 
     def get(self):
         return self._buttleData
+
+
+def _decode_dict(data):
+        """
+            This function will recursively pass in nested dicts, and will convert all unicode elements into string (essencial for some Tuttle functions). 
+        """
+        rv = {}
+        for key, value in data.iteritems():
+            if isinstance(value, unicode):
+               value = str(value)
+            rv[key] = value
+        return rv

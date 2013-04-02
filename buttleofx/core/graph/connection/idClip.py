@@ -58,9 +58,9 @@ class IdClip:
         """
             Convert the idClip to a dictionary of his representation.
         """
-        res = {
+        clip = {
             "nodeName": self._nodeName,
             "clipName": self._clipName,
             "clipIndex": self._clipIndex
         }
-        return res
+        return clip

@@ -174,7 +174,7 @@ class Node(object):
         """
             Convert the node to a dictionary of his representation.
         """
-        res = {
+        node = {
             "name": self._name,
             "pluginIdentifier": self._type,
             "pluginVersion": self.getPluginVersion(),
@@ -186,18 +186,16 @@ class Node(object):
             "params": []
         }
         for param in self.getParams():
-            tmpDict = {
-                "name": param.getName(),
-                "value": param.getValue()
-            }
-            res["params"].append(tmpDict)
-        return res
+            tmpDict = param.object_to_dict()
+            node["params"].append(tmpDict)
+        return node
 
     def dict_to_object(self, nodeData):
         """
             Set all values of the node, from a dictionary.
         """
         # uiParams
+        self.setCoord(nodeData["uiParams"]["coord"][0], nodeData["uiParams"]["coord"][1])
         self.setColor(nodeData["uiParams"]["color"])
         self.setNameUser(nodeData["uiParams"]["nameUser"])
 
@@ -205,4 +203,4 @@ class Node(object):
         for param in self.getParams():
             for paramData in nodeData["params"]:
                 if param.getName() == paramData["name"]:
-                    param.setValue(paramData["value"])
+                    param.dict_to_object(paramData)

@@ -50,3 +50,21 @@ class Param:
             Virtual function.
             Set the tuttle value(s) of the param (but do not push a command in the CommandManager.
         """
+
+    ######## SAVE / LOAD ########
+
+    def object_to_dict(self):
+        """
+            Convert the param to a dictionary of his representation.
+        """
+        param = {
+            "name": self.getName(),
+            "value": self.getValue()
+        }
+        return param
+
+    def dict_to_object(self, paramData):
+        """
+            Set all values of the param, from a dictionary.
+        """
+        self.setValue(paramData["value"])

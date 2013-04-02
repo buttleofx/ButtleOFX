@@ -92,9 +92,9 @@ class Connection(object):
         """
             Convert the connection to a dictionary of his representation.
         """
-        res = {
+        connection = {
             "id": self._id,
             "clipOut": self._clipOut.object_to_dict(),
             "clipIn": self._clipIn.object_to_dict()
         }
-        return res
+        return connection

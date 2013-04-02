@@ -107,7 +107,7 @@ class Graph(object):
 
     ################################################## CREATION & DESTRUCTION ##################################################
 
-    def createNode(self, nodeType, x, y):
+    def createNode(self, nodeType, x = 10, y = 10):
         """
             Adds a node from the node list when a node is created.
         """
@@ -211,3 +211,31 @@ class Graph(object):
             if (clipOut.getNodeName() == connection.getClipIn().getNodeName() and clipIn.getNodeName() == connection.getClipOut().getNodeName()):
                 return True
         return False
+
+
+    ################################################ SAVE / LOAD ################################################
+
+    def object_to_dict(self):
+        """
+            Convert the graph to a dictionary of his representation.
+        """
+        graph = {
+            "nodes": [],
+            "connections": [],
+            "currentSelectedNodes": []
+        }
+
+        # nodes
+        for node in self.getNodes():
+            graph["nodes"].append(node.object_to_dict())
+
+        # connections
+        for con in self.getConnections():
+            graph["connections"].append(con.object_to_dict())
+
+        return graph
+
+    def dict_to_object(self, nodeData):
+        """
+            Set all elements of the graph (nodes, connections...), from a dictionary.
+        """

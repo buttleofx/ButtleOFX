@@ -21,7 +21,6 @@ class ChoiceWrapper(ParamWrapper):
 
     @QtCore.Slot(result=str)
     def getDefaultValue(self):
-        self.setHasChanged(False)
         return self._param.getDefaultValue()
 
     def getListValue(self):

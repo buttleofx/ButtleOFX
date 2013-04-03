@@ -15,12 +15,10 @@ class Double2DWrapper(ParamWrapper):
 
     @QtCore.Slot(result=float)
     def getDefaultValue1(self):
-        self.setValue1HasChanged(False)
         return self._param.getDefaultValue1()
 
     @QtCore.Slot(result=float)
     def getDefaultValue2(self):
-        self.setValue2HasChanged(False)
         return self._param.getDefaultValue2()
 
     def getValue1(self):

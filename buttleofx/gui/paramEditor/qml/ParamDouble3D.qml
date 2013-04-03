@@ -30,6 +30,9 @@ Item {
                 acceptedButtons: Qt.RightButton
                 //reinitialise the values of the params
                 onClicked: {
+                    paramObject.value1HasChanged = false
+                    paramObject.value2HasChanged = false
+                    paramObject.value3HasChanged = false
                     paramObject.value1 = paramObject.getDefaultValue1()
                     paramObject.value2 = paramObject.getDefaultValue2()
                     paramObject.value3 = paramObject.getDefaultValue3() 
@@ -86,6 +89,7 @@ Item {
                 acceptedButtons: Qt.RightButton
                 onClicked: {
                     // reinitialise the value of the value1 to her default value
+                    paramObject.value1HasChanged = false
                     paramObject.value1 = paramObject.getDefaultValue1()
                 }
             }
@@ -141,6 +145,7 @@ Item {
                 acceptedButtons: Qt.RightButton
                 onClicked: {
                     // reinitialise the value of the value2 to her default value
+                    paramObject.value2HasChanged = false
                     paramObject.value2 = paramObject.getDefaultValue2()
                 }
             }
@@ -196,6 +201,7 @@ Item {
                 acceptedButtons: Qt.RightButton
                 onClicked: {
                     // reinitialise the value of the value3 to her default value
+                    paramObject.value3HasChanged = false
                     paramObject.value3 = paramObject.getDefaultValue3()
                 }
             }

@@ -16,9 +16,9 @@ class ParamChoice(Param):
 
     def __init__(self, tuttleParam):
         Param.__init__(self, tuttleParam)
-        
+
         self._oldValue = self.getValue()
-        
+
         self._listValue = []
         for choice in range(tuttleParam.getProperties().fetchProperty("OfxParamPropChoiceOption").getDimension()):
             self._listValue.append(tuttleParam.getProperties().fetchProperty("OfxParamPropChoiceOption").getStringValue(choice))
@@ -52,12 +52,10 @@ class ParamChoice(Param):
 
     def setHasChanged(self, changed):
         self._hasChanged = changed
-        self.paramChanged()
 
     def setValue(self, value):
         if(self.getDefaultValue() != value):
             self.setHasChanged(True)
-        
         self._tuttleParam.setValue(str(value))
 
     def pushValue(self, value):

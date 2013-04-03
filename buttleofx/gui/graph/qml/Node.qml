@@ -88,6 +88,7 @@ Rectangle {
             if (acceptDrop) {
                     _buttleData.currentViewerNodeWrapper = m.nodeModel;
                     _buttleData.assignNodeToViewerIndex(m.nodeModel);
+                    _buttleEvent.emitViewerChangedSignal()
             }
         }
     }

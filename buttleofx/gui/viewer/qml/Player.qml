@@ -375,6 +375,7 @@ Item {
                                     onClicked: {
                                         _buttleData.currentViewerIndex = index + 1
                                         _buttleData.currentViewerNodeWrapper = _buttleData.getNodeWrapperByViewerIndex(index+1)
+                                        _buttleEvent.emitViewerChangedSignal()
                                     }
                                 }
 

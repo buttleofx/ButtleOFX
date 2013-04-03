@@ -47,7 +47,6 @@ class ParamDouble(Param):
 
     def setHasChanged(self, changed):
         self._hasChanged = changed
-        self.paramChanged()
 
     def setOldValue(self, value):
         self._oldValue = value
@@ -58,7 +57,6 @@ class ParamDouble(Param):
         # used to know if bold font or not
         if(self.getDefaultValue() != value):
             self.setHasChanged(True)
-
         self._tuttleParam.setValue(float(value))
 
     def pushValue(self, newValue):

@@ -21,6 +21,9 @@ class IdClip:
         """
         return (self._nodeName == otherClip._nodeName and self._clipName == otherClip._clipName and self._clipIndex == otherClip._clipIndex)
 
+    def __str__(self):
+        return 'Noeud  "%s" , Clip "%s" (index %d)' % (self._nodeName, self._clipName, self._clipIndex)
+
     ######## getters ########
 
     def getId(self):

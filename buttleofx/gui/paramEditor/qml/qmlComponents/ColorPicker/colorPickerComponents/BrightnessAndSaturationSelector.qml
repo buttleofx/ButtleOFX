@@ -20,9 +20,6 @@ Item{
     // currentColor is the color displayed in the little rectangle (black by default)
     property color currentColor : "black"
 
-    // used to place the cursor at the good position the first time
-    property bool alreadyPassed: false
-
     SquaresGrid { 
         height: parent.height
         width: parent.width
@@ -50,8 +47,10 @@ Item{
         property int r : 5
         Rectangle {
             // - parent.r is used to match center of the circle and position
-            x: alreadyPassed ? - parent.r : -parent.r + saturation * bsPicker.width 
-            y: alreadyPassed ? -parent.r : -parent.r + (1 - brightness) * bsPicker.height 
+            /* x and y are updated in StateGroup and so when the colorPicker is charged, x and y adapt 
+            their value to saturation and brightness (as defined in colorPicker) */
+            x: - parent.r
+            y: -parent.r
             width: parent.r*2
             height: parent.r*2
             radius: parent.r
@@ -72,7 +71,6 @@ Item{
         //handleMouse used to manage the displacement of the little circle cursor in the square
         function handleMouse(mouse) {
             if (mouse.buttons & Qt.LeftButton) {
-                alreadyPassed = true
                 cursorPicker.x =  Math.max(0, Math.min(width,  mouse.x));
                 cursorPicker.y = Math.max(0, Math.min(height, mouse.y));
             }

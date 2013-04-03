@@ -9,7 +9,7 @@ Item {
     property int heightElement: 22
     //property int widthElement: 160
     property int max: 0
-    property string side: "right"
+    property string side: "prout"
     z: 1000
 
     ListView {
@@ -29,12 +29,13 @@ Item {
         }
 
         // Create a next menu
-        function createNextMenu(parentName, labelElement, x, y, clickFrom) {
+        function createNextMenu(parentName, labelElement, x, y, clickFrom, side) {
             destroyNextMenu()
-            var newComponent = Qt.createQmlObject('MenuList { parentName: "' + parentName + labelElement + '/"; x: ' + x + '; y: ' + y +  ';}', nodeMenuView);
+            var newComponent = Qt.createQmlObject('MenuList { parentName: "' + parentName + labelElement + '/"; x: ' + x + '; y: ' + y + '; side: "' + side + '";}', nodeMenuView);
             newComponent.clickFrom = clickFrom;
-            newComponent.side = menulist.side;
+            //newComponent.side = menulist.side;
             nodeMenuView.nextMenu = newComponent
+            console.log("createNextMenu", menulist.side)
        }
 
         delegate {
@@ -46,7 +47,9 @@ Item {
                     parentName: menulist.parentName
                     menuListItem: nodeMenuView
                     height: heightElement
-                    width: menulist.max * 8 + 30
+                    width: menulist.max*8 + 30
+                    x:  numSide* width
+                    property int numSide: stringToInt(nodeMenuElement)
                     property int max: maxElement(nodeMenuElement)
                     property variant clickFrom: menulist.clickFrom
 
@@ -58,6 +61,15 @@ Item {
                         return menulist.max
                     }
 
+                    // Return -1 if side = left, else 0
+                    function stringToInt(nodeMenuElement) {
+                        if(menulist.side == "left") {
+                            return -1;
+                        }
+                        else {
+                            return 0;
+                        }
+                    }
                 }
             }
         }

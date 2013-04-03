@@ -35,12 +35,11 @@ class ParamBoolean(Param):
 
     def setHasChanged(self, changed):
         self._hasChanged = changed
-        self.paramChanged()
 
     def setValue(self, value):
         if(self.getDefaultValue() != value):
             self.setHasChanged(True)
-        
+
         self._tuttleParam.setValue(bool(value))
 
     def pushValue(self, value):

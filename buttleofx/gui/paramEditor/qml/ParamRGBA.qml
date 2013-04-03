@@ -8,6 +8,13 @@ ColorPicker{
     // colorObject ensures the link between qml and python
     property variant colorObject: model.object
 
+    Component.onCompleted: {
+        defaultValueRed = colorObject.r
+        defaultValueGreen = colorObject.g
+        defaultValueBlue = colorObject.b
+        defaultValueAlpha = colorObject.a
+    }
+    
     title: colorObject.text
 
     // Is this param secret ?
@@ -23,6 +30,7 @@ ColorPicker{
         entireColor: currentColor //entireColor is a QColor exposed in colorExtended from Quickmamba
     }
 
+
     // everytime the color changed, we send the data to Tuttle
     onMainColorChanged: {
         if(colorObject){
@@ -30,6 +38,8 @@ ColorPicker{
             colorObject.g = mainCurrentColor.green
             colorObject.b = mainCurrentColor.blue
             colorObject.a = mainCurrentColor.alpha
+            //setValue is given from python in rgbaWrapper.py
+            //colorObject.setValue(mainCurrentColor.red, mainCurrentColor.green, mainCurrentColor.blue, mainCurrentColor.alpha)
         }
     }
 }

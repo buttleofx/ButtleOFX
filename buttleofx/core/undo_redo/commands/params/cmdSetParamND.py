@@ -21,7 +21,7 @@ class CmdSetParamND(UndoableCommand):
         else:
             logging.error(param.getName() + " : do not recognize the type.")
             self._oldValue = None
-            
+
         self._newValues = newValues
 
     def undoCmd(self):
@@ -45,4 +45,3 @@ class CmdSetParamND(UndoableCommand):
         self._param.getTuttleParam().setValue(self._newValues)
         self._param.setOldValues(self._newValues)
         self._param.paramChanged()
-        

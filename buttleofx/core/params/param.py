@@ -39,6 +39,12 @@ class Param:
     def isSecret(self):
         return self._tuttleParam.getSecret()
 
+    def getDefaultValue(self):
+        """
+            Virtual function.
+            Returns the default value(s) of the param.
+        """
+
     def getValue(self):
         """
             Virtual function.
@@ -56,7 +62,10 @@ class Param:
     def object_to_dict(self):
         """
             Convert the param to a dictionary of his representation.
+            We do not save param which had not been changed.
         """
+        if (self.getValue() == self.getDefaultValue()):
+            return None
         param = {
             "name": self.getName(),
             "value": self.getValue()

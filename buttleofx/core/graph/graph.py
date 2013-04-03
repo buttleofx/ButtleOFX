@@ -25,7 +25,6 @@ class Graph(object):
 
     def __init__(self):
         self._graphTuttle = tuttle.Graph()
-        #self._graphTuttle.setup() # good idea ?
 
         self._nodes = []
         self._connections = []
@@ -67,6 +66,9 @@ class Graph(object):
         return self._nodes
 
     def getNode(self, nodeName):
+        """
+            Returns the right node object given its name (None if no node found).
+        """
         for node in self._nodes:
             if node.getName() == nodeName:
                 return node
@@ -74,17 +76,24 @@ class Graph(object):
 
     def getConnections(self):
         """
-            Returns the connection List.
+            Returns the connection list.
         """
         return self._connections
 
     def getConnectionByClips(self, clipOut, clipIn):
+        """
+            Returns a connection, given the output clip and the input clip. (None if no connection found).
+            The order of the clips is important.
+        """
         for connection in self._connections:
             if connection.getClipOut() == clipOut and connection.getClipIn() == clipIn:
                 return connection
         return None
 
     def getConnectionById(self, connectionId):
+        """
+            Returns the right connection object given its id (None if no connection found).
+        """
         for connection in self._connections:
             if connection.getId() == connectionId:
                 return connection
@@ -92,7 +101,7 @@ class Graph(object):
 
     def getGraphTuttle(self):
         """
-            Return the Tuttle's graph.
+            Returns the Tuttle's graph.
         """
         return self._graphTuttle
 
@@ -111,7 +120,6 @@ class Graph(object):
             Creates a reader node when an image has been dropped in the graph.
         """
         extension = url.split(".")[-1].lower()
-        print extension
 
         if extension in ['jpeg', 'jpg', 'jpe', 'jfif', 'jfi']:
             nodeType = 'tuttle.jpegreader'
@@ -130,12 +138,10 @@ class Graph(object):
             return
             #use exception !
 
-        # create the node
-        #########################
-        # use a group of command : 
-        # - create node
-        # - setParamString
-        #########################
+        # We create the node.
+        # We can't use a group of commands because we need the tuttle node to set the value, and this tuttle node is created in the function doCmd() of the cmdCreateNode.
+        # So we use a special command CmdCreateReaderNode which creates a new node and set its value with the correct url.
+        # See the definition of the class CmdCreateReaderNode.
         cmdCreateReaderNode = CmdCreateReaderNode(self, nodeType, x, y, url)
         cmdManager = CommandManager()
         return cmdManager.push(cmdCreateReaderNode)
@@ -143,6 +149,7 @@ class Graph(object):
     def deleteNodes(self, nodes):
         """
             Removes a node in the node list when a node is deleted.
+            Pushes a command in the CommandManager.
         """
         cmdDeleteNodes = CmdDeleteNodes(self, nodes)
         cmdManager = CommandManager()
@@ -151,6 +158,7 @@ class Graph(object):
     def createConnection(self, clipOut, clipIn):
         """
             Adds a connection in the connection list when a connection is created.
+            Pushes a command in the CommandManager.
         """
         cmdCreateConnection = CmdCreateConnection(self, clipOut, clipIn)
         cmdManager = CommandManager()
@@ -159,6 +167,7 @@ class Graph(object):
     def deleteConnection(self, connection):
         """
             Removes a connection.
+            Pushes a command in the CommandManager.
         """
         cmdDeleteConnection = CmdDeleteConnection(self, connection)
         cmdManager = CommandManager()
@@ -175,7 +184,7 @@ class Graph(object):
 
     def nodeMoved(self, nodeName, x, y):
         """
-            This fonction push a cmdMoved in the CommandManager.
+            This fonction pushes a cmdMoved in the CommandManager.
         """
         # only push a cmd if the node truly moved
         if self.getNode(nodeName).getOldCoord() != (x, y):

@@ -34,51 +34,75 @@ class ConnectionWrapper(QtCore.QObject):
         return self._connection.getId()
 
     def getClipOutPosX(self):
+        """
+            Returns the x position of the first clip of the connection (= the output clip). => x1
+        """
         return self._connection.getClipOut().getCoord()[0]
 
     def getClipOutPosY(self):
+        """
+            Returns the y position of the first clip of the connection (= the output clip). => y1
+        """
         return self._connection.getClipOut().getCoord()[1]
 
     def getClipInPosX(self):
+        """
+            Returns the x position of the second clip of the connection (= the input clip). => x2
+        """
         return self._connection.getClipIn().getCoord()[0]
 
     def getClipInPosY(self):
+        """
+            Returns the y position of the second clip of the connection (= the input clip). => y2
+        """
         return self._connection.getClipIn().getCoord()[1]
 
     ######## setters ########
 
     def setClipOutPosX(self, posX):
+        """
+            Sets the x position of the first clip of the connection (= the output clip). => x1
+        """
         self._connection.getClipOut().setXCoord(posX)
 
     def setClipOutPosY(self, posY):
+        """
+            Sets the y position of the first clip of the connection (= the output clip). => y1
+        """
         self._connection.getClipOut().setYCoord(posY)
 
     def setClipInPosX(self, posX):
+        """
+            Sets the x position of the second clip of the connection (= the input clip). => x2
+        """
         self._connection.getClipIn().setXCoord(posX)
 
     def setClipInPosY(self, posY):
+        """
+            Sets the y position of the second clip of the connection (= the input clip). => y2
+        """
         self._connection.getClipIn().setYCoord(posY)
 
     ################################################## LINK WRAPPER LAYER TO QML ##################################################
 
-    @QtCore.Signal
-    def connectionClipOutChanged(self):
-        pass
+    connectionClipOutChanged = connectionClipInChanged = QtCore.Signal()
 
     def emitConnectionClipOutChanged(self):
+        """
+            Emits the signal connectionClipOutChanged.
+        """
         self.connectionClipOutChanged.emit()
 
-    @QtCore.Signal
-    def connectionClipInChanged(self):
-        pass
-
     def emitConnectionClipInChanged(self):
+        """
+            Emits the signal connectionClipInChanged.
+        """
         self.connectionClipInChanged.emit()
 
     ################################################## DATA EXPOSED TO QML ##################################################
 
-    clipOutPosX = QtCore.Property(int, getClipOutPosX, setClipOutPosX, notify=connectionClipOutChanged)
-    clipOutPosY = QtCore.Property(int, getClipOutPosY, setClipOutPosX, notify=connectionClipOutChanged)
+    clipOutPosX = QtCore.Property(int, getClipOutPosX, setClipOutPosX, notify=connectionClipOutChanged)  # x1
+    clipOutPosY = QtCore.Property(int, getClipOutPosY, setClipOutPosX, notify=connectionClipOutChanged)  # y1
 
-    clipInPosX = QtCore.Property(int, getClipInPosX, setClipInPosX, notify=connectionClipInChanged)
-    clipInPosY = QtCore.Property(int, getClipInPosY, setClipInPosX, notify=connectionClipInChanged)
+    clipInPosX = QtCore.Property(int, getClipInPosX, setClipInPosX, notify=connectionClipInChanged)  # x2
+    clipInPosY = QtCore.Property(int, getClipInPosY, setClipInPosX, notify=connectionClipInChanged)  # y2

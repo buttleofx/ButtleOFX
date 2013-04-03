@@ -91,7 +91,7 @@ Rectangle {
 
         onDrop: {
             if(acceptDrop) {
-                _buttleManager.nodeManager.dropReaderNode(firstUrl, pos.x, pos.y)
+                _buttleManager.nodeManager.dropFile(firstUrl, pos.x, pos.y)
             }
         }
     }

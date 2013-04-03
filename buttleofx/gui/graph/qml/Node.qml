@@ -139,7 +139,7 @@ Rectangle {
             anchors.centerIn: parent
             text: m.nodeModel.nameUser
             font.pointSize: 10
-            property bool isSelected: _buttleData.nodeInCurrentSelectedNodeNames(m.nodeModel)
+            property bool isSelected: _buttleData.nodeIsSelected(m.nodeModel)
             
             onTextChanged: {
                 m.nodeModel.fitWidth(nodeText.width);
@@ -149,7 +149,7 @@ Rectangle {
             Connections {
                 target: _buttleData
                 onCurrentSelectedNodeWrappersChanged: {
-                    nodeText.isSelected = _buttleData.nodeInCurrentSelectedNodeNames(m.nodeModel)
+                    nodeText.isSelected = _buttleData.nodeIsSelected(m.nodeModel)
                 }
             }
             color: isSelected ? m.nodeModel.color : "black"

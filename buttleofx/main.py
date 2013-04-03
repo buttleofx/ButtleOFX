@@ -1,7 +1,6 @@
-import os, sys
-from OpenGL import GL
+import os
 # PySide
-from PySide import QtGui, QtDeclarative, QtOpenGL, QtCore
+from PySide import QtGui, QtDeclarative, QtOpenGL
 
 # Logging (see console.log)
 import logging
@@ -21,7 +20,6 @@ logging.basicConfig(format='Buttle - %(levelname)s - %(message)s', filename='con
 # Tuttle
 from pyTuttle import tuttle
 # quickmamba
-from quickmamba.models import QObjectListModel
 from quickmamba.utils import QmlInstantCoding
 # PyCheck
 #import pychecker.checker
@@ -47,11 +45,11 @@ from buttleofx.manager import ButtleManagerSingleton
 # event
 from buttleofx.event import ButtleEventSingleton
 # new QML type
-from buttleofx.gui.paramEditor import Finder
+from buttleofx.data import Finder
 # undo_redo
 from buttleofx.core.undo_redo.manageTools import CommandManager
 
-
+# Path of this file
 currentFilePath = os.path.dirname(os.path.abspath(__file__))
 
 
@@ -102,7 +100,6 @@ def main(argv):
     # event
     buttleEvent = ButtleEventSingleton().get()
 
-
     # expose data to QML
     rc = view.rootContext()
     rc.setContextProperty("_buttleApp", app)
@@ -124,4 +121,3 @@ def main(argv):
 
     view.show()
     app.exec_()
-

@@ -20,7 +20,7 @@ class NodeManager(QtCore.QObject):
     @QtCore.Slot(str, int, int)
     def creationNode(self, nodeType, x, y):
         """
-            Create a node.
+            Creates a node.
         """
         buttleData = ButtleDataSingleton().get()
         buttleData.getGraph().createNode(nodeType, x, y)
@@ -31,7 +31,7 @@ class NodeManager(QtCore.QObject):
     @QtCore.Slot()
     def destructionNodes(self):
         """
-            Delete the current node(s).
+            Deletes the current node(s).
         """
         buttleData = ButtleDataSingleton().get()
 
@@ -64,7 +64,7 @@ class NodeManager(QtCore.QObject):
     @QtCore.Slot()
     def cutNode(self):
         """
-            Cut the current node(s).
+            Cuts the current node(s).
         """
         # Call the copyNode function to save the data of the selected nodes
         self.copyNode()
@@ -87,7 +87,7 @@ class NodeManager(QtCore.QObject):
     @QtCore.Slot()
     def copyNode(self):
         """
-            Copy the current node(s).
+            Copies the current node(s).
         """
         buttleData = ButtleDataSingleton().get()
         # Clear the info saved in currentCopiedNodesInfo
@@ -108,7 +108,7 @@ class NodeManager(QtCore.QObject):
     @QtCore.Slot()
     def pasteNode(self):
         """
-            Past the current node(s).
+            Pasts the current node(s).
         """
         buttleData = ButtleDataSingleton().get()
         # If nodes have been copied previously
@@ -127,7 +127,7 @@ class NodeManager(QtCore.QObject):
     @QtCore.Slot()
     def duplicationNode(self):
         """
-            Duplicate the current node(s).
+            Duplicates the current node(s).
         """
         buttleData = ButtleDataSingleton().get()
         if buttleData.getCurrentSelectedNodeWrappers() != []:
@@ -153,12 +153,19 @@ class NodeManager(QtCore.QObject):
         self.undoRedoChanged()
 
     @QtCore.Slot(str, int, int)
-    def dropReaderNode(self, url, x, y):
+    def dropFile(self, url, x, y):
         """
-            Drop an image or a video on the graph : create a reader node.
+            Drops a file on the graph.
+            - Image or video : creates a reader node.
+            - Json : load a graph (if the format allows it)
         """
         buttleData = ButtleDataSingleton().get()
-        buttleData.getGraph().createReaderNode(url, x, y)
+
+        extension = url.split(".")[-1].lower()
+        if extension == 'json':
+            buttleData.loadData(url)  # also need to verify the json format
+        else:
+            buttleData.getGraph().createReaderNode(url, x, y)
 
         # update undo/redo display
         self.undoRedoChanged()
@@ -166,7 +173,7 @@ class NodeManager(QtCore.QObject):
     @QtCore.Slot(str, int, int)
     def nodeMoved(self, nodeName, x, y):
         """
-            This fonction push a cmdMoved in the CommandManager.
+            This fonction pushes a cmdMoved in the CommandManager.
         """
         buttleData = ButtleDataSingleton().get()
         buttleData.getGraph().nodeMoved(nodeName, x, y)
@@ -177,7 +184,7 @@ class NodeManager(QtCore.QObject):
     @QtCore.Slot(str, int, int)
     def nodeIsMoving(self, nodeName, x, y):
         """
-            This fonction update the position of the connections.
+            This fonction updates the position of the connections.
         """
         buttleData = ButtleDataSingleton().get()
         node = buttleData.getGraph().getNode(nodeName)

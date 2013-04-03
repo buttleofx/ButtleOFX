@@ -32,6 +32,7 @@ class CmdSetCoord(UndoableCommand):
     def redoCmd(self):
         """
             Redoes the movement of the node.
+            Just calls the doCmd() function.
         """
         return self.doCmd()
 

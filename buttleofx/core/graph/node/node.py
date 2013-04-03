@@ -186,8 +186,8 @@ class Node(object):
             "params": []
         }
         for param in self.getParams():
-            tmpDict = param.object_to_dict()
-            node["params"].append(tmpDict)
+            paramDict = param.object_to_dict()
+            node["params"].append(paramDict)
         return node
 
     def dict_to_object(self, nodeData):

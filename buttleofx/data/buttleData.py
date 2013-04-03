@@ -303,28 +303,8 @@ class ButtleData(QtCore.QObject):
             read_data = f.read()
             decoded = json.loads(read_data, object_hook=_decode_dict)
 
-            # create the nodes
-            for nodeData in decoded["graph"]["nodes"]:
-                node = self.getGraph().createNode(nodeData["pluginIdentifier"])
-                self.getGraph().getGraphTuttle().renameNode(node.getTuttleNode(), nodeData["name"])
-                node.dict_to_object(nodeData)
-
-            # create the connections
-            for connectionData in decoded["graph"]["connections"]:
-                clipIn_nodeName = connectionData["clipIn"]["nodeName"]
-                clipIn_clipName = connectionData["clipIn"]["clipName"]
-                clipIn_clipIndex = connectionData["clipIn"]["clipIndex"]
-                clipIn_positionClip = self.getGraphWrapper().getPositionClip(clipIn_nodeName, clipIn_clipName, clipIn_clipIndex)
-                clipIn = IdClip(clipIn_nodeName, clipIn_clipName, clipIn_clipIndex, clipIn_positionClip)
-
-                clipOut_nodeName = connectionData["clipOut"]["nodeName"]
-                clipOut_clipName = connectionData["clipOut"]["clipName"]
-                clipOut_clipIndex = connectionData["clipOut"]["clipIndex"]
-                clipOut_positionClip = self.getGraphWrapper().getPositionClip(clipOut_nodeName, clipOut_clipName, clipOut_clipIndex)
-                clipOut = IdClip(clipOut_nodeName, clipOut_clipName, clipOut_clipIndex, clipOut_positionClip)
-
-                connection = self.getGraph().createConnection(clipOut, clipIn)
-
+            # create the graph
+            self.getGraph().dict_to_object(decoded["graph"])
 
             # graph : currentSeletedNodes
             for currentSeletedNode in decoded["graph"]["currentSelectedNodes"]:

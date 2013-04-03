@@ -3,7 +3,7 @@ import logging
 from pyTuttle import tuttle
 # quickmamba
 from quickmamba.patterns import Signal
-#undo_redo
+# undo_redo
 from buttleofx.core.undo_redo.manageTools import CommandManager
 from buttleofx.core.undo_redo.commands.node import CmdCreateNode, CmdDeleteNodes, CmdCreateReaderNode, CmdSetCoord
 from buttleofx.core.undo_redo.commands.connection import CmdCreateConnection, CmdDeleteConnection
@@ -235,7 +235,29 @@ class Graph(object):
 
         return graph
 
-    def dict_to_object(self, nodeData):
+    def dict_to_object(self, graphData):
         """
             Set all elements of the graph (nodes, connections...), from a dictionary.
         """
+        # create the nodes
+        for nodeData in graphData["nodes"]:
+            node = self.createNode(nodeData["pluginIdentifier"])
+            self.getGraphTuttle().renameNode(node.getTuttleNode(), nodeData["name"])
+            node.dict_to_object(nodeData)
+
+        # create the connections
+        from buttleofx.core.graph.connection import IdClip
+        for connectionData in graphData["connections"]:
+            clipIn_nodeName = connectionData["clipIn"]["nodeName"]
+            clipIn_clipName = connectionData["clipIn"]["clipName"]
+            clipIn_clipIndex = connectionData["clipIn"]["clipIndex"]
+            clipIn_positionClip = connectionData["clipIn"]["coord"]
+            clipIn = IdClip(clipIn_nodeName, clipIn_clipName, clipIn_clipIndex, clipIn_positionClip)
+
+            clipOut_nodeName = connectionData["clipOut"]["nodeName"]
+            clipOut_clipName = connectionData["clipOut"]["clipName"]
+            clipOut_clipIndex = connectionData["clipOut"]["clipIndex"]
+            clipOut_positionClip = connectionData["clipOut"]["coord"]
+            clipOut = IdClip(clipOut_nodeName, clipOut_clipName, clipOut_clipIndex, clipOut_positionClip)
+
+            connection = self.createConnection(clipOut, clipIn)

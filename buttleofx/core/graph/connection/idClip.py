@@ -1,4 +1,4 @@
-class IdClip:
+class IdClip(object):
     """
         Class usefull to identify a clip with :
         - _id : the clipId
@@ -9,6 +9,8 @@ class IdClip:
     """
 
     def __init__(self, nodeName, clipName, clipIndex, coord):
+        super(IdClip, self).__init__()
+        
         self._id = nodeName + clipName
         self._nodeName = nodeName
         self._clipName = clipName
@@ -61,6 +63,7 @@ class IdClip:
         clip = {
             "nodeName": self._nodeName,
             "clipName": self._clipName,
-            "clipIndex": self._clipIndex
+            "clipIndex": self._clipIndex,
+            "coord": self._coord
         }
         return clip

@@ -1,15 +1,15 @@
 from PySide import QtCore, QtGui
-# tools
-from buttleofx.data import tuttleTools
 # quickmamba
 from quickmamba.patterns import Singleton, Signal
+# tools
+from buttleofx.data import tuttleTools
 
 
 class ButtleEvent(QtCore.QObject):
     """
         Class ButtleEvent defined by:
             - paramChangedSignal : signal emited when a param value changed
-            - viewerChangedSignal : signal emited when ???
+            - viewerChangedSignal : signal emited when the current view of the viewer changes
 
         This class contains all data we need to manage the application.
     """
@@ -26,6 +26,7 @@ class ButtleEvent(QtCore.QObject):
         """
         self.oneParamChangedSignal()
 
+    @QtCore.Slot()
     def emitViewerChangedSignal(self):
         """
             Emits the signal viewerChangedSignal.

@@ -28,24 +28,23 @@ class ParamRGBA(Param):
     def getDefaultA(self):
         return self._tuttleParam.getDoubleValueAtIndex(3)
 
-    def getValue(self):
-        return (self.getValueR(), self.getValueG(), self.getValueB(), self.getValueA())
+    def getDefaultValue(self):
+        return (self.getDefaultR(), self.getDefaultG(), self.getDefaultB(), self.getDefaultA())
 
     def getValueR(self):
-        #print "red value: ", self._tuttleParam.getDoubleValueAtIndex(0)
         return self._tuttleParam.getDoubleValueAtIndex(0)
 
     def getValueG(self):
-        #print "green value: ", self._tuttleParam.getDoubleValueAtIndex(1)
         return self._tuttleParam.getDoubleValueAtIndex(1)
 
     def getValueB(self):
-        #print "blue value: ", self._tuttleParam.getDoubleValueAtIndex(2)
         return self._tuttleParam.getDoubleValueAtIndex(2)
 
     def getValueA(self):
-        #print "alpha value: ", self._tuttleParam.getDoubleValueAtIndex(3)
         return self._tuttleParam.getDoubleValueAtIndex(3)
+
+    def getValue(self):
+        return (self.getValueR(), self.getValueG(), self.getValueB(), self.getValueA())
 
     #################### setters ####################
 

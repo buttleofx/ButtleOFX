@@ -47,16 +47,16 @@ class ButtleData(QtCore.QObject):
     _currentCopiedNodesInfo = {}
 
     # for the viewer
+    _currentViewerIndex = 1
+    _mapViewerIndextoNodeName = {}
     _mapNodeNameToComputedImage = {}
-
-    # signals
-    paramChangedSignal = Signal()
-    viewerChangedSignal = Signal()
 
     def init(self, view, filePath):
         self._graph = Graph()
         self._graphWrapper = GraphWrapper(self._graph, view)
         self._buttlePath = filePath
+        for index in range(1, 9):
+            self._mapViewerIndextoNodeName[str(index)] = None
 
         return self
 
@@ -115,6 +115,16 @@ class ButtleData(QtCore.QObject):
         currentSelectedNodeWrappers.setObjectList([self.getGraphWrapper().getNodeWrapper(nodeName) for nodeName in self.getCurrentSelectedNodeNames()])
         return currentSelectedNodeWrappers
 
+    def getCurrentViewerIndex(self):
+        """
+            Returns the current viewer index.
+        """
+        return self._currentViewerIndex
+
+    @QtCore.Slot(int, result=QtCore.QObject)
+    def getNodeWrapperByViewerIndex(self, index):
+        return self._graphWrapper.getNodeWrapper(self._mapViewerIndextoNodeName[str(index)])
+
     def getCurrentViewerNodeWrapper(self):
         """
             Returns the current viewer nodeWrapper.
@@ -158,32 +168,32 @@ class ButtleData(QtCore.QObject):
         if self._currentParamNodeName == nodeWrapper.getName():
             return
         self._currentParamNodeName = nodeWrapper.getName()
-        # emit signals
+        # Emit signal
         self.currentParamNodeChanged.emit()
 
     def setCurrentSelectedNodeWrappers(self, nodeWrappers):
         self.setCurrentSelectedNodeNames([nodeWrapper.getName() for nodeWrapper in nodeWrappers])
         self.currentSelectedNodesChanged.emit()
 
-    @QtCore.Slot(QtCore.QObject)
-    def appendToCurrentSelectedNodeWrappers(self, nodeWrapper):
-        self.appendToCurrentSelectedNodeNames(nodeWrapper.getName())
-
-    def appendToCurrentSelectedNodeNames(self, nodeName):
-        if nodeName in self._currentSelectedNodeNames:
-            self._currentSelectedNodeNames.remove(nodeName)
-        else:
-            self._currentSelectedNodeNames.append(nodeName)
-        # emit signal
-        self.currentSelectedNodesChanged.emit()
+    def setCurrentViewerIndex(self, index):
+        """
+            Set the value of the current viewer index.
+        """
+        # Update value of the current viewer index
+        self._currentViewerIndex = index
+        # Emit signal
+        self.currentViewerIndexChanged.emit()
 
     def setCurrentViewerNodeWrapper(self, nodeWrapper):
         """
             Changes the current viewer node and emits the change.
         """
-        if self._currentViewerNodeName == nodeWrapper.getName():
+        if nodeWrapper == None:
+            self._currentViewerNodeName = None
+        elif self._currentViewerNodeName == nodeWrapper.getName():
             return
-        self._currentViewerNodeName = nodeWrapper.getName()
+        else:
+            self._currentViewerNodeName = nodeWrapper.getName()
         # emit signal
         self.currentViewerNodeChanged.emit()
 
@@ -198,6 +208,18 @@ class ButtleData(QtCore.QObject):
         self.currentConnectionWrapperChanged.emit()
 
     ############################################### ADDITIONAL FUNCTIONS ##################################################
+
+    @QtCore.Slot(QtCore.QObject)
+    def appendToCurrentSelectedNodeWrappers(self, nodeWrapper):
+        self.appendToCurrentSelectedNodeNames(nodeWrapper.getName())
+
+    def appendToCurrentSelectedNodeNames(self, nodeName):
+        if nodeName in self._currentSelectedNodeNames:
+            self._currentSelectedNodeNames.remove(nodeName)
+        else:
+            self._currentSelectedNodeNames.append(nodeName)
+        # emit signal
+        self.currentSelectedNodesChanged.emit()
 
     @QtCore.Slot("QVariant", result=bool)
     def nodeIsSelected(self, nodeWrapper):
@@ -215,6 +237,11 @@ class ButtleData(QtCore.QObject):
             if node.getCoord()[0] >= x and node.getCoord()[0] <= x + width:
                 if node.getCoord()[1] >= y and node.getCoord()[1] <= y + height:
                     self.appendToCurrentSelectedNodeNames(node.getName())
+
+    @QtCore.Slot(QtCore.QObject)
+    def assignNodeToViewerIndex(self, nodeWrapper):
+        self._mapViewerIndextoNodeName.update({str(self._currentViewerIndex): nodeWrapper.getName()})
+        print self._mapViewerIndextoNodeName
 
     @QtCore.Slot()
     def clearCurrentSelectedNodeNames(self):
@@ -265,32 +292,27 @@ class ButtleData(QtCore.QObject):
             dictJson = {
                 "date": {},
                 "window": {},
-                "graph": {
-                    "nodes": [],
-                    "connections": [],
-                    "currentSelectedNodes": []
-                },
+                "graph": {},
                 "paramEditor": {},
                 "viewer": {}
             }
+
             # date
             today = datetime.today().strftime("%A, %d. %B %Y %I:%M%p")
             dictJson["date"]["creation"] = today
 
-            # nodes
-            for node in self._graph.getNodes():
-                dictJson["graph"]["nodes"].append(node.object_to_dict())
+            # graph
+            dictJson["graph"] = self.getGraph().object_to_dict()
+
+            # graph : currentSeletedNodes
+            for node in self.getGraph().getNodes():
                 if node.getName() in self.getCurrentSelectedNodeNames():
                     dictJson["graph"]["currentSelectedNodes"].append(node.getName())
 
-            # connections
-            for con in self._graph.getConnections():
-                dictJson["graph"]["connections"].append(con.object_to_dict())
-
-            # paramEditor
+            # paramEditor : currentParamNodeName
             dictJson["paramEditor"] = self.getCurrentParamNodeName()
 
-            # viewer
+            # viewer : currentViewerNodeName
             dictJson["viewer"] = self.getCurrentViewerNodeName()
 
             # write dictJson in a file
@@ -305,42 +327,22 @@ class ButtleData(QtCore.QObject):
         """
         with open(unicode(url), 'r') as f:
             read_data = f.read()
-            decoded = json.loads(read_data)
 
-            # create the nodes
-            for nodeData in decoded["graph"]["nodes"]:
-                tmpType = nodeData["pluginIdentifier"]
-                tmpX = nodeData["uiParams"]["coord"][0]
-                tmpY = nodeData["uiParams"]["coord"][1]
-                node = self.getGraph().createNode(tmpType, tmpX, tmpY)
-                node.dict_to_object(nodeData)
+            decoded = json.loads(read_data, object_hook=_decode_dict)
 
-            # create the connections
-            for connectionData in decoded["graph"]["connections"]:
-                clipIn_nodeName = connectionData["clipIn"]["nodeName"]
-                clipIn_clipName = connectionData["clipIn"]["clipName"]
-                clipIn_clipIndex = connectionData["clipIn"]["clipIndex"]
-                clipIn_positionClip = self.getGraphWrapper().getPositionClip(clipIn_nodeName, clipIn_clipName, clipIn_clipIndex)
-                clipIn = IdClip(clipIn_nodeName, clipIn_clipName, clipIn_clipIndex, clipIn_positionClip)
+            # create the graph
+            self.getGraph().dict_to_object(decoded["graph"])
 
-                clipOut_nodeName = connectionData["clipOut"]["nodeName"]
-                clipOut_clipName = connectionData["clipOut"]["clipName"]
-                clipOut_clipIndex = connectionData["clipOut"]["clipIndex"]
-                clipOut_positionClip = self.getGraphWrapper().getPositionClip(clipOut_nodeName, clipOut_clipName, clipOut_clipIndex)
-                clipOut = IdClip(clipOut_nodeName, clipOut_clipName, clipOut_clipIndex, clipOut_positionClip)
-
-                connection = self.getGraph().createConnection(clipOut, clipIn)
-
-            # selected nodes
-            # in paramEditor
+            # graph : currentSeletedNodes
+            for currentSeletedNode in decoded["graph"]["currentSelectedNodes"]:
+                self.appendToCurrentSelectedNodeNames(currentSeletedNode)
+            self.currentSelectedNodesChanged.emit()
+            # paramEditor : currentParamNodeName
             self.setCurrentParamNodeName(decoded["paramEditor"])
             self.currentParamNodeChanged.emit()
-            # in viewer
+            # viewer : currentViewerNodeName
             self.setCurrentViewerNodeName(decoded["viewer"])
             self.currentViewerNodeChanged.emit()
-            # in graph
-            self.setCurrentSelectedNodeNames(decoded["graph"]["currentSelectedNodes"])
-            self.currentSelectedNodesChanged.emit()
 
         f.closed
 
@@ -365,6 +367,9 @@ class ButtleData(QtCore.QObject):
     currentConnectionWrapperChanged = QtCore.Signal()
     currentConnectionWrapper = QtCore.Property(QtCore.QObject, getCurrentConnectionWrapper, setCurrentConnectionWrapper, notify=currentConnectionWrapperChanged)
 
+    currentViewerIndexChanged = QtCore.Signal()
+    currentViewerIndex = QtCore.Property("int", getCurrentViewerIndex, setCurrentViewerIndex, notify=currentViewerIndexChanged)
+
     # paste possibility
     pastePossibilityChanged = QtCore.Signal()
     canPaste = QtCore.Property(bool, canPaste, notify=pastePossibilityChanged)
@@ -377,3 +382,15 @@ class ButtleDataSingleton(Singleton):
 
     def get(self):
         return self._buttleData
+
+
+def _decode_dict(data):
+        """
+        This function will recursively pass in nested dicts, and will convert all unicode elements into string (essencial for some Tuttle functions).
+        """
+        rv = {}
+        for key, value in data.iteritems():
+            if isinstance(value, unicode):
+                value = str(value)
+            rv[key] = value
+        return rv

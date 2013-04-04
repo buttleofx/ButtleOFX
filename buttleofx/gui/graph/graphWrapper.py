@@ -142,6 +142,15 @@ class GraphWrapper(QtCore.QObject):
             yClip = nodeCoord.y() + inputTopMargin + int(clipIndex) * (clipSpacing + clipSize) + clipSize / 2
         return (xClip, yClip)
 
+    @QtCore.Slot(str, str, int, result=int)
+    def getXClip(self, nodeName, clipName, clipIndex):
+        return self.getPositionClip(nodeName, clipName, clipIndex)[0]
+
+    @QtCore.Slot(str, str, int, result=int)
+    def getYClip(self, nodeName, clipName, clipIndex):
+        return self.getPositionClip(nodeName, clipName, clipIndex)[1]
+
+
     #################### setters ####################
 
     def setZMax(self, zMax):

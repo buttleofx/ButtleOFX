@@ -3,7 +3,7 @@ import logging
 from pyTuttle import tuttle
 # quickmamba
 from quickmamba.patterns import Signal
-#undo_redo
+# undo_redo
 from buttleofx.core.undo_redo.manageTools import CommandManager
 from buttleofx.core.undo_redo.commands.node import CmdCreateNode, CmdDeleteNodes, CmdCreateReaderNode, CmdSetCoord
 from buttleofx.core.undo_redo.commands.connection import CmdCreateConnection, CmdDeleteConnection
@@ -107,7 +107,7 @@ class Graph(object):
 
     ################################################## CREATION & DESTRUCTION ##################################################
 
-    def createNode(self, nodeType, x, y):
+    def createNode(self, nodeType, x = 10, y = 10):
         """
             Adds a node from the node list when a node is created.
         """
@@ -211,3 +211,53 @@ class Graph(object):
             if (clipOut.getNodeName() == connection.getClipIn().getNodeName() and clipIn.getNodeName() == connection.getClipOut().getNodeName()):
                 return True
         return False
+
+
+    ################################################ SAVE / LOAD ################################################
+
+    def object_to_dict(self):
+        """
+            Convert the graph to a dictionary of his representation.
+        """
+        graph = {
+            "nodes": [],
+            "connections": [],
+            "currentSelectedNodes": []
+        }
+
+        # nodes
+        for node in self.getNodes():
+            graph["nodes"].append(node.object_to_dict())
+
+        # connections
+        for con in self.getConnections():
+            graph["connections"].append(con.object_to_dict())
+
+        return graph
+
+    def dict_to_object(self, graphData):
+        """
+            Set all elements of the graph (nodes, connections...), from a dictionary.
+        """
+        # create the nodes
+        for nodeData in graphData["nodes"]:
+            node = self.createNode(nodeData["pluginIdentifier"])
+            self.getGraphTuttle().renameNode(node.getTuttleNode(), nodeData["name"])
+            node.dict_to_object(nodeData)
+
+        # create the connections
+        from buttleofx.core.graph.connection import IdClip
+        for connectionData in graphData["connections"]:
+            clipIn_nodeName = connectionData["clipIn"]["nodeName"]
+            clipIn_clipName = connectionData["clipIn"]["clipName"]
+            clipIn_clipIndex = connectionData["clipIn"]["clipIndex"]
+            clipIn_positionClip = connectionData["clipIn"]["coord"]
+            clipIn = IdClip(clipIn_nodeName, clipIn_clipName, clipIn_clipIndex, clipIn_positionClip)
+
+            clipOut_nodeName = connectionData["clipOut"]["nodeName"]
+            clipOut_clipName = connectionData["clipOut"]["clipName"]
+            clipOut_clipIndex = connectionData["clipOut"]["clipIndex"]
+            clipOut_positionClip = connectionData["clipOut"]["coord"]
+            clipOut = IdClip(clipOut_nodeName, clipOut_clipName, clipOut_clipIndex, clipOut_positionClip)
+
+            connection = self.createConnection(clipOut, clipIn)

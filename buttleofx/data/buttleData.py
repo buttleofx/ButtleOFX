@@ -354,13 +354,11 @@ class ButtleDataSingleton(Singleton):
         return self._buttleData
 
 
-def _decode_dict(data):
-        """
-            This function will recursively pass in nested dicts, and will convert all unicode elements into string (essencial for some Tuttle functions). 
-        """
-        rv = {}
-        for key, value in data.iteritems():
-            if isinstance(value, unicode):
-               value = str(value)
-            rv[key] = value
-        return rv
+def _decode_dict(dict_):
+    """
+        This function will recursively pass in nested dicts, and will convert all unicode elements into string (essencial for some Tuttle functions). 
+    """
+    for key in dict_:
+        if isinstance(dict_[key], unicode):
+           dict_[key] = str(dict_[key])
+    return dict_

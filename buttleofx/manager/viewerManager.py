@@ -32,7 +32,7 @@ class ViewerManager(QtCore.QObject):
     def setNodeError(self, nodeName):
         """
             Sets the name of the node that can't be displayed.
-            Emit signal which is displayed on the viewer. 
+            Emit signal which is displayed on the viewer.
         """
         self._nodeError = nodeName
         self.nodeErrorChanged.emit()

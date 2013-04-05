@@ -35,7 +35,6 @@ Item {
             newComponent.clickFrom = clickFrom;
             //newComponent.side = menulist.side;
             nodeMenuView.nextMenu = newComponent
-            console.log("createNextMenu", menulist.side)
        }
 
         delegate {

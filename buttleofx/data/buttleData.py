@@ -55,7 +55,7 @@ class ButtleData(QtCore.QObject):
         self._graph = Graph()
         self._graphWrapper = GraphWrapper(self._graph, view)
         self._buttlePath = filePath
-        for index in range(1, 9):
+        for index in range(1, 10):
             self._mapViewerIndextoNodeName[str(index)] = None
 
         return self
@@ -155,6 +155,7 @@ class ButtleData(QtCore.QObject):
 
     def setCurrentViewerNodeName(self, nodeName):
         self._currentViewerNodeName = nodeName
+        self.currentViewerNodeChanged.emit()
 
     def setCurrentCopiedNodesInfo(self, nodesInfo):
         self._currentCopiedNodesInfo = nodesInfo
@@ -241,7 +242,6 @@ class ButtleData(QtCore.QObject):
     @QtCore.Slot(QtCore.QObject)
     def assignNodeToViewerIndex(self, nodeWrapper):
         self._mapViewerIndextoNodeName.update({str(self._currentViewerIndex): nodeWrapper.getName()})
-        print self._mapViewerIndextoNodeName
 
     @QtCore.Slot()
     def clearCurrentSelectedNodeNames(self):
@@ -294,7 +294,10 @@ class ButtleData(QtCore.QObject):
                 "window": {},
                 "graph": {},
                 "paramEditor": {},
-                "viewer": {}
+                "viewer": {
+                    "other_views": {},
+                    "current_view": {}
+                }
             }
 
             # date
@@ -313,7 +316,11 @@ class ButtleData(QtCore.QObject):
             dictJson["paramEditor"] = self.getCurrentParamNodeName()
 
             # viewer : currentViewerNodeName
-            dictJson["viewer"] = self.getCurrentViewerNodeName()
+            for num_view, view in self._mapViewerIndextoNodeName.iteritems():
+                if self.getCurrentViewerNodeName() == view:
+                    dictJson["viewer"]["current_view"][str(num_view)] = view
+                if view is not None and self.getCurrentViewerNodeName() != view:
+                    dictJson["viewer"]["other_views"].update({num_view: view})
 
             # write dictJson in a file
             f.write(unicode(json.dumps(dictJson, sort_keys=True, indent=2, ensure_ascii=False)))
@@ -340,10 +347,14 @@ class ButtleData(QtCore.QObject):
             # paramEditor : currentParamNodeName
             self.setCurrentParamNodeName(decoded["paramEditor"])
             self.currentParamNodeChanged.emit()
+            # viewer : other views
+            for index, view in decoded["viewer"]["other_views"].iteritems():
+                self._mapViewerIndextoNodeName.update({index: view})
             # viewer : currentViewerNodeName
-            self.setCurrentViewerNodeName(decoded["viewer"])
-            self.currentViewerNodeChanged.emit()
-
+            for index, current_view in decoded["viewer"]["current_view"].iteritems():
+                self._mapViewerIndextoNodeName.update({index: current_view})
+                self.setCurrentViewerIndex(int(index))
+                self.setCurrentViewerNodeName(current_view)
         f.closed
 
     ################################################## DATA EXPOSED TO QML ##################################################
@@ -368,7 +379,7 @@ class ButtleData(QtCore.QObject):
     currentConnectionWrapper = QtCore.Property(QtCore.QObject, getCurrentConnectionWrapper, setCurrentConnectionWrapper, notify=currentConnectionWrapperChanged)
 
     currentViewerIndexChanged = QtCore.Signal()
-    currentViewerIndex = QtCore.Property("int", getCurrentViewerIndex, setCurrentViewerIndex, notify=currentViewerIndexChanged)
+    currentViewerIndex = QtCore.Property(int, getCurrentViewerIndex, setCurrentViewerIndex, notify=currentViewerIndexChanged)
 
     # paste possibility
     pastePossibilityChanged = QtCore.Signal()
@@ -382,6 +393,7 @@ class ButtleDataSingleton(Singleton):
 
     def get(self):
         return self._buttleData
+
 
 def _decode_dict(dict_):
     """

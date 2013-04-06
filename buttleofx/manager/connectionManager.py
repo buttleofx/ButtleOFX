@@ -62,6 +62,11 @@ class ConnectionManager(QtCore.QObject):
         mimeData.setText("clip/" + str(clip.getNodeName()) + "/" + str(clip.getClipName()) + "/" + str(clipIndex))
         drag.setMimeData(mimeData)
 
+        # transparent pixmap
+        pixmap = QtGui.QPixmap(1, 1)
+        pixmap.fill(QtCore.Qt.transparent)
+        drag.setPixmap(pixmap)
+
         # starts the drag
         drag.exec_(QtCore.Qt.MoveAction)
 

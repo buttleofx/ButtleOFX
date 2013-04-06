@@ -90,9 +90,14 @@ Rectangle {
 
             // tmpConnection update
             if(hasText && text.substring(0, 5) == "clip/") {
-                connections.tmpConnectionX2 =  pos.x
-                connections.tmpConnectionY2 =  pos.y
-                console.log("newPosition : " + connections.tmpConnectionX2+"," + connections.tmpConnectionY2)
+                if (connections.tmpClipName == "Output") {
+                    connections.tmpConnectionX2 =  pos.x
+                    connections.tmpConnectionY2 =  pos.y
+                }
+                else {
+                    connections.tmpConnectionX1 =  pos.x
+                    connections.tmpConnectionY1 =  pos.y
+                }
             }
         }
 
@@ -139,6 +144,7 @@ Rectangle {
             }
 
             property bool tmpConnectionExists : false
+            property string tmpClipName
             property int tmpConnectionX1
             property int tmpConnectionY1
             property int tmpConnectionX2

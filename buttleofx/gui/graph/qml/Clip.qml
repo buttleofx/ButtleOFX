@@ -44,7 +44,24 @@ Rectangle {
         anchors.margins: -7
         onDragEnter: {
             acceptDrop = hasText && text.substring(0, 5) == "clip/";
+
+            // tmpConnection update
+            if(acceptDrop) {
+                // position of the clip
+                var xClip = _buttleData.graphWrapper.getXClip(c.clipModel.nodeName, c.clipModel.name, index)
+                var yClip = _buttleData.graphWrapper.getYClip(c.clipModel.nodeName, c.clipModel.name, index)
+
+                if (connections.tmpClipName == "Output") {
+                    connections.tmpConnectionX2 =  xClip
+                    connections.tmpConnectionY2 =  yClip
+                }
+                else {
+                    connections.tmpConnectionX1 =  xClip
+                    connections.tmpConnectionY1 =  yClip
+                }
+            }
         }
+
         onDrop: {
             if (acceptDrop) {
                 _buttleManager.connectionManager.connectionDropEvent(text, c.clipModel, index)
@@ -68,6 +85,7 @@ Rectangle {
 
             // display of the tmpConnection with right coordinates
             connections.tmpConnectionExists = true
+            connections.tmpClipName = c.clipModel.name
             connections.tmpConnectionX1 = xClip
             connections.tmpConnectionY1 = yClip
             connections.tmpConnectionX2 = xClip
@@ -86,6 +104,5 @@ Rectangle {
             // Doesn't work because of the drag execution
             onReleased: { connections.tmpConnectionExists = false}
        */
-
     }
 }

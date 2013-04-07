@@ -58,37 +58,6 @@ from PySide import QtCore
 from PySide.QtCore import *
 from PySide.QtGui import *
 
-# class MenuWrapper(QtCore.QObject):
-
-#     # Init the MenuWrapper with the parentName of the menu
-#     def __init__(self, parentName, widget):
-#         #super.__init__(self)
-
-#         self._menu = QMenu()
-#         self._menu.setTitle(parentName)
-
-#         # Add the pluginName
-
-#         for pluginId in ButtleDataSingleton().get().getQObjectPluginsIdentifiersByParentPath(parentName):
-#             print pluginId[0]
-#             self._menu.setTitle(parentName)
-#             submenu = QMenu()
-#             submenu.setTitle(pluginId[0])
-#             self._menu.addMenu(submenu)
-#             #self._menu.addAction(QAction(pluginId[0], self._menu))
-#             plname = parentName + pluginId[0] + "/"
-
-#             for pl in ButtleDataSingleton().get().getQObjectPluginsIdentifiersByParentPath(plname):
-#                 submenu.addAction(QAction(pl[0], submenu))
-
-#             # Creation of the first menu and is parentName
-#             # Creation of the nextMenu and setTitle
-#             # Add it to the preview menu
-#             # Search the name of the awtions
-#             # For each child, add the addAction
-
-#             # ...
-
 
 class ButtleApp(QtGui.QApplication):
     def __init__(self, argv):
@@ -154,7 +123,7 @@ def main(argv):
     helpMenu = MenuWrapper("help", helpElements, view)
 
     #Main menu:
-    addMenu = MenuWrapper("buttle/tuttle/", [], view)
+    addMenu = MenuWrapper("buttle/", [], view)
 
     # expose data to QML
     rc = view.rootContext()

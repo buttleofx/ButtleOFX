@@ -3,46 +3,55 @@ import QtQuick 1.1
 Item {
     id: timelineTools
     anchors.fill: parent
+    //timer comes from Player 
+    property variant timer
 
     function doAction(buttonName) {
         switch (buttonName) {
             case "begin":
-                playingAnimation.stop();
+                //same result as if we push the stop button
+                timer.stop()
+                //playingAnimation.stop();
                 cursorTimeline.x = 0;
                 timeProperties.formerKeyTime = timeProperties.currentTime;
                 break;
 
             case "previous":
-                playingAnimation.stop();
+                timer.previousFrame()
+                //playingAnimation.stop();
                 var xCursorPreviousImage = ((timeProperties.currentTime - 1000/25) * (barTimeline.width - cursorTimeline.width)) / timeProperties.timeDuration; // - 1/25 s
                 cursorTimeline.x =  xCursorPreviousImage > 0 ? xCursorPreviousImage : 0;
                 timeProperties.formerKeyTime = timeProperties.currentTime;
                 break;
 
             case "stop":
-                playingAnimation.stop();
+                timer.stop()
+                //playingAnimation.stop();
                 cursorTimeline.x = 0;
                 timeProperties.formerKeyTime = timeProperties.currentTime;
                 break;
 
             case "pause":
-                playingAnimation.stop();
+                timer.pause()
+                //playingAnimation.stop();
                 timeProperties.formerKeyTime = timeProperties.currentTime;
                 break;
 
             case "play":
-                playingAnimation.start();
+                timer.play()
+                //playingAnimation.start();
                 break;
 
             case "next":
-                playingAnimation.stop();
+                timer.nextFrame()
+                //playingAnimation.stop();
                 var xCursorNextImage = ((timeProperties.currentTime + 1000/25) * (barTimeline.width - cursorTimeline.width)) / timeProperties.timeDuration; // + 1/25 s
                 cursorTimeline.x = xCursorNextImage < timeline.endPosition ? xCursorNextImage : timeline.endPosition;
                 timeProperties.formerKeyTime = timeProperties.currentTime
                 break;
 
             case "end":
-                playingAnimation.stop();
+                //playingAnimation.stop();
                 cursorTimeline.x = timeline.endPosition;
                 timeProperties.formerKeyTime = timeProperties.currentTime;
                 break;
@@ -57,7 +66,7 @@ Item {
         ListElement { buttonName: "previous"; imageSource: "previous.png"; imageSourceLocked: "previous_locked.png"; imageSourceHover: "previous_hover.png"; state: "normal" }
         ListElement { buttonName: "stop"; imageSource: "stop.png"; imageSourceLocked: "stop_locked.png"; imageSourceHover: "stop_hover.png"; state: "normal" }
         ListElement { buttonName: "pause"; imageSource: "pause.png"; imageSourceLocked: "pause_locked.png"; imageSourceHover: "pause_hover.png"; state: "normal" }
-        ListElement {  buttonName: "play"; imageSource: "play.png"; imageSourceLocked: "playlocked.png"; imageSourceHover: "play_hover.png"; state: "normal" }
+        ListElement { buttonName: "play"; imageSource: "play.png"; imageSourceLocked: "playlocked.png"; imageSourceHover: "play_hover.png"; state: "normal" }
         ListElement { buttonName: "next"; imageSource: "next.png"; imageSourceLocked: "next_locked.png"; imageSourceHover: "next_hover.png"; state: "normal" }
         ListElement { buttonName: "end"; imageSource: "end.png"; imageSourceLocked: "end_locked.png"; imageSourceHover: "end_hover.png"; state: "normal" }
     }
@@ -96,6 +105,7 @@ Item {
                                 id: buttonTimelineMousearea
                                 hoverEnabled: true
                                 anchors.fill: parent
+                                anchors.margins: -2 //to allow to push the button easily
                                 onClicked: {
                                     timelineTools.doAction(buttonName)
                                     //take the focus of the mainWindow

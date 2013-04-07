@@ -44,7 +44,7 @@ class GLViewport_tuttleofx(GLViewport):
         buttleEvent.oneParamChangedSignal.disconnect(self.loadImage)
 
     def loadImage_tuttle(self):
-        print "--------------------------------- loadImage_tuttle ---------------------------"
+        #print "--------------------------------- loadImage_tuttle ---------------------------"
         buttleManager = ButtleManagerSingleton().get()
         #imgRes = buttleManager.getViewerManager().computeNode(self._time)
 
@@ -66,7 +66,7 @@ class GLViewport_tuttleofx(GLViewport):
 
         try:
             self.loadImage_tuttle()
-            print('Tuttle img_data:', self.img_data)
+            #print('Tuttle img_data:', self.img_data)
         except:
             print 'Error while loading image file '
             self.img_data = None

@@ -41,15 +41,14 @@ class ViewerManager(QtCore.QObject):
         """
             Computes the node at the frame indicated.
         """
-        print "------- COMPUTE NODE -------"
+        #print "------- COMPUTE NODE -------"
 
         buttleData = ButtleDataSingleton().get()
         #Get the name of the currentNode of the viewer
         node = buttleData.getCurrentViewerNodeName()
         #Get the output where we save the result
         self._tuttleImageCache = tuttle.MemoryCache()
-        #should replace 25 by the fps of the video (a sort of getFPS(node))
-        #should expose the duration of the video to the QML too
+        #compute the image at the frame given in argument
         buttleData.getGraph().getGraphTuttle().compute(self._tuttleImageCache, node, tuttle.ComputeOptions(int(frame)))
 
         self._computedImage = self._tuttleImageCache.get(0)
@@ -77,7 +76,7 @@ class ViewerManager(QtCore.QObject):
                     print "**************************Image already calculated**********************"
                     return buttleData._mapNodeNameToComputedImage[node]
                 # If it is not
-            print "************************Calcul of image***************************"
+            #print "************************Calcul of image***************************"
             return self.computeNode(frame)
         except Exception as e:
             print "Can't display node : " + node

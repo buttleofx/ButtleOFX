@@ -28,23 +28,23 @@ def numpyValueTypeToGlType(valueType):
 
 
 def load_texture(array, width, height):
-    print('loading texture')
-    print('shape:', array.shape)
-    print('array.ndim', array.ndim)
-    print('array.dtype', array.dtype)
+    #print('loading texture')
+    #print('shape:', array.shape)
+    #print('array.ndim', array.ndim)
+    #print('array.dtype', array.dtype)
 
     array_type = numpyValueTypeToGlType(array.dtype)
 
     if array.ndim == 2:
         # linear array of pixels
         size, channels = array.shape
-        print('size:%d, channels:%d' % (size, channels))
+        #print('size:%d, channels:%d' % (size, channels))
         array_channelGL = nbChannelsToGlPixelType(channels)
         return GL.glTexImage2D(GL.GL_TEXTURE_2D, 0, GL.GL_RGBA, width, height, 0, array_channelGL, array_type, array)
     elif array.ndim == 3:
         # 2D array of pixels
         array_height, array_width, channels = array.shape
-        print('width:%d, height:%d, channels:%d' % (width, height, channels))
+        #print('width:%d, height:%d, channels:%d' % (width, height, channels))
         array_channelGL = nbChannelsToGlPixelType(channels)
         return GL.glTexImage2D(GL.GL_TEXTURE_2D, 0, GL.GL_RGBA, array_width, array_height, 0, array_channelGL, array_type, array)
 
@@ -89,12 +89,12 @@ class GLViewport(QtDeclarative.QDeclarativeItem):
         GL.glEnable(GL.GL_LINE_SMOOTH)
 
     def updateTextureFromImage(self):
-        print "updateTextureFromImage begin"
+        #print "updateTextureFromImage begin"
         if self.img_data is not None:
             self.tex = loadTextureFromImage(self._imageBoundsValue, self.img_data)
         else:
             self.tex = None
-        print "updateTextureFromImage end"
+        #print "updateTextureFromImage end"
 
     @QtCore.Slot()
     def fitImage(self):
@@ -196,8 +196,8 @@ class GLViewport(QtDeclarative.QDeclarativeItem):
         GL.glEnd()
 
     def geometryChanged(self, new, old):
-        print "GLViewport.geometryChanged"
-        print "new:", new.x(), new.y(), new.width(), new.height()
+        #print "GLViewport.geometryChanged"
+        #print "new:", new.x(), new.y(), new.width(), new.height()
         #print "old:", old.x(), old.y(), old.width(), old.height()
 
         self._localGeometry = new

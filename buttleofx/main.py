@@ -48,9 +48,46 @@ from buttleofx.event import ButtleEventSingleton
 from buttleofx.data import Finder
 # undo_redo
 from buttleofx.core.undo_redo.manageTools import CommandManager
+# Menu
+from buttleofx.gui.graph.menu import MenuWrapper
 
 # Path of this file
 currentFilePath = os.path.dirname(os.path.abspath(__file__))
+
+from PySide import QtCore
+from PySide.QtCore import *
+from PySide.QtGui import *
+
+# class MenuWrapper(QtCore.QObject):
+
+#     # Init the MenuWrapper with the parentName of the menu
+#     def __init__(self, parentName, widget):
+#         #super.__init__(self)
+
+#         self._menu = QMenu()
+#         self._menu.setTitle(parentName)
+
+#         # Add the pluginName
+
+#         for pluginId in ButtleDataSingleton().get().getQObjectPluginsIdentifiersByParentPath(parentName):
+#             print pluginId[0]
+#             self._menu.setTitle(parentName)
+#             submenu = QMenu()
+#             submenu.setTitle(pluginId[0])
+#             self._menu.addMenu(submenu)
+#             #self._menu.addAction(QAction(pluginId[0], self._menu))
+#             plname = parentName + pluginId[0] + "/"
+
+#             for pl in ButtleDataSingleton().get().getQObjectPluginsIdentifiersByParentPath(plname):
+#                 submenu.addAction(QAction(pl[0], submenu))
+
+#             # Creation of the first menu and is parentName
+#             # Creation of the nextMenu and setTitle
+#             # Add it to the preview menu
+#             # Search the name of the awtions
+#             # For each child, add the addAction
+
+#             # ...
 
 
 class ButtleApp(QtGui.QApplication):
@@ -99,6 +136,23 @@ def main(argv):
     buttleManager = ButtleManagerSingleton().get().init()
     # event
     buttleEvent = ButtleEventSingleton().get()
+    # Menus
+    # Create the file menu
+    fileElements = ["New", "Open", "Save as", "Save", "0", "Import", "Export", "0", "Exit"]
+    fileMenu = MenuWrapper("file", fileElements, view)
+    # Create the edit menu
+    editElements = ["Undo", "Redo", "0", "Copy", "Cut", "Paste", "Delete selection"]
+    editMenu = MenuWrapper("edit", editElements, view)
+
+    # Create the render menu
+    renderElements = ["Render image", "Render animation"]
+    renderMenu = MenuWrapper("render", renderElements, view)
+    # Create the window menu
+    windowElements = ["New viewer", "Parameters editor", "Viewer", "GraphEditor", "Tools"]
+    windowMenu = MenuWrapper("window", windowElements, view)
+    # Create the help menu
+    helpElements = ["Manual", "About ButtleOFX", "0", "About Clement Champetier"]
+    helpMenu = MenuWrapper("help", helpElements, view)
 
     # expose data to QML
     rc = view.rootContext()
@@ -106,6 +160,11 @@ def main(argv):
     rc.setContextProperty("_buttleData", buttleData)
     rc.setContextProperty("_buttleManager", buttleManager)
     rc.setContextProperty("_buttleEvent", buttleEvent)
+    rc.setContextProperty("_fileMenu", fileMenu)
+    rc.setContextProperty("_editMenu", editMenu)
+    rc.setContextProperty("_renderMenu", renderMenu)
+    rc.setContextProperty("_windowMenu", windowMenu)
+    rc.setContextProperty("_helpMenu", helpMenu)
 
     # set the view
     view.setSource(os.path.join(currentFilePath, "MainWindow.qml"))
@@ -113,9 +172,11 @@ def main(argv):
     view.setWindowTitle("ButtleOFX")
     view.setWindowIcon(QtGui.QIcon("blackMosquito.png"))
     view.setWindowIconText("ButtleOFX")
+    view.setVisible(True)
 
     # Declare we are using instant coding tool on this view
     qic = QmlInstantCoding(view, verbose=True)
+
     # Add any source file (.qml and .js by default) in current working directory
     qic.addFilesFromDirectory(os.getcwd(), recursive=True)
 

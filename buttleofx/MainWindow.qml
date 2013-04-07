@@ -105,6 +105,14 @@ Item {
                 text: "Add"
                 y: 11
                 font.pointSize: 10
+
+                MouseArea {
+                    anchors.fill: parent
+                    hoverEnabled: true
+                    onEntered: {
+                        _addMenu.showMenu(parent.x, mainMenu.height)
+                    }
+                }
             }
 
             Text {
@@ -113,7 +121,7 @@ Item {
                 y: 11
                 font.pointSize: 10
 
-                 MouseArea {
+                MouseArea {
                     anchors.fill: parent
                     hoverEnabled: true
                     onEntered: {
@@ -128,7 +136,7 @@ Item {
                 y: 11
                 font.pointSize: 10
 
-                 MouseArea {
+                MouseArea {
                     anchors.fill: parent
                     hoverEnabled: true
                     onEntered: {
@@ -143,7 +151,7 @@ Item {
                 y: 11
                 font.pointSize: 10
 
-                 MouseArea {
+                MouseArea {
                     anchors.fill: parent
                     hoverEnabled: true
                     onEntered: {

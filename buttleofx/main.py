@@ -143,7 +143,6 @@ def main(argv):
     # Create the edit menu
     editElements = ["Undo", "Redo", "0", "Copy", "Cut", "Paste", "Delete selection"]
     editMenu = MenuWrapper("edit", editElements, view)
-
     # Create the render menu
     renderElements = ["Render image", "Render animation"]
     renderMenu = MenuWrapper("render", renderElements, view)
@@ -153,6 +152,9 @@ def main(argv):
     # Create the help menu
     helpElements = ["Manual", "About ButtleOFX", "0", "About Clement Champetier"]
     helpMenu = MenuWrapper("help", helpElements, view)
+
+    #Main menu:
+    addMenu = MenuWrapper("buttle/tuttle/", [], view)
 
     # expose data to QML
     rc = view.rootContext()
@@ -165,6 +167,7 @@ def main(argv):
     rc.setContextProperty("_renderMenu", renderMenu)
     rc.setContextProperty("_windowMenu", windowMenu)
     rc.setContextProperty("_helpMenu", helpMenu)
+    rc.setContextProperty("_addMenu", addMenu)
 
     # set the view
     view.setSource(os.path.join(currentFilePath, "MainWindow.qml"))
@@ -179,6 +182,8 @@ def main(argv):
 
     # Add any source file (.qml and .js by default) in current working directory
     qic.addFilesFromDirectory(os.getcwd(), recursive=True)
+
+    #add._menu.popup(view.mapToGlobal(QtCore.QPoint(0, 0)))
 
     view.show()
     app.exec_()

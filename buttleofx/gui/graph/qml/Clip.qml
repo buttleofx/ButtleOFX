@@ -48,17 +48,16 @@ Rectangle {
             // tmpConnection update
             if(acceptDrop) {
                 // position of the clip
-                var xClip = _buttleData.graphWrapper.getXClip(c.clipModel.nodeName, c.clipModel.name, index)
-                var yClip = _buttleData.graphWrapper.getYClip(c.clipModel.nodeName, c.clipModel.name, index)
+                var posClip = _buttleData.graphWrapper.getPointClip(c.clipModel.nodeName, c.clipModel.name, index)
 
                 if (connections.tmpClipName == "Output") {
-                    connections.tmpConnectionX2 =  xClip
-                    connections.tmpConnectionY2 =  yClip
+                    connections.tmpConnectionX2 =  posClip.x
+                    connections.tmpConnectionY2 =  posClip.y
                 }
                 else {
-                    connections.tmpConnectionX1 =  xClip
-                    connections.tmpConnectionY1 =  yClip
-                }
+                    connections.tmpConnectionX1 =  posClip.x
+                    connections.tmpConnectionY1 =  posClip.y
+//                }
             }
         }
 
@@ -80,16 +79,15 @@ Rectangle {
 
             // tmpConnection :
             // position of the clip
-            var xClip = _buttleData.graphWrapper.getXClip(c.clipModel.nodeName, c.clipModel.name, index)
-            var yClip = _buttleData.graphWrapper.getYClip(c.clipModel.nodeName, c.clipModel.name, index)
+            var posClip = _buttleData.graphWrapper.getPointClip(c.clipModel.nodeName, c.clipModel.name, index)
 
             // display of the tmpConnection with right coordinates
             connections.tmpConnectionExists = true
             connections.tmpClipName = c.clipModel.name
-            connections.tmpConnectionX1 = xClip
-            connections.tmpConnectionY1 = yClip
-            connections.tmpConnectionX2 = xClip
-            connections.tmpConnectionY2 = yClip
+            connections.tmpConnectionX1 = posClip.x
+            connections.tmpConnectionY1 = posClip.y
+            connections.tmpConnectionX2 = posClip.x
+            connections.tmpConnectionY2 = posClip.y
 
 
             // drag execution

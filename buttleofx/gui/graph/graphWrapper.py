@@ -142,14 +142,14 @@ class GraphWrapper(QtCore.QObject):
             yClip = nodeCoord.y() + inputTopMargin + int(clipIndex) * (clipSpacing + clipSize) + clipSize / 2
         return (xClip, yClip)
 
-    @QtCore.Slot(str, str, int, result=int)
-    def getXClip(self, nodeName, clipName, clipIndex):
-        return self.getPositionClip(nodeName, clipName, clipIndex)[0]
-
-    @QtCore.Slot(str, str, int, result=int)
-    def getYClip(self, nodeName, clipName, clipIndex):
-        return self.getPositionClip(nodeName, clipName, clipIndex)[1]
-
+    @QtCore.Slot(str, str, int, result=QtCore.QPointF)
+    def getPointClip(self, nodeName, clipName, clipIndex):
+        """
+            Returns the position of the clip as a QPointF.
+            Usefull in QML to have access to x and y.
+        """
+        pos = self.getPositionClip(nodeName, clipName, clipIndex)
+        return QtCore.QPointF(pos[0], pos[1])
 
     #################### setters ####################
 

@@ -15,6 +15,8 @@ Item {
     }
 
     Keys.onPressed: {
+
+        // Graph toolbar
         if (event.key == Qt.Key_Delete) {
             if(_buttleData.currentConnectionWrapper) {
                 _buttleManager.connectionManager.disconnect(_buttleData.currentConnectionWrapper);
@@ -41,6 +43,9 @@ Item {
         if ((event.key == Qt.Key_X) && (event.modifiers & Qt.ControlModifier)){
             _buttleManager.nodeManager.cutNode()
         }
+
+        // Viewer
+
     }
 
     Rectangle {
@@ -49,27 +54,15 @@ Item {
         height: 32
         color: "#141414"
         Row {
-            spacing: 7
+            spacing: 10
             x: 3
-            Rectangle{
-                height: 24
-                width: 24
-                color: "#222"
-                border.width: 1
-                border.color: "#252525"
-                y: 4
-                Image {
-                    id: mosquito
-                    source: _buttleData.buttlePath + "/gui/img/mosquito/mosquito.png"
-                    x: 2
-                }
+
+            Image {
+                id: mosquito
+                source: _buttleData.buttlePath + "/gui/img/icons/logo_icon.png"
+                y: 5
             }
-            Text {
-                color: "#00b2a1"
-                text: "ButtleOFX"
-                y: 7
-                font.pointSize: 14
-            }
+
             Text {
                 color: "white"
                 text: "File"

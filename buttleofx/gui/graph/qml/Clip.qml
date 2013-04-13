@@ -57,50 +57,51 @@ Rectangle {
                 else {
                     connections.tmpConnectionX1 =  posClip.x
                     connections.tmpConnectionY1 =  posClip.y
-//                }
+                }
+            }
+
+            onDrop: {
+                if (acceptDrop) {
+                    _buttleManager.connectionManager.connectionDropEvent(text, c.clipModel, index)
+                }
             }
         }
 
-        onDrop: {
-            if (acceptDrop) {
-                _buttleManager.connectionManager.connectionDropEvent(text, c.clipModel, index)
+        MouseArea {
+            id: clipMouseArea
+            anchors.fill: parent
+            hoverEnabled: true
+
+            onPressed: {
+                // take the focus of the MainWindow
+                clip.forceActiveFocus()
+
+                // tmpConnection :
+                // position of the clip
+                var posClip = _buttleData.graphWrapper.getPointClip(c.clipModel.nodeName, c.clipModel.name, index)
+
+                // display of the tmpConnection with right coordinates
+                connections.tmpConnectionExists = true
+                connections.tmpClipName = c.clipModel.name
+                connections.tmpConnectionX1 = posClip.x
+                connections.tmpConnectionY1 = posClip.y
+                connections.tmpConnectionX2 = posClip.x
+                connections.tmpConnectionY2 = posClip.y
+
+
+                // drag execution
+                _buttleManager.connectionManager.connectionDragEvent(c.clipModel, index) // we send all information needed to identify the clip : nodename, port and clip number
+
+                // at the end of the drag (i.e. onReleased !), we hide the tmpConnection.
+                connections.tmpConnectionExists = false
             }
+
+
+           /*
+                // Doesn't work because of the drag execution
+                onReleased: { connections.tmpConnectionExists = false}
+           */
         }
     }
 
-    MouseArea {
-        id: clipMouseArea
-        anchors.fill: parent
-        hoverEnabled: true
-
-        onPressed: {
-            // take the focus of the MainWindow
-            clip.forceActiveFocus()
-
-            // tmpConnection :
-            // position of the clip
-            var posClip = _buttleData.graphWrapper.getPointClip(c.clipModel.nodeName, c.clipModel.name, index)
-
-            // display of the tmpConnection with right coordinates
-            connections.tmpConnectionExists = true
-            connections.tmpClipName = c.clipModel.name
-            connections.tmpConnectionX1 = posClip.x
-            connections.tmpConnectionY1 = posClip.y
-            connections.tmpConnectionX2 = posClip.x
-            connections.tmpConnectionY2 = posClip.y
-
-
-            // drag execution
-            _buttleManager.connectionManager.connectionDragEvent(c.clipModel, index) // we send all information needed to identify the clip : nodename, port and clip number
-
-            // at the end of the drag (i.e. onReleased !), we hide the tmpConnection.
-            connections.tmpConnectionExists = false
-        }
-
-
-       /*
-            // Doesn't work because of the drag execution
-            onReleased: { connections.tmpConnectionExists = false}
-       */
-    }
 }

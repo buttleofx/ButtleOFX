@@ -87,6 +87,18 @@ Rectangle {
         acceptDrop: false
         onDragEnter: {
             acceptDrop = hasUrls;
+
+            // tmpConnection update
+            if(hasText && text.substring(0, 5) == "clip/") {
+                if (connections.tmpClipName == "Output") {
+                    connections.tmpConnectionX2 =  pos.x
+                    connections.tmpConnectionY2 =  pos.y
+                }
+                else {
+                    connections.tmpConnectionX1 =  pos.x
+                    connections.tmpConnectionY1 =  pos.y
+                }
+            }
         }
 
         onDrop: {
@@ -94,6 +106,7 @@ Rectangle {
                 _buttleManager.nodeManager.dropFile(firstUrl, pos.x, pos.y)
             }
         }
+
     }
 
     Rectangle {
@@ -128,6 +141,22 @@ Rectangle {
                     x2: model.object.clipInPosX
                     y2: model.object.clipInPosY
                 }
+            }
+
+            property bool tmpConnectionExists : false
+            property string tmpClipName
+            property int tmpConnectionX1
+            property int tmpConnectionY1
+            property int tmpConnectionX2
+            property int tmpConnectionY2
+
+            CanvasConnection {
+                id: tmpCanvasConnection
+                visible: connections.tmpConnectionExists ? 1 : 0
+                x1: connections.tmpConnectionX1
+                y1: connections.tmpConnectionY1
+                x2: connections.tmpConnectionX2
+                y2: connections.tmpConnectionY2
             }
         }
 

@@ -70,6 +70,96 @@ Item {
                 y: 7
                 font.pointSize: 14
             }
+            Text {
+                color: "white"
+                text: "File"
+                y: 11
+                font.pointSize: 10
+
+                MouseArea {
+                    anchors.fill: parent
+                    hoverEnabled: true
+                    onEntered: {
+                        _fileMenu.showMenu(parent.x, mainMenu.height)
+                    }
+                }
+            }
+
+            Text {
+                color: "white"
+                text: "Edit"
+                y: 11
+                font.pointSize: 10
+
+                MouseArea {
+                    anchors.fill: parent
+                    hoverEnabled: true
+                    onEntered: {
+                        _editMenu.showMenu(parent.x, mainMenu.height)
+                    }
+                }
+            }
+
+            Text {
+                color: "white"
+                text: "Add"
+                y: 11
+                font.pointSize: 10
+
+                MouseArea {
+                    anchors.fill: parent
+                    hoverEnabled: true
+                    onEntered: {
+                        _addMenu.showMenu(parent.x, mainMenu.height)
+                    }
+                }
+            }
+
+            Text {
+                color: "white"
+                text: "Render"
+                y: 11
+                font.pointSize: 10
+
+                MouseArea {
+                    anchors.fill: parent
+                    hoverEnabled: true
+                    onEntered: {
+                        _renderMenu.showMenu(parent.x, mainMenu.height)
+                    }
+                }
+            }
+
+            Text {
+                color: "white"
+                text: "Window"
+                y: 11
+                font.pointSize: 10
+
+                MouseArea {
+                    anchors.fill: parent
+                    hoverEnabled: true
+                    onEntered: {
+                        _windowMenu.showMenu(parent.x, mainMenu.height)
+                    }
+                }
+            }
+
+            Text {
+                color: "white"
+                text: "Help"
+                y: 11
+                font.pointSize: 10
+
+                MouseArea {
+                    anchors.fill: parent
+                    hoverEnabled: true
+                    onEntered: {
+                        _helpMenu.showMenu(parent.x, mainMenu.height)
+                    }
+                }
+            }
+
         }
     }
 

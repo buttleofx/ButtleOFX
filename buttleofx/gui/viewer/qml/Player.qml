@@ -9,7 +9,7 @@ Item {
 
     property variant node
 
-    TimerPlayer{
+    TimerPlayer {
         //class Timer defined in python
         //property associated : frame, acces with timer.frame
         id: timer
@@ -31,7 +31,7 @@ Item {
 
 
     // Displays an integer with 2 digits
-    function with2digits(n){
+    function with2digits(n) {
         return n > 9 ? "" + n: "0" + n;
     }
 
@@ -324,9 +324,8 @@ Item {
 */
                     Item {
                         anchors.verticalCenter: tools.verticalCenter
-                        // 320 = approximative width of TimelineTools
-                        x: (barTimeline.width - 320) / 2
-                        //here is the timeline tools
+                        anchors.left: parent.left
+                        anchors.leftMargin: 25
                         TimelineTools {
                             timer: timer
                         }
@@ -337,7 +336,7 @@ Item {
                     // Mosquitos
                    Row {
                         id: selectViewer
-                        spacing: 5
+                        spacing: 2
                         anchors.right: parent.right
                         anchors.rightMargin: parent.height
                         y: 8
@@ -367,8 +366,6 @@ Item {
                             }
                         }
 
-
-                        /*
                         // mosquitos numbers
                         Repeater {
                             id: number
@@ -376,35 +373,30 @@ Item {
 
                             Rectangle {
                                 id: numberElement
-                                width: tools.height - 10
-                                height: tools.height - 10
-                                y: 8
-                                color: "#343434"
+                                width: 28
+                                height: 28
+                                color: _buttleData.currentViewerIndex == index+1 ? "#343434" : "transparent"
                                 radius: 3
-                                state: "unclicked"
 
                                 Text {
                                     text: model.index + 1
                                     color: "white"
-                                    anchors.verticalCenter: parent.verticalCenter
+                                    anchors.top: parent.top
+                                    anchors.topMargin: 6
                                     anchors.left: parent.left
-                                    anchors.leftMargin: 10
-
-                                    //anchors.verticalCenter: parent.verticalCenter
+                                    anchors.leftMargin: 12
                                 }
 
                                  MouseArea {
                                     anchors.fill: parent
                                     onClicked: {
-                                        // from 1 to 9 because the first element of 'selectViewer is the mosquito image !
-                                        for(var i=1; i<10; ++i) {
-                                            selectViewer.children[i].state = "unclicked"
-                                        }
-                                        numberElement.state = "clicked"
+                                        _buttleData.currentViewerIndex = index + 1
+                                        _buttleData.currentViewerNodeWrapper = _buttleData.getNodeWrapperByViewerIndex(index+1)
+                                        _buttleEvent.emitViewerChangedSignal()
                                     }
                                 }
 
-                                states: [
+                                /*states: [
                                     State {
                                         name: "clicked"
                                         PropertyChanges {
@@ -419,10 +411,10 @@ Item {
                                             color: "transparent"
                                         }
                                       }
-                                ]
+                                ]*/
                             }
                         } // Repeater mosquito 
-*/
+
                     } // Row (selectViewer = mosquitos )
 
                 } // Tools Rectangle (zoom, timeline buttons, mosquitos)

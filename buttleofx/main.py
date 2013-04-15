@@ -50,9 +50,15 @@ from buttleofx.data import Finder
 from buttleofx.gui.viewer import TimerPlayer
 # undo_redo
 from buttleofx.core.undo_redo.manageTools import CommandManager
+# Menu
+from buttleofx.gui.graph.menu import MenuWrapper
 
 # Path of this file
 currentFilePath = os.path.dirname(os.path.abspath(__file__))
+
+from PySide import QtCore
+from PySide.QtCore import *
+from PySide.QtGui import *
 
 
 class ButtleApp(QtGui.QApplication):
@@ -103,6 +109,25 @@ def main(argv):
     buttleManager = ButtleManagerSingleton().get().init()
     # event
     buttleEvent = ButtleEventSingleton().get()
+    # Menus
+    # Create the file menu
+    fileElements = ["New", "Open", "Save as", "Save", "0", "Import", "Export", "0", "Exit"]
+    fileMenu = MenuWrapper("file", fileElements, view)
+    # Create the edit menu
+    editElements = ["Undo", "Redo", "0", "Copy", "Cut", "Paste", "Delete selection"]
+    editMenu = MenuWrapper("edit", editElements, view)
+    # Create the render menu
+    renderElements = ["Render image", "Render animation"]
+    renderMenu = MenuWrapper("render", renderElements, view)
+    # Create the window menu
+    windowElements = ["New viewer", "Parameters editor", "Viewer", "GraphEditor", "Tools"]
+    windowMenu = MenuWrapper("window", windowElements, view)
+    # Create the help menu
+    helpElements = ["Manual", "About ButtleOFX", "0", "About Clement Champetier"]
+    helpMenu = MenuWrapper("help", helpElements, view)
+
+    #Main menu:
+    addMenu = MenuWrapper("buttle/", [], view)
 
     # expose data to QML
     rc = view.rootContext()
@@ -110,6 +135,12 @@ def main(argv):
     rc.setContextProperty("_buttleData", buttleData)
     rc.setContextProperty("_buttleManager", buttleManager)
     rc.setContextProperty("_buttleEvent", buttleEvent)
+    rc.setContextProperty("_fileMenu", fileMenu)
+    rc.setContextProperty("_editMenu", editMenu)
+    rc.setContextProperty("_renderMenu", renderMenu)
+    rc.setContextProperty("_windowMenu", windowMenu)
+    rc.setContextProperty("_helpMenu", helpMenu)
+    rc.setContextProperty("_addMenu", addMenu)
 
     # set the view
     view.setSource(os.path.join(currentFilePath, "MainWindow.qml"))
@@ -117,11 +148,15 @@ def main(argv):
     view.setWindowTitle("ButtleOFX")
     view.setWindowIcon(QtGui.QIcon("blackMosquito.png"))
     view.setWindowIconText("ButtleOFX")
+    view.setVisible(True)
 
     # Declare we are using instant coding tool on this view
     qic = QmlInstantCoding(view, verbose=True)
+
     # Add any source file (.qml and .js by default) in current working directory
     qic.addFilesFromDirectory(os.getcwd(), recursive=True)
+
+    #add._menu.popup(view.mapToGlobal(QtCore.QPoint(0, 0)))
 
     view.show()
     app.exec_()

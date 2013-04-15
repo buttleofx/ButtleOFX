@@ -6,9 +6,9 @@ from tuttleOverlayInteract import TuttleOverlayInteract
 from glviewport import GLViewport
 # data
 from buttleofx.data import ButtleDataSingleton
-# manager 
+# manager
 from buttleofx.manager import ButtleManagerSingleton
-# event 
+# event
 from buttleofx.event import ButtleEventSingleton
 
 
@@ -30,7 +30,7 @@ class GLViewport_tuttleofx(GLViewport):
         buttleEvent = ButtleEventSingleton().get()
         # connect : load image when the viewer changed
         buttleEvent.viewerChangedSignal.connect(self.loadImage)
-        # connect : clearMap and load image when one param changed 
+        # connect : clearMap and load image when one param changed
         buttleEvent.oneParamChangedSignal.connect(self.clearMapOfImageAlreadyCalculated)
         buttleEvent.oneParamChangedSignal.connect(self.loadImage)
 
@@ -39,7 +39,7 @@ class GLViewport_tuttleofx(GLViewport):
         buttleEvent = ButtleEventSingleton().get()
         # disconnect : load image when the viewer changed
         buttleEvent.viewerChangedSignal.disconnect(self.loadImage)
-        # disconnect : clearMap and load image when one param changed 
+        # disconnect : clearMap and load image when one param changed
         buttleEvent.oneParamChangedSignal.disconnect(self.clearMapOfImageAlreadyCalculated)
         buttleEvent.oneParamChangedSignal.disconnect(self.loadImage)
 

@@ -13,6 +13,7 @@ Item {
         //class Timer defined in python
         //property associated : frame, acces with timer.frame
         id: timer
+        fps: player.node.fps
     }
 
     QtObject {

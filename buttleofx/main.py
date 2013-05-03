@@ -1,6 +1,7 @@
 import os
 # PySide
 from PySide import QtGui, QtDeclarative, QtOpenGL
+from PySide.QtDeclarative import QDeclarativeEngine, QDeclarativeComponent
 
 # Logging (see console.log)
 import logging
@@ -58,37 +59,6 @@ from PySide import QtCore
 from PySide.QtCore import *
 from PySide.QtGui import *
 
-# class MenuWrapper(QtCore.QObject):
-
-#     # Init the MenuWrapper with the parentName of the menu
-#     def __init__(self, parentName, widget):
-#         #super.__init__(self)
-
-#         self._menu = QMenu()
-#         self._menu.setTitle(parentName)
-
-#         # Add the pluginName
-
-#         for pluginId in ButtleDataSingleton().get().getQObjectPluginsIdentifiersByParentPath(parentName):
-#             print pluginId[0]
-#             self._menu.setTitle(parentName)
-#             submenu = QMenu()
-#             submenu.setTitle(pluginId[0])
-#             self._menu.addMenu(submenu)
-#             #self._menu.addAction(QAction(pluginId[0], self._menu))
-#             plname = parentName + pluginId[0] + "/"
-
-#             for pl in ButtleDataSingleton().get().getQObjectPluginsIdentifiersByParentPath(plname):
-#                 submenu.addAction(QAction(pl[0], submenu))
-
-#             # Creation of the first menu and is parentName
-#             # Creation of the nextMenu and setTitle
-#             # Add it to the preview menu
-#             # Search the name of the awtions
-#             # For each child, add the addAction
-
-#             # ...
-
 
 class ButtleApp(QtGui.QApplication):
     def __init__(self, argv):
@@ -107,83 +77,76 @@ class ButtleApp(QtGui.QApplication):
 
 def main(argv):
 
-    #preload Tuttle
+    # Preload Tuttle
     tuttle.core().preload()
 
+    # Create QApplication
+    app = ButtleApp(argv)
+
+     # Create QDDeclarativeEngine and QDeclarativeComonent
+    engine = QDeclarativeEngine(app)
+    component = QtDeclarative.QDeclarativeComponent(engine, QUrl.fromLocalFile("MainWindow.qml"))
+    myObject = component.create()
+
+
+    # Set context
+    # rc = component.creationContext()
+
+    # # rc.setContextProperty("_buttleApp", app)
+    # # rc.setContextProperty("_buttleData", buttleData)
+    # # rc.setContextProperty("_buttleManager", buttleManager)
+    # # rc.setContextProperty("_buttleEvent", buttleEvent)
+    # myObject = component.beginCreate(rc)
+    #component.completeCreate()
+
     # add new QML type
-    QtDeclarative.qmlRegisterType(Finder, "FolderListViewItem", 1, 0, "FolderListView")
-    if tuttleofx_installed:
-        QtDeclarative.qmlRegisterType(GLViewport_tuttleofx, "Viewport", 1, 0, "GLViewport")
-    else:
-        QtDeclarative.qmlRegisterType(GLViewport_pil, "Viewport", 1, 0, "GLViewport")
+    # QtDeclarativeComponent.qmlRegisterType(Finder, "FolderListViewItem", 1, 0, "FolderListView")
+    # if tuttleofx_installed:
+    #     QtDeclarativeComponent.qmlRegisterType(GLViewport_tuttleofx, "Viewport", 1, 0, "GLViewport")
+    # else:
+    #     QtDeclarativeComponent.qmlRegisterType(GLViewport_pil, "Viewport", 1, 0, "GLViewport")
 
     # init undo_redo contexts
     cmdManager = CommandManager()
     cmdManager.setActive()
     cmdManager.clean()
 
-    # create QApplication
-    app = ButtleApp(argv)
 
+    # Don't have it anymore
     # create the declarative view
-    view = QtDeclarative.QDeclarativeView()
-    view.setViewport(QtOpenGL.QGLWidget())
-    view.setViewportUpdateMode(QtDeclarative.QDeclarativeView.FullViewportUpdate)
+
+    # view = QtDeclarative.QDeclarativeComponent()
+    # view.setViewport(QtOpenGL.QGLWidget())
+    # view.setViewportUpdateMode(QtDeclarative.QDeclarativeViewComponent.FullViewportUpdate)
 
     # data
-    buttleData = ButtleDataSingleton().get().init(view, currentFilePath)
+    buttleData = ButtleDataSingleton().get().init(myObject, currentFilePath)
     # manager
     buttleManager = ButtleManagerSingleton().get().init()
     # event
     buttleEvent = ButtleEventSingleton().get()
-    # Menus
-    # # Create the file menu
-    # fileElements = ["New", "Open", "Save as", "Save", "0", "Import", "Export", "0", "Exit"]
-    # fileMenu = MenuWrapper("file", fileElements, view)
-    # # Create the edit menu
-    # editElements = ["Undo", "Redo", "0", "Copy", "Cut", "Paste", "Delete selection"]
-    # editMenu = MenuWrapper("edit", editElements, view)
-    # # Create the render menu
-    # renderElements = ["Render image", "Render animation"]
-    # renderMenu = MenuWrapper("render", renderElements, view)
-    # # Create the window menu
-    # windowElements = ["New viewer", "Parameters editor", "Viewer", "GraphEditor", "Tools"]
-    # windowMenu = MenuWrapper("window", windowElements, view)
-    # # Create the help menu
-    # helpElements = ["Manual", "About ButtleOFX", "0", "About Clement Champetier"]
-    # helpMenu = MenuWrapper("help", helpElements, view)
-
-    # #Main menu:
-    # addMenu = MenuWrapper("buttle/tuttle/", [], view)
 
     # expose data to QML
-    rc = view.rootContext()
-    rc.setContextProperty("_buttleApp", app)
-    rc.setContextProperty("_buttleData", buttleData)
-    rc.setContextProperty("_buttleManager", buttleManager)
-    rc.setContextProperty("_buttleEvent", buttleEvent)
-    # rc.setContextProperty("_fileMenu", fileMenu)
-    # rc.setContextProperty("_editMenu", editMenu)
-    # rc.setContextProperty("_renderMenu", renderMenu)
-    # rc.setContextProperty("_windowMenu", windowMenu)
-    # rc.setContextProperty("_helpMenu", helpMenu)
-    # rc.setContextProperty("_addMenu", addMenu)
+    # rc = engine.rootContext()
+    # rc.setContextProperty("_buttleApp", app)
+    # rc.setContextProperty("_buttleData", buttleData)
+    # rc.setContextProperty("_buttleManager", buttleManager)
+    # rc.setContextProperty("_buttleEvent", buttleEvent)
+    # # rc.setContextProperty("_fileMenu", fileMenu)
+    # # rc.setContextProperty("_editMenu", editMenu)
+    # # rc.setContextProperty("_renderMenu", renderMenu)
+    # # rc.setContextProperty("_windowMenu", windowMenu)
+    # # rc.setContextProperty("_helpMenu", helpMenu)
+    # # rc.setContextProperty("_addMenu", addMenu)
 
-    # set the view
-    view.setSource(os.path.join(currentFilePath, "MainWindow.qml"))
-    view.setResizeMode(QtDeclarative.QDeclarativeView.SizeRootObjectToView)
-    view.setWindowTitle("ButtleOFX")
-    view.setWindowIcon(QtGui.QIcon("blackMosquito.png"))
-    view.setWindowIconText("ButtleOFX")
-    view.setVisible(True)
 
     # Declare we are using instant coding tool on this view
-    qic = QmlInstantCoding(view, verbose=True)
+    #qic = QmlInstantCoding(engine, verbose=True)
 
     # Add any source file (.qml and .js by default) in current working directory
-    qic.addFilesFromDirectory(os.getcwd(), recursive=True)
+    #qic.addFilesFromDirectory(os.getcwd(), recursive=True)
 
     #add._menu.popup(view.mapToGlobal(QtCore.QPoint(0, 0)))
 
-    view.show()
+    #engine.show()
     app.exec_()

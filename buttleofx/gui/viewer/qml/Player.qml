@@ -14,6 +14,7 @@ Item {
         //property associated : frame, acces with timer.frame
         id: timer
         fps: player.node.fps
+        nbFrames: player.node.nbFrames
     }
 
     QtObject {

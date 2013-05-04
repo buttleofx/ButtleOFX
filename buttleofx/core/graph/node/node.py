@@ -144,10 +144,6 @@ class Node(object):
         self._color = (r, g, b)
         self.nodeLookChanged()
 
-    def setColor(self, color):
-        self._color = color
-        self.nodeLookChanged()
-
     def setClips(self, clips):
         self._clips = clips
 

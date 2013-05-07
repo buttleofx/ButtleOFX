@@ -1,14 +1,16 @@
 from PySide import QtCore
 # tuttle
 from pyTuttle import tuttle
+#logging for doing prints in a file
+import logging
 # for the viewer
 from tuttleOverlayInteract import TuttleOverlayInteract
 from glviewport import GLViewport
 # data
 from buttleofx.data import ButtleDataSingleton
-# manager 
+# manager
 from buttleofx.manager import ButtleManagerSingleton
-# event 
+# event
 from buttleofx.event import ButtleEventSingleton
 
 
@@ -47,10 +49,10 @@ class GLViewport_tuttleofx(GLViewport):
         #print "--------------------------------- loadImage_tuttle ---------------------------"
         buttleManager = ButtleManagerSingleton().get()
         #imgRes = buttleManager.getViewerManager().computeNode(self._time)
-
+        logging.debug("retrieveImage start")
         imgRes = buttleManager.getViewerManager().retrieveImage(self._frame, self._frameHasChanged)
+        logging.debug("retrieveImage end")
         self._frameHasChanged = False
-
         self.img_data = imgRes.getNumpyArray()
 
         bounds = imgRes.getBounds()
@@ -95,9 +97,9 @@ class GLViewport_tuttleofx(GLViewport):
     def setTime(self, currentTime):
         self._timeHasChanged = True
         self._time = currentTime
-        self.update()
-        self.timeChanged.emit()
         self.loadImage()
+        self.timeChanged.emit()
+        self.update()
 
     timeChanged = QtCore.Signal()
     time = QtCore.Property(float, getTime, setTime, notify=timeChanged)
@@ -109,9 +111,9 @@ class GLViewport_tuttleofx(GLViewport):
     def setFrame(self, currentFrame):
         self._frameHasChanged = True
         self._frame = currentFrame
-        self.update()
-        self.frameChanged.emit()
         self.loadImage()
+        self.frameChanged.emit()
+        self.update()
 
     frameChanged = QtCore.Signal()
     frame = QtCore.Property(int, getFrame, setFrame, notify=frameChanged)

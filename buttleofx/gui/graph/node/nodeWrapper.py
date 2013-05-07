@@ -141,7 +141,7 @@ class NodeWrapper(QtCore.QObject):
             self.setFpsError(str(e))
             return 1
             raise
-        framerate = node.getFrameRate()
+        framerate = node.getOutputFrameRate()
         #if (framerate == None):
         #    framerate = 1
         print "framerate: ", framerate

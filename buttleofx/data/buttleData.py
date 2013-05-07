@@ -48,6 +48,10 @@ class ButtleData(QtCore.QObject):
 
     # for the viewer
     _mapNodeNameToComputedImage = {}
+        # boolean used in viewerManager
+    _videoIsPlaying = False
+        # processGraph used in viewerManager to compute images
+    _processGraph = None
 
     # signals
     paramChangedSignal = Signal()
@@ -133,6 +137,13 @@ class ButtleData(QtCore.QObject):
         """
         return self._mapNodeNameToComputedImage
 
+    def getVideoIsPlaying(self):
+        return self._videoIsPlaying
+
+    def getProcessGraph(self):
+        return self._processGraph
+
+
     #################### setters ####################
 
     ### current data ###
@@ -196,6 +207,12 @@ class ButtleData(QtCore.QObject):
         else:
             self._currentConnectionId = connectionWrapper.getId()
         self.currentConnectionWrapperChanged.emit()
+
+    def setVideoIsPlaying(self, valueBool):
+        self._videoIsPlaying = valueBool
+
+    def setProcessGraph(self, processGraph):
+        self._processGraph = processGraph
 
     ############################################### ADDITIONAL FUNCTIONS ##################################################
 

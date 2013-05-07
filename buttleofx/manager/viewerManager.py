@@ -17,6 +17,7 @@ class ViewerManager(QtCore.QObject):
 
         self._tuttleImageCache = None
         self._computedImage = None
+        self._videoIsPlaying = False
 
         # for the viewer : name of the hypothetical node that can't be displayed.
         self._nodeError = ""
@@ -48,11 +49,23 @@ class ViewerManager(QtCore.QObject):
         node = buttleData.getCurrentViewerNodeName()
         #Get the output where we save the result
         self._tuttleImageCache = tuttle.MemoryCache()
-        #compute the image at the frame given in argument
-        buttleData.getGraph().getGraphTuttle().compute(self._tuttleImageCache, node, tuttle.ComputeOptions(int(frame)))
+
+        if buttleData.getVideoIsPlaying() is True:
+
+            # initialization of the process graph
+            graph = buttleData.getGraph().getGraphTuttle()
+            processOptions = tuttle.ComputeOptions()
+            processGraph = tuttle.ProcessGraph(processOptions, graph, [])
+            processGraph.setup()
+            timeRange = tuttle.TimeRange(0, 500, 1)
+            processGraph.beginSequence(timeRange)
+            processGraph.setupAtTime(frame)
+            processGraph.processAtTime(self._tuttleImageCache, frame)
+        else:
+            #compute the image at the frame given in argument
+            buttleData.getGraph().getGraphTuttle().compute(self._tuttleImageCache, node, tuttle.ComputeOptions(int(frame)))
 
         self._computedImage = self._tuttleImageCache.get(0)
-
         #Add the computedImage to the map
         buttleData._mapNodeNameToComputedImage.update({node: self._computedImage})
 

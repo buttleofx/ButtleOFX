@@ -25,13 +25,24 @@ class TimerPlayer(QtDeclarative.QDeclarativeItem):
     # fonctions used in QML for the Viewer (in the file TimelineTools.qml)
     @QtCore.Slot()
     def play(self):
+        print "--------------playing-------------"
         buttleData = ButtleDataSingleton().get()
         # we say the video is playing (used in viewerManager.py)
         buttleData.setVideoIsPlaying(True)
+        timeRange = tuttle.TimeRange(int(self._frame), int(self._nbFrames), 1)
+        # we specify the timeRange (used in viewerManager.py)
+        buttleData.setTimeRange(timeRange)
+        #launch the timer
+        self._timer.start(self._speed)
+
         # initialization of the process graph
         # graph = buttleData.getGraph().getGraphTuttle()
         # processOptions = tuttle.ComputeOptions()
-        # self._processGraph = tuttle.ProcessGraph(processOptions, graph, [])
+        # processGraph = tuttle.ProcessGraph(processOptions, graph, [])
+        # buttleData.setProcessGraph(processGraph)
+
+        #print "-----------setup processGraph--------"
+        #buttleData.processGraphSetUp()
 
         # print "--------------playing-------------"
         # print "-----------setup processGraph--------"
@@ -45,56 +56,60 @@ class TimerPlayer(QtDeclarative.QDeclarativeItem):
         # # send to ButtleData to communicate with viewerManager
         # buttleData.setProcessGraph(self._processGraph)
 
-        #launch the timer
-        self._timer.start(self._speed)
-
     @QtCore.Slot()
     def pause(self):
         self._timer.stop()
-
-        print "endSequence"
-        self._processGraph.endSequence()
-        self._processGraph = None
-
         buttleData = ButtleDataSingleton().get()
         buttleData.setVideoIsPlaying(False)
-        #MAYBE CAUSE PROBLEM
-        buttleData.setProcessGraph(None)
+
+        # print "endSequence"
+        # self._processGraph.endSequence()
+        # self._processGraph = None
+        #buttleData.setProcessGraph(None)
 
     @QtCore.Slot()
     def stop(self):
         self._timer.stop()
-
-        print "endSequence"
-        self._processGraph.endSequence()
-        self._processGraph = None
-
         buttleData = ButtleDataSingleton().get()
-
         buttleData.setVideoIsPlaying(False)
-        #MAYBE CAUSE PROBLEM
-        buttleData.setProcessGraph(None)
-
         self._frame = 0
+        self.framePlayerChanged.emit()
+
+        # print "endSequence"
+        # self._processGraph.endSequence()
+        # self._processGraph = None
+        #buttleData.setProcessGraph(None)
 
     @QtCore.Slot()
     def nextFrame(self):
-        self._frame = self._frame + 1
+        if(self._frame < self._nbFrames - 1):
+            self._frame = self._frame + 1
+        else:
+            return
         # debug
         # print self._frame
         # print "self._fps :", self._fps
         self.framePlayerChanged.emit()
 
-    # @QtCore.Slot()
-    # def previousFrame(self):
-    #     self._frame = self._frame - 1
-    #     self.framePlayerChanged.emit()
+    @QtCore.Slot()
+    def previousFrame(self):
+        if(self._frame > 0):
+            self._frame = self._frame - 1
+        else:
+            return
+        self.framePlayerChanged.emit()
 
     def getFrame(self):
         return self._frame
 
     def setFrame(self, frame):
-        self._frame = frame
+        if(int(frame) < self._nbFrames):
+            self._frame = int(frame)
+            print "hohohohoho"
+            print self._frame
+        else:
+            print 'alala'
+            return
         self.framePlayerChanged.emit()
 
     def getFPS(self):

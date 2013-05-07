@@ -52,6 +52,7 @@ class ButtleData(QtCore.QObject):
     _videoIsPlaying = False
         # processGraph used in viewerManager to compute images
     _processGraph = None
+    _timeRange = None
 
     # signals
     paramChangedSignal = Signal()
@@ -137,12 +138,6 @@ class ButtleData(QtCore.QObject):
         """
         return self._mapNodeNameToComputedImage
 
-    def getVideoIsPlaying(self):
-        return self._videoIsPlaying
-
-    def getProcessGraph(self):
-        return self._processGraph
-
 
     #################### setters ####################
 
@@ -208,11 +203,30 @@ class ButtleData(QtCore.QObject):
             self._currentConnectionId = connectionWrapper.getId()
         self.currentConnectionWrapperChanged.emit()
 
+    ############################################### VIDEO FONCTIONS ##################################################
+    def getVideoIsPlaying(self):
+        return self._videoIsPlaying
+
+    def getProcessGraph(self):
+        return self._processGraph
+
     def setVideoIsPlaying(self, valueBool):
         self._videoIsPlaying = valueBool
 
     def setProcessGraph(self, processGraph):
         self._processGraph = processGraph
+
+    def processGraphSetUp(self):
+        self._processGraph.setup()
+
+    def processGraphBeginSequence(self, timeRange):
+        self._processGraph.beginSequence(timeRange)
+
+    def setTimeRange(self, timeRange):
+        self._timeRange = timeRange
+
+    def getTimeRange(self):
+        return self._timeRange
 
     ############################################### ADDITIONAL FUNCTIONS ##################################################
 

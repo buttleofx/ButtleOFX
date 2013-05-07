@@ -7,14 +7,18 @@ Item {
     implicitWidth: 950
     implicitHeight: 400
 
+    // remark : in python if there are ten frames, they are numbered from 0 to 9 so we need some time to add 1 for display
     property variant node
+    property real nodeFps : node ? node.fps :  25
+    property int nodeNbFrames: node ? node.nbFrames : 1
+    property real nodeDurationSeconds: node ? node.nbFrames/node.fps : 0
 
     TimerPlayer{
         //class Timer defined in python
         //property associated : frame, acces with timer.frame
         id: timer
-        fps: player.node.fps
-        nbFrames: player.node.nbFrames
+        fps: nodeFps 
+        nbFrames: nodeNbFrames//player.node.nbFrames
     }
 
     QtObject {
@@ -39,11 +43,11 @@ Item {
 
     // Returns the string displayed under the viewer. It's the current time.
     function getTimePosition() {
-        var totalSeconds = Math.floor(timeProperties.timeDuration / 1000)
+        var totalSeconds = Math.floor(player.nodeDurationSeconds)
         var totalMinutes = Math.floor(totalSeconds / 60)
         var totalHours = Math.floor(totalMinutes / 60)
 
-        var elapsedSeconds = Math.floor(timeProperties.currentTime / 1000)
+        var elapsedSeconds = Math.floor( (timer.frame + 1) * nodeDurationSeconds / nodeNbFrames)
         var elapsedMinutes = Math.floor(totalSeconds / 60)
         var elapsedHours = Math.floor(totalMinutes / 60)
 
@@ -126,9 +130,9 @@ Item {
                         //here we send the frame the viewer has to display
                         frameViewer: timer.frame
                         // we moove the cursor of the timeline when the frame is changed
-                        onFrameViewerChanged: {
-                            cursorTimeline.x = timer.frame * (barTimeline.width - cursorTimeline.width) / timeProperties.nbFrames
-                        }
+                        /*onFrameViewerChanged: {
+                            cursorTimeline.x = timer.frame * (barTimeline.width - cursorTimeline.width/2) / timeProperties.nbFrames
+                        }*/
                         //time: timeProperties.currentTime
                         //fps: timeProperties.fps
                         clip: true
@@ -331,6 +335,7 @@ Item {
                         //here is the timeline tools
                         TimelineTools {
                             timer: timer
+                            nbFrames: player.nodeNbFrames
                         }
                     }
 
@@ -435,7 +440,7 @@ Item {
                 id: timeline
                 width: parent.width
                 implicitHeight: 10
-                property double endPosition : barTimeline.x + barTimeline.width - cursorTimeline.width
+                property double endPosition : barTimeline.x + barTimeline.width - cursorTimeline.width/2
 
                 // Playing animation
                 /*NumberAnimation {
@@ -461,13 +466,13 @@ Item {
                         Rectangle{
                             id: whiteBar
                             x: barTimeline.x
-                            width: cursorTimeline.x - barTimeline.x
+                            width: cursorTimeline.x - barTimeline.x + cursorTimeline.width/2 
                             height: parent.height
                             color: "white"
                         }
                         Rectangle{
                             id: greyBar
-                            x: barTimeline.x + cursorTimeline.x
+                            x: barTimeline.x + cursorTimeline.x + cursorTimeline.width/2
                             width: barTimeline.width - whiteBar.width
                             height: parent.height
                             color: "grey"
@@ -476,11 +481,11 @@ Item {
                             anchors.fill : parent
                             anchors.margins: -10
                             onPressed : {
-                                cursorTimeline.x = mouse.x
-                                barTimeline.forceActiveFocus()
+                                // -10 because of margins
+                                cursorTimeline.x = mouse.x - 10 - cursorTimeline.width/2
+                                timer.frame = (cursorTimeline.x + cursorTimeline.width/2) * timeProperties.nbFrames /barTimeline.width;
                             }
                             onReleased : {
-                                timeProperties.formerKeyTime = timeProperties.currentTime
                             }
                         }
                         /*onWidthChanged: {
@@ -492,7 +497,7 @@ Item {
                     Rectangle {
                         id: cursorTimeline
                         anchors.verticalCenter: parent.verticalCenter
-                        x: timer.frame * (barTimeline.width - cursorTimeline.width) / timeProperties.nbFrames
+                        x: timer.frame * (barTimeline.width - cursorTimeline.width/2) / timeProperties.nbFrames
                         height: 10
                         width: 5
                         radius: 1
@@ -509,14 +514,12 @@ Item {
                             drag.minimumX: barTimeline.x
                             drag.maximumX: timeline.endPosition
                             anchors.margins: -10 // allow to have an area around the cursor which allows to select the cursor even if we are not exactly on it
-                           /* onPressed: {
-                                playingAnimation.stop();
-                                cursorTimeline.forceActiveFocus()
+                            onPressed: {
+                                timer.pause()
                             }
                             onReleased: {
-                                //timer.frame = (cursorTimeline.x * timeProperties.nbFrames) / (barTimeline.width - cursorTimeline.width);
-                                timeProperties.formerKeyTime = timeProperties.currentTime
-                            }*/
+                                timer.frame = (cursorTimeline.x + cursorTimeline.width/2) * timeProperties.nbFrames / barTimeline.width;
+                            }
                         }
                     }
                 }

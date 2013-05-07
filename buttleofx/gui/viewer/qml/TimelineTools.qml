@@ -5,6 +5,7 @@ Item {
     anchors.fill: parent
     //timer comes from Player 
     property variant timer
+    property int nbFrames
 
     function doAction(buttonName) {
         switch (buttonName) {
@@ -12,29 +13,29 @@ Item {
                 //same result as if we push the stop button
                 timer.stop()
                 //playingAnimation.stop();
-                cursorTimeline.x = 0;
-                timeProperties.formerKeyTime = timeProperties.currentTime;
+                //cursorTimeline.x = 0;
+                //timeProperties.formerKeyTime = timeProperties.currentTime;
                 break;
 
             case "previous":
                 timer.previousFrame()
                 //playingAnimation.stop();
-                var xCursorPreviousImage = ((timeProperties.currentTime - 1000/25) * (barTimeline.width - cursorTimeline.width)) / timeProperties.timeDuration; // - 1/25 s
-                cursorTimeline.x =  xCursorPreviousImage > 0 ? xCursorPreviousImage : 0;
-                timeProperties.formerKeyTime = timeProperties.currentTime;
+                //var xCursorPreviousImage = ((timeProperties.currentTime - 1000/25) * (barTimeline.width - cursorTimeline.width)) / timeProperties.timeDuration; // - 1/25 s
+                //cursorTimeline.x =  xCursorPreviousImage > 0 ? xCursorPreviousImage : 0;
+                //timeProperties.formerKeyTime = timeProperties.currentTime;
                 break;
 
             case "stop":
                 timer.stop()
                 //playingAnimation.stop();
-                cursorTimeline.x = 0;
-                timeProperties.formerKeyTime = timeProperties.currentTime;
+                //cursorTimeline.x = 0;
+                //timeProperties.formerKeyTime = timeProperties.currentTime;
                 break;
 
             case "pause":
                 timer.pause()
                 //playingAnimation.stop();
-                timeProperties.formerKeyTime = timeProperties.currentTime;
+                //timeProperties.formerKeyTime = timeProperties.currentTime;
                 break;
 
             case "play":
@@ -45,15 +46,16 @@ Item {
             case "next":
                 timer.nextFrame()
                 //playingAnimation.stop();
-                var xCursorNextImage = ((timeProperties.currentTime + 1000/25) * (barTimeline.width - cursorTimeline.width)) / timeProperties.timeDuration; // + 1/25 s
-                cursorTimeline.x = xCursorNextImage < timeline.endPosition ? xCursorNextImage : timeline.endPosition;
-                timeProperties.formerKeyTime = timeProperties.currentTime
+                //var xCursorNextImage = ((timeProperties.currentTime + 1000/25) * (barTimeline.width - cursorTimeline.width)) / timeProperties.timeDuration; // + 1/25 s
+                //cursorTimeline.x = xCursorNextImage < timeline.endPosition ? xCursorNextImage : timeline.endPosition;
+                //timeProperties.formerKeyTime = timeProperties.currentTime
                 break;
 
             case "end":
+                timer.frame = nbFrames - 1
                 //playingAnimation.stop();
-                cursorTimeline.x = timeline.endPosition;
-                timeProperties.formerKeyTime = timeProperties.currentTime;
+                //cursorTimeline.x = timeline.endPosition;
+                //timeProperties.formerKeyTime = timeProperties.currentTime;
                 break;
             default:
                 break;

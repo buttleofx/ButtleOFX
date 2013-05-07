@@ -49,19 +49,22 @@ class ViewerManager(QtCore.QObject):
         node = buttleData.getCurrentViewerNodeName()
         #Get the output where we save the result
         self._tuttleImageCache = tuttle.MemoryCache()
+        graph = buttleData.getGraph().getGraphTuttle()
+        processOptions = tuttle.ComputeOptions()
+        processGraph = tuttle.ProcessGraph(processOptions, graph, [])
 
         if buttleData.getVideoIsPlaying() is True:
-
-            # initialization of the process graph
-            graph = buttleData.getGraph().getGraphTuttle()
-            processOptions = tuttle.ComputeOptions()
-            processGraph = tuttle.ProcessGraph(processOptions, graph, [])
             processGraph.setup()
-            timeRange = tuttle.TimeRange(0, 500, 1)
-            processGraph.beginSequence(timeRange)
+            #timeRange = tuttle.TimeRange(0, 125, 1)
+            processGraph.beginSequence(buttleData.getTimeRange())
             processGraph.setupAtTime(frame)
             processGraph.processAtTime(self._tuttleImageCache, frame)
         else:
+            # if the video is not longer playing we need to close the process
+            if processGraph.process(self._tuttleImageCache) is True:
+                processGraph.endSequence()
+                print "endSequence"
+                processGraph = None  # useless ?
             #compute the image at the frame given in argument
             buttleData.getGraph().getGraphTuttle().compute(self._tuttleImageCache, node, tuttle.ComputeOptions(int(frame)))
 

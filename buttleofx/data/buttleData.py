@@ -50,6 +50,11 @@ class ButtleData(QtCore.QObject):
     _currentViewerIndex = 1
     _mapViewerIndextoNodeName = {}
     _mapNodeNameToComputedImage = {}
+        # boolean used in viewerManager
+    _videoIsPlaying = False
+        # processGraph used in viewerManager to compute images
+    _processGraph = None
+    _timeRange = None
 
     def init(self, view, filePath):
         self._graph = Graph()
@@ -143,6 +148,7 @@ class ButtleData(QtCore.QObject):
         """
         return self._mapNodeNameToComputedImage
 
+
     #################### setters ####################
 
     ### current data ###
@@ -207,6 +213,31 @@ class ButtleData(QtCore.QObject):
         else:
             self._currentConnectionId = connectionWrapper.getId()
         self.currentConnectionWrapperChanged.emit()
+
+    ############################################### VIDEO FONCTIONS ##################################################
+    def getVideoIsPlaying(self):
+        return self._videoIsPlaying
+
+    def getProcessGraph(self):
+        return self._processGraph
+
+    def setVideoIsPlaying(self, valueBool):
+        self._videoIsPlaying = valueBool
+
+    def setProcessGraph(self, processGraph):
+        self._processGraph = processGraph
+
+    def processGraphSetUp(self):
+        self._processGraph.setup()
+
+    def processGraphBeginSequence(self, timeRange):
+        self._processGraph.beginSequence(timeRange)
+
+    def setTimeRange(self, timeRange):
+        self._timeRange = timeRange
+
+    def getTimeRange(self):
+        return self._timeRange
 
     ############################################### ADDITIONAL FUNCTIONS ##################################################
 

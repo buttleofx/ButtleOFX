@@ -103,13 +103,11 @@ class TimerPlayer(QtDeclarative.QDeclarativeItem):
         return self._frame
 
     def setFrame(self, frame):
-        if(int(frame) < self._nbFrames):
-            self._frame = int(frame)
-            print "hohohohoho"
-            print self._frame
-        else:
-            print 'alala'
+        if(int(frame) >= self._nbFrames):
+            print 'setFrame, ignore: frame outside bounds'
             return
+        self._frame = int(frame)
+        print "setFrame: ", self._frame
         self.framePlayerChanged.emit()
 
     def getFPS(self):

@@ -50,23 +50,25 @@ class ViewerManager(QtCore.QObject):
         #Get the output where we save the result
         self._tuttleImageCache = tuttle.MemoryCache()
         graph = buttleData.getGraph().getGraphTuttle()
-        processOptions = tuttle.ComputeOptions()
-        processGraph = tuttle.ProcessGraph(processOptions, graph, [])
+        processOptions = tuttle.ComputeOptions(int(frame))
+        print 'node:', node
+        processGraph = tuttle.ProcessGraph(processOptions, graph, [node])
 
-        if buttleData.getVideoIsPlaying() is True:
-            processGraph.setup()
-            #timeRange = tuttle.TimeRange(0, 125, 1)
-            processGraph.beginSequence(buttleData.getTimeRange())
-            processGraph.setupAtTime(frame)
-            processGraph.processAtTime(self._tuttleImageCache, frame)
-        else:
-            # if the video is not longer playing we need to close the process
-            if processGraph.process(self._tuttleImageCache) is True:
-                processGraph.endSequence()
-                print "endSequence"
-                processGraph = None  # useless ?
-            #compute the image at the frame given in argument
-            buttleData.getGraph().getGraphTuttle().compute(self._tuttleImageCache, node, tuttle.ComputeOptions(int(frame)))
+        #if buttleData.getVideoIsPlaying():
+        processGraph.setup()
+        timeRange = tuttle.TimeRange(frame, frame, 1)  # buttleData.getTimeRange()
+        processGraph.beginSequence(timeRange)
+        processGraph.setupAtTime(frame)
+        processGraph.processAtTime(self._tuttleImageCache, frame)
+        processGraph.endSequence()
+        #else:
+        # if the video is not longer playing we need to close the process
+        #if processGraph.process(self._tuttleImageCache):
+        #    processGraph.endSequence()
+        #    print "endSequence"
+        #    processGraph = None  # useless ?
+        #compute the image at the frame given in argument
+        #buttleData.getGraph().getGraphTuttle().compute(self._tuttleImageCache, node, processOptions)
 
         self._computedImage = self._tuttleImageCache.get(0)
         #Add the computedImage to the map

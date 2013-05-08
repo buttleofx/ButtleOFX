@@ -45,30 +45,27 @@ class ViewerManager(QtCore.QObject):
         #print "------- COMPUTE NODE -------"
 
         buttleData = ButtleDataSingleton().get()
-        #Get the name of the currentNode of the viewer
+        # Get the name of the currentNode of the viewer
         node = buttleData.getCurrentViewerNodeName()
+        graph = buttleData.getGraph().getGraphTuttle()
+
         #Get the output where we save the result
         self._tuttleImageCache = tuttle.MemoryCache()
-        graph = buttleData.getGraph().getGraphTuttle()
-        processOptions = tuttle.ComputeOptions(int(frame))
-        print 'node:', node
-        processGraph = tuttle.ProcessGraph(processOptions, graph, [node])
 
-        #if buttleData.getVideoIsPlaying():
-        processGraph.setup()
-        timeRange = tuttle.TimeRange(frame, frame, 1)  # buttleData.getTimeRange()
-        processGraph.beginSequence(timeRange)
-        processGraph.setupAtTime(frame)
-        processGraph.processAtTime(self._tuttleImageCache, frame)
-        processGraph.endSequence()
-        #else:
-        # if the video is not longer playing we need to close the process
-        #if processGraph.process(self._tuttleImageCache):
-        #    processGraph.endSequence()
-        #    print "endSequence"
-        #    processGraph = None  # useless ?
-        #compute the image at the frame given in argument
-        #buttleData.getGraph().getGraphTuttle().compute(self._tuttleImageCache, node, processOptions)
+        if buttleData.getVideoIsPlaying() is True:  # if a video is playing
+            processGraph = buttleData.getProcessGraph()
+            processGraph.setupAtTime(frame)
+            processGraph.processAtTime(self._tuttleImageCache, frame)
+            print " cache empty ? : ", self._tuttleImageCache.empty()
+        else:  # if it's an image only
+            processOptions = tuttle.ComputeOptions(int(frame))
+            processGraph = tuttle.ProcessGraph(processOptions, graph, [node])
+            processGraph.setup()
+            timeRange = tuttle.TimeRange(frame, frame, 1)  # buttleData.getTimeRange()
+            processGraph.beginSequence(timeRange)
+            processGraph.setupAtTime(frame)
+            processGraph.processAtTime(self._tuttleImageCache, frame)
+            processGraph.endSequence()
 
         self._computedImage = self._tuttleImageCache.get(0)
         #Add the computedImage to the map

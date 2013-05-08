@@ -26,59 +26,46 @@ class TimerPlayer(QtDeclarative.QDeclarativeItem):
     @QtCore.Slot()
     def play(self):
         print "--------------playing-------------"
+
         buttleData = ButtleDataSingleton().get()
-        # we say the video is playing (used in viewerManager.py)
+        #Get the name of the currentNode of the viewer
+        node = buttleData.getCurrentViewerNodeName()
+        # initialization of the process graph
+        graph = buttleData.getGraph().getGraphTuttle()
+        processOptions = tuttle.ComputeOptions()
+        processGraph = tuttle.ProcessGraph(processOptions, graph, [node])
+        processGraph.setup()
+        # timeRange between the frames of beginning and end (first frame, last frame, step)
+        timeRange = tuttle.TimeRange(self._frame, self._nbFrames, 1)
+        processGraph.beginSequence(timeRange)
+        # communicate processGraph to buttleData
+        buttleData.setProcessGraph(processGraph)
+
         buttleData.setVideoIsPlaying(True)
-        timeRange = tuttle.TimeRange(int(self._frame), int(self._nbFrames), 1)
-        # we specify the timeRange (used in viewerManager.py)
-        buttleData.setTimeRange(timeRange)
-        #launch the timer
+
         self._timer.start(self._speed)
 
-        # initialization of the process graph
-        # graph = buttleData.getGraph().getGraphTuttle()
-        # processOptions = tuttle.ComputeOptions()
-        # processGraph = tuttle.ProcessGraph(processOptions, graph, [])
-        # buttleData.setProcessGraph(processGraph)
-
-        #print "-----------setup processGraph--------"
-        #buttleData.processGraphSetUp()
-
-        # print "--------------playing-------------"
-        # print "-----------setup processGraph--------"
-        # self._processGraph.setup()
-
-        # # timeRange between the frames of beginning and end (first frame, last frame, step)
-        # timeRange = tuttle.TimeRange(0, 500, 1)  # self._frame, self._nbFrames
-        # print "---------begin Sequence--------"
-        # self._processGraph.beginSequence(timeRange)
-
-        # # send to ButtleData to communicate with viewerManager
-        # buttleData.setProcessGraph(self._processGraph)
 
     @QtCore.Slot()
     def pause(self):
         self._timer.stop()
         buttleData = ButtleDataSingleton().get()
         buttleData.setVideoIsPlaying(False)
-
-        # print "endSequence"
-        # self._processGraph.endSequence()
-        # self._processGraph = None
-        #buttleData.setProcessGraph(None)
+        # close processGraph and delete it
+        buttleData.getProcessGraph.endSequence()
+        buttleData.setProcessGraph(None)
 
     @QtCore.Slot()
     def stop(self):
         self._timer.stop()
         buttleData = ButtleDataSingleton().get()
         buttleData.setVideoIsPlaying(False)
+        # close processGraph and delete it
+        buttleData.getProcessGraph.endSequence()
+        buttleData.setProcessGraph(None)
+        # return to the beginning of the video
         self._frame = 0
         self.framePlayerChanged.emit()
-
-        # print "endSequence"
-        # self._processGraph.endSequence()
-        # self._processGraph = None
-        #buttleData.setProcessGraph(None)
 
     @QtCore.Slot()
     def nextFrame(self):
@@ -86,9 +73,6 @@ class TimerPlayer(QtDeclarative.QDeclarativeItem):
             self._frame = self._frame + 1
         else:
             return
-        # debug
-        # print self._frame
-        # print "self._fps :", self._fps
         self.framePlayerChanged.emit()
 
     @QtCore.Slot()
@@ -107,7 +91,6 @@ class TimerPlayer(QtDeclarative.QDeclarativeItem):
             print 'setFrame, ignore: frame outside bounds'
             return
         self._frame = int(frame)
-        print "setFrame: ", self._frame
         self.framePlayerChanged.emit()
 
     def getFPS(self):

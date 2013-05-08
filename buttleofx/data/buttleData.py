@@ -218,26 +218,14 @@ class ButtleData(QtCore.QObject):
     def getVideoIsPlaying(self):
         return self._videoIsPlaying
 
-    def getProcessGraph(self):
-        return self._processGraph
-
     def setVideoIsPlaying(self, valueBool):
         self._videoIsPlaying = valueBool
 
+    def getProcessGraph(self):
+        return self._processGraph
+
     def setProcessGraph(self, processGraph):
         self._processGraph = processGraph
-
-    def processGraphSetUp(self):
-        self._processGraph.setup()
-
-    def processGraphBeginSequence(self, timeRange):
-        self._processGraph.beginSequence(timeRange)
-
-    def setTimeRange(self, timeRange):
-        self._timeRange = timeRange
-
-    def getTimeRange(self):
-        return self._timeRange
 
     ############################################### ADDITIONAL FUNCTIONS ##################################################
 

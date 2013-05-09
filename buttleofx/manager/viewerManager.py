@@ -52,11 +52,10 @@ class ViewerManager(QtCore.QObject):
         #Get the output where we save the result
         self._tuttleImageCache = tuttle.MemoryCache()
 
-        if buttleData.getVideoIsPlaying() is True:  # if a video is playing
+        if buttleData.getVideoIsPlaying():  # if a video is playing
             processGraph = buttleData.getProcessGraph()
             processGraph.setupAtTime(frame)
             processGraph.processAtTime(self._tuttleImageCache, frame)
-            print " cache empty ? : ", self._tuttleImageCache.empty()
         else:  # if it's an image only
             processOptions = tuttle.ComputeOptions(int(frame))
             processGraph = tuttle.ProcessGraph(processOptions, graph, [node])
@@ -66,6 +65,9 @@ class ViewerManager(QtCore.QObject):
             processGraph.setupAtTime(frame)
             processGraph.processAtTime(self._tuttleImageCache, frame)
             processGraph.endSequence()
+
+        print "computeNode isPlaying ? : ", buttleData.getVideoIsPlaying()
+        print " cache size ? : ", self._tuttleImageCache.size()
 
         self._computedImage = self._tuttleImageCache.get(0)
         #Add the computedImage to the map

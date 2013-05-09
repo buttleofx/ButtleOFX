@@ -32,11 +32,12 @@ class TimerPlayer(QtDeclarative.QDeclarativeItem):
         node = buttleData.getCurrentViewerNodeName()
         # initialization of the process graph
         graph = buttleData.getGraph().getGraphTuttle()
-        processOptions = tuttle.ComputeOptions()
-        processGraph = tuttle.ProcessGraph(processOptions, graph, [node])
-        processGraph.setup()
+
         # timeRange between the frames of beginning and end (first frame, last frame, step)
         timeRange = tuttle.TimeRange(self._frame, self._nbFrames, 1)
+        self.processOptions = tuttle.ComputeOptions(self._frame, self._nbFrames, 1)
+        processGraph = tuttle.ProcessGraph(self.processOptions, graph, [node])
+        processGraph.setup()
         processGraph.beginSequence(timeRange)
         # communicate processGraph to buttleData
         buttleData.setProcessGraph(processGraph)
@@ -52,7 +53,7 @@ class TimerPlayer(QtDeclarative.QDeclarativeItem):
         buttleData = ButtleDataSingleton().get()
         buttleData.setVideoIsPlaying(False)
         # close processGraph and delete it
-        buttleData.getProcessGraph.endSequence()
+        buttleData.getProcessGraph().endSequence()
         buttleData.setProcessGraph(None)
 
     @QtCore.Slot()
@@ -61,7 +62,7 @@ class TimerPlayer(QtDeclarative.QDeclarativeItem):
         buttleData = ButtleDataSingleton().get()
         buttleData.setVideoIsPlaying(False)
         # close processGraph and delete it
-        buttleData.getProcessGraph.endSequence()
+        buttleData.getProcessGraph().endSequence()
         buttleData.setProcessGraph(None)
         # return to the beginning of the video
         self._frame = 0

@@ -45,7 +45,11 @@ Item {
         }
 
         // Viewer
-
+        /*if ((event.key == Qt.Key_1) && (event.modifiers & Qt.KeypadModifier)){
+            _buttleData.currentViewerIndex = 1
+            _buttleData.currentViewerNodeWrapper = _buttleData.getNodeWrapperByViewerIndex(1)
+            _buttleEvent.emitViewerChangedSignal()
+        }*/
     }
 
     Rectangle {

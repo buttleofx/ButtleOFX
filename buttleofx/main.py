@@ -13,7 +13,7 @@ import logging
         # logging.error("error message")
         # logging.critical("critical message")
 # print in a file
-logging.basicConfig(format='Buttle - %(levelname)s - %(message)s', filename='console.log', filemode='w', level=logging.DEBUG)
+logging.basicConfig(format='Buttle - %(levelname)s - %(asctime)-15s - %(message)s', filename='console.log', filemode='w', level=logging.DEBUG)
 # print in console
 #logging.basicConfig(format='Buttle - %(levelname)s - %(message)s', level=logging.DEBUG)
 
@@ -46,6 +46,8 @@ from buttleofx.manager import ButtleManagerSingleton
 from buttleofx.event import ButtleEventSingleton
 # new QML type
 from buttleofx.data import Finder
+#TimerPlayer
+from buttleofx.gui.viewer import TimerPlayer
 # undo_redo
 from buttleofx.core.undo_redo.manageTools import CommandManager
 # Menu
@@ -79,6 +81,8 @@ def main(argv):
     #preload Tuttle
     tuttle.core().preload()
 
+    # give to QML acces to TimerPlayer defined in buttleofx/gui/viewer
+    QtDeclarative.qmlRegisterType(TimerPlayer, "TimerPlayer", 1, 0, "TimerPlayer")
     # add new QML type
     QtDeclarative.qmlRegisterType(Finder, "FolderListViewItem", 1, 0, "FolderListView")
     if tuttleofx_installed:

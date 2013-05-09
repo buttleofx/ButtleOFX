@@ -17,6 +17,7 @@ class ViewerManager(QtCore.QObject):
 
         self._tuttleImageCache = None
         self._computedImage = None
+        self._videoIsPlaying = False
 
         # for the viewer : name of the hypothetical node that can't be displayed.
         self._nodeError = ""
@@ -41,19 +42,31 @@ class ViewerManager(QtCore.QObject):
         """
             Computes the node at the frame indicated.
         """
-        print "------- COMPUTE NODE -------"
+        #print "------- COMPUTE NODE -------"
 
         buttleData = ButtleDataSingleton().get()
-        #Get the name of the currentNode of the viewer
+        # Get the name of the currentNode of the viewer
         node = buttleData.getCurrentViewerNodeName()
+        graph = buttleData.getGraph().getGraphTuttle()
+
         #Get the output where we save the result
         self._tuttleImageCache = tuttle.MemoryCache()
-        #should replace 25 by the fps of the video (a sort of getFPS(node))
-        #should expose the duration of the video to the QML too
-        buttleData.getGraph().getGraphTuttle().compute(self._tuttleImageCache, node, tuttle.ComputeOptions(int(frame)))
+
+        if buttleData.getVideoIsPlaying():  # if a video is playing
+            processGraph = buttleData.getProcessGraph()
+            processGraph.setupAtTime(frame)
+            processGraph.processAtTime(self._tuttleImageCache, frame)
+        else:  # if it's an image only
+            processOptions = tuttle.ComputeOptions(int(frame))
+            processGraph = tuttle.ProcessGraph(processOptions, graph, [node])
+            processGraph.setup()
+            timeRange = tuttle.TimeRange(frame, frame, 1)  # buttleData.getTimeRange()
+            processGraph.beginSequence(timeRange)
+            processGraph.setupAtTime(frame)
+            processGraph.processAtTime(self._tuttleImageCache, frame)
+            processGraph.endSequence()
 
         self._computedImage = self._tuttleImageCache.get(0)
-
         #Add the computedImage to the map
         buttleData._mapNodeNameToComputedImage.update({node: self._computedImage})
 
@@ -77,7 +90,7 @@ class ViewerManager(QtCore.QObject):
                     print "**************************Image already calculated**********************"
                     return buttleData._mapNodeNameToComputedImage[node]
                 # If it is not
-            print "************************Calcul of image***************************"
+            #print "************************Calcul of image***************************"
             return self.computeNode(frame)
         except Exception as e:
             print "Can't display node : " + node

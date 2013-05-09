@@ -6,10 +6,10 @@ Rectangle {
     id: container
 
     property url imageFile
-    property real time: 0
-    property int fps: 25
-    property int frame: 0
-    color:"#111111"
+    //property real time: 0
+    //property int fps: 25
+    property int frameViewer: 0
+    color: "#111111"
 
     GLViewport {
         id: viewport
@@ -17,7 +17,8 @@ Rectangle {
         
         offset.x: 0.0
         offset.y: 0.0
-        frame: container.time/1000 * container.fps
+        //frame is a QProperty defined in glviewport_tuttleofx.py
+        frame: container.frameViewer//container.time/1000 * container.fps
         fittedMode: true
 
         property real inWidth: 16

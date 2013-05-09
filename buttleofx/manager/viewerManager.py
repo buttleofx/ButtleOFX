@@ -66,9 +66,6 @@ class ViewerManager(QtCore.QObject):
             processGraph.processAtTime(self._tuttleImageCache, frame)
             processGraph.endSequence()
 
-        print "computeNode isPlaying ? : ", buttleData.getVideoIsPlaying()
-        print " cache size ? : ", self._tuttleImageCache.size()
-
         self._computedImage = self._tuttleImageCache.get(0)
         #Add the computedImage to the map
         buttleData._mapNodeNameToComputedImage.update({node: self._computedImage})

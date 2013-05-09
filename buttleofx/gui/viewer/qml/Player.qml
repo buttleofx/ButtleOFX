@@ -18,21 +18,7 @@ Item {
         //property associated : frame, acces with timer.frame
         id: timer
         fps: nodeFps 
-        nbFrames: nodeNbFrames//player.node.nbFrames
-    }
-
-    QtObject {
-        id: timeProperties
-        property real currentTime : 0 // current position of the time (milliseconds)
-        property real formerKeyTime : 0 // position of the time before animation starts
-        
-        // for video
-        // frames per second of the video, fps and nbFrames are QProperties declared in nodeWrapper.py
-        property real fps: node ? node.fps : 1
-        // number total of frames of the video 
-        property int nbFrames: node ? node.nbFrames : 0
-        // timeDuration is the duration of the video
-        property real timeDuration : node ? nbFrames/fps*1000 : 0
+        nbFrames: nodeNbFrames
     }
 
 
@@ -43,7 +29,7 @@ Item {
 
     // Returns the string displayed under the viewer. It's the current time.
     function getTimePosition() {
-        var totalSeconds = Math.floor(player.nodeDurationSeconds)
+        var totalSeconds = Math.floor(nodeDurationSeconds)
         var totalMinutes = Math.floor(totalSeconds / 60)
         var totalHours = Math.floor(totalMinutes / 60)
 
@@ -129,12 +115,6 @@ Item {
                         id: viewer
                         //here we send the frame the viewer has to display
                         frameViewer: timer.frame
-                        // we moove the cursor of the timeline when the frame is changed
-                        /*onFrameViewerChanged: {
-                            cursorTimeline.x = timer.frame * (barTimeline.width - cursorTimeline.width/2) / timeProperties.nbFrames
-                        }*/
-                        //time: timeProperties.currentTime
-                        //fps: timeProperties.fps
                         clip: true
                     }
                 }
@@ -432,17 +412,6 @@ Item {
                 id: timeline
                 width: parent.width
                 implicitHeight: 10
-                property double endPosition : barTimeline.x + barTimeline.width - cursorTimeline.width/2
-
-                // Playing animation
-                /*NumberAnimation {
-                     id: playingAnimation
-                     target: cursorTimeline
-                     properties: "x"
-                     from: cursorTimeline.x
-                     to: timeline.endPosition
-                     duration : timeProperties.timeDuration - timeProperties.formerKeyTime
-                }*/
 
                 // main container
                 Rectangle {
@@ -475,42 +444,40 @@ Item {
                             onPressed : {
                                 // -10 because of margins
                                 cursorTimeline.x = mouse.x - 10 - cursorTimeline.width/2
-                                timer.frame = (cursorTimeline.x + cursorTimeline.width/2) * timeProperties.nbFrames /barTimeline.width;
-                            }
-                            onReleased : {
+                                timer.pause()
+                                timer.frame = (cursorTimeline.x + cursorTimeline.width/2) * nodeNbFrames /barTimeline.width;
+                                
                             }
                         }
-                        /*onWidthChanged: {
-                            cursorTimeline.x = (timeProperties.currentTime * (barTimeline.width - cursorTimeline.width)) / timeProperties.timeDuration
-                        }*/
+                        /* blocks the cursor even if window isn't resize...
+                        onWidthChanged: {
+                            cursorTimeline.x = timer.frame * (barTimeline.width - cursorTimeline.width/2) / nodeNbFrames;
+                        }
+                        */
                     }
 
                     // cursor timeline (little white rectangle)
                     Rectangle {
                         id: cursorTimeline
                         anchors.verticalCenter: parent.verticalCenter
-                        x: timer.frame * (barTimeline.width - cursorTimeline.width/2) / timeProperties.nbFrames
+                        x: barTimeline.x + (timer.frame * barTimeline.width / nodeNbFrames) - cursorTimeline.width/2
                         height: 10
                         width: 5
                         radius: 1
                         color: "white"
-
-                        /*onXChanged: {
-                            timeProperties.currentTime = (cursorTimeline.x * timeProperties.timeDuration) / (barTimeline.width - cursorTimeline.width);
-                        }*/
 
                         MouseArea{
                             anchors.fill: parent
                             drag.target: parent
                             drag.axis: Drag.XAxis
                             drag.minimumX: barTimeline.x
-                            drag.maximumX: timeline.endPosition
+                            drag.maximumX: barTimeline.x + barTimeline.width
                             anchors.margins: -10 // allow to have an area around the cursor which allows to select the cursor even if we are not exactly on it
                             onPressed: {
                                 timer.pause()
                             }
                             onReleased: {
-                                timer.frame = (cursorTimeline.x + cursorTimeline.width/2) * timeProperties.nbFrames / barTimeline.width;
+                                timer.frame = (cursorTimeline.x + cursorTimeline.width/2) * nodeNbFrames / barTimeline.width;
                             }
                         }
                     }

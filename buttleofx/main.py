@@ -62,6 +62,8 @@ from PySide.QtGui import *
 class ButtleApp(QtGui.QApplication):
     def __init__(self, argv):
         super(ButtleApp, self).__init__(argv)
+        iconPath = os.path.join(currentFilePath, "gui/img/mosquito/mosquito.png")
+        self.setWindowIcon(QtGui.QIcon(iconPath))
 
     def notify(self, receiver, event):
         try:

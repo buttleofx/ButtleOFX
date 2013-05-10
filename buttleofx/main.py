@@ -1,7 +1,6 @@
 import os
 # PySide
 from PySide import QtGui, QtDeclarative, QtOpenGL
-from PySide.QtDeclarative import QDeclarativeEngine, QDeclarativeComponent
 
 # Logging (see console.log)
 import logging
@@ -58,7 +57,7 @@ currentFilePath = os.path.dirname(os.path.abspath(__file__))
 from PySide import QtCore
 from PySide.QtCore import *
 from PySide.QtGui import *
-
+#import shiboken
 
 class ButtleApp(QtGui.QApplication):
     def __init__(self, argv):
@@ -80,51 +79,49 @@ def main(argv):
     # Preload Tuttle
     tuttle.core().preload()
 
-    # Create QApplication
-    app = ButtleApp(argv)
-
-     # Create QDDeclarativeEngine and QDeclarativeComonent
-    engine = QDeclarativeEngine(app)
-    component = QtDeclarative.QDeclarativeComponent(engine, QUrl.fromLocalFile("MainWindow.qml"))
-    myObject = component.create()
-
-
-    # Set context
-    # rc = component.creationContext()
-
-    # # rc.setContextProperty("_buttleApp", app)
-    # # rc.setContextProperty("_buttleData", buttleData)
-    # # rc.setContextProperty("_buttleManager", buttleManager)
-    # # rc.setContextProperty("_buttleEvent", buttleEvent)
-    # myObject = component.beginCreate(rc)
-    #component.completeCreate()
-
-    # add new QML type
-    # QtDeclarativeComponent.qmlRegisterType(Finder, "FolderListViewItem", 1, 0, "FolderListView")
-    # if tuttleofx_installed:
-    #     QtDeclarativeComponent.qmlRegisterType(GLViewport_tuttleofx, "Viewport", 1, 0, "GLViewport")
-    # else:
-    #     QtDeclarativeComponent.qmlRegisterType(GLViewport_pil, "Viewport", 1, 0, "GLViewport")
-
     # init undo_redo contexts
     cmdManager = CommandManager()
     cmdManager.setActive()
     cmdManager.clean()
 
-
-    # Don't have it anymore
-    # create the declarative view
-
-    # view = QtDeclarative.QDeclarativeComponent()
-    # view.setViewport(QtOpenGL.QGLWidget())
-    # view.setViewportUpdateMode(QtDeclarative.QDeclarativeViewComponent.FullViewportUpdate)
-
     # data
-    buttleData = ButtleDataSingleton().get().init(myObject, currentFilePath)
+    buttleData = ButtleDataSingleton().get()
     # manager
     buttleManager = ButtleManagerSingleton().get().init()
     # event
     buttleEvent = ButtleEventSingleton().get()
+
+
+    QApplication.setGraphicsSystem("opengl")
+    # Create QApplication
+    app = ButtleApp(argv)
+
+    # Create QDDeclarativeEngine and QDeclarativeComonent
+    engine = QtDeclarative.QDeclarativeEngine(app)
+
+    # add new QML type
+    QtDeclarative.qmlRegisterType(Finder, "FolderListViewItem", 1, 0, "FolderListView")
+    if tuttleofx_installed:
+        QtDeclarative.qmlRegisterType(GLViewport_tuttleofx, "Viewport", 1, 0, "GLViewport")
+    else:
+        QtDeclarative.qmlRegisterType(GLViewport_pil, "Viewport", 1, 0, "GLViewport")
+
+    # Set context
+    rc = engine.rootContext()
+    rc.setContextProperty("_buttleApp", app)
+    rc.setContextProperty("_buttleData", buttleData)
+    rc.setContextProperty("_buttleManager", buttleManager)
+    rc.setContextProperty("_buttleEvent", buttleEvent)
+
+    component = QtDeclarative.QDeclarativeComponent(engine, QUrl.fromLocalFile(os.path.join(currentFilePath, "MainWindow.qml")))
+    print "A:", component.errors()
+    myObject = component.beginCreate(rc)
+    print "B:", component.errors()
+    buttleData.init(myObject, currentFilePath)
+    component.completeCreate()
+    print "C:", component.errors()
+    #myObject = component.create()
+
 
     # expose data to QML
     # rc = engine.rootContext()
@@ -148,5 +145,18 @@ def main(argv):
 
     #add._menu.popup(view.mapToGlobal(QtCore.QPoint(0, 0)))
 
-    #engine.show()
+#    # create the declarative view
+#    view = QtDeclarative.QDeclarativeView()
+#    view.setViewport(QtOpenGL.QGLWidget())
+#    view.setViewportUpdateMode(QtDeclarative.QDeclarativeView.FullViewportUpdate)
+
+#    scene = QtGui.QGraphicsScene()
+#    componentPtr = long(shiboken.getCppPointer(component)[0])
+#    item = shiboken.wrapInstance(componentPtr, QtGui.QGraphicsItem)
+#    item.setPos(10,500)
+#    scene.addItem(item)
+#    view.setScene(scene)
+#    view.show()
+#    view.resize(1024, 2000)
+
     app.exec_()

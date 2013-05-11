@@ -443,10 +443,12 @@ Item {
                             anchors.margins: -10
                             onPressed : {
                                 // -10 because of margins
-                                cursorTimeline.x = mouse.x - 10 - cursorTimeline.width/2
+
+                                //cursorTimeline.x = mouse.x - 10 - cursorTimeline.width/2
+                                //timer.frame = (cursorTimeline.x + cursorTimeline.width/2) * nodeNbFrames /barTimeline.width;
+
+                                timer.frame = (mouse.x - 10) * nodeNbFrames /barTimeline.width;
                                 timer.pause()
-                                timer.frame = (cursorTimeline.x + cursorTimeline.width/2) * nodeNbFrames /barTimeline.width;
-                                
                             }
                         }
                         /* blocks the cursor even if window isn't resize...
@@ -472,12 +474,16 @@ Item {
                             drag.axis: Drag.XAxis
                             drag.minimumX: barTimeline.x
                             drag.maximumX: barTimeline.x + barTimeline.width
-                            anchors.margins: -10 // allow to have an area around the cursor which allows to select the cursor even if we are not exactly on it
+                            anchors.margins: -10  // allow to have an area around the cursor which allows to select the cursor even if we are not exactly on it
                             onPressed: {
-                                timer.pause()
+                                timer.pause()  // stop if it was playing
+                                timer.launchProcessGraph()  // used this to use the processGraph (should be faster)
+                            }
+                            onPositionChanged: {
+                                timer.frame = (cursorTimeline.x + cursorTimeline.width/2) * nodeNbFrames / barTimeline.width
                             }
                             onReleased: {
-                                timer.frame = (cursorTimeline.x + cursorTimeline.width/2) * nodeNbFrames / barTimeline.width;
+                                timer.pause()  // to close the processGraph launch with onPressed
                             }
                         }
                     }

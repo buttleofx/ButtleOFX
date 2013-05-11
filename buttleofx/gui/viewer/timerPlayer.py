@@ -44,6 +44,25 @@ class TimerPlayer(QtDeclarative.QDeclarativeItem):
         self._timer.start(self._speed)
 
     @QtCore.Slot()
+    def launchProcessGraph(self):
+        buttleData = ButtleDataSingleton().get()
+        #Get the name of the currentNode of the viewer
+        node = buttleData.getCurrentViewerNodeName()
+        # initialization of the process graph
+        graph = buttleData.getGraph().getGraphTuttle()
+
+        # timeRange between the frames of beginning and end (first frame, last frame, step)
+        timeRange = tuttle.TimeRange(self._frame, self._nbFrames, 1)
+        self._processOptions = tuttle.ComputeOptions(self._frame, self._nbFrames, 1)
+        processGraph = tuttle.ProcessGraph(self._processOptions, graph, [node])
+        processGraph.setup()
+        processGraph.beginSequence(timeRange)
+        # communicate processGraph to buttleData
+        buttleData.setProcessGraph(processGraph)
+
+        buttleData.setVideoIsPlaying(True)
+
+    @QtCore.Slot()
     def pause(self):
         print "--------------pause-------------"
         self._timer.stop()
@@ -112,6 +131,10 @@ class TimerPlayer(QtDeclarative.QDeclarativeItem):
 
     def getNbFrames(self):
         return self.nbFrames
+
+    @QtCore.Slot()
+    def frameChanged(self):
+        self.framePlayerChanged.emit()
 
     framePlayerChanged = QtCore.Signal()
     fpsVideoChanged = QtCore.Signal()

@@ -38,9 +38,9 @@ class TimerPlayer(QtDeclarative.QDeclarativeItem):
         processGraph.beginSequence(timeRange)
         # communicate processGraph to buttleData
         buttleData.setProcessGraph(processGraph)
-
         buttleData.setVideoIsPlaying(True)
-
+        
+        self._speed = 1000/self._fps
         self._timer.start(self._speed)
 
     @QtCore.Slot()
@@ -59,7 +59,7 @@ class TimerPlayer(QtDeclarative.QDeclarativeItem):
         processGraph.beginSequence(timeRange)
         # communicate processGraph to buttleData
         buttleData.setProcessGraph(processGraph)
-
+        
         buttleData.setVideoIsPlaying(True)
 
     @QtCore.Slot()

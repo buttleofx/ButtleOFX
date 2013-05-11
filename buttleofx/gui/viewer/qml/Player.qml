@@ -448,7 +448,7 @@ Item {
                                 //timer.frame = (cursorTimeline.x + cursorTimeline.width/2) * nodeNbFrames /barTimeline.width;
 
                                 timer.frame = (mouse.x - 10) * nodeNbFrames /barTimeline.width;
-                                timer.pause()
+                                //timer.pause()
                             }
                         }
                         /* blocks the cursor even if window isn't resize...

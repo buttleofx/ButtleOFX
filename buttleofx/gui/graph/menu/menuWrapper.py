@@ -36,13 +36,12 @@ class MenuWrapper(QtCore.QObject):
         # Create a menu based on the elementList
         if elementList != []:
             for element in elementList:
-                print element
                 if element != "0":
                     # action = QAction(self._menu)
                     # action = self._menu.addAction(QAction(element[0], self._menu))
                     # FileMenu
-                    if(element[0] == "Open"):
-                        self._menu.addAction(QAction(element[0], self._menu, shortcut=element[1], statusTip='Open ', triggered=app.quit))
+                    # if(element[0] == "Open"):
+                    #     self._menu.addAction(QAction(element[0], self._menu, shortcut=element[1], statusTip='Open a graph', triggered=app.quit))
 
                     # elif(element[0] == "Save as"):
                     #     self._menu.addAction(QAction(element[0], self._menu, shortcut=element[1], statusTip='Exit the application', triggered=app.quit))
@@ -56,7 +55,7 @@ class MenuWrapper(QtCore.QObject):
                     # elif(element[0] == "Export"):
                     #     self._menu.addAction(QAction(element[0], self._menu, shortcut=element[1], statusTip='Save graph', triggered=ButtleDataSingleton().get().saveData(finderSaveGraph.propFile)))
 
-                    elif(element[0] == "Exit"):
+                    if(element[0] == "Exit"):
                         self._menu.addAction(QAction(element[0], self._menu, shortcut=element[1], statusTip='Exit the application', triggered=app.quit))
 
                     # EditMenu
@@ -65,13 +64,13 @@ class MenuWrapper(QtCore.QObject):
                     elif(element[0] == "Redo"):
                         self._menu.addAction(QAction(element[0], self._menu, shortcut=element[1], statusTip='Redo the last action', triggered=ButtleManagerSingleton().get().redo))
                     elif(element[0] == "Copy"):
-                        self._menu.addAction(QAction(element[0], self._menu, shortcut=element[1], statusTip='Undo the last action', triggered=ButtleManagerSingleton().get().nodeManager.copyNode))
+                        self._menu.addAction(QAction(element[0], self._menu, shortcut=element[1], statusTip='Copy the selected node', triggered=ButtleManagerSingleton().get().nodeManager.copyNode))
                     elif(element[0] == "Paste"):
-                        self._menu.addAction(QAction(element[0], self._menu, shortcut=element[1], statusTip='Undo the last action', triggered=ButtleManagerSingleton().get().nodeManager.pasteNode))
+                        self._menu.addAction(QAction(element[0], self._menu, shortcut=element[1], statusTip='Paste the selected node', triggered=ButtleManagerSingleton().get().nodeManager.pasteNode))
                     elif(element[0] == "Cut"):
-                        self._menu.addAction(QAction(element[0], self._menu, shortcut=element[1], statusTip='Undo the last action', triggered=ButtleManagerSingleton().get().nodeManager.cutNode))
+                        self._menu.addAction(QAction(element[0], self._menu, shortcut=element[1], statusTip='Cut the selected node', triggered=ButtleManagerSingleton().get().nodeManager.cutNode))
                     elif(element[0] == "Duplicate"):
-                        self._menu.addAction(QAction(element[0], self._menu, shortcut=element[1], statusTip='Undo the last action', triggered=ButtleManagerSingleton().get().nodeManager.duplicationNode))
+                        self._menu.addAction(QAction(element[0], self._menu, shortcut=element[1], statusTip='Duplicate the selected node', triggered=ButtleManagerSingleton().get().nodeManager.duplicationNode))
 
                     else:
                         self._menu.addAction(QAction(element[0], self._menu, shortcut=element[1]))
@@ -83,11 +82,6 @@ class MenuWrapper(QtCore.QObject):
         else:
             self._menu.setTitle(parentName)
             createMenu(self._menu, parentName, self._view)
-
-             # AddMenu
-            print self._menu.title()
-            #self._menu.addAction(QAction(element[0], self._menu, shortcut=element[1], statusTip='Undo the last action', triggered=ButtleManagerSingleton().get().nodeManager.creationNode(nodeType, -graph.originX + 20, -graph.originY + 20)))
-        
 
     @QtCore.Slot(float, float)
     def showMenu(self, x, y):

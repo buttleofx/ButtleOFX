@@ -29,6 +29,17 @@ class NodeManager(QtCore.QObject):
         self.undoRedoChanged()
 
     @QtCore.Slot()
+    def creationNodeImage(self):
+        """
+            Creates a node.
+        """
+        buttleData = ButtleDataSingleton().get()
+        buttleData.getGraph().createNode("tuttle.imagestatistics", 20, 20)
+
+        # update undo/redo display
+        self.undoRedoChanged()
+
+    @QtCore.Slot()
     def destructionNodes(self):
         """
             Deletes the current node(s).

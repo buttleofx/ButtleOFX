@@ -15,6 +15,7 @@ Rectangle {
 
         onClickCreationNode: {
             console.log("Node created clicking from Graph")
+            console.log(nodeType)
             _buttleManager.nodeManager.creationNode(nodeType, -graph.originX + graph.mouseX, -graph.originY + graph.mouseY)
         }
     }

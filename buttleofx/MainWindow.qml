@@ -23,7 +23,7 @@ Item {
                 _buttleManager.nodeManager.destructionNodes();
             }
         }
-        if ((event.key == Qt.Key_Z) && (event.modifiers & Qt.ControlModifier)) {
+        /*if ((event.key == Qt.Key_Z) && (event.modifiers & Qt.ControlModifier)) {
             _buttleManager.undo();
         }
         if ((event.key == Qt.Key_Y) && (event.modifiers & Qt.ControlModifier)) {
@@ -40,7 +40,7 @@ Item {
         }
         if ((event.key == Qt.Key_X) && (event.modifiers & Qt.ControlModifier)){
             _buttleManager.nodeManager.cutNode()
-        }
+        }*/
     }
 
     Rectangle {
@@ -48,6 +48,7 @@ Item {
         width: parent.width
         height: 32
         color: "#141414"
+
         Row {
             spacing: 7
             x: 3
@@ -70,6 +71,7 @@ Item {
                 y: 7
                 font.pointSize: 14
             }
+
             Text {
                 color: "white"
                 text: "File"
@@ -79,7 +81,7 @@ Item {
                 MouseArea {
                     anchors.fill: parent
                     hoverEnabled: true
-                    onEntered: {
+                    onClicked: {
                         _fileMenu.showMenu(parent.x, mainMenu.height)
                     }
                 }
@@ -94,7 +96,7 @@ Item {
                 MouseArea {
                     anchors.fill: parent
                     hoverEnabled: true
-                    onEntered: {
+                    onClicked: {
                         _editMenu.showMenu(parent.x, mainMenu.height)
                     }
                 }
@@ -109,7 +111,7 @@ Item {
                 MouseArea {
                     anchors.fill: parent
                     hoverEnabled: true
-                    onEntered: {
+                    onClicked: {
                         _addMenu.showMenu(parent.x, mainMenu.height)
                     }
                 }
@@ -124,7 +126,7 @@ Item {
                 MouseArea {
                     anchors.fill: parent
                     hoverEnabled: true
-                    onEntered: {
+                    onClicked: {
                         _renderMenu.showMenu(parent.x, mainMenu.height)
                     }
                 }
@@ -139,7 +141,7 @@ Item {
                 MouseArea {
                     anchors.fill: parent
                     hoverEnabled: true
-                    onEntered: {
+                    onClicked: {
                         _windowMenu.showMenu(parent.x, mainMenu.height)
                     }
                 }
@@ -154,7 +156,7 @@ Item {
                 MouseArea {
                     anchors.fill: parent
                     hoverEnabled: true
-                    onEntered: {
+                    onClicked: {
                         _helpMenu.showMenu(parent.x, mainMenu.height)
                     }
                 }

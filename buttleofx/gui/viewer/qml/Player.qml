@@ -29,13 +29,14 @@ Item {
 
     // Returns the string displayed under the viewer. It's the current time.
     function getTimePosition() {
-        var totalSeconds = Math.floor(nodeDurationSeconds)
-        var totalMinutes = Math.floor(totalSeconds / 60)
-        var totalHours = Math.floor(totalMinutes / 60)
+        var totalHours = Math.floor(nodeDurationSeconds / 3600)
+        var totalMinutes = Math.floor((nodeDurationSeconds - totalHours*3600) / 60)
+        var totalSeconds = Math.floor(nodeDurationSeconds - totalHours*3600 - totalMinutes*60)
 
-        var elapsedSeconds = Math.floor( (timer.frame + 1) * nodeDurationSeconds / nodeNbFrames)
-        var elapsedMinutes = Math.floor(totalSeconds / 60)
-        var elapsedHours = Math.floor(totalMinutes / 60)
+        var durationElapsedSeconds = Math.floor((timer.frame + 1) / timer.fps)
+        var elapsedHours = Math.floor(durationElapsedSeconds / 3600)
+        var elapsedMinutes = Math.floor((durationElapsedSeconds - elapsedHours*3600) / 60)
+        var elapsedSeconds = Math.floor(durationElapsedSeconds - elapsedHours*3600 - elapsedMinutes*60)
 
         return with2digits(elapsedHours) + ":" + with2digits(elapsedMinutes) + ":" + with2digits(elapsedSeconds) + " / " + with2digits(totalHours) + ":" + with2digits(totalMinutes) + ":" + with2digits(totalSeconds)
     }

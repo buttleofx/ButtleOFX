@@ -113,12 +113,10 @@ class CommandManager(Singleton):
         Executes a new undoable command (add command to the stack ?)
         """
 
-        # update buttleData to indicate that something just changed (must be done in first because self.index will me incremented then !)
         # if the graph was saved, and some commands were undone, and an other command is beeing pushed => the graph will never be the same as the one that had been saved, so we "clear" the savedGraphIndex (=-1)
+        # it must be done in first because self.index will me incremented then !
         if self.savedGraphIndex > self.index:
             self.savedGraphIndex = -1
-        # we update buttleData now
-        self.graphHadChanged()
 
         # clear the redoable part of commands
         for command in self.commands[self.index:]:
@@ -130,6 +128,9 @@ class CommandManager(Singleton):
         # do the command
         res = newCommand.doCmd()
         self.index += 1
+
+        # we update buttleData to indicate that something just changed
+        self.graphHadChanged()
 
         return res
 

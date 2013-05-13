@@ -192,9 +192,12 @@ Item {
                 id: toolBarRegion
                 y: parent.height + tabBar.height
                 width: parent.width
-                implicitHeight: 25
+                implicitHeight: toolBarRegion.skipLine ? 50 : 25
                 color: "transparent"
                 Layout.verticalSizePolicy: Layout.Fixed
+
+                // indicates if the toolBar must be displayed with 1 or 2 lines
+                property bool skipLine : selectViewer.x < 350
 
                 // Tools (zoom, timeline buttons, mosquitos)
                 Rectangle {
@@ -209,126 +212,24 @@ Item {
                         GradientStop { position: 1; color: "#141414" }
                     }
 
-                    // WILL BE USED LATER
-                    // Zoom tools
-/*                    Row {
-                        id: zoomTools
-                        y: 15
-                        spacing : 5
-
-                        // Zoom +
-                        Rectangle {
-                            id: magGlassIn
-                            width: 22
-                            height: 15
-                            color: "#141414"
-
-                            Image {
-                                id: magGlassInButton
-                                source: "../img/zoom_plus.png"
-                                anchors.centerIn: parent
-                            }
-
-                            MouseArea {
-                                anchors.fill: parent
-                                onClicked: {
-                                    console.log("Zoom activated")
-
-                                    if(magGlassIn.state != "clicked") {
-                                        magGlassIn.state = "clicked"
-                                        magGlassOut.state = "unclicked"
-                                    }
-
-                                    else {
-                                        magGlassIn.state = "unclicked"
-                                    }
-                                }
-                            }
-
-                            states: [
-                                State {
-                                    name: "clicked"
-                                    PropertyChanges {
-                                        target: magGlassIn
-                                        color: "#212121"
-                                    }
-                                   },
-                                State {
-                                name: "unclicked";
-                                    PropertyChanges {
-                                        target: magGlassIn
-                                        color: "transparent"
-                                    }
-                                  }
-                            ]
-                        }
-
-                        // Zoom -
-                        Rectangle {
-                            id: magGlassOut
-                            width: 22
-                            height: 15
-                            color: "transparent"
-
-                            Image {
-                                id: magGlassOutButton
-                                source: "../img/zoom_moins.png"
-                                anchors.centerIn: parent
-                            }
-
-                            MouseArea {
-                                anchors.fill: parent
-                                onClicked: {
-                                    console.log("ZoomOut activated")
-                                    if(magGlassOut.state != "clicked") {
-                                        magGlassOut.state = "clicked"
-                                        magGlassIn.state = "unclicked"
-                                    }
-
-                                    else {
-                                        magGlassOut.state = "unclicked"
-                                    }
-                                }
-                            }
-
-                            states: [
-                                State {
-                                    name: "clicked"
-                                    PropertyChanges {
-                                        target: magGlassOut
-                                        color: "#212121"
-                                    }
-                                   },
-                                State {
-                                    name: "unclicked";
-                                    PropertyChanges {
-                                        target: magGlassOut
-                                        color: "transparent"
-                                    }
-                                  }
-                            ]
-                        }
-                    }
-*/
                     Item {
-                        anchors.verticalCenter: tools.verticalCenter
+                        y: 10
                         anchors.left: parent.left
                         anchors.leftMargin: 25
                         TimelineTools {
+                            id: timelineTools
                             timer: timer
                             nbFrames: player.nodeNbFrames
                         }
                     }
 
-
-                    // WILL BE USED LATER
                     // Mosquitos
                    Row {
                         id: selectViewer
                         spacing: 2
                         anchors.right: parent.right
                         anchors.rightMargin: parent.height
-                        y: 8
+                        y: toolBarRegion.skipLine ? 5 + selectViewer.height : 8
 
                         // Mosquito
                         Rectangle {
@@ -414,12 +315,13 @@ Item {
                 id: timeline
                 width: parent.width
                 implicitHeight: 10
+                anchors.bottom: toolBarRegion.top
 
                 // main container
                 Rectangle {
                     width: parent.width
                     color: "transparent"
-                    y: -25
+                    y: 10
                     Rectangle {
                         id: barTimeline
                         anchors.verticalCenter: parent.verticalCenter

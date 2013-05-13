@@ -45,6 +45,38 @@ class ConnectionManager(QtCore.QObject):
 
         return True
 
+    @QtCore.Slot(str, QtCore.QObject, int, result=bool)
+    def canConnectTmpNodes(self, dataTmpClip, clip, clipIndex):
+        """
+            Returns True if the connection between the nodes is possible, else False.
+            This function is called by Clip.qml on the event onDragEnter, to display in real time if the nodes can be connected (during a creation of a connection).
+            It simulates a connection and calls the function self.canConnect(clip1, clip2).
+        """
+        buttleData = ButtleDataSingleton().get()
+
+        # we split the data of the tmpClip (from mimeData) to find needed informations about this clip.
+        infosTmpClip = dataTmpClip.split("/")
+
+        if infosTmpClip[0] != "clip" or len(infosTmpClip) != 4:
+            return False
+        else:
+            tmpClipNodeName, tmpClipName, tmpClipIndex = infosTmpClip[1], infosTmpClip[2], int(infosTmpClip[3])
+
+        # we find the position of this tmpClip to be able to create a IdClip object.
+        positionTmpClip = buttleData.getGraphWrapper().getPositionClip(tmpClipNodeName, tmpClipName, tmpClipIndex)
+        tmpClip = IdClip(tmpClipNodeName, tmpClipName, clipIndex, positionTmpClip)
+
+        if tmpClip:
+            # idem, for the "dropped" clip = newClip
+            positionNewClip = buttleData.getGraphWrapper().getPositionClip(clip.getNodeName(), clip.getClipName(), clipIndex)
+            newClip = IdClip(clip.getNodeName(), clip.getClipName(), clipIndex, positionNewClip)
+
+            # finally we return if the clips can be connected
+            return self.canConnect(tmpClip, newClip)
+
+        else:
+            return False
+
     ############### EVENTS FROM QML ###############
 
     @QtCore.Slot(QtCore.QObject, int)

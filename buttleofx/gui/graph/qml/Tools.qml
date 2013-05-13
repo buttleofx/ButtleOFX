@@ -55,6 +55,21 @@ Rectangle {
             case "duplicate":
                 _buttleManager.nodeManager.duplicationNode();
                 break;
+
+            case "save":
+                finderSaveGraph.browseFile()
+                if (finderSaveGraph.propFile) {
+                    _buttleData.saveData(finderSaveGraph.propFile)
+                }
+                break;
+
+            case "open":
+                finderLoadGraph.browseFile();
+                if (finderLoadGraph.propFile) {
+                    _buttleData.loadData(finderLoadGraph.propFile)
+                }
+                break;
+
             default:
                 break;
         }
@@ -87,6 +102,40 @@ Rectangle {
                 buttonName: "createNode"
                 buttonText: "Create a new node"
                 locked: false
+            }
+
+            ToolElement {
+
+                FolderListView {
+                    id: finderLoadGraph
+                    typeDialog: "OpenFile"
+                    messageDialog: "Load a graph"
+                    directoryDialog: _buttleData.buttlePath
+                }
+
+                imageSource: parent.imgPath + "open.png"
+                imageSourceHover: parent.imgPath + "open_hover.png"
+                imageSourceLocked: parent.imgPath + "open_locked.png"
+                buttonName: "open"
+                buttonText: "Load a graph"
+                locked: false
+            }
+
+            ToolElement {
+
+                FolderListView {
+                    id: finderSaveGraph
+                    typeDialog: "SaveFile"
+                    messageDialog: "Save the graph"
+                    directoryDialog: _buttleData.buttlePath
+                }
+
+                imageSource: parent.imgPath + "save.png"
+                imageSourceHover: parent.imgPath + "save_hover.png"
+                imageSourceLocked: parent.imgPath + "save_locked.png"
+                buttonName: "save"
+                buttonText: "Save graph"
+                locked: false // need to be improved : boolean in _buttleData modified each time the graph is modified ??
             }
 
             ToolElement {
@@ -144,84 +193,13 @@ Rectangle {
             }
 
             ToolElement {
-                id: deleteTool
                 imageSource: parent.imgPath + "delete.png"
                 imageSourceHover: parent.imgPath + "delete_hover.png"
                 imageSourceLocked: parent.imgPath + "delete_locked.png"
                 buttonName: "deleteNode"
                 buttonText: "Delete the node"
                 locked: (!_buttleData.currentSelectedNodeWrappers.isEmpty() || _buttleData.currentConnectionWrapper)? false : true
-            }
-
-            // to save the graph
-            Rectangle {
-                id: buttonSave
-                anchors.verticalCenter: parent.verticalCenter
-                width: textSaveGraph.width
-                height: 28
-                color: "transparent"
-                radius: 3
-
-                FolderListView {
-                    id: finderSaveGraph
-                    typeDialog: "SaveFile"
-                    messageDialog: "Save the graph"
-                    directoryDialog: _buttleData.buttlePath
-                }
-
-                Text {
-                    id: textSaveGraph
-                    color: "#00b2a1"
-                    text: "Save Graph"
-                    y: 7
-                    font.pointSize: 12
-                }
-                MouseArea {
-                    hoverEnabled: true
-                    anchors.fill: parent
-                    onClicked: {
-                        finderSaveGraph.browseFile()
-                        if (finderSaveGraph.propFile) {
-                            _buttleData.saveData(finderSaveGraph.propFile)
-                        }
-                    }
-                }
-            }
-
-            // to load the graph
-            Rectangle {
-                id: buttonLoad
-                anchors.verticalCenter: parent.verticalCenter
-                width: textSaveGraph.width
-                height: 28
-                color: "transparent"
-                radius: 3
-
-                FolderListView {
-                    id: finderLoadGraph
-                    typeDialog: "OpenFile"
-                    messageDialog: "Load a graph"
-                    directoryDialog: _buttleData.buttlePath
-                }
-
-                Text {
-                    id: textLoadGraph
-                    color: "#00b2a1"
-                    text: "Load Graph"
-                    y: 7
-                    font.pointSize: 12
-                }
-                MouseArea {
-                    hoverEnabled: true
-                    anchors.fill: parent
-                    onClicked: {
-                        finderLoadGraph.browseFile();
-                        if (finderLoadGraph.propFile) {
-                            _buttleData.loadData(finderLoadGraph.propFile)
-                        }
-                    }
-                }
-            }
+            }            
         }
     }
 }

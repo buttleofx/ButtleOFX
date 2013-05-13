@@ -204,7 +204,7 @@ class NodeWrapper(QtCore.QObject):
 
     # from a QColor
     def setColor(self, color):
-        self._node.setColor(color.red(), color.green(), color.blue())
+        self._node.setColorRGB(color.red(), color.green(), color.blue())
 
     def setNbInput(self, nbInput):
         self._node.setNbInput(nbInput)

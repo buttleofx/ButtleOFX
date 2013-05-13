@@ -21,6 +21,7 @@ Item {
         nbFrames: nodeNbFrames
     }
 
+    property variant timer : timer
 
     // Displays an integer with 2 digits
     function with2digits(n) {
@@ -29,13 +30,14 @@ Item {
 
     // Returns the string displayed under the viewer. It's the current time.
     function getTimePosition() {
-        var totalSeconds = Math.floor(nodeDurationSeconds)
-        var totalMinutes = Math.floor(totalSeconds / 60)
-        var totalHours = Math.floor(totalMinutes / 60)
+        var totalHours = Math.floor(nodeDurationSeconds / 3600)
+        var totalMinutes = Math.floor((nodeDurationSeconds - totalHours*3600) / 60)
+        var totalSeconds = Math.floor(nodeDurationSeconds - totalHours*3600 - totalMinutes*60)
 
-        var elapsedSeconds = Math.floor( (timer.frame + 1) * nodeDurationSeconds / nodeNbFrames)
-        var elapsedMinutes = Math.floor(totalSeconds / 60)
-        var elapsedHours = Math.floor(totalMinutes / 60)
+        var durationElapsedSeconds = Math.floor((timer.frame + 1) / timer.fps)
+        var elapsedHours = Math.floor(durationElapsedSeconds / 3600)
+        var elapsedMinutes = Math.floor((durationElapsedSeconds - elapsedHours*3600) / 60)
+        var elapsedSeconds = Math.floor(durationElapsedSeconds - elapsedHours*3600 - elapsedMinutes*60)
 
         return with2digits(elapsedHours) + ":" + with2digits(elapsedMinutes) + ":" + with2digits(elapsedSeconds) + " / " + with2digits(totalHours) + ":" + with2digits(totalMinutes) + ":" + with2digits(totalSeconds)
     }
@@ -172,7 +174,7 @@ Item {
                                 target: titleErrorDisplay
                                 opacity: 0
                             }
-                        }, 
+                        },
                         State {
                             name: "shown"
                             when: _buttleManager.viewerManager.nodeError != ""
@@ -400,7 +402,7 @@ Item {
                                       }
                                 ]*/
                             }
-                        } // Repeater mosquito 
+                        } // Repeater mosquito
 
                     } // Row (selectViewer = mosquitos )
 
@@ -427,7 +429,7 @@ Item {
                         Rectangle{
                             id: whiteBar
                             x: barTimeline.x
-                            width: cursorTimeline.x - barTimeline.x + cursorTimeline.width/2 
+                            width: cursorTimeline.x - barTimeline.x + cursorTimeline.width/2
                             height: parent.height
                             color: "white"
                         }
@@ -443,10 +445,12 @@ Item {
                             anchors.margins: -10
                             onPressed : {
                                 // -10 because of margins
-                                cursorTimeline.x = mouse.x - 10 - cursorTimeline.width/2
-                                timer.pause()
-                                timer.frame = (cursorTimeline.x + cursorTimeline.width/2) * nodeNbFrames /barTimeline.width;
-                                
+
+                                //cursorTimeline.x = mouse.x - 10 - cursorTimeline.width/2
+                                //timer.frame = (cursorTimeline.x + cursorTimeline.width/2) * nodeNbFrames /barTimeline.width;
+
+                                timer.frame = (mouse.x - 10) * nodeNbFrames /barTimeline.width;
+                                //timer.pause()
                             }
                         }
                         /* blocks the cursor even if window isn't resize...
@@ -472,12 +476,16 @@ Item {
                             drag.axis: Drag.XAxis
                             drag.minimumX: barTimeline.x
                             drag.maximumX: barTimeline.x + barTimeline.width
-                            anchors.margins: -10 // allow to have an area around the cursor which allows to select the cursor even if we are not exactly on it
+                            anchors.margins: -10  // allow to have an area around the cursor which allows to select the cursor even if we are not exactly on it
                             onPressed: {
-                                timer.pause()
+                                timer.pause()  // stop if it was playing
+                                timer.launchProcessGraph()  // used this to use the processGraph (should be faster)
+                            }
+                            onPositionChanged: {
+                                timer.frame = (cursorTimeline.x + cursorTimeline.width/2) * nodeNbFrames / barTimeline.width
                             }
                             onReleased: {
-                                timer.frame = (cursorTimeline.x + cursorTimeline.width/2) * nodeNbFrames / barTimeline.width;
+                                timer.pause()  // to close the processGraph launch with onPressed
                             }
                         }
                     }

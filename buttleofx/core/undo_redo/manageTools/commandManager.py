@@ -3,13 +3,16 @@ from quickmamba.patterns import Singleton
 
 class CommandManager(Singleton):
     """
-    Manage a list of commands.
+    Manages a list of commands.
     """
     commands = []  # list of undo/redo commands
     index = 0
 
     active = False
+
     cleanIndex = 0
+    savedGraphIndex = 0
+
     undoLimit = 10
     redoLimit = 10
 
@@ -54,6 +57,13 @@ class CommandManager(Singleton):
         Sets the redo limit of the CommandManager.
         """
         self.redoLimit = limit
+
+    def setSavedGraphIndex(self, index):
+        """
+        Sets the index where was the graph when he was saved the last time, and indicates to buttleData that something changed (usefull for the display of the "save graph" icon)
+        """
+        self.savedGraphIndex = index
+        self.graphHadChanged()
 
     def canUndo(self):
         """
@@ -103,6 +113,13 @@ class CommandManager(Singleton):
         Executes a new undoable command (add command to the stack ?)
         """
 
+        # update buttleData to indicate that something just changed (must be done in first because self.index will me incremented then !)
+        # if the graph was saved, and some commands were undone, and an other command is beeing pushed => the graph will never be the same as the one that had been saved, so we "clear" the savedGraphIndex (=-1)
+        if self.savedGraphIndex > self.index:
+            self.savedGraphIndex = -1
+        # we update buttleData now
+        self.graphHadChanged()
+
         # clear the redoable part of commands
         for command in self.commands[self.index:]:
             self.commands.pop(self.commands.index(command))
@@ -124,6 +141,9 @@ class CommandManager(Singleton):
             self.index -= 1
             self.commands[self.index].undoCmd()
 
+            # we update buttleData to indicates that the graph just changed
+            self.graphHadChanged()
+
     def redo(self):
         """
         Redoes the last undone command.
@@ -131,6 +151,9 @@ class CommandManager(Singleton):
         if self.canRedo():
             self.commands[self.index].redoCmd()
             self.index += 1
+
+            # we update buttleData to indicates that the graph just changed
+            self.graphHadChanged()
 
     def getIndex(self):
         """
@@ -143,3 +166,11 @@ class CommandManager(Singleton):
         Gets the list of commands of the CommandManager.
         """
         return self.commands
+
+    def graphHadChanged(self):
+        """
+            Indicates to ButtleData that a command just had been done.
+            This function will update the property graphCanBeSaved of ButtleData and will change the display of the "save graph" icon.
+        """
+        from buttleofx.data import ButtleDataSingleton
+        ButtleDataSingleton().get().setGraphCanBeSaved(self.savedGraphIndex != self.index)

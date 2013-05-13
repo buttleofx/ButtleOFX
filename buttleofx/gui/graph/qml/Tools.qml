@@ -135,7 +135,7 @@ Rectangle {
                 imageSourceLocked: parent.imgPath + "save_locked.png"
                 buttonName: "save"
                 buttonText: "Save graph"
-                locked: false // need to be improved : boolean in _buttleData modified each time the graph is modified ??
+                locked: !_buttleData.graphCanBeSaved
             }
 
             ToolElement {

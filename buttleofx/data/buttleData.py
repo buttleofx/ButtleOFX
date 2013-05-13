@@ -14,6 +14,8 @@ from buttleofx.core.graph import Graph
 from buttleofx.core.graph.connection import IdClip
 # gui : graphWrapper
 from buttleofx.gui.graph import GraphWrapper
+# commands
+from buttleofx.core.undo_redo.manageTools import CommandManager
 
 
 class ButtleData(QtCore.QObject):
@@ -28,12 +30,14 @@ class ButtleData(QtCore.QObject):
         - _currentCopiedNodesInfo : the list of buttle info for the current node(s) copied
         - _mapNodeNameToComputedImage
         - _buttlePath : the path of the root directory (usefull to import images)
-
+        - _graphCanBeSaved : a boolean indicating if the graph had changed since the last saving (usefull for the display of the icon "save graph")
         This class containts all data we need to manage the application.
     """
 
     _graph = None
     _graphWrapper = None
+
+    _graphCanBeSaved = False
 
     # the current params
     _currentParamNodeName = None
@@ -148,6 +152,12 @@ class ButtleData(QtCore.QObject):
         """
         return self._mapNodeNameToComputedImage
 
+    def graphCanBeSaved(self):
+        """
+            Returns the value of the boolean self._graphCanBeSaved
+        """
+        return self._graphCanBeSaved
+
 
     #################### setters ####################
 
@@ -213,6 +223,13 @@ class ButtleData(QtCore.QObject):
         else:
             self._currentConnectionId = connectionWrapper.getId()
         self.currentConnectionWrapperChanged.emit()
+
+    def setGraphCanBeSaved(self, canBeSaved):
+        """
+            Set the value of the boolean self._graphCanBeSaved.
+        """
+        self._graphCanBeSaved = canBeSaved
+        self.graphCanBeSavedChanged.emit()
 
     ############################################### VIDEO FONCTIONS ##################################################
     def getVideoIsPlaying(self):
@@ -345,6 +362,9 @@ class ButtleData(QtCore.QObject):
             f.write(unicode(json.dumps(dictJson, sort_keys=True, indent=2, ensure_ascii=False)))
         f.closed
 
+        # Finally we update the savedGraphIndex of the CommandManager : it must be equal to the current index
+        CommandManager().setSavedGraphIndex(CommandManager().getIndex())
+
     @QtCore.Slot(str)
     @QtCore.Slot()
     def loadData(self, url='buttleofx/backup/data.json'):
@@ -403,6 +423,11 @@ class ButtleData(QtCore.QObject):
     # paste possibility
     pastePossibilityChanged = QtCore.Signal()
     canPaste = QtCore.Property(bool, canPaste, notify=pastePossibilityChanged)
+
+    # possibility to save graph
+    graphCanBeSavedChanged = QtCore.Signal()
+    graphCanBeSaved = QtCore.Property(bool, graphCanBeSaved, notify=graphCanBeSavedChanged)
+
 
 
 # This class exists just because there are problems when a class extends 2 other classes (Singleton and QObject)

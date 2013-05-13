@@ -140,8 +140,12 @@ class Node(object):
     def setOldCoord(self, x, y):
         self._oldCoord = (x, y)
 
-    def setColor(self, r, g, b):
+    def setColorRGB(self, r, g, b):
         self._color = (r, g, b)
+        self.nodeLookChanged()
+
+    def setColor(self, color):
+        self._color = color
         self.nodeLookChanged()
 
     def setClips(self, clips):

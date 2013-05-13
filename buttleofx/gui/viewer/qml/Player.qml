@@ -190,14 +190,14 @@ Item {
             /******************* ToolBar *************************************/
             Rectangle {
                 id: toolBarRegion
+
+                property int impHeightValue: 25
+
                 y: parent.height + tabBar.height
                 width: parent.width
-                implicitHeight: toolBarRegion.skipLine ? 50 : 25
+                implicitHeight: impHeightValue
                 color: "transparent"
                 Layout.verticalSizePolicy: Layout.Fixed
-
-                // indicates if the toolBar must be displayed with 1 or 2 lines
-                property bool skipLine : selectViewer.x < 350
 
                 // Tools (zoom, timeline buttons, mosquitos)
                 Rectangle {
@@ -223,13 +223,28 @@ Item {
                         }
                     }
 
-                    // Mosquitos
+                    // Mosquitos element (buttons to select the viewer)
                    Row {
                         id: selectViewer
+
+                        property int yValue: 8
+                        y: yValue
+
                         spacing: 2
                         anchors.right: parent.right
                         anchors.rightMargin: parent.height
-                        y: toolBarRegion.skipLine ? 5 + selectViewer.height : 8
+
+                        // when there isn't enough place to display this element and the timeline tools on the same line, we display them with 2 lines
+                        onXChanged: {
+                            if (selectViewer.x < 350) {
+                                toolBarRegion.implicitHeight = toolBarRegion.impHeightValue * 2
+                                selectViewer.y = selectViewer.yValue + selectViewer.height - 3
+                            }
+                            else {
+                                toolBarRegion.implicitHeight = toolBarRegion.impHeightValue
+                                selectViewer.y = selectViewer.yValue
+                            }
+                        }
 
                         // Mosquito
                         Rectangle {

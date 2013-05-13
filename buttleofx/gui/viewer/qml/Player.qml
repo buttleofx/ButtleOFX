@@ -21,6 +21,7 @@ Item {
         nbFrames: nodeNbFrames
     }
 
+    property variant timer : timer
 
     // Displays an integer with 2 digits
     function with2digits(n) {
@@ -173,7 +174,7 @@ Item {
                                 target: titleErrorDisplay
                                 opacity: 0
                             }
-                        }, 
+                        },
                         State {
                             name: "shown"
                             when: _buttleManager.viewerManager.nodeError != ""
@@ -401,7 +402,7 @@ Item {
                                       }
                                 ]*/
                             }
-                        } // Repeater mosquito 
+                        } // Repeater mosquito
 
                     } // Row (selectViewer = mosquitos )
 
@@ -428,7 +429,7 @@ Item {
                         Rectangle{
                             id: whiteBar
                             x: barTimeline.x
-                            width: cursorTimeline.x - barTimeline.x + cursorTimeline.width/2 
+                            width: cursorTimeline.x - barTimeline.x + cursorTimeline.width/2
                             height: parent.height
                             color: "white"
                         }

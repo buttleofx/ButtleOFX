@@ -71,7 +71,7 @@ Rectangle {
             anchors.fill: parent
             anchors.margins: -7
             onDragEnter: {
-                acceptDrop = hasText && text.substring(0, 5) == "clip/";
+                acceptDrop = hasText && text.substring(0, 5) == "clip/" && _buttleManager.connectionManager.canConnectTmpNodes(text, c.clipModel, index);
 
                 // tmpConnection update
                 if(acceptDrop) {
@@ -88,13 +88,14 @@ Rectangle {
                     }
                 }
 
-                onDrop: {
-                    if (acceptDrop) {
-                        _buttleManager.connectionManager.connectionDropEvent(text, c.clipModel, index)
-                    }
-                }
+
             }
 
+            onDrop: {
+                if (acceptDrop) {
+                    _buttleManager.connectionManager.connectionDropEvent(text, c.clipModel, index)
+                }
+            }
 
         }
     }

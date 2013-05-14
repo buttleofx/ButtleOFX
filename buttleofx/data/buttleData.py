@@ -390,10 +390,17 @@ class ButtleData(QtCore.QObject):
 
             # viewer : currentViewerNodeName
             for num_view, view in self._mapViewerIndextoNodeName.iteritems():
-                if self.getCurrentViewerNodeName() == view:
-                    dictJson["viewer"]["current_view"][str(num_view)] = view
-                if view is not None and self.getCurrentViewerNodeName() != view:
-                    dictJson["viewer"]["other_views"].update({num_view: view})
+                if view is not None:
+                    (nodeName, frame) = view
+                    print "nodeName = " + nodeName + " / frame = " + str(frame)
+                    if self.getCurrentViewerNodeName() == nodeName:
+                        dictJson["viewer"]["current_view"][str(num_view)] = {}
+                        dictJson["viewer"]["current_view"][str(num_view)]["nodeName"] = nodeName
+                        dictJson["viewer"]["current_view"][str(num_view)]["frame"] = frame
+                    else:
+                        dictJson["viewer"]["other_views"][str(num_view)] = {}
+                        dictJson["viewer"]["other_views"][str(num_view)]["nodeName"] = nodeName
+                        dictJson["viewer"]["other_views"][str(num_view)]["frame"] = frame
 
             # write dictJson in a file
             f.write(unicode(json.dumps(dictJson, sort_keys=True, indent=2, ensure_ascii=False)))
@@ -425,12 +432,15 @@ class ButtleData(QtCore.QObject):
             self.currentParamNodeChanged.emit()
             # viewer : other views
             for index, view in decoded["viewer"]["other_views"].iteritems():
-                self._mapViewerIndextoNodeName.update({index: view})
+                nodeName, frame = view["nodeName"], view["frame"]
+                self._mapViewerIndextoNodeName.update({index: (nodeName, frame)})
             # viewer : currentViewerNodeName
             for index, current_view in decoded["viewer"]["current_view"].iteritems():
-                self._mapViewerIndextoNodeName.update({index: current_view})
+                nodeName, frame = current_view["nodeName"], current_view["frame"]
+                self._mapViewerIndextoNodeName.update({index: (nodeName, frame)})
                 self.setCurrentViewerIndex(int(index))
                 self.setCurrentViewerNodeName(current_view)
+                self.setCurrentViewerFrame(frame)
         f.closed
 
     ################################################## DATA EXPOSED TO QML ##################################################

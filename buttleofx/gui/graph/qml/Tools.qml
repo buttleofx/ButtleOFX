@@ -63,7 +63,7 @@ Rectangle {
                 }
                 break;
 
-            case "open":
+            case "load":
                 finderLoadGraph.browseFile();
                 if (finderLoadGraph.propFile) {
                     _buttleData.loadData(finderLoadGraph.propFile)
@@ -116,8 +116,8 @@ Rectangle {
                 imageSource: parent.imgPath + "open.png"
                 imageSourceHover: parent.imgPath + "open_hover.png"
                 imageSourceLocked: parent.imgPath + "open_locked.png"
-                buttonName: "open"
-                buttonText: "Load a graph"
+                buttonName: "load"
+                buttonText: "Load a graph (Ctrl+L)"
                 locked: false
             }
 
@@ -134,7 +134,7 @@ Rectangle {
                 imageSourceHover: parent.imgPath + "save_hover.png"
                 imageSourceLocked: parent.imgPath + "save_locked.png"
                 buttonName: "save"
-                buttonText: "Save graph"
+                buttonText: "Save graph (Ctrl+S)"
                 locked: !_buttleData.graphCanBeSaved
             }
 
@@ -143,7 +143,7 @@ Rectangle {
                 imageSourceHover: parent.imgPath + "undo_hover.png"
                 imageSourceLocked: parent.imgPath + "undo_locked.png"
                 buttonName: "undo"
-                buttonText: "Undo"
+                buttonText: "Undo (Ctrl+Z)"
                 locked: _buttleManager.canUndo ? false : true
             }
 
@@ -152,7 +152,7 @@ Rectangle {
                 imageSourceHover: parent.imgPath + "redo_hover.png"
                 imageSourceLocked: parent.imgPath + "redo_locked.png"
                 buttonName: "redo"
-                buttonText: "Redo"
+                buttonText: "Redo (Ctrl+Y)"
                 locked: _buttleManager.canRedo ? false : true
             }
 
@@ -161,7 +161,7 @@ Rectangle {
                 imageSourceHover: parent.imgPath + "copy_hover.png"
                 imageSourceLocked: parent.imgPath + "copy_locked.png"
                 buttonName: "copy"
-                buttonText: "Copy"
+                buttonText: "Copy (Ctrl+C)"
                 locked: _buttleData.currentSelectedNodeWrappers.isEmpty() ? true : false
             }
 
@@ -170,7 +170,7 @@ Rectangle {
                 imageSourceHover: parent.imgPath + "cut_hover.png"
                 imageSourceLocked: parent.imgPath + "cut_locked.png"
                 buttonName: "cut"
-                buttonText: "Cut"
+                buttonText: "Cut (Ctrl+X)"
                 locked: _buttleData.currentSelectedNodeWrappers.isEmpty() ? true : false
             }
 
@@ -179,7 +179,7 @@ Rectangle {
                 imageSourceHover: parent.imgPath + "paste_hover.png"
                 imageSourceLocked: parent.imgPath + "paste_locked.png"
                 buttonName: "paste"
-                buttonText: "Paste"
+                buttonText: "Paste (Ctrl+V)"
                 locked: _buttleData.canPaste ? false : true
             }
 
@@ -188,7 +188,7 @@ Rectangle {
                 imageSourceHover: parent.imgPath + "duplicate_hover.png"
                 imageSourceLocked: parent.imgPath + "duplicate_locked.png"
                 buttonName: "duplicate"
-                buttonText: "Duplicate"
+                buttonText: "Duplicate (Ctrl+D)"
                 locked: _buttleData.currentSelectedNodeWrappers.isEmpty() ? true : false
             }
 
@@ -197,7 +197,7 @@ Rectangle {
                 imageSourceHover: parent.imgPath + "delete_hover.png"
                 imageSourceLocked: parent.imgPath + "delete_locked.png"
                 buttonName: "deleteNode"
-                buttonText: "Delete the node"
+                buttonText: "Delete the node (suppr)"
                 locked: (!_buttleData.currentSelectedNodeWrappers.isEmpty() || _buttleData.currentConnectionWrapper)? false : true
             }            
         }

@@ -21,27 +21,47 @@ Item {
             if(_buttleData.currentConnectionWrapper) {
                 _buttleManager.connectionManager.disconnect(_buttleData.currentConnectionWrapper);
             }
-            else {
+            else if (!_buttleData.currentSelectedNodeWrappers.isEmpty()){
                 _buttleManager.nodeManager.destructionNodes();
             }
         }
         if ((event.key == Qt.Key_Z) && (event.modifiers & Qt.ControlModifier)) {
-            _buttleManager.undo();
+            if(_buttleManager.canUndo) {
+                _buttleManager.undo();
+            }
         }
         if ((event.key == Qt.Key_Y) && (event.modifiers & Qt.ControlModifier)) {
-            _buttleManager.redo();
+            if(_buttleManager.canRedo) {
+                _buttleManager.redo();
+            }
         }
         if ((event.key == Qt.Key_D) && (event.modifiers & Qt.ControlModifier)){
-            _buttleManager.nodeManager.duplicationNode()
+            if (!_buttleData.currentSelectedNodeWrappers.isEmpty()) {
+                _buttleManager.nodeManager.duplicationNode()
+            }
         }
         if ((event.key == Qt.Key_C) && (event.modifiers & Qt.ControlModifier)){
-            _buttleManager.nodeManager.copyNode()
+            if (!_buttleData.currentSelectedNodeWrappers.isEmpty()) {
+                _buttleManager.nodeManager.copyNode()
+            }
         }
         if ((event.key == Qt.Key_V) && (event.modifiers & Qt.ControlModifier)){
-            _buttleManager.nodeManager.pasteNode()
+           if (_buttleData.canPaste) {
+                _buttleManager.nodeManager.pasteNode();
+           }
         }
         if ((event.key == Qt.Key_X) && (event.modifiers & Qt.ControlModifier)){
-            _buttleManager.nodeManager.cutNode()
+            if (!_buttleData.currentSelectedNodeWrappers.isEmpty()) {
+                _buttleManager.nodeManager.cutNode()
+            }
+        }
+        if ((event.key == Qt.Key_S) && (event.modifiers & Qt.ControlModifier)){
+            if(_buttleData.graphCanBeSaved) {
+                graphEditor.doAction("save")
+            }
+        }
+        if ((event.key == Qt.Key_L) && (event.modifiers & Qt.ControlModifier)){
+            graphEditor.doAction("load")
         }
 
         // Viewer
@@ -212,6 +232,7 @@ Item {
                 }
 
                 GraphEditor {
+                    id: graphEditor
                     //Splitter.minimumHeight: 0
                     width: parent.width
                     height: 0.5*parent.height

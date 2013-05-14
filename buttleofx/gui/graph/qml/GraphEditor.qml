@@ -7,6 +7,10 @@ Rectangle {
     z: 0    
     clip: true
 
+    function doAction(action) {
+        tools.doAction(action)
+    }
+
     Graph {
         id: graph
         y: 30

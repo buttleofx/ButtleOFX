@@ -4,7 +4,7 @@ from pyTuttle import tuttle
 # quickmamba
 from quickmamba.patterns import Signal
 # undo_redo
-from buttleofx.core.undo_redo.manageTools import CommandManager
+from buttleofx.core.undo_redo.manageTools import CommandManager, GroupUndoableCommands
 from buttleofx.core.undo_redo.commands.node import CmdCreateNode, CmdDeleteNodes, CmdCreateReaderNode, CmdSetCoord
 from buttleofx.core.undo_redo.commands.connection import CmdCreateConnection, CmdDeleteConnection
 
@@ -182,15 +182,39 @@ class Graph(object):
 
     ############################################### INTERACTION ###############################################
 
-    def nodeMoved(self, nodeName, x, y):
+    def nodeMoved(self, nodeName, newX, newY):
         """
-            This fonction pushes a cmdMoved in the CommandManager.
+            This function pushes a cmdMoved in the CommandManager.
         """
-        # only push a cmd if the node truly moved
-        if self.getNode(nodeName).getOldCoord() != (x, y):
-            cmdMoved = CmdSetCoord(self, nodeName, (x, y))
-            cmdManager = CommandManager()
-            cmdManager.push(cmdMoved)
+
+        from buttleofx.data import ButtleDataSingleton
+        buttleData = ButtleDataSingleton().get()
+        node = buttleData.getGraph().getNode(nodeName)
+
+        # What is the value of the movement (compared to the old position) ?
+        oldX, oldY = node.getOldCoord()
+        xMovement = newX - oldX
+        yMovement = newY - oldY
+
+        # if the node did'nt really move, nothing is done
+        if (xMovement, xMovement) == (0, 0):
+            return
+
+        commands = []
+
+        # we create a GroupUndoableCommands of CmdSetCoord for each selected node
+        for selectedNodeWrapper in buttleData.getCurrentSelectedNodeWrappers():
+            # we get the needed informations for this node
+            selectedNode = selectedNodeWrapper.getNode()
+            selectedNodeName = selectedNode.getName()
+            oldX, oldY = selectedNode.getOldCoord()
+
+            # we set the new coordinates of the node (each selected node is doing the same movement)
+            cmdMoved = CmdSetCoord(self, selectedNodeName, (oldX + xMovement, oldY + yMovement))
+            commands.append(cmdMoved)
+
+        # then we push the group of commands
+        CommandManager().push(GroupUndoableCommands(commands))
 
     ################################################## FLAGS ##################################################
 
@@ -211,7 +235,6 @@ class Graph(object):
             if (clipOut.getNodeName() == connection.getClipIn().getNodeName() and clipIn.getNodeName() == connection.getClipOut().getNodeName()):
                 return True
         return False
-
 
     ################################################ SAVE / LOAD ################################################
 

@@ -10,8 +10,7 @@ class GroupUndoableCommands:
     groupUndoableCommands = []
 
     def __init__(self, commands):
-        for command in commands:
-            self.groupUndoableCommands.append(command)
+        self.groupUndoableCommands = commands
 
     def undoCmd(self):
         """

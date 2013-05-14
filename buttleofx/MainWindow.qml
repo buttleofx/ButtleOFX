@@ -46,49 +46,32 @@ Item {
 
         // Viewer
         if ((event.key == Qt.Key_1) && (event.modifiers & Qt.KeypadModifier)){
-            _buttleData.currentViewerIndex = 1
-            _buttleData.currentViewerNodeWrapper = _buttleData.getNodeWrapperByViewerIndex(1)
-            _buttleEvent.emitViewerChangedSignal()
+            player.changeViewer(1)
         }
         if ((event.key == Qt.Key_2) && (event.modifiers & Qt.KeypadModifier)){
-            _buttleData.currentViewerIndex = 2
-            _buttleData.currentViewerNodeWrapper = _buttleData.getNodeWrapperByViewerIndex(2)
-            _buttleEvent.emitViewerChangedSignal()
+
+            player.changeViewer(2)
         }
         if ((event.key == Qt.Key_3) && (event.modifiers & Qt.KeypadModifier)){
-            _buttleData.currentViewerIndex = 3
-            _buttleData.currentViewerNodeWrapper = _buttleData.getNodeWrapperByViewerIndex(3)
-            _buttleEvent.emitViewerChangedSignal()
+            player.changeViewer(3)
         }
         if ((event.key == Qt.Key_4) && (event.modifiers & Qt.KeypadModifier)){
-            _buttleData.currentViewerIndex = 4
-            _buttleData.currentViewerNodeWrapper = _buttleData.getNodeWrapperByViewerIndex(4)
-            _buttleEvent.emitViewerChangedSignal()
+            player.changeViewer(4)
         }
         if ((event.key == Qt.Key_5) && (event.modifiers & Qt.KeypadModifier)){
-            _buttleData.currentViewerIndex = 5
-            _buttleData.currentViewerNodeWrapper = _buttleData.getNodeWrapperByViewerIndex(5)
-            _buttleEvent.emitViewerChangedSignal()
+            player.changeViewer(5)
         }
         if ((event.key == Qt.Key_6) && (event.modifiers & Qt.KeypadModifier)){
-            _buttleData.currentViewerIndex = 6
-            _buttleData.currentViewerNodeWrapper = _buttleData.getNodeWrapperByViewerIndex(6)
-            _buttleEvent.emitViewerChangedSignal()
+            player.changeViewer(6)
         }
         if ((event.key == Qt.Key_7) && (event.modifiers & Qt.KeypadModifier)){
-            _buttleData.currentViewerIndex = 7
-            _buttleData.currentViewerNodeWrapper = _buttleData.getNodeWrapperByViewerIndex(7)
-            _buttleEvent.emitViewerChangedSignal()
+            player.changeViewer(7)
         }
         if ((event.key == Qt.Key_8) && (event.modifiers & Qt.KeypadModifier)){
-            _buttleData.currentViewerIndex = 8
-            _buttleData.currentViewerNodeWrapper = _buttleData.getNodeWrapperByViewerIndex(8)
-            _buttleEvent.emitViewerChangedSignal()
+            player.changeViewer(8)
         }
         if ((event.key == Qt.Key_9) && (event.modifiers & Qt.KeypadModifier)){
-            _buttleData.currentViewerIndex = 9
-            _buttleData.currentViewerNodeWrapper = _buttleData.getNodeWrapperByViewerIndex(9)
-            _buttleEvent.emitViewerChangedSignal()
+            player.changeViewer(9)
         }
     }
 

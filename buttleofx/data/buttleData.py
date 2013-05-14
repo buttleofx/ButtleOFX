@@ -42,7 +42,6 @@ class ButtleData(QtCore.QObject):
     # the current params
     _currentParamNodeName = None
     _currentSelectedNodeNames = []
-    _currentViewerNodeName = None
 
     # for the connections
     _currentConnectionId = None
@@ -52,6 +51,8 @@ class ButtleData(QtCore.QObject):
 
     # for the viewer
     _currentViewerIndex = 1
+    _currentViewerFrame = 0
+    _currentViewerNodeName = None
     _mapViewerIndextoNodeName = {}
     _mapNodeNameToComputedImage = {}
         # boolean used in viewerManager
@@ -132,13 +133,40 @@ class ButtleData(QtCore.QObject):
 
     @QtCore.Slot(int, result=QtCore.QObject)
     def getNodeWrapperByViewerIndex(self, index):
-        return self._graphWrapper.getNodeWrapper(self._mapViewerIndextoNodeName[str(index)])
+        """
+            Returns the nodeWrapper of the node contained in the viewer at the corresponding index.
+        """
+        # We get the infos of this node. It's a tuple (fodeName, frame), so we have to return the first element nodeViewerInfos[0].
+        nodeViewerInfos = self._mapViewerIndextoNodeName[str(index)]
+        if nodeViewerInfos is None:
+            return None
+        else:
+            return self._graphWrapper.getNodeWrapper(nodeViewerInfos[0])
+
+    @QtCore.Slot(int, result=int)
+    def getFrameByViewerIndex(self, index):
+        """
+            Returns the frame of the node contained in the viewer at the corresponding index.
+        """
+        # We get the infos of this node. It's a tuple (fodeName, frame), so we have to return the second element nodeViewerInfos[1].
+        nodeViewerInfos = self._mapViewerIndextoNodeName[str(index)]
+        if nodeViewerInfos is None:
+            return 0
+        else:
+            return nodeViewerInfos[1]
+
 
     def getCurrentViewerNodeWrapper(self):
         """
             Returns the current viewer nodeWrapper.
         """
         return self._graphWrapper.getNodeWrapper(self.getCurrentViewerNodeName())
+
+    def getCurrentViewerFrame(self):
+        """
+            Returns the frame of the current viewer nodeWrapper.
+        """
+        return self._currentViewerFrame
 
     def getCurrentConnectionWrapper(self):
         """
@@ -172,6 +200,10 @@ class ButtleData(QtCore.QObject):
     def setCurrentViewerNodeName(self, nodeName):
         self._currentViewerNodeName = nodeName
         self.currentViewerNodeChanged.emit()
+
+    def setCurrentViewerFrame(self, frame):
+        self._currentViewerFrame = frame
+        self.currentViewerFrameChanged.emit()
 
     def setCurrentCopiedNodesInfo(self, nodesInfo):
         self._currentCopiedNodesInfo = nodesInfo
@@ -275,9 +307,14 @@ class ButtleData(QtCore.QObject):
                 if node.getCoord()[1] >= y and node.getCoord()[1] <= y + height:
                     self.appendToCurrentSelectedNodeNames(node.getName())
 
-    @QtCore.Slot(QtCore.QObject)
-    def assignNodeToViewerIndex(self, nodeWrapper):
-        self._mapViewerIndextoNodeName.update({str(self._currentViewerIndex): nodeWrapper.getName()})
+    @QtCore.Slot(QtCore.QObject, int)
+    def assignNodeToViewerIndex(self, nodeWrapper, frame):
+        """
+            Assigns a node to the _mapViewerIndextoNodeName at the current viewerIndex.
+            It adds a tuple (nodeName, frame).
+        """
+        if nodeWrapper:
+            self._mapViewerIndextoNodeName.update({str(self._currentViewerIndex): (nodeWrapper.getName(), frame)})
 
     @QtCore.Slot()
     def clearCurrentSelectedNodeNames(self):
@@ -410,6 +447,8 @@ class ButtleData(QtCore.QObject):
 
     currentViewerNodeChanged = QtCore.Signal()
     currentViewerNodeWrapper = QtCore.Property(QtCore.QObject, getCurrentViewerNodeWrapper, setCurrentViewerNodeWrapper, notify=currentViewerNodeChanged)
+    currentViewerFrameChanged = QtCore.Signal()
+    currentViewerFrame = QtCore.Property(int, getCurrentViewerFrame, setCurrentViewerFrame, notify=currentViewerFrameChanged)
 
     currentSelectedNodesChanged = QtCore.Signal()
     currentSelectedNodeWrappers = QtCore.Property("QVariant", getCurrentSelectedNodeWrappers, setCurrentSelectedNodeWrappers, notify=currentSelectedNodesChanged)

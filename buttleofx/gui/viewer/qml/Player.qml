@@ -295,8 +295,20 @@ Item {
                                  MouseArea {
                                     anchors.fill: parent
                                     onClicked: {
+                                        // first we save the frame for the current node, to be able to retrieve the frame later
+                                        if (_buttleData.currentViewerNodeWrapper != null) {
+                                            _buttleData.assignNodeToViewerIndex(_buttleData.currentViewerNodeWrapper, timer.frame);
+                                        }
+
+                                        // then we change the viewer
                                         _buttleData.currentViewerIndex = index + 1
                                         _buttleData.currentViewerNodeWrapper = _buttleData.getNodeWrapperByViewerIndex(index+1)
+
+                                        // and we change the frame of the viewer (if there isn't a node in this view, returns 0)
+                                        var frame = _buttleData.getFrameByViewerIndex(index+1)
+                                        _buttleData.currentViewerFrame = frame
+                                        timer.frame = frame
+
                                         _buttleEvent.emitViewerChangedSignal()
                                     }
                                 }

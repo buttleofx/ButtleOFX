@@ -205,7 +205,6 @@ Rectangle {
                     var newComponent = Qt.createQmlObject('MenuList { parentName: "buttle/"; x: rightMouseArea.mouseX; y:  rightMouseArea.mouseY; clickFrom: graph; side: "right";}', parent);
                     //newComponent.side = "right";
                     tools.menuComponent = newComponent;
-                    console.log(tools.menuComponent)
                     
                 }
                 else {

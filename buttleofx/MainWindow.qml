@@ -93,6 +93,41 @@ Item {
         if ((event.key == Qt.Key_9) && (event.modifiers & Qt.KeypadModifier)){
             player.changeViewer(9)
         }
+        // Assign the mosquito to the selected node
+        if ((event.key == Qt.Key_M)) {
+            var selectedNodes = _buttleData.currentSelectedNodeWrappers
+
+            // we assign the mosquito only if there is only one node selected
+            if(selectedNodes.count == 1) {
+                var node = selectedNodes.get(0)
+                _buttleData.currentViewerNodeWrapper = node
+                _buttleData.currentViewerFrame = 0
+                _buttleData.assignNodeToViewerIndex(node, 0)
+                _buttleEvent.emitViewerChangedSignal()
+            }
+        }
+
+        // Player
+        if (event.key == Qt.Key_Space && player.node != null) {
+            if(player.isPlaying) {
+                player.doAction("pause");
+            }
+            else {
+                player.doAction("play");
+            }
+        }
+
+        // Send the selected node on the parameters editor
+        if ((event.key == Qt.Key_P)) {
+            var selectedNodes = _buttleData.currentSelectedNodeWrappers
+
+            // we send the node only if there is only one node selected
+            if(selectedNodes.count == 1) {
+                var node = selectedNodes.get(0)
+                _buttleData.currentParamNodeWrapper = node
+            }
+        }
+
     }
 
     Rectangle {

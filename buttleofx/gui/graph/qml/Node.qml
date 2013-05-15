@@ -91,10 +91,11 @@ Rectangle {
         }
         onDrop: {
             if (acceptDrop) {
-                    _buttleData.currentViewerNodeWrapper = m.nodeModel;
-                    // we assign the node to the viewer, at the frame 0
-                    _buttleData.assignNodeToViewerIndex(m.nodeModel, 0);
-                    _buttleEvent.emitViewerChangedSignal()
+                _buttleData.currentViewerNodeWrapper = m.nodeModel;
+                _buttleData.currentViewerFrame = 0;
+                // we assign the node to the viewer, at the frame 0
+                _buttleData.assignNodeToViewerIndex(m.nodeModel, 0);
+                _buttleEvent.emitViewerChangedSignal()
             }
         }
     }

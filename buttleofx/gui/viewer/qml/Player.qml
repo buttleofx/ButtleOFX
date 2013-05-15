@@ -12,6 +12,7 @@ Item {
     property real nodeFps : node ? node.fps :  25
     property int nodeNbFrames: node ? node.nbFrames : 1
     property real nodeDurationSeconds: node ? node.nbFrames/node.fps : 0
+    property bool isPlaying: false
 
     TimerPlayer {
         //class Timer defined in python
@@ -60,6 +61,10 @@ Item {
         timer.frame = frame
 
         _buttleEvent.emitViewerChangedSignal()
+    }
+
+    function doAction(action) {
+        timelineTools.doAction(action)
     }
 
     onNodeChanged: {

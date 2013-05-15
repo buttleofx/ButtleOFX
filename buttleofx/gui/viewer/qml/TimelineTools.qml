@@ -12,6 +12,7 @@ Item {
             case "begin":
                 //same result as if we push the stop button
                 timer.stop()
+                player.isPlaying = false
                 break;
 
             case "previous":
@@ -20,14 +21,17 @@ Item {
 
             case "stop":
                 timer.stop()
+                player.isPlaying = false
                 break;
 
             case "pause":
                 timer.pause()
+                player.isPlaying = false
                 break;
 
             case "play":
                 timer.play()
+                player.isPlaying = true
                 break;
 
             case "next":
@@ -36,6 +40,7 @@ Item {
 
             case "end":
                 timer.frame = nbFrames - 1
+                player.isPlaying = false
                 break;
             default:
                 break;

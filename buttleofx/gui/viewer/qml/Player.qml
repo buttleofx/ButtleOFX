@@ -297,7 +297,8 @@ Item {
                                     onClicked: {
                                         _buttleData.currentViewerIndex = index + 1
                                         _buttleData.currentViewerNodeWrapper = _buttleData.getNodeWrapperByViewerIndex(index+1)
-                                        _buttleEvent.emitViewerChangedSignal()
+                                        if(_buttleData.getCurrentViewerNodeName())
+                                            _buttleEvent.emitViewerChangedSignal()
                                     }
                                 }
 

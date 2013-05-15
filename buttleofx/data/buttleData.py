@@ -28,7 +28,7 @@ class ButtleData(QtCore.QObject):
         - _currentParamNodeName : the name of the node currently displayed in the paramEditor
         - _currentConnectionId : the list of the id of the connections currently selected
         - _currentCopiedNodesInfo : the list of buttle info for the current node(s) copied
-        - _mapNodeNameToComputedImage
+        - _mapNodeNameToComputedImage : this map makes the correspondance between a gloablHash and a computed image (max 20 images stored)
         - _buttlePath : the path of the root directory (usefull to import images)
         - _graphCanBeSaved : a boolean indicating if the graph had changed since the last saving (usefull for the display of the icon "save graph")
         This class containts all data we need to manage the application.
@@ -54,9 +54,9 @@ class ButtleData(QtCore.QObject):
     _currentViewerIndex = 1
     _mapViewerIndextoNodeName = {}
     _mapNodeNameToComputedImage = {}
-        # boolean used in viewerManager
+    # boolean used in viewerManager
     _videoIsPlaying = False
-        # processGraph used in viewerManager to compute images
+    # processGraph used in viewerManager to compute images
     _processGraph = None
     _timeRange = None
 
@@ -96,6 +96,7 @@ class ButtleData(QtCore.QObject):
         """
         return self._currentSelectedNodeNames
 
+    @QtCore.Slot()
     def getCurrentViewerNodeName(self):
         """
             Returns the name of the current viewer node.

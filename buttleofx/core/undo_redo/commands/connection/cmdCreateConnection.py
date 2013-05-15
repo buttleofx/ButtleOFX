@@ -68,10 +68,5 @@ class CmdCreateConnection(UndoableCommand):
         self._graphTarget.getConnections().append(self._connection)
         self._graphTarget.connectionsChanged()
 
-        # link signals of the connection to a global signal ViewerChangedSignal
-        buttleEvent = ButtleEventSingleton().get()
-        self._connection.connectionClipOutChanged.connect(buttleEvent.emitViewerChangedSignal)
-        self._connection.connectionClipInChanged.connect(buttleEvent.emitViewerChangedSignal)
-
         # return the buttle connection
         return self._connection

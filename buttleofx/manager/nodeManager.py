@@ -43,8 +43,11 @@ class NodeManager(QtCore.QObject):
         if buttleData.getCurrentViewerNodeName() in buttleData.getCurrentSelectedNodeNames():
             buttleData.setCurrentViewerNodeName(None)
         # if the viewer display a node affected by the destruction
-        if buttleData.getCurrentViewerNodeName() in buttleData._mapNodeNameToComputedImage:
-            buttleData.setCurrentViewerNodeName(None)
+        frame = 0
+        hashCode = tuttle.NodeHashContainer().getHash(buttleData.getCurrentViewerNodeName(), frame)
+        for hashCodeOfImageComputed, imageComputed in buttleData._mapNodeNameToComputedImage:
+            if hashCode == hashCodeOfImageComputed:
+                buttleData.setCurrentViewerNodeName(None)
 
         # if at least one node in the graph
         if len(buttleData.getGraphWrapper().getNodeWrappers()) > 0 and len(buttleData.getGraph().getNodes()) > 0:

@@ -32,8 +32,7 @@ class GLViewport_tuttleofx(GLViewport):
         buttleEvent = ButtleEventSingleton().get()
         # connect : load image when the viewer changed
         buttleEvent.viewerChangedSignal.connect(self.loadImage)
-        # connect : clearMap and load image when one param changed
-        buttleEvent.oneParamChangedSignal.connect(self.clearMapOfImageAlreadyCalculated)
+        # connect : load image when one param changed
         buttleEvent.oneParamChangedSignal.connect(self.loadImage)
 
     @QtCore.Slot()
@@ -41,14 +40,11 @@ class GLViewport_tuttleofx(GLViewport):
         buttleEvent = ButtleEventSingleton().get()
         # disconnect : load image when the viewer changed
         buttleEvent.viewerChangedSignal.disconnect(self.loadImage)
-        # disconnect : clearMap and load image when one param changed
-        buttleEvent.oneParamChangedSignal.disconnect(self.clearMapOfImageAlreadyCalculated)
+        # disconnect : load image when one param changed
         buttleEvent.oneParamChangedSignal.disconnect(self.loadImage)
 
     def loadImage_tuttle(self):
-        #print "--------------------------------- loadImage_tuttle ---------------------------"
         buttleManager = ButtleManagerSingleton().get()
-        #imgRes = buttleManager.getViewerManager().computeNode(self._time)
         logging.debug("retrieveImage start")
         imgRes = buttleManager.getViewerManager().retrieveImage(self._frame, self._frameHasChanged)
         logging.debug("retrieveImage end")

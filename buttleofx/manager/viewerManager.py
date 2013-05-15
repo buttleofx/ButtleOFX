@@ -38,16 +38,12 @@ class ViewerManager(QtCore.QObject):
         self._nodeError = nodeName
         self.nodeErrorChanged.emit()
 
-    def computeNode(self, frame):
+    def computeNode(self, node, frame):
         """
-            Computes the node at the frame indicated.
+            Computes the node (displayed in the viewer) at the frame indicated.
         """
-        #print "------- COMPUTE NODE -------"
-
         buttleData = ButtleDataSingleton().get()
-        # Get the name of the currentNode of the viewer
-        node = buttleData.getCurrentViewerNodeName()
-        graph = buttleData.getGraph().getGraphTuttle()
+        graphTuttle = buttleData.getGraph().getGraphTuttle()
 
         #Get the output where we save the result
         self._tuttleImageCache = tuttle.MemoryCache()
@@ -58,7 +54,7 @@ class ViewerManager(QtCore.QObject):
             processGraph.processAtTime(self._tuttleImageCache, frame)
         else:  # if it's an image only
             processOptions = tuttle.ComputeOptions(int(frame))
-            processGraph = tuttle.ProcessGraph(processOptions, graph, [node])
+            processGraph = tuttle.ProcessGraph(processOptions, graphTuttle, [node])
             processGraph.setup()
             timeRange = tuttle.TimeRange(frame, frame, 1)  # buttleData.getTimeRange()
             processGraph.beginSequence(timeRange)
@@ -67,8 +63,18 @@ class ViewerManager(QtCore.QObject):
             processGraph.endSequence()
 
         self._computedImage = self._tuttleImageCache.get(0)
+
         #Add the computedImage to the map
-        buttleData._mapNodeNameToComputedImage.update({node: self._computedImage})
+        hashMap = tuttle.NodeHashContainer()
+        graphTuttle.computeGlobalHashAtTime(hashMap, frame)
+        hasCode = hashMap.getHash(node, frame)
+        #Max 15 computedImages saved in memory
+        if hasCode not in buttleData._mapNodeNameToComputedImage.keys() and len(buttleData._mapNodeNameToComputedImage) < 15:
+            buttleData._mapNodeNameToComputedImage.update({hasCode: self._computedImage})
+        elif hasCode not in buttleData._mapNodeNameToComputedImage.keys() and len(buttleData._mapNodeNameToComputedImage) >= 15:
+            #Delete a computed image from the memory (random)
+            buttleData._mapNodeNameToComputedImage.popitem()
+            buttleData._mapNodeNameToComputedImage.update({hasCode: self._computedImage})
 
         return self._computedImage
 
@@ -79,19 +85,24 @@ class ViewerManager(QtCore.QObject):
         buttleData = ButtleDataSingleton().get()
         #Get the name of the currentNode of the viewer
         node = buttleData.getCurrentViewerNodeName()
+        #Get the gloabl hashCode of the node
+        if node != None:
+            hashMap = tuttle.NodeHashContainer()
+            buttleData.getGraph().getGraphTuttle().computeGlobalHashAtTime(hashMap, frame)
+            node_hashCode = hashMap.getHash(node, frame)
         #Get the map
         mapNodeToImage = buttleData.getMapNodeNameToComputedImage()
 
         try:
             self.setNodeError("")
-            #If the image is already calculated
-            for element in mapNodeToImage:
-                if node == element and frameChanged is False:
+            for key in mapNodeToImage.keys():
+                #If the image is already calculated
+                if node_hashCode == key and frameChanged is False:
                     print "**************************Image already calculated**********************"
-                    return buttleData._mapNodeNameToComputedImage[node]
-                # If it is not
-            #print "************************Calcul of image***************************"
-            return self.computeNode(frame)
+                    return mapNodeToImage.get(node_hashCode)
+            #If it is not
+            print "**************************Image is not already calculated**********************"
+            return self.computeNode(node, frame)
         except Exception as e:
             print "Can't display node : " + node
             self.setNodeError(str(e))

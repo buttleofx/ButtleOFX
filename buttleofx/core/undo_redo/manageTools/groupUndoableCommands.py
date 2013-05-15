@@ -28,6 +28,8 @@ class GroupUndoableCommands:
     def doCmd(self):
         """
         Executes the user request (the groupe of functions).
+        Returns nothing : maybe need to be improved in the future (list of return value of each command ?).
         """
         for command in self.groupUndoableCommands:
             command.doCmd()
+        return

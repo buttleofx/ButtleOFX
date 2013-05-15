@@ -126,7 +126,7 @@ class CommandManager(Singleton):
         self.commands.append(newCommand)
 
         # do the command
-        newCommand.doCmd()
+        return newCommand.doCmd()
         self.index += 1
 
         # we update buttleData to indicate that something just changed

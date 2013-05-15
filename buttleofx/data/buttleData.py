@@ -16,7 +16,8 @@ from buttleofx.core.graph.connection import IdClip
 from buttleofx.gui.graph import GraphWrapper
 # commands
 from buttleofx.core.undo_redo.manageTools import CommandManager
-
+# events
+from buttleofx.event import ButtleEvent
 
 class ButtleData(QtCore.QObject):
     """
@@ -438,9 +439,12 @@ class ButtleData(QtCore.QObject):
             for index, current_view in decoded["viewer"]["current_view"].iteritems():
                 nodeName, frame = current_view["nodeName"], current_view["frame"]
                 self._mapViewerIndextoNodeName.update({index: (nodeName, frame)})
-                self.setCurrentViewerIndex(int(index))
-                self.setCurrentViewerNodeName(current_view)
-                self.setCurrentViewerFrame(frame)
+            # #The next commands doesn't work : we need to click on the viewer's number to see the image in the viewer. Need to be fixed.
+            #     self.setCurrentViewerIndex(int(index))
+            #     self.setCurrentViewerNodeName(current_view)
+            #     self.setCurrentViewerNodeWrapper = self.getNodeWrapperByViewerIndex(int(index))
+            #     self.setCurrentViewerFrame(frame)
+            # ButtleEvent().emitViewerChangedSignal()
         f.closed
 
     ################################################## DATA EXPOSED TO QML ##################################################

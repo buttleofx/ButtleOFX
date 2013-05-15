@@ -21,75 +21,113 @@ Item {
             if(_buttleData.currentConnectionWrapper) {
                 _buttleManager.connectionManager.disconnect(_buttleData.currentConnectionWrapper);
             }
-            else {
+            else if (!_buttleData.currentSelectedNodeWrappers.isEmpty()){
                 _buttleManager.nodeManager.destructionNodes();
             }
         }
         if ((event.key == Qt.Key_Z) && (event.modifiers & Qt.ControlModifier)) {
-            _buttleManager.undo();
+            if(_buttleManager.canUndo) {
+                _buttleManager.undo();
+            }
         }
         if ((event.key == Qt.Key_Y) && (event.modifiers & Qt.ControlModifier)) {
-            _buttleManager.redo();
+            if(_buttleManager.canRedo) {
+                _buttleManager.redo();
+            }
         }
         if ((event.key == Qt.Key_D) && (event.modifiers & Qt.ControlModifier)){
-            _buttleManager.nodeManager.duplicationNode()
+            if (!_buttleData.currentSelectedNodeWrappers.isEmpty()) {
+                _buttleManager.nodeManager.duplicationNode()
+            }
         }
         if ((event.key == Qt.Key_C) && (event.modifiers & Qt.ControlModifier)){
-            _buttleManager.nodeManager.copyNode()
+            if (!_buttleData.currentSelectedNodeWrappers.isEmpty()) {
+                _buttleManager.nodeManager.copyNode()
+            }
         }
         if ((event.key == Qt.Key_V) && (event.modifiers & Qt.ControlModifier)){
-            _buttleManager.nodeManager.pasteNode()
+           if (_buttleData.canPaste) {
+                _buttleManager.nodeManager.pasteNode();
+           }
         }
         if ((event.key == Qt.Key_X) && (event.modifiers & Qt.ControlModifier)){
-            _buttleManager.nodeManager.cutNode()
+            if (!_buttleData.currentSelectedNodeWrappers.isEmpty()) {
+                _buttleManager.nodeManager.cutNode()
+            }
+        }
+        if ((event.key == Qt.Key_S) && (event.modifiers & Qt.ControlModifier)){
+            if(_buttleData.graphCanBeSaved) {
+                graphEditor.doAction("save")
+            }
+        }
+        if ((event.key == Qt.Key_L) && (event.modifiers & Qt.ControlModifier)){
+            graphEditor.doAction("load")
         }
 
         // Viewer
         if ((event.key == Qt.Key_1) && (event.modifiers & Qt.KeypadModifier)){
-            _buttleData.currentViewerIndex = 1
-            _buttleData.currentViewerNodeWrapper = _buttleData.getNodeWrapperByViewerIndex(1)
-            _buttleEvent.emitViewerChangedSignal()
+            player.changeViewer(1)
         }
         if ((event.key == Qt.Key_2) && (event.modifiers & Qt.KeypadModifier)){
-            _buttleData.currentViewerIndex = 2
-            _buttleData.currentViewerNodeWrapper = _buttleData.getNodeWrapperByViewerIndex(2)
-            _buttleEvent.emitViewerChangedSignal()
+
+            player.changeViewer(2)
         }
         if ((event.key == Qt.Key_3) && (event.modifiers & Qt.KeypadModifier)){
-            _buttleData.currentViewerIndex = 3
-            _buttleData.currentViewerNodeWrapper = _buttleData.getNodeWrapperByViewerIndex(3)
-            _buttleEvent.emitViewerChangedSignal()
+            player.changeViewer(3)
         }
         if ((event.key == Qt.Key_4) && (event.modifiers & Qt.KeypadModifier)){
-            _buttleData.currentViewerIndex = 4
-            _buttleData.currentViewerNodeWrapper = _buttleData.getNodeWrapperByViewerIndex(4)
-            _buttleEvent.emitViewerChangedSignal()
+            player.changeViewer(4)
         }
         if ((event.key == Qt.Key_5) && (event.modifiers & Qt.KeypadModifier)){
-            _buttleData.currentViewerIndex = 5
-            _buttleData.currentViewerNodeWrapper = _buttleData.getNodeWrapperByViewerIndex(5)
-            _buttleEvent.emitViewerChangedSignal()
+            player.changeViewer(5)
         }
         if ((event.key == Qt.Key_6) && (event.modifiers & Qt.KeypadModifier)){
-            _buttleData.currentViewerIndex = 6
-            _buttleData.currentViewerNodeWrapper = _buttleData.getNodeWrapperByViewerIndex(6)
-            _buttleEvent.emitViewerChangedSignal()
+            player.changeViewer(6)
         }
         if ((event.key == Qt.Key_7) && (event.modifiers & Qt.KeypadModifier)){
-            _buttleData.currentViewerIndex = 7
-            _buttleData.currentViewerNodeWrapper = _buttleData.getNodeWrapperByViewerIndex(7)
-            _buttleEvent.emitViewerChangedSignal()
+            player.changeViewer(7)
         }
         if ((event.key == Qt.Key_8) && (event.modifiers & Qt.KeypadModifier)){
-            _buttleData.currentViewerIndex = 8
-            _buttleData.currentViewerNodeWrapper = _buttleData.getNodeWrapperByViewerIndex(8)
-            _buttleEvent.emitViewerChangedSignal()
+            player.changeViewer(8)
         }
         if ((event.key == Qt.Key_9) && (event.modifiers & Qt.KeypadModifier)){
-            _buttleData.currentViewerIndex = 9
-            _buttleData.currentViewerNodeWrapper = _buttleData.getNodeWrapperByViewerIndex(9)
-            _buttleEvent.emitViewerChangedSignal()
+            player.changeViewer(9)
         }
+        // Assign the mosquito to the selected node
+        if ((event.key == Qt.Key_M)) {
+            var selectedNodes = _buttleData.currentSelectedNodeWrappers
+
+            // we assign the mosquito only if there is only one node selected
+            if(selectedNodes.count == 1) {
+                var node = selectedNodes.get(0)
+                _buttleData.currentViewerNodeWrapper = node
+                _buttleData.currentViewerFrame = 0
+                _buttleData.assignNodeToViewerIndex(node, 0)
+                _buttleEvent.emitViewerChangedSignal()
+            }
+        }
+
+        // Player
+        if (event.key == Qt.Key_Space && player.node != null) {
+            if(player.isPlaying) {
+                player.doAction("pause");
+            }
+            else {
+                player.doAction("play");
+            }
+        }
+
+        // Send the selected node on the parameters editor
+        if ((event.key == Qt.Key_P)) {
+            var selectedNodes = _buttleData.currentSelectedNodeWrappers
+
+            // we send the node only if there is only one node selected
+            if(selectedNodes.count == 1) {
+                var node = selectedNodes.get(0)
+                _buttleData.currentParamNodeWrapper = node
+            }
+        }
+
     }
 
     Rectangle {
@@ -229,6 +267,7 @@ Item {
                 }
 
                 GraphEditor {
+                    id: graphEditor
                     //Splitter.minimumHeight: 0
                     width: parent.width
                     height: 0.5*parent.height

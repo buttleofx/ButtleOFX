@@ -126,13 +126,11 @@ class CommandManager(Singleton):
         self.commands.append(newCommand)
 
         # do the command
-        res = newCommand.doCmd()
+        return newCommand.doCmd()
         self.index += 1
 
         # we update buttleData to indicate that something just changed
         self.graphHadChanged()
-
-        return res
 
     def undo(self):
         """

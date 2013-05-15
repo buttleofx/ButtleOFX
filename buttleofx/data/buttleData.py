@@ -16,7 +16,8 @@ from buttleofx.core.graph.connection import IdClip
 from buttleofx.gui.graph import GraphWrapper
 # commands
 from buttleofx.core.undo_redo.manageTools import CommandManager
-
+# events
+from buttleofx.event import ButtleEvent
 
 class ButtleData(QtCore.QObject):
     """
@@ -42,7 +43,6 @@ class ButtleData(QtCore.QObject):
     # the current params
     _currentParamNodeName = None
     _currentSelectedNodeNames = []
-    _currentViewerNodeName = None
 
     # for the connections
     _currentConnectionId = None
@@ -52,6 +52,8 @@ class ButtleData(QtCore.QObject):
 
     # for the viewer
     _currentViewerIndex = 1
+    _currentViewerFrame = 0
+    _currentViewerNodeName = None
     _mapViewerIndextoNodeName = {}
     _mapNodeNameToComputedImage = {}
     # boolean used in viewerManager
@@ -133,13 +135,40 @@ class ButtleData(QtCore.QObject):
 
     @QtCore.Slot(int, result=QtCore.QObject)
     def getNodeWrapperByViewerIndex(self, index):
-        return self._graphWrapper.getNodeWrapper(self._mapViewerIndextoNodeName[str(index)])
+        """
+            Returns the nodeWrapper of the node contained in the viewer at the corresponding index.
+        """
+        # We get the infos of this node. It's a tuple (fodeName, frame), so we have to return the first element nodeViewerInfos[0].
+        nodeViewerInfos = self._mapViewerIndextoNodeName[str(index)]
+        if nodeViewerInfos is None:
+            return None
+        else:
+            return self._graphWrapper.getNodeWrapper(nodeViewerInfos[0])
+
+    @QtCore.Slot(int, result=int)
+    def getFrameByViewerIndex(self, index):
+        """
+            Returns the frame of the node contained in the viewer at the corresponding index.
+        """
+        # We get the infos of this node. It's a tuple (fodeName, frame), so we have to return the second element nodeViewerInfos[1].
+        nodeViewerInfos = self._mapViewerIndextoNodeName[str(index)]
+        if nodeViewerInfos is None:
+            return 0
+        else:
+            return nodeViewerInfos[1]
+
 
     def getCurrentViewerNodeWrapper(self):
         """
             Returns the current viewer nodeWrapper.
         """
         return self._graphWrapper.getNodeWrapper(self.getCurrentViewerNodeName())
+
+    def getCurrentViewerFrame(self):
+        """
+            Returns the frame of the current viewer nodeWrapper.
+        """
+        return self._currentViewerFrame
 
     def getCurrentConnectionWrapper(self):
         """
@@ -173,6 +202,10 @@ class ButtleData(QtCore.QObject):
     def setCurrentViewerNodeName(self, nodeName):
         self._currentViewerNodeName = nodeName
         self.currentViewerNodeChanged.emit()
+
+    def setCurrentViewerFrame(self, frame):
+        self._currentViewerFrame = frame
+        self.currentViewerFrameChanged.emit()
 
     def setCurrentCopiedNodesInfo(self, nodesInfo):
         self._currentCopiedNodesInfo = nodesInfo
@@ -276,9 +309,14 @@ class ButtleData(QtCore.QObject):
                 if node.getCoord()[1] >= y and node.getCoord()[1] <= y + height:
                     self.appendToCurrentSelectedNodeNames(node.getName())
 
-    @QtCore.Slot(QtCore.QObject)
-    def assignNodeToViewerIndex(self, nodeWrapper):
-        self._mapViewerIndextoNodeName.update({str(self._currentViewerIndex): nodeWrapper.getName()})
+    @QtCore.Slot(QtCore.QObject, int)
+    def assignNodeToViewerIndex(self, nodeWrapper, frame):
+        """
+            Assigns a node to the _mapViewerIndextoNodeName at the current viewerIndex.
+            It adds a tuple (nodeName, frame).
+        """
+        if nodeWrapper:
+            self._mapViewerIndextoNodeName.update({str(self._currentViewerIndex): (nodeWrapper.getName(), frame)})
 
     @QtCore.Slot()
     def clearCurrentSelectedNodeNames(self):
@@ -354,10 +392,17 @@ class ButtleData(QtCore.QObject):
 
             # viewer : currentViewerNodeName
             for num_view, view in self._mapViewerIndextoNodeName.iteritems():
-                if self.getCurrentViewerNodeName() == view:
-                    dictJson["viewer"]["current_view"][str(num_view)] = view
-                if view is not None and self.getCurrentViewerNodeName() != view:
-                    dictJson["viewer"]["other_views"].update({num_view: view})
+                if view is not None:
+                    (nodeName, frame) = view
+                    print "nodeName = " + nodeName + " / frame = " + str(frame)
+                    if self.getCurrentViewerNodeName() == nodeName:
+                        dictJson["viewer"]["current_view"][str(num_view)] = {}
+                        dictJson["viewer"]["current_view"][str(num_view)]["nodeName"] = nodeName
+                        dictJson["viewer"]["current_view"][str(num_view)]["frame"] = frame
+                    else:
+                        dictJson["viewer"]["other_views"][str(num_view)] = {}
+                        dictJson["viewer"]["other_views"][str(num_view)]["nodeName"] = nodeName
+                        dictJson["viewer"]["other_views"][str(num_view)]["frame"] = frame
 
             # write dictJson in a file
             f.write(unicode(json.dumps(dictJson, sort_keys=True, indent=2, ensure_ascii=False)))
@@ -389,12 +434,18 @@ class ButtleData(QtCore.QObject):
             self.currentParamNodeChanged.emit()
             # viewer : other views
             for index, view in decoded["viewer"]["other_views"].iteritems():
-                self._mapViewerIndextoNodeName.update({index: view})
+                nodeName, frame = view["nodeName"], view["frame"]
+                self._mapViewerIndextoNodeName.update({index: (nodeName, frame)})
             # viewer : currentViewerNodeName
             for index, current_view in decoded["viewer"]["current_view"].iteritems():
-                self._mapViewerIndextoNodeName.update({index: current_view})
-                self.setCurrentViewerIndex(int(index))
-                self.setCurrentViewerNodeName(current_view)
+                nodeName, frame = current_view["nodeName"], current_view["frame"]
+                self._mapViewerIndextoNodeName.update({index: (nodeName, frame)})
+            # #The next commands doesn't work : we need to click on the viewer's number to see the image in the viewer. Need to be fixed.
+            #     self.setCurrentViewerIndex(int(index))
+            #     self.setCurrentViewerNodeName(current_view)
+            #     self.setCurrentViewerNodeWrapper = self.getNodeWrapperByViewerIndex(int(index))
+            #     self.setCurrentViewerFrame(frame)
+            # ButtleEvent().emitViewerChangedSignal()
         f.closed
 
     ################################################## DATA EXPOSED TO QML ##################################################
@@ -411,6 +462,8 @@ class ButtleData(QtCore.QObject):
 
     currentViewerNodeChanged = QtCore.Signal()
     currentViewerNodeWrapper = QtCore.Property(QtCore.QObject, getCurrentViewerNodeWrapper, setCurrentViewerNodeWrapper, notify=currentViewerNodeChanged)
+    currentViewerFrameChanged = QtCore.Signal()
+    currentViewerFrame = QtCore.Property(int, getCurrentViewerFrame, setCurrentViewerFrame, notify=currentViewerFrameChanged)
 
     currentSelectedNodesChanged = QtCore.Signal()
     currentSelectedNodeWrappers = QtCore.Property("QVariant", getCurrentSelectedNodeWrappers, setCurrentSelectedNodeWrappers, notify=currentSelectedNodesChanged)

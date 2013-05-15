@@ -12,6 +12,7 @@ Item {
     property real nodeFps : node ? node.fps :  25
     property int nodeNbFrames: node ? node.nbFrames : 1
     property real nodeDurationSeconds: node ? node.nbFrames/node.fps : 0
+    property bool isPlaying: false
 
     TimerPlayer {
         //class Timer defined in python
@@ -40,6 +41,30 @@ Item {
         var elapsedSeconds = Math.floor(durationElapsedSeconds - elapsedHours*3600 - elapsedMinutes*60)
 
         return with2digits(elapsedHours) + ":" + with2digits(elapsedMinutes) + ":" + with2digits(elapsedSeconds) + " / " + with2digits(totalHours) + ":" + with2digits(totalMinutes) + ":" + with2digits(totalSeconds)
+    }
+
+    // Changes the viewer : displays the vew n°indexViewer.
+    // It updates in ButtleData all informations of the current viewer : the nodeWrapper, the viewerIndex, the frame, and it sets the right frame on the timeline.
+    function changeViewer(indexViewer) {
+        // first we save the frame for the current node, to be able to retrieve the frame later
+        if (_buttleData.currentViewerNodeWrapper != null)
+            _buttleData.assignNodeToViewerIndex(_buttleData.currentViewerNodeWrapper, timer.frame)
+
+        // then we change the viewer
+        _buttleData.currentViewerIndex = indexViewer
+        _buttleData.currentViewerNodeWrapper = _buttleData.getNodeWrapperByViewerIndex(indexViewer)
+
+        // and we change the frame of the viewer (if there isn't a node in this view, returns 0)
+        var frame = _buttleData.getFrameByViewerIndex(indexViewer)
+        _buttleData.currentViewerFrame = frame
+        timer.frame = frame
+
+        if (_buttleData.getCurrentViewerNodeName())
+            _buttleEvent.emitViewerChangedSignal()
+    }
+
+    function doAction(action) {
+        timelineTools.doAction(action)
     }
 
     onNodeChanged: {
@@ -295,10 +320,7 @@ Item {
                                  MouseArea {
                                     anchors.fill: parent
                                     onClicked: {
-                                        _buttleData.currentViewerIndex = index + 1
-                                        _buttleData.currentViewerNodeWrapper = _buttleData.getNodeWrapperByViewerIndex(index+1)
-                                        if(_buttleData.getCurrentViewerNodeName())
-                                            _buttleEvent.emitViewerChangedSignal()
+                                        player.changeViewer(index+1)
                                     }
                                 }
 

@@ -176,7 +176,7 @@ class NodeManager(QtCore.QObject):
     @QtCore.Slot(str, int, int)
     def nodeMoved(self, nodeName, x, y):
         """
-            This fonction pushes a cmdMoved in the CommandManager.
+            This function pushes a cmdMoved in the CommandManager.
         """
         buttleData = ButtleDataSingleton().get()
         buttleData.getGraph().nodeMoved(nodeName, x, y)
@@ -185,20 +185,23 @@ class NodeManager(QtCore.QObject):
         self.undoRedoChanged()
 
     @QtCore.Slot(str, int, int)
-    def nodeIsMoving(self, nodeName, x, y):
+    def nodeIsMoving(self, nodeName, newX, newY):
         """
-            This fonction updates the position of the connections.
+            This function updates the position of the selected nodes and the connections, when one or several nodes are moving.
         """
         buttleData = ButtleDataSingleton().get()
         node = buttleData.getGraph().getNode(nodeName)
-        node.setCoord(x, y)
 
-        # update the coords of connections only if the node has connections
-        buttleData = ButtleDataSingleton().get()
-        for con in buttleData.getGraph().getConnections():
-            if con.getClipOut().getNodeName() == nodeName:
-                buttleData.getGraph().connectionsCoordChanged(node)
-                return
-            if con.getClipIn().getNodeName() == nodeName:
-                buttleData.getGraph().connectionsCoordChanged(node)
-                return
+        # What is the value of the movement (compared to the old position) ?
+        oldX, oldY = node.getCoord()
+        xMovement = newX - oldX
+        yMovement = newY - oldY
+
+        # for each selected node, we update the position considering the value of the movement
+        for selectedNodeWrapper in buttleData.getCurrentSelectedNodeWrappers():
+            selectedNode = selectedNodeWrapper.getNode()
+            currentX, currentY = selectedNode.getCoord()
+            selectedNode.setCoord(currentX + xMovement, currentY + yMovement)
+
+            # we update also the position of all the connections
+            buttleData.getGraph().connectionsCoordChanged(selectedNode)

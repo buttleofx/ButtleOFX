@@ -42,6 +42,20 @@ Rectangle {
         onPressed: {
             // left button : we change the current selected nodes & we start moving
             if (mouse.button == Qt.LeftButton) {
+
+                // we clear the list of selected connections
+                _buttleData.clearCurrentConnectionId()
+
+                // if the Control Key is not pressed, we clear the list of selected nodes
+                if (!(mouse.modifiers & Qt.ControlModifier)) {
+                    _buttleData.clearCurrentSelectedNodeNames()
+                }
+
+                // we add the node to the list of selected nodes (if it's not already selected)
+                if(!_buttleData.nodeIsSelected(m.nodeModel)) {
+                    _buttleData.appendToCurrentSelectedNodeWrappers(m.nodeModel)
+                }
+
                 _buttleData.graphWrapper.zMax += 1
                 parent.z = _buttleData.graphWrapper.zMax
                 stateMoving.state = "moving"
@@ -61,17 +75,8 @@ Rectangle {
                 _buttleManager.nodeManager.nodeMoved(m.nodeModel.name, parent.x, parent.y)
                 stateMoving.state = "normal"
             }
-            if (mouse.button == Qt.LeftButton) {
-                _buttleData.clearCurrentConnectionId()
-                if(mouse.modifiers & Qt.ControlModifier){
-                    _buttleData.appendToCurrentSelectedNodeWrappers(m.nodeModel)
-                }
-                else{
-                    _buttleData.clearCurrentSelectedNodeNames()
-                    _buttleData.appendToCurrentSelectedNodeWrappers(m.nodeModel)
-                }
-            }
         }
+
         // double click : we change the current param node
         onDoubleClicked: {
             _buttleData.currentParamNodeWrapper = m.nodeModel;
@@ -86,9 +91,11 @@ Rectangle {
         }
         onDrop: {
             if (acceptDrop) {
-                    _buttleData.currentViewerNodeWrapper = m.nodeModel;
-                    _buttleData.assignNodeToViewerIndex(m.nodeModel);
-                    _buttleEvent.emitViewerChangedSignal()
+                _buttleData.currentViewerNodeWrapper = m.nodeModel;
+                _buttleData.currentViewerFrame = 0;
+                // we assign the node to the viewer, at the frame 0
+                _buttleData.assignNodeToViewerIndex(m.nodeModel, 0);
+                _buttleEvent.emitViewerChangedSignal()
             }
         }
     }

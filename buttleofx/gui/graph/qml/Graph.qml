@@ -49,7 +49,7 @@ Rectangle {
         onReleased: {
             rectangleSelection.visible = false;
             _buttleData.clearCurrentSelectedNodeNames();
-            graphArea.drawSelection(rectangleSelection.x, rectangleSelection.y, rectangleSelection.width, rectangleSelection.height)
+            graphArea.drawSelection(rectangleSelection.x - graphArea.originX, rectangleSelection.y - graphArea.originY, rectangleSelection.width, rectangleSelection.height)
         }
 
         onMousePositionChanged: {
@@ -160,7 +160,7 @@ Rectangle {
             }
         }
 
-        transform: Scale { id: scale; origin.x: graphArea.width/2; origin.y: graphArea.height/2; xScale: 1; yScale: 1}
+        //transform: Scale { id: scale; origin.x: graphArea.width/2; origin.y: graphArea.height/2; xScale: 1; yScale: 1}
     }
 
     // Rectangle selection is placed here so it is drawn over the nodes
@@ -172,6 +172,7 @@ Rectangle {
         visible: false
     }
 
+    /*
     WheelArea {
         anchors.fill: parent
         property real nbSteps: 5
@@ -181,16 +182,17 @@ Rectangle {
                 //scale.origin.y = middleMouseArea.mouseY
                 //console.log(connectnode.width)
                 if(delta < 0 && scale.xScale - 0.2 > 0.3 && scale.yScale - 0.2 > 0.3 ) {
-                    scale.xScale -= 0.1 
-                    scale.yScale -= 0.1             
+                    scale.xScale -= 0.1
+                    scale.yScale -= 0.1
                 }
                 if(delta > 0) {
                     scale.xScale += 0.1
-                    scale.yScale += 0.1  
+                    scale.yScale += 0.1
                 }
-            }          
-        } 
+            }
+        }
     }
+    */
 
     // NODE CREATION WITH RIGHT CLICK
     MouseArea {
@@ -203,7 +205,6 @@ Rectangle {
                     var newComponent = Qt.createQmlObject('MenuList { parentName: "buttle/"; x: rightMouseArea.mouseX; y:  rightMouseArea.mouseY; clickFrom: graph; side: "right";}', parent);
                     //newComponent.side = "right";
                     tools.menuComponent = newComponent;
-                    console.log(tools.menuComponent)
                     
                 }
                 else {

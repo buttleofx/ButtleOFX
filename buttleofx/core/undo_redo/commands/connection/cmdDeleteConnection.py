@@ -41,7 +41,7 @@ class CmdDeleteConnection(UndoableCommand):
         tuttleNodeSource = self._graphTarget.getNode(str(self._connection.getClipOut().getNodeName())).getTuttleNode()
         tuttleNodeOutput = self._graphTarget.getNode(str(self._connection.getClipIn().getNodeName())).getTuttleNode()
         outputClip = tuttleNodeSource.getClip("Output")
-        inputClip = tuttleNodeOutput.getClip(self._connection.getClipIn().getClipName())
+        inputClip = tuttleNodeOutput.getClip(str(self._connection.getClipIn().getClipName()))
 
         # Delete the tuttle connection
         self._graphTarget.getGraphTuttle().unconnect(outputClip, inputClip)

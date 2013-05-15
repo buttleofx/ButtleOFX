@@ -107,3 +107,22 @@ class MenuWrapper(QtCore.QObject):
     @QtCore.Slot()
     def hideMenu(self):
         self._menu.clear()
+
+# Solution 2:
+# Mais tu peux faire plus simple et élégant...
+# Tu connectes simplement le menu lui même, qui contient toutes les actions et connecter la fonction "triggered(QAction*)" de ce menu qui passe en argument la QAction.
+
+# void MyObject::menuSelection(QAction* action)
+# {
+# qDebug() << "Triggered: " << action->text();
+# }
+
+# void MyObject::showMenu(QPoint menuPos)
+# {
+# QMenu menu;
+# menu.addAction( "File A" );
+# menu.addAction( "File B" );
+# menu.addAction( "File C" );
+# connect(&menu, SIGNAL(triggered(QAction*)), this, SLOT(menuSelection(QAction*)));
+# menu.exec(menuPos);
+# }

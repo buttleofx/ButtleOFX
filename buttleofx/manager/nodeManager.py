@@ -161,7 +161,7 @@ class NodeManager(QtCore.QObject):
         buttleData = ButtleDataSingleton().get()
 
         extension = url.split(".")[-1].lower()
-        if extension == 'json':
+        if extension == 'bofx':
             buttleData.loadData(url)  # also need to verify the json format
         else:
             buttleData.getGraph().createReaderNode(url, x, y)

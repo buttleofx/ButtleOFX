@@ -134,7 +134,7 @@ class Graph(object):
         elif extension in ['bmp', 'cin', 'dds', 'dpx', 'exr', 'fits', 'hdr', 'ico', 'j2k', 'j2c', 'jp2', 'jpeg', 'jpg', 'jpe', 'jfif', 'jfi', 'pbm', 'pgm', 'png', 'pnm', 'ppm', 'pic', 'psd', 'rgbe', 'sgi', 'tga', 'tif', 'tiff', 'tpic', 'tx', 'webp']:
             nodeType = 'tuttle.oiioreader'
         else:
-            print "Unknown format. Can't create reader node."
+            logging.debug("Unknown format. Can't create reader node.")
             return
             #use exception !
 

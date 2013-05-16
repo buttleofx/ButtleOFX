@@ -394,7 +394,6 @@ class ButtleData(QtCore.QObject):
             for num_view, view in self._mapViewerIndextoNodeName.iteritems():
                 if view is not None:
                     (nodeName, frame) = view
-                    print "nodeName = " + nodeName + " / frame = " + str(frame)
                     if self.getCurrentViewerNodeName() == nodeName:
                         dictJson["viewer"]["current_view"][str(num_view)] = {}
                         dictJson["viewer"]["current_view"][str(num_view)]["nodeName"] = nodeName

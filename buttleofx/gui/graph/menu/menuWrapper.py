@@ -97,25 +97,6 @@ class MenuWrapper(QtCore.QObject):
             ButtleManagerSingleton().get().nodeManager.creationNodeImage(action)
 
     @QtCore.Slot(float, float)
-    def showMenu2(self, x, y):
-        # Create a menu based on the elementList
-        if self._elementList != []:
-            for element in self._elementList:
-                if element != "0":
-                    self._menu.addAction(QAction(element, self._menu))
-                else:
-                    self._menu.addSeparator()
-
-        # Create a menu based on the parentName
-        else:
-            self._menu.setTitle(self._parentName)
-            createMenu(self._menu, self._parentName, self._view)
-            createMenu(submenu, parentName + pluginId[0] + "/", view)
-
-        pos = QtCore.QPoint(x, y)
-        self._menu.exec_(self._view.mapToGlobal(pos))
-
-    @QtCore.Slot(float, float)
     def showMenu(self, x, y):
         pos = QtCore.QPoint(x, y)
         self._menu.exec_(self._view.mapToGlobal(pos))

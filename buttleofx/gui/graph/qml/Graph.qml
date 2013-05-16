@@ -200,6 +200,7 @@ Rectangle {
         anchors.fill: parent
         acceptedButtons: Qt.RightButton
         onClicked: {
+            //_addMenu.showMenu(rightMouseArea.mouseX, rightMouseArea.mouseY);
             if (!tools.menuComponent) {
                 if(rightMouseArea.mouseX + 500 < graph.width) {
                     var newComponent = Qt.createQmlObject('MenuList { parentName: "buttle/"; x: rightMouseArea.mouseX; y:  rightMouseArea.mouseY; clickFrom: graph; side: "right";}', parent);
@@ -213,6 +214,7 @@ Rectangle {
                     //newComponent.side = "left";
                     tools.menuComponent = newComponent;     
                 }
+            }
 
                 
              /*if (mouse.button == Qt.RightButton)
@@ -220,7 +222,7 @@ Rectangle {
              listmodel.y = mouseY - 30
              listmodel.clickFrom = graphArea
              listmodel.menuState = (listmodel.menuState == "hidden") ? "shown" : "hidden"
-        */}
+        }*/
         }   
     }
 }

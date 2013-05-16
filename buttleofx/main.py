@@ -122,9 +122,6 @@ def main(argv):
     rc.setContextProperty("_buttleEvent", buttleEvent)
     rc.setContextProperty("_fileMenu", fileMenu)
     rc.setContextProperty("_editMenu", editMenu)
-    #rc.setContextProperty("_renderMenu", renderMenu)
-    #rc.setContextProperty("_windowMenu", windowMenu)
-    #rc.setContextProperty("_helpMenu", helpMenu)
     rc.setContextProperty("_addMenu", addMenu)
 
     # set the view

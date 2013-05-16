@@ -359,9 +359,9 @@ class ButtleData(QtCore.QObject):
 
     @QtCore.Slot(str)
     @QtCore.Slot()
-    def saveData(self, url='buttleofx/backup/data.json'):
+    def saveData(self, url='buttleofx/backup/data.bofx'):
         """
-            Saves all data in a json file (default file : buttleofx/backup/data.json)
+            Saves all data in a json file (default file : buttleofx/backup/data.bofx)
         """
         with io.open(url, 'w', encoding='utf-8') as f:
             dictJson = {
@@ -413,7 +413,7 @@ class ButtleData(QtCore.QObject):
 
     @QtCore.Slot(str)
     @QtCore.Slot()
-    def loadData(self, url='buttleofx/backup/data.json'):
+    def loadData(self, url='buttleofx/backup/data.bofx'):
         """
             Loads all data from a Json file (the default Json file if no url is given)
         """

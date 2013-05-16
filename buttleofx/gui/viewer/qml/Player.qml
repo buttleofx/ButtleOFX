@@ -59,8 +59,7 @@ Item {
         _buttleData.currentViewerFrame = frame
         timer.frame = frame
 
-        if (_buttleData.getCurrentViewerNodeName())
-            _buttleEvent.emitViewerChangedSignal()
+        _buttleEvent.emitViewerChangedSignal()
     }
 
     function doAction(action) {

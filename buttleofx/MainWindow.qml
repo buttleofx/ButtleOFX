@@ -94,7 +94,7 @@ Item {
             player.changeViewer(9)
         }
         // Assign the mosquito to the selected node
-        if ((event.key == Qt.Key_M)) {
+        if ((event.key == Qt.Key_Return)||(event.key == Qt.Key_Enter)) {
             var selectedNodes = _buttleData.currentSelectedNodeWrappers
 
             // we assign the mosquito only if there is only one node selected

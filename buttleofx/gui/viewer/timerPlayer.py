@@ -1,5 +1,6 @@
 from PySide import QtCore
 from PySide import QtDeclarative
+import logging
 
 from pyTuttle import tuttle
 
@@ -23,7 +24,7 @@ class TimerPlayer(QtDeclarative.QDeclarativeItem):
     # fonctions used in QML for the Viewer (in the file TimelineTools.qml)
     @QtCore.Slot()
     def play(self):
-        print "--------------playing-------------"
+        logging.debug("--------------playing-------------")
         buttleData = ButtleDataSingleton().get()
         #Get the name of the currentNode of the viewer
         node = buttleData.getCurrentViewerNodeName()
@@ -64,7 +65,7 @@ class TimerPlayer(QtDeclarative.QDeclarativeItem):
 
     @QtCore.Slot()
     def pause(self):
-        print "--------------pause-------------"
+        logging.debug("--------------pause-------------")
         self._timer.stop()
         buttleData = ButtleDataSingleton().get()
         if buttleData.getVideoIsPlaying():
@@ -76,7 +77,7 @@ class TimerPlayer(QtDeclarative.QDeclarativeItem):
 
     @QtCore.Slot()
     def stop(self):
-        print "--------------stop-------------"
+        logging.debug("--------------stop-------------")
         self._timer.stop()
         buttleData = ButtleDataSingleton().get()
         # if a video is reading, we need to close the processGraph
@@ -110,7 +111,7 @@ class TimerPlayer(QtDeclarative.QDeclarativeItem):
 
     def setFrame(self, frame):
         if(int(frame) >= self._nbFrames):
-            print 'setFrame, ignore: frame outside bounds'
+            logging.debug('setFrame, ignore: frame outside bounds')
             self.pause()
             return
         if(int(frame) == self._nbFrames - 1):

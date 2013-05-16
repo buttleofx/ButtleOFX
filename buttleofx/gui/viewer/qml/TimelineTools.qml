@@ -25,13 +25,17 @@ Item {
                 break;
 
             case "pause":
-                timer.pause()
-                player.isPlaying = false
+                if(player.isPlaying) {
+                    timer.pause()
+                    player.isPlaying = false
+                }
                 break;
 
             case "play":
-                timer.play()
-                player.isPlaying = true
+                if(!player.isPlaying) {
+                    timer.play()
+                    player.isPlaying = true
+                }
                 break;
 
             case "next":

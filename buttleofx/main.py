@@ -110,24 +110,9 @@ def main(argv):
     # event
     buttleEvent = ButtleEventSingleton().get()
     # Menus
-    # Create the file menu
-    fileElements = ["New", "Open", "Save as", "Save", "0", "Import", "Export", "0", "Exit"]
-    fileMenu = MenuWrapper("file", fileElements, view)
-    # Create the edit menu
-    editElements = ["Undo", "Redo", "0", "Copy", "Cut", "Paste", "Delete selection"]
-    editMenu = MenuWrapper("edit", editElements, view)
-    # Create the render menu
-    renderElements = ["Render image", "Render animation"]
-    renderMenu = MenuWrapper("render", renderElements, view)
-    # Create the window menu
-    windowElements = ["New viewer", "Parameters editor", "Viewer", "GraphEditor", "Tools"]
-    windowMenu = MenuWrapper("window", windowElements, view)
-    # Create the help menu
-    helpElements = ["Manual", "About ButtleOFX", "0", "About Clement Champetier"]
-    helpMenu = MenuWrapper("help", helpElements, view)
-
-    #Main menu:
-    addMenu = MenuWrapper("buttle/", [], view)
+    fileMenu = MenuWrapper("file", 0, view, app)
+    editMenu = MenuWrapper("edit", 0, view, app)
+    addMenu = MenuWrapper("buttle/", 1, view, app)
 
     # expose data to QML
     rc = view.rootContext()
@@ -137,9 +122,9 @@ def main(argv):
     rc.setContextProperty("_buttleEvent", buttleEvent)
     rc.setContextProperty("_fileMenu", fileMenu)
     rc.setContextProperty("_editMenu", editMenu)
-    rc.setContextProperty("_renderMenu", renderMenu)
-    rc.setContextProperty("_windowMenu", windowMenu)
-    rc.setContextProperty("_helpMenu", helpMenu)
+    #rc.setContextProperty("_renderMenu", renderMenu)
+    #rc.setContextProperty("_windowMenu", windowMenu)
+    #rc.setContextProperty("_helpMenu", helpMenu)
     rc.setContextProperty("_addMenu", addMenu)
 
     # set the view

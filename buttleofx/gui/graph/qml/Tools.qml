@@ -16,11 +16,13 @@ Rectangle {
     function doAction(buttonName) {
         switch (buttonName) {
             case "createNode":
-                if (!tools.menuComponent) {
+
+                _addMenu.showMenu(parent.x , parent.y + graph.y + tools.height);
+                /*if (!tools.menuComponent) {
                     var newComponent = Qt.createQmlObject('MenuList { parentName: "buttle/"; y: tools.height; clickFrom: tools}', parent);
                     newComponent.side = "right";
                     tools.menuComponent = newComponent;
-                }
+                }*/
                 break;
 
             case "deleteNode":
@@ -96,6 +98,7 @@ Rectangle {
             property string imgPath: _buttleData.buttlePath + "/gui/img/buttons/tools/"
 
             ToolElement {
+                id: plus
                 imageSource: parent.imgPath + "plus.png"
                 imageSourceHover: parent.imgPath + "plus_hover.png"
                 imageSourceLocked: parent.imgPath + "plus.png"

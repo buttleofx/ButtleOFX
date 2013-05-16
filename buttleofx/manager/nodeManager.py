@@ -1,8 +1,17 @@
 from PySide import QtCore
+from PySide import QtGui
+from PySide.QtCore import *
+from PySide.QtGui import *
+
 # quickmamba
 from quickmamba.patterns import Signal
+import shiboken
 # data
 from buttleofx.data import ButtleDataSingleton
+
+
+def wrapInstanceAs(instance, target_class):
+    return shiboken.wrapInstance(shiboken.getCppPointer(instance)[0], target_class)
 
 
 class NodeManager(QtCore.QObject):
@@ -29,12 +38,13 @@ class NodeManager(QtCore.QObject):
         self.undoRedoChanged()
 
     @QtCore.Slot()
-    def creationNodeImage(self):
+    def creationNodeImage(self, action):
         """
             Creates a node.
         """
+
         buttleData = ButtleDataSingleton().get()
-        buttleData.getGraph().createNode("tuttle.imagestatistics", 20, 20)
+        buttleData.getGraph().createNode(action.data(), 20, 20)
 
         # update undo/redo display
         self.undoRedoChanged()

@@ -110,29 +110,9 @@ def main(argv):
     # event
     buttleEvent = ButtleEventSingleton().get()
     # Menus
-    # Create the file menu
-    # fileNames = ["New", "Open", "Save as", "Save", "0", "Import", "Export", "0", "Exit"]
-    # fileShortcut = [None, None, None, 'Ctrl+S', None, 'Ctrl+I', 'Ctrl+E', None, 'Ctrl+Q']
-
-    fileElements = [["Open", None], ["Save as", None], ["Save", 'Ctrl+S'], "0", ["Import", 'Ctrl+I'], ["Export", 'Ctrl+E'], "0", ["Exit", 'Ctrl+Q']]
-
-    fileMenu = MenuWrapper("file", fileElements, view, app)
-    # Create the edit menu
-    #editElements = ["Undo", "Redo", "0", "Copy", "Cut", "Paste", "Delete selection"]
-    editElements = [["Undo", 'Ctrl+Z'], ["Redo", 'Ctrl+Y'], "0", ["Copy", 'Ctrl+C'], ["Cut", 'Ctrl+X'], ["Paste", 'Ctrl+V'], ["Duplicate", 'Ctrl+D'], ["Delete selection", None]]
-    editMenu = MenuWrapper("edit", editElements, view, app)
-    # Create the render menu
-    # renderElements = ["Render image", "Render animation"]
-    # renderMenu = MenuWrapper("render", renderElements, view, app)
-    # Create the window menu
-    # windowElements = ["New viewer", "Parameters editor", "Viewer", "GraphEditor", "Tools"]
-    # windowMenu = MenuWrapper("window", windowElements, view, app)
-    # Create the help menu
-    # helpElements = ["Manual", "About ButtleOFX", "0", "About Clement Champetier"]
-    # helpMenu = MenuWrapper("help", helpElements, view, app)
-
-    #Main menu:
-    addMenu = MenuWrapper("buttle/", [], view, app)
+    fileMenu = MenuWrapper("file", 0, view, app)
+    editMenu = MenuWrapper("edit", 0, view, app)
+    addMenu = MenuWrapper("buttle/", 1, view, app)
 
     # expose data to QML
     rc = view.rootContext()

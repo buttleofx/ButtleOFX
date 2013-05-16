@@ -23,7 +23,7 @@ Item {
                 _buttleManager.nodeManager.destructionNodes();
             }
         }
-        /*if ((event.key == Qt.Key_Z) && (event.modifiers & Qt.ControlModifier)) {
+        if ((event.key == Qt.Key_Z) && (event.modifiers & Qt.ControlModifier)) {
             _buttleManager.undo();
         }
         if ((event.key == Qt.Key_Y) && (event.modifiers & Qt.ControlModifier)) {
@@ -40,7 +40,7 @@ Item {
         }
         if ((event.key == Qt.Key_X) && (event.modifiers & Qt.ControlModifier)){
             _buttleManager.nodeManager.cutNode()
-        }*/
+        }
     }
 
     Rectangle {
@@ -116,52 +116,6 @@ Item {
                     }
                 }
             }
-
-            Text {
-                color: "white"
-                text: "Render"
-                y: 11
-                font.pointSize: 10
-
-                MouseArea {
-                    anchors.fill: parent
-                    hoverEnabled: true
-                    onClicked: {
-                        _renderMenu.showMenu(parent.x, mainMenu.height)
-                    }
-                }
-            }
-
-            Text {
-                color: "white"
-                text: "Window"
-                y: 11
-                font.pointSize: 10
-
-                MouseArea {
-                    anchors.fill: parent
-                    hoverEnabled: true
-                    onClicked: {
-                        _windowMenu.showMenu(parent.x, mainMenu.height)
-                    }
-                }
-            }
-
-            Text {
-                color: "white"
-                text: "Help"
-                y: 11
-                font.pointSize: 10
-
-                MouseArea {
-                    anchors.fill: parent
-                    hoverEnabled: true
-                    onClicked: {
-                        _helpMenu.showMenu(parent.x, mainMenu.height)
-                    }
-                }
-            }
-
         }
     }
 

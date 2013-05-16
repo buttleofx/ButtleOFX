@@ -1,4 +1,7 @@
 from PySide import QtCore
+from PySide.QtCore import *
+from PySide.QtGui import *
+
 # quickmamba
 from quickmamba.patterns import Signal
 # data
@@ -24,6 +27,18 @@ class NodeManager(QtCore.QObject):
         """
         buttleData = ButtleDataSingleton().get()
         buttleData.getGraph().createNode(nodeType, x, y)
+
+        # update undo/redo display
+        self.undoRedoChanged()
+
+    @QtCore.Slot()
+    def creationNodeImage(self, action):
+        """
+            Creates a node.
+        """
+
+        buttleData = ButtleDataSingleton().get()
+        buttleData.getGraph().createNode(action.data(), 20, 20)
 
         # update undo/redo display
         self.undoRedoChanged()

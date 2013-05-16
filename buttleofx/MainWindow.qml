@@ -135,6 +135,7 @@ Item {
         width: parent.width
         height: 32
         color: "#141414"
+
         Row {
             spacing: 10
             x: 3
@@ -154,7 +155,7 @@ Item {
                 MouseArea {
                     anchors.fill: parent
                     hoverEnabled: true
-                    onEntered: {
+                    onClicked: {
                         _fileMenu.showMenu(parent.x, mainMenu.height)
                     }
                 }
@@ -169,7 +170,7 @@ Item {
                 MouseArea {
                     anchors.fill: parent
                     hoverEnabled: true
-                    onEntered: {
+                    onClicked: {
                         _editMenu.showMenu(parent.x, mainMenu.height)
                     }
                 }
@@ -184,57 +185,11 @@ Item {
                 MouseArea {
                     anchors.fill: parent
                     hoverEnabled: true
-                    onEntered: {
+                    onClicked: {
                         _addMenu.showMenu(parent.x, mainMenu.height)
                     }
                 }
             }
-
-            Text {
-                color: "white"
-                text: "Render"
-                y: 11
-                font.pointSize: 10
-
-                MouseArea {
-                    anchors.fill: parent
-                    hoverEnabled: true
-                    onEntered: {
-                        _renderMenu.showMenu(parent.x, mainMenu.height)
-                    }
-                }
-            }
-
-            Text {
-                color: "white"
-                text: "Window"
-                y: 11
-                font.pointSize: 10
-
-                MouseArea {
-                    anchors.fill: parent
-                    hoverEnabled: true
-                    onEntered: {
-                        _windowMenu.showMenu(parent.x, mainMenu.height)
-                    }
-                }
-            }
-
-            Text {
-                color: "white"
-                text: "Help"
-                y: 11
-                font.pointSize: 10
-
-                MouseArea {
-                    anchors.fill: parent
-                    hoverEnabled: true
-                    onEntered: {
-                        _helpMenu.showMenu(parent.x, mainMenu.height)
-                    }
-                }
-            }
-
         }
     }
 

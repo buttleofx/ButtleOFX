@@ -35,7 +35,7 @@ Item {
         var totalMinutes = Math.floor((nodeDurationSeconds - totalHours*3600) / 60)
         var totalSeconds = Math.floor(nodeDurationSeconds - totalHours*3600 - totalMinutes*60)
 
-        var durationElapsedSeconds = Math.floor((timer.frame + 1) / timer.fps)
+        var durationElapsedSeconds = timer ? Math.floor((timer.frame + 1) / timer.fps) : 0
         var elapsedHours = Math.floor(durationElapsedSeconds / 3600)
         var elapsedMinutes = Math.floor((durationElapsedSeconds - elapsedHours*3600) / 60)
         var elapsedSeconds = Math.floor(durationElapsedSeconds - elapsedHours*3600 - elapsedMinutes*60)
@@ -140,7 +140,7 @@ Item {
                     Viewer {
                         id: viewer
                         //here we send the frame the viewer has to display
-                        frameViewer: timer.frame
+                        frameViewer: timer ? timer.frame : 0
                         clip: true
                     }
                 }
@@ -403,7 +403,9 @@ Item {
                     Rectangle {
                         id: cursorTimeline
                         anchors.verticalCenter: parent.verticalCenter
-                        x: barTimeline.x + (timer.frame * barTimeline.width / nodeNbFrames) - cursorTimeline.width/2
+
+                        property int frame: timer ? timer.frame : 0
+                        x: barTimeline.x + (frame * barTimeline.width / nodeNbFrames) - cursorTimeline.width/2
                         height: 10
                         width: 5
                         radius: 1

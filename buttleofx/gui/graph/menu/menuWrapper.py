@@ -43,7 +43,7 @@ class MenuWrapper(QtCore.QObject):
                 self._menu.addAction(action)
                 self._menu.addSeparator()
 
-                action = QAction("Exit", self._menu, statusTip='Exit the application', triggered=app.quit)
+                action = QAction("Exit", self._menu, shortcut='Ctrl+Q', statusTip='Exit the application', triggered=app.quit)
                 action.setData(0)
                 self._menu.addAction(action)
 
@@ -69,7 +69,7 @@ class MenuWrapper(QtCore.QObject):
                 action = QAction("Duplicate", self._menu, shortcut='Ctrl+D', statusTip='Duplicate the selected node', triggered=ButtleManagerSingleton().get().nodeManager.duplicationNode)
                 action.setData(0)
                 self._menu.addAction(action)
-                action = QAction("Delete", self._menu, shortcut='Suppr', statusTip='Delete the selected node')
+                action = QAction("Delete", self._menu, statusTip='Delete the selected node')
                 action.setData(0)
                 self._menu.addAction(action)
 

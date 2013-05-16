@@ -14,7 +14,7 @@ Item {
         //anchors.fill: parent
     }
 
-    Keys.onPressed: {
+   /* Keys.onPressed: {
         if (event.key == Qt.Key_Delete) {
             if(_buttleData.currentConnectionWrapper) {
                 _buttleManager.connectionManager.disconnect(_buttleData.currentConnectionWrapper);
@@ -41,7 +41,7 @@ Item {
         if ((event.key == Qt.Key_X) && (event.modifiers & Qt.ControlModifier)){
             _buttleManager.nodeManager.cutNode()
         }
-    }
+    }*/
 
     Rectangle {
         id: mainMenu

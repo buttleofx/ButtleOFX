@@ -43,30 +43,30 @@ class MenuWrapper(QtCore.QObject):
                 self._menu.addAction(action)
                 self._menu.addSeparator()
 
-                action = QAction("Exit", self._menu, statusTip='Exit the application')
+                action = QAction("Exit", self._menu, statusTip='Exit the application', triggered=app.quit)
                 action.setData(0)
                 self._menu.addAction(action)
 
             # EditMenu
             elif(parentName == 'edit'):
-                action = QAction("Undo", self._menu, shortcut='Ctrl+Z', statusTip='Undo the last action')
+                action = QAction("Undo", self._menu, shortcut='Ctrl+Z', statusTip='Undo the last action', triggered=ButtleManagerSingleton().get().undo)
                 action.setData(0)
                 self._menu.addAction(action)
-                action = QAction("Redo", self._menu, shortcut='Ctrl+Y', statusTip='Redo the last action')
+                action = QAction("Redo", self._menu, shortcut='Ctrl+Y', statusTip='Redo the last action', triggered=ButtleManagerSingleton().get().redo)
                 action.setData(0)
                 self._menu.addAction(action)
                 self._menu.addSeparator()
 
-                action = QAction("Copy", self._menu, shortcut='Ctrl+C', statusTip='Copy the selected node')
+                action = QAction("Copy", self._menu, shortcut='Ctrl+C', statusTip='Copy the selected node', triggered=ButtleManagerSingleton().get().nodeManager.copyNode)
                 action.setData(0)
                 self._menu.addAction(action)
-                action = QAction("Paste", self._menu, shortcut='Ctrl+V', statusTip='Paste the selected node')
+                action = QAction("Paste", self._menu, shortcut='Ctrl+V', statusTip='Paste the selected node', triggered=ButtleManagerSingleton().get().nodeManager.pasteNode)
                 action.setData(0)
                 self._menu.addAction(action)
-                action = QAction("Cut", self._menu, shortcut='Ctrl+X', statusTip='Cut the selected node')
+                action = QAction("Cut", self._menu, shortcut='Ctrl+X', statusTip='Cut the selected node', triggered=ButtleManagerSingleton().get().nodeManager.cutNode)
                 action.setData(0)
                 self._menu.addAction(action)
-                action = QAction("Duplicate", self._menu, shortcut='Ctrl+D', statusTip='Duplicate the selected node')
+                action = QAction("Duplicate", self._menu, shortcut='Ctrl+D', statusTip='Duplicate the selected node', triggered=ButtleManagerSingleton().get().nodeManager.duplicationNode)
                 action.setData(0)
                 self._menu.addAction(action)
                 action = QAction("Delete", self._menu, shortcut='Suppr', statusTip='Delete the selected node')
@@ -84,32 +84,13 @@ class MenuWrapper(QtCore.QObject):
     def menuSelection(self, action):
         # If it cames from the other menus
         if action.data() == 0:
-            if(action.text() == "Exit"):
-                print "app.quit()"
-
-            elif(action.text() == "Undo"):
-                ButtleManagerSingleton().get().undo()
-
-            elif(action.text() == "Redo"):
-                ButtleManagerSingleton().get().redo()
-
-            elif(action.text() == "Copy"):
-                ButtleManagerSingleton().get().nodeManager.copyNode()
-
-            elif(action.text() == "Paste"):
-                ButtleManagerSingleton().get().nodeManager.pasteNode()
-
-            elif(action.text() == "Cut"):
-                ButtleManagerSingleton().get().nodeManager.cutNode()
-
-            elif(action.text() == "Duplicate"):
-                ButtleManagerSingleton().get().nodeManager.duplicationNode()
-
-            elif(action.text() == "Delete"):
-                if(ButtleDataSingleton().get().currentConnectionWrapper):
-                    ButtleManagerSingleton().get().connectionManager.disconnect(ButtleDataSingleton().get().currentConnectionWrapper)
-                else:
-                    ButtleManagerSingleton().get().nodeManager.destructionNodes()
+            if(action.triggered != None):
+                action.triggered()
+            # elif(action.text() == "Delete"):
+            #     if(ButtleDataSingleton().get().currentConnectionWrapper):
+            #         ButtleManagerSingleton().get().connectionManager.disconnect(ButtleDataSingleton().get().currentConnectionWrapper)
+            #     else:
+            #         ButtleManagerSingleton().get().nodeManager.destructionNodes()
 
         # If it cames from the NodeMenu
         else:

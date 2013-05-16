@@ -26,12 +26,7 @@ Rectangle {
                 break;
 
             case "deleteNode":
-                if(_buttleData.currentConnectionWrapper) {
-                    _buttleManager.connectionManager.disconnect(_buttleData.currentConnectionWrapper);
-                }
-                else {
-                    _buttleManager.nodeManager.destructionNodes();
-                }
+                _buttleManager.deleteSelection();
                 break;
 
             case "undo":

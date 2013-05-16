@@ -137,14 +137,12 @@ class NodeWrapper(QtCore.QObject):
             self.setFpsError("")
             graph.setup()
         except Exception as e:
-            print "can't get fps of the node" + self._node.getName()
+            logging.debug("can't get fps of the node" + self._node.getName())
             self.setFpsError(str(e))
             return 1
             raise
         framerate = node.getOutputFrameRate()
-        #if (framerate == None):
-        #    framerate = 1
-        print "framerate: ", framerate
+        #print "framerate: ", framerate
         return framerate
 
     def getFpsError(self):
@@ -166,17 +164,16 @@ class NodeWrapper(QtCore.QObject):
             self.setFrameError("")
             graph.setup()
         except Exception as e:
-            print "can't get nbFrames of the node" + self._node.getName()
+            logging.debug("can't get nbFrames of the node" + self._node.getName())
             self.setFrameError(str(e))
             return 0
             raise
-        timeDomain = node.getTimeDomain()
-        #getTimeDomain() returns first frame and last one
+        timeDomain = node.getTimeDomain() #getTimeDomain() returns first frame and last one
         nbFrames = timeDomain.max - timeDomain.min
         #not very elegant but allow to avoid a problem because an image returns a number of frames very high
         if nbFrames > 100000000 or nbFrames < 0:
             nbFrames = 1
-        print "nbFrames: ", nbFrames
+        #print "nbFrames: ", nbFrames
         return nbFrames
 
     def getFrameError(self):

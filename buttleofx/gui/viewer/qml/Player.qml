@@ -68,7 +68,7 @@ Item {
     }
 
     onNodeChanged: {
-        console.log("Node Changed : ", node)
+        //console.log("Node Changed : ", node)
     }
 
     /*************************** TabBar*************************************/

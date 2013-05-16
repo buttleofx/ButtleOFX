@@ -66,7 +66,7 @@ class GLViewport_tuttleofx(GLViewport):
             self.loadImage_tuttle()
             #print('Tuttle img_data:', self.img_data)
         except Exception as e:
-            print 'Error while loading image file.\nError: "%s"' % str(e)
+            logging.debug('Error while loading image file.\nError: "%s"' % str(e))
             self.img_data = None
             self.setImageBounds(QtCore.QRect())
             #raise
@@ -85,20 +85,6 @@ class GLViewport_tuttleofx(GLViewport):
         pixelScale.y = pixelScale.x
         if self.img_data is not None and self.tuttleOverlay:
             self.tuttleOverlay.draw(pixelScale)
-
-    #time management
-    def getTime(self):
-        return self._time
-
-    def setTime(self, currentTime):
-        self._timeHasChanged = True
-        self._time = currentTime
-        self.loadImage()
-        self.timeChanged.emit()
-        self.update()
-
-    timeChanged = QtCore.Signal()
-    time = QtCore.Property(float, getTime, setTime, notify=timeChanged)
 
     #frame management
     def getFrame(self):

@@ -98,13 +98,13 @@ class ViewerManager(QtCore.QObject):
             for key in mapNodeToImage.keys():
                 #If the image is already calculated
                 if node_hashCode == key and frameChanged is False:
-                    print "**************************Image already calculated**********************"
+                    #print "**************************Image already calculated**********************"
                     return mapNodeToImage.get(node_hashCode)
             #If it is not
-            print "**************************Image is not already calculated**********************"
+            #print "**************************Image is not already calculated**********************"
             return self.computeNode(node, frame)
         except Exception as e:
-            print "Can't display node : " + node
+            logging.debug("Can't display node : " + node)
             self.setNodeError(str(e))
             raise
 

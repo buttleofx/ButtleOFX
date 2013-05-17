@@ -197,6 +197,7 @@ class Node(object):
         """
         # uiParams
         self.setCoord(nodeData["uiParams"]["coord"][0], nodeData["uiParams"]["coord"][1])
+        self.setOldCoord(nodeData["uiParams"]["coord"][0], nodeData["uiParams"]["coord"][1])
         self.setColor(nodeData["uiParams"]["color"])
         self.setNameUser(nodeData["uiParams"]["nameUser"])
 

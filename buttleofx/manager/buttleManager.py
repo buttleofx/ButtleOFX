@@ -92,6 +92,15 @@ class ButtleManager(QtCore.QObject):
         cmdManager = CommandManager()
         return cmdManager.canRedo()
 
+    ############### DELETION ###############
+    @QtCore.Slot()
+    def deleteSelection(self):
+        buttleData = ButtleDataSingleton().get()
+        if(buttleData.currentConnectionWrapper):
+            self._connectionManager.disconnect(buttleData.currentConnectionWrapper)
+        else:
+            self._nodeManager.destructionNodes()
+
     ################################################## DATA EXPOSED TO QML ##################################################
 
     @QtCore.Signal

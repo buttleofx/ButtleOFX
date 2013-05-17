@@ -18,12 +18,7 @@ Item {
 
         // Graph toolbar
         if (event.key == Qt.Key_Delete) {
-            if(_buttleData.currentConnectionWrapper) {
-                _buttleManager.connectionManager.disconnect(_buttleData.currentConnectionWrapper);
-            }
-            else if (!_buttleData.currentSelectedNodeWrappers.isEmpty()){
-                _buttleManager.nodeManager.destructionNodes();
-            }
+           _buttleManager.deleteSelection();
         }
         if ((event.key == Qt.Key_Z) && (event.modifiers & Qt.ControlModifier)) {
             if(_buttleManager.canUndo) {

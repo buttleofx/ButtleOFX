@@ -21,7 +21,7 @@ class NodeManager(QtCore.QObject):
     ############### EVENTS FROM QML ###############
 
     @QtCore.Slot(str, int, int)
-    def creationNode(self, nodeType, x, y):
+    def creationNode(self, nodeType, x=20, y=20):
         """
             Creates a node.
         """
@@ -31,17 +31,6 @@ class NodeManager(QtCore.QObject):
         # update undo/redo display
         self.undoRedoChanged()
 
-    @QtCore.Slot()
-    def creationNodeImage(self, action):
-        """
-            Creates a node.
-        """
-
-        buttleData = ButtleDataSingleton().get()
-        buttleData.getGraph().createNode(action.data(), 20, 20)
-
-        # update undo/redo display
-        self.undoRedoChanged()
 
     @QtCore.Slot()
     def destructionNodes(self):

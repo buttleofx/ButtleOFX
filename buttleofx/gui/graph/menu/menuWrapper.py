@@ -94,7 +94,7 @@ class MenuWrapper(QtCore.QObject):
 
         # If it cames from the NodeMenu
         else:
-            ButtleManagerSingleton().get().nodeManager.creationNodeImage(action)
+            ButtleManagerSingleton().get().nodeManager.creationNode(action.data())
 
     @QtCore.Slot(float, float)
     def showMenu(self, x, y):

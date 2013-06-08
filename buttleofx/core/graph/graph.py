@@ -107,7 +107,7 @@ class Graph(object):
 
     ################################################## CREATION & DESTRUCTION ##################################################
 
-    def createNode(self, nodeType, x = 10, y = 10):
+    def createNode(self, nodeType, x = 20, y = 20):
         """
             Adds a node from the node list when a node is created.
         """

@@ -91,19 +91,19 @@ Rectangle {
             // tmpConnection update
             if(hasText && text.substring(0, 5) == "clip/") {
                 if (connections.tmpClipName == "Output") {
-                    connections.tmpConnectionX2 =  pos.x
-                    connections.tmpConnectionY2 =  pos.y
+                    connections.tmpConnectionX2 =  pos.x - graphArea.originX
+                    connections.tmpConnectionY2 =  pos.y - graphArea.originY
                 }
                 else {
-                    connections.tmpConnectionX1 =  pos.x
-                    connections.tmpConnectionY1 =  pos.y
+                    connections.tmpConnectionX1 =  pos.x - graphArea.originX
+                    connections.tmpConnectionY1 =  pos.y - graphArea.originY
                 }
             }
         }
 
         onDrop: {
             if(acceptDrop) {
-                _buttleManager.nodeManager.dropFile(firstUrl, pos.x, pos.y)
+                _buttleManager.nodeManager.dropFile(firstUrl, pos.x - graphArea.originX, pos.y - graphArea.originY)
             }
         }
 

@@ -303,11 +303,25 @@ class ButtleData(QtCore.QObject):
         return False
 
     @QtCore.Slot(int, int, int, int)
-    def addNodeWrappersInRectangleSelection(self, x, y, width, height):
-        for node in self.getGraph().getNodes():
-            if node.getCoord()[0] >= x and node.getCoord()[0] <= x + width:
-                if node.getCoord()[1] >= y and node.getCoord()[1] <= y + height:
-                    self.appendToCurrentSelectedNodeNames(node.getName())
+    def addNodeWrappersInRectangleSelection(self, xRect, yRect, widthRect, heightRect):
+        """
+            Selects the nodes which are is the rectangle selection area.
+        """
+        for nodeW in self.getGraphWrapper().getNodeWrappers():
+            xNode = nodeW.getNode().getCoord()[0]
+            yNode = nodeW.getNode().getCoord()[1]
+            widthNode = nodeW.getWidth()
+            heightNode = nodeW.getHeight()
+
+            # we project the boundin-boxes on the axes and we check if the segments overlap
+            horizontalOverlap = (xNode < xRect + widthRect) and (xRect < xNode + widthNode)
+            verticalOverlap = (yNode < yRect + heightRect) and (yRect < yNode + heightNode)
+            overlap = horizontalOverlap and verticalOverlap
+
+            # if the bounding-boxes overlap then the node is in the selection area
+            if overlap:
+                self.appendToCurrentSelectedNodeNames(nodeW.getName())
+
 
     @QtCore.Slot(QtCore.QObject, int)
     def assignNodeToViewerIndex(self, nodeWrapper, frame):

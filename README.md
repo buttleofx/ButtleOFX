@@ -23,26 +23,26 @@ Compilation
 3rdParties
 ----------
 
-`git clone git://gitorious.org/~freesmael/qt-labs/freesmaels-qmlcanvas.git qmlcanvas`
-`cd qmlcanvas`
-`qmake-qt4`
-`make`
+`git clone git://gitorious.org/~freesmael/qt-labs/freesmaels-qmlcanvas.git qmlcanvas`  
+`cd qmlcanvas`  
+`qmake-qt4`  
+`make`  
 
-`git clone git://gitorious.org/qt/qtquickcontrols.git -b qt4`
-`cd qtquickcontrols`
-`qmake-qt4`
-`make install`
+`git clone git://gitorious.org/qt/qtquickcontrols.git -b qt4`  
+`cd qtquickcontrols`  
+`qmake-qt4`  
+`make install`  
 
 
 Run
 ---
 
-``export BUTTLEOFX=`pwd```
-``export TUTTLEOFX_BIN=$BUTTLEOFX/TuttleOFX/dist/`hostname`/gcc-`gcc -dumpversion`/production``
-`export PYTHONPATH=$TUTTLEOFX_BIN/python`
-`export OFX_PLUGIN_PATH=$TUTTLEOFX_BIN/plugin`
-
-python buttleApp.py
+``export BUTTLEOFX=`pwd` ``  
+``export TUTTLEOFX_BIN=$BUTTLEOFX/TuttleOFX/dist/`hostname`/gcc-`gcc -dumpversion`/production``  
+`export PYTHONPATH=$TUTTLEOFX_BIN/python`  
+`export OFX_PLUGIN_PATH=$TUTTLEOFX_BIN/plugin`  
+     
+`python buttleApp.py`  
 
 
 Errors

@@ -239,7 +239,7 @@ class ButtleData(QtCore.QObject):
         """
             Changes the current viewer node and emits the change.
         """
-        if nodeWrapper == None:
+        if nodeWrapper is None:
             self._currentViewerNodeName = None
         elif self._currentViewerNodeName == nodeWrapper.getName():
             return

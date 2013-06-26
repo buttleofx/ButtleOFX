@@ -11,7 +11,7 @@ from buttleofx.manager import ButtleManagerSingleton
 def createMenu(parentMenu, parentName, view):
     for pluginId in ButtleDataSingleton().get().getQObjectPluginsIdentifiersByParentPath(parentName):
         # If it is a plugin, we add it to the menu
-            if ButtleDataSingleton().get().isAPlugin(pluginId[1]) == True:
+            if ButtleDataSingleton().get().isAPlugin(pluginId[1]) is True:
                 action = QAction(pluginId[0], parentMenu)
                 action.setData(pluginId[1])
                 parentMenu.addAction(action)
@@ -84,7 +84,7 @@ class MenuWrapper(QtCore.QObject):
     def menuSelection(self, action):
         # If it cames from the other menus
         if action.data() == 0:
-            if(action.triggered != None):
+            if(action.triggered is not None):
                 action.triggered()
             # elif(action.text() == "Delete"):
             #     if(ButtleDataSingleton().get().currentConnectionWrapper):

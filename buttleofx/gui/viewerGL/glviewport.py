@@ -174,7 +174,7 @@ class GLViewport(QtDeclarative.QDeclarativeItem):
         #self.tuttleReaderNode
 
     def internPaintGL(self, widget):
-        if self.img_data != None:
+        if self.img_data is not None:
             self.prepareGL(widget)
             self.drawImage()
             #self.drawRegions()

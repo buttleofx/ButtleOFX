@@ -187,7 +187,7 @@ class Node(object):
         }
         for param in self.getParams():
             paramDict = param.object_to_dict()
-            if paramDict != None:
+            if paramDict is not None:
                 node["params"].append(paramDict)
         return node
 

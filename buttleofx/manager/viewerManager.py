@@ -86,7 +86,7 @@ class ViewerManager(QtCore.QObject):
         #Get the name of the currentNode of the viewer
         node = buttleData.getCurrentViewerNodeName()
         #Get the gloabl hashCode of the node
-        if node != None:
+        if node is not None:
             hashMap = tuttle.NodeHashContainer()
             buttleData.getGraph().getGraphTuttle().computeGlobalHashAtTime(hashMap, frame)
             node_hashCode = hashMap.getHash(node, frame)

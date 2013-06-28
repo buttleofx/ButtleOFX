@@ -37,16 +37,27 @@ def getPluginsIdentifiersAsDictionary():
             - if i's a category of plugins, the tuple is : (categoryLabel, "")
         The keys of this dictionary are the "paths" of each element of the menu.
         Example :
-        pluginsIdentifiersAsDictionary["tuttle/"] = ['image', 'param']
-        pluginsIdentifiersAsDictionary["tuttle/image/"] = ['io', 'process', 'generator', 'display', 'tool']
-        pluginsIdentifiersAsDictionary["tuttle/image/tool/"] = ['tuttle.dummy']
+        pluginsIdentifiersAsDictionary["buttle/tuttle/"] = ['image', 'param']
+        pluginsIdentifiersAsDictionary["buttle/tuttle/image/"] = ['io', 'process', 'generator', 'display', 'tool']
+        pluginsIdentifiersAsDictionary["buttle/tuttle/image/tool/"] = ['tuttle.dummy']
     """
+
+    # root label : parent of all plugins
+    buttleLabel = "buttle/"
+
     # list of all Tuttle's plugins
     pluginCache = tuttle.core().getImageEffectPluginCache()
     plugins = pluginCache.getPlugins()
 
     # Creation of the dictionary
     pluginsIdentifiersAsDictionary = dict()
+
+    # if no plugin found we just add the "buttle" key with a message for the user
+    if len(plugins) == 0:
+        pluginsIdentifiersAsDictionary[buttleLabel] = []
+        pluginsIdentifiersAsDictionary[buttleLabel].append(('Error : no plugin found...', False))
+        return pluginsIdentifiersAsDictionary
+
     for plugin in plugins:
         pluginId = plugin.getIdentifier()
         # All plugin labels in Tuttle are preceded by 'Tuttle', so we can delete 'Tuttle' from the beginning of the word. It doesn't affect other plugins, not preceded by 'Tuttle'.
@@ -62,7 +73,7 @@ def getPluginsIdentifiersAsDictionary():
             parentList = fullPath.split('/')
 
         # parentLabel is the parentPath of each element of this nex list of parents
-        parentLabel = "buttle/"
+        parentLabel = buttleLabel
 
         # We browse this list of parents. For each element, we want to create a new entry in the dictionary.
         for i in range(len(parentList) + 1):

@@ -9,22 +9,37 @@ from buttleofx.manager import ButtleManagerSingleton
 
 
 def createMenu(parentMenu, parentName, view):
-    for pluginId in ButtleDataSingleton().get().getQObjectPluginsIdentifiersByParentPath(parentName):
+    for menuItem in ButtleDataSingleton().get().getQObjectPluginsIdentifiersByParentPath(parentName):
+        """
+            TODO : Need to be documented.
+        """
+        # menuItem is a tuple : see getPluginsIdentifiersAsDictionary() is data/tuttleTools.py        
+        pluginParent, pluginId = menuItem  # if the item is not a plugin, pluginId = ""
+
+        isAPlugin = ButtleDataSingleton().get().isAPlugin(pluginId) is True
+        noPluginFound = pluginId is False
+
+        if noPluginFound:
+            action = QAction(pluginParent, parentMenu)
+            action.setData(None)
+            parentMenu.addAction(action)
         # If it is a plugin, we add it to the menu
-            if ButtleDataSingleton().get().isAPlugin(pluginId[1]) is True:
-                action = QAction(pluginId[0], parentMenu)
-                action.setData(pluginId[1])
-                parentMenu.addAction(action)
-            # Else we create a new menu
-            else:
-                submenu = QMenu(view)
-                submenu.setTitle(pluginId[0])
-                parentMenu.addMenu(submenu)
-                createMenu(submenu, parentName + pluginId[0] + "/", view)
+        elif isAPlugin:
+            action = QAction(pluginParent, parentMenu)
+            action.setData(pluginId)
+            parentMenu.addAction(action)
+        # Else we create a new menu
+        else:
+            submenu = QMenu(view)
+            submenu.setTitle(pluginParent)
+            parentMenu.addMenu(submenu)
+            createMenu(submenu, parentName + pluginParent + "/", view)
 
 
 class MenuWrapper(QtCore.QObject):
-
+    """
+             TODO : Need to be documented.
+    """
     # Init the MenuWrapper with the parentName of the menu
     def __init__(self, parentName, check, view, app):
         super(MenuWrapper, self).__init__(view)
@@ -82,21 +97,28 @@ class MenuWrapper(QtCore.QObject):
 
     @QtCore.Slot(QtGui.QAction)
     def menuSelection(self, action):
-        # If it cames from the other menus
-        if action.data() == 0:
-            if(action.triggered is not None):
-                action.triggered()
-            # elif(action.text() == "Delete"):
-            #     if(ButtleDataSingleton().get().currentConnectionWrapper):
-            #         ButtleManagerSingleton().get().connectionManager.disconnect(ButtleDataSingleton().get().currentConnectionWrapper)
-            #     else:
-            #         ButtleManagerSingleton().get().nodeManager.destructionNodes()
+        """
+             TODO : Need to be documented.
+        """
+        if action.data() is not None:
+            # If it cames from the other menus
+            if action.data() == 0:
+                if(action.triggered is not None):
+                    action.triggered()
+                # elif(action.text() == "Delete"):
+                #     if(ButtleDataSingleton().get().currentConnectionWrapper):
+                #         ButtleManagerSingleton().get().connectionManager.disconnect(ButtleDataSingleton().get().currentConnectionWrapper)
+                #     else:
+                #         ButtleManagerSingleton().get().nodeManager.destructionNodes()
 
-        # If it cames from the NodeMenu
-        else:
-            ButtleManagerSingleton().get().nodeManager.creationNode(action.data())
+            # If it cames from the NodeMenu
+            else:
+                ButtleManagerSingleton().get().nodeManager.creationNode(action.data())
 
     @QtCore.Slot(float, float)
     def showMenu(self, x, y):
+        """
+             TODO : Need to be documented.
+        """
         pos = QtCore.QPoint(x, y)
         self._menu.exec_(self._view.mapToGlobal(pos))

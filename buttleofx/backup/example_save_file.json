@@ -1,0 +1,133 @@
+{
+    "date":
+    {
+        "creation": "Sunday, March 04, 2012 12:00:00 AM",
+        "lastModification": "Friday, January 26, 2013 07:22:00 PM" 
+    },
+
+    "window":
+    {
+        // window informations (size of each module, ...)
+    },
+
+    "graph":
+    {
+        "nodes":
+        [
+            {
+                "name": "TuttleDpxWriter_1",
+                "pluginIdentifier": "tuttle.dpxwriter",
+                "pluginVersion": "1.0",
+                "uiParams":
+                {
+                    "nameUser": "Barbapapa",
+                    "x": 118, 
+                    "y": 218,
+                    "color": "#00b2a1"
+                },
+                
+                "params":
+                [
+                    { 
+                        "name": "filename",
+                        "value": "/home/Images/img.dpx"
+                    },
+                    {
+                        "name": "channel",
+                        "value": "compositeVideo"
+                    },
+                    {
+                        "name": "example_paramRGB",
+                        "value": [23, 42, 169]
+                    },
+                    // etc...
+                ]
+            },
+
+            {
+                "name": "S_ChannelSwitcher_1",
+                "pluginIdentifier": "com.genarts.sapphire.adjust.s_channelswitcher",
+                "pluginVersion": "1.0",
+                "uiParams":
+                {
+                    "nameUser": "Miou miou",
+                    "x": 4, 
+                    "y": 4,
+                    "color": "#021f8c"
+                },
+                "params":
+                [
+                    // etc...
+                ]
+            },
+
+            // etc...
+        ],
+
+        "connections":
+        [
+            {
+                "id": "connection1",
+                "clipOut":
+                {
+                    "nodeName": "TuttleDpxWriter_1",
+                    "clipName": "Output"
+                },
+                "clipIn":
+                {
+                    "nodeName": "S_ChannelSwitcher_1",
+                    "clipName": "Source"
+                },
+            },
+            {
+                "id": "connection2",
+                "clipOut":
+                {
+                    "nodeName": "TuttleDpxWriter_1",
+                    "clipName": "Output"
+                },
+                "clipIn":
+                {
+                    "nodeName": "TuttleFlip_1",
+                    "clipName": "Source"
+                },
+            }
+
+            // etc...
+        ],
+
+        "currentSelectedNodes":
+        [
+            { "nodeName": "truc" },
+            { "nodeName": "truc" },
+            { "nodeName": "truc" }
+            // etc...
+        ],
+
+        "currentSelectedConnections":
+        [
+            { "id": "connection1"},
+            { "id": "connection2"}
+            // etc...
+        ],
+
+        "currentParamNode" : "truc",
+    },
+
+    "viewer":
+    {
+        // the nodeName of each node in the viewer :
+        "viewer1": "TuttleDpxWriter_1",
+        "viewer2": "TuttleFlip_4",
+        "viewer3": "None",
+        "viewer4": "None",
+        "viewer5": "None",
+        "viewer6": "None",
+        "viewer7": "S_ChannelSwitcher_1",
+        "viewer8": "None",
+        "viewer9": "None",
+        "currentViewer": 2
+    }
+}
+
+

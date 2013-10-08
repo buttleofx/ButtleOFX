@@ -1,3 +1,6 @@
 [submodule "TuttleOFX"]
 	path = TuttleOFX
-	url = git@github.com:tuttleofx/TuttleOFX.git
+	url = http://github.com/tuttleofx/TuttleOFX.git
+[submodule "QuickMamba"]
+	path = QuickMamba
+	url = http://github.com/buttleofx/QuickMamba.git

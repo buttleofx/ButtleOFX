@@ -1,0 +1,47 @@
+{
+  "date": {
+    "creation": "Thursday, 14. March 2013 07:22PM"
+  }, 
+  "graph": {
+    "connections": [], 
+    "currentSelectedNodes": [
+      "TuttlePngReader_1"
+    ], 
+    "nodes": [
+      {
+        "name": "TuttlePngReader_1", 
+        "params": [
+          {
+            "name": "filename", 
+            "value": "/home/yuki/mosquito.png"
+          }, 
+          {
+            "name": "channel", 
+            "value": "auto"
+          }, 
+          {
+            "name": "bitDepth", 
+            "value": "auto"
+          }
+        ], 
+        "pluginIdentifier": "tuttle.pngreader", 
+        "pluginVersion": "1.0", 
+        "uiParams": {
+          "color": [
+            0, 
+            178, 
+            161
+          ], 
+          "coord": [
+            20, 
+            20
+          ], 
+          "nameUser": "TuttlePngReader_1"
+        }
+      }
+    ]
+  }, 
+  "paramEditor": "TuttlePngReader_1", 
+  "viewer": "TuttlePngReader_1", 
+  "window": {}
+}

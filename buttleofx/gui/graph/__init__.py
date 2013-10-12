@@ -1,1 +1,1 @@
-from graphWrapper import GraphWrapper
+from .graphWrapper import GraphWrapper

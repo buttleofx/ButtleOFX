@@ -28,6 +28,6 @@ class MenuItem(QtCore.QObject):
         self._listMenuItem = listMenuItem
 
     changed = QtCore.Signal()
-    label = QtCore.Property(unicode, getLabel, setLabel, notify=changed)
+    label = QtCore.Property(str, getLabel, setLabel, notify=changed)
     itemType = QtCore.Property(QtCore.QObject, getType, setType, notify=changed)
     listMenuItem = QtCore.Property(QtCore.QObject, getListMenuItem, setListMenuItem, notify=changed)

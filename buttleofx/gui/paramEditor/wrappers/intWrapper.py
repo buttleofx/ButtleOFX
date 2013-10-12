@@ -1,6 +1,6 @@
+from .paramWrapper import ParamWrapper
+
 from PySide import QtCore
-# common
-from paramWrapper import ParamWrapper
 
 
 class IntWrapper(ParamWrapper):

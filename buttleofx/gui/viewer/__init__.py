@@ -1,1 +1,1 @@
-from timerPlayer import TimerPlayer
+from .timerPlayer import TimerPlayer

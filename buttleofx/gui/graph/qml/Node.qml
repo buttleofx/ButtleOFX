@@ -138,8 +138,8 @@ Rectangle {
     Rectangle {
         id: nodeRectangle
         anchors.centerIn: parent
-        height: parent.height - 8
-        width: parent.width - 8
+        anchors.fill: parent
+        anchors.margins: 4
         color: "#bbbbbb"
         radius: 8
         Text {

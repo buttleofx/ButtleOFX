@@ -418,7 +418,7 @@ class ButtleData(QtCore.QObject):
                         dictJson["viewer"]["other_views"][str(num_view)]["frame"] = frame
 
             # write dictJson in a file
-            f.write(unicode(json.dumps(dictJson, sort_keys=True, indent=2, ensure_ascii=False)))
+            f.write(str(json.dumps(dictJson, sort_keys=True, indent=2, ensure_ascii=False)))
         f.closed
 
         # Finally we update the savedGraphIndex of the CommandManager : it must be equal to the current index
@@ -430,7 +430,7 @@ class ButtleData(QtCore.QObject):
         """
             Loads all data from a Json file (the default Json file if no url is given)
         """
-        with open(unicode(url), 'r') as f:
+        with open(str(url), 'r') as f:
             read_data = f.read()
 
             decoded = json.loads(read_data, object_hook=_decode_dict)
@@ -508,9 +508,9 @@ class ButtleDataSingleton(Singleton):
 
 def _decode_dict(dict_):
     """
-        This function will recursively pass in nested dicts, and will convert all unicode elements into string (essencial for some Tuttle functions). 
+        This function will recursively pass in nested dicts, and will convert all str elements into string (essencial for some Tuttle functions). 
     """
     for key in dict_:
-        if isinstance(dict_[key], unicode):
+        if isinstance(dict_[key], str):
            dict_[key] = str(dict_[key])
     return dict_

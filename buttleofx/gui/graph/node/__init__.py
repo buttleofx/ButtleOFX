@@ -1,1 +1,1 @@
-from nodeWrapper import NodeWrapper
+from .nodeWrapper import NodeWrapper

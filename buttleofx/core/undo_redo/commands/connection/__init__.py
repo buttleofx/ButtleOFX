@@ -1,2 +1,2 @@
-from cmdCreateConnection import CmdCreateConnection
-from cmdDeleteConnection import CmdDeleteConnection
+from .cmdCreateConnection import CmdCreateConnection
+from .cmdDeleteConnection import CmdDeleteConnection

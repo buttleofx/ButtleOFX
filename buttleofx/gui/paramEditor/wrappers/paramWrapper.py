@@ -44,6 +44,6 @@ class ParamWrapper(QtCore.QObject):
     def emitOtherParamOfTheNodeChanged(self):
         self.otherParamOfTheNodeChanged.emit()
 
-    paramType = QtCore.Property(unicode, getParamType, constant=True)
-    text = QtCore.Property(unicode, getText, constant=True)
+    paramType = QtCore.Property(str, getParamType, constant=True)
+    text = QtCore.Property(str, getText, constant=True)
     isSecret = QtCore.Property(bool, isSecret, notify=otherParamOfTheNodeChanged)

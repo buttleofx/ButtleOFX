@@ -1,2 +1,2 @@
-from idClip import IdClip
-from connection import Connection
+from .idClip import IdClip
+from .connection import Connection

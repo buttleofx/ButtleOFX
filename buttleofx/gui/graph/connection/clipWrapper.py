@@ -19,5 +19,5 @@ class ClipWrapper(QtCore.QObject):
     def getClipName(self):
         return self._clipName
 
-    name = QtCore.Property(unicode, getClipName, constant=True)
-    nodeName = QtCore.Property(unicode, getNodeName, constant=True)
+    name = QtCore.Property(str, getClipName, constant=True)
+    nodeName = QtCore.Property(str, getNodeName, constant=True)

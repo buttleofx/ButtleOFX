@@ -1,14 +1,14 @@
-from PySide import QtCore
-# quickmamba
-from quickmamba.patterns import Singleton
 # 'little' managers
-from nodeManager import NodeManager
-from connectionManager import ConnectionManager
-from viewerManager import ViewerManager
-# undo_redo
+from .nodeManager import NodeManager
+from .connectionManager import ConnectionManager
+from .viewerManager import ViewerManager
+
 from buttleofx.core.undo_redo.manageTools import CommandManager
-# data
 from buttleofx.data import ButtleDataSingleton
+
+from quickmamba.patterns import Singleton
+
+from PySide import QtCore
 
 
 class ButtleManager(QtCore.QObject):

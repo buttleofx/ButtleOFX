@@ -1,2 +1,2 @@
-from glviewport import GLViewport
-#from main import main
+from .glviewport import GLViewport
+#from .main import main

@@ -1,6 +1,6 @@
+from .paramWrapper import ParamWrapper
+
 from PySide import QtCore
-# common
-from paramWrapper import ParamWrapper
 
 
 class GroupWrapper(ParamWrapper):
@@ -22,4 +22,4 @@ class GroupWrapper(ParamWrapper):
 
     # ################################################## DATA EXPOSED TO QML ##################################################
 
-    label = QtCore.Property(unicode, getLabel, constant=True)
+    label = QtCore.Property(str, getLabel, constant=True)

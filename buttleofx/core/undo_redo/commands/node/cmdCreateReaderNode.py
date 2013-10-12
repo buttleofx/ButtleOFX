@@ -3,7 +3,7 @@ from buttleofx.core.undo_redo.manageTools import UndoableCommand
 from buttleofx.core.undo_redo.commands.node import CmdCreateNode
 
 
-class CmdCreateReaderNode(UndoableCommand, CmdCreateNode):
+class CmdCreateReaderNode(CmdCreateNode):
     """
         Command that creates a node and sets its filename. It's the case when an image is dropped in the graph.
         We can't use a group of commands because we need the tuttle node to set the value, and this tuttle node is created in the function doCmd() of the cmdCreateNode.!

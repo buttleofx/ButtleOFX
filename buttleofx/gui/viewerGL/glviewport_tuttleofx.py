@@ -4,8 +4,8 @@ from pyTuttle import tuttle
 #logging for doing prints in a file
 import logging
 # for the viewer
-from tuttleOverlayInteract import TuttleOverlayInteract
-from glviewport import GLViewport
+from .tuttleOverlayInteract import TuttleOverlayInteract
+from .glviewport import GLViewport
 # data
 from buttleofx.data import ButtleDataSingleton
 # manager

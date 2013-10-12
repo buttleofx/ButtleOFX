@@ -1,2 +1,2 @@
-from menuItem import MenuItem
-from menuWrapper import MenuWrapper
+from .menuItem import MenuItem
+from .menuWrapper import MenuWrapper

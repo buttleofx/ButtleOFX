@@ -1,8 +1,8 @@
-from PySide import QtCore
-# common
-from paramWrapper import ParamWrapper
-#quickmamba
+from .paramWrapper import ParamWrapper
+
 from quickmamba.models import QObjectListModel
+
+from PySide import QtCore
 
 
 class ChoiceWrapper(ParamWrapper):

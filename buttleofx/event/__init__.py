@@ -1,1 +1,1 @@
-from buttleEvent import ButtleEvent, ButtleEventSingleton
+from .buttleEvent import ButtleEvent, ButtleEventSingleton

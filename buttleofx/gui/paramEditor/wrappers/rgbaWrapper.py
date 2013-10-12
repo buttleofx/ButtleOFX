@@ -1,7 +1,6 @@
-from PySide import QtCore
-# common
-from paramWrapper import ParamWrapper
+from .paramWrapper import ParamWrapper
 
+from PySide import QtCore
 
 class RGBAWrapper(ParamWrapper):
     """

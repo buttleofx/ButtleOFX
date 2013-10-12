@@ -1,6 +1,7 @@
-from PySide import QtCore
 # common
-from paramWrapper import ParamWrapper
+from .paramWrapper import ParamWrapper
+
+from PySide import QtCore
 
 
 class StringWrapper(ParamWrapper):
@@ -13,7 +14,7 @@ class StringWrapper(ParamWrapper):
 
     #################### getters ####################
 
-    @QtCore.Slot(result=unicode)
+    @QtCore.Slot(result=str)
     def getDefaultValue(self):
         self.setHasChanged(False)
         return self._param.getDefaultValue()

@@ -6,7 +6,7 @@
 # http://www.developpez.net/forums/d310663/autres-langages/python-zope/general-python/classes-abstraites-python/
 
 
-class UndoableCommand:
+class UndoableCommand(object):
     """
     Object saved in the Command Manager.
     """

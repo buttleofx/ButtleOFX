@@ -1,6 +1,6 @@
-from wheelArea import WheelArea
-from dropArea import DropArea
-from colorExtended import ColorExtended
+from .wheelArea import WheelArea
+from .dropArea import DropArea
+from .colorExtended import ColorExtended
 
 from PySide import QtDeclarative
 

@@ -149,7 +149,7 @@ class QmlInstantCoding(QtCore.QObject):
     def onFileChanged(self, sourceFile):
         """ Handle changes in a watched file. """
         if self._verbose:
-            print "Source file changed : ", sourceFile
+            print("Source file changed : ", sourceFile)
         # Retrieve source file from attached view
         source = self._attachedView.source()
         # Clear the QDeclarativeEngine cache
@@ -165,7 +165,7 @@ class QmlInstantCoding(QtCore.QObject):
             time.sleep(0.1)
             cptTry += 1
 
-        print "Reloading ", sourceFile
+        print("Reloading ", sourceFile)
         # To reload the view, re-set the source
         self._attachedView.setSource(source)
         # Finally, readd the modified file to the watch system

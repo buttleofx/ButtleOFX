@@ -1,3 +1,3 @@
-from singleton import Singleton
-from signalEvent import Signal
+from .singleton import Singleton
+from .signalEvent import Signal
 

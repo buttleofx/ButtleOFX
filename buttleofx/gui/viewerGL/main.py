@@ -14,20 +14,20 @@ else:
     from glviewport_pil import GLViewport_pil
 
 
-from PySide import QtGui, QtDeclarative, QtOpenGL
+from PyQt5 import QtCore, QtWidgets, QtQuick, QtQml, QtOpenGL
 
 import os
 
 currentFilePath = os.path.dirname(os.path.abspath(__file__))
 
-class ButtleApp(QtGui.QApplication):
+class ButtleApp(QtWidgets.QApplication):
     def __init__(self, argv):
         super(ButtleApp, self).__init__(argv)
     
     def notify(self, receiver, event):
         try:
             #print("QApp notify")
-            return QtGui.QApplication.notify(self, receiver, event)
+            return QtWidgets.QApplication.notify(self, receiver, event)
         except Exception as e:
             print("QApp notify exception: " + str(e))
             import traceback
@@ -35,19 +35,19 @@ class ButtleApp(QtGui.QApplication):
             return False
 
 def main(argv):
-    # Launch a DeclarativeView
+    # Launch a QuickView
     app = ButtleApp(argv)
 
-    decView = QtDeclarative.QDeclarativeView()
+    decView = QtQuick.QQuickView()
     decView.setViewport( QtOpenGL.QGLWidget() )
-    decView.setViewportUpdateMode(QtDeclarative.QDeclarativeView.FullViewportUpdate)
+    decView.setViewportUpdateMode(QtQuick.QQuickView.FullViewportUpdate)
     if tuttleofx_installed:
-        QtDeclarative.qmlRegisterType(GLViewport_tuttleofx, "Viewport", 1, 0, "GLViewport")
+        QtQml.qmlRegisterType(GLViewport_tuttleofx, "Viewport", 1, 0, "GLViewport")
     else:
-        QtDeclarative.qmlRegisterType(GLViewport_pil, "Viewport", 1, 0, "GLViewport")
+        QtQml.qmlRegisterType(GLViewport_pil, "Viewport", 1, 0, "GLViewport")
     
-    decView.setSource(os.path.join(currentFilePath, "Viewer.qml"))
-    decView.setResizeMode(QtDeclarative.QDeclarativeView.SizeRootObjectToView)
+    decView.setSource(QtCore.QUrl(os.path.join(currentFilePath, "Viewer.qml")))
+    decView.setResizeMode(QtQuick.QQuickView.SizeRootObjectToView)
     decView.setWindowTitle("Viewer OpenGL")
     decView.show()
     app.exec_()

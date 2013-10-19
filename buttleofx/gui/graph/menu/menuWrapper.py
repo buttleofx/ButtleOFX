@@ -1,7 +1,11 @@
-from PySide import QtCore
-from PySide import QtGui
-from PySide.QtCore import *
-from PySide.QtGui import *
+from PyQt5 import QtCore
+from PyQt5 import QtGui
+
+# TODO: no * in imports
+from PyQt5.QtCore import *
+from PyQt5.QtGui import *
+from PyQt5.QtWidgets import *
+
 # data
 from buttleofx.data import ButtleDataSingleton
 # manager
@@ -30,7 +34,7 @@ def createMenu(parentMenu, parentName, view):
             parentMenu.addAction(action)
         # Else we create a new menu
         else:
-            submenu = QMenu(view)
+            submenu = QMenu()  #QMenu(view)
             submenu.setTitle(pluginParent)
             parentMenu.addMenu(submenu)
             createMenu(submenu, parentName + pluginParent + "/", view)
@@ -44,7 +48,7 @@ class MenuWrapper(QtCore.QObject):
     def __init__(self, parentName, check, view, app):
         super(MenuWrapper, self).__init__(view)
         self._view = view
-        self._menu = QMenu(view)
+        self._menu = QMenu()  #QMenu(view)
         self._menu.setTitle(parentName)
 
         if(check == 0):
@@ -95,7 +99,7 @@ class MenuWrapper(QtCore.QObject):
 
         self._menu.triggered.connect(self.menuSelection)
 
-    @QtCore.Slot(QtGui.QAction)
+    @QtCore.pyqtSlot(QAction)
     def menuSelection(self, action):
         """
              TODO : Need to be documented.
@@ -104,7 +108,7 @@ class MenuWrapper(QtCore.QObject):
             # If it cames from the other menus
             if action.data() == 0:
                 if(action.triggered is not None):
-                    action.triggered()
+                    action.triggered.emit()
                 # elif(action.text() == "Delete"):
                 #     if(ButtleDataSingleton().get().currentConnectionWrapper):
                 #         ButtleManagerSingleton().get().connectionManager.disconnect(ButtleDataSingleton().get().currentConnectionWrapper)
@@ -115,7 +119,7 @@ class MenuWrapper(QtCore.QObject):
             else:
                 ButtleManagerSingleton().get().nodeManager.creationNode(action.data())
 
-    @QtCore.Slot(float, float)
+    @QtCore.pyqtSlot(float, float)
     def showMenu(self, x, y):
         """
              TODO : Need to be documented.

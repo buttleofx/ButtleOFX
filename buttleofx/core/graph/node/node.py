@@ -1,5 +1,5 @@
 import logging
-from PySide import QtGui
+from PyQt5 import QtGui
 # to parse
 import json
 # Tuttle

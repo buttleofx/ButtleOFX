@@ -1,4 +1,4 @@
-from PySide import QtCore, QtGui
+from PyQt5 import QtCore, QtGui
 import logging
 #quickmamba
 from quickmamba.models import QObjectListModel
@@ -76,7 +76,7 @@ class NodeWrapper(QtCore.QObject):
     def getColor(self):
         return QtGui.QColor(*self._node.getColor())
 
-    @QtCore.Slot(result=QtGui.QColor)
+    @QtCore.pyqtSlot(result=QtGui.QColor)
     def getDefaultColor(self):
         return QtGui.QColor(0, 178, 161)
 
@@ -142,7 +142,7 @@ class NodeWrapper(QtCore.QObject):
             return 1
             raise
         framerate = node.getOutputFrameRate()
-        #print "framerate: ", framerate
+        #print("framerate: ", framerate)
         return framerate
 
     def getFpsError(self):
@@ -173,7 +173,7 @@ class NodeWrapper(QtCore.QObject):
         #not very elegant but allow to avoid a problem because an image returns a number of frames very high
         if nbFrames > 100000000 or nbFrames < 0:
             nbFrames = 1
-        #print "nbFrames: ", nbFrames
+        #print("nbFrames: ", nbFrames)
         return nbFrames
 
     def getFrameError(self):
@@ -212,8 +212,8 @@ class NodeWrapper(QtCore.QObject):
 
     ################################################## LINK WRAPPER LAYER TO QML ##################################################
 
-    nodeLookChanged = nodePositionChanged = nodeContentChanged = QtCore.Signal()
-    nodeWidthChanged = QtCore.Signal()
+    nodeLookChanged = nodePositionChanged = nodeContentChanged = QtCore.pyqtSignal()
+    nodeWidthChanged = QtCore.pyqtSignal()
 
     def emitNodeLookChanged(self):
         """
@@ -238,7 +238,7 @@ class NodeWrapper(QtCore.QObject):
 
     ##### SLot #####
 
-    @QtCore.Slot(int)
+    @QtCore.pyqtSlot(int)
     def fitWidth(self, textWidth):
         """
             Function called by Node.qml to fit the width of the node given the width of the text (with an horizontal margin).
@@ -248,28 +248,28 @@ class NodeWrapper(QtCore.QObject):
     ################################################## DATA EXPOSED TO QML ##################################################
 
     # params from Buttle
-    name = QtCore.Property(str, getName, constant=True)
-    nameUser = QtCore.Property(str, getNameUser, setNameUser, notify=nodeLookChanged)
-    nodeType = QtCore.Property(str, getType, constant=True)
-    coord = QtCore.Property(QtCore.QPoint, getCoord, setCoord, notify=nodePositionChanged)  # problem to access to x property with QPoint !
-    xCoord = QtCore.Property(int, getXCoord, setXCoord, notify=nodePositionChanged)
-    yCoord = QtCore.Property(int, getYCoord, setYCoord, notify=nodePositionChanged)
-    color = QtCore.Property(QtGui.QColor, getColor, setColor, notify=nodeLookChanged)
-    nbInput = QtCore.Property(int, getNbInput, constant=True)
+    name = QtCore.pyqtProperty(str, getName, constant=True)
+    nameUser = QtCore.pyqtProperty(str, getNameUser, setNameUser, notify=nodeLookChanged)
+    nodeType = QtCore.pyqtProperty(str, getType, constant=True)
+    coord = QtCore.pyqtProperty(QtCore.QPoint, getCoord, setCoord, notify=nodePositionChanged)  # problem to access to x property with QPoint !
+    xCoord = QtCore.pyqtProperty(int, getXCoord, setXCoord, notify=nodePositionChanged)
+    yCoord = QtCore.pyqtProperty(int, getYCoord, setYCoord, notify=nodePositionChanged)
+    color = QtCore.pyqtProperty(QtGui.QColor, getColor, setColor, notify=nodeLookChanged)
+    nbInput = QtCore.pyqtProperty(int, getNbInput, constant=True)
     # params (wrappers)
-    params = QtCore.Property(QtCore.QObject, getParams, notify=nodeContentChanged)
+    params = QtCore.pyqtProperty(QtCore.QObject, getParams, notify=nodeContentChanged)
 
     # video
-    fps = QtCore.Property(float, getFPS, constant=True)
-    nbFrames = QtCore.Property(int, getNbFrames, constant=True)
+    fps = QtCore.pyqtProperty(float, getFPS, constant=True)
+    nbFrames = QtCore.pyqtProperty(int, getNbFrames, constant=True)
 
     # for a clean display of  connections
-    height = QtCore.Property(int, getHeight, constant=True)
-    width = QtCore.Property(int, getWidth, setWidth, notify=nodeWidthChanged)  # using nodeLookChanged creates a binding loop
-    srcClips = QtCore.Property(QtCore.QObject, getSrcClips, constant=True)
-    outputClip = QtCore.Property(QtCore.QObject, getOutputClip, constant=True)
-    clipSpacing = QtCore.Property(int, getClipSpacing, constant=True)
-    clipSize = QtCore.Property(int, getClipSize, constant=True)
-    sideMargin = QtCore.Property(int, getSideMargin, constant=True)
-    inputTopMargin = QtCore.Property(int, getInputTopMargin, constant=True)
-    outputTopMargin = QtCore.Property(int, getOutputTopMargin, constant=True)
+    height = QtCore.pyqtProperty(int, getHeight, constant=True)
+    width = QtCore.pyqtProperty(int, getWidth, setWidth, notify=nodeWidthChanged)  # using nodeLookChanged creates a binding loop
+    srcClips = QtCore.pyqtProperty(QtCore.QObject, getSrcClips, constant=True)
+    outputClip = QtCore.pyqtProperty(QtCore.QObject, getOutputClip, constant=True)
+    clipSpacing = QtCore.pyqtProperty(int, getClipSpacing, constant=True)
+    clipSize = QtCore.pyqtProperty(int, getClipSize, constant=True)
+    sideMargin = QtCore.pyqtProperty(int, getSideMargin, constant=True)
+    inputTopMargin = QtCore.pyqtProperty(int, getInputTopMargin, constant=True)
+    outputTopMargin = QtCore.pyqtProperty(int, getOutputTopMargin, constant=True)

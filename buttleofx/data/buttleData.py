@@ -1,4 +1,4 @@
-from PySide import QtCore
+from PyQt5 import QtCore
 # to parse data
 import json
 # to save and load data
@@ -98,7 +98,7 @@ class ButtleData(QtCore.QObject):
         """
         return self._currentSelectedNodeNames
 
-    @QtCore.Slot()
+    @QtCore.pyqtSlot()
     def getCurrentViewerNodeName(self):
         """
             Returns the name of the current viewer node.
@@ -133,7 +133,7 @@ class ButtleData(QtCore.QObject):
         """
         return self._currentViewerIndex
 
-    @QtCore.Slot(int, result=QtCore.QObject)
+    @QtCore.pyqtSlot(int, result=QtCore.QObject)
     def getNodeWrapperByViewerIndex(self, index):
         """
             Returns the nodeWrapper of the node contained in the viewer at the corresponding index.
@@ -145,7 +145,7 @@ class ButtleData(QtCore.QObject):
         else:
             return self._graphWrapper.getNodeWrapper(nodeViewerInfos[0])
 
-    @QtCore.Slot(int, result=int)
+    @QtCore.pyqtSlot(int, result=int)
     def getFrameByViewerIndex(self, index):
         """
             Returns the frame of the node contained in the viewer at the corresponding index.
@@ -280,7 +280,7 @@ class ButtleData(QtCore.QObject):
 
     ############################################### ADDITIONAL FUNCTIONS ##################################################
 
-    @QtCore.Slot(QtCore.QObject)
+    @QtCore.pyqtSlot(QtCore.QObject)
     def appendToCurrentSelectedNodeWrappers(self, nodeWrapper):
         self.appendToCurrentSelectedNodeNames(nodeWrapper.getName())
 
@@ -292,7 +292,7 @@ class ButtleData(QtCore.QObject):
         # emit signal
         self.currentSelectedNodesChanged.emit()
 
-    @QtCore.Slot("QVariant", result=bool)
+    @QtCore.pyqtSlot("QVariant", result=bool)
     def nodeIsSelected(self, nodeWrapper):
         """
             Returns True if the node is selected (=if nodeName is in the list _currentSelectedNodeNames), else False.
@@ -302,7 +302,7 @@ class ButtleData(QtCore.QObject):
                 return True
         return False
 
-    @QtCore.Slot(int, int, int, int)
+    @QtCore.pyqtSlot(int, int, int, int)
     def addNodeWrappersInRectangleSelection(self, xRect, yRect, widthRect, heightRect):
         """
             Selects the nodes which are is the rectangle selection area.
@@ -323,7 +323,7 @@ class ButtleData(QtCore.QObject):
                 self.appendToCurrentSelectedNodeNames(nodeW.getName())
 
 
-    @QtCore.Slot(QtCore.QObject, int)
+    @QtCore.pyqtSlot(QtCore.QObject, int)
     def assignNodeToViewerIndex(self, nodeWrapper, frame):
         """
             Assigns a node to the _mapViewerIndextoNodeName at the current viewerIndex.
@@ -332,12 +332,12 @@ class ButtleData(QtCore.QObject):
         if nodeWrapper:
             self._mapViewerIndextoNodeName.update({str(self._currentViewerIndex): (nodeWrapper.getName(), frame)})
 
-    @QtCore.Slot()
+    @QtCore.pyqtSlot()
     def clearCurrentSelectedNodeNames(self):
         self._currentSelectedNodeNames[:] = []
         self.currentSelectedNodesChanged.emit()
 
-    @QtCore.Slot()
+    @QtCore.pyqtSlot()
     def clearCurrentConnectionId(self):
         self._currentConnectionId = None
         self.currentConnectionWrapperChanged.emit()
@@ -353,7 +353,7 @@ class ButtleData(QtCore.QObject):
 
     ################################################## PLUGIN LIST #####################################################
 
-    @QtCore.Slot(str, result=QtCore.QObject)
+    @QtCore.pyqtSlot(str, result=QtCore.QObject)
     def getQObjectPluginsIdentifiersByParentPath(self, pathname):
         """
             Returns a QObjectListModel of all the PluginsIdentifiers (String) we expect to find after the submenu 'pathname'.
@@ -362,7 +362,7 @@ class ButtleData(QtCore.QObject):
         pluginsIds.setObjectList(tuttleTools.getPluginsIdentifiersByParentPath(pathname))
         return pluginsIds
 
-    @QtCore.Slot(str, result=bool)
+    @QtCore.pyqtSlot(str, result=bool)
     def isAPlugin(self, pluginId):
         """
             Returns if a string is a plugin identifier.
@@ -371,8 +371,8 @@ class ButtleData(QtCore.QObject):
 
     ################################################## SAVE / LOAD ##################################################
 
-    @QtCore.Slot(str)
-    @QtCore.Slot()
+    @QtCore.pyqtSlot(str)
+    @QtCore.pyqtSlot()
     def saveData(self, url='buttleofx/backup/data.bofx'):
         """
             Saves all data in a json file (default file : buttleofx/backup/data.bofx)
@@ -424,13 +424,13 @@ class ButtleData(QtCore.QObject):
         # Finally we update the savedGraphIndex of the CommandManager : it must be equal to the current index
         CommandManager().setSavedGraphIndex(CommandManager().getIndex())
 
-    @QtCore.Slot(str)
-    @QtCore.Slot()
+    @QtCore.pyqtSlot(str)
+    @QtCore.pyqtSlot()
     def loadData(self, url='buttleofx/backup/data.bofx'):
         """
             Loads all data from a Json file (the default Json file if no url is given)
         """
-        with open(str(url), 'r') as f:
+        with open(url, 'r') as f:
             read_data = f.read()
 
             decoded = json.loads(read_data, object_hook=_decode_dict)
@@ -464,36 +464,36 @@ class ButtleData(QtCore.QObject):
     ################################################## DATA EXPOSED TO QML ##################################################
 
     # graphWrapper
-    graphWrapper = QtCore.Property(QtCore.QObject, getGraphWrapper, constant=True)
+    graphWrapper = QtCore.pyqtProperty(QtCore.QObject, getGraphWrapper, constant=True)
 
     # filePath
-    buttlePath = QtCore.Property(str, getButtlePath, constant=True)
+    buttlePath = QtCore.pyqtProperty(str, getButtlePath, constant=True)
 
     # current param, view, and selected node
-    currentParamNodeChanged = QtCore.Signal()
-    currentParamNodeWrapper = QtCore.Property(QtCore.QObject, getCurrentParamNodeWrapper, setCurrentParamNodeWrapper, notify=currentParamNodeChanged)
+    currentParamNodeChanged = QtCore.pyqtSignal()
+    currentParamNodeWrapper = QtCore.pyqtProperty(QtCore.QObject, getCurrentParamNodeWrapper, setCurrentParamNodeWrapper, notify=currentParamNodeChanged)
 
-    currentViewerNodeChanged = QtCore.Signal()
-    currentViewerNodeWrapper = QtCore.Property(QtCore.QObject, getCurrentViewerNodeWrapper, setCurrentViewerNodeWrapper, notify=currentViewerNodeChanged)
-    currentViewerFrameChanged = QtCore.Signal()
-    currentViewerFrame = QtCore.Property(int, getCurrentViewerFrame, setCurrentViewerFrame, notify=currentViewerFrameChanged)
+    currentViewerNodeChanged = QtCore.pyqtSignal()
+    currentViewerNodeWrapper = QtCore.pyqtProperty(QtCore.QObject, getCurrentViewerNodeWrapper, setCurrentViewerNodeWrapper, notify=currentViewerNodeChanged)
+    currentViewerFrameChanged = QtCore.pyqtSignal()
+    currentViewerFrame = QtCore.pyqtProperty(int, getCurrentViewerFrame, setCurrentViewerFrame, notify=currentViewerFrameChanged)
 
-    currentSelectedNodesChanged = QtCore.Signal()
-    currentSelectedNodeWrappers = QtCore.Property("QVariant", getCurrentSelectedNodeWrappers, setCurrentSelectedNodeWrappers, notify=currentSelectedNodesChanged)
+    currentSelectedNodesChanged = QtCore.pyqtSignal()
+    currentSelectedNodeWrappers = QtCore.pyqtProperty("QVariant", getCurrentSelectedNodeWrappers, setCurrentSelectedNodeWrappers, notify=currentSelectedNodesChanged)
 
-    currentConnectionWrapperChanged = QtCore.Signal()
-    currentConnectionWrapper = QtCore.Property(QtCore.QObject, getCurrentConnectionWrapper, setCurrentConnectionWrapper, notify=currentConnectionWrapperChanged)
+    currentConnectionWrapperChanged = QtCore.pyqtSignal()
+    currentConnectionWrapper = QtCore.pyqtProperty(QtCore.QObject, getCurrentConnectionWrapper, setCurrentConnectionWrapper, notify=currentConnectionWrapperChanged)
 
-    currentViewerIndexChanged = QtCore.Signal()
-    currentViewerIndex = QtCore.Property(int, getCurrentViewerIndex, setCurrentViewerIndex, notify=currentViewerIndexChanged)
+    currentViewerIndexChanged = QtCore.pyqtSignal()
+    currentViewerIndex = QtCore.pyqtProperty(int, getCurrentViewerIndex, setCurrentViewerIndex, notify=currentViewerIndexChanged)
 
     # paste possibility
-    pastePossibilityChanged = QtCore.Signal()
-    canPaste = QtCore.Property(bool, canPaste, notify=pastePossibilityChanged)
+    pastePossibilityChanged = QtCore.pyqtSignal()
+    canPaste = QtCore.pyqtProperty(bool, canPaste, notify=pastePossibilityChanged)
 
     # possibility to save graph
-    graphCanBeSavedChanged = QtCore.Signal()
-    graphCanBeSaved = QtCore.Property(bool, graphCanBeSaved, notify=graphCanBeSavedChanged)
+    graphCanBeSavedChanged = QtCore.pyqtSignal()
+    graphCanBeSaved = QtCore.pyqtProperty(bool, graphCanBeSaved, notify=graphCanBeSavedChanged)
 
 
 

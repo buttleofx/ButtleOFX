@@ -8,7 +8,7 @@ from buttleofx.gui.paramEditor.params import ParamInt
 from buttleofx.gui.paramEditor.params import ParamString
 from buttleofx.gui.paramEditor.wrappers import ParamEditorWrapper
 
-from PySide import QtGui, QtDeclarative
+from PyQt5 import QtCore, QtWidgets, QtQuick
 
 import sys
 import os
@@ -16,8 +16,8 @@ import os
 currentFilePath = os.path.dirname(os.path.abspath(__file__))
 
 if __name__ == '__main__':
-    app = QtGui.QApplication(sys.argv)
-    view = QtDeclarative.QDeclarativeView()
+    app = QtWidgets.QApplication(sys.argv)
+    view = QtQuick.QQuickView()
 
     paramList = [
             ParamInt(20, 5, 128),
@@ -70,8 +70,8 @@ if __name__ == '__main__':
     paramsw = ParamEditorWrapper(view, paramList)
     view.rootContext().setContextProperty('_paramListModel', paramsw)
 
-    view.setSource(os.path.join(currentFilePath, 'qml/ParamEditor.qml'))
-    view.setResizeMode(QtDeclarative.QDeclarativeView.SizeRootObjectToView)
+    view.setSource(QtCore.QUrl(os.path.join(currentFilePath, 'qml/ParamEditor.qml')))
+    view.setResizeMode(QtQuick.QQuickView.SizeRootObjectToView)
 
     view.show()
 

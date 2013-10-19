@@ -1,7 +1,7 @@
 # common
 from .paramWrapper import ParamWrapper
 
-from PySide import QtCore
+from PyQt5 import QtCore
 
 
 class StringWrapper(ParamWrapper):
@@ -14,7 +14,7 @@ class StringWrapper(ParamWrapper):
 
     #################### getters ####################
 
-    @QtCore.Slot(result=str)
+    @QtCore.pyqtSlot(result=str)
     def getDefaultValue(self):
         self.setHasChanged(False)
         return self._param.getDefaultValue()
@@ -36,17 +36,15 @@ class StringWrapper(ParamWrapper):
     def setHasChanged(self, changed):
         self._param.setHasChanged(changed)
 
-    @QtCore.Slot(str)
+    @QtCore.pyqtSlot(str)
     def pushValue(self, value):
         self._param.pushValue(value)
 
-    @QtCore.Signal
-    def changed(self):
-        pass
+    changed = QtCore.pyqtSignal()
     
     ################################################## DATA EXPOSED TO QML ##################################################
 
-    value = QtCore.Property(str, getValue, setValue, notify=changed)
-    stringType = QtCore.Property(str, getStringType, constant=True)
+    value = QtCore.pyqtProperty(str, getValue, setValue, notify=changed)
+    stringType = QtCore.pyqtProperty(str, getStringType, constant=True)
     
-    hasChanged = QtCore.Property(bool, getHasChanged, setHasChanged, notify=changed)
+    hasChanged = QtCore.pyqtProperty(bool, getHasChanged, setHasChanged, notify=changed)

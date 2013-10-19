@@ -1,4 +1,4 @@
-import QtQuick 1.1
+import QtQuick 2.0
 import "qmlComponents/ColorPicker"
 import QuickMamba 1.0
 

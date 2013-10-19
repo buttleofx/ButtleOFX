@@ -1,5 +1,4 @@
-from PySide import QtCore
-from PySide import QtDeclarative
+from PyQt5 import QtCore, QtQuick
 import logging
 
 from pyTuttle import tuttle
@@ -7,14 +6,15 @@ from pyTuttle import tuttle
 from buttleofx.data import ButtleDataSingleton
 
 
-class TimerPlayer(QtDeclarative.QDeclarativeItem):
+class TimerPlayer(QtQuick.QQuickItem):
 
     def __init__(self, parent=None):
-        QtDeclarative.QDeclarativeItem.__init__(self, parent)
+        QtQuick.QQuickItem.__init__(self, parent)
         self._timer = QtCore.QTimer()
+        import functools
+        self._timer.timeout.connect(self.nextFrame)  # initialize the timer
         self._fps = 25
         self._speed = 1000/self._fps  # delay between frames in milliseconds
-        self.connect(self._timer, QtCore.SIGNAL("timeout()"), self.nextFrame)  # initialize the timer
         self._frame = 0
         self._fps = 25
         self._nbFrames = 1
@@ -22,7 +22,7 @@ class TimerPlayer(QtDeclarative.QDeclarativeItem):
         self._processOptions = None
 
     # fonctions used in QML for the Viewer (in the file TimelineTools.qml)
-    @QtCore.Slot()
+    @QtCore.pyqtSlot()
     def play(self):
         logging.debug("--------------playing-------------")
         buttleData = ButtleDataSingleton().get()
@@ -44,7 +44,7 @@ class TimerPlayer(QtDeclarative.QDeclarativeItem):
         self._speed = 1000/self._fps
         self._timer.start(self._speed)
 
-    @QtCore.Slot()
+    @QtCore.pyqtSlot()
     def launchProcessGraph(self):
         buttleData = ButtleDataSingleton().get()
         #Get the name of the currentNode of the viewer
@@ -63,7 +63,7 @@ class TimerPlayer(QtDeclarative.QDeclarativeItem):
         
         buttleData.setVideoIsPlaying(True)
 
-    @QtCore.Slot()
+    @QtCore.pyqtSlot()
     def pause(self):
         logging.debug("--------------pause-------------")
         self._timer.stop()
@@ -75,7 +75,7 @@ class TimerPlayer(QtDeclarative.QDeclarativeItem):
             buttleData.setProcessGraph(None)
         self.framePlayerChanged.emit()
 
-    @QtCore.Slot()
+    @QtCore.pyqtSlot()
     def stop(self):
         logging.debug("--------------stop-------------")
         self._timer.stop()
@@ -90,7 +90,6 @@ class TimerPlayer(QtDeclarative.QDeclarativeItem):
         self._frame = 0
         self.framePlayerChanged.emit()
 
-    @QtCore.Slot()
     def nextFrame(self):
         if(self._frame < self._nbFrames - 1):
             self._frame = self._frame + 1
@@ -98,7 +97,7 @@ class TimerPlayer(QtDeclarative.QDeclarativeItem):
             return
         self.framePlayerChanged.emit()
 
-    @QtCore.Slot()
+    @QtCore.pyqtSlot()
     def previousFrame(self):
         if(self._frame > 0):
             self._frame = self._frame - 1
@@ -133,14 +132,14 @@ class TimerPlayer(QtDeclarative.QDeclarativeItem):
     def getNbFrames(self):
         return self.nbFrames
 
-    @QtCore.Slot()
+    @QtCore.pyqtSlot()
     def frameChanged(self):
         self.framePlayerChanged.emit()
 
-    framePlayerChanged = QtCore.Signal()
-    fpsVideoChanged = QtCore.Signal()
-    nbFramesChanged = QtCore.Signal()
+    framePlayerChanged = QtCore.pyqtSignal()
+    fpsVideoChanged = QtCore.pyqtSignal()
+    nbFramesChanged = QtCore.pyqtSignal()
 
-    frame = QtCore.Property(float, getFrame, setFrame, notify=framePlayerChanged)
-    fps = QtCore.Property(float, getFPS, setFPS, notify=fpsVideoChanged)
-    nbFrames = QtCore.Property(int, getNbFrames, setNbFrames, notify=nbFramesChanged)
+    frame = QtCore.pyqtProperty(float, getFrame, setFrame, notify=framePlayerChanged)
+    fps = QtCore.pyqtProperty(float, getFPS, setFPS, notify=fpsVideoChanged)
+    nbFrames = QtCore.pyqtProperty(int, getNbFrames, setNbFrames, notify=nbFramesChanged)

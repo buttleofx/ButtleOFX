@@ -1,6 +1,6 @@
 from .paramWrapper import ParamWrapper
 
-from PySide import QtCore
+from PyQt5 import QtCore
 
 
 class GroupWrapper(ParamWrapper):
@@ -16,10 +16,8 @@ class GroupWrapper(ParamWrapper):
     def getLabel(self):
         return self._param.getLabel()
 
-    @QtCore.Signal
-    def changed(self):
-        pass
+    changed = QtCore.pyqtSignal()
 
     # ################################################## DATA EXPOSED TO QML ##################################################
 
-    label = QtCore.Property(str, getLabel, constant=True)
+    label = QtCore.pyqtProperty(str, getLabel, constant=True)

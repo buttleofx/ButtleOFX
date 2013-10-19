@@ -1,6 +1,6 @@
 from .paramWrapper import ParamWrapper
 
-from PySide import QtCore
+from PyQt5 import QtCore
 
 
 class RGBWrapper(ParamWrapper):
@@ -42,12 +42,10 @@ class RGBWrapper(ParamWrapper):
     def setValueB(self, value):
         self._param.setValueB(value)
 
-    @QtCore.Signal
-    def changed(self):
-        pass
+    changed = QtCore.pyqtSignal()
 
     ################################################## DATA EXPOSED TO QML ##################################################
 
-    r = QtCore.Property(float, getValueR, setValueR, notify=changed)
-    g = QtCore.Property(float, getValueG, setValueG, notify=changed)
-    b = QtCore.Property(float, getValueB, setValueB, notify=changed)
+    r = QtCore.pyqtProperty(float, getValueR, setValueR, notify=changed)
+    g = QtCore.pyqtProperty(float, getValueG, setValueG, notify=changed)
+    b = QtCore.pyqtProperty(float, getValueB, setValueB, notify=changed)

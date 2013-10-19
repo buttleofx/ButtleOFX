@@ -1,4 +1,4 @@
-import QtQuick 1.1
+import QtQuick 2.0
 import QuickMamba 1.0
 
 Rectangle {
@@ -84,7 +84,7 @@ Rectangle {
 
     }
 
-    DropArea {
+    ExternDropArea {
         anchors.fill: parent
         onDragEnter: {
             acceptDrop = hasText && text=="mosquito_of_the_dead";

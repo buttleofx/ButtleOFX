@@ -1,4 +1,4 @@
-from PySide import QtCore
+from PyQt5 import QtCore
 # core
 from buttleofx.core.params import ParamInt, ParamInt2D, ParamInt3D, ParamString, ParamBoolean, ParamDouble, ParamDouble2D, ParamDouble3D, ParamChoice, ParamPushButton, ParamRGBA, ParamRGB, ParamGroup, ParamPage
 # gui

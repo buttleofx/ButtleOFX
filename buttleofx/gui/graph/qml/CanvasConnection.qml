@@ -1,5 +1,4 @@
-import QtQuick 1.1
-import Canvas 1.0
+import QtQuick 2.0
 
 Canvas {
     property int x1
@@ -17,11 +16,11 @@ Canvas {
     height: Math.abs(y1 - y2) + 2*canvasMargin
     x: Math.min(x1, x2) - canvasMargin
     y: Math.min(y1, y2) - canvasMargin
-    color: "transparent"
+    //color: "transparent"
 
     // Drawing a curve for the connection
     onPaint: {
-        var ctx = getContext();
+        var ctx = getContext("2d");
         var cHeight = height;
         var cWidth = width;
         var startX = 0

@@ -1,4 +1,4 @@
-from PySide import QtGui, QtDeclarative, QtCore
+from PyQt5 import QtGui, QtQml, QtQuick, QtCore
 
 from OpenGL import GL
 
@@ -71,7 +71,7 @@ def loadTextureFromImage(imgBounds, img_data):
     return texture
 
 
-class GLViewport(QtDeclarative.QDeclarativeItem):
+class GLViewport(QtQuick.QQuickItem):
     _glGeometry = QtCore.QRect()
 
     def __init__(self, parent=None):
@@ -81,7 +81,7 @@ class GLViewport(QtDeclarative.QDeclarativeItem):
         self.tex = None
 
         # Enable paint method calls
-        self.setFlag(QtGui.QGraphicsItem.ItemHasNoContents, False)
+        self.setFlag(QtQuick.QQuickItem.ItemHasNoContents, False)
 
     def initializeGL(self):
         GL.glClearColor(0.0, 0.0, 0.0, 0.0)  # We assign a black background
@@ -89,14 +89,14 @@ class GLViewport(QtDeclarative.QDeclarativeItem):
         GL.glEnable(GL.GL_LINE_SMOOTH)
 
     def updateTextureFromImage(self):
-        #print "updateTextureFromImage begin"
+        #print("updateTextureFromImage begin")
         if self.img_data is not None:
             self.tex = loadTextureFromImage(self._imageBoundsValue, self.img_data)
         else:
             self.tex = None
-        #print "updateTextureFromImage end"
+        #print("updateTextureFromImage end")
 
-    @QtCore.Slot()
+    @QtCore.pyqtSlot()
     def fitImage(self):
         widthRatio = self.width() / float(self.getImageBounds().width()) if self.getImageBounds().width() else 1.0
         heightRatio = self.height() / float(self.getImageBounds().height()) if self.getImageBounds().height() else 1.0
@@ -131,9 +131,9 @@ class GLViewport(QtDeclarative.QDeclarativeItem):
         GL.glColor3d(1.0, 1.0, 1.0)
 
     def drawImage(self):
-        #print "GLViewport.drawImage"
-        #print "widget size:", self.width(), "x", self.height()
-        #print "image size:", self.getImageBounds().width(), "x", self.getImageBounds().height()
+        #print("GLViewport.drawImage")
+        #print("widget size:", self.width(), "x", self.height())
+        #print("image size:", self.getImageBounds().width(), "x", self.getImageBounds().height())
 
         if self.img_data is not None and self.tex is None:
             self.updateTextureFromImage()
@@ -181,7 +181,7 @@ class GLViewport(QtDeclarative.QDeclarativeItem):
 
     def paint(self, painter, option, widget):
         #def paint(self, painter, widget):
-        #print "GLViewport.paint"
+        #print("GLViewport.paint")
 
         painter.beginNativePainting()
         self.internPaintGL(widget)
@@ -196,20 +196,20 @@ class GLViewport(QtDeclarative.QDeclarativeItem):
         GL.glEnd()
 
     def geometryChanged(self, new, old):
-        #print "GLViewport.geometryChanged"
-        #print "new:", new.x(), new.y(), new.width(), new.height()
-        #print "old:", old.x(), old.y(), old.width(), old.height()
+        #print("GLViewport.geometryChanged")
+        #print("new:", new.x(), new.y(), new.width(), new.height())
+        #print("old:", old.x(), old.y(), old.width(), old.height())
 
         self._localGeometry = new
         self._glGeometry = self.sceneTransform().mapRect(new)
 
         if self._fittedModeValue:
             self.fitImage()
-        QtDeclarative.QDeclarativeItem.geometryChanged(self, new, old)
+        QtQuick.QQuickItem.geometryChanged(self, new, old)
 
     def mousePressEvent(self, event):
-        #print "GLViewport.mousePressEvent"
-        QtDeclarative.QDeclarativeItem.mousePressEvent(self, event)
+        #print("GLViewport.mousePressEvent")
+        QtQuick.QQuickItem.mousePressEvent(self, event)
 
     def getBgColor(self):
         return self._bgColorValue
@@ -218,9 +218,9 @@ class GLViewport(QtDeclarative.QDeclarativeItem):
         self._bgColorValue = color
         self.update()
         self.bgColorChanged.emit()
-    bgColorChanged = QtCore.Signal()
+    bgColorChanged = QtCore.pyqtSignal()
     _bgColorValue = QtGui.QColor(255, 0, 0)
-    bgColor = QtCore.Property(QtGui.QColor, getBgColor, setBgColor, notify=bgColorChanged)
+    bgColor = QtCore.pyqtProperty(QtGui.QColor, getBgColor, setBgColor, notify=bgColorChanged)
 
     def getImageBounds(self):
         return self._imageBoundsValue
@@ -229,9 +229,9 @@ class GLViewport(QtDeclarative.QDeclarativeItem):
         self._imageBoundsValue = imgSize
         self.update()
         self.imageBoundsChanged.emit()
-    imageBoundsChanged = QtCore.Signal()
+    imageBoundsChanged = QtCore.pyqtSignal()
     _imageBoundsValue = QtCore.QRect(0, 0, 800, 600)
-    imageSize = QtCore.Property(QtCore.QSize, getImageBounds, setImageBounds, notify=imageBoundsChanged)
+    imageSize = QtCore.pyqtProperty(QtCore.QSize, getImageBounds, setImageBounds, notify=imageBoundsChanged)
 
     def getRegionOfDefinition(self):
         return self._rodValue
@@ -240,9 +240,9 @@ class GLViewport(QtDeclarative.QDeclarativeItem):
         self._rodValue = rod
         self.update()
         self.rodChanged.emit()
-    rodChanged = QtCore.Signal()
+    rodChanged = QtCore.pyqtSignal()
     _rodValue = QtCore.QRectF(-50., -100., 900., 500.)
-    rod = QtCore.Property(QtCore.QRectF, getRegionOfDefinition, setRegionOfDefinition, notify=rodChanged)
+    rod = QtCore.pyqtProperty(QtCore.QRectF, getRegionOfDefinition, setRegionOfDefinition, notify=rodChanged)
 
     def getRegionOfWork(self):
         return self._rowValue
@@ -251,9 +251,9 @@ class GLViewport(QtDeclarative.QDeclarativeItem):
         self._rowValue = row
         self.update()
         self.rowChanged.emit()
-    rowChanged = QtCore.Signal()
+    rowChanged = QtCore.pyqtSignal()
     _rowValue = QtCore.QRectF(0., 0., 720., 576.)
-    row = QtCore.Property(QtCore.QRectF, getRegionOfWork, setRegionOfWork, notify=rowChanged)
+    row = QtCore.pyqtProperty(QtCore.QRectF, getRegionOfWork, setRegionOfWork, notify=rowChanged)
 
     def getFittedMode(self):
         return self._fittedModeValue
@@ -261,23 +261,23 @@ class GLViewport(QtDeclarative.QDeclarativeItem):
     def setfittedMode(self, fittedMode):
         self._fittedModeValue = fittedMode
         self.fittedModeChanged.emit()
-    fittedModeChanged = QtCore.Signal()
+    fittedModeChanged = QtCore.pyqtSignal()
     _fittedModeValue = False
-    fittedMode = QtCore.Property(bool, getFittedMode, setfittedMode, notify=fittedModeChanged)
+    fittedMode = QtCore.pyqtProperty(bool, getFittedMode, setfittedMode, notify=fittedModeChanged)
 
     def getOffset(self):
         return self._offsetValue
 
     def setOffset(self, offset):
-        #print "setOffset:", offset
+        #print("setOffset:", offset)
         self._offsetValue = offset
         self.update()
         self.offsetChanged.emit()
-    offsetChanged = QtCore.Signal()
+    offsetChanged = QtCore.pyqtSignal()
     _offsetValue = QtCore.QPointF(0., 0.)
-    offset = QtCore.Property(QtCore.QPointF, getOffset, setOffset, notify=offsetChanged)
+    offset = QtCore.pyqtProperty(QtCore.QPointF, getOffset, setOffset, notify=offsetChanged)
 
-    @QtCore.Slot(float, float)
+    @QtCore.pyqtSlot(float, float)
     def setOffset_xy(self, x, y):
         self.setOffset(QtCore.QPointF(x, y))
 
@@ -285,13 +285,13 @@ class GLViewport(QtDeclarative.QDeclarativeItem):
         return self._scaleValue
 
     def setScale(self, scale):
-        #print "setScale:", self._scaleValue, " => ", scale
+        #print("setScale:", self._scaleValue, " => ", scale)
         minValue = 0.001
         self._scaleValue = scale if scale > minValue else minValue
         self.update()
         self.scaleChanged.emit()
 
-    @QtCore.Slot(float, float, float)
+    @QtCore.pyqtSlot(float, float, float)
     def setScaleAtPos_viewportCoord(self, scale, x, y):
         '''
         scale: the new scale value
@@ -313,6 +313,6 @@ class GLViewport(QtDeclarative.QDeclarativeItem):
         self.update()
         self.offsetChanged.emit()
         self.scaleChanged.emit()
-    scaleChanged = QtCore.Signal()
+    scaleChanged = QtCore.pyqtSignal()
     _scaleValue = 1.
-    imgScale = QtCore.Property(float, getScale, setScale, notify=scaleChanged)
+    imgScale = QtCore.pyqtProperty(float, getScale, setScale, notify=scaleChanged)

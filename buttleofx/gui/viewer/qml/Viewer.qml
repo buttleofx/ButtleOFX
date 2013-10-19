@@ -1,4 +1,4 @@
-import QtQuick 1.1
+import QtQuick 2.0
 import QuickMamba 1.0
 import Viewport 1.0
 
@@ -64,11 +64,11 @@ Rectangle {
                 viewport.fittedMode = true
             }
         }
-        WheelArea {
+        MouseArea {
             anchors.fill: parent
             property real nbSteps: 10
-            onVerticalWheel: {
-                var deltaF = (delta / 120.0) / nbSteps
+            onWheel: {
+                var deltaF = (angleDelta.y / 120.0) / nbSteps
                 var newScale = viewport.imgScale * (1.0 + deltaF)
                 viewport.setScaleAtPos_viewportCoord( newScale, pos.x, (height-pos.y) )
                 viewport.fittedMode = false

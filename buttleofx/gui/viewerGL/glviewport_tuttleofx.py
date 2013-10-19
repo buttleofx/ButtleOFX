@@ -1,4 +1,4 @@
-from PySide import QtCore
+from PyQt5 import QtCore
 # tuttle
 from pyTuttle import tuttle
 #logging for doing prints in a file
@@ -35,7 +35,7 @@ class GLViewport_tuttleofx(GLViewport):
         # connect : load image when one param changed
         buttleEvent.oneParamChangedSignal.connect(self.loadImage)
 
-    @QtCore.Slot()
+    @QtCore.pyqtSlot()
     def unconnectToButtleEvent(self):
         buttleEvent = ButtleEventSingleton().get()
         # disconnect : load image when the viewer changed
@@ -97,5 +97,5 @@ class GLViewport_tuttleofx(GLViewport):
         self.frameChanged.emit()
         self.update()
 
-    frameChanged = QtCore.Signal()
-    frame = QtCore.Property(int, getFrame, setFrame, notify=frameChanged)
+    frameChanged = QtCore.pyqtSignal()
+    frame = QtCore.pyqtProperty(int, getFrame, setFrame, notify=frameChanged)

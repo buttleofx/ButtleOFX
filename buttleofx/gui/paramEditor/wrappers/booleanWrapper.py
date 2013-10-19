@@ -1,6 +1,6 @@
 from .paramWrapper import ParamWrapper
 
-from PySide import QtCore
+from PyQt5 import QtCore
 
 
 class BooleanWrapper(ParamWrapper):
@@ -13,7 +13,7 @@ class BooleanWrapper(ParamWrapper):
 
     #################### getters ####################
 
-    @QtCore.Slot(result=bool)
+    @QtCore.pyqtSlot(result=bool)
     def getDefaultValue(self):
         return self._param.getDefaultValue()
 
@@ -31,15 +31,13 @@ class BooleanWrapper(ParamWrapper):
     def setHasChanged(self, changed):
         self._param.setHasChanged(changed)
 
-    @QtCore.Slot(bool)
+    @QtCore.pyqtSlot(bool)
     def pushValue(self, value):
         self._param.pushValue(value)
 
-    @QtCore.Signal
-    def changed(self):
-        pass
+    changed = QtCore.pyqtSignal()
 
     ################################################## DATA EXPOSED TO QML ##################################################
 
-    value = QtCore.Property(bool, getValue, setValue, notify=changed)
-    hasChanged = QtCore.Property(bool, getHasChanged, setHasChanged, notify=changed)
+    value = QtCore.pyqtProperty(bool, getValue, setValue, notify=changed)
+    hasChanged = QtCore.pyqtProperty(bool, getHasChanged, setHasChanged, notify=changed)

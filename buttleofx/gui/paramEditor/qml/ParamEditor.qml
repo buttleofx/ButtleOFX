@@ -1,5 +1,6 @@
-import QtQuick 1.1
-import QtDesktop 0.1
+import QtQuick 2.0
+import QtQuick.Controls 1.0
+import QtQuick.Layouts 1.0
 
 //parent of the ParamEditor is the Row of the ButtleAp
 Item {
@@ -21,14 +22,15 @@ Item {
     implicitWidth: 300
     implicitHeight: 500
 
-    SplitterColumn {
+    SplitView {
         width: parent.width
         height: parent.height
-        handleWidth: 3
+        //handleWidth: 3
+        orientation: Qt.Vertical
 
         /*TUTTLE PARAMS*/
-        Rectangle{
-            Splitter.minimumHeight: tuttleParamTitle.height
+        Rectangle {
+            Layout.minimumHeight: tuttleParamTitle.height
 
             id: tuttleParams
             height: 500
@@ -36,7 +38,7 @@ Item {
             color: paramEditor.background           
 
             /* Params depend on the node type (Tuttle data)*/
-            Item{
+            Item {
                 id: tuttleParamContent
                 height: parent.height - tuttleParamTitle.height
                 width: parent.width
@@ -44,14 +46,14 @@ Item {
 
                 property string lastGroupParam : "No Group."
 
-                ScrollArea{
+                ScrollView {
                     anchors.fill: parent
                     anchors.topMargin: 5
                     anchors.bottomMargin: 5
                     height: 110
                     width: 110
-                    frame: false
-                    frameWidth: 0
+                    //frame: false
+                    // frameWidth: 0
                     ListView {
                         id: tuttleParam
                         height: count ? contentHeight : 0
@@ -100,7 +102,7 @@ Item {
 
         /*BUTTLE PARAMS*/
         Rectangle{
-            Splitter.minimumHeight: buttleParamTitle.height
+            Layout.minimumHeight: buttleParamTitle.height
             id: buttleParams
             anchors.bottom: parent.bottom
             height: 190

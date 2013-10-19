@@ -1,5 +1,4 @@
-import QtQuick 1.1
-import Canvas 1.0
+import QtQuick 2.0
 
 Item {
     id: connectionItem

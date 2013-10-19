@@ -1,4 +1,4 @@
-from PySide import QtCore, QtGui
+from PyQt5 import QtCore, QtGui
 # quickmamba
 from quickmamba.patterns import Signal
 # Tuttle
@@ -98,17 +98,17 @@ class ViewerManager(QtCore.QObject):
             for key in mapNodeToImage.keys():
                 #If the image is already calculated
                 if node_hashCode == key and frameChanged is False:
-                    #print "**************************Image already calculated**********************"
+                    #print("**************************Image already calculated**********************")
                     return mapNodeToImage.get(node_hashCode)
             #If it is not
-            #print "**************************Image is not already calculated**********************"
+            #print("**************************Image is not already calculated**********************")
             return self.computeNode(node, frame)
         except Exception as e:
             logging.debug("Can't display node : " + node)
             self.setNodeError(str(e))
             raise
 
-    @QtCore.Slot()
+    @QtCore.pyqtSlot()
     def mosquitoDragEvent(self):
         """
             Function called when the viewer's mosquito is dragged.
@@ -132,5 +132,5 @@ class ViewerManager(QtCore.QObject):
         drag.exec_(QtCore.Qt.MoveAction)
 
     # error displayed on the Viewer
-    nodeErrorChanged = QtCore.Signal()
-    nodeError = QtCore.Property(str, getNodeError, setNodeError, notify=nodeErrorChanged)
+    nodeErrorChanged = QtCore.pyqtSignal()
+    nodeError = QtCore.pyqtProperty(str, getNodeError, setNodeError, notify=nodeErrorChanged)

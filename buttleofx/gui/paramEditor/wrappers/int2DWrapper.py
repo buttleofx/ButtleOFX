@@ -1,6 +1,6 @@
 from .paramWrapper import ParamWrapper
 
-from PySide import QtCore
+from PyQt5 import QtCore
 
 
 class Int2DWrapper(ParamWrapper):
@@ -13,11 +13,11 @@ class Int2DWrapper(ParamWrapper):
 
     #################### getters ####################
 
-    @QtCore.Slot(result=int)
+    @QtCore.pyqtSlot(result=int)
     def getDefaultValue1(self):
         return self._param.getDefaultValue1()
 
-    @QtCore.Slot(result=int)
+    @QtCore.pyqtSlot(result=int)
     def getDefaultValue2(self):
         return self._param.getDefaultValue2()
 
@@ -59,19 +59,17 @@ class Int2DWrapper(ParamWrapper):
     def setValue2HasChanged(self, changed):
         self._param.setValue2HasChanged(changed)
 
-    @QtCore.Signal
-    def changed(self):
-        pass
+    changed = QtCore.pyqtSignal()
 
     ################################################## DATA EXPOSED TO QML ##################################################
 
-    value1 = QtCore.Property(int, getValue1, setValue1, notify=changed)
-    value2 = QtCore.Property(int, getValue2, setValue2, notify=changed)
+    value1 = QtCore.pyqtProperty(int, getValue1, setValue1, notify=changed)
+    value2 = QtCore.pyqtProperty(int, getValue2, setValue2, notify=changed)
 
-    maximum1 = QtCore.Property(int, getMaximum1, constant=True)
-    minimum1 = QtCore.Property(int, getMinimum1, constant=True)
-    maximum2 = QtCore.Property(int, getMaximum2, constant=True)
-    minimum2 = QtCore.Property(int, getMinimum2, constant=True)
+    maximum1 = QtCore.pyqtProperty(int, getMaximum1, constant=True)
+    minimum1 = QtCore.pyqtProperty(int, getMinimum1, constant=True)
+    maximum2 = QtCore.pyqtProperty(int, getMaximum2, constant=True)
+    minimum2 = QtCore.pyqtProperty(int, getMinimum2, constant=True)
 
-    value1HasChanged = QtCore.Property(bool, getValue1HasChanged, setValue1HasChanged, notify=changed)
-    value2HasChanged = QtCore.Property(bool, getValue2HasChanged, setValue2HasChanged, notify=changed)
+    value1HasChanged = QtCore.pyqtProperty(bool, getValue1HasChanged, setValue1HasChanged, notify=changed)
+    value2HasChanged = QtCore.pyqtProperty(bool, getValue2HasChanged, setValue2HasChanged, notify=changed)

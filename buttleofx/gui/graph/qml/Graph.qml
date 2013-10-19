@@ -1,6 +1,5 @@
-import QtQuick 1.1
+import QtQuick 2.0
 import QuickMamba 1.0
-import Canvas 1.0
 
 Rectangle {
     id:graphArea
@@ -52,7 +51,7 @@ Rectangle {
             graphArea.drawSelection(rectangleSelection.x - graphArea.originX, rectangleSelection.y - graphArea.originY, rectangleSelection.width, rectangleSelection.height)
         }
 
-        onMousePositionChanged: {
+        onPositionChanged: {
             if(mouse.x < xStart){
                 rectangleSelection.x = mouse.x
                 rectangleSelection.width = xStart - mouse.x;
@@ -82,7 +81,7 @@ Rectangle {
         drag.axis: Drag.XandYAxis
     }
 
-    DropArea {
+    ExternDropArea {
         anchors.fill: parent
         acceptDrop: false
         onDragEnter: {

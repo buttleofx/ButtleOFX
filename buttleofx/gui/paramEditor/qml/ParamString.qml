@@ -1,4 +1,4 @@
-import QtQuick 1.1
+import QtQuick 2.0
 import FolderListViewItem 1.0
 
 /*ParamString is an input field*/
@@ -26,7 +26,7 @@ Item {
     {
         // we need a multi line input
         if (paramObject.stringType == "OfxParamStringIsMultiLine") {
-            var newObject = Qt.createQmlObject('import QtQuick 1.1;' +
+            var newObject = Qt.createQmlObject('import QtQuick 2.0;' +
                 'Flickable {' +
                     'id: flick;' +
                     'width: parent.width - 10;' +
@@ -64,7 +64,7 @@ Item {
                 '}', stringInput, "inputLine");
         }
         else {
-            var newObject = Qt.createQmlObject('import QtQuick 1.1;'+
+            var newObject = Qt.createQmlObject('import QtQuick 2.0;'+
                 'TextInput{' +
                     'id: paramStringInput;' +
                     'text: paramObject.value;' + 

@@ -1,5 +1,5 @@
-import QtQuick 1.1
-import QtDesktop 0.1
+import QtQuick 2.0
+import QtQuick.Layouts 1.0
 import TimerPlayer 1.0
 
 Item {
@@ -133,7 +133,7 @@ Item {
                 width: parent.width
                 color: "transparent"
                 Layout.minimumHeight: 50
-                Layout.verticalSizePolicy: Layout.Expanding
+                Layout.fillHeight: true
 
                 Component {
                     id: viewer_component
@@ -221,7 +221,7 @@ Item {
                 width: parent.width
                 implicitHeight: impHeightValue
                 color: "transparent"
-                Layout.verticalSizePolicy: Layout.Fixed
+                Layout.fillHeight: true
 
                 // Tools (zoom, timeline buttons, mosquitos)
                 Rectangle {

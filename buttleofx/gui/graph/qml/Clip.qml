@@ -1,4 +1,4 @@
-import QtQuick 1.1
+import QtQuick 2.0
 import QuickMamba 1.0
 
 Rectangle {
@@ -67,7 +67,7 @@ Rectangle {
             connections.tmpConnectionExists = false
         }
 
-        DropArea {
+        ExternDropArea {
             anchors.fill: parent
             anchors.margins: -7
             onDragEnter: {

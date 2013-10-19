@@ -1,8 +1,3 @@
-import os
-# PySide
-from PySide import QtGui, QtDeclarative, QtOpenGL
-
-# Logging (see console.log)
 import logging
 # fix thow to display our info
     # from the lowest to the highest level : DEBUG - INFO - WARNING - ERROR - CRITICAL (default = WARNING)
@@ -53,22 +48,24 @@ from buttleofx.core.undo_redo.manageTools import CommandManager
 # Menu
 from buttleofx.gui.graph.menu import MenuWrapper
 
+# PyQt5
+from PyQt5 import QtCore, QtWidgets, QtQml, QtQuick, QtOpenGL
+
+import os
+
+
 # Path of this file
 currentFilePath = os.path.dirname(os.path.abspath(__file__))
 
-from PySide import QtCore
-from PySide.QtCore import *
-from PySide.QtGui import *
 
-
-class ButtleApp(QtGui.QApplication):
+class ButtleApp(QtWidgets.QApplication):
     def __init__(self, argv):
         super(ButtleApp, self).__init__(argv)
 
     def notify(self, receiver, event):
         try:
             #logging.info("QApp notify")
-            return QtGui.QApplication.notify(self, receiver, event)
+            return QtWidgets.QApplication.notify(self, receiver, event)
         except Exception as e:
             logging.exception("QApp notify exception: " + str(e))
             import traceback
@@ -82,13 +79,13 @@ def main(argv):
     tuttle.core().preload()
 
     # give to QML acces to TimerPlayer defined in buttleofx/gui/viewer
-    QtDeclarative.qmlRegisterType(TimerPlayer, "TimerPlayer", 1, 0, "TimerPlayer")
+    QtQml.qmlRegisterType(TimerPlayer, "TimerPlayer", 1, 0, "TimerPlayer")
     # add new QML type
-    QtDeclarative.qmlRegisterType(Finder, "FolderListViewItem", 1, 0, "FolderListView")
+    QtQml.qmlRegisterType(Finder, "FolderListViewItem", 1, 0, "FolderListView")
     if tuttleofx_installed:
-        QtDeclarative.qmlRegisterType(GLViewport_tuttleofx, "Viewport", 1, 0, "GLViewport")
+        QtQml.qmlRegisterType(GLViewport_tuttleofx, "Viewport", 1, 0, "GLViewport")
     else:
-        QtDeclarative.qmlRegisterType(GLViewport_pil, "Viewport", 1, 0, "GLViewport")
+        QtQml.qmlRegisterType(GLViewport_pil, "Viewport", 1, 0, "GLViewport")
 
     # init undo_redo contexts
     cmdManager = CommandManager()
@@ -99,9 +96,9 @@ def main(argv):
     app = ButtleApp(argv)
 
     # create the declarative view
-    view = QtDeclarative.QDeclarativeView()
-    view.setViewport(QtOpenGL.QGLWidget())
-    view.setViewportUpdateMode(QtDeclarative.QDeclarativeView.FullViewportUpdate)
+    view = QtQuick.QQuickView()
+    #view.setViewport(QtOpenGL.QGLWidget())
+    #view.setViewportUpdateMode(QtQml.QQuickView.FullViewportUpdate)
 
     # data
     buttleData = ButtleDataSingleton().get().init(view, currentFilePath)
@@ -125,11 +122,11 @@ def main(argv):
     rc.setContextProperty("_addMenu", addMenu)
 
     # set the view
-    view.setSource(os.path.join(currentFilePath, "MainWindow.qml"))
-    view.setResizeMode(QtDeclarative.QDeclarativeView.SizeRootObjectToView)
-    view.setWindowTitle("ButtleOFX")
-    view.setWindowIcon(QtGui.QIcon("blackMosquito.png"))
-    view.setWindowIconText("ButtleOFX")
+    view.setSource(QtCore.QUrl(os.path.join(currentFilePath, "MainWindow.qml")))
+    view.setResizeMode(QtQuick.QQuickView.SizeRootObjectToView)
+    #view.setWindowTitle("ButtleOFX")
+    #view.setWindowIcon(QtGui.QIcon("blackMosquito.png"))
+    #view.setWindowIconText("ButtleOFX")
     view.setVisible(True)
 
     # Declare we are using instant coding tool on this view

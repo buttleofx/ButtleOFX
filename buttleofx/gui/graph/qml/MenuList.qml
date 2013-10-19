@@ -1,4 +1,4 @@
-import QtQuick 1.1
+import QtQuick 2.0
 
 Item {
     id: menulist
@@ -16,7 +16,7 @@ Item {
         width: 160
         id: nodeMenuView
         model: _buttleData.getQObjectPluginsIdentifiersByParentPath(menulist.parentName)
-        height: heightElement * model.count
+        height: heightElement * (model ? model.count : 0)
         property variant nextMenu: null
         property variant currentElementLabel: ""
 
@@ -41,8 +41,8 @@ Item {
             Component {
                 MenuElement {
                     id: nodeMenuElement
-                    labelElement: object[0]
-                    idElement: object[1]
+                    labelElement: object[0] ? object[0] : ""
+                    idElement: object[1] ? object[1] : ""
                     parentName: menulist.parentName
                     menuListItem: nodeMenuView
                     height: heightElement

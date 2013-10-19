@@ -1,4 +1,4 @@
-from PySide import QtCore
+from PyQt5 import QtCore
 
 
 class ClipWrapper(QtCore.QObject):
@@ -19,5 +19,5 @@ class ClipWrapper(QtCore.QObject):
     def getClipName(self):
         return self._clipName
 
-    name = QtCore.Property(str, getClipName, constant=True)
-    nodeName = QtCore.Property(str, getNodeName, constant=True)
+    name = QtCore.pyqtProperty(str, getClipName, constant=True)
+    nodeName = QtCore.pyqtProperty(str, getNodeName, constant=True)

@@ -7,8 +7,8 @@ sys.path.append(os.path.join(currentFilePath,'QuickMamba'))
 
 #----------------------------------------
 
-import buttleofx
 import quickmamba
+import buttleofx
 
 if __name__ == '__main__':
     quickmamba.qmlRegister()

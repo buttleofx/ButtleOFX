@@ -1,4 +1,4 @@
-from PySide import QtCore
+from PyQt5 import QtCore
 
 
 class MenuItem(QtCore.QObject):
@@ -27,7 +27,7 @@ class MenuItem(QtCore.QObject):
     def setListMenuItem(self, listMenuItem):
         self._listMenuItem = listMenuItem
 
-    changed = QtCore.Signal()
-    label = QtCore.Property(str, getLabel, setLabel, notify=changed)
-    itemType = QtCore.Property(QtCore.QObject, getType, setType, notify=changed)
-    listMenuItem = QtCore.Property(QtCore.QObject, getListMenuItem, setListMenuItem, notify=changed)
+    changed = QtCore.pyqtSignal()
+    label = QtCore.pyqtProperty(str, getLabel, setLabel, notify=changed)
+    itemType = QtCore.pyqtProperty(QtCore.QObject, getType, setType, notify=changed)
+    listMenuItem = QtCore.pyqtProperty(QtCore.QObject, getListMenuItem, setListMenuItem, notify=changed)

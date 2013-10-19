@@ -1,6 +1,6 @@
 from .paramWrapper import ParamWrapper
 
-from PySide import QtCore
+from PyQt5 import QtCore
 
 
 class IntWrapper(ParamWrapper):
@@ -13,7 +13,7 @@ class IntWrapper(ParamWrapper):
 
     #################### getters ####################
 
-    @QtCore.Slot(result=int)
+    @QtCore.pyqtSlot(result=int)
     def getDefaultValue(self):
         return self._param.getDefaultValue()
 
@@ -37,19 +37,17 @@ class IntWrapper(ParamWrapper):
     def setHasChanged(self, changed):
         self._param.setHasChanged(changed)
 
-    @QtCore.Slot(int)
+    @QtCore.pyqtSlot(int)
     def pushValue(self, value):
         self._param.pushValue(value)
 
-    @QtCore.Signal
-    def changed(self):
-        pass
+    changed = QtCore.pyqtSignal()
 
     ################################################## DATA EXPOSED TO QML ##################################################
 
-    value = QtCore.Property(int, getValue, setValue, notify=changed)
+    value = QtCore.pyqtProperty(int, getValue, setValue, notify=changed)
 
-    maximum = QtCore.Property(int, getMaximum, constant=True)
-    minimum = QtCore.Property(int, getMinimum, constant=True)
+    maximum = QtCore.pyqtProperty(int, getMaximum, constant=True)
+    minimum = QtCore.pyqtProperty(int, getMinimum, constant=True)
 
-    hasChanged = QtCore.Property(bool, getHasChanged, setHasChanged, notify=changed)
+    hasChanged = QtCore.pyqtProperty(bool, getHasChanged, setHasChanged, notify=changed)

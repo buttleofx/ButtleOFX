@@ -1,5 +1,5 @@
-import QtQuick 1.1
-import QtDesktop 0.1
+import QtQuick 2.0
+import QtQuick.Controls 1.0
 import QuickMamba 1.0
 
 import "gui/graph/qml"
@@ -10,9 +10,9 @@ Item {
     width: 1200
     height: 800
 
-    TopFocusHandler {
-        //anchors.fill: parent
-    }
+    //TopFocusHandler {
+    //    //anchors.fill: parent
+    //}
 
     Keys.onPressed: {
 
@@ -196,15 +196,17 @@ Item {
         height: parent.height - y
         color: "#353535"
 
-        SplitterRow {
+        SplitView {
             anchors.fill: parent
             anchors.margins: 3
-            handleWidth: 3
+            //handleWidth: 3
+            orientation: Qt.Horizontal
 
-            SplitterColumn {
+            SplitView {
                 width: 0.7*parent.width
                 height: parent.height
-                handleWidth: 3
+                //handleWidth: 3
+                orientation: Qt.Vertical
                 //Splitter.expanding: true // obligatory to allow to have the minimumWidth
 
                 Player {

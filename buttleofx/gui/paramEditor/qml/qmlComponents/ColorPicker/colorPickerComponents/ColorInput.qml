@@ -1,4 +1,4 @@
-import QtQuick 1.1
+import QtQuick 2.0
 
 // an input field with a title
 Row {

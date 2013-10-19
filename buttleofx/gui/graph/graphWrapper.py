@@ -1,4 +1,4 @@
-from PySide import QtCore
+from PyQt5 import QtCore
 import logging
 # quickmamba
 from quickmamba.models import QObjectListModel
@@ -106,7 +106,7 @@ class GraphWrapper(QtCore.QObject):
                 return connection
         return None
 
-    @QtCore.Slot(result=QtCore.QObject)
+    @QtCore.pyqtSlot(result=QtCore.QObject)
     def getLastCreatedNodeWrapper(self):
         """
             Returns the wrapper of the last node created.
@@ -142,7 +142,7 @@ class GraphWrapper(QtCore.QObject):
             yClip = nodeCoord.y() + inputTopMargin + int(clipIndex) * (clipSpacing + clipSize) + clipSize / 2
         return (xClip, yClip)
 
-    @QtCore.Slot(str, str, int, result=QtCore.QPointF)
+    @QtCore.pyqtSlot(str, str, int, result=QtCore.QPointF)
     def getPointClip(self, nodeName, clipName, clipIndex):
         """
             Returns the position of the clip as a QPointF.
@@ -200,7 +200,7 @@ class GraphWrapper(QtCore.QObject):
         for connection in self._graph.getConnections():
             self.createConnectionWrapper(connection)
 
-    @QtCore.Slot(QtCore.QObject)
+    @QtCore.pyqtSlot(QtCore.QObject)
     def updateConnectionsCoord(self, node):
         """
             Updates the coordinates of the connections when a node is beeing moved.
@@ -223,9 +223,9 @@ class GraphWrapper(QtCore.QObject):
     ################################################## DATA EXPOSED TO QML ##################################################
 
     # nodeWrappers and connectionWrappers
-    nodeWrappers = QtCore.Property(QtCore.QObject, getNodeWrappers, constant=True)
-    connectionWrappers = QtCore.Property(QtCore.QObject, getConnectionWrappers, constant=True)
+    nodeWrappers = QtCore.pyqtProperty(QtCore.QObject, getNodeWrappers, constant=True)
+    connectionWrappers = QtCore.pyqtProperty(QtCore.QObject, getConnectionWrappers, constant=True)
 
     # z index for QML (good superposition of nodes in the graph)
-    zMaxChanged = QtCore.Signal()
-    zMax = QtCore.Property(int, getZMax, setZMax, notify=zMaxChanged)
+    zMaxChanged = QtCore.pyqtSignal()
+    zMax = QtCore.pyqtProperty(int, getZMax, setZMax, notify=zMaxChanged)

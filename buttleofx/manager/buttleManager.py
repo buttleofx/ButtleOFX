@@ -8,7 +8,7 @@ from buttleofx.data import ButtleDataSingleton
 
 from quickmamba.patterns import Singleton
 
-from PySide import QtCore
+from PyQt5 import QtCore
 
 
 class ButtleManager(QtCore.QObject):
@@ -43,7 +43,7 @@ class ButtleManager(QtCore.QObject):
 
     ############### UNDO & REDO ###############
 
-    @QtCore.Slot()
+    @QtCore.pyqtSlot()
     def undo(self):
         """
             Calls the cmdManager to undo the last command.
@@ -59,7 +59,7 @@ class ButtleManager(QtCore.QObject):
         buttleData.currentParamNodeChanged.emit()
         buttleData.currentViewerNodeChanged.emit()
 
-    @QtCore.Slot()
+    @QtCore.pyqtSlot()
     def redo(self):
         """
             Calls the cmdManager to redo the last command.
@@ -93,7 +93,7 @@ class ButtleManager(QtCore.QObject):
         return cmdManager.canRedo()
 
     ############### DELETION ###############
-    @QtCore.Slot()
+    @QtCore.pyqtSlot()
     def deleteSelection(self):
         buttleData = ButtleDataSingleton().get()
         if(buttleData.currentConnectionWrapper):
@@ -103,21 +103,19 @@ class ButtleManager(QtCore.QObject):
 
     ################################################## DATA EXPOSED TO QML ##################################################
 
-    @QtCore.Signal
-    def changed(self):
-        pass
+    changed = QtCore.pyqtSignal()
 
     def emitUndoRedoChanged(self):
         self.changed.emit()
 
     # undo redo
-    canUndo = QtCore.Property(bool, canUndo, notify=changed)
-    canRedo = QtCore.Property(bool, canRedo, notify=changed)
+    canUndo = QtCore.pyqtProperty(bool, canUndo, notify=changed)
+    canRedo = QtCore.pyqtProperty(bool, canRedo, notify=changed)
 
     # managers
-    nodeManager = QtCore.Property(QtCore.QObject, getNodeManager, constant=True)
-    connectionManager = QtCore.Property(QtCore.QObject, getConnectionManager, constant=True)
-    viewerManager = QtCore.Property(QtCore.QObject, getViewerManager, constant=True)
+    nodeManager = QtCore.pyqtProperty(QtCore.QObject, getNodeManager, constant=True)
+    connectionManager = QtCore.pyqtProperty(QtCore.QObject, getConnectionManager, constant=True)
+    viewerManager = QtCore.pyqtProperty(QtCore.QObject, getViewerManager, constant=True)
 
 
 # This class exists just because thre are problems when a class extends 2 other class (Singleton and QObject)

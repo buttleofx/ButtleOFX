@@ -1,4 +1,4 @@
-from PySide import QtCore
+from PyQt5 import QtCore
 
 
 class ParamWrapper(QtCore.QObject):
@@ -37,13 +37,11 @@ class ParamWrapper(QtCore.QObject):
     def emitParamChanged(self):
         self.changed.emit()
 
-    @QtCore.Signal
-    def otherParamOfTheNodeChanged(self):
-        pass
+    otherParamOfTheNodeChanged = QtCore.pyqtSignal()
 
     def emitOtherParamOfTheNodeChanged(self):
         self.otherParamOfTheNodeChanged.emit()
 
-    paramType = QtCore.Property(str, getParamType, constant=True)
-    text = QtCore.Property(str, getText, constant=True)
-    isSecret = QtCore.Property(bool, isSecret, notify=otherParamOfTheNodeChanged)
+    paramType = QtCore.pyqtProperty(str, getParamType, constant=True)
+    text = QtCore.pyqtProperty(str, getText, constant=True)
+    isSecret = QtCore.pyqtProperty(bool, isSecret, notify=otherParamOfTheNodeChanged)

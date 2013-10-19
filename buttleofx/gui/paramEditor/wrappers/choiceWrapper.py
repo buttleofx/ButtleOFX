@@ -2,7 +2,7 @@ from .paramWrapper import ParamWrapper
 
 from quickmamba.models import QObjectListModel
 
-from PySide import QtCore
+from PyQt5 import QtCore
 
 
 class ChoiceWrapper(ParamWrapper):
@@ -19,7 +19,7 @@ class ChoiceWrapper(ParamWrapper):
 
     #################### getters ####################
 
-    @QtCore.Slot(result=str)
+    @QtCore.pyqtSlot(result=str)
     def getDefaultValue(self):
         return self._param.getDefaultValue()
 
@@ -40,17 +40,15 @@ class ChoiceWrapper(ParamWrapper):
     def setHasChanged(self, changed):
         self._param.setHasChanged(changed)
 
-    @QtCore.Slot(str)
+    @QtCore.pyqtSlot(str)
     def pushValue(self, value):
         self._param.pushValue(value)
 
-    @QtCore.Signal
-    def changed(self):
-        pass
+    changed = QtCore.pyqtSignal()
 
     ################################################## DATA EXPOSED TO QML ##################################################
 
-    listValue = QtCore.Property(QtCore.QObject, getListValue, constant=True)
-    value = QtCore.Property(str, getValue, setValue, notify=changed)
+    listValue = QtCore.pyqtProperty(QtCore.QObject, getListValue, constant=True)
+    value = QtCore.pyqtProperty(str, getValue, setValue, notify=changed)
 
-    hasChanged = QtCore.Property(bool, getHasChanged, setHasChanged, notify=changed)
+    hasChanged = QtCore.pyqtProperty(bool, getHasChanged, setHasChanged, notify=changed)

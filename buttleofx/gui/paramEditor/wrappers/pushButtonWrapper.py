@@ -1,6 +1,6 @@
 from .paramWrapper import ParamWrapper
 
-from PySide import QtCore
+from PyQt5 import QtCore
 
 
 class PushButtonWrapper(ParamWrapper):
@@ -19,11 +19,9 @@ class PushButtonWrapper(ParamWrapper):
     def getEnabled(self):
         return self._param.getEnabled()
 
-    @QtCore.Signal
-    def changed(self):
-        pass
+    changed = QtCore.pyqtSignal()
 
     ################################################## DATA EXPOSED TO QML ##################################################
 
-    name = QtCore.Property(str, getName, constant=True)
-    enabled = QtCore.Property(bool, getEnabled, constant=True)
+    name = QtCore.pyqtProperty(str, getName, constant=True)
+    enabled = QtCore.pyqtProperty(bool, getEnabled, constant=True)

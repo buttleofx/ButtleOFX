@@ -1,4 +1,4 @@
-import QtQuick 1.1
+import QtQuick 2.0
 import "colorPickerComponents"
 import "colorPickerComponents/ColorFunctions.js" as ColorFunctions
 import QuickMamba 1.0

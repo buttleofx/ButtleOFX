@@ -1,4 +1,4 @@
-from PySide import QtCore, QtGui
+from PyQt5 import QtCore, QtGui
 # quickmamba
 from quickmamba.patterns import Signal
 # data
@@ -45,7 +45,7 @@ class ConnectionManager(QtCore.QObject):
 
         return True
 
-    @QtCore.Slot(str, QtCore.QObject, int, result=bool)
+    @QtCore.pyqtSlot(str, QtCore.QObject, int, result=bool)
     def canConnectTmpNodes(self, dataTmpClip, clip, clipIndex):
         """
             Returns True if the connection between the nodes is possible, else False.
@@ -79,7 +79,7 @@ class ConnectionManager(QtCore.QObject):
 
     ############### EVENTS FROM QML ###############
 
-    @QtCore.Slot(QtCore.QObject, int)
+    @QtCore.pyqtSlot(QtCore.QObject, int)
     def connectionDragEvent(self, clip, clipIndex):
         """
             Function called when a clip is pressed (but not released yet).
@@ -102,7 +102,7 @@ class ConnectionManager(QtCore.QObject):
         # starts the drag
         drag.exec_(QtCore.Qt.MoveAction)
 
-    @QtCore.Slot(str, QtCore.QObject, int)
+    @QtCore.pyqtSlot(str, QtCore.QObject, int)
     def connectionDropEvent(self, dataTmpClip, clip, clipIndex):
         """
             Creates or deletes a connection between 2 clips ('tmpClip', the "dragged" clip, and 'newClip', the "dropped" clip)
@@ -160,7 +160,7 @@ class ConnectionManager(QtCore.QObject):
         buttleData = ButtleDataSingleton().get()
         buttleData.getGraph().createConnection(clipOut, clipIn)
 
-    @QtCore.Slot(QtCore.QObject)
+    @QtCore.pyqtSlot(QtCore.QObject)
     def disconnect(self, connectionWrapper):
         """
             Removes a connection between 2 clips.

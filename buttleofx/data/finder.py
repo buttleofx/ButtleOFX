@@ -1,9 +1,9 @@
-from PySide import QtGui, QtCore, QtDeclarative
-from PySide.QtGui import QWidget, QFileDialog
+from PyQt5 import QtGui, QtCore, QtQuick
+from PyQt5.QtWidgets import QWidget, QFileDialog
 import logging
 
 
-class Finder(QtDeclarative.QDeclarativeItem):
+class Finder(QtQuick.QQuickItem):
     """
         Class finder
         _file : the file name
@@ -13,7 +13,7 @@ class Finder(QtDeclarative.QDeclarativeItem):
     """
 
     def __init__(self, parent=None):
-        QtDeclarative.QDeclarativeItem.__init__(self, parent)
+        QtQuick.QQuickItem.__init__(self, parent)
 
         self._file = None
         self._filters = ["*.json"]
@@ -52,7 +52,7 @@ class Finder(QtDeclarative.QDeclarativeItem):
     def getFinder(self):
         return self
 
-    @QtCore.Slot()
+    @QtCore.pyqtSlot()
     def browseFile(self):
         dialog = QFileDialog()
 
@@ -67,10 +67,10 @@ class Finder(QtDeclarative.QDeclarativeItem):
             return
         self._file = self._file[0]
 
-    finder = QtCore.Property(QtCore.QObject, getFinder, constant=True)
+    finder = QtCore.pyqtProperty(QtCore.QObject, getFinder, constant=True)
 
-    changed = QtCore.Signal()
-    propFile = QtCore.Property(str, getFile, setFile, notify=changed)
-    typeDialog = QtCore.Property(str, getType, setType, notify=changed)
-    messageDialog = QtCore.Property(str, getMessage, setMessage, notify=changed)
-    directoryDialog = QtCore.Property(str, getDirectory, setDirectory, notify=changed)
+    changed = QtCore.pyqtSignal()
+    propFile = QtCore.pyqtProperty(str, getFile, setFile, notify=changed)
+    typeDialog = QtCore.pyqtProperty(str, getType, setType, notify=changed)
+    messageDialog = QtCore.pyqtProperty(str, getMessage, setMessage, notify=changed)
+    directoryDialog = QtCore.pyqtProperty(str, getDirectory, setDirectory, notify=changed)

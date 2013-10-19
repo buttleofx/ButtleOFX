@@ -1,6 +1,6 @@
 from .paramWrapper import ParamWrapper
 
-from PySide import QtCore
+from PyQt5 import QtCore
 
 
 class DoubleWrapper(ParamWrapper):
@@ -13,14 +13,14 @@ class DoubleWrapper(ParamWrapper):
 
     #################### getters ####################
 
-    @QtCore.Slot(result=float)
+    @QtCore.pyqtSlot(result=float)
     def getDefaultValue(self):
         return self._param.getDefaultValue()
 
     def getValue(self):
         return self._param.getValue()
 
-    @QtCore.Slot(result=float)
+    @QtCore.pyqtSlot(result=float)
     def getOldValue(self):
         return self._param.getOldValue()
 
@@ -41,19 +41,17 @@ class DoubleWrapper(ParamWrapper):
     def setHasChanged(self, changed):
         self._param.setHasChanged(changed)
 
-    @QtCore.Slot(float)
+    @QtCore.pyqtSlot(float)
     def pushValue(self, value):
         self._param.pushValue(value)
 
-    @QtCore.Signal
-    def changed(self):
-        pass
+    changed = QtCore.pyqtSignal()
 
     ################################################## DATA EXPOSED TO QML ##################################################
 
-    value = QtCore.Property(float, getValue, setValue, notify=changed)
+    value = QtCore.pyqtProperty(float, getValue, setValue, notify=changed)
 
-    maximum = QtCore.Property(float, getMaximum, constant=True)
-    minimum = QtCore.Property(float, getMinimum, constant=True)
+    maximum = QtCore.pyqtProperty(float, getMaximum, constant=True)
+    minimum = QtCore.pyqtProperty(float, getMinimum, constant=True)
 
-    hasChanged = QtCore.Property(bool, getHasChanged, setHasChanged, notify=changed)
+    hasChanged = QtCore.pyqtProperty(bool, getHasChanged, setHasChanged, notify=changed)

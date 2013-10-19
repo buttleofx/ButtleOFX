@@ -1,6 +1,6 @@
 from .paramWrapper import ParamWrapper
 
-from PySide import QtCore
+from PyQt5 import QtCore
 
 
 class Double3DWrapper(ParamWrapper):
@@ -13,15 +13,15 @@ class Double3DWrapper(ParamWrapper):
 
     #################### getters ####################
 
-    @QtCore.Slot(result=float)
+    @QtCore.pyqtSlot(result=float)
     def getDefaultValue1(self):
         return self._param.getDefaultValue1()
 
-    @QtCore.Slot(result=float)
+    @QtCore.pyqtSlot(result=float)
     def getDefaultValue2(self):
         return self._param.getDefaultValue2()
 
-    @QtCore.Slot(result=float)
+    @QtCore.pyqtSlot(result=float)
     def getDefaultValue3(self):
         return self._param.getDefaultValue3()
 
@@ -81,23 +81,21 @@ class Double3DWrapper(ParamWrapper):
     def setValue3HasChanged(self, changed):
         self._param.setValue3HasChanged(changed)
 
-    @QtCore.Signal
-    def changed(self):
-        pass
+    changed = QtCore.pyqtSignal()
 
     ################################################## DATA EXPOSED TO QML ##################################################
 
-    value1 = QtCore.Property(float, getValue1, setValue1, notify=changed)
-    value2 = QtCore.Property(float, getValue2, setValue2, notify=changed)
-    value3 = QtCore.Property(float, getValue3, setValue3, notify=changed)
+    value1 = QtCore.pyqtProperty(float, getValue1, setValue1, notify=changed)
+    value2 = QtCore.pyqtProperty(float, getValue2, setValue2, notify=changed)
+    value3 = QtCore.pyqtProperty(float, getValue3, setValue3, notify=changed)
 
-    maximum1 = QtCore.Property(float, getMaximum1, constant=True)
-    minimum1 = QtCore.Property(float, getMinimum1, constant=True)
-    maximum2 = QtCore.Property(float, getMaximum2, constant=True)
-    minimum2 = QtCore.Property(float, getMinimum2, constant=True)
-    maximum3 = QtCore.Property(float, getMaximum3, constant=True)
-    minimum3 = QtCore.Property(float, getMinimum3, constant=True)
+    maximum1 = QtCore.pyqtProperty(float, getMaximum1, constant=True)
+    minimum1 = QtCore.pyqtProperty(float, getMinimum1, constant=True)
+    maximum2 = QtCore.pyqtProperty(float, getMaximum2, constant=True)
+    minimum2 = QtCore.pyqtProperty(float, getMinimum2, constant=True)
+    maximum3 = QtCore.pyqtProperty(float, getMaximum3, constant=True)
+    minimum3 = QtCore.pyqtProperty(float, getMinimum3, constant=True)
 
-    value1HasChanged = QtCore.Property(bool, getValue1HasChanged, setValue1HasChanged, notify=changed)
-    value2HasChanged = QtCore.Property(bool, getValue2HasChanged, setValue2HasChanged, notify=changed)
-    value3HasChanged = QtCore.Property(bool, getValue3HasChanged, setValue3HasChanged, notify=changed)
+    value1HasChanged = QtCore.pyqtProperty(bool, getValue1HasChanged, setValue1HasChanged, notify=changed)
+    value2HasChanged = QtCore.pyqtProperty(bool, getValue2HasChanged, setValue2HasChanged, notify=changed)
+    value3HasChanged = QtCore.pyqtProperty(bool, getValue3HasChanged, setValue3HasChanged, notify=changed)

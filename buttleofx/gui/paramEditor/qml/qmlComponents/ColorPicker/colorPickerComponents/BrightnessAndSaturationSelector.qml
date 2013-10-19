@@ -1,4 +1,4 @@
-import QtQuick 1.1
+import QtQuick 2.0
 
 // square where we can choose the saturation and the brightness of the color
 Item{

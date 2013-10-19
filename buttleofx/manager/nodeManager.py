@@ -1,6 +1,6 @@
-from PySide import QtCore
-from PySide.QtCore import *
-from PySide.QtGui import *
+from PyQt5 import QtCore
+from PyQt5.QtCore import *
+from PyQt5.QtGui import *
 
 # quickmamba
 from quickmamba.patterns import Signal
@@ -20,7 +20,7 @@ class NodeManager(QtCore.QObject):
 
     ############### EVENTS FROM QML ###############
 
-    @QtCore.Slot(str, int, int)
+    @QtCore.pyqtSlot(str, int, int)
     def creationNode(self, nodeType, x=20, y=20):
         """
             Creates a node.
@@ -32,7 +32,7 @@ class NodeManager(QtCore.QObject):
         self.undoRedoChanged()
 
 
-    @QtCore.Slot()
+    @QtCore.pyqtSlot()
     def destructionNodes(self):
         """
             Deletes the current node(s).
@@ -64,7 +64,7 @@ class NodeManager(QtCore.QObject):
         # update undo/redo display
         self.undoRedoChanged()
 
-    @QtCore.Slot()
+    @QtCore.pyqtSlot()
     def cutNode(self):
         """
             Cuts the current node(s).
@@ -87,7 +87,7 @@ class NodeManager(QtCore.QObject):
                 # Emit the change for the toolbar
                 buttleData.pastePossibilityChanged.emit()
 
-    @QtCore.Slot()
+    @QtCore.pyqtSlot()
     def copyNode(self):
         """
             Copies the current node(s).
@@ -108,7 +108,7 @@ class NodeManager(QtCore.QObject):
                 # Emit the change for the toolbar
                 buttleData.pastePossibilityChanged.emit()
 
-    @QtCore.Slot()
+    @QtCore.pyqtSlot()
     def pasteNode(self):
         """
             Pasts the current node(s).
@@ -127,7 +127,7 @@ class NodeManager(QtCore.QObject):
         # update undo/redo display
         self.undoRedoChanged()
 
-    @QtCore.Slot()
+    @QtCore.pyqtSlot()
     def duplicationNode(self):
         """
             Duplicates the current node(s).
@@ -155,7 +155,7 @@ class NodeManager(QtCore.QObject):
         # update undo/redo display
         self.undoRedoChanged()
 
-    @QtCore.Slot(str, int, int)
+    @QtCore.pyqtSlot(str, int, int)
     def dropFile(self, url, x, y):
         """
             Drops a file on the graph.
@@ -173,7 +173,7 @@ class NodeManager(QtCore.QObject):
         # update undo/redo display
         self.undoRedoChanged()
 
-    @QtCore.Slot(str, int, int)
+    @QtCore.pyqtSlot(str, int, int)
     def nodeMoved(self, nodeName, x, y):
         """
             This function pushes a cmdMoved in the CommandManager.
@@ -184,7 +184,7 @@ class NodeManager(QtCore.QObject):
         # update undo/redo display
         self.undoRedoChanged()
 
-    @QtCore.Slot(str, int, int)
+    @QtCore.pyqtSlot(str, int, int)
     def nodeIsMoving(self, nodeName, newX, newY):
         """
             This function updates the position of the selected nodes and the connections, when one or several nodes are moving.

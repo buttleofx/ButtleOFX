@@ -1,4 +1,4 @@
-from PySide import QtCore, QtGui
+from PyQt5 import QtCore, QtGui
 # quickmamba
 from quickmamba.patterns import Singleton, Signal
 # tools
@@ -26,7 +26,7 @@ class ButtleEvent(QtCore.QObject):
         """
         self.oneParamChangedSignal()
 
-    @QtCore.Slot()
+    @QtCore.pyqtSlot()
     def emitViewerChangedSignal(self):
         """
             Emits the signal viewerChangedSignal.

@@ -1,5 +1,5 @@
 import logging
-from PySide import QtCore
+from PyQt5 import QtCore
 
 
 class ConnectionWrapper(QtCore.QObject):
@@ -85,7 +85,7 @@ class ConnectionWrapper(QtCore.QObject):
 
     ################################################## LINK WRAPPER LAYER TO QML ##################################################
 
-    connectionClipOutChanged = connectionClipInChanged = QtCore.Signal()
+    connectionClipOutChanged = connectionClipInChanged = QtCore.pyqtSignal()
 
     def emitConnectionClipOutChanged(self):
         """
@@ -101,8 +101,8 @@ class ConnectionWrapper(QtCore.QObject):
 
     ################################################## DATA EXPOSED TO QML ##################################################
 
-    clipOutPosX = QtCore.Property(int, getClipOutPosX, setClipOutPosX, notify=connectionClipOutChanged)  # x1
-    clipOutPosY = QtCore.Property(int, getClipOutPosY, setClipOutPosX, notify=connectionClipOutChanged)  # y1
+    clipOutPosX = QtCore.pyqtProperty(int, getClipOutPosX, setClipOutPosX, notify=connectionClipOutChanged)  # x1
+    clipOutPosY = QtCore.pyqtProperty(int, getClipOutPosY, setClipOutPosX, notify=connectionClipOutChanged)  # y1
 
-    clipInPosX = QtCore.Property(int, getClipInPosX, setClipInPosX, notify=connectionClipInChanged)  # x2
-    clipInPosY = QtCore.Property(int, getClipInPosY, setClipInPosX, notify=connectionClipInChanged)  # y2
+    clipInPosX = QtCore.pyqtProperty(int, getClipInPosX, setClipInPosX, notify=connectionClipInChanged)  # x2
+    clipInPosY = QtCore.pyqtProperty(int, getClipInPosY, setClipInPosX, notify=connectionClipInChanged)  # y2

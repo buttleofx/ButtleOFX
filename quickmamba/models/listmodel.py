@@ -1,4 +1,4 @@
-from PySide import QtCore
+from PyQt5 import QtCore
 
 
 class QObjectListModel(QtCore.QAbstractListModel):
@@ -16,10 +16,12 @@ class QObjectListModel(QtCore.QAbstractListModel):
         super(QObjectListModel, self).__init__(parent)
 
         self._objects = list()      # Internal list of objects
-        roles = dict()
+        self.roles = QtCore.QAbstractListModel.roleNames(self)
         self.ObjectRole = QtCore.Qt.UserRole + 1
-        roles[self.ObjectRole] = "object"
-        self.setRoleNames(roles)
+        self.roles[self.ObjectRole] = "object"
+
+    def roleNames(self):
+        return self.roles
 
     def __iter__(self):
         """ Enables iteration over the list of objects. """
@@ -68,7 +70,7 @@ class QObjectListModel(QtCore.QAbstractListModel):
         self.beginResetModel()
         self._objects = objects
         self.endResetModel()
-        self.dataChanged.emit(self.index(0), self.index(self.size() - 1))
+        self.dataChanged.emit(self.index(0), self.index(self.size() - 1), [])
         if self.size() != oldSize:
             self.countChanged.emit()
 
@@ -110,7 +112,7 @@ class QObjectListModel(QtCore.QAbstractListModel):
         (i.e., 0 <= i < size()).
         """
         self._objects[i] = obj
-        self.dataChanged.emit(self.index(i), self.index(i))
+        self.dataChanged.emit(self.index(i), self.index(i), [])
 
     def move(self, fromIndex, toIndex):
         """ Moves the item at index position from to index position to
@@ -196,17 +198,17 @@ class QObjectListModel(QtCore.QAbstractListModel):
         """ Returns the number of items in the model. """
         return len(self._objects)
 
-    @QtCore.Slot(result=bool)
+    @QtCore.pyqtSlot(result=bool)
     def isEmpty(self):
         """ Returns true if the model contains no items; otherwise returns false. """
         return len(self._objects) == 0
 
-    @QtCore.Slot(int, result="QVariant")
+    @QtCore.pyqtSlot(int, result="QVariant")
     def get(self, i):
         """ For usage from QML.
         Note: return param is mandatory to mimic Q_INVOKABLE C++ method behavior
         """
         return self._objects[i]
 
-    countChanged = QtCore.Signal()
-    count = QtCore.Property(int, size, notify=countChanged)
+    countChanged = QtCore.pyqtSignal()
+    count = QtCore.pyqtProperty(int, size, notify=countChanged)

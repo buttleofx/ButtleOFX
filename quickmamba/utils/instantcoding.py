@@ -1,30 +1,31 @@
+from PyQt5 import QtCore, QtQuick
+
 import os
 import time
-from PySide import QtCore, QtDeclarative
 
 
 class QmlInstantCoding(QtCore.QObject):
     """
     QmlInstantCoding is an utility class helping developing QML applications.
-    It reloads its attached QDeclarativeView whenever one of the watched source file is modified.
+    It reloads its attached QQuickView whenever one of the watched source file is modified.
     As it consumes resources, make sure to disable file watching in production mode.
     """
     def __init__(self, attachedView, watching=True, watchSource=False, verbose=False):
         """
         Build a QmlInstantCoding instance.
 
-        attachedView -- the QDeclarativeView on which this QmlInstantCoding is applied
+        attachedView -- the QQuickView on which this QmlInstantCoding is applied
         watching -- if True, file watching is enable (default: True)
-        watchSource -- watch the attached QDeclarativeView source file if it already has one (default: False)
+        watchSource -- watch the attached QQuickView source file if it already has one (default: False)
         verbose -- if True, output log infos (default: False)
         """
         super(QmlInstantCoding, self).__init__()
 
-        if not isinstance(attachedView, QtDeclarative.QDeclarativeView):
-            raise TypeError("QmlInstantCoding: attachedView must be a QDeclarativeView.")
+        if not isinstance(attachedView, QtQuick.QQuickView):
+            raise TypeError("QmlInstantCoding: attachedView must be a QQuickView.")
 
         self._fileWatcher = QtCore.QFileSystemWatcher()     # Internal Qt File Watcher
-        self._attachedView = attachedView                   # Declarative view attached to our watcher
+        self._attachedView = attachedView                   # Quick view attached to our watcher
         self._watchedFiles = []                             # Internal watched files list
         self._verbose = verbose                             # Verbose bool
         self._watching = False                              # Defines whether the watcher is active
@@ -33,7 +34,7 @@ class QmlInstantCoding(QtCore.QObject):
         # Update the watching status
         self.setWatching(watching)
         # If view already has a source, add it to files to watch
-        if self._attachedView.status() != QtDeclarative.QDeclarativeView.Status.Null and watchSource:
+        if self._attachedView.status() != QtQuick.QQuickView.Null and watchSource:
             self.addFile(self._attachedView.source())
 
     def setWatching(self, watchValue):
@@ -78,7 +79,7 @@ class QmlInstantCoding(QtCore.QObject):
         'filename' can be an absolute or relative path (str and QUrl accepted)
         """
         # Deal with QUrl type
-        # NOTE: happens when using the source() method on a QDeclarativeView
+        # NOTE: happens when using the source() method on a QQuickView
         if isinstance(filename, QtCore.QUrl):
             filename = filename.path()
 
@@ -145,14 +146,14 @@ class QmlInstantCoding(QtCore.QObject):
         """ Returns the list of watched files """
         return self._watchedFiles
 
-    @QtCore.Slot(str)
+    @QtCore.pyqtSlot(str)
     def onFileChanged(self, sourceFile):
         """ Handle changes in a watched file. """
         if self._verbose:
             print("Source file changed : ", sourceFile)
         # Retrieve source file from attached view
         source = self._attachedView.source()
-        # Clear the QDeclarativeEngine cache
+        # Clear the QQuickEngine cache
         self._attachedView.engine().clearComponentCache()
         # Remove the modified file from the watched list
         self.removeFile(sourceFile)
@@ -167,6 +168,6 @@ class QmlInstantCoding(QtCore.QObject):
 
         print("Reloading ", sourceFile)
         # To reload the view, re-set the source
-        self._attachedView.setSource(source)
+        self._attachedView.setSource(QtCore.QUrl(source))
         # Finally, readd the modified file to the watch system
         self.addFile(sourceFile)

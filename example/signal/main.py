@@ -23,7 +23,7 @@ class View(object):
         model.changed.connect(self.model_changed)
 
     def model_changed(self):
-        print "New value:", self.model.get_value()
+        print("New value:", self.model.get_value())
 
 
 model = Model(10)

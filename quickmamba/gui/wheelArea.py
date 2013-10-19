@@ -1,13 +1,13 @@
-from PySide import QtCore
-from PySide import QtDeclarative
+from PyQt5 import QtCore
+from PyQt5 import QtQuick
 
-class WheelArea(QtDeclarative.QDeclarativeItem):
+class WheelArea(QtQuick.QQuickItem):
     #QPointF pos, int delta, Qt::MouseButtons buttons, Qt::KeyboardModifiers modifiers
-    internVerticalWheel = QtCore.Signal(QtCore.QPointF, int, QtCore.Qt.MouseButtons, QtCore.Qt.KeyboardModifiers)
-    internHorizontalWheel = QtCore.Signal(QtCore.QPointF, int, QtCore.Qt.MouseButtons, QtCore.Qt.KeyboardModifiers)
+    internVerticalWheel = QtCore.pyqtSignal(QtCore.QPointF, int, QtCore.Qt.MouseButtons, QtCore.Qt.KeyboardModifiers)
+    internHorizontalWheel = QtCore.pyqtSignal(QtCore.QPointF, int, QtCore.Qt.MouseButtons, QtCore.Qt.KeyboardModifiers)
   
     def __init__(self, parent = None):
-        QtDeclarative.QDeclarativeItem.__init__(self, parent)
+        QtQuick.QQuickItem.__init__(self, parent)
 
     def wheelEvent(self, event):
         if event.orientation() == QtCore.Qt.Horizontal:

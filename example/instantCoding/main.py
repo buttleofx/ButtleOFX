@@ -1,18 +1,20 @@
 import sys
 sys.path.append("../..")
 
-import os
-from PySide import QtGui, QtDeclarative
 from quickmamba.utils import QmlInstantCoding
+
+from PyQt5 import QtCore, QtWidgets, QtQuick
+
+import os
 
 
 def main():
-    app = QtGui.QApplication(sys.argv)
-    view = QtDeclarative.QDeclarativeView()
-    view.setResizeMode(QtDeclarative.QDeclarativeView.SizeRootObjectToView)
+    app = QtWidgets.QApplication(sys.argv)
+    view = QtQuick.QQuickView()
+    view.setResizeMode(QtQuick.QQuickView.SizeRootObjectToView)
 
     # Create a declarative view
-    view.setSource("source.qml")
+    view.setSource(QtCore.QUrl("source.qml"))
     # Declare we are using instant coding tool on this view
     qic = QmlInstantCoding(view, verbose=True)
     # Add any source file (.qml and .js by default) in current working directory

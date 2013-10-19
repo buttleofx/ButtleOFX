@@ -1,8 +1,9 @@
 import sys
 sys.path.append("../..")
 
-from PySide import QtCore, QtGui, QtDeclarative
 from quickmamba.models import QObjectListModel
+
+from PyQt5 import QtCore, QtWidgets, QtQuick
 
 
 class ClipWrapper(QtCore.QObject):
@@ -17,10 +18,10 @@ class ClipWrapper(QtCore.QObject):
     def getDuration(self):
         return self._duration
 
-    nameChanged = QtCore.Signal()
-    durationChanged = QtCore.Signal()
-    name = QtCore.Property(str, getName, notify=nameChanged)
-    duration = QtCore.Property(int, getDuration, notify=durationChanged)
+    nameChanged = QtCore.pyqtSignal()
+    durationChanged = QtCore.pyqtSignal()
+    name = QtCore.pyqtProperty(str, getName, notify=nameChanged)
+    duration = QtCore.pyqtProperty(int, getDuration, notify=durationChanged)
 
 
 class MainWrapper(QtCore.QObject):
@@ -32,18 +33,18 @@ class MainWrapper(QtCore.QObject):
     def getClips(self):
         return self._clips
 
-    modelChanged = QtCore.Signal()
-    clips = QtCore.Property(QtCore.QObject, getClips, notify=modelChanged)
+    modelChanged = QtCore.pyqtSignal()
+    clips = QtCore.pyqtProperty(QtCore.QObject, getClips, notify=modelChanged)
 
 
 def main():
-    app = QtGui.QApplication(sys.argv)
-    view = QtDeclarative.QDeclarativeView()
+    app = QtWidgets.QApplication(sys.argv)
+    view = QtQuick.QQuickView()
 
     mw = MainWrapper(view)
     view.rootContext().setContextProperty("_mainWrapper", mw)
-    view.setSource("source.qml")
-    view.setResizeMode(QtDeclarative.QDeclarativeView.SizeRootObjectToView)
+    view.setSource(QtCore.QUrl("source.qml"))
+    view.setResizeMode(QtQuick.QQuickView.SizeRootObjectToView)
 
     view.show()
     app.exec_()

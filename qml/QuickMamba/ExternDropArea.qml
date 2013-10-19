@@ -1,8 +1,8 @@
-import QtQuick 1.1
+import QtQuick 2.0
 import QuickMamba 1.0
 
-DropAreaImpl {
-    id: dropAreaItem
+ExternDropAreaImpl {
+    id: externDropAreaItem
     anchors.fill: parent
     
     // HACK to expose signal parameters with named params
@@ -43,10 +43,10 @@ DropAreaImpl {
         string source)
     
     Component.onCompleted: {
-        dropAreaItem.internDragEnter.connect(dragEnter)
-        dropAreaItem.internDragMove.connect(dragMove)
-        dropAreaItem.internDragLeave.connect(dragLeave)
-        dropAreaItem.internDrop.connect(drop)
+        externDropAreaItem.internDragEnter.connect(dragEnter)
+        externDropAreaItem.internDragMove.connect(dragMove)
+        externDropAreaItem.internDragLeave.connect(dragLeave)
+        externDropAreaItem.internDrop.connect(drop)
     }
 }
 

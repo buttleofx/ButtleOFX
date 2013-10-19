@@ -1,10 +1,10 @@
-from PySide import QtCore, QtGui
-from PySide import QtDeclarative
+from PyQt5 import QtCore, QtGui
+from PyQt5 import QtQuick
 
-class DropArea(QtDeclarative.QDeclarativeItem):
+class ExternDropArea(QtQuick.QQuickItem):
     # QGraphicsSceneDragDropEvent:
     #Qt::MouseButtons buttons, Qt::DropAction dropAction, const QMimeData mimeData, Qt::KeyboardModifiers modifiers, QPointF pos, Qt::DropActions possibleActions, Qt::DropAction proposedAction, QWidget source
-    internDragEnter = QtCore.Signal(
+    internDragEnter = QtCore.pyqtSignal(
         bool, str, # text
         bool, str, # html
         bool, str, # urls
@@ -12,7 +12,7 @@ class DropArea(QtDeclarative.QDeclarativeItem):
         QtCore.Qt.KeyboardModifiers, QtCore.QPointF,
         QtCore.Qt.DropActions, QtCore.Qt.DropAction,
         str)
-    internDragMove = QtCore.Signal(
+    internDragMove = QtCore.pyqtSignal(
         bool, str, # text
         bool, str, # html
         bool, str, # urls
@@ -20,7 +20,7 @@ class DropArea(QtDeclarative.QDeclarativeItem):
         QtCore.Qt.KeyboardModifiers, QtCore.QPointF,
         QtCore.Qt.DropActions, QtCore.Qt.DropAction,
         str)
-    internDragLeave = QtCore.Signal(
+    internDragLeave = QtCore.pyqtSignal(
         bool, str, # text
         bool, str, # html
         bool, str, # urls
@@ -28,7 +28,7 @@ class DropArea(QtDeclarative.QDeclarativeItem):
         QtCore.Qt.KeyboardModifiers, QtCore.QPointF,
         QtCore.Qt.DropActions, QtCore.Qt.DropAction,
         str)
-    internDrop = QtCore.Signal(
+    internDrop = QtCore.pyqtSignal(
         bool, str, # text
         bool, str, # html
         bool, str, # urls
@@ -38,8 +38,8 @@ class DropArea(QtDeclarative.QDeclarativeItem):
         str)
 
     def __init__(self, parent = None):
-        super(DropArea, self).__init__(parent)
-        self.setAcceptDrops(True)
+        super(ExternDropArea, self).__init__(parent)
+        #self.setAcceptDrops(True)
 
     def dragEnterEvent(self, event):
         #print 'dragEnterEvent'
@@ -153,8 +153,8 @@ class DropArea(QtDeclarative.QDeclarativeItem):
         self.update()
         self.acceptDropChanged.emit()
 
-    acceptDropChanged = QtCore.Signal()
+    acceptDropChanged = QtCore.pyqtSignal()
 
     _acceptDropValue = True
-    acceptDrop = QtCore.Property(bool, getAcceptDrop, setAcceptDrop, notify=acceptDropChanged)
+    acceptDrop = QtCore.pyqtProperty(bool, getAcceptDrop, setAcceptDrop, notify=acceptDropChanged)
 

@@ -1,12 +1,12 @@
 from .wheelArea import WheelArea
-from .dropArea import DropArea
+from .externDropArea import ExternDropArea
 from .colorExtended import ColorExtended
 
-from PySide import QtDeclarative
+from PyQt5 import QtQml
 
 def qmlRegister():
-    QtDeclarative.qmlRegisterType(WheelArea, "QuickMamba", 1, 0, "WheelAreaImpl")
-    QtDeclarative.qmlRegisterType(DropArea, "QuickMamba", 1, 0, "DropAreaImpl")
-    QtDeclarative.qmlRegisterType(ColorExtended, "QuickMamba", 1, 0, "ColorExtended")
+    QtQml.qmlRegisterType(WheelArea, "QuickMamba", 1, 0, "WheelAreaImpl")
+    QtQml.qmlRegisterType(ExternDropArea, "QuickMamba", 1, 0, "ExternDropAreaImpl")
+    QtQml.qmlRegisterType(ColorExtended, "QuickMamba", 1, 0, "ColorExtended")
 
 

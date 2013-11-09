@@ -219,9 +219,8 @@ Item {
 
                 y: parent.height + tabBar.height
                 width: parent.width
-                implicitHeight: impHeightValue
                 color: "transparent"
-                Layout.fillHeight: true
+                Layout.preferredHeight: 25
 
                 // Tools (zoom, timeline buttons, mosquitos)
                 Rectangle {

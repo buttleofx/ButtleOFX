@@ -124,6 +124,7 @@ Item {
         y: tabBar.height
         color: "#141414"
 
+
         ColumnLayout {
 
             //Viewer
@@ -219,9 +220,10 @@ Item {
 
                 y: parent.height + tabBar.height
                 width: parent.width
-                implicitHeight: impHeightValue
                 color: "transparent"
-                Layout.fillHeight: true
+                Layout.minimumWidth : 700
+                Layout.preferredHeight: 25
+                Layout.preferredWidth: parent.width
 
                 // Tools (zoom, timeline buttons, mosquitos)
                 Rectangle {

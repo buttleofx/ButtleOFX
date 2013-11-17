@@ -126,17 +126,98 @@ ApplicationWindow {
 
     menuBar: MenuBar {
         Menu {
-            title: "First"
-        }
-        Menu {
-            title: "Second"
-            
+            title: "File"
+
             MenuItem {
-                text: "todo"
+                text: "Load"
+                shortcut: "Ctrl+L"
+                onTriggered: graphEditor.doAction("load")
+            }
+
+            MenuItem {
+                text: "Save"
+                shortcut: "Ctrl+S"
+                onTriggered:
+                    if(_buttleData.graphCanBeSaved) {
+                        graphEditor.doAction("save")
+                    }
+            }
+
+            MenuSeparator { }
+
+            MenuItem {
+                text: "Exit"
+                onTriggered: Qt.quit()
             }
         }
-    }
 
+        Menu {
+            title: "Edit"
+            
+            MenuItem {
+                text: "Undo"
+                shortcut: "Ctrl+Z"
+                onTriggered:
+                    if(_buttleManager.canUndo) {
+                        _buttleManager.undo();
+                    }
+            }
+
+            MenuItem {
+                text: "Redo"
+                shortcut: "Ctrl+Y"
+                onTriggered:
+                    if(_buttleManager.canRedo) {
+                        _buttleManager.redo();
+                    }
+            }
+
+            MenuSeparator { }
+
+            MenuItem {
+                text: "Copy"
+                shortcut: "Ctrl+C"
+                onTriggered:
+                    if(!_buttleData.currentSelectedNodeWrappers.isEmpty()) {
+                        _buttleManager.nodeManager.copyNode()
+                    }
+            }
+
+            MenuItem {
+                text: "Paste"
+                shortcut: "Ctrl+V"
+                onTriggered:
+                    if(_buttleData.canPaste) {
+                        _buttleManager.nodeManager.pasteNode();
+                    }
+            }
+
+            MenuItem {
+                text: "Cut"
+                shortcut: "Ctrl+X"
+                onTriggered:
+                    if (!_buttleData.currentSelectedNodeWrappers.isEmpty()) {
+                        _buttleManager.nodeManager.cutNode()
+                    }
+            }
+
+            MenuItem {
+                text: "Duplicate"
+                shortcut: "Ctrl+D"
+                onTriggered:
+                    if (!_buttleData.currentSelectedNodeWrappers.isEmpty()) {
+                        _buttleManager.nodeManager.duplicationNode()
+                    }
+            }
+
+            MenuItem {
+                text: "Delete"
+                onTriggered: _buttleManager.deleteSelection()
+            }
+        }
+
+    }
+/*
     Rectangle {
         id: mainMenu
         width: parent.width
@@ -199,7 +280,7 @@ ApplicationWindow {
             }
         }
     }
-
+*/
     //this rectangle represents the zone under the menu, it allows to define the anchors.fill and margins for the SplitterRow
     Rectangle {
         id: modulsContainer

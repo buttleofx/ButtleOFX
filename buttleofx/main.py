@@ -49,7 +49,7 @@ from buttleofx.core.undo_redo.manageTools import CommandManager
 from buttleofx.gui.graph.menu import MenuWrapper
 
 # PyQt5
-from PyQt5 import QtCore, QtWidgets, QtQml, QtQuick, QtOpenGL
+from PyQt5 import QtCore, QtGui, QtQml
 
 import os
 
@@ -58,22 +58,22 @@ import os
 currentFilePath = os.path.dirname(os.path.abspath(__file__))
 
 
-class ButtleApp(QtWidgets.QApplication):
+class ButtleApp(QtGui.QGuiApplication):
     def __init__(self, argv):
         super(ButtleApp, self).__init__(argv)
 
-    def notify(self, receiver, event):
-        try:
-            #logging.info("QApp notify")
-            return QtWidgets.QApplication.notify(self, receiver, event)
-        except Exception as e:
-            logging.exception("QApp notify exception: " + str(e))
-            import traceback
-            traceback.print_exc()
-            return False
+#    def notify(self, receiver, event):
+#        try:
+#            logging.info("QApp notify")
+#            return super(ButtleApp, self).notify(receiver, event)
+#        except Exception as e:
+#            logging.exception("QApp notify exception: " + str(e))
+#            import traceback
+#            traceback.print_exc()
+#            return False
 
 
-def main(argv):
+def main(argv, app):
 
     #preload Tuttle
     tuttle.core().preload()
@@ -92,50 +92,57 @@ def main(argv):
     cmdManager.setActive()
     cmdManager.clean()
 
-    # create QApplication
-    app = ButtleApp(argv)
-
     # create the declarative view
-    view = QtQuick.QQuickView()
+    engine = QtQml.QQmlEngine(app)
+    #view = QtQuick.QQuickView()
     #view.setViewport(QtOpenGL.QGLWidget())
     #view.setViewportUpdateMode(QtQml.QQuickView.FullViewportUpdate)
 
     # data
-    buttleData = ButtleDataSingleton().get().init(view, currentFilePath)
+    buttleData = ButtleDataSingleton().get().init(engine, currentFilePath)
     # manager
     buttleManager = ButtleManagerSingleton().get().init()
     # event
     buttleEvent = ButtleEventSingleton().get()
     # Menus
-    fileMenu = MenuWrapper("file", 0, view, app)
-    editMenu = MenuWrapper("edit", 0, view, app)
-    addMenu = MenuWrapper("buttle/", 1, view, app)
+    #fileMenu = MenuWrapper("file", 0, component, app)
+    #editMenu = MenuWrapper("edit", 0, view, app)
+    #addMenu = MenuWrapper("buttle/", 1, view, app)
 
     # expose data to QML
-    rc = view.rootContext()
+    rc = engine.rootContext()
     rc.setContextProperty("_buttleApp", app)
     rc.setContextProperty("_buttleData", buttleData)
     rc.setContextProperty("_buttleManager", buttleManager)
     rc.setContextProperty("_buttleEvent", buttleEvent)
-    rc.setContextProperty("_fileMenu", fileMenu)
-    rc.setContextProperty("_editMenu", editMenu)
-    rc.setContextProperty("_addMenu", addMenu)
+    #rc.setContextProperty("_fileMenu", fileMenu)
+    #rc.setContextProperty("_editMenu", editMenu)
+    #rc.setContextProperty("_addMenu", addMenu)
 
-    # set the view
-    view.setSource(QtCore.QUrl(os.path.join(currentFilePath, "MainWindow.qml")))
-    view.setResizeMode(QtQuick.QQuickView.SizeRootObjectToView)
-    #view.setWindowTitle("ButtleOFX")
-    #view.setWindowIcon(QtGui.QIcon("blackMosquito.png"))
-    #view.setWindowIconText("ButtleOFX")
-    view.setVisible(True)
+    mainFilepath = os.path.join(currentFilePath, "MainWindow.qml")
+    component = QtQml.QQmlComponent(engine)
+    component.loadUrl(QtCore.QUrl(mainFilepath))
+
+    topLevel = component.create()
+#    topLevel = component.beginCreate(rc)
+#    component.completeCreate()
+#    print("Component errors:", component.errors())
 
     # Declare we are using instant coding tool on this view
-    qic = QmlInstantCoding(view, verbose=True)
+    qic = QmlInstantCoding(component, verbose=True)
 
     # Add any source file (.qml and .js by default) in current working directory
-    qic.addFilesFromDirectory(os.getcwd(), recursive=True)
+    parentDir = os.path.dirname(currentFilePath)
+    print("Watch directory:", parentDir)
+    qic.addFilesFromDirectory(parentDir, recursive=True)
 
     #add._menu.popup(view.mapToGlobal(QtCore.QPoint(0, 0)))
 
-    view.show()
-    app.exec_()
+    if topLevel is not None:
+        topLevel.show()
+    else:
+        print("ERRORS")
+        # Print all errors that occurred.
+        for error in component.errors():
+            print(error.toString())
+

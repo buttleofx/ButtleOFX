@@ -12,5 +12,7 @@ import buttleofx
 
 if __name__ == '__main__':
     quickmamba.qmlRegister()
-    buttleofx.main(sys.argv)
 
+    app = buttleofx.ButtleApp(sys.argv)
+    buttleofx.main(sys.argv, app)
+    app.exec_()

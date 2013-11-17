@@ -6,7 +6,7 @@ import "gui/graph/qml"
 import "gui/viewer/qml"
 import "gui/paramEditor/qml"
 
-Item {
+ApplicationWindow {
     width: 1200
     height: 800
 
@@ -122,7 +122,19 @@ Item {
                 _buttleData.currentParamNodeWrapper = node
             }
         }
+    }
 
+    menuBar: MenuBar {
+        Menu {
+            title: "First"
+        }
+        Menu {
+            title: "Second"
+            
+            MenuItem {
+                text: "todo"
+            }
+        }
     }
 
     Rectangle {

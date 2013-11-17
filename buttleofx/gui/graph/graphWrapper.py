@@ -11,7 +11,6 @@ class GraphWrapper(QtCore.QObject):
     """
         Class GraphWrapper defined by:
             - _view : to have the view object
-            - _rootObject : to have the root object
 
             - _nodeWrappers : list of node wrappers (the python objects we use to communicate with the QML)
             - _connectionWrappers : list of connections wrappers (the python objects we use to communicate with the QML)
@@ -27,7 +26,6 @@ class GraphWrapper(QtCore.QObject):
         super(GraphWrapper, self).__init__(view)
 
         self._view = view
-        self._rootObject = view.rootObject()
 
         self._nodeWrappers = QObjectListModel(self)
         self._connectionWrappers = QObjectListModel(self)

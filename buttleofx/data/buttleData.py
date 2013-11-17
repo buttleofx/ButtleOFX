@@ -30,9 +30,9 @@ class ButtleData(QtCore.QObject):
         - _currentConnectionId : the list of the id of the connections currently selected
         - _currentCopiedNodesInfo : the list of buttle info for the current node(s) copied
         - _mapNodeNameToComputedImage : this map makes the correspondance between a gloablHash and a computed image (max 20 images stored)
-        - _buttlePath : the path of the root directory (usefull to import images)
-        - _graphCanBeSaved : a boolean indicating if the graph had changed since the last saving (usefull for the display of the icon "save graph")
-        This class containts all data we need to manage the application.
+        - _buttlePath : the path of the root directory (useful to import images)
+        - _graphCanBeSaved : a boolean indicating if the graph had changed since the last saving (useful for the display of the icon "save graph")
+        This class contains all data we need to manage the application.
     """
 
     _graph = None
@@ -508,9 +508,9 @@ class ButtleDataSingleton(Singleton):
 
 def _decode_dict(dict_):
     """
-        This function will recursively pass in nested dicts, and will convert all str elements into string (essencial for some Tuttle functions). 
+        This function will recursively pass in nested dicts, and will convert all str elements into string (essential for some Tuttle functions). 
     """
     for key in dict_:
         if isinstance(dict_[key], str):
-           dict_[key] = str(dict_[key])
+            dict_[key] = str(dict_[key])
     return dict_

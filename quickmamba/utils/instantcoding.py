@@ -21,9 +21,6 @@ class QmlInstantCoding(QtCore.QObject):
         """
         super(QmlInstantCoding, self).__init__()
 
-        if not isinstance(attachedView, QtQuick.QQuickView):
-            raise TypeError("QmlInstantCoding: attachedView must be a QQuickView.")
-
         self._fileWatcher = QtCore.QFileSystemWatcher()     # Internal Qt File Watcher
         self._attachedView = attachedView                   # Quick view attached to our watcher
         self._watchedFiles = []                             # Internal watched files list
@@ -34,8 +31,8 @@ class QmlInstantCoding(QtCore.QObject):
         # Update the watching status
         self.setWatching(watching)
         # If view already has a source, add it to files to watch
-        if self._attachedView.status() != QtQuick.QQuickView.Null and watchSource:
-            self.addFile(self._attachedView.source())
+        #if self._attachedView.status() != QtQuick.QQuickView.Null and watchSource:
+        #    self.addFile(self._attachedView.source())
 
     def setWatching(self, watchValue):
         """
@@ -57,7 +54,7 @@ class QmlInstantCoding(QtCore.QObject):
         # Disabling the watcher
         else:
             # 1. Remove all files in the internal Qt File Watcher
-            self._fileWatcher.removePath(self._watchedFiles)
+            self._fileWatcher.removePaths(self._watchedFiles)
             # 2. Disconnect 'filechanged' signal
             self._fileWatcher.fileChanged.disconnect(self.onFileChanged)
 
@@ -95,6 +92,8 @@ class QmlInstantCoding(QtCore.QObject):
         self._watchedFiles.append(filename)
         # And, if watching is active, add it to the internal watcher as well
         if self._watching:
+            if self._verbose:
+                print("instantcoding: addPath", filename)
             self._fileWatcher.addPath(filename)
 
     def addFiles(self, filenames):

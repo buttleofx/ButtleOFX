@@ -129,12 +129,12 @@ def main(argv, app):
 #    print("Component errors:", component.errors())
 
     # Declare we are using instant coding tool on this view
-    # qic = QmlInstantCoding(component, verbose=True)
+    qic = QmlInstantCoding(component, verbose=True)
 
     # Add any source file (.qml and .js by default) in current working directory
     parentDir = os.path.dirname(currentFilePath)
     print("Watch directory:", parentDir)
-    # qic.addFilesFromDirectory(parentDir, recursive=True)
+    qic.addFilesFromDirectory(parentDir, recursive=True)
 
     #add._menu.popup(view.mapToGlobal(QtCore.QPoint(0, 0)))
 

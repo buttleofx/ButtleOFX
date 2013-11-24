@@ -55,7 +55,7 @@ ApplicationWindow {
                 graphEditor.doAction("save")
             }
         }
-        if ((event.key == Qt.Key_L) && (event.modifiers & Qt.ControlModifier)){
+        if ((event.key == Qt.Key_O) && (event.modifiers & Qt.ControlModifier)){
             graphEditor.doAction("load")
         }
 
@@ -129,8 +129,8 @@ ApplicationWindow {
             title: "File"
 
             MenuItem {
-                text: "Load"
-                shortcut: "Ctrl+L"
+                text: "Open"
+                shortcut: "Ctrl+O"
                 onTriggered: graphEditor.doAction("load")
             }
 
@@ -216,6 +216,16 @@ ApplicationWindow {
             }
         }
 
+/* A revoir
+        Menu {
+            title: "Add"
+
+            MenuItem {
+                text: "New Node"
+                onTriggered: _addMenu.showMenu(parent.x, mainMenu.height)
+            }
+        }
+*/
     }
 /*
     Rectangle {

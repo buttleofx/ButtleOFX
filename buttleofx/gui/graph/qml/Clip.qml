@@ -61,7 +61,7 @@ Rectangle {
 
 
             // drag execution
-            _buttleManager.connectionManager.connectionDragEvent(c.clipModel, index) // we send all information needed to identify the clip : nodename, port and clip number
+            //_buttleManager.connectionManager.connectionDragEvent(c.clipModel, index) // we send all information needed to identify the clip : nodename, port and clip number
 
             // at the end of the drag (i.e. onReleased !), we hide the tmpConnection.
             connections.tmpConnectionExists = false
@@ -93,7 +93,7 @@ Rectangle {
 
             onDrop: {
                 if (acceptDrop) {
-                    _buttleManager.connectionManager.connectionDropEvent(text, c.clipModel, index)
+                    //_buttleManager.connectionManager.connectionDropEvent(text, c.clipModel, index)
                 }
             }
 

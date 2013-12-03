@@ -1,73 +1,60 @@
 import QtQuick 2.1
-import Qt.labs.folderlistmodel 1.0
 import QtQuick.Dialogs 1.0
 import ButtleFileModel 1.0
 
-Rectangle{
+
+Rectangle {
     id: winFile
-	color: "green"
+    color: fileModel.exists ? "green" : "lightblue"
 
     property string folder
-	property string file: gridview.currentIndex
-    onFolderChanged: {
-        console.log("WindowsFiles folder: ", folder)
-    }
+    property string file: gridview.currentIndex
 
-    // margins: 20
-    /*
-    FolderListModel{
-        id: fileModel
-        folder: winFile.folder
-        onFolderChanged: {
-            console.log("FolderListModel folder: ", folder)
-        }
-        showDirsFirst: true
-        nameFilters: [ "*.png", "*.jpg" ]
-    }*/
     FileModelBrowser {
         id: fileModel
         folder: winFile.folder
     }
 
-	GridView{
+    GridView {
         id: gridview
-		height : parent.height
-		width : parent.width
-		cellWidth: 150
+        height : parent.height
+        width : parent.width
+        cellWidth: 150
 
-        model: fileModel
-		delegate: Column {
-			id : file
-			Image{
-				x: 25
-                source: model.type == "Folder" ? "./img/folder-icon.png" : "file://"+ model.filepath
-				sourceSize.width: 40
-				sourceSize.height: 40
-                Component.onCompleted: {
-                    console.log("Image Component.onCompleted: ", source)
+        model: fileModel.fileItems
+        delegate: Component {
+            Column {
+                id : file
+                Image {
+                    x: 25
+                    source: model.object.type == "Folder" ? "./img/folder-icon.png" : "file://" + model.object.filepath
+                    sourceSize.width: 40
+                    sourceSize.height: 40
+                    Component.onCompleted: {
+                        console.log("Image Component.onCompleted: ", source)
+                    }
+
+                    MouseArea {
+                        id: mouseRegionImage
+                        anchors.fill : parent
+                        onClicked: gridview.currentIndex = index
+                        onDoubleClicked: model.object.type == "Folder" ? console.log("Go to " + model.object.filepath) : console.log("Open " + model.object.filepath)
+                    }
                 }
+                Text {
+                    text: model.object.filepath
+                    anchors.horizontalCenter: parent.horizontalCenter
 
-				MouseArea{
-					id: mouseRegionImage
-					anchors.fill : parent
-					onClicked: gridview.currentIndex = index
-					onDoubleClicked: folder1.isFolder(index) ? console.log("Go to " + fileName) : console.log("Open " + fileName)
-				}
-			}	
-			Text{
-                text: model.filepath
-				anchors.horizontalCenter: parent.horizontalCenter
-
-				MouseArea{
-					id: mouseRegionText
-					anchors.fill : parent
-					onClicked: gridview.currentIndex = index
-                    onDoubleClicked: console.log("Open " + model.filepath)
-				}
+                    MouseArea {
+                        id: mouseRegionText
+                        anchors.fill : parent
+                        onClicked: gridview.currentIndex = index
+                        onDoubleClicked: Qt.openUrlExternally(model.object.filepath)
+                    }
+                }
             }
-		}
-		highlight: Rectangle { color: "lightsteelblue"; radius: 5}
-		focus: true
-	}
+        }
+        highlight: Rectangle { color: "lightsteelblue"; radius: 5}
+    }
 
 }

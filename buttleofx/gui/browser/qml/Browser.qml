@@ -9,7 +9,7 @@ Rectangle {
 
     QtObject {
         id: m
-        property string directory: "~/"
+        property string directory: "/"
         property string filepath: ""
     }
 

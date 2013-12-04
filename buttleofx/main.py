@@ -52,12 +52,14 @@ from buttleofx.gui.graph.menu import MenuWrapper
 from PyQt5 import QtCore, QtGui, QtQml
 
 import os
+import sys
 
 
 # Path of this file
 currentFilePath = os.path.dirname(os.path.abspath(__file__))
 
 osname = os.name.lower()
+sysplatform = sys.platform.lower()
 windows = osname == "nt" and sysplatform.startswith("win")
 macos = sysplatform.startswith("darwin")
 linux = not windows and not macos

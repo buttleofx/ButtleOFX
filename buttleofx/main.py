@@ -57,6 +57,12 @@ import os
 # Path of this file
 currentFilePath = os.path.dirname(os.path.abspath(__file__))
 
+osname = os.name.lower()
+windows = osname == "nt" and sysplatform.startswith("win")
+macos = sysplatform.startswith("darwin")
+linux = not windows and not macos
+unix = not windows
+
 
 class ButtleApp(QtGui.QGuiApplication):
     def __init__(self, argv):
@@ -120,8 +126,10 @@ def main(argv, app):
     #rc.setContextProperty("_addMenu", addMenu)
 
     mainFilepath = os.path.join(currentFilePath, "MainWindow.qml")
+    if windows:
+      mainFilepath = mainFilepath.replace('\\', '/')
     component = QtQml.QQmlComponent(engine)
-    component.loadUrl(QtCore.QUrl(mainFilepath))
+    component.loadUrl(QtCore.QUrl("file:///" + mainFilepath))
 
     topLevel = component.create()
 #    topLevel = component.beginCreate(rc)

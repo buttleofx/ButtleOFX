@@ -6,7 +6,7 @@ from PyQt5 import QtGui, QtCore, QtQuick
 from PyQt5.QtWidgets import QWidget, QFileDialog
 
 
-class FileItem(QtQuick.QQuickItem):
+class FileItem(QtCore.QObject):
     
     class Type():
         """ Enum """
@@ -15,6 +15,7 @@ class FileItem(QtQuick.QQuickItem):
         Sequence = 'Sequence'
     
     def __init__(self, filepath, fileType):
+        super(FileItem, self).__init__()
         self._filepath = filepath
         self._fileType = fileType
     
@@ -43,11 +44,8 @@ class FileModelBrowser(QtQuick.QQuickItem):
         return self._folder
     
     def setFolder(self, folder):
-        print("FileModelBrowser.setFolder", folder)
         self._folder = folder
         self.updateFileItems(folder)
-        from pprint import pprint
-        pprint(self._fileItems)
         self.folderChanged.emit()
     
     def getFolderExists(self):

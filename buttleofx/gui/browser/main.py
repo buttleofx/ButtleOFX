@@ -11,7 +11,6 @@ import fileModelBrowser
 
 
 if __name__ == '__main__':
-    QtQml.qmlRegisterType(fileModelBrowser.FileItem, "ButtleFileModel", 1, 0, "FileItem")
     QtQml.qmlRegisterType(fileModelBrowser.FileModelBrowser, "ButtleFileModel", 1, 0, "FileModelBrowser")
 
     app = QtWidgets.QApplication(sys.argv)

@@ -11,7 +11,7 @@ ApplicationWindow {
     height: 800
 
     //TopFocusHandler {
-    //    //anchors.fill: parent
+    // //anchors.fill: parent
     //}
 
     Keys.onPressed: {

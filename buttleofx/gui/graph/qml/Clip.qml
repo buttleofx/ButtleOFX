@@ -37,7 +37,6 @@ Rectangle {
         }
     }
 
-
     MouseArea {
         id: clipMouseArea
         anchors.fill: parent
@@ -59,12 +58,11 @@ Rectangle {
             connections.tmpConnectionX2 = posClip.x
             connections.tmpConnectionY2 = posClip.y
 
-
-            // drag execution
             //_buttleManager.connectionManager.connectionDragEvent(c.clipModel, index) // we send all information needed to identify the clip : nodename, port and clip number
 
             // at the end of the drag (i.e. onReleased !), we hide the tmpConnection.
-            connections.tmpConnectionExists = false
+            // Temporary modification to true and not false, to make a qml drag
+            connections.tmpConnectionExists = true
         }
 
         ExternDropArea {

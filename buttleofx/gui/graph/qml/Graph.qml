@@ -80,7 +80,15 @@ Rectangle {
         drag.target: connectnode
         drag.axis: Drag.XandYAxis
     }
-
+    DropArea {
+        anchors.fill: parent
+        onEntered: {
+          console.log("onEntered")
+        }
+        onDropped: {
+          console.log("onDropped")
+        }
+    }
     ExternDropArea {
         anchors.fill: parent
         acceptDrop: false
@@ -156,6 +164,28 @@ Rectangle {
                 y1: connections.tmpConnectionY1
                 x2: connections.tmpConnectionX2
                 y2: connections.tmpConnectionY2
+            }
+            MouseArea {
+                anchors.fill: parent
+                hoverEnabled:  true
+                enabled: connections.tmpConnectionExists ? 1: 0
+                onPositionChanged: {
+                    if(connections.tmpConnectionExists){
+                        if (connections.tmpClipName == "Output") {
+
+                            tmpCanvasConnection.x2 = mouse.x - graphArea.originX
+                            tmpCanvasConnection.y2 = mouse.y - graphArea.originY
+                        }else{
+                            tmpCanvasConnection.x1 = mouse.x - graphArea.originX
+                            tmpCanvasConnection.y1 = mouse.y - graphArea.originY
+                        }
+                    }
+                }
+                onClicked: {
+                    connections.tmpConnectionExists = false
+                    tmpCanvasConnection.x2 = tmpCanvasConnection.x1
+                    tmpCanvasConnection.y2 = tmpCanvasConnection.y1
+                }
             }
         }
 

@@ -1,7 +1,5 @@
 import QtQuick 2.0
 import QtQuick.Controls 1.0
-import QtQml 2.1
-
 import QuickMamba 1.0
 
 import "gui/graph/qml"
@@ -57,7 +55,7 @@ ApplicationWindow {
                 graphEditor.doAction("save")
             }
         }
-        if ((event.key == Qt.Key_L) && (event.modifiers & Qt.ControlModifier)){
+        if ((event.key == Qt.Key_O) && (event.modifiers & Qt.ControlModifier)){
             graphEditor.doAction("load")
         }
 
@@ -131,8 +129,8 @@ ApplicationWindow {
             title: "File"
 
             MenuItem {
-                text: "Load"
-                shortcut: "Ctrl+L"
+                text: "Open"
+                shortcut: "Ctrl+O"
                 onTriggered: graphEditor.doAction("load")
             }
 
@@ -155,7 +153,7 @@ ApplicationWindow {
 
         Menu {
             title: "Edit"
-            
+
             MenuItem {
                 text: "Undo"
                 shortcut: "Ctrl+Z"
@@ -218,25 +216,85 @@ ApplicationWindow {
             }
         }
 
+/* A revoir
         Menu {
-            id: nodesMenu
-            title: "Nodes"
+            title: "Add"
 
-            Instantiator {
-                model: _buttleData.pluginsIdentifiers
-                MenuItem {
-                    text: object
-                    onTriggered: _buttleManager.nodeManager.creationNode(object, 0, 0)
+            MenuItem {
+                text: "New Node"
+                onTriggered: _addMenu.showMenu(parent.x, mainMenu.height)
+            }
+        }
+*/
+    }
+/*
+    Rectangle {
+        id: mainMenu
+        width: parent.width
+        height: 32
+        color: "#141414"
+
+        Row {
+            spacing: 10
+            x: 3
+
+            Image {
+                id: mosquito
+                source: _buttleData.buttlePath + "/gui/img/icons/logo_icon.png"
+                y: 5
+            }
+
+            Text {
+                color: "white"
+                text: "File"
+                y: 11
+                font.pointSize: 10
+
+                MouseArea {
+                    anchors.fill: parent
+                    hoverEnabled: true
+                    onClicked: {
+                        _fileMenu.showMenu(parent.x, mainMenu.height)
+                    }
                 }
-                onObjectAdded: nodesMenu.insertItem(index, object)
-                onObjectRemoved: nodesMenu.removeItem(object)
+            }
+
+            Text {
+                color: "white"
+                text: "Edit"
+                y: 11
+                font.pointSize: 10
+
+                MouseArea {
+                    anchors.fill: parent
+                    hoverEnabled: true
+                    onClicked: {
+                        _editMenu.showMenu(parent.x, mainMenu.height)
+                    }
+                }
+            }
+
+            Text {
+                color: "white"
+                text: "Add"
+                y: 11
+                font.pointSize: 10
+
+                MouseArea {
+                    anchors.fill: parent
+                    hoverEnabled: true
+                    onClicked: {
+                        _addMenu.showMenu(parent.x, mainMenu.height)
+                    }
+                }
             }
         }
     }
-
+*/
     //this rectangle represents the zone under the menu, it allows to define the anchors.fill and margins for the SplitterRow
     Rectangle {
         id: modulsContainer
+        y: mainMenu.height
         width: parent.width
         height: parent.height - y
         color: "#353535"
@@ -272,7 +330,7 @@ ApplicationWindow {
             }
 
             ParamEditor {
-                //Splitter.minimumWidth: 0 
+                //Splitter.minimumWidth: 0
                 width: 0.3*parent.width
                 params: _buttleData.currentParamNodeWrapper ? _buttleData.currentParamNodeWrapper.params : null
                 currentParamNode: _buttleData.currentParamNodeWrapper

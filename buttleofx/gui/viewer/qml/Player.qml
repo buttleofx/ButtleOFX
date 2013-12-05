@@ -132,7 +132,8 @@ Item {
             Rectangle {
                 id: viewerRegion
                 width: parent.width
-                color: "transparent"
+                //color: "transparent"
+                color: "blue"
                 Layout.minimumHeight: 50
                 Layout.fillHeight: true
 

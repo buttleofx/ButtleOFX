@@ -107,8 +107,11 @@ class MenuWrapper(QtCore.QObject):
         if action.data() is not None:
             # If it cames from the other menus
             if action.data() == 0:
-                if(action.triggered is not None):
+                #if(action.triggered is not None):
+                    trigger = pyqtSignal()
+                    action.trigger.connect()
                     action.triggered.emit()
+                    #this.connect(action, SIGNAL(triggered(bool)), this, SLOT(app.quit))
                 # elif(action.text() == "Delete"):
                 #     if(ButtleDataSingleton().get().currentConnectionWrapper):
                 #         ButtleManagerSingleton().get().connectionManager.disconnect(ButtleDataSingleton().get().currentConnectionWrapper)
@@ -116,8 +119,8 @@ class MenuWrapper(QtCore.QObject):
                 #         ButtleManagerSingleton().get().nodeManager.destructionNodes()
 
             # If it cames from the NodeMenu
-            else:
-                ButtleManagerSingleton().get().nodeManager.creationNode(action.data())
+            #else:
+                #ButtleManagerSingleton().get().nodeManager.creationNode(action.data())
 
     @QtCore.pyqtSlot(float, float)
     def showMenu(self, x, y):

@@ -353,6 +353,18 @@ class ButtleData(QtCore.QObject):
 
     ################################################## PLUGIN LIST #####################################################
 
+    def getPluginsIdentifiers(self):
+        from pyTuttle import tuttle
+        pluginCache = tuttle.core().getImageEffectPluginCache()
+        plugins = pluginCache.getPlugins()
+        print("getPluginsIdentifiers => nb plugins:", len(plugins))
+
+        pluginsIds = [plugin.getIdentifier() for plugin in plugins]
+        pluginsIdsModel = QObjectListModel(self)
+        for p in pluginsIds:
+            pluginsIdsModel.append(p)
+        return pluginsIdsModel
+
     @QtCore.pyqtSlot(str, result=QtCore.QObject)
     def getQObjectPluginsIdentifiersByParentPath(self, pathname):
         """
@@ -462,6 +474,8 @@ class ButtleData(QtCore.QObject):
         f.closed
 
     ################################################## DATA EXPOSED TO QML ##################################################
+
+    pluginsIdentifiers = QtCore.pyqtProperty(QtCore.QObject, getPluginsIdentifiers, constant=True)
 
     # graphWrapper
     graphWrapper = QtCore.pyqtProperty(QtCore.QObject, getGraphWrapper, constant=True)

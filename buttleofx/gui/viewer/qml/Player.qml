@@ -292,7 +292,7 @@ Item {
                                 anchors.fill: parent
 
                                 onPressed: {
-                                    _buttleManager.viewerManager.mosquitoDragEvent()
+                                    //_buttleManager.viewerManager.mosquitoDragEvent()
                                 }
                             }
                         }

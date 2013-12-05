@@ -1,5 +1,5 @@
 import QtQuick 2.0
-import FolderListViewItem 1.0
+import QtQuick.Dialogs 1.0
 
 Rectangle {
     id: tools
@@ -54,17 +54,17 @@ Rectangle {
                 break;
 
             case "save":
-                finderSaveGraph.browseFile()
-                if (finderSaveGraph.propFile) {
-                    _buttleData.saveData(finderSaveGraph.propFile)
-                }
+                finderSaveGraph.open();
+                /*if (finderSaveGraph.fileUrl) {
+                    _buttleData.saveData(finderSaveGraph.fileUrl)
+                }*/
                 break;
 
             case "load":
-                finderLoadGraph.browseFile();
-                if (finderLoadGraph.propFile) {
-                    _buttleData.loadData(finderLoadGraph.propFile)
-                }
+                finderLoadGraph.open();
+                /*if (finderLoadGraph.fileUrl) {
+                    _buttleData.loadData(finderLoadGraph.fileUrl)
+                }*/
                 break;
 
             default:
@@ -104,28 +104,35 @@ Rectangle {
 
             ToolElement {
 
-                FolderListView {
+                FileDialog {
                     id: finderLoadGraph
-                    typeDialog: "OpenFile"
-                    messageDialog: "Load a graph"
-                    directoryDialog: _buttleData.buttlePath
+                    title: "Open a graph"
+                    folder: _buttleData.buttlePath
+                    nameFilters: [ "ButtleOFX Graph files (*.bofx)", "All files (*)" ]
+                    selectedNameFilter: "All files (*)"
+                    onAccepted: {
+                        console.log(finderLoadGraph.fileUrl)
+                        _buttleData.loadData(finderLoadGraph.fileUrl)
+                    }
                 }
 
                 imageSource: parent.imgPath + "open.png"
                 imageSourceHover: parent.imgPath + "open_hover.png"
                 imageSourceLocked: parent.imgPath + "open_locked.png"
                 buttonName: "load"
-                buttonText: "Load a graph (Ctrl+L)"
+                buttonText: "Open a graph (Ctrl+O)"
                 locked: false
             }
 
             ToolElement {
 
-                FolderListView {
+                FileDialog {
                     id: finderSaveGraph
-                    typeDialog: "SaveFile"
-                    messageDialog: "Save the graph"
-                    directoryDialog: _buttleData.buttlePath
+                    title: "Save the graph"
+                    folder: _buttleData.buttlePath
+                    nameFilters: [ "ButtleOFX Graph files (*.bofx)", "All files (*)" ]
+                    selectedNameFilter: "All files (*)"
+                    onAccepted: _buttleData.saveData(finderSaveGraph.fileUrl)
                 }
 
                 imageSource: parent.imgPath + "save.png"

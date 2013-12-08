@@ -139,6 +139,7 @@ def main(argv, app):
     #add._menu.popup(view.mapToGlobal(QtCore.QPoint(0, 0)))
 
     if topLevel is not None:
+        topLevel.setIcon(QtGui.QIcon(os.path.join(currentFilePath, "../blackMosquito.png")))
         topLevel.show()
     else:
         print("ERRORS")

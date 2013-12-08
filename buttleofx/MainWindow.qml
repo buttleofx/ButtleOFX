@@ -294,7 +294,6 @@ ApplicationWindow {
     //this rectangle represents the zone under the menu, it allows to define the anchors.fill and margins for the SplitterRow
     Rectangle {
         id: modulsContainer
-        y: mainMenu.height
         width: parent.width
         height: parent.height - y
         color: "#353535"

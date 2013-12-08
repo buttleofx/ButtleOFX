@@ -1,6 +1,7 @@
 import QtQuick 2.0
 import QtQuick.Controls 1.0
 import QuickMamba 1.0
+import QtQml 2.1
 
 import "gui/graph/qml"
 import "gui/viewer/qml"
@@ -213,6 +214,20 @@ ApplicationWindow {
             MenuItem {
                 text: "Delete"
                 onTriggered: _buttleManager.deleteSelection()
+            }
+        }
+        Menu {
+            id: nodesMenu
+            title: "Nodes"
+
+            Instantiator {
+                model: _buttleData.pluginsIdentifiers
+                MenuItem {
+                    text: object
+                    onTriggered: _buttleManager.nodeManager.creationNode(object, 0, 0)
+                }
+                onObjectAdded: nodesMenu.insertItem(index, object)
+                onObjectRemoved: nodesMenu.removeItem(object)
             }
         }
 

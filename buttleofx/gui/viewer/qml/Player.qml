@@ -287,13 +287,19 @@ Item {
                                 anchors.centerIn: parent
                             }
 
+                            Drag.active: mosquitoMouseArea.drag.active
+                            Drag.hotSpot.x: 14
+                            Drag.hotSpot.y: 14
+
                             MouseArea {
-                                hoverEnabled: true
+								hoverEnabled: true
                                 id: mosquitoMouseArea
                                 anchors.fill: parent
 
+                                drag.target: parent
+
                                 onPressed: {
-                                    //_buttleManager.viewerManager.mosquitoDragEvent()
+                                    _buttleManager.viewerManager.mosquitoDragEvent()
                                 }
                             }
                         }

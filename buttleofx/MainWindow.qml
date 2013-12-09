@@ -341,6 +341,7 @@ ApplicationWindow {
                     //Splitter.minimumHeight: 0
                     width: parent.width
                     height: 0.5*parent.height
+                    z: -1
                 }
             }
 

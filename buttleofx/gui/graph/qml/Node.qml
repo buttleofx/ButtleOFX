@@ -84,9 +84,23 @@ Rectangle {
 
     }
 
-    ExternDropArea {
+
+    // TO BE CHECKED : drop of the mosquito until the node
+    DropArea {
         anchors.fill: parent
-        onDragEnter: {
+
+        onEntered: {
+            //acceptDrop: text=="mosquito_of_the_dead";
+            //if (acceptDrop){
+                _buttleData.currentViewerNodeWrapper = m.nodeModel;
+                _buttleData.currentViewerFrame = 0;
+                // we assign the node to the viewer, at the frame 0
+                _buttleData.assignNodeToViewerIndex(m.nodeModel, 0);
+                _buttleEvent.emitViewerChangedSignal()
+            //}
+        }
+
+        /*onDragEnter: {
             acceptDrop = hasText && text=="mosquito_of_the_dead";
         }
         onDrop: {
@@ -97,7 +111,7 @@ Rectangle {
                 _buttleData.assignNodeToViewerIndex(m.nodeModel, 0);
                 _buttleEvent.emitViewerChangedSignal()
             }
-        }
+        }*/
     }
 
     Rectangle {

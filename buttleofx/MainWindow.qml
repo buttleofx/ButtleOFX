@@ -213,6 +213,7 @@ ApplicationWindow {
 
             MenuItem {
                 text: "Delete"
+                shortcut: "del"
                 onTriggered: _buttleManager.deleteSelection()
             }
         }

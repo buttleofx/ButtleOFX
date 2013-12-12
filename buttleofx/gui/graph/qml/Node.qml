@@ -38,7 +38,7 @@ Rectangle {
         anchors.fill: parent
         drag.target: parent
         drag.axis: Drag.XandYAxis
-        acceptedButtons: Qt.LeftButton | Qt.RightButton
+        acceptedButtons: Qt.LeftButton | Qt.RightButton | Qt.MidButton
         onPressed: {
             // left button : we change the current selected nodes & we start moving
             if (mouse.button == Qt.LeftButton) {
@@ -74,6 +74,16 @@ Rectangle {
             if (mouse.button == Qt.LeftButton) {
                 _buttleManager.nodeManager.nodeMoved(m.nodeModel.name, parent.x, parent.y)
                 stateMoving.state = "normal"
+            }
+
+
+             //middle button : assign the node to the viewer
+            else if (mouse.button == Qt.MidButton){
+                _buttleData.currentViewerNodeWrapper = m.nodeModel;
+                _buttleData.currentViewerFrame = 0;
+                // we assign the node to the viewer, at the frame 0
+                _buttleData.assignNodeToViewerIndex(m.nodeModel, 0);
+                _buttleEvent.emitViewerChangedSignal()
             }
         }
 

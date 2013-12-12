@@ -276,6 +276,14 @@ Item {
                         // Mosquito
                         Rectangle {
                             id: mosquitoTool
+                            StateGroup {
+                                id: mosquitoState
+                                states: State {
+                                    name: "dragging"
+                                    when: mosquitoMouseArea.pressed
+                                    PropertyChanges { target: mosquitoTool; x: mosquitoTool.x; y: mosquitoTool.y }
+                                }
+                            }
                             width: 28
                             height: 28
                             color : mosquitoMouseArea.containsMouse ? "#343434" : "transparent"
@@ -301,6 +309,8 @@ Item {
                                 onPressed: {
                                     _buttleManager.viewerManager.mosquitoDragEvent()
                                 }
+                                //onPressed: {
+                                //}
                             }
                         }
 

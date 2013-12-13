@@ -202,7 +202,7 @@ Rectangle {
                 imageSourceHover: parent.imgPath + "delete_hover.png"
                 imageSourceLocked: parent.imgPath + "delete_locked.png"
                 buttonName: "deleteNode"
-                buttonText: "Delete the node (suppr)"
+                buttonText: "Delete the node (del)"
                 locked: (!_buttleData.currentSelectedNodeWrappers.isEmpty() || _buttleData.currentConnectionWrapper)? false : true
             }
         }

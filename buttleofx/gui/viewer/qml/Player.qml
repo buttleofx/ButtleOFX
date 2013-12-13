@@ -306,11 +306,6 @@ Item {
 
                                 drag.target: parent
 
-                                onPressed: {
-                                    _buttleManager.viewerManager.mosquitoDragEvent()
-                                }
-                                //onPressed: {
-                                //}
                             }
                         }
 

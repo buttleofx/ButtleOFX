@@ -300,17 +300,15 @@ Item {
                             Drag.hotSpot.y: 14
 
                             MouseArea {
-								hoverEnabled: true
                                 id: mosquitoMouseArea
                                 anchors.fill: parent
 
-                                drag.target: parent
+                                hoverEnabled: true
 
-                                onPressed: {
-                                    _buttleManager.viewerManager.mosquitoDragEvent()
+                                drag.target: parent
+                                onReleased: {
+                                    mosquitoTool.Drag.drop()
                                 }
-                                //onPressed: {
-                                //}
                             }
                         }
 

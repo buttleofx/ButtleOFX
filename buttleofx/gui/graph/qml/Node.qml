@@ -96,6 +96,7 @@ Rectangle {
 
     DropArea {
         anchors.fill: parent
+        keys: "mosquitoMouseArea"
 
         onDropped: {
             _buttleData.currentViewerNodeWrapper = m.nodeModel;

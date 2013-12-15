@@ -297,12 +297,15 @@ Item {
                             Drag.active: mosquitoMouseArea.drag.active
                             Drag.hotSpot.x: 14
                             Drag.hotSpot.y: 14
+                            Drag.keys: "mosquitoMouseArea"
 
                             MouseArea {
                                 id: mosquitoMouseArea
                                 anchors.fill: parent
 
                                 hoverEnabled: true
+
+                                onReleased: parent.Drag.drop()
 								drag.target: parent
                             }
                         }

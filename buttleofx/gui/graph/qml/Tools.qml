@@ -133,6 +133,7 @@ Rectangle {
                     nameFilters: [ "ButtleOFX Graph files (*.bofx)", "All files (*)" ]
                     selectedNameFilter: "All files (*)"
                     onAccepted: _buttleData.saveData(finderSaveGraph.fileUrl)
+                    selectExisting: false
                 }
 
                 imageSource: parent.imgPath + "save.png"

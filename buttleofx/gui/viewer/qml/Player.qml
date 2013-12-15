@@ -299,12 +299,11 @@ Item {
                             Drag.hotSpot.y: 14
 
                             MouseArea {
-								hoverEnabled: true
                                 id: mosquitoMouseArea
                                 anchors.fill: parent
 
-                                drag.target: parent
-
+                                hoverEnabled: true
+								drag.target: parent
                             }
                         }
 

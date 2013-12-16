@@ -1,26 +1,21 @@
 import QtQuick 2.0
 import QuickMamba 1.0
 
-Rectangle {
-    id:graphArea
-    y: 30
-    z: 0
-    width: 850
-    height: 350 - y
+Item {
+    id: qml_graphRoot
+
+    QtObject {
+        id: m
+        property variant graphRoot: qml_graphRoot
+    }
 
     property alias originX: connectnode.x
     property alias originY: connectnode.y
 
-    property alias mouseX: rightMouseArea.mouseX
-    property alias mouseY: rightMouseArea.mouseY
-
     signal clickCreationNode(string nodeType)
     signal drawSelection(int selectionX, int selectionY, int selectionWidth, int selectionHeight)
 
-    color: "#212121"
-
     // Selection area
-
     MouseArea {
         id: leftMouseArea
         property int xStart
@@ -48,7 +43,7 @@ Rectangle {
         onReleased: {
             rectangleSelection.visible = false;
             _buttleData.clearCurrentSelectedNodeNames();
-            graphArea.drawSelection(rectangleSelection.x - graphArea.originX, rectangleSelection.y - graphArea.originY, rectangleSelection.width, rectangleSelection.height)
+            m.graphRoot.drawSelection(rectangleSelection.x - m.graphRoot.originX, rectangleSelection.y - m.graphRoot.originY, rectangleSelection.width, rectangleSelection.height)
         }
 
         onPositionChanged: {
@@ -72,81 +67,92 @@ Rectangle {
         _buttleData.addNodeWrappersInRectangleSelection(selectionX, selectionY, selectionWidth, selectionHeight);
     }
 
-    MouseArea{
-        id: middleMouseArea
-        anchors.fill: parent
-        acceptedButtons: Qt.MiddleButton
-        hoverEnabled: true
-        drag.target: connectnode
-        drag.axis: Drag.XandYAxis
-    }
-   /* DropArea {
-        anchors.fill: parent
-        onEntered: {
-          console.log("onEntered")
-        }
-        onDropped: {
-          console.log("onDropped")
-        }
-    }*/
+    /*
     ExternDropArea {
         anchors.fill: parent
-        acceptDrop: false
+        acceptDrop: true
         onDragEnter: {
-            acceptDrop = hasUrls;
-
-            // tmpConnection update
-            if(hasText && text.substring(0, 5) == "clip/") {
-                if (connections.tmpClipName == "Output") {
-                    connections.tmpConnectionX2 =  pos.x - graphArea.originX
-                    connections.tmpConnectionY2 =  pos.y - graphArea.originY
-                }
-                else {
-                    connections.tmpConnectionX1 =  pos.x - graphArea.originX
-                    connections.tmpConnectionY1 =  pos.y - graphArea.originY
-                }
-            }
+            acceptDrop = hasUrls
         }
-
         onDrop: {
+            console.log("Drop external files:", acceptDrop)
             if(acceptDrop) {
-                _buttleManager.nodeManager.dropFile(firstUrl, pos.x - graphArea.originX, pos.y - graphArea.originY)
+                _buttleManager.nodeManager.dropFile(firstUrl, pos.x - m.graphRoot.originX, pos.y - m.graphRoot.originY)
             }
         }
-
     }
-
+    */
     Rectangle {
         id: connectnode
         Item {
             id: nodes
-            width: graphArea.width
-            height: graphArea.height
+            width: m.graphRoot.width
+            height: m.graphRoot.height
             z: 1
             Repeater {
-                model : _buttleData.graphWrapper.nodeWrappers
+                id: nodesRepeater
+                model: _buttleData.graphWrapper.nodeWrappers
                 Node {
                     Component.onDestruction: {
                         nodes.forceActiveFocus()
                     }
+                    objectName: "qmlNode_" + model.object.name
+                    graphRoot: m.graphRoot
                 }
             }
         }
 
         Item {
             id: connections
-            width: graphArea.width
-            height: graphArea.height
+            width: m.graphRoot.width
+            height: m.graphRoot.height
             // We set the z to 0 so the canvas is not over the node's clips
             z: 0
             Repeater {
                 model : _buttleData.graphWrapper.connectionWrappers
                 Connection {
                     connectionModel: model.object
-                    x1: model.object.clipOutPosX
-                    y1: model.object.clipOutPosY
-                    x2: model.object.clipInPosX
-                    y2: model.object.clipInPosY
+                    /*
+                    Component.onCompleted: {
+                        console.log("qml Connection")
+                        console.log("connectionModel.out_clipNodeName: ", connectionModel.out_clipNodeName)
+                        console.log("connectionModel.in_clipNodeName: ", connectionModel.in_clipNodeName)
+                        console.log("connection: ", x1, y1, x2, y2)
+                        console.log("nodeOut.coord.y: ", nodeOut.coord.y)
+                        console.log("clipOut.coord.y: ", clipOut.coord.y)
+                        if(clipOut.coord.y - nodeOut.coord.y < 5)
+                        {
+                           console.debug("A -- BUG -- node coord is same than clip coord")
+                        }
+                    }
+                    */
+                    property variant nodeOut: _buttleData.graphWrapper.getNodeWrapper(connectionModel.out_clipNodeName)
+                    property variant clipOut: nodeOut.getClip(connectionModel.out_clipName)
+
+                    property variant nodeIn: _buttleData.graphWrapper.getNodeWrapper(connectionModel.in_clipNodeName)
+                    property variant clipIn: nodeIn.getClip(connectionModel.in_clipName)
+
+                    x1: clipOut.coord.x
+                    y1: clipOut.coord.y
+                    x2: clipIn.coord.x
+                    y2: clipIn.coord.y
+                    /*
+                    onClipOutChanged: {
+                        console.debug("Connection, onClipOutChanged")
+                    }
+                    onY1Changed: {
+                        console.debug("---------------------")
+                        console.debug("Connection, Y1 changed", x1)
+                        console.log("connection: ", x1, y1, x2, y2)
+                        console.log("nodeOut.coord.y: ", nodeOut.coord.y)
+                        console.log("clipOut.coord.y: ", clipOut.coord.y)
+                        if(clipOut.coord.y - nodeOut.coord.y < 5)
+                        {
+                            console.debug("B -- BUG -- node coord is same than clip coord")
+                        }
+                        console.debug("---------------------")
+                    }
+                    */
                 }
             }
 
@@ -166,8 +172,6 @@ Rectangle {
                 y2: connections.tmpConnectionY2
             }
         }
-
-        //transform: Scale { id: scale; origin.x: graphArea.width/2; origin.y: graphArea.height/2; xScale: 1; yScale: 1}
     }
 
     // Rectangle selection is placed here so it is drawn over the nodes
@@ -200,36 +204,4 @@ Rectangle {
         }
     }
     */
-
-    // NODE CREATION WITH RIGHT CLICK
-    MouseArea {
-        id: rightMouseArea
-        anchors.fill: parent
-        acceptedButtons: Qt.RightButton
-        onClicked: {
-            //_addMenu.showMenu(rightMouseArea.mouseX, rightMouseArea.mouseY);
-            if (!tools.menuComponent) {
-                if(rightMouseArea.mouseX + 500 < graph.width) {
-                    var newComponent = Qt.createQmlObject('MenuList { parentName: "buttle/"; x: rightMouseArea.mouseX; y:  rightMouseArea.mouseY; clickFrom: graph; side: "right";}', parent);
-                    //newComponent.side = "right";
-                    tools.menuComponent = newComponent;
-                    
-                }
-                else {
-                    //var newComponent = Qt.createQmlObject('MenuList { parentName: "buttle/"; x: graph.width - 500; y:  rightMouseArea.mouseY; clickFrom: graph;}', parent);
-                    var newComponent = Qt.createQmlObject('MenuList { parentName: "buttle/"; x: rightMouseArea.mouseX; y:  rightMouseArea.mouseY; clickFrom: graph; side: "left";}', parent);                    
-                    //newComponent.side = "left";
-                    tools.menuComponent = newComponent;     
-                }
-            }
-
-                
-             /*if (mouse.button == Qt.RightButton)
-             listmodel.x = mouseX
-             listmodel.y = mouseY - 30
-             listmodel.clickFrom = graphArea
-             listmodel.menuState = (listmodel.menuState == "hidden") ? "shown" : "hidden"
-        }*/
-        }   
-    }
 }

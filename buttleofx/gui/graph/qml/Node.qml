@@ -2,11 +2,14 @@ import QtQuick 2.0
 import QuickMamba 1.0
 
 Rectangle {
-    id: node
+    id: qml_nodeRoot
+
+    property variant graphRoot
 
     QtObject {
         id: m
         property variant nodeModel: model.object
+        property variant nodeRoot: qml_nodeRoot
     }
 
     x: m.nodeModel.coord.x
@@ -17,8 +20,9 @@ Rectangle {
     width: m.nodeModel.width
 
     Component.onCompleted: {
-        m.nodeModel.fitWidth(nodeText.width);
-        _buttleData.graphWrapper.updateConnectionsCoord(m.nodeModel);
+        // console.log("Node: ", objectName)
+        m.nodeModel.fitWidth(nodeText.width)
+        // _buttleData.graphWrapper.updateConnectionsCoord(m.nodeModel);
     }
 
     property int inputSpacing : m.nodeModel.clipSpacing
@@ -67,7 +71,7 @@ Rectangle {
             }
 
             // take the focus
-            node.forceActiveFocus()
+            m.nodeRoot.forceActiveFocus()
         }
         onReleased: {
             // left button : we end moving
@@ -151,7 +155,7 @@ Rectangle {
             
             onTextChanged: {
                 m.nodeModel.fitWidth(nodeText.width);
-                _buttleData.graphWrapper.updateConnectionsCoord(m.nodeModel);
+                // _buttleData.graphWrapper.updateConnectionsCoord(m.nodeModel);
             }
 
             Connections {
@@ -163,33 +167,42 @@ Rectangle {
             color: isSelected ? m.nodeModel.color : "black"
         }
     }
-    //inputClips
+    // inputClips
     Column {
         id: nodeInputs
-        anchors.left: parent.left
-        anchors.leftMargin: -node.sideMargin
-        anchors.top: parent.top
-        anchors.topMargin: node.inputTopMargin
-        spacing: node.inputSpacing
+        // anchors.left: parent.left
+        anchors.leftMargin: -m.nodeRoot.sideMargin
+        // anchors.top: parent.top
+        anchors.topMargin: m.nodeRoot.inputTopMargin
+        anchors.fill: parent
+        spacing: m.nodeRoot.inputSpacing
         Repeater {
             model: m.nodeModel.srcClips
             Clip {
+                id: in_clip
                 clipWrapper: model.object
-                port : "input"
+                port: "input"
+                graphRoot: m.nodeRoot.graphRoot
+                nodeRoot: m.nodeRoot
             }
         }
     }
-    //outputClip
+    // outputClip
     Column {
         id: nodeOutputs
         anchors.right: parent.right
-        anchors.rightMargin: -node.sideMargin
+        anchors.rightMargin: -m.nodeRoot.sideMargin
         anchors.top : parent.top
-        anchors.topMargin: node.outputTopMargin
+        anchors.topMargin: m.nodeRoot.outputTopMargin
+        width: 1
+        height: 1
         // always only one outputClip
         Clip {
+            id: out_clip
             clipWrapper: m.nodeModel.outputClip
-            port : "output"
+            port: "output"
+            graphRoot: m.nodeRoot.graphRoot
+            nodeRoot: m.nodeRoot
         }
     }
 
@@ -197,7 +210,7 @@ Rectangle {
         id: deadMosquito
         width: 23
         height: 21
-        x: node.width - 12
+        x: m.nodeRoot.width - 12
         y: -10
         state: "normal"
         color: "transparent"
@@ -236,11 +249,11 @@ Rectangle {
         states: [
             State {
                 name: "normal"
-                PropertyChanges { target: node; x: m.nodeModel.coord.x; y: m.nodeModel.coord.y }
+                PropertyChanges { target: m.nodeRoot; x: m.nodeModel.coord.x; y: m.nodeModel.coord.y }
             },
             State {
                 name: "moving"
-                PropertyChanges { target: node; x: m.nodeModel.coord.x ; y: m.nodeModel.coord.y }
+                PropertyChanges { target: m.nodeRoot; x: m.nodeModel.coord.x ; y: m.nodeModel.coord.y }
             }
         ]
     }
@@ -251,23 +264,23 @@ Rectangle {
             State {
             name: "pressed"
             when: nodeMouseArea.pressed
-            PropertyChanges { target: node; opacity: .5 }
+            PropertyChanges { target: m.nodeRoot; opacity: .5 }
             }
         ]
     }
 
     onXChanged: {
         if (nodeMouseArea.drag.active) {
-            node.nodeIsMoving()
+            m.nodeRoot.nodeIsMoving()
         }
     }
     onYChanged: {
         if (nodeMouseArea.drag.active) {
-            node.nodeIsMoving()
+            m.nodeRoot.nodeIsMoving()
         }
     }
 
     function nodeIsMoving() {
-        _buttleManager.nodeManager.nodeIsMoving(m.nodeModel.name, node.x, node.y)
+        _buttleManager.nodeManager.nodeIsMoving(m.nodeModel.name, m.nodeRoot.x, m.nodeRoot.y)
     }
 }

@@ -5,7 +5,7 @@ from quickmamba.patterns import Signal
 
 class Connection(object):
     """
-        Creates a python object Connection. This class is usefull to identify a connection between 2 clips.
+        Creates a python object Connection. This class is useful to identify a connection between 2 clips.
 
         Class Connection defined by:
         - data from tuttle :

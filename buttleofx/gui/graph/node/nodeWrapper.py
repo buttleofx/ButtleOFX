@@ -41,6 +41,8 @@ class NodeWrapper(QtCore.QObject):
         self._node.nodeLookChanged.connect(self.emitNodeLookChanged)
         self._node.nodePositionChanged.connect(self.emitNodePositionChanged)
         self._node.nodeContentChanged.connect(self.emitNodeContentChanged)
+        
+        self._clips = [ClipWrapper(clip, self.getName(), self._view) for clip in self._node.getClips()]
 
         logging.info("Gui : NodeWrapper created")
 
@@ -65,7 +67,7 @@ class NodeWrapper(QtCore.QObject):
         return self._node.getType()
 
     def getCoord(self):
-        return QtCore.QPoint(self._node.getCoord()[0], self._node.getCoord()[1])
+        return QtCore.QPointF(self._node.getCoord()[0], self._node.getCoord()[1])
 
     def getXCoord(self):
         return self._node.getCoord()[0]
@@ -88,16 +90,21 @@ class NodeWrapper(QtCore.QObject):
             Returns a QObjectListModel of ClipWrappers of the input clips of this node.
         """
         srcClips = QObjectListModel(self)
-        srcClips.setObjectList([ClipWrapper(clip, self.getName(), self._view) for clip in self._node.getClips() if not clip == "Output"])
+        srcClips.setObjectList([clip for clip in self._clips if not clip.name == "Output"])
         return srcClips
 
     def getOutputClip(self):
         """
             Returns the ClipWrapper of the output clip of this node.
         """
-        for clip in self._node.getClips():
-            if clip == "Output":
-                return ClipWrapper(clip, self.getName(), self._view)
+        return next(clip for clip in self._clips if clip.name == "Output")
+
+    @QtCore.pyqtSlot(str, result=QtCore.QObject)
+    def getClip(self, name):
+        """
+            Returns the ClipWrapper of the output clip of this node.
+        """
+        return next(clip for clip in self._clips if clip.name == name)
 
     def getHeight(self):
         return int(self._heightEmptyNode + self._clipSpacing * self.getNbInput())
@@ -251,7 +258,7 @@ class NodeWrapper(QtCore.QObject):
     name = QtCore.pyqtProperty(str, getName, constant=True)
     nameUser = QtCore.pyqtProperty(str, getNameUser, setNameUser, notify=nodeLookChanged)
     nodeType = QtCore.pyqtProperty(str, getType, constant=True)
-    coord = QtCore.pyqtProperty(QtCore.QPoint, getCoord, setCoord, notify=nodePositionChanged)  # problem to access to x property with QPoint !
+    coord = QtCore.pyqtProperty(QtCore.QPointF, getCoord, setCoord, notify=nodePositionChanged)  # problem to access to x property with QPoint !
     xCoord = QtCore.pyqtProperty(int, getXCoord, setXCoord, notify=nodePositionChanged)
     yCoord = QtCore.pyqtProperty(int, getYCoord, setYCoord, notify=nodePositionChanged)
     color = QtCore.pyqtProperty(QtGui.QColor, getColor, setColor, notify=nodeLookChanged)

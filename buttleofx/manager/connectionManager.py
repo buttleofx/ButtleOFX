@@ -151,6 +151,14 @@ class ConnectionManager(QtCore.QObject):
         # update undo/redo display
         self.undoRedoChanged()
 
+    @QtCore.pyqtSlot(QtCore.QObject, QtCore.QObject)
+    def connectWrappers(self, clipOut, clipIn):
+        # print("connectWrappers:", clipOut, clipIn)
+        id_clipOut = IdClip(clipOut.getNodeName(), clipOut.getClipName())
+        id_clipIn = IdClip(clipIn.getNodeName(), clipIn.getClipName())
+        
+        self.connect(id_clipOut, id_clipIn)
+        
     ############### CREATION AND DESTRUCTION ###############
 
     def connect(self, clipOut, clipIn):

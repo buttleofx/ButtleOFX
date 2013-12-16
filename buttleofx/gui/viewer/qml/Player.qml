@@ -4,8 +4,6 @@ import TimerPlayer 1.0
 
 Item {
     id: player
-    implicitWidth: 950
-    implicitHeight: 400
 
     // remark : in python if there are ten frames, they are numbered from 0 to 9 so we need some time to add 1 for display
     property variant node
@@ -123,7 +121,6 @@ Item {
         width: parent.width
         y: tabBar.height
         color: "#141414"
-
 
         ColumnLayout {
 

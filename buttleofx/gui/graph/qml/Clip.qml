@@ -2,34 +2,69 @@ import QtQuick 2.0
 import QuickMamba 1.0
 
 Rectangle {
-    id: clip
+    id: clipRoot
+
     property string port
     property variant clipWrapper
+    property variant graphRoot
+    property variant nodeRoot
 
     QtObject {
-        id: c
-        property variant clipModel: clipWrapper
+        id: m
+        property variant clipWrapper: clipRoot.clipWrapper
+        property double radius: clipSize / 2.0
     }
 
+    objectName: "qmlClip_" + m.clipWrapper.name
     height: clipSize
     width: clipSize
-    color:  clipMouseArea.containsMouse ? "#00b2a1" : "#bbbbbb"
+    color: clipMouseArea.containsMouse ? "#00b2a1" : "#bbbbbb"
     radius: 4
 
-    Rectangle {
+    // Synchronize QML graphic information (clip position) into the model,
+    // to share it with connection objects
+    property double absXPos: nodeRoot.x + clipRoot.mapToItem(nodeRoot, m.radius, m.radius).x
+    onAbsXPosChanged: {
+        // console.debug("__________")
+        // console.debug("clipRoot qml update clip coord:", absXPos)
+        // console.debug("nodeRoot.x:", nodeRoot.x)
+        // console.debug("clipRoot.x:", clipRoot.mapToItem(nodeRoot, m.radius, m.radius).x)
+        // console.debug("m.radius:", m.radius)
+        // console.debug("__________")
+        clipWrapper.coord.x = absXPos
+    }
+    property double absYPos: nodeRoot.y + clipRoot.mapToItem(nodeRoot, m.radius, m.radius).y
+    onAbsYPosChanged: {
+        // console.debug("__________", m.clipWrapper.nodeName, m.clipWrapper.name)
+        // console.debug("clipRoot qml update clip coord:", absYPos)
+        // console.debug("nodeRoot.y:", nodeRoot.y)
+        // console.debug("clipRoot.y:", clipRoot.mapToItem(nodeRoot, m.radius, m.radius).y)
+        // console.debug("m.radius:", m.radius)
+        // console.debug("__________")
+        clipWrapper.coord.y = absYPos
+    }
+    function updateClipWrapperCoords()
+    {
+        clipWrapper.coord.x = absXPos
+        clipWrapper.coord.y = absYPos
+    }
+    Component.onCompleted: {
+        updateClipWrapperCoords()
+    }
 
+    Rectangle {
         id: clipName
         color: clipMouseArea.containsMouse ? "#fff" : "#333"
         radius: 3
         opacity: clipMouseArea.containsMouse ? 1 : 0
         height: 17
         width: clipNameText.width + 10
-        x: clip.port == "output" ? parent.x + 15 : parent.x - clipNameText.width - 15
+        x: clipRoot.port == "output" ? parent.x + 15 : parent.x - clipNameText.width - 15
         y: -5
 
         Text{
             id: clipNameText
-            text: c.clipModel.name
+            text: m.clipWrapper.name
             font.pointSize: 8
             color: "#999"
             x: 7
@@ -37,19 +72,42 @@ Rectangle {
         }
     }
 
-    DropArea{
+    DropArea {
         id: droparea
         objectName: "DropArea"
         width: 15
         height: 15
-        onDropped: { //Accepts the drop and erase the handle
+        onDropped: {
+            // Accepts the drop and erase the handle
             drop.accept()
+
             handle.opacity = 0
             handle.radius = 4
             handle.width = 7
             handle.height = 7
             handle.x = 0
             handle.y = 0
+
+            var clipOut = null
+            var clipIn = null
+            console.log("clip.clipWrapper.name:", m.clipWrapper.name)
+            if( m.clipWrapper.name == "Output" )
+            {
+                console.log("drop on output")
+                clipOut = m.clipWrapper
+                clipIn = drag.source.clipWrapper
+            }
+            else
+            {
+                console.log("drop on input")
+                clipOut = drag.source.clipWrapper
+                clipIn = m.clipWrapper
+
+                console.log("clipOut:", clipOut)
+                console.log("clipIn:", clipIn)
+                console.log("drag.source:", drag.source)
+            }
+            _buttleManager.connectionManager.connectWrappers(clipOut, clipIn)
         }
         onEntered: { //The handle is displayed to show that a connection is available
             handle.opacity = 0.5
@@ -84,8 +142,10 @@ Rectangle {
         drag.target: handle
 
         onReleased: {
-            if (handle.Drag.drop() !== Qt.IgnoreAction) console.log("Accepted!");
-            else connections.tmpConnectionExists = false
+            var dropStatus = handle.Drag.drop()
+            if (dropStatus !== Qt.IgnoreAction)
+                console.log("Accepted!")
+            connections.tmpConnectionExists = false
             handle.opacity= 0
         }
 
@@ -99,13 +159,14 @@ Rectangle {
             y: 0
             color: "#32d2cc"
             Drag.active: clipMouseArea.drag.active
-            Drag.hotSpot.x: width/2
-            Drag.hotSpot.y: height/2
+            Drag.hotSpot.x: width * 0.5
+            Drag.hotSpot.y: height * 0.5
             opacity: 0
+            property variant clipWrapper: m.clipWrapper
             states: [
                 State {
                    when: handle.Drag.active
-                   PropertyChanges{
+                   PropertyChanges {
                       target: handle
                       opacity: 1
                    }
@@ -115,74 +176,33 @@ Rectangle {
 
         onPressed: {
             // take the focus of the MainWindow
-            clip.forceActiveFocus()
+            clipRoot.forceActiveFocus()
             // tmpConnection :
             // position of the clip
-            var posClip = _buttleData.graphWrapper.getPointClip(c.clipModel.nodeName, c.clipModel.name, index)
+            var posClip = clipRoot.mapToItem(clipRoot.graphRoot, m.radius, m.radius)
 
             // display of the tmpConnection with right coordinates
             connections.tmpConnectionExists = true
-            connections.tmpClipName = c.clipModel.name
+            connections.tmpClipName = m.clipWrapper.name
 
             connections.tmpConnectionX1 = posClip.x
             connections.tmpConnectionY1 = posClip.y
             connections.tmpConnectionX2 = posClip.x
             connections.tmpConnectionY2 = posClip.y
-
-           // _buttleManager.connectionManager.connectionDragEvent(c.clipModel, index) // we send all information needed to identify the clip : nodename, port and clip number
-
-            // at the end of the drag (i.e. onReleased !), we hide the tmpConnection.
-            // Temporary modification to true and not false, to make a qml drag
-            //connections.tmpConnectionExists = true
-
-        }
-       onPositionChanged: { //Update of the connection during the drag
-           if(clipMouseArea.drag.active){
-                var posClip = _buttleData.graphWrapper.getPointClip(c.clipModel.nodeName, c.clipModel.name, index)
-
+       }
+       onPositionChanged: {
+           // Update of the connection during the drag
+           if(clipMouseArea.drag.active) {
                 if (connections.tmpClipName == "Output") {
-                    connections.tmpConnectionX2 = mouse.x + posClip.x
-                    connections.tmpConnectionY2 = mouse.y + posClip.y
-                }else{
-                    connections.tmpConnectionX1 =  mouse.x + posClip.x
-                    connections.tmpConnectionY1= mouse.y + posClip.y
+                    connections.tmpConnectionX2 = mouse.x + connections.tmpConnectionX1
+                    connections.tmpConnectionY2 = mouse.y + connections.tmpConnectionY1
+                } else {
+                    connections.tmpConnectionX1 = mouse.x + connections.tmpConnectionX2
+                    connections.tmpConnectionY1 = mouse.y + connections.tmpConnectionY2
                 }
            }
-            handle.x = mouseX
-            handle.y = mouseY
-        }
-
-        //Old way to do the drag and drop
-        ExternDropArea {
-            anchors.fill: parent
-            anchors.margins: -7
-            onDragEnter: {
-                acceptDrop = hasText && text.substring(0, 5) == "clip/" && _buttleManager.connectionManager.canConnectTmpNodes(text, c.clipModel, index);
-
-                // tmpConnection update
-                if(acceptDrop) {
-                    // position of the clip
-                    var posClip = _buttleData.graphWrapper.getPointClip(c.clipModel.nodeName, c.clipModel.name, index)
-
-                    if (connections.tmpClipName == "Output") {
-                        connections.tmpConnectionX2 =  posClip.x
-                        connections.tmpConnectionY2 =  posClip.y
-                    }
-                    else {
-                        connections.tmpConnectionX1 =  posClip.x
-                        connections.tmpConnectionY1 =  posClip.y
-                    }
-                }
-
-
-            }
-
-            onDrop: {
-                if (acceptDrop) {
-                    //_buttleManager.connectionManager.connectionDropEvent(text, c.clipModel, index)
-                }
-            }
-
+           handle.x = mouseX
+           handle.y = mouseY
         }
     }
 }

@@ -27,7 +27,7 @@ Rectangle {
                 id : file
                 Image {
                     x: 25
-                    source: model.object.fileType == "Folder" ? "./img/folder-icon.png" : "file://" + model.object.filepath
+                    source: model.object.fileType == "Folder" ? "./img/folder-icon.png" : folder + "/" + model.object.filepath
                     sourceSize.width: 40
                     sourceSize.height: 40
                     Component.onCompleted: {

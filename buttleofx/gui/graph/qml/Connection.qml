@@ -3,6 +3,7 @@ import QtQuick 2.0
 Item {
     id: connectionItem
     property variant connectionModel
+
     property int x1
     property int y1
     property int x2
@@ -28,7 +29,7 @@ Item {
             function intersectPath(mouseX, mouseY, margin){
                 for(var x = mouseX - margin; x< mouseX + margin; x++){
                     for(var y = mouseY - margin; y< mouseY + margin; y++){
-                        if(connection.getContext().isPointInPath(x, y)){
+                        if(connection.getContext("2d").isPointInPath(x, y)){
                             return true;
                         }
                     }

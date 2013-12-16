@@ -1,5 +1,6 @@
 import QtQuick 2.0
 import QtQuick.Controls 1.0
+import QtQuick.Layouts 1.0
 import QtQml 2.1
 
 import QuickMamba 1.0
@@ -244,35 +245,33 @@ ApplicationWindow {
         SplitView {
             anchors.fill: parent
             anchors.margins: 3
-            //handleWidth: 3
             orientation: Qt.Horizontal
 
             SplitView {
                 width: 0.7*parent.width
                 height: parent.height
-                //handleWidth: 3
                 orientation: Qt.Vertical
-                //Splitter.expanding: true // obligatory to allow to have the minimumWidth
 
                 Player {
-                    //Splitter.minimumHeight: 0
-                    //Splitter.expanding: true
                     id: player
+                    Layout.minimumHeight: 200
+                    Layout.fillHeight: true
                     width: parent.width
-                    height: 0.5*parent.height
+
                     node: _buttleData.currentViewerNodeWrapper
                 }
 
                 GraphEditor {
                     id: graphEditor
-                    //Splitter.minimumHeight: 0
+                    Layout.minimumHeight: 200
+                    Layout.fillHeight: true
+                    height: 0.4 * parent.height
                     width: parent.width
-                    height: 0.5*parent.height
                 }
             }
 
             ParamEditor {
-                //Splitter.minimumWidth: 0 
+                Layout.minimumWidth: 100
                 width: 0.3*parent.width
                 params: _buttleData.currentParamNodeWrapper ? _buttleData.currentParamNodeWrapper.params : null
                 currentParamNode: _buttleData.currentParamNodeWrapper

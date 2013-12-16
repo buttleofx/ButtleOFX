@@ -18,7 +18,7 @@ class FileItem(QtCore.QObject):
         super(FileItem, self).__init__()
         self._filepath = filepath
         self._fileType = fileType
-    
+
     def getFilepath(self):
         return self._filepath
     
@@ -27,6 +27,7 @@ class FileItem(QtCore.QObject):
     
     filepath = QtCore.pyqtProperty(str, getFilepath, constant=True)
     fileType = QtCore.pyqtProperty(str, getFileType, constant=True)
+
     
     # isSelected = QtCore.pyqtProperty(bool, getSelected, setSelected)
 

@@ -27,7 +27,7 @@ Rectangle {
                 id : file
                 Image {
                     x: 25
-                    source: model.object.type == "Folder" ? "./img/folder-icon.png" : "file://" + model.object.filepath
+                    source: model.object.fileType == "Folder" ? "./img/folder-icon.png" : "file://" + model.object.filepath
                     sourceSize.width: 40
                     sourceSize.height: 40
                     Component.onCompleted: {
@@ -38,7 +38,7 @@ Rectangle {
                         id: mouseRegionImage
                         anchors.fill : parent
                         onClicked: gridview.currentIndex = index
-                        onDoubleClicked: model.object.type == "Folder" ? console.log("Go to " + model.object.filepath) : console.log("Open " + model.object.filepath)
+                        onDoubleClicked: model.object.fileType == "Folder" ? console.log("Go to " + model.object.filepath) : console.log("Open " + model.object.filepath)
                     }
                 }
                 Text {
@@ -49,7 +49,7 @@ Rectangle {
                         id: mouseRegionText
                         anchors.fill : parent
                         onClicked: gridview.currentIndex = index
-                        onDoubleClicked: Qt.openUrlExternally(model.object.filepath)
+                        onDoubleClicked: model.object.fileType == "Folder" ? console.log("Go to " + model.object.filepath) : Qt.openUrlExternally(folder + "/" + model.object.filepath)
                     }
                 }
             }

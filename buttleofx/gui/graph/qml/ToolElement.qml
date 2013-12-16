@@ -15,6 +15,8 @@ Rectangle {
     property string buttonText
     property bool locked
 
+    signal clicked()
+
     Image {
         id: imageButton
         source: imageSource
@@ -27,9 +29,9 @@ Rectangle {
         anchors.fill: parent
         onClicked: {
             if(!locked) {
-                tools.doAction(buttonName);
+                buttonTools.clicked()
                 //take the focus of the mainWindow
-                parent.forceActiveFocus();
+                parent.forceActiveFocus()
             }
         }
     }

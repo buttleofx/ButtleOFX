@@ -236,7 +236,7 @@ Rectangle {
                      when: m.nodeModel == _buttleData.currentViewerNodeWrapper
                      PropertyChanges {
                          target: deadMosquitoImage;
-                         source: _buttleData.buttlePath + "/gui/img/mosquito/mosquito_dead.png"
+                         source: "file///" + _buttleData.buttlePath + "/gui/img/mosquito/mosquito_dead.png"
                      }
                  }
              ]

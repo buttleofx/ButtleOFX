@@ -54,16 +54,17 @@ from PyQt5 import QtCore, QtGui, QtQml
 import os
 import sys
 
-
-# Path of this file
-currentFilePath = os.path.dirname(os.path.abspath(__file__))
-
 osname = os.name.lower()
 sysplatform = sys.platform.lower()
 windows = osname == "nt" and sysplatform.startswith("win")
 macos = sysplatform.startswith("darwin")
 linux = not windows and not macos
 unix = not windows
+
+# Path of this file
+currentFilePath = os.path.dirname(os.path.abspath(__file__))
+if windows:
+    currentFilePath = currentFilePath.replace("\\", "/")
 
 
 class ButtleApp(QtGui.QGuiApplication):

@@ -279,7 +279,7 @@ Item {
 
                             Image {
                                 id: mosquito
-                                source: _buttleData.buttlePath + "/gui/img/mosquito/mosquito.png"
+                                source: "file:///" + _buttleData.buttlePath + "/gui/img/mosquito/mosquito.png"
                                 anchors.centerIn: parent
                             }
 

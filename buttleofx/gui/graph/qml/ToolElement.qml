@@ -19,7 +19,8 @@ Rectangle {
 
     Image {
         id: imageButton
-        source: imageSource
+        property string file: buttonTools.imageSource
+        source: "file:///" + imageButton.file
         anchors.verticalCenter: parent.verticalCenter
         anchors.horizontalCenter: parent.horizontalCenter
     }
@@ -59,7 +60,7 @@ Rectangle {
                  }
                  PropertyChanges {
                     target: imageButton
-                    source: imageSourceLocked
+                    file: imageSourceLocked
                  }
              },
              State {
@@ -71,7 +72,7 @@ Rectangle {
                  }
                  PropertyChanges {
                     target: imageButton
-                    source: imageSource
+                    file: imageSource
                  }
              },
              State {
@@ -83,7 +84,7 @@ Rectangle {
                  }
                  PropertyChanges {
                     target: imageButton
-                    source: imageSource
+                    file: imageSource
                  }
              },
              State {
@@ -95,7 +96,7 @@ Rectangle {
                  }
                  PropertyChanges {
                     target: imageButton
-                    source: imageSourceHover
+                    file: imageSourceHover
                  }
              }
          ]

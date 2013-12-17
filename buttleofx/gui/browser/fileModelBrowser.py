@@ -8,15 +8,18 @@ from PyQt5.QtWidgets import QWidget, QFileDialog
 
 class FileItem(QtCore.QObject):
     
+    _isSelected = False
+    
     class Type():
         """ Enum """
         File = 'File'
         Folder = 'Folder'
         Sequence = 'Sequence'
     
-    def __init__(self, filepath, fileType):
+    def __init__(self, folder, fileName, fileType):
         super(FileItem, self).__init__()
-        self._filepath = filepath
+        self._filepath = folder + "/" + fileName
+        self._fileName = fileName
         self._fileType = fileType
 
     def getFilepath(self):
@@ -25,11 +28,21 @@ class FileItem(QtCore.QObject):
     def getFileType(self):
         return self._fileType
     
+    def getFileName(self):
+        return self._fileName
+    
+    def getSelected(self):
+        return self._isSelected
+    
+    def setSelected(self, isSelected):
+        self._isSelected = isSelected
+        self.isSelectedChange.emit()
+
     filepath = QtCore.pyqtProperty(str, getFilepath, constant=True)
     fileType = QtCore.pyqtProperty(str, getFileType, constant=True)
-
-    
-    # isSelected = QtCore.pyqtProperty(bool, getSelected, setSelected)
+    fileName = QtCore.pyqtProperty(str, getFileName, constant=True)
+    isSelectedChange = QtCore.pyqtSignal()
+    isSelected = QtCore.pyqtProperty(bool, getSelected, setSelected, notify=isSelectedChange)
 
 
 class FileModelBrowser(QtQuick.QQuickItem):
@@ -64,9 +77,9 @@ class FileModelBrowser(QtQuick.QQuickItem):
         try:
             _, dirs, files = next(os.walk(folder))
             for d in dirs:
-                self._fileItems.append(FileItem(d, FileItem.Type.Folder))
+                self._fileItems.append(FileItem(folder, d, FileItem.Type.Folder))
             for f in files:
-                self._fileItems.append(FileItem(f, FileItem.Type.File))
+                self._fileItems.append(FileItem(folder, f, FileItem.Type.File))
         except Exception:
             pass
         self._fileItemsModel.setObjectList(self._fileItems)
@@ -77,6 +90,29 @@ class FileModelBrowser(QtQuick.QQuickItem):
     def getFileItems(self):
         return self._fileItemsModel
     
-    fileItems = QtCore.pyqtProperty(QtCore.QObject, getFileItems, notify=folderChanged)
+    @QtCore.pyqtSlot(int)
+    def selectItem(self, index):
+        for item in self._fileItems:
+            item.isSelected = False
+        if index < len(self._fileItems):
+            print("index", len(self._fileItems))
+            self._fileItems[index].isSelected = True
+        else:
+            print("not index", len(self._fileItems))
     
-    # nameFilters = QtCore.pyqtProperty(str, setFilters)
+    class NameFilter():
+        """ Enum """
+        All = '*'
+        Jpeg = '.jpg'
+        Png = 'png'
+    
+    def getFilter(self):
+        return self._nameFilter
+        
+    def setFilter(self, nameFilter):
+        self._nameFilter = nameFilter
+        self.nameFilterChange.emit()
+
+    fileItems = QtCore.pyqtProperty(QtCore.QObject, getFileItems, notify=folderChanged)
+    nameFilterChange = QtCore.pyqtSignal()
+    nameFilter = QtCore.pyqtProperty(str, getFilter, setFilter, notify=nameFilterChange)

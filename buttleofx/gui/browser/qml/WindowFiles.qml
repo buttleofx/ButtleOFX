@@ -13,7 +13,12 @@ Rectangle {
     FileModelBrowser {
         id: fileModel
         folder: winFile.folder
+
+        onFolderChanged: {
+            fileModel.selectItem(0)
+        }
     }
+
 
     GridView {
         id: gridview
@@ -27,29 +32,38 @@ Rectangle {
                 id : file
                 Image {
                     x: 25
-                    source: model.object.fileType == "Folder" ? "./img/folder-icon.png" : folder + "/" + model.object.filepath
+                    source: model.object.fileType == "Folder" ? "./img/folder-icon.png" : model.object.filepath
                     sourceSize.width: 40
                     sourceSize.height: 40
-                    Component.onCompleted: {
-                        console.log("Image Component.onCompleted: ", source)
-                    }
+
 
                     MouseArea {
                         id: mouseRegionImage
                         anchors.fill : parent
-                        onClicked: gridview.currentIndex = index
-                        onDoubleClicked: model.object.fileType == "Folder" ? console.log("Go to " + model.object.filepath) : console.log("Open " + model.object.filepath)
+                        onClicked: {
+                            gridview.currentIndex = index
+                            fileModel.selectItem(index)
+                            //if ctrl:
+                            //if shift:
+                        }
+                        onDoubleClicked: model.object.fileType == "Folder" ? console.log("Go to " + model.object.fileName) : Qt.openUrlExternally(model.object.filepath)
                     }
                 }
                 Text {
-                    text: model.object.filepath
+                    text: model.object.fileName
+                    color: model.object.isSelected ? "black" : "white"
                     anchors.horizontalCenter: parent.horizontalCenter
 
                     MouseArea {
                         id: mouseRegionText
                         anchors.fill : parent
-                        onClicked: gridview.currentIndex = index
-                        onDoubleClicked: model.object.fileType == "Folder" ? console.log("Go to " + model.object.filepath) : Qt.openUrlExternally(folder + "/" + model.object.filepath)
+                        onClicked: {
+                            gridview.currentIndex = index
+                            fileModel.selectItem(index)
+                            //if ctrl:
+                            //if shift:
+                        }
+                        onDoubleClicked: model.object.fileType == "Folder" ? console.log("Go to " + model.object.fileName) : Qt.openUrlExternally(model.object.filepath)
                     }
                 }
             }

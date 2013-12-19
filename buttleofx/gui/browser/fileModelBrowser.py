@@ -78,7 +78,30 @@ class FileModelBrowser(QtQuick.QQuickItem):
             _, dirs, files = next(os.walk(folder))
             for d in dirs:
                 self._fileItems.append(FileItem(folder, d, FileItem.Type.Folder))
-            for f in files:
+            
+            if self._nameFilter == "*":
+                print("On recupère tous les fichiers")
+                for f in files:
+                    self._fileItems.append(FileItem(folder, f, FileItem.Type.File))
+                    
+            if self._nameFilter == ".jpg":
+                print("On recupère seulement les fichiers en ",self._nameFilter)
+                for f in files:
+                    begin = f.find(".")
+                    format = f[begin:len(f)]
+                    print(format)
+                    if format is self._nameFilter:
+                        print("On recupère seulement les fichiers en ",format)
+                        self._fileItems.append(FileItem(folder, f, FileItem.Type.File))
+                        
+            if self._nameFilter == ".png":
+                for f in files:
+                    begin = f.find(".")
+                    format = f[begin:len(f)]
+                    if format is self._nameFilter:
+                        print("On recupère seulement les fichiers en ",format)
+                        self._fileItems.append(FileItem(folder, f, FileItem.Type.File))
+                
                 self._fileItems.append(FileItem(folder, f, FileItem.Type.File))
         except Exception:
             pass
@@ -100,11 +123,13 @@ class FileModelBrowser(QtQuick.QQuickItem):
         else:
             print("not index", len(self._fileItems))
     
-    class NameFilter():
-        """ Enum """
-        All = '*'
-        Jpeg = '.jpg'
-        Png = 'png'
+#    class NameFilter():
+#        """ Enum """
+#        All = '*'
+#        Jpeg = '.jpg'
+#        Png = 'png'
+
+    _nameFilter = ".png"
     
     def getFilter(self):
         return self._nameFilter

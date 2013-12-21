@@ -7,6 +7,7 @@ Rectangle {
     property string port
     property variant clipWrapper
     property variant graphRoot
+    //nodeRoot est récupéré de Node.qml, il désigne le node auquel appartient le clip
     property variant nodeRoot
 
     QtObject {
@@ -23,7 +24,7 @@ Rectangle {
 
     // Synchronize QML graphic information (clip position) into the model,
     // to share it with connection objects
-    property double absXPos: nodeRoot.x + clipRoot.mapToItem(nodeRoot, m.radius, m.radius).x
+    property double absXPos: nodeRoot.x + clipRoot.mapToItem(nodeRoot, m.radius, m.radius).x // Est-ce la position du clip dans le repère du graph ?
     onAbsXPosChanged: {
         // console.debug("__________")
         // console.debug("clipRoot qml update clip coord:", absXPos)
@@ -77,16 +78,12 @@ Rectangle {
         objectName: "DropArea"
         width: 15
         height: 15
+        keys: "handle"
         onDropped: {
             // Accepts the drop and erase the handle
             drop.accept()
 
-            handle.opacity = 0
-            handle.radius = 4
-            handle.width = 7
-            handle.height = 7
-            handle.x = 0
-            handle.y = 0
+            handle.state = ""
 
             var clipOut = null
             var clipIn = null
@@ -110,20 +107,10 @@ Rectangle {
             _buttleManager.connectionManager.connectWrappers(clipOut, clipIn)
         }
         onEntered: { //The handle is displayed to show that a connection is available
-            handle.opacity = 0.5
-            handle.radius = 8
-            handle.width = 15
-            handle.height = 15
-            handle.x = -handle.width/4
-            handle.y = -handle.height/4
+            handle.state = "entereddrop"
         }
         onExited: { //Erase the handle
-            handle.opacity = 0
-            handle.radius = 4
-            handle.width = 7
-            handle.height = 7
-            handle.x = 0
-            handle.y = 0
+            handle.state = ""
         }
         Item { //Area that accepts the drop
             id: droprec
@@ -161,14 +148,28 @@ Rectangle {
             Drag.active: clipMouseArea.drag.active
             Drag.hotSpot.x: width * 0.5
             Drag.hotSpot.y: height * 0.5
+            Drag.keys: "handle"
             opacity: 0
             property variant clipWrapper: m.clipWrapper
             states: [
                 State {
+                   name: "dragging"
                    when: handle.Drag.active
                    PropertyChanges {
                       target: handle
                       opacity: 1
+                   }
+                },
+                State {
+                   name: "entereddrop"
+                   PropertyChanges {
+                      target: handle
+                      opacity: 0.5
+                      radius: 8
+                      width: 15
+                      height: 15
+                      x: -handle.width/4
+                      y: -handle.height/4
                    }
                 }
             ]
@@ -189,6 +190,8 @@ Rectangle {
             connections.tmpConnectionY1 = posClip.y
             connections.tmpConnectionX2 = posClip.x
             connections.tmpConnectionY2 = posClip.y
+
+
        }
        onPositionChanged: {
            // Update of the connection during the drag

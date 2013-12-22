@@ -389,7 +389,11 @@ class ButtleData(QtCore.QObject):
         """
             Saves all data in a json file (default file : buttleofx/backup/data.bofx)
         """
-        with io.open(url, 'w', encoding='utf-8') as f:
+
+        filepath = QtCore.QUrl(url).toLocalFile()+".bofx"
+
+
+        with io.open(filepath, 'w', encoding='utf-8') as f:
             dictJson = {
                 "date": {},
                 "window": {},
@@ -417,7 +421,7 @@ class ButtleData(QtCore.QObject):
             dictJson["paramEditor"] = self.getCurrentParamNodeName()
 
             # viewer : currentViewerNodeName
-            for num_view, view in self._mapViewerIndextoNodeName.iteritems():
+            for num_view, view in self._mapViewerIndextoNodeName.items():
                 if view is not None:
                     (nodeName, frame) = view
                     if self.getCurrentViewerNodeName() == nodeName:
@@ -442,7 +446,10 @@ class ButtleData(QtCore.QObject):
         """
             Loads all data from a Json file (the default Json file if no url is given)
         """
-        with open(url, 'r') as f:
+
+        filepath = QtCore.QUrl(url).toLocalFile()
+
+        with open(filepath, 'r') as f:
             read_data = f.read()
 
             decoded = json.loads(read_data, object_hook=_decode_dict)

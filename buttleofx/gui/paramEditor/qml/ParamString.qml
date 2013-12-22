@@ -196,7 +196,6 @@ Item {
                     onAccepted: {
                         if (folderfiledialog.fileUrl){
                             paramObject.value = folderfiledialog.fileUrl
-                            paramObject.value = paramObject.value.substring(7, paramObject.value.selectionEnd) // take the url without "file://"
                             paramObject.pushValue(paramObject.value)
                         }
                     }

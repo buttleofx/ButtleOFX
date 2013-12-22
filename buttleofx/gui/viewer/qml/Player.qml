@@ -136,6 +136,8 @@ Item {
                 Layout.minimumHeight: 50
                 Layout.fillHeight: true
 
+                Layout.preferredWidth: parent.width - 10
+
                 Component {
                     id: viewer_component
                     Viewer {

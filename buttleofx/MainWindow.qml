@@ -10,6 +10,7 @@ import "gui/paramEditor/qml"
 ApplicationWindow {
     width: 1200
     height: 800
+    id: mainWindowQML
 
     //TopFocusHandler {
     // //anchors.fill: parent
@@ -147,8 +148,10 @@ ApplicationWindow {
             MenuSeparator { }
 
             MenuItem {
+                id: quitButton
                 text: "Exit"
                 onTriggered: Qt.quit()
+                //connect(quitButton, SIGNAL(quit()), mainWindowQML, SLOT(quit()));
             }
         }
 

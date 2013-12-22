@@ -94,6 +94,7 @@ def main(argv, app):
 
     # create the declarative view
     engine = QtQml.QQmlEngine(app)
+    engine.quit.connect(app.quit)
     #view = QtQuick.QQuickView()
     #view.setViewport(QtOpenGL.QGLWidget())
     #view.setViewportUpdateMode(QtQml.QQuickView.FullViewportUpdate)
@@ -137,6 +138,7 @@ def main(argv, app):
     qic.addFilesFromDirectory(parentDir, recursive=True)
 
     #add._menu.popup(view.mapToGlobal(QtCore.QPoint(0, 0)))
+
 
     if topLevel is not None:
         topLevel.setIcon(QtGui.QIcon(os.path.join(currentFilePath, "../blackMosquito.png")))

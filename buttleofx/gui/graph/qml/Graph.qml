@@ -15,6 +15,7 @@ Item {
     signal clickCreationNode(string nodeType)
     signal drawSelection(int selectionX, int selectionY, int selectionWidth, int selectionHeight)
 
+
     // Selection area
     MouseArea {
         id: leftMouseArea
@@ -96,10 +97,13 @@ Item {
                     Component.onDestruction: {
                         nodes.forceActiveFocus()
                     }
+                    Component.onCompleted: {
+                        console.log("test")
+                    }
                     objectName: "qmlNode_" + model.object.name
                     graphRoot: m.graphRoot
                 }
-            }
+            }     
         }
 
         Item {
@@ -108,10 +112,54 @@ Item {
             height: m.graphRoot.height
             // We set the z to 0 so the canvas is not over the node's clips
             z: 0
-            Repeater {
+
+            ListView {
                 model : _buttleData.graphWrapper.connectionWrappers
-                Connection {
-                    connectionModel: model.object
+                delegate : Component {
+                    Connection {
+                        id:connection2
+                        connectionModel: model.object
+                        Component.onCompleted:{
+
+                        }
+
+                        property variant nodeOut: _buttleData.graphWrapper.getNodeWrapper(connectionModel.out_clipNodeName)
+                        property variant clipOut: nodeOut.getClip(connectionModel.out_clipName)
+
+                        property variant nodeIn: _buttleData.graphWrapper.getNodeWrapper(connectionModel.in_clipNodeName)
+                        property variant clipIn: nodeIn.getClip(connectionModel.in_clipName)
+
+                        x1: clipOut.coord.x
+                        y1: clipOut.coord.y
+                        x2: clipIn.coord.x
+                        y2: clipIn.coord.y
+
+                         CanvasConnection {
+                            id:connection
+                            x1: clipOut.coord.x
+                            y1: clipOut.coord.y
+                            x2: clipIn.coord.x
+                            y2: clipIn.coord.y
+
+                            /*DropArea{
+                                id: droparea
+                                objectName: "DropArea"
+                                anchors.fill: parent
+                                onDropped: {
+                                    drop.accept()
+                                    console.log("dropConnection")
+                                }
+                                onEntered: {
+                                    console.log("drag source : "+ drag.source)
+                                }
+                                Item{
+                                    anchors.fill: parent
+                                }
+                            }*/
+                         }
+                     }
+
+
                     /*
                     Component.onCompleted: {
                         console.log("qml Connection")
@@ -126,16 +174,6 @@ Item {
                         }
                     }
                     */
-                    property variant nodeOut: _buttleData.graphWrapper.getNodeWrapper(connectionModel.out_clipNodeName)
-                    property variant clipOut: nodeOut.getClip(connectionModel.out_clipName)
-
-                    property variant nodeIn: _buttleData.graphWrapper.getNodeWrapper(connectionModel.in_clipNodeName)
-                    property variant clipIn: nodeIn.getClip(connectionModel.in_clipName)
-
-                    x1: clipOut.coord.x
-                    y1: clipOut.coord.y
-                    x2: clipIn.coord.x
-                    y2: clipIn.coord.y
                     /*
                     onClipOutChanged: {
                         console.debug("Connection, onClipOutChanged")

@@ -6,6 +6,8 @@ Rectangle {
 
     property variant graphRoot
 
+    Drag.active: nodeMouseArea.drag.active
+
     QtObject {
         id: m
         property variant nodeModel: model.object
@@ -79,6 +81,9 @@ Rectangle {
                 _buttleManager.nodeManager.nodeMoved(m.nodeModel.name, parent.x, parent.y)
                 stateMoving.state = "normal"
             }
+            var dropStatus = parent.Drag.drop()
+            if (dropStatus !== Qt.IgnoreAction)
+                console.log("Accepted!")
         }
 
         // double click : we change the current param node
@@ -88,7 +93,7 @@ Rectangle {
 
     }
 
-    ExternDropArea {
+   /* ExternDropArea {
         anchors.fill: parent
         onDragEnter: {
             acceptDrop = hasText && text=="mosquito_of_the_dead";
@@ -102,7 +107,7 @@ Rectangle {
                 _buttleEvent.emitViewerChangedSignal()
             }
         }
-    }
+    }*/
 
     Rectangle {
         id: nodeBorder

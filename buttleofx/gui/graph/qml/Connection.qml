@@ -1,4 +1,5 @@
 import QtQuick 2.0
+import QuickMamba 1.0
 
 Item {
     id: connectionItem
@@ -72,5 +73,22 @@ Item {
                 connection.requestPaint()
             }
         }
+
+        DropArea{
+            id: droparea1
+            objectName: "DropArea"
+            anchors.fill: parent
+            onDropped: {
+                drop.accept()
+                console.log("drop : " + drag.source)
+            }
+            onEntered: {
+                console.log("dropConnection")
+            }
+            Item{
+                anchors.fill: parent
+            }
+        }
+
     }
 }

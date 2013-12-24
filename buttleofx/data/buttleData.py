@@ -310,10 +310,11 @@ class ButtleData(QtCore.QObject):
         for nodeW in self.getGraphWrapper().getNodeWrappers():
             xNode = nodeW.getNode().getCoord()[0]
             yNode = nodeW.getNode().getCoord()[1]
-            widthNode = nodeW.getWidth()
-            heightNode = nodeW.getHeight()
+            # TODO: should be done in QML
+            widthNode = 40
+            heightNode = 10
 
-            # we project the boundin-boxes on the axes and we check if the segments overlap
+            # we project the bounding-boxes on the axes and we check if the segments overlap
             horizontalOverlap = (xNode < xRect + widthRect) and (xRect < xNode + widthNode)
             verticalOverlap = (yNode < yRect + heightRect) and (yRect < yNode + heightNode)
             overlap = horizontalOverlap and verticalOverlap

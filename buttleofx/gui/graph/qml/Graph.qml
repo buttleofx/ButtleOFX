@@ -9,8 +9,8 @@ Item {
         property variant graphRoot: qml_graphRoot
     }
 
-    property alias originX: connectnode.x
-    property alias originY: connectnode.y
+    property alias originX: graphContainer.x
+    property alias originY: graphContainer.y
 
     signal clickCreationNode(string nodeType)
     signal drawSelection(int selectionX, int selectionY, int selectionWidth, int selectionHeight)
@@ -20,46 +20,60 @@ Item {
         id: leftMouseArea
         property int xStart
         property int yStart
-        property bool drawingSelection : false
+        property int graphContainer_xStart
+        property int graphContainer_yStart
+
+        property bool drawingSelection: false
+        property bool selectMode: true
 
         anchors.fill: parent
-        hoverEnabled: true
+        // hoverEnabled: true
         acceptedButtons: Qt.LeftButton
-        onClicked: {
-            if (tools.menuComponent) {
-                tools.menuComponent.destroy();
-            }
-        }
         onPressed: {
-            xStart = mouse.x;
-            yStart = mouse.y;
+            xStart = mouse.x
+            yStart = mouse.y
+            graphContainer_xStart = graphContainer.x
+            graphContainer_yStart = graphContainer.y
+
             rectangleSelection.x = mouse.x;
             rectangleSelection.y = mouse.y;
             rectangleSelection.width = 1;
             rectangleSelection.height = 1;
-            rectangleSelection.visible = true;
-            drawingSelection: true;
+            selectMode = ! (mouse.modifiers & Qt.ControlModifier)
+            if( selectMode ) {
+                rectangleSelection.visible = true;
+                drawingSelection = true;
+            }
         }
         onReleased: {
-            rectangleSelection.visible = false;
-            _buttleData.clearCurrentSelectedNodeNames();
-            m.graphRoot.drawSelection(rectangleSelection.x - m.graphRoot.originX, rectangleSelection.y - m.graphRoot.originY, rectangleSelection.width, rectangleSelection.height)
+            if( selectMode ) {
+                rectangleSelection.visible = false;
+                _buttleData.clearCurrentSelectedNodeNames();
+                m.graphRoot.drawSelection(rectangleSelection.x - m.graphRoot.originX, rectangleSelection.y - m.graphRoot.originY, rectangleSelection.width, rectangleSelection.height)
+            }
         }
 
         onPositionChanged: {
-            if(mouse.x < xStart){
+            if( mouse.x < xStart ) {
                 rectangleSelection.x = mouse.x
                 rectangleSelection.width = xStart - mouse.x;
             }
             else {
                 rectangleSelection.width = mouse.x - xStart;
             }
-            if(mouse.y < yStart){
+            if( mouse.y < yStart ) {
                 rectangleSelection.y = mouse.y
                 rectangleSelection.height = yStart - mouse.y;
             }
             else {
                 rectangleSelection.height = mouse.y - yStart;
+            }
+
+            if( ! selectMode ) {
+                var xOffset = mouse.x - xStart
+                var yOffset = mouse.y - yStart
+                m.graphRoot.originX = graphContainer_xStart + xOffset
+                m.graphRoot.originY = graphContainer_yStart + yOffset
             }
         }
     }
@@ -83,20 +97,49 @@ Item {
     }
     */
     Rectangle {
-        id: connectnode
+        id: graphContainer
+        x: 0
+        y: 0
+        width: parent.width
+        height: parent.height
+
+        color: "transparent"
+
+        Item {
+            id: repere
+            property color repereColor: "red"
+            property double size: 50
+            property double thickness: 2
+            Rectangle {
+                id: axeX
+
+                x: -repere.size - 0.5 * repere.thickness
+                y: 0
+                width: 2 * repere.size + repere.thickness
+                height: 2
+                color: repere.repereColor
+            }
+            Rectangle {
+                id: axeY
+
+                x: 0
+                y: -repere.size - 0.5 * repere.thickness
+                width: 2
+                height: 2 * repere.size + repere.thickness
+                color: repere.repereColor
+            }
+        }
+
         Item {
             id: nodes
-            width: m.graphRoot.width
-            height: m.graphRoot.height
+            anchors.fill: parent
             z: 1
+
             Repeater {
                 id: nodesRepeater
                 model: _buttleData.graphWrapper.nodeWrappers
                 Node {
-                    Component.onDestruction: {
-                        nodes.forceActiveFocus()
-                    }
-                    objectName: "qmlNode_" + model.object.name
+                    nodeWrapper: model.object
                     graphRoot: m.graphRoot
                 }
             }
@@ -104,59 +147,27 @@ Item {
 
         Item {
             id: connections
-            width: m.graphRoot.width
-            height: m.graphRoot.height
+            anchors.fill: parent
             // We set the z to 0 so the canvas is not over the node's clips
             z: 0
             Repeater {
                 model : _buttleData.graphWrapper.connectionWrappers
                 Connection {
-                    connectionModel: model.object
-                    /*
-                    Component.onCompleted: {
-                        console.log("qml Connection")
-                        console.log("connectionModel.out_clipNodeName: ", connectionModel.out_clipNodeName)
-                        console.log("connectionModel.in_clipNodeName: ", connectionModel.in_clipNodeName)
-                        console.log("connection: ", x1, y1, x2, y2)
-                        console.log("nodeOut.coord.y: ", nodeOut.coord.y)
-                        console.log("clipOut.coord.y: ", clipOut.coord.y)
-                        if(clipOut.coord.y - nodeOut.coord.y < 5)
-                        {
-                           console.debug("A -- BUG -- node coord is same than clip coord")
-                        }
-                    }
-                    */
-                    property variant nodeOut: _buttleData.graphWrapper.getNodeWrapper(connectionModel.out_clipNodeName)
-                    property variant clipOut: nodeOut.getClip(connectionModel.out_clipName)
+                    connectionWrapper: model.object
+                    property variant nodeOut: _buttleData.graphWrapper.getNodeWrapper(connectionWrapper.out_clipNodeName)
+                    property variant clipOut: nodeOut.getClip(connectionWrapper.out_clipName)
 
-                    property variant nodeIn: _buttleData.graphWrapper.getNodeWrapper(connectionModel.in_clipNodeName)
-                    property variant clipIn: nodeIn.getClip(connectionModel.in_clipName)
+                    property variant nodeIn: _buttleData.graphWrapper.getNodeWrapper(connectionWrapper.in_clipNodeName)
+                    property variant clipIn: nodeIn.getClip(connectionWrapper.in_clipName)
 
-                    x1: clipOut.coord.x
-                    y1: clipOut.coord.y
-                    x2: clipIn.coord.x
-                    y2: clipIn.coord.y
-                    /*
-                    onClipOutChanged: {
-                        console.debug("Connection, onClipOutChanged")
-                    }
-                    onY1Changed: {
-                        console.debug("---------------------")
-                        console.debug("Connection, Y1 changed", x1)
-                        console.log("connection: ", x1, y1, x2, y2)
-                        console.log("nodeOut.coord.y: ", nodeOut.coord.y)
-                        console.log("clipOut.coord.y: ", clipOut.coord.y)
-                        if(clipOut.coord.y - nodeOut.coord.y < 5)
-                        {
-                            console.debug("B -- BUG -- node coord is same than clip coord")
-                        }
-                        console.debug("---------------------")
-                    }
-                    */
+                    x1: clipOut.xCoord
+                    y1: clipOut.yCoord
+                    x2: clipIn.xCoord
+                    y2: clipIn.yCoord
                 }
             }
 
-            property bool tmpConnectionExists : false
+            property bool tmpConnectionExists: false
             property string tmpClipName
             property int tmpConnectionX1
             property int tmpConnectionY1
@@ -165,7 +176,8 @@ Item {
 
             CanvasConnection {
                 id: tmpCanvasConnection
-                visible: connections.tmpConnectionExists ? 1 : 0
+                visible: connections.tmpConnectionExists ? true : false
+
                 x1: connections.tmpConnectionX1
                 y1: connections.tmpConnectionY1
                 x2: connections.tmpConnectionX2

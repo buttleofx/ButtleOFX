@@ -1,41 +1,39 @@
 import QtQuick 2.0
+import QtQuick.Layouts 1.0
+
 import QuickMamba 1.0
+
 
 Rectangle {
     id: qml_nodeRoot
 
     property variant graphRoot
+    property alias nodeWrapper: m.nodeWrapper
 
     QtObject {
         id: m
-        property variant nodeModel: model.object
+        property variant nodeWrapper
         property variant nodeRoot: qml_nodeRoot
-    }
 
-    x: m.nodeModel.coord.x
-    y: m.nodeModel.coord.y
+        property int inputSpacing: 10
+        property int clipSize: 10
+        property int nbInput: m.nodeWrapper.nbInput
+        property int inputTopMargin: 10
+        property int outputTopMargin: 10
+        property int sideMargin: 10
+    }
+    objectName: "qmlNode_" + m.nodeWrapper.name
+
+    x: m.nodeWrapper.coord.x
+    y: m.nodeWrapper.coord.y
     z: _buttleData.graphWrapper.zMax
 
-    height: m.nodeModel.height
-    width: m.nodeModel.width
-
-    Component.onCompleted: {
-        // console.log("Node: ", objectName)
-        m.nodeModel.fitWidth(nodeText.width)
-        // _buttleData.graphWrapper.updateConnectionsCoord(m.nodeModel);
-    }
-
-    property int inputSpacing : m.nodeModel.clipSpacing
-    property int clipSize: m.nodeModel.clipSize
-    property int nbInput: m.nodeModel.nbInput
-    property int inputTopMargin: m.nodeModel.inputTopMargin
-    property int outputTopMargin: m.nodeModel.outputTopMargin
-    property int sideMargin: m.nodeModel.sideMargin
+    height: 40
+    width: 80
 
     signal drawSelection(int x, int y, int width, int height)
 
     color: "transparent"
-    focus: true
 
     MouseArea {
         id: nodeMouseArea
@@ -56,8 +54,8 @@ Rectangle {
                 }
 
                 // we add the node to the list of selected nodes (if it's not already selected)
-                if(!_buttleData.nodeIsSelected(m.nodeModel)) {
-                    _buttleData.appendToCurrentSelectedNodeWrappers(m.nodeModel)
+                if(!_buttleData.nodeIsSelected(m.nodeWrapper)) {
+                    _buttleData.appendToCurrentSelectedNodeWrappers(m.nodeWrapper)
                 }
 
                 _buttleData.graphWrapper.zMax += 1
@@ -76,14 +74,14 @@ Rectangle {
         onReleased: {
             // left button : we end moving
             if (mouse.button == Qt.LeftButton) {
-                _buttleManager.nodeManager.nodeMoved(m.nodeModel.name, parent.x, parent.y)
+                _buttleManager.nodeManager.nodeMoved(m.nodeWrapper.name, parent.x, parent.y)
                 stateMoving.state = "normal"
             }
         }
 
         // double click : we change the current param node
         onDoubleClicked: {
-            _buttleData.currentParamNodeWrapper = m.nodeModel;
+            _buttleData.currentParamNodeWrapper = m.nodeWrapper;
         }
 
     }
@@ -95,10 +93,10 @@ Rectangle {
         }
         onDrop: {
             if (acceptDrop) {
-                _buttleData.currentViewerNodeWrapper = m.nodeModel;
+                _buttleData.currentViewerNodeWrapper = m.nodeWrapper;
                 _buttleData.currentViewerFrame = 0;
                 // we assign the node to the viewer, at the frame 0
-                _buttleData.assignNodeToViewerIndex(m.nodeModel, 0);
+                _buttleData.assignNodeToViewerIndex(m.nodeWrapper, 0);
                 _buttleEvent.emitViewerChangedSignal()
             }
         }
@@ -108,31 +106,21 @@ Rectangle {
         id: nodeBorder
         anchors.centerIn: parent
         radius: 10
-        state: "normal"
+
+        height: parent.height
+        width: parent.width
+        color:  m.nodeWrapper.color
+        opacity: 0.5
 
         StateGroup {
             id: stateParamNode
              states: [
                  State {
-                     name: "normal"
-                     when: m.nodeModel != _buttleData.currentParamNodeWrapper
+                     name: "currentParamNode"
+                     when: m.nodeWrapper == _buttleData.currentParamNodeWrapper
                      PropertyChanges {
                          target: nodeBorder
-                         height: parent.height
-                         width: parent.width
-                         color:  m.nodeModel.color
-                         opacity: 0.5
-                     }
-                 },
-                 State {
-                     name: "currentParamNode"
-                     when: m.nodeModel == _buttleData.currentParamNodeWrapper
-                     PropertyChanges {
-                         target: nodeBorder;
-                         height: parent.height
-                         width: parent.width
-                         color:  m.nodeModel.color
-                         opacity: 1;
+                         opacity: 1
                      }
                  }
              ]
@@ -149,60 +137,87 @@ Rectangle {
         Text {
             id: nodeText
             anchors.centerIn: parent
-            text: m.nodeModel.nameUser
+            text: m.nodeWrapper.nameUser
             font.pointSize: 10
-            property bool isSelected: _buttleData.nodeIsSelected(m.nodeModel)
+            property bool isSelected: _buttleData.nodeIsSelected(m.nodeWrapper)
             
-            onTextChanged: {
-                m.nodeModel.fitWidth(nodeText.width);
-                // _buttleData.graphWrapper.updateConnectionsCoord(m.nodeModel);
-            }
+            // onTextChanged: {
+            //     m.nodeWrapper.fitWidth(nodeText.width);
+            //     // _buttleData.graphWrapper.updateConnectionsCoord(m.nodeModel);
+            // }
 
             Connections {
                 target: _buttleData
                 onCurrentSelectedNodeWrappersChanged: {
-                    nodeText.isSelected = _buttleData.nodeIsSelected(m.nodeModel)
+                    nodeText.isSelected = _buttleData.nodeIsSelected(m.nodeWrapper)
                 }
             }
-            color: isSelected ? m.nodeModel.color : "black"
+            color: isSelected ? m.nodeWrapper.color : "black"
         }
     }
-    // inputClips
-    Column {
-        id: nodeInputs
-        // anchors.left: parent.left
-        anchors.leftMargin: -m.nodeRoot.sideMargin
-        // anchors.top: parent.top
-        anchors.topMargin: m.nodeRoot.inputTopMargin
+    RowLayout {
+        id: inputClipsLayout
         anchors.fill: parent
-        spacing: m.nodeRoot.inputSpacing
-        Repeater {
-            model: m.nodeModel.srcClips
+
+        // inputClips
+        Item {
+            id: inputClipsItem
+            height: parent.height
+            Layout.minimumWidth: 20
+            Layout.alignment: Qt.AlignVCenter | Qt.AlignLeft
+
+
+            ListView {
+                id: inputClipsContainer
+                anchors.verticalCenter: parent.verticalCenter
+                width: childrenRect.width
+                height: childrenRect.height
+                spacing: 5
+                model: m.nodeWrapper.srcClips
+                delegate: Component {
+                    Clip {
+                        id: in_clip
+                        x_inGraph: qml_nodeRoot.x + inputClipsLayout.x + inputClipsItem.x + inputClipsContainer.x + x
+                        y_inGraph: qml_nodeRoot.y + inputClipsLayout.y + inputClipsItem.y + inputClipsContainer.y + y
+
+                        port: "input"
+                        clipWrapper: model.object
+                        graphRoot: m.nodeRoot.graphRoot
+                        nodeRoot: m.nodeRoot
+                        clipSize: m.clipSize
+                    }
+                }
+            }
+
+        }
+        Item {
+            height: parent.height
+            Layout.minimumWidth: 40
+            Layout.fillWidth: true
+        }
+
+        // outputClip
+        Item {
+            id: outputClipContainer
+
+            height: parent.height
+            implicitWidth: childrenRect.width
+            Layout.minimumWidth: childrenRect.width
+            Layout.preferredWidth: childrenRect.width
+            Layout.alignment: Qt.AlignVCenter | Qt.AlignRight
+            // always only one output clip
             Clip {
-                id: in_clip
-                clipWrapper: model.object
-                port: "input"
+                id: out_clip
+                anchors.verticalCenter: parent.verticalCenter
+                x_inGraph: qml_nodeRoot.x + outputClipContainer.x + x
+                y_inGraph: qml_nodeRoot.y + outputClipContainer.y + y
+
+                port: "output"
+                clipWrapper: m.nodeWrapper.outputClip
                 graphRoot: m.nodeRoot.graphRoot
                 nodeRoot: m.nodeRoot
+                clipSize: m.clipSize
             }
-        }
-    }
-    // outputClip
-    Column {
-        id: nodeOutputs
-        anchors.right: parent.right
-        anchors.rightMargin: -m.nodeRoot.sideMargin
-        anchors.top : parent.top
-        anchors.topMargin: m.nodeRoot.outputTopMargin
-        width: 1
-        height: 1
-        // always only one outputClip
-        Clip {
-            id: out_clip
-            clipWrapper: m.nodeModel.outputClip
-            port: "output"
-            graphRoot: m.nodeRoot.graphRoot
-            nodeRoot: m.nodeRoot
         }
     }
 
@@ -216,16 +231,16 @@ Rectangle {
         color: "transparent"
 
         Image {
-                id: deadMosquitoImage
-                anchors.fill: parent
-             }
+            id: deadMosquitoImage
+            anchors.fill: parent
+         }
 
         StateGroup {
             id: stateViewerNode
              states: [
                  State {
                      name: "normal"
-                     when: m.nodeModel != _buttleData.currentViewerNodeWrapper
+                     when: m.nodeWrapper != _buttleData.currentViewerNodeWrapper
                      PropertyChanges {
                          target: deadMosquitoImage;
                          source: ""
@@ -233,7 +248,7 @@ Rectangle {
                  },
                  State {
                      name: "currentViewerNode"
-                     when: m.nodeModel == _buttleData.currentViewerNodeWrapper
+                     when: m.nodeWrapper == _buttleData.currentViewerNodeWrapper
                      PropertyChanges {
                          target: deadMosquitoImage;
                          source: "file///" + _buttleData.buttlePath + "/gui/img/mosquito/mosquito_dead.png"
@@ -249,11 +264,11 @@ Rectangle {
         states: [
             State {
                 name: "normal"
-                PropertyChanges { target: m.nodeRoot; x: m.nodeModel.coord.x; y: m.nodeModel.coord.y }
+                PropertyChanges { target: m.nodeRoot; x: m.nodeWrapper.coord.x; y: m.nodeWrapper.coord.y }
             },
             State {
                 name: "moving"
-                PropertyChanges { target: m.nodeRoot; x: m.nodeModel.coord.x ; y: m.nodeModel.coord.y }
+                PropertyChanges { target: m.nodeRoot; x: m.nodeWrapper.coord.x ; y: m.nodeWrapper.coord.y }
             }
         ]
     }
@@ -281,6 +296,6 @@ Rectangle {
     }
 
     function nodeIsMoving() {
-        _buttleManager.nodeManager.nodeIsMoving(m.nodeModel.name, m.nodeRoot.x, m.nodeRoot.y)
+        _buttleManager.nodeManager.nodeIsMoving(m.nodeWrapper.name, m.nodeRoot.x, m.nodeRoot.y)
     }
 }

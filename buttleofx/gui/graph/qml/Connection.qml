@@ -2,12 +2,17 @@ import QtQuick 2.0
 
 Item {
     id: connectionItem
-    property variant connectionModel
+    property alias connectionWrapper: m.connectionWrapper
 
     property int x1
     property int y1
     property int x2
     property int y2
+
+    QtObject {
+        id: m
+        property variant connectionWrapper
+    }
 
     CanvasConnection {
         id: connection
@@ -18,11 +23,9 @@ Item {
         y2: parent.y2
 
         state: "normal"
-
-        QtObject {
-            id: m
-            property variant connectionModel: connectionItem.connectionModel
-        }
+        r: 0
+        g: 178
+        b: 161
 
         MouseArea {
             // Returns true if we click on the curve
@@ -43,7 +46,7 @@ Item {
             //Propagate the event to the connections below
             onPressed: mouse.accepted = intersectPath(mouseX, mouseY, 5)
             onClicked: {
-                _buttleData.currentConnectionWrapper = m.connectionModel
+                _buttleData.currentConnectionWrapper = m.connectionWrapper
                 _buttleData.clearCurrentSelectedNodeNames();
             }
 
@@ -58,13 +61,8 @@ Item {
             states: [
                 State {
                     name: "selectedConnection"
-                    when: m.connectionModel == _buttleData.currentConnectionWrapper
+                    when: m.connectionWrapper == _buttleData.currentConnectionWrapper
                     PropertyChanges { target: connection; r: 187; g: 187; b: 187 }
-                },
-                State {
-                    name: "normal"
-                    when: m.connectionModel != _buttleData.currentConnectionWrapper
-                    PropertyChanges { target: connection; r: 0; g: 178; b: 161 }
                 }
             ]
             // Need to re-paint the connection after each change of state.

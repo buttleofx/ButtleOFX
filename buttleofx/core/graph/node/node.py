@@ -68,7 +68,7 @@ class Node(object):
         self._oldCoord = nodeCoord
         self._color = (0, 178, 161)
         self._nbInput = self._tuttleNode.asImageEffectNode().getClipImageSet().getNbClips() - 1
-        self._clips = [clip.getName() for clip in self._tuttleNode.asImageEffectNode().getClipImageSet().getClips()]
+        self._clipWrappers = [clip.getName() for clip in self._tuttleNode.asImageEffectNode().getClipImageSet().getClips()]
 
         # buttle params
         self._params = []
@@ -113,7 +113,7 @@ class Node(object):
         return self._nbInput
 
     def getClips(self):
-        return self._clips
+        return self._clipWrappers
 
     def getParams(self):
         return self._params
@@ -149,7 +149,7 @@ class Node(object):
         self.nodeLookChanged()
 
     def setClips(self, clips):
-        self._clips = clips
+        self._clipWrappers = clips
 
     ######## emit signal ########
 

@@ -35,7 +35,7 @@ class GraphWrapper(QtCore.QObject):
         self._graph = graph
 
         # links core signals to wrapper layer
-        self._graph.nodesChanged.connect(self.updateNodeWrappers)
+        self._graph.nodesChanged.connect(self.updateWrappers)
         self._graph.connectionsChanged.connect(self.updateConnectionWrappers)
 
         logging.info("Gui : GraphWrapper created")
@@ -146,6 +146,10 @@ class GraphWrapper(QtCore.QObject):
 
     ################################################ UPDATE WRAPPER LAYER ################################################
 
+    def updateWrappers(self):
+        self.updateNodeWrappers()
+        self.updateConnectionWrappers()
+        
     def updateNodeWrappers(self):
         """
             Updates the nodeWrappers when the signal nodesChanged has been emitted.

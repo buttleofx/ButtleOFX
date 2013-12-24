@@ -15,24 +15,41 @@ class ClipWrapper(QtCore.QObject):
         self._clipName = clipName
         
         # determined by QML, but declared in model to be shared with connections
-        self._coord = QtCore.QPointF(50.0, 50.0)
+        self._xCoord = 1234
+        self._yCoord = 123
 
     def getNodeName(self):
         return self._nodeName
 
     def getClipName(self):
         return self._clipName
+    
+    def getFullName(self):
+        return "%s.%s" % (self.getNodeName(), self.getClipName())
 
-    def getCoord(self):
-        return self._coord
+    def getXCoord(self):
+        # print("ClipWrapper  << getCoord:", self.getFullName(), self._coord.x(), self._coord.y())
+        return self._xCoord
 
-    def setCoord(self, point):
-        # print("ClipWrapper setCoord:", self, point.x(), point.y())
-        self._coord = point
-        self.coordChanged.emit()
+    def getYCoord(self):
+        # print("ClipWrapper  << getCoord:", self.getFullName(), self._coord.x(), self._coord.y())
+        return self._yCoord
+
+    def setXCoord(self, x):
+        # print("ClipWrapper  >> setXCoord:", self.getFullName(), x)
+        self._xCoord = x
+        self.xCoordChanged.emit()
+
+    def setYCoord(self, y):
+        # print("ClipWrapper  >> setYCoord:", self.getFullName(), y)
+        self._yCoord = y
+        self.yCoordChanged.emit()
 
     name = QtCore.pyqtProperty(str, getClipName, constant=True)
     nodeName = QtCore.pyqtProperty(str, getNodeName, constant=True)
+    fullName = QtCore.pyqtProperty(str, getFullName, constant=True)
 
-    coordChanged = QtCore.pyqtSignal()
-    coord = QtCore.pyqtProperty(QtCore.QPointF, getCoord, setCoord, notify=coordChanged)
+    xCoordChanged = QtCore.pyqtSignal()
+    yCoordChanged = QtCore.pyqtSignal()
+    xCoord = QtCore.pyqtProperty(int, getXCoord, setXCoord, notify=xCoordChanged)
+    yCoord = QtCore.pyqtProperty(int, getYCoord, setYCoord, notify=yCoordChanged)

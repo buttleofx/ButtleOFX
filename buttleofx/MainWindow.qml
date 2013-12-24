@@ -248,15 +248,16 @@ ApplicationWindow {
             orientation: Qt.Horizontal
 
             SplitView {
-                width: 0.7*parent.width
-                height: parent.height
+                implicitWidth: 0.7*parent.width
+                implicitHeight: parent.height
                 orientation: Qt.Vertical
+                Layout.fillWidth: true
 
                 Player {
                     id: player
                     Layout.minimumHeight: 200
                     Layout.fillHeight: true
-                    width: parent.width
+                    implicitWidth: parent.width
 
                     node: _buttleData.currentViewerNodeWrapper
                 }
@@ -265,8 +266,8 @@ ApplicationWindow {
                     id: graphEditor
                     Layout.minimumHeight: 200
                     Layout.fillHeight: true
-                    height: 0.4 * parent.height
-                    width: parent.width
+                    implicitHeight: 0.4 * parent.height
+                    implicitWidth: parent.width
                 }
             }
 

@@ -1,9 +1,8 @@
 import QtQuick 2.0
 import QtQuick.Layouts 1.0
 
-Rectangle {
+Item {
     id: graphEditor
-    color: "#212121"
 
     ColumnLayout {
         anchors.fill: parent
@@ -11,10 +10,10 @@ Rectangle {
 
         Tools {
             id: tools
-            width : parent.width
+            implicitWidth : parent.width
             Layout.minimumHeight: 40
             Layout.preferredHeight: 40
-            height: 40
+            implicitHeight: 40
             menuComponent: null
 
             onClickCreationNode: {
@@ -24,8 +23,9 @@ Rectangle {
         }
         Graph {
             id: graph
-            width: parent.width
+            implicitWidth: parent.width
             Layout.minimumHeight: 100
+            implicitHeight: 300
             Layout.fillHeight: true
             clip: true
 

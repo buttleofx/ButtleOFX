@@ -9,6 +9,7 @@ class ConnectionWrapper(QtCore.QObject):
     """
 
     def __init__(self, connection, view):
+        # print("ConnectionWrapper constructor")
         super(ConnectionWrapper, self).__init__(view)
 
         self._connection = connection

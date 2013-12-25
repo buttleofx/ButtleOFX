@@ -39,6 +39,9 @@ class ParamChoice(Param):
     def getValue(self):
         return self._tuttleParam.getStringValue()
 
+    def getCurrentIndex(self):
+        return self._tuttleParam.getIntValue()
+
     def getListValue(self):
         return self._listValue
 

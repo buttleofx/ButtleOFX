@@ -133,6 +133,8 @@ Item {
                 Layout.minimumHeight: 50
                 Layout.fillHeight: true
 
+                Layout.preferredWidth: parent.width - 10
+
                 Component {
                     id: viewer_component
                     Viewer {
@@ -272,6 +274,14 @@ Item {
                         // Mosquito
                         Rectangle {
                             id: mosquitoTool
+                            StateGroup {
+                                id: mosquitoState
+                                states: State {
+                                    name: "dragging"
+                                    when: mosquitoMouseArea.pressed
+                                    PropertyChanges { target: mosquitoTool; x: mosquitoTool.x; y: mosquitoTool.y }
+                                }
+                            }
                             width: 28
                             height: 28
                             color : mosquitoMouseArea.containsMouse ? "#343434" : "transparent"
@@ -283,14 +293,19 @@ Item {
                                 anchors.centerIn: parent
                             }
 
+                            Drag.active: mosquitoMouseArea.drag.active
+                            Drag.hotSpot.x: 14
+                            Drag.hotSpot.y: 14
+                            Drag.keys: "mosquitoMouseArea"
+
                             MouseArea {
-                                hoverEnabled: true
                                 id: mosquitoMouseArea
                                 anchors.fill: parent
 
-                                onPressed: {
-                                    //_buttleManager.viewerManager.mosquitoDragEvent()
-                                }
+                                hoverEnabled: true
+
+                                onReleased: parent.Drag.drop()
+								drag.target: parent
                             }
                         }
 

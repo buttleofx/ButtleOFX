@@ -1,5 +1,6 @@
 import QtQuick 2.0
 import FolderListViewItem 1.0
+import QtQuick.Dialogs 1.0
 
 /*ParamString is an input field*/
 
@@ -14,13 +15,13 @@ Item {
     visible: !paramObject.isSecret
     height: paramObject.isSecret ? 0 : implicitHeight
 
-    FolderListView {
+  /*  FolderListView {
         id: finder
         property bool isReader: _buttleData.currentParamNodeWrapper.nodeType.indexOf("reader") != -1
         typeDialog: isReader ? "OpenFile" : "SaveFile"
         messageDialog: isReader ? "Open file" : "Save file as"
     }
-
+*/
     /*Container of the textInput*/
     function createInput(paramObject)
     {
@@ -168,7 +169,8 @@ Item {
                     }
                 }
             ]
-        }
+        }//Rectangle
+
         // hidden by default
         Image {
             id: folderforFileOrDirectory
@@ -176,19 +178,29 @@ Item {
             width: (paramObject.stringType == "OfxParamStringIsFilePath" || paramObject.stringType == "OfxParamStringIsDirectoryPath") ? 20 : 0
             y: 2
 
-            MouseArea {
-                id: buttonmousearea
-                anchors.fill: parent   
+            MouseArea{
+                anchors.fill: parent
+
                 onPressed: {
-//                    finder.browseFile(_buttleData.currentParamNodeWrapper)
-                    finder.browseFile()
-                    if( finder.propFile )
-                    {
-                        paramObject.value = finder.propFile
-                        paramObject.pushValue(paramObject.value)
+                    folderfiledialog.open()
+                }
+
+                // open a file dialog to select a file
+                FileDialog {
+
+                    id: folderfiledialog
+                    title: "Open"
+                    folder: _buttleData.buttlePath
+                    nameFilters: [ "All files (*)" ]
+                    selectedNameFilter: "All files (*)"
+                    onAccepted: {
+                        if (folderfiledialog.fileUrl){
+                            paramObject.value = folderfiledialog.fileUrl
+                            paramObject.pushValue(paramObject.value)
+                        }
                     }
                 }
-            }
-        }
-    }
+            }//MouseArea
+        }//Image
+    }//Row
 }

@@ -264,7 +264,7 @@ Item {
                                     radius: 3
                                     TextInput {
                                         id: nodeColorRGBInput
-                                        text: currentParamNode ? currentParamNode.color : ""
+                                        //text: currentParamNode ? currentParamNode.color : ""
                                         anchors.left: parent.left
                                         anchors.verticalCenter: parent.verticalCenter
                                         anchors.leftMargin: 5

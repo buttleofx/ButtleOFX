@@ -42,7 +42,7 @@ Rectangle {
         anchors.fill: parent
         drag.target: parent
         drag.axis: Drag.XandYAxis
-        acceptedButtons: Qt.LeftButton | Qt.RightButton
+        acceptedButtons: Qt.LeftButton | Qt.RightButton | Qt.MidButton
         onPressed: {
             // left button : we change the current selected nodes & we start moving
             if (mouse.button == Qt.LeftButton) {
@@ -79,6 +79,14 @@ Rectangle {
                 _buttleManager.nodeManager.nodeMoved(m.nodeWrapper.name, parent.x, parent.y)
                 stateMoving.state = "normal"
             }
+             //middle button : assign the node to the viewer
+            else if (mouse.button == Qt.MidButton){
+                _buttleData.currentViewerNodeWrapper = m.nodeModel
+                _buttleData.currentViewerFrame = 0
+                // we assign the node to the viewer, at the frame 0
+                _buttleData.assignNodeToViewerIndex(m.nodeModel, 0)
+                _buttleEvent.emitViewerChangedSignal()
+            }
             var dropStatus = parent.Drag.drop()
             if (dropStatus !== Qt.IgnoreAction)
                 console.log("Accepted!")
@@ -86,26 +94,23 @@ Rectangle {
 
         // double click : we change the current param node
         onDoubleClicked: {
-            _buttleData.currentParamNodeWrapper = m.nodeWrapper;
+            _buttleData.currentParamNodeWrapper = m.nodeWrapper
         }
 
     }
 
-   /* ExternDropArea {
+    DropArea {
         anchors.fill: parent
-        onDragEnter: {
-            acceptDrop = hasText && text=="mosquito_of_the_dead";
+        keys: "mosquitoMouseArea"
+
+        onDropped: {
+            _buttleData.currentViewerNodeWrapper = m.nodeWrapper
+            _buttleData.currentViewerFrame = 0
+            // we assign the node to the viewer, at the frame 0
+            _buttleData.assignNodeToViewerIndex(m.nodeModel, 0)
+            _buttleEvent.emitViewerChangedSignal()
         }
-        onDrop: {
-            if (acceptDrop) {
-                _buttleData.currentViewerNodeWrapper = m.nodeWrapper;
-                _buttleData.currentViewerFrame = 0;
-                // we assign the node to the viewer, at the frame 0
-                _buttleData.assignNodeToViewerIndex(m.nodeWrapper, 0);
-                _buttleEvent.emitViewerChangedSignal()
-            }
-        }
-    }*/
+    }
 
     Rectangle {
         id: nodeBorder

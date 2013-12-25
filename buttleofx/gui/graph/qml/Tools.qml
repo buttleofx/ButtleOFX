@@ -1,5 +1,5 @@
 import QtQuick 2.0
-import FolderListViewItem 1.0
+import QtQuick.Dialogs 1.0
 
 Rectangle {
     id: tools
@@ -42,18 +42,23 @@ Rectangle {
 
             ToolElement {
 
-                FolderListView {
+                FileDialog {
                     id: finderLoadGraph
-                    typeDialog: "OpenFile"
-                    messageDialog: "Load a graph"
-                    directoryDialog: _buttleData.buttlePath
+                    title: "Open a graph"
+                    folder: _buttleData.buttlePath
+                    nameFilters: [ "ButtleOFX Graph files (*.bofx)", "All files (*)" ]
+                    selectedNameFilter: "All files (*)"
+                    onAccepted: {
+                        console.log(finderLoadGraph.fileUrl)
+                        _buttleData.loadData(finderLoadGraph.fileUrl)
+                    }
                 }
 
                 imageSource: parent.imgPath + "open.png"
                 imageSourceHover: parent.imgPath + "open_hover.png"
                 imageSourceLocked: parent.imgPath + "open_locked.png"
                 buttonName: "load"
-                buttonText: "Load a graph (Ctrl+L)"
+                buttonText: "Open a graph (Ctrl+O)"
                 locked: false
 
                 onClicked: {
@@ -66,11 +71,14 @@ Rectangle {
 
             ToolElement {
 
-                FolderListView {
+                FileDialog {
                     id: finderSaveGraph
-                    typeDialog: "SaveFile"
-                    messageDialog: "Save the graph"
-                    directoryDialog: _buttleData.buttlePath
+                    title: "Save the graph"
+                    folder: _buttleData.buttlePath
+                    nameFilters: [ "ButtleOFX Graph files (*.bofx)", "All files (*)" ]
+                    selectedNameFilter: "All files (*)"
+                    onAccepted: _buttleData.saveData(finderSaveGraph.fileUrl)
+                    selectExisting: false
                 }
 
                 imageSource: parent.imgPath + "save.png"
@@ -171,7 +179,7 @@ Rectangle {
                 imageSourceHover: parent.imgPath + "delete_hover.png"
                 imageSourceLocked: parent.imgPath + "delete_locked.png"
                 buttonName: "deleteNode"
-                buttonText: "Delete the node (suppr)"
+                buttonText: "Delete the node (del)"
                 locked: (!_buttleData.currentSelectedNodeWrappers.isEmpty() || _buttleData.currentConnectionWrapper)? false : true
 
                 onClicked: {

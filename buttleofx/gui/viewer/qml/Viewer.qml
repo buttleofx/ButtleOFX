@@ -68,9 +68,9 @@ Rectangle {
             anchors.fill: parent
             property real nbSteps: 10
             onWheel: {
-                var deltaF = (angleDelta.y / 120.0) / nbSteps
+                var deltaF = (wheel.angleDelta.y / 120.0) / nbSteps
                 var newScale = viewport.imgScale * (1.0 + deltaF)
-                viewport.setScaleAtPos_viewportCoord( newScale, pos.x, (height-pos.y) )
+                viewport.setScaleAtPos_viewportCoord( newScale, wheel.x, (height-wheel.y) )
                 viewport.fittedMode = false
             }
         }

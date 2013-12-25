@@ -81,10 +81,10 @@ Rectangle {
             }
              //middle button : assign the node to the viewer
             else if (mouse.button == Qt.MidButton){
-                _buttleData.currentViewerNodeWrapper = m.nodeModel
+                _buttleData.currentViewerNodeWrapper = m.nodeWrapper
                 _buttleData.currentViewerFrame = 0
                 // we assign the node to the viewer, at the frame 0
-                _buttleData.assignNodeToViewerIndex(m.nodeModel, 0)
+                _buttleData.assignNodeToViewerIndex(m.nodeWrapper, 0)
                 _buttleEvent.emitViewerChangedSignal()
             }
             var dropStatus = parent.Drag.drop()
@@ -107,7 +107,7 @@ Rectangle {
             _buttleData.currentViewerNodeWrapper = m.nodeWrapper
             _buttleData.currentViewerFrame = 0
             // we assign the node to the viewer, at the frame 0
-            _buttleData.assignNodeToViewerIndex(m.nodeModel, 0)
+            _buttleData.assignNodeToViewerIndex(m.nodeWrapper, 0)
             _buttleEvent.emitViewerChangedSignal()
         }
     }
@@ -153,7 +153,7 @@ Rectangle {
             
             // onTextChanged: {
             //     m.nodeWrapper.fitWidth(nodeText.width);
-            //     // _buttleData.graphWrapper.updateConnectionsCoord(m.nodeModel);
+            //     // _buttleData.graphWrapper.updateConnectionsCoord(m.nodeWrapper);
             // }
 
             Connections {
@@ -261,7 +261,7 @@ Rectangle {
                      when: m.nodeWrapper == _buttleData.currentViewerNodeWrapper
                      PropertyChanges {
                          target: deadMosquitoImage;
-                         source: "file///" + _buttleData.buttlePath + "/gui/img/mosquito/mosquito_dead.png"
+                         source: _buttleData.buttlePath + "/gui/img/mosquito/mosquito_dead.png"
                      }
                  }
              ]

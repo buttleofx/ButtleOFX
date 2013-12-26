@@ -18,7 +18,7 @@ Rectangle {
         property variant nodeRoot: qml_nodeRoot
 
         property int inputSpacing: 10
-        property int clipSize: 10
+        property int clipSize: 9
         property int nbInput: m.nodeWrapper.nbInput
         property int inputTopMargin: 10
         property int outputTopMargin: 10
@@ -144,9 +144,11 @@ Rectangle {
         anchors.margins: 4
         color: "#bbbbbb"
         radius: 8
+        clip: true
         Text {
             id: nodeText
-            anchors.centerIn: parent
+            anchors.verticalCenter: parent.verticalCenter
+            x: 5
             text: m.nodeWrapper.nameUser
             font.pointSize: 10
             property bool isSelected: _buttleData.nodeIsSelected(m.nodeWrapper)
@@ -184,6 +186,7 @@ Rectangle {
                 height: childrenRect.height
                 spacing: 5
                 model: m.nodeWrapper.srcClips
+
                 delegate: Component {
                     Clip {
                         id: in_clip
@@ -195,6 +198,7 @@ Rectangle {
                         graphRoot: m.nodeRoot.graphRoot
                         nodeRoot: m.nodeRoot
                         clipSize: m.clipSize
+                        x:-10
                     }
                 }
             }
@@ -227,6 +231,7 @@ Rectangle {
                 graphRoot: m.nodeRoot.graphRoot
                 nodeRoot: m.nodeRoot
                 clipSize: m.clipSize
+                x:10
             }
         }
     }

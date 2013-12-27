@@ -222,6 +222,7 @@ Rectangle {
                     connections.tmpConnectionX1 = x_inGraph + mouse.x
                     connections.tmpConnectionY1 = y_inGraph + mouse.y
                 }
+                //Hack to position correctly the handle (the drag in QML creates a gap)
                 handle.x = mouseX - handle.width/2
                 handle.y = mouseY - handle.height/2
            }

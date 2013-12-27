@@ -42,6 +42,7 @@ Rectangle {
         anchors.fill: parent
         drag.target: parent
         drag.axis: Drag.XandYAxis
+        Drag.keys: "node"
         acceptedButtons: Qt.LeftButton | Qt.RightButton | Qt.MidButton
         onPressed: {
             // left button : we change the current selected nodes & we start moving

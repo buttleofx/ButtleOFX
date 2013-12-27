@@ -10,6 +10,7 @@ Item {
     property int x2
     property int y2
 
+
     QtObject {
         id: m
         property variant connectionWrapper
@@ -76,16 +77,49 @@ Item {
             id: droparea1
             objectName: "DropArea"
             anchors.fill: parent
+            Drag.keys: "node"
             onDropped: {
-                drop.accept()
-                console.log("drop : " + drag.source)
+                console.log("111111111111111111111"+drop.source.nodeWrapper.srcClips)
+                if(drop.source.nodeWrapper.name != clipIn.nodeName && drop.source.nodeWrapper.name != clipOut.nodeName){
+                    if(drop.source.nodeWrapper.getClip("Source") != null){
+                        drop.accept()
+                        //Create two connections from one and delete the previous one
+                        _buttleManager.connectionManager.dissociateConnection(clipOut, clipIn, drop.source.nodeWrapper.getClip("Source"), drop.source.nodeWrapper.getClip("Output"), m.connectionWrapper)
+                    }
+                }
+                dropIndicator.state = ""
             }
             onEntered: {
+                if(drag.source.nodeWrapper.name != clipIn.nodeName && drag.source.nodeWrapper.name != clipOut.nodeName){
+                    dropIndicator.state = "entereddrop"
+                }
+            }
+            onExited: {
                 console.log("dropConnection")
+                dropIndicator.state = ""
             }
             Item{
                 anchors.fill: parent
             }
+        }
+
+        Rectangle{
+            id: dropIndicator
+            anchors.centerIn: parent
+            width: 12
+            height: 12
+            radius: 0.5 * width
+            color: "#00b2a1"
+            visible: false
+            states: [
+                State {
+                   name: "entereddrop"
+                   PropertyChanges {
+                      target: dropIndicator
+                      visible: true
+                   }
+                }
+            ]
         }
 
     }

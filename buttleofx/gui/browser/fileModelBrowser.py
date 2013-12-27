@@ -84,16 +84,17 @@ class FileModelBrowser(QtQuick.QQuickItem):
                 for f in files:
                     self._fileItems.append(FileItem(folder, f, FileItem.Type.File))
                     
-            if self._nameFilter == ".jpg" or self._nameFilter == ".png":
+            if (self._nameFilter == ".jpg") or (self._nameFilter == ".png"):
                 for f in files:
-                    begin = f.find(".")
-                    format = f[begin:len(f)]
-                    if format is self._nameFilter:
-                        print("Only ",format," files")
-                        self._fileItems.append(FileItem(folder, f, FileItem.Type.File))
-                        
-                
-               # self._fileItems.append(FileItem(folder, f, FileItem.Type.File))
+                    (filename, extension) = os.path.splitext(f)
+                    print(extension)
+                    
+                    print(extension, "is", self._nameFilter, ":", format is self._nameFilter)
+                    if extension is self._nameFilter:
+                        print("Only ", extension, " files")
+                        #self._fileItems.append(FileItem(folder, f, FileItem.Type.File))
+                          
+                self._fileItems.append(FileItem(folder, f, FileItem.Type.File))
         except Exception:
             pass
         self._fileItemsModel.setObjectList(self._fileItems)
@@ -120,7 +121,7 @@ class FileModelBrowser(QtQuick.QQuickItem):
 #        Jpeg = '.jpg'
 #        Png = 'png'
 
-    _nameFilter = ".png"
+    _nameFilter = ".jpg"
     
     def getFilter(self):
         return self._nameFilter

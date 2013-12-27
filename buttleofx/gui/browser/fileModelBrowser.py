@@ -80,29 +80,20 @@ class FileModelBrowser(QtQuick.QQuickItem):
                 self._fileItems.append(FileItem(folder, d, FileItem.Type.Folder))
             
             if self._nameFilter == "*":
-                print("On recupère tous les fichiers")
+                print("All files")
                 for f in files:
                     self._fileItems.append(FileItem(folder, f, FileItem.Type.File))
                     
-            if self._nameFilter == ".jpg":
-                print("On recupère seulement les fichiers en ",self._nameFilter)
+            if self._nameFilter == ".jpg" or self._nameFilter == ".png":
                 for f in files:
                     begin = f.find(".")
                     format = f[begin:len(f)]
-                    print(format)
                     if format is self._nameFilter:
-                        print("On recupère seulement les fichiers en ",format)
+                        print("Only ",format," files")
                         self._fileItems.append(FileItem(folder, f, FileItem.Type.File))
                         
-            if self._nameFilter == ".png":
-                for f in files:
-                    begin = f.find(".")
-                    format = f[begin:len(f)]
-                    if format is self._nameFilter:
-                        print("On recupère seulement les fichiers en ",format)
-                        self._fileItems.append(FileItem(folder, f, FileItem.Type.File))
                 
-                self._fileItems.append(FileItem(folder, f, FileItem.Type.File))
+               # self._fileItems.append(FileItem(folder, f, FileItem.Type.File))
         except Exception:
             pass
         self._fileItemsModel.setObjectList(self._fileItems)

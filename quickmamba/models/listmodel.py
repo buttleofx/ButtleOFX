@@ -30,7 +30,7 @@ class QObjectListModel(QtCore.QAbstractListModel):
     def __len__(self):
         return self.size()
 
-    def __nonzero__(self):
+    def __bool__(self):
         return self.size() > 0
 
     def __getitem__(self, index):

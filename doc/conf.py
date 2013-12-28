@@ -23,7 +23,7 @@ print("sys.path: ", sys.path)
 # hack for readthedocs to cause it to run doxygen first
 on_rtd = os.environ.get('READTHEDOCS', None) == 'True'
 if on_rtd:
-    if ! os.path.exists("doc/build_rst"):
+    if not os.path.exists("doc/build_rst"):
         os.mkdir("doc/build_rst")
     
     import subprocess

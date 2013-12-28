@@ -12,22 +12,27 @@
 
 import sys, os
 
+file_dir = os.path.abspath(os.path.dirname(__file__))
+
 # If extensions (or modules to document with autodoc) are in another directory,
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
-sys.path.insert(0, os.path.abspath('../..'))
-sys.path.insert(0, os.path.abspath('../../QuickMamba'))
+sys.path.insert(0, os.path.abspath(os.path.join(file_dir, '..')))
+sys.path.insert(0, os.path.abspath(os.path.join(file_dir, '../QuickMamba')))
 
+print("file_dir: ", file_dir)
 print("sys.path: ", sys.path)
 
-# hack for readthedocs to cause it to run doxygen first
-on_rtd = os.environ.get('READTHEDOCS', None) == 'True'
+# hack for readthedocs to cause it to run spinx-apidoc first
+# on_rtd = os.environ.get('READTHEDOCS', None) == 'True'
+on_rtd = True
 if on_rtd:
-    if not os.path.exists("doc/build_rst"):
-        os.mkdir("doc/build_rst")
+    build_rst_path = os.path.join(file_dir, "build_rst")
+    if not os.path.exists(build_rst_path):
+        os.mkdir(build_rst_path)
     
     import subprocess
-    subprocess.call(['sphinx-apidoc', '-o', 'doc/build_rst', 'buttleofx', '--force'])
+    subprocess.call(['sphinx-apidoc', '-o', 'build_rst', '../buttleofx', '--force'])
 
 
 # -- General configuration -----------------------------------------------------

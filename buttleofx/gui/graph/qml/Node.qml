@@ -30,8 +30,8 @@ Rectangle {
     y: m.nodeWrapper.coord.y
     z: _buttleData.graphWrapper.zMax
 
-    height: 40
-    width: 80
+    //height: 40
+    //width: 120
 
     signal drawSelection(int x, int y, int width, int height)
 

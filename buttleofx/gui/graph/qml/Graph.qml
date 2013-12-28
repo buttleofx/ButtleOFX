@@ -12,6 +12,8 @@ Item {
     property alias originX: graphContainer.x
     property alias originY: graphContainer.y
 
+    property int nodeWidth: 80
+
     signal clickCreationNode(string nodeType)
     signal drawSelection(int selectionX, int selectionY, int selectionWidth, int selectionHeight)
 
@@ -77,12 +79,16 @@ Item {
             }
         }
         onWheel: {
-                if (wheel.angleDelta.y > 0)
+                if(wheel.angleDelta.y > 0){
                     console.log("+++++++++++++++++++++")
-                else
+                    nodeWidth = nodeWidth +1
+                }else{
                     console.log("---------------------")
+                    nodeWidth = nodeWidth -1
+                }
 
                 _buttleData.zoom(wheel.angleDelta.y)
+
         }
     }
     onDrawSelection: {
@@ -149,6 +155,8 @@ Item {
                 Node {
                     nodeWrapper: model.object
                     graphRoot: m.graphRoot
+                    height: nodeWidth /2
+                    width: nodeWidth
                 }
             }
         }

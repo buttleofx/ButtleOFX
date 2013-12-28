@@ -361,6 +361,7 @@ class ButtleData(QtCore.QObject):
             else:
               i.xCoord -= 5   
         self._graphWrapper.updateNodeWrappers()
+        self._graphWrapper.updateConnectionWrappers()
         
     ################################################## PLUGIN LIST #####################################################
 

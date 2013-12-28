@@ -351,7 +351,17 @@ class ButtleData(QtCore.QObject):
             Returns True if we can paste (= if there is at least one node selected).
         """
         return self._currentCopiedNodesInfo != {}
-
+        
+    @QtCore.pyqtSlot(int)
+    def zoom(self, delta):
+        nodes = self._graphWrapper.getNodeWrappers()
+        for i in nodes:
+            if delta >= 0:
+              i.xCoord += 5
+            else:
+              i.xCoord -= 5   
+        self._graphWrapper.updateNodeWrappers()
+        
     ################################################## PLUGIN LIST #####################################################
 
     def getPluginsIdentifiers(self):

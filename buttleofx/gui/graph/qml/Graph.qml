@@ -76,6 +76,14 @@ Item {
                 m.graphRoot.originY = graphContainer_yStart + yOffset
             }
         }
+        onWheel: {
+                if (wheel.angleDelta.y > 0)
+                    console.log("+++++++++++++++++++++")
+                else
+                    console.log("---------------------")
+
+                _buttleData.zoom(wheel.angleDelta.y)
+        }
     }
     onDrawSelection: {
         _buttleData.addNodeWrappersInRectangleSelection(selectionX, selectionY, selectionWidth, selectionHeight);

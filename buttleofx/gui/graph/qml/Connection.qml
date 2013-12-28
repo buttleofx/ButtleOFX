@@ -79,13 +79,11 @@ Item {
             anchors.fill: parent
             Drag.keys: "node"
             onDropped: {
-                console.log("111111111111111111111"+drop.source.nodeWrapper.srcClips)
+                //we assure that the node dropped is not part of the actual connection
                 if(drop.source.nodeWrapper.name != clipIn.nodeName && drop.source.nodeWrapper.name != clipOut.nodeName){
-                    if(drop.source.nodeWrapper.getClip("Source") != null){
                         drop.accept()
                         //Create two connections from one and delete the previous one
-                        _buttleManager.connectionManager.dissociateConnection(clipOut, clipIn, drop.source.nodeWrapper.getClip("Source"), drop.source.nodeWrapper.getClip("Output"), m.connectionWrapper)
-                    }
+                        _buttleManager.connectionManager.dissociateConnection(clipOut, clipIn, drop.source.nodeWrapper.getClip("Source"), drop.source.nodeWrapper.getClip(drop.source.nodeWrapper.outputClip.name), m.connectionWrapper)
                 }
                 dropIndicator.state = ""
             }

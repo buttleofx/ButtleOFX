@@ -29,7 +29,7 @@ Item {
         property bool selectMode: true
 
         anchors.fill: parent
-        // hoverEnabled: true
+        hoverEnabled: true
         acceptedButtons: Qt.LeftButton
         onPressed: {
             xStart = mouse.x
@@ -81,13 +81,12 @@ Item {
         onWheel: {
                 if(wheel.angleDelta.y > 0){
                     console.log("+++++++++++++++++++++")
-                    nodeWidth = nodeWidth +1
+                    nodeWidth = nodeWidth +5
                 }else{
                     console.log("---------------------")
-                    nodeWidth = nodeWidth -1
+                    nodeWidth = nodeWidth -5
                 }
-
-                _buttleData.zoom(wheel.angleDelta.y)
+                _buttleData.zoom(wheel.angleDelta.y, mouseX, mouseY, nodeWidth)
 
         }
     }

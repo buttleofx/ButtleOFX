@@ -354,25 +354,46 @@ class ButtleData(QtCore.QObject):
         """
         return self._currentCopiedNodesInfo != {}
         
-    @QtCore.pyqtSlot(int, float, float, float)
-    def zoom(self, delta, centerX, centerY, nodeWidth):
-        nodes = self._graphWrapper.getNodeWrappers()
+    #@QtCore.pyqtSlot(int, float, float, float)
+    #def zoom(self, delta, centerX, centerY, nodeWidth):
+     #   nodes = self._graphWrapper.getNodeWrappers()
    
-        for i in nodes:
-            nodeX = i.xCoord + nodeWidth/2
-            stepX = ((nodeX-centerX)/(math.fabs(nodeX-centerX)))*5
-            stepY = (i.yCoord-centerY)/(math.fabs(i.yCoord-centerY))
-            if delta < 0 : #dezoom
-                if math.fabs(nodeX-centerX) > 6 :
-                    i.xCoord -= stepX
-                if math.fabs(i.yCoord-centerY) > 2 :
-                    i.yCoord -= stepY
-            else : #zoom
-                if math.fabs(nodeX-centerX) > 6 :
-                    i.xCoord += stepX
-                if math.fabs(i.yCoord-centerY) > 2 :
-                    i.yCoord += stepY
+      #  for i in nodes:
+       #     nodeX = i.xCoord + nodeWidth/2
+        #    stepX = ((nodeX-centerX)/(math.fabs(nodeX-centerX)))*5
+         #   stepY = (i.yCoord-centerY)/(math.fabs(i.yCoord-centerY))
+          #  if delta < 0 : #dezoom
+           #     if math.fabs(nodeX-centerX) > 6 :
+            #        i.xCoord -= stepX
+             #   if math.fabs(i.yCoord-centerY) > 2 :
+              #      i.yCoord -= stepY
+            #else : #zoom
+             #   if math.fabs(nodeX-centerX) > 6 :
+              #      i.xCoord += stepX
+               # if math.fabs(i.yCoord-centerY) > 2 :
+                #    i.yCoord += stepY
                 
+        #self._graphWrapper.updateNodeWrappers()
+        #self._graphWrapper.updateConnectionWrappers()
+        
+    @QtCore.pyqtSlot(int, int, int, int, int, int, float, float, float)
+    def zoom(self, delta, width, height, originX, originY, nodeWidth, zoomCoeff, graphPreviousWidth, graphPreviousHeight):
+        newWidth = zoomCoeff * width
+        newHeight = zoomCoeff * height
+        reinitOriginX = (width * 0.5) - (graphPreviousWidth * 0.5)
+        reinitOriginY = (height * 0.5) - (graphPreviousHeight * 0.5)
+        newOriginX = (width * 0.5) - (newWidth * 0.5)
+        newOriginY = (height * 0.5) - (newHeight * 0.5)  
+
+        nodes = self._graphWrapper.getNodeWrappers()
+        for i in nodes:
+            if graphPreviousWidth != width :
+                i.xCoord = ((i.xCoord - reinitOriginX) * width) / graphPreviousWidth
+                i.yCoord = ((i.yCoord - reinitOriginY) * height) / graphPreviousHeight
+                
+            i.xCoord = ((i.xCoord * newWidth) / width) + newOriginX #- (nodeWidth * 0.5)
+            i.yCoord = ((i.yCoord * newHeight) / height) + newOriginY #- (nodeWidth * 0.5)
+   
         self._graphWrapper.updateNodeWrappers()
         self._graphWrapper.updateConnectionWrappers()
         

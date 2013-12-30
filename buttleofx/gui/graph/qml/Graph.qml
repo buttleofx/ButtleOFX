@@ -13,6 +13,7 @@ Item {
     property alias originY: graphContainer.y
 
     property real zoomCoeff: 1
+    property real zoomStep: 0.05
     property int nodeWidth: 80
     property int nodeInitialWidth: 80
     property real graphPreviousWidth: width
@@ -83,17 +84,18 @@ Item {
             }
         }
         onWheel: {
-                if(wheel.angleDelta.y > 0){
-                    zoomCoeff += 0.1
-                }else{
-                    zoomCoeff -= 0.1
+            if(wheel.angleDelta.y > 0){
+                zoomCoeff += zoomStep
+            }else{
+                if(zoomCoeff > zoomStep){ //inferior boundary
+                    zoomCoeff -= zoomStep
                 }
+            }
 
-                _buttleData.zoom(graphContainer.width, graphContainer.height, graphContainer.x, graphContainer.y, nodeWidth, zoomCoeff, graphPreviousWidth, graphPreviousHeight)
-
-                graphPreviousWidth = zoomCoeff * graphContainer.width
-                graphPreviousHeight = zoomCoeff * graphContainer.height
-                nodeWidth = zoomCoeff * nodeInitialWidth
+            _buttleData.zoom(graphContainer.width, graphContainer.height, nodeWidth, zoomCoeff, graphPreviousWidth, graphPreviousHeight, mouseX, mouseY)
+            graphPreviousWidth = zoomCoeff * graphContainer.width
+            graphPreviousHeight = zoomCoeff * graphContainer.height
+            nodeWidth = zoomCoeff * nodeInitialWidth
         }
     }
     onDrawSelection: {

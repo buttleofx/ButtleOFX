@@ -92,7 +92,7 @@ Item {
                 }
             }
 
-            _buttleData.zoom(graphContainer.width, graphContainer.height, nodeWidth, zoomCoeff, graphPreviousWidth, graphPreviousHeight, mouseX, mouseY)
+            _buttleData.zoom(graphContainer.width, graphContainer.height, nodeWidth, zoomCoeff, graphPreviousWidth, graphPreviousHeight, mouseX, mouseY, m.graphRoot.originX, m.graphRoot.originY)
             graphPreviousWidth = zoomCoeff * graphContainer.width
             graphPreviousHeight = zoomCoeff * graphContainer.height
             nodeWidth = zoomCoeff * nodeInitialWidth

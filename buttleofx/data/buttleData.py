@@ -354,11 +354,11 @@ class ButtleData(QtCore.QObject):
         """
         return self._currentCopiedNodesInfo != {}
         
-    @QtCore.pyqtSlot(int, int, int, float, float, float, float, float)
-    def zoom(self, width, height, nodeWidth, zoomCoeff, graphPreviousWidth, graphPreviousHeight, mouseX, mouseY):
+    @QtCore.pyqtSlot(int, int, int, float, float, float, float, float, int, int)
+    def zoom(self, width, height, nodeWidth, zoomCoeff, graphPreviousWidth, graphPreviousHeight, mouseX, mouseY, offsetX, offsetY):
     
-          mouseXRatio = mouseX / width
-          mouseYRatio = mouseY / height
+          mouseXRatio = (mouseX - offsetX) / width
+          mouseYRatio = (mouseY - offsetY) / height
           newWidth = zoomCoeff * width
           newHeight = zoomCoeff * height
           reinitOriginX = (width * mouseXRatio) - (graphPreviousWidth * mouseXRatio)

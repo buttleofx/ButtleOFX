@@ -354,30 +354,8 @@ class ButtleData(QtCore.QObject):
         """
         return self._currentCopiedNodesInfo != {}
         
-    #@QtCore.pyqtSlot(int, float, float, float)
-    #def zoom(self, delta, centerX, centerY, nodeWidth):
-     #   nodes = self._graphWrapper.getNodeWrappers()
-   
-      #  for i in nodes:
-       #     nodeX = i.xCoord + nodeWidth/2
-        #    stepX = ((nodeX-centerX)/(math.fabs(nodeX-centerX)))*5
-         #   stepY = (i.yCoord-centerY)/(math.fabs(i.yCoord-centerY))
-          #  if delta < 0 : #dezoom
-           #     if math.fabs(nodeX-centerX) > 6 :
-            #        i.xCoord -= stepX
-             #   if math.fabs(i.yCoord-centerY) > 2 :
-              #      i.yCoord -= stepY
-            #else : #zoom
-             #   if math.fabs(nodeX-centerX) > 6 :
-              #      i.xCoord += stepX
-               # if math.fabs(i.yCoord-centerY) > 2 :
-                #    i.yCoord += stepY
-                
-        #self._graphWrapper.updateNodeWrappers()
-        #self._graphWrapper.updateConnectionWrappers()
-        
-    @QtCore.pyqtSlot(int, int, int, int, int, int, float, float, float)
-    def zoom(self, delta, width, height, originX, originY, nodeWidth, zoomCoeff, graphPreviousWidth, graphPreviousHeight):
+    @QtCore.pyqtSlot(int, int, int, int, int, float, float, float)
+    def zoom(self, width, height, originX, originY, nodeWidth, zoomCoeff, graphPreviousWidth, graphPreviousHeight):
         newWidth = zoomCoeff * width
         newHeight = zoomCoeff * height
         reinitOriginX = (width * 0.5) - (graphPreviousWidth * 0.5)

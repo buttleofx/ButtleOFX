@@ -89,12 +89,11 @@ Item {
                     zoomCoeff -= 0.1
                 }
 
-                _buttleData.zoom(wheel.angleDelta.y, graphContainer.width, graphContainer.height, graphContainer.x, graphContainer.y, nodeWidth, zoomCoeff, graphPreviousWidth, graphPreviousHeight)
+                _buttleData.zoom(graphContainer.width, graphContainer.height, graphContainer.x, graphContainer.y, nodeWidth, zoomCoeff, graphPreviousWidth, graphPreviousHeight)
 
                 graphPreviousWidth = zoomCoeff * graphContainer.width
                 graphPreviousHeight = zoomCoeff * graphContainer.height
                 nodeWidth = zoomCoeff * nodeInitialWidth
-
         }
     }
     onDrawSelection: {

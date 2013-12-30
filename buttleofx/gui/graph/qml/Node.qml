@@ -176,7 +176,7 @@ Rectangle {
         Item {
             id: inputClipsItem
             height: parent.height
-            Layout.minimumWidth: 20
+            Layout.minimumWidth: 2
             Layout.alignment: Qt.AlignVCenter | Qt.AlignLeft
 
 
@@ -207,7 +207,7 @@ Rectangle {
         }
         Item {
             height: parent.height
-            Layout.minimumWidth: 40
+            Layout.minimumWidth: 2
             Layout.fillWidth: true
         }
 

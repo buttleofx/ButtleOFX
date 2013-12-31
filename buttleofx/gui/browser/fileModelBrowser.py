@@ -80,7 +80,6 @@ class FileModelBrowser(QtQuick.QQuickItem):
                 self._fileItems.append(FileItem(folder, d, FileItem.Type.Folder))
             
             if self._nameFilter == "*":
-                print("All files")
                 for f in files:
                     self._fileItems.append(FileItem(folder, f, FileItem.Type.File))
                     

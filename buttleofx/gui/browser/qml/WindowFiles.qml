@@ -19,7 +19,6 @@ Rectangle {
         folder: winFile.folder
 
         onFolderChanged: {
-            fileModel.setFilter(winFile.filterName)
             fileModel.selectItem(0)
         }
         onNameFilterChanged: {
@@ -76,7 +75,7 @@ Rectangle {
                             //if ctrl:
                             //if shift:
                         }
-                        onDoubleClicked: model.object.fileType == "Folder" ? console.log("Go to " + model.object.fileName) : Qt.openUrlExternally(model.object.filepath)
+                        onDoubleClicked: model.object.fileType == "Folder" ? winFile.goToFolder(model.object.filepath) : Qt.openUrlExternally(model.object.filepath)
                     }
                 }
             }

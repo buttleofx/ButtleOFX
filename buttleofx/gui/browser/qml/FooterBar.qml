@@ -9,7 +9,8 @@ Rectangle {
 	property string fileName: "Default file"
     property string fileType: "File"
     property string filter: "*"
-    signal changeFilter(string filter)
+
+    signal changeFilter(string newFilter)
     signal openFolder(string newFolder)
 
 	RowLayout {
@@ -25,8 +26,12 @@ Rectangle {
             width: 200
             model: [ "*", ".jpg", ".png" ]
 
+
+            onCurrentTextChanged: {
+                changeFilter(currentText)
+                console.log("currentText = " + currentText)
+            }
             onCurrentIndexChanged: {
-                footer.changeFilter(currentText)
                 console.log("nameFilter = " + currentIndex)
             }
         }
@@ -37,7 +42,6 @@ Rectangle {
 			Layout.fillHeight: true
 
             onClicked: {
-                console.debug("It's a " + fileType)
                 footer.fileType == "Folder" ? footer.openFolder(fileName) : Qt.openUrlExternally(fileName)
                 console.debug("Open " + fileName)
             }

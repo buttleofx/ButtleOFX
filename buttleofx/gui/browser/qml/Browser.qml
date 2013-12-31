@@ -89,8 +89,8 @@ Rectangle {
             fileName: m.filepath
             fileType : m.fileType
             onChangeFilter: {
-                console.debug("filter has changed to " + filter)
-                m.filter= filter
+                console.debug("filter has changed to " + newFilter)
+                m.filter= newFilter
             }
             onOpenFolder: {
                 console.debug("folder has changed to " + newFolder)

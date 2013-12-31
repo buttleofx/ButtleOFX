@@ -8,7 +8,7 @@ Rectangle {
 
 	property string fileName: "Default file"
     property string filter: "*"
-    signal changeFilter(string filter)
+    signal changeFilter(string newFilter)
 
 	RowLayout {
 		anchors.fill: parent
@@ -23,8 +23,11 @@ Rectangle {
             width: 200
             model: [ "*", ".jpg", ".png" ]
 
-            onCurrentIndexChanged: {
+            onCurrentTextChanged: {
                 changeFilter(currentText)
+                console.log("currentText = " + currentText)
+            }
+            onCurrentIndexChanged: {
                 console.log("nameFilter = " + currentIndex)
             }
         }

@@ -79,8 +79,8 @@ Rectangle {
 
             fileName: m.filepath
             onChangeFilter: {
-                console.debug("filter has changed to " + filter)
-                m.filter= filter
+                console.debug("filter has changed to " + newFilter)
+                m.filter= newFilter
             }
 	    }
 

@@ -11,6 +11,7 @@ Rectangle {
         id: m
         property string directory: "/"
         property string filepath: ""
+        property string fileType: ""
         property string filter:"*"
     }
 
@@ -52,10 +53,18 @@ Rectangle {
 	            Layout.fillHeight: true
 			    
                 folder: m.directory
+                onGoToFolder: {
+                    console.debug("folder has changed to " + newFolder)
+                    m.directory= newFolder
+                }
                 filterName: m.filter
                 onChangeFile: {
                     m.filepath = file
                     console.debug("filepath has changed to " + m.filepath)
+                }
+                onChangeFileType: {
+                    m.fileType = fileType
+                    console.debug("fileType has changed to " + m.fileType)
                 }
 
 		    }
@@ -78,9 +87,14 @@ Rectangle {
 		    Layout.preferredHeight: 40
 
             fileName: m.filepath
+            fileType : m.fileType
             onChangeFilter: {
                 console.debug("filter has changed to " + filter)
                 m.filter= filter
+            }
+            onOpenFolder: {
+                console.debug("folder has changed to " + newFolder)
+                m.directory= newFolder
             }
 	    }
 

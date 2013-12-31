@@ -123,7 +123,7 @@ class FileModelBrowser(QtQuick.QQuickItem):
     def getFilter(self):
         return self._nameFilter
      
-    @QtCore.pyqtSlot(str)   
+    @QtCore.pyqtSlot(str)
     def setFilter(self, nameFilter):
         self._nameFilter = nameFilter
         self.updateFileItems(self._folder)

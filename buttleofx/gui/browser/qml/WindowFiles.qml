@@ -8,9 +8,11 @@ Rectangle {
     color: fileModel.exists ? "green" : "lightblue"
 
     property string folder
+    signal goToFolder(string newFolder)
     property string filterName
     property string file
     signal changeFile(string file)
+    signal changeFileType(string fileType)
 
     FileModelBrowser {
         id: fileModel
@@ -50,10 +52,12 @@ Rectangle {
                         onClicked: {
                             gridview.currentIndex = index
                             fileModel.selectItem(index)
+                            winFile.changeFile(model.object.filepath)
+                            winFile.changeFileType(model.object.fileType)
                             //if ctrl:
                             //if shift:
                         }
-                        onDoubleClicked: model.object.fileType == "Folder" ? console.log("Go to " + model.object.fileName) : Qt.openUrlExternally(model.object.filepath)
+                        onDoubleClicked: model.object.fileType == "Folder" ? winFile.goToFolder(model.object.filepath) : Qt.openUrlExternally(model.object.filepath)
                     }
                 }
                 Text {
@@ -68,6 +72,7 @@ Rectangle {
                             gridview.currentIndex = index
                             fileModel.selectItem(index)
                             winFile.changeFile(model.object.filepath)
+                            winFile.changeFileType(model.object.fileType)
                             //if ctrl:
                             //if shift:
                         }

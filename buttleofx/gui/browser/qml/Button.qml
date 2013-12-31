@@ -15,7 +15,7 @@ Rectangle {
 	signal buttonClick();
 
 	onButtonClick: {
-		console.log(buttonLabel.text + " clicked");
+        console.log(buttonLabel.text + " clicked");
 	}
 
 	border {

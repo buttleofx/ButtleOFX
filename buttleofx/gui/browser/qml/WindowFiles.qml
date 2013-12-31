@@ -8,13 +8,20 @@ Rectangle {
     color: fileModel.exists ? "green" : "lightblue"
 
     property string folder
-    property string file: gridview.currentIndex
+    property string filterName
+    property string file
+    signal changeFile(string file)
 
     FileModelBrowser {
         id: fileModel
         folder: winFile.folder
 
         onFolderChanged: {
+            fileModel.setFilter(winFile.filterName)
+            fileModel.selectItem(0)
+        }
+        onNameFilterChanged: {
+            fileModel.setFilter(winFile.filterName)
             fileModel.selectItem(0)
         }
     }
@@ -60,6 +67,7 @@ Rectangle {
                         onClicked: {
                             gridview.currentIndex = index
                             fileModel.selectItem(index)
+                            winFile.changeFile(model.object.filepath)
                             //if ctrl:
                             //if shift:
                         }

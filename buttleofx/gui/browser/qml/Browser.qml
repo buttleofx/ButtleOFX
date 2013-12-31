@@ -11,13 +11,13 @@ Rectangle {
         id: m
         property string directory: "/"
         property string filepath: ""
+        property string filter:"*"
     }
 
 	ColumnLayout {
 	    anchors.fill: parent
 
 	    HeaderBar {
-		    //anchors.top: parent.top
 		    id: headerBar
 		    Layout.fillWidth: true
 		    Layout.preferredHeight: 40
@@ -25,6 +25,7 @@ Rectangle {
             folder: m.directory
             onChangeFolder: {
                 m.directory = folder
+                console.debug("folder has changed to " + folder)
             }
 	    }
 
@@ -51,6 +52,11 @@ Rectangle {
 	            Layout.fillHeight: true
 			    
                 folder: m.directory
+                filterName: m.filter
+                onChangeFile: {
+                    m.filepath = file
+                    console.debug("filepath has changed to " + m.filepath)
+                }
 
 		    }
 
@@ -72,7 +78,12 @@ Rectangle {
 		    Layout.preferredHeight: 40
 
             fileName: m.filepath
+            onChangeFilter: {
+                console.debug("filter has changed to " + filter)
+                m.filter= filter
+            }
 	    }
+
     }
 }
 

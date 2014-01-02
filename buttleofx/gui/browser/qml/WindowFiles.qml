@@ -17,12 +17,12 @@ Rectangle {
     FileModelBrowser {
         id: fileModel
         folder: winFile.folder
+        nameFilter: winFile.filterName
 
         onFolderChanged: {
             fileModel.selectItem(0)
         }
         onNameFilterChanged: {
-            fileModel.setFilter(winFile.filterName)
             fileModel.selectItem(0)
         }
     }

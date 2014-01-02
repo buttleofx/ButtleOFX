@@ -31,9 +31,6 @@ Rectangle {
                 changeFilter(currentText)
                 console.log("currentText = " + currentText)
             }
-            onCurrentIndexChanged: {
-                console.log("nameFilter = " + currentIndex)
-            }
         }
 
 		Button{

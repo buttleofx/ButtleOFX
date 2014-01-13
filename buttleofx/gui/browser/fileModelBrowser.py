@@ -120,8 +120,6 @@ class FileModelBrowser(QtQuick.QQuickItem):
 #        All = '*'
 #        Jpeg = '.jpg'
 #        Png = 'png'
-
-    _nameFilter = ".jpg"
     
     def getFilter(self):
         return self._nameFilter
@@ -135,4 +133,3 @@ class FileModelBrowser(QtQuick.QQuickItem):
     fileItems = QtCore.pyqtProperty(QtCore.QObject, getFileItems, notify=folderChanged)
     nameFilterChange = QtCore.pyqtSignal()
     nameFilter = QtCore.pyqtProperty(str, getFilter, setFilter, notify=nameFilterChange)
-    

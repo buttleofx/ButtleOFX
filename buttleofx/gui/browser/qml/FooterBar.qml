@@ -39,7 +39,7 @@ Rectangle {
 			Layout.fillHeight: true
 
             onClicked: {
-                footer.fileType == "Folder" ? footer.openFolder(fileName) : Qt.openUrlExternally(fileName)
+                footer.fileType == "Folder" ? footer.openFolder(fileName) : Qt.openUrlExternally("file:///" + fileName)
                 console.debug("Open " + fileName)
             }
 		}

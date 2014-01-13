@@ -20,8 +20,7 @@ Rectangle {
 			MouseArea{
 				anchors.fill: parent
                 onClicked: {
-                    console.debug("Previous clicked")
-                    console.debug("Go to " + headerBar.folder)
+                    console.debug("Undo")
                 }
 			}
 		}
@@ -33,7 +32,7 @@ Rectangle {
 
 			MouseArea{
 				anchors.fill: parent
-				onClicked: console.log("Next clicked")
+                onClicked: console.log("Redo")
 			}
 		}
 		Image{
@@ -46,7 +45,6 @@ Rectangle {
 				anchors.fill: parent
                 onClicked: {
                     changeFolder(parentFolder)
-                    console.log("Folder clicked")
                 }
 			}
 		}

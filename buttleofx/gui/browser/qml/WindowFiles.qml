@@ -59,7 +59,7 @@ Rectangle {
                             //if shift:
                         }
                         onDoubleClicked: {
-                            model.object.fileType == "Folder" ? winFile.goToFolder(model.object.filepath) : Qt.openUrlExternally(model.object.filepath)
+                            model.object.fileType == "Folder" ? winFile.goToFolder(model.object.filepath) : Qt.openUrlExternally("file:///" + model.object.filepath)
                         }
                     }
                 }
@@ -80,12 +80,13 @@ Rectangle {
                             //if shift:
                         }
                         onDoubleClicked: {
-                            model.object.fileType == "Folder" ? winFile.goToFolder(model.object.filepath) : Qt.openUrlExternally(model.object.filepath)
+                            model.object.fileType == "Folder" ? winFile.goToFolder(model.object.filepath) : Qt.openUrlExternally("file:///" + model.object.filepath)
                         }
                     }
                 }
             }
         }
+
         highlight: Rectangle { color: "lightsteelblue"; radius: 5}
     }
 

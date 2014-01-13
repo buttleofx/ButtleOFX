@@ -11,6 +11,7 @@ Rectangle {
         id: m
         property string directory: "/"
         property string filepath: ""
+        property string fileFolder: "/"
         property string fileType: ""
         property string filter:"*"
     }
@@ -23,6 +24,7 @@ Rectangle {
 		    Layout.fillWidth: true
 		    Layout.preferredHeight: 40
 
+            parentFolder: m.fileFolder
             folder: m.directory
             onChangeFolder: {
                 m.directory = folder
@@ -42,8 +44,8 @@ Rectangle {
 
 		    LeftCol {
                 id: left
-                Layout.minimumWidth: 50
-                Layout.preferredWidth: 100
+                Layout.minimumWidth: 80
+                Layout.preferredWidth: 150
 	            Layout.fillHeight: true
 		    }
 
@@ -62,6 +64,11 @@ Rectangle {
                     m.filepath = file
                     console.debug("filepath has changed to " + m.filepath)
                 }
+                onChangeFileFolder: {
+                    m.fileFolder = fileFolder
+                    console.debug("fileFolder has changed to " + m.fileFolder)
+                }
+
                 onChangeFileType: {
                     m.fileType = fileType
                     console.debug("fileType has changed to " + m.fileType)

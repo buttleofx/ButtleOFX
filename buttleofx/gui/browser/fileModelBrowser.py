@@ -1,4 +1,5 @@
 import logging
+import os
 
 from quickmamba.models import QObjectListModel
 
@@ -19,7 +20,6 @@ class FileItem(QtCore.QObject):
     def __init__(self, folder, fileName, fileType):
         super(FileItem, self).__init__()
         self._filepath = folder + "/" + fileName
-        self._fileName = fileName
         self._fileType = fileType
 
     def getFilepath(self):
@@ -29,7 +29,7 @@ class FileItem(QtCore.QObject):
         return self._fileType
     
     def getFileName(self):
-        return self._fileName
+        return os.path.basename(self._filepath)
     
     def getSelected(self):
         return self._isSelected
@@ -65,10 +65,14 @@ class FileModelBrowser(QtQuick.QQuickItem):
     def getFolderExists(self):
         import os
         return os.path.exists(self._folder)
+    
+    def getParentFolder(self):
+        return os.path.dirname(self._folder)
 
     folderChanged = QtCore.pyqtSignal()
     folder = QtCore.pyqtProperty(str, getFolder, setFolder, notify=folderChanged)
     exists = QtCore.pyqtProperty(bool, getFolderExists, notify=folderChanged)
+    parentFolder = QtCore.pyqtProperty(str, getParentFolder, constant=True)
     
     def updateFileItems(self, folder):
         self._fileItems = []
@@ -131,3 +135,4 @@ class FileModelBrowser(QtQuick.QQuickItem):
     fileItems = QtCore.pyqtProperty(QtCore.QObject, getFileItems, notify=folderChanged)
     nameFilterChange = QtCore.pyqtSignal()
     nameFilter = QtCore.pyqtProperty(str, getFilter, setFilter, notify=nameFilterChange)
+    

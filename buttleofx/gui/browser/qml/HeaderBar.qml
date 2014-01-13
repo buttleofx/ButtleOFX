@@ -6,6 +6,7 @@ Rectangle {
 
     property string folder
     signal changeFolder(string folder)
+    property string parentFolder
 
 	Row{
 		spacing: 10;
@@ -18,7 +19,10 @@ Rectangle {
 
 			MouseArea{
 				anchors.fill: parent
-				onClicked: console.log("Previous clicked")
+                onClicked: {
+                    console.debug("Previous clicked")
+                    console.debug("Go to " + headerBar.folder)
+                }
 			}
 		}
 		Image{
@@ -40,7 +44,10 @@ Rectangle {
 
 			MouseArea{
 				anchors.fill: parent
-				onClicked: console.log("Folder clicked")
+                onClicked: {
+                    changeFolder(parentFolder)
+                    console.log("Folder clicked")
+                }
 			}
 		}
 

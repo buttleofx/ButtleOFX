@@ -10,6 +10,7 @@ Rectangle {
     property string folder
     signal goToFolder(string newFolder)
     property string filterName
+    signal changeFileFolder(string fileFolder)
     property string file
     signal changeFile(string file)
     signal changeFileType(string fileType)
@@ -21,6 +22,7 @@ Rectangle {
 
         onFolderChanged: {
             fileModel.selectItem(0)
+            winFile.changeFileFolder(fileModel.parentFolder)
         }
         onNameFilterChanged: {
             fileModel.selectItem(0)
@@ -56,7 +58,9 @@ Rectangle {
                             //if ctrl:
                             //if shift:
                         }
-                        onDoubleClicked: model.object.fileType == "Folder" ? winFile.goToFolder(model.object.filepath) : Qt.openUrlExternally(model.object.filepath)
+                        onDoubleClicked: {
+                            model.object.fileType == "Folder" ? winFile.goToFolder(model.object.filepath) : Qt.openUrlExternally(model.object.filepath)
+                        }
                     }
                 }
                 Text {
@@ -75,7 +79,9 @@ Rectangle {
                             //if ctrl:
                             //if shift:
                         }
-                        onDoubleClicked: model.object.fileType == "Folder" ? winFile.goToFolder(model.object.filepath) : Qt.openUrlExternally(model.object.filepath)
+                        onDoubleClicked: {
+                            model.object.fileType == "Folder" ? winFile.goToFolder(model.object.filepath) : Qt.openUrlExternally(model.object.filepath)
+                        }
                     }
                 }
             }

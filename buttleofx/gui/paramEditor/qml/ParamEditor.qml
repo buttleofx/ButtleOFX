@@ -104,7 +104,6 @@ Item {
         Rectangle{
             Layout.minimumHeight: buttleParamTitle.height
             id: buttleParams
-            anchors.bottom: parent.bottom
             height: 190
             width: paramEditor.width
             color: paramEditor.background
@@ -133,8 +132,6 @@ Item {
 
             Loader {
                 sourceComponent: currentParamNode ? nodeParamComponent : undefined
-                anchors.top: buttleParamTitle.bottom
-                anchors.topMargin: 10
                 Component {
                     id: nodeParamComponent
                     Column {
@@ -267,7 +264,7 @@ Item {
                                     radius: 3
                                     TextInput {
                                         id: nodeColorRGBInput
-                                        text: currentParamNode ? currentParamNode.color : ""
+                                        //text: currentParamNode ? currentParamNode.color : ""
                                         anchors.left: parent.left
                                         anchors.verticalCenter: parent.verticalCenter
                                         anchors.leftMargin: 5

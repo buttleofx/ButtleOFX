@@ -35,8 +35,7 @@ class GraphWrapper(QtCore.QObject):
         self._graph = graph
 
         # links core signals to wrapper layer
-        self._graph.nodesChanged.connect(self.updateNodeWrappers)
-        self._graph.connectionsCoordChanged.connect(self.updateConnectionsCoord)
+        self._graph.nodesChanged.connect(self.updateWrappers)
         self._graph.connectionsChanged.connect(self.updateConnectionWrappers)
 
         logging.info("Gui : GraphWrapper created")
@@ -80,6 +79,7 @@ class GraphWrapper(QtCore.QObject):
         """
         return self._nodeWrappers
 
+    @QtCore.pyqtSlot(str, result=QtCore.QObject)
     def getNodeWrapper(self, nodeName):
         """
             Returns the right nodeWrapper, identified with its nodeName.
@@ -117,38 +117,6 @@ class GraphWrapper(QtCore.QObject):
         """
         return self._zMax
 
-    def getPositionClip(self, nodeName, clipName, clipIndex):
-        """
-            Function called when a new idClip is created.
-            Returns the position of the clip.
-            The calculation is the same as in the QML file (Node.qml).
-        """
-        node = self.getNodeWrapper(nodeName)
-
-        nodeCoord = node.getCoord()
-        widthNode = node.getWidth()
-        clipSpacing = node.getClipSpacing()
-        clipSize = node.getClipSize()
-        inputTopMargin = node.getInputTopMargin()
-        outputTopMargin = node.getOutputTopMargin()
-
-        if (clipName == "Output"):
-            xClip = nodeCoord.x() + widthNode + clipSize / 2
-            yClip = nodeCoord.y() + outputTopMargin + clipSize / 2
-        else:
-            xClip = nodeCoord.x() - clipSize / 2
-            yClip = nodeCoord.y() + inputTopMargin + int(clipIndex) * (clipSpacing + clipSize) + clipSize / 2
-        return (xClip, yClip)
-
-    @QtCore.pyqtSlot(str, str, int, result=QtCore.QPointF)
-    def getPointClip(self, nodeName, clipName, clipIndex):
-        """
-            Returns the position of the clip as a QPointF.
-            Usefull in QML to have access to x and y.
-        """
-        pos = self.getPositionClip(nodeName, clipName, clipIndex)
-        return QtCore.QPointF(pos[0], pos[1])
-
     #################### setters ####################
 
     def setZMax(self, zMax):
@@ -178,6 +146,10 @@ class GraphWrapper(QtCore.QObject):
 
     ################################################ UPDATE WRAPPER LAYER ################################################
 
+    def updateWrappers(self):
+        self.updateNodeWrappers()
+        self.updateConnectionWrappers()
+        
     def updateNodeWrappers(self):
         """
             Updates the nodeWrappers when the signal nodesChanged has been emitted.
@@ -197,26 +169,6 @@ class GraphWrapper(QtCore.QObject):
         # and we fill with the new data
         for connection in self._graph.getConnections():
             self.createConnectionWrapper(connection)
-
-    @QtCore.pyqtSlot(QtCore.QObject)
-    def updateConnectionsCoord(self, node):
-        """
-            Updates the coordinates of the connections when a node is beeing moved.
-            This update just affects the connections of the moving node.
-        """
-        # for each connection of the graph
-        for connection in self._graph.getConnections():
-            # if the connection concerns the node we're moving
-            if node.getName() in connection.getConcernedNodes():
-                clipOut = connection.getClipOut()
-                clipIn = connection.getClipIn()
-                if self.getNodeWrapper(clipOut.getNodeName()) is not None:
-                    # update clipOut coords
-                    clipOut.setCoord(self.getPositionClip(clipOut.getNodeName(), clipOut.getClipName(), clipOut.getClipIndex()))
-                if self.getNodeWrapper(clipIn.getNodeName()) is not None:
-                    # update clipIn coords
-                    clipIn.setCoord(self.getPositionClip(clipIn.getNodeName(), clipIn.getClipName(), clipIn.getClipIndex()))
-        self.updateConnectionWrappers()
 
     ################################################## DATA EXPOSED TO QML ##################################################
 

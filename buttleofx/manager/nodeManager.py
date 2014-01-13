@@ -202,6 +202,3 @@ class NodeManager(QtCore.QObject):
             selectedNode = selectedNodeWrapper.getNode()
             currentX, currentY = selectedNode.getCoord()
             selectedNode.setCoord(currentX + xMovement, currentY + yMovement)
-
-            # we update also the position of all the connections
-            buttleData.getGraph().connectionsCoordChanged(selectedNode)

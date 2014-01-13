@@ -1,10 +1,8 @@
 import QtQuick 2.0
-import FolderListViewItem 1.0
+import QtQuick.Dialogs 1.0
 
 Rectangle {
     id: tools
-    width: 850
-    height: 40
 
     // if the menu is open (= if "tools has children"), property children is the first list created. Else, null.
     property variant menuComponent
@@ -13,67 +11,6 @@ Rectangle {
 
     signal clickCreationNode(string nodeType)
 
-    function doAction(buttonName) {
-        switch (buttonName) {
-            case "createNode":
-
-                _addMenu.showMenu(parent.x , parent.y + graph.y + tools.height);
-                /*if (!tools.menuComponent) {
-                    var newComponent = Qt.createQmlObject('MenuList { parentName: "buttle/"; y: tools.height; clickFrom: tools}', parent);
-                    newComponent.side = "right";
-                    tools.menuComponent = newComponent;
-                }*/
-                break;
-
-            case "deleteNode":
-                _buttleManager.deleteSelection();
-                break;
-
-            case "undo":
-                _buttleManager.undo();
-                break;
-
-            case "redo":
-                _buttleManager.redo();
-                break;
-
-            case "copy":
-                _buttleManager.nodeManager.copyNode();
-                break;
-
-            case "paste":
-                _buttleManager.nodeManager.pasteNode();
-                break;
-
-            case "cut":
-                _buttleManager.nodeManager.cutNode();
-                break;
-
-            case "duplicate":
-                _buttleManager.nodeManager.duplicationNode();
-                break;
-
-            case "save":
-                finderSaveGraph.browseFile()
-                if (finderSaveGraph.propFile) {
-                    _buttleData.saveData(finderSaveGraph.propFile)
-                }
-                break;
-
-            case "load":
-                finderLoadGraph.browseFile();
-                if (finderLoadGraph.propFile) {
-                    _buttleData.loadData(finderLoadGraph.propFile)
-                }
-                break;
-
-            default:
-                break;
-        }
-    }
-
-    anchors.top: parent.top
-    color: "#212121"
     gradient: Gradient {
         GradientStop { position: 0.0; color: gradian2 }
         GradientStop { position: 0.85; color: gradian2 }
@@ -85,8 +22,6 @@ Rectangle {
         anchors.fill: parent
         anchors.leftMargin: 10
         anchors.topMargin: 3
-
-
 
         Row {
             spacing: 15
@@ -100,32 +35,50 @@ Rectangle {
                 buttonName: "createNode"
                 buttonText: "Create a new node"
                 locked: false
+                onClicked: {
+                    // TODO
+                }
             }
 
             ToolElement {
 
-                FolderListView {
+                FileDialog {
                     id: finderLoadGraph
-                    typeDialog: "OpenFile"
-                    messageDialog: "Load a graph"
-                    directoryDialog: _buttleData.buttlePath
+                    title: "Open a graph"
+                    folder: _buttleData.buttlePath
+                    nameFilters: [ "ButtleOFX Graph files (*.bofx)", "All files (*)" ]
+                    selectedNameFilter: "All files (*)"
+                    onAccepted: {
+                        console.log(finderLoadGraph.fileUrl)
+                        _buttleData.loadData(finderLoadGraph.fileUrl)
+                    }
                 }
 
                 imageSource: parent.imgPath + "open.png"
                 imageSourceHover: parent.imgPath + "open_hover.png"
                 imageSourceLocked: parent.imgPath + "open_locked.png"
                 buttonName: "load"
-                buttonText: "Load a graph (Ctrl+L)"
+                buttonText: "Open a graph (Ctrl+O)"
                 locked: false
+
+                onClicked: {
+                    finderLoadGraph.browseFile()
+                    if (finderLoadGraph.propFile) {
+                        _buttleData.loadData(finderLoadGraph.propFile)
+                    }
+                }
             }
 
             ToolElement {
 
-                FolderListView {
+                FileDialog {
                     id: finderSaveGraph
-                    typeDialog: "SaveFile"
-                    messageDialog: "Save the graph"
-                    directoryDialog: _buttleData.buttlePath
+                    title: "Save the graph"
+                    folder: _buttleData.buttlePath
+                    nameFilters: [ "ButtleOFX Graph files (*.bofx)", "All files (*)" ]
+                    selectedNameFilter: "All files (*)"
+                    onAccepted: _buttleData.saveData(finderSaveGraph.fileUrl)
+                    selectExisting: false
                 }
 
                 imageSource: parent.imgPath + "save.png"
@@ -134,6 +87,13 @@ Rectangle {
                 buttonName: "save"
                 buttonText: "Save graph (Ctrl+S)"
                 locked: !_buttleData.graphCanBeSaved
+
+                onClicked: {
+                    finderSaveGraph.browseFile()
+                    if (finderSaveGraph.propFile) {
+                        _buttleData.saveData(finderSaveGraph.propFile)
+                    }
+                }
             }
 
             ToolElement {
@@ -143,6 +103,10 @@ Rectangle {
                 buttonName: "undo"
                 buttonText: "Undo (Ctrl+Z)"
                 locked: _buttleManager.canUndo ? false : true
+
+                onClicked: {
+                    _buttleManager.undo()
+                }
             }
 
             ToolElement {
@@ -152,6 +116,10 @@ Rectangle {
                 buttonName: "redo"
                 buttonText: "Redo (Ctrl+Y)"
                 locked: _buttleManager.canRedo ? false : true
+
+                onClicked: {
+                    _buttleManager.redo()
+                }
             }
 
             ToolElement {
@@ -161,6 +129,10 @@ Rectangle {
                 buttonName: "copy"
                 buttonText: "Copy (Ctrl+C)"
                 locked: _buttleData.currentSelectedNodeWrappers.isEmpty() ? true : false
+
+                onClicked: {
+                    _buttleManager.nodeManager.copyNode()
+                }
             }
 
             ToolElement {
@@ -170,6 +142,10 @@ Rectangle {
                 buttonName: "cut"
                 buttonText: "Cut (Ctrl+X)"
                 locked: _buttleData.currentSelectedNodeWrappers.isEmpty() ? true : false
+
+                onClicked: {
+                    _buttleManager.nodeManager.cutNode()
+                }
             }
 
             ToolElement {
@@ -179,6 +155,10 @@ Rectangle {
                 buttonName: "paste"
                 buttonText: "Paste (Ctrl+V)"
                 locked: _buttleData.canPaste ? false : true
+
+                onClicked: {
+                    _buttleManager.nodeManager.pasteNode()
+                }
             }
 
             ToolElement {
@@ -188,6 +168,10 @@ Rectangle {
                 buttonName: "duplicate"
                 buttonText: "Duplicate (Ctrl+D)"
                 locked: _buttleData.currentSelectedNodeWrappers.isEmpty() ? true : false
+
+                onClicked: {
+                    _buttleManager.nodeManager.duplicationNode()
+                }
             }
 
             ToolElement {
@@ -195,8 +179,12 @@ Rectangle {
                 imageSourceHover: parent.imgPath + "delete_hover.png"
                 imageSourceLocked: parent.imgPath + "delete_locked.png"
                 buttonName: "deleteNode"
-                buttonText: "Delete the node (suppr)"
+                buttonText: "Delete the node (del)"
                 locked: (!_buttleData.currentSelectedNodeWrappers.isEmpty() || _buttleData.currentConnectionWrapper)? false : true
+
+                onClicked: {
+                    _buttleManager.deleteSelection()
+                }
             }            
         }
     }

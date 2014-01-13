@@ -19,6 +19,8 @@ from buttleofx.core.undo_redo.manageTools import CommandManager
 # events
 from buttleofx.event import ButtleEvent
 
+import math
+
 class ButtleData(QtCore.QObject):
     """
         Class ButtleData defined by:
@@ -310,10 +312,11 @@ class ButtleData(QtCore.QObject):
         for nodeW in self.getGraphWrapper().getNodeWrappers():
             xNode = nodeW.getNode().getCoord()[0]
             yNode = nodeW.getNode().getCoord()[1]
-            widthNode = nodeW.getWidth()
-            heightNode = nodeW.getHeight()
+            # TODO: should be done in QML
+            widthNode = 40
+            heightNode = 10
 
-            # we project the boundin-boxes on the axes and we check if the segments overlap
+            # we project the bounding-boxes on the axes and we check if the segments overlap
             horizontalOverlap = (xNode < xRect + widthRect) and (xRect < xNode + widthNode)
             verticalOverlap = (yNode < yRect + heightRect) and (yRect < yNode + heightNode)
             overlap = horizontalOverlap and verticalOverlap
@@ -350,7 +353,31 @@ class ButtleData(QtCore.QObject):
             Returns True if we can paste (= if there is at least one node selected).
         """
         return self._currentCopiedNodesInfo != {}
+        
+    @QtCore.pyqtSlot(int, int, int, float, float, float, float, float, int, int)
+    def zoom(self, width, height, nodeWidth, zoomCoeff, graphPreviousWidth, graphPreviousHeight, mouseX, mouseY, offsetX, offsetY):
+    
+          mouseXRatio = (mouseX - offsetX) / width
+          mouseYRatio = (mouseY - offsetY) / height
+          newWidth = zoomCoeff * width
+          newHeight = zoomCoeff * height
+          reinitOriginX = (width * mouseXRatio) - (graphPreviousWidth * mouseXRatio)
+          reinitOriginY = (height * mouseYRatio) - (graphPreviousHeight * mouseYRatio)
+          newOriginX = (width * mouseXRatio) - (newWidth * mouseXRatio)
+          newOriginY = (height * mouseYRatio) - (newHeight * mouseYRatio)  
 
+          nodes = self._graphWrapper.getNodeWrappers()
+          for i in nodes:
+              if graphPreviousWidth != width :
+                  i.xCoord = ((i.xCoord - reinitOriginX) * width) / graphPreviousWidth
+                  i.yCoord = ((i.yCoord - reinitOriginY) * height) / graphPreviousHeight
+                  
+              i.xCoord = ((i.xCoord * newWidth) / width) + newOriginX #- (nodeWidth * 0.5)
+              i.yCoord = ((i.yCoord * newHeight) / height) + newOriginY #- (nodeWidth * 0.5)
+     
+          self._graphWrapper.updateNodeWrappers()
+          self._graphWrapper.updateConnectionWrappers()
+        
     ################################################## PLUGIN LIST #####################################################
 
     def getPluginsIdentifiers(self):
@@ -389,7 +416,11 @@ class ButtleData(QtCore.QObject):
         """
             Saves all data in a json file (default file : buttleofx/backup/data.bofx)
         """
-        with io.open(url, 'w', encoding='utf-8') as f:
+
+        filepath = QtCore.QUrl(url).toLocalFile()+".bofx"
+
+
+        with io.open(filepath, 'w', encoding='utf-8') as f:
             dictJson = {
                 "date": {},
                 "window": {},
@@ -417,7 +448,7 @@ class ButtleData(QtCore.QObject):
             dictJson["paramEditor"] = self.getCurrentParamNodeName()
 
             # viewer : currentViewerNodeName
-            for num_view, view in self._mapViewerIndextoNodeName.iteritems():
+            for num_view, view in self._mapViewerIndextoNodeName.items():
                 if view is not None:
                     (nodeName, frame) = view
                     if self.getCurrentViewerNodeName() == nodeName:
@@ -442,7 +473,10 @@ class ButtleData(QtCore.QObject):
         """
             Loads all data from a Json file (the default Json file if no url is given)
         """
-        with open(url, 'r') as f:
+
+        filepath = QtCore.QUrl(url).toLocalFile()
+
+        with open(filepath, 'r') as f:
             read_data = f.read()
 
             decoded = json.loads(read_data, object_hook=_decode_dict)

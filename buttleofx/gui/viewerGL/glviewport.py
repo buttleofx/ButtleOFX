@@ -81,7 +81,7 @@ class GLViewport(QtQuick.QQuickItem):
         self.tex = None
 
         # Enable paint method calls
-        self.setFlag(QtQuick.QQuickItem.ItemHasNoContents, False)
+        self.setFlag(QtQuick.QQuickItem.ItemHasContents, True)
 
     def initializeGL(self):
         GL.glClearColor(0.0, 0.0, 0.0, 0.0)  # We assign a black background

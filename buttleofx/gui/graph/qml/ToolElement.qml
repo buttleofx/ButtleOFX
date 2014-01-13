@@ -15,9 +15,12 @@ Rectangle {
     property string buttonText
     property bool locked
 
+    signal clicked()
+
     Image {
         id: imageButton
-        source: imageSource
+        property string file: buttonTools.imageSource
+        source: "file:///" + imageButton.file
         anchors.verticalCenter: parent.verticalCenter
         anchors.horizontalCenter: parent.horizontalCenter
     }
@@ -27,9 +30,9 @@ Rectangle {
         anchors.fill: parent
         onClicked: {
             if(!locked) {
-                tools.doAction(buttonName);
+                buttonTools.clicked()
                 //take the focus of the mainWindow
-                parent.forceActiveFocus();
+                parent.forceActiveFocus()
             }
         }
     }
@@ -57,7 +60,7 @@ Rectangle {
                  }
                  PropertyChanges {
                     target: imageButton
-                    source: imageSourceLocked
+                    file: imageSourceLocked
                  }
              },
              State {
@@ -69,7 +72,7 @@ Rectangle {
                  }
                  PropertyChanges {
                     target: imageButton
-                    source: imageSource
+                    file: imageSource
                  }
              },
              State {
@@ -81,7 +84,7 @@ Rectangle {
                  }
                  PropertyChanges {
                     target: imageButton
-                    source: imageSource
+                    file: imageSource
                  }
              },
              State {
@@ -93,7 +96,7 @@ Rectangle {
                  }
                  PropertyChanges {
                     target: imageButton
-                    source: imageSourceHover
+                    file: imageSourceHover
                  }
              }
          ]

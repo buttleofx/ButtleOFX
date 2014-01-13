@@ -7,6 +7,7 @@ Item {
     implicitHeight: 30
 
     property variant paramObject: model.object
+    // property variant menuItems: paramObject.listValue
 
     // Is this param secret ?
     visible: !paramObject.isSecret
@@ -55,11 +56,11 @@ Item {
             // usefull to avoid setting paramObject.value when loaded the comboBox
             property int comboBoxCharged: 0
 
-            selectedText: paramObject.value
+           currentIndex: paramObject.value
 
-            onSelectedIndexChanged: {
+           onCurrentIndexChanged: {
                 if (comboBoxCharged) {
-                    paramObject.value = menuItems.get(selectedIndex).text
+                    paramObject.value = menuItems.get(currentIndex).text
                     paramObject.pushValue(paramObject.value)
                 }
                 else {

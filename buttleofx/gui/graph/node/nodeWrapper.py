@@ -18,6 +18,8 @@ class NodeWrapper(QtCore.QObject):
     """
 
     def __init__(self, node, view):
+        # print("NodeWrapper constructor")
+        
         super(NodeWrapper, self).__init__(view)
 
         self._node = node
@@ -25,13 +27,6 @@ class NodeWrapper(QtCore.QObject):
 
         # paramWrappers
         self._paramWrappers = ParamEditorWrapper(self._view, self._node.getParams())
-
-        # data given to QML to have nodes and clips with good looking
-        self._width = 0  # will be setted by QML
-        self._heightEmptyNode = 35
-        self._clipSpacing = 7
-        self._clipSize = 8
-        self._sideMargin = 6
 
         # potential errors
         self._fpsError = ""
@@ -41,6 +36,10 @@ class NodeWrapper(QtCore.QObject):
         self._node.nodeLookChanged.connect(self.emitNodeLookChanged)
         self._node.nodePositionChanged.connect(self.emitNodePositionChanged)
         self._node.nodeContentChanged.connect(self.emitNodeContentChanged)
+        
+        self._clipWrappers = [ClipWrapper(clip, self.getName(), self._view) for clip in self._node.getClips()]
+        
+        self._srcClips = QObjectListModel(self)
 
         logging.info("Gui : NodeWrapper created")
 
@@ -65,7 +64,7 @@ class NodeWrapper(QtCore.QObject):
         return self._node.getType()
 
     def getCoord(self):
-        return QtCore.QPoint(self._node.getCoord()[0], self._node.getCoord()[1])
+        return QtCore.QPointF(self._node.getCoord()[0], self._node.getCoord()[1])
 
     def getXCoord(self):
         return self._node.getCoord()[0]
@@ -87,38 +86,21 @@ class NodeWrapper(QtCore.QObject):
         """
             Returns a QObjectListModel of ClipWrappers of the input clips of this node.
         """
-        srcClips = QObjectListModel(self)
-        srcClips.setObjectList([ClipWrapper(clip, self.getName(), self._view) for clip in self._node.getClips() if not clip == "Output"])
-        return srcClips
+        self._srcClips.setObjectList([clip for clip in self._clipWrappers if not clip.name == "Output"])
+        return self._srcClips
 
     def getOutputClip(self):
         """
             Returns the ClipWrapper of the output clip of this node.
         """
-        for clip in self._node.getClips():
-            if clip == "Output":
-                return ClipWrapper(clip, self.getName(), self._view)
+        return next(clip for clip in self._clipWrappers if clip.name == "Output")
 
-    def getHeight(self):
-        return int(self._heightEmptyNode + self._clipSpacing * self.getNbInput())
-
-    def getWidth(self):
-        return self._width
-
-    def getClipSpacing(self):
-        return self._clipSpacing
-
-    def getClipSize(self):
-        return self._clipSize
-
-    def getSideMargin(self):
-        return self._sideMargin
-
-    def getInputTopMargin(self):
-        return (self.getHeight() - self.getClipSize() * self.getNbInput() - self.getClipSpacing() * (self.getNbInput() - 1)) / 2
-
-    def getOutputTopMargin(self):
-        return (self.getHeight() - self.getClipSize()) / 2
+    @QtCore.pyqtSlot(str, result=QtCore.QObject)
+    def getClip(self, name):
+        """
+            Returns the ClipWrapper of the output clip of this node.
+        """
+        return next(clip for clip in self._clipWrappers if clip.name == name)
 
     def getParams(self):
         return self._paramWrappers.getParamElts()
@@ -206,14 +188,9 @@ class NodeWrapper(QtCore.QObject):
     def setNbInput(self, nbInput):
         self._node.setNbInput(nbInput)
 
-    def setWidth(self, width):
-        self._width = width
-        self.nodeWidthChanged.emit()
-
     ################################################## LINK WRAPPER LAYER TO QML ##################################################
 
     nodeLookChanged = nodePositionChanged = nodeContentChanged = QtCore.pyqtSignal()
-    nodeWidthChanged = QtCore.pyqtSignal()
 
     def emitNodeLookChanged(self):
         """
@@ -236,25 +213,15 @@ class NodeWrapper(QtCore.QObject):
         # emit signal
         self.nodeContentChanged.emit()
 
-    ##### SLot #####
-
-    @QtCore.pyqtSlot(int)
-    def fitWidth(self, textWidth):
-        """
-            Function called by Node.qml to fit the width of the node given the width of the text (with an horizontal margin).
-        """
-        self.setWidth(textWidth + 20)
-
     ################################################## DATA EXPOSED TO QML ##################################################
 
     # params from Buttle
     name = QtCore.pyqtProperty(str, getName, constant=True)
     nameUser = QtCore.pyqtProperty(str, getNameUser, setNameUser, notify=nodeLookChanged)
     nodeType = QtCore.pyqtProperty(str, getType, constant=True)
-    coord = QtCore.pyqtProperty(QtCore.QPoint, getCoord, setCoord, notify=nodePositionChanged)  # problem to access to x property with QPoint !
+    coord = QtCore.pyqtProperty(QtCore.QPointF, getCoord, setCoord, notify=nodePositionChanged)  # problem to access to x property with QPoint !
     xCoord = QtCore.pyqtProperty(int, getXCoord, setXCoord, notify=nodePositionChanged)
     yCoord = QtCore.pyqtProperty(int, getYCoord, setYCoord, notify=nodePositionChanged)
-    color = QtCore.pyqtProperty(QtGui.QColor, getColor, setColor, notify=nodeLookChanged)
     nbInput = QtCore.pyqtProperty(int, getNbInput, constant=True)
     # params (wrappers)
     params = QtCore.pyqtProperty(QtCore.QObject, getParams, notify=nodeContentChanged)
@@ -264,12 +231,7 @@ class NodeWrapper(QtCore.QObject):
     nbFrames = QtCore.pyqtProperty(int, getNbFrames, constant=True)
 
     # for a clean display of  connections
-    height = QtCore.pyqtProperty(int, getHeight, constant=True)
-    width = QtCore.pyqtProperty(int, getWidth, setWidth, notify=nodeWidthChanged)  # using nodeLookChanged creates a binding loop
     srcClips = QtCore.pyqtProperty(QtCore.QObject, getSrcClips, constant=True)
     outputClip = QtCore.pyqtProperty(QtCore.QObject, getOutputClip, constant=True)
-    clipSpacing = QtCore.pyqtProperty(int, getClipSpacing, constant=True)
-    clipSize = QtCore.pyqtProperty(int, getClipSize, constant=True)
-    sideMargin = QtCore.pyqtProperty(int, getSideMargin, constant=True)
-    inputTopMargin = QtCore.pyqtProperty(int, getInputTopMargin, constant=True)
-    outputTopMargin = QtCore.pyqtProperty(int, getOutputTopMargin, constant=True)
+
+    color = QtCore.pyqtProperty(QtGui.QColor, getColor, setColor, notify=nodeLookChanged)

@@ -273,14 +273,10 @@ class Graph(object):
         for connectionData in graphData["connections"]:
             clipIn_nodeName = connectionData["clipIn"]["nodeName"]
             clipIn_clipName = connectionData["clipIn"]["clipName"]
-            clipIn_clipIndex = connectionData["clipIn"]["clipIndex"]
-            clipIn_positionClip = connectionData["clipIn"]["coord"]
-            clipIn = IdClip(clipIn_nodeName, clipIn_clipName, clipIn_clipIndex, clipIn_positionClip)
+            clipIn = IdClip(clipIn_nodeName, clipIn_clipName)
 
             clipOut_nodeName = connectionData["clipOut"]["nodeName"]
             clipOut_clipName = connectionData["clipOut"]["clipName"]
-            clipOut_clipIndex = connectionData["clipOut"]["clipIndex"]
-            clipOut_positionClip = connectionData["clipOut"]["coord"]
-            clipOut = IdClip(clipOut_nodeName, clipOut_clipName, clipOut_clipIndex, clipOut_positionClip)
+            clipOut = IdClip(clipOut_nodeName, clipOut_clipName)
 
             connection = self.createConnection(clipOut, clipIn)

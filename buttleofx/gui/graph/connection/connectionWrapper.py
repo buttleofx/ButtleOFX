@@ -9,13 +9,10 @@ class ConnectionWrapper(QtCore.QObject):
     """
 
     def __init__(self, connection, view):
+        # print("ConnectionWrapper constructor")
         super(ConnectionWrapper, self).__init__(view)
 
         self._connection = connection
-
-        # the link between the connection and the connectionWarpper
-        self._connection.connectionClipOutChanged.connect(self.emitConnectionClipOutChanged)
-        self._connection.connectionClipInChanged.connect(self.emitConnectionClipInChanged)
 
         logging.info("Gui : ConnectionWrapper created")
 
@@ -33,76 +30,21 @@ class ConnectionWrapper(QtCore.QObject):
     def getId(self):
         return self._connection.getId()
 
-    def getClipOutPosX(self):
-        """
-            Returns the x position of the first clip of the connection (= the output clip). => x1
-        """
-        return self._connection.getClipOut().getCoord()[0]
-
-    def getClipOutPosY(self):
-        """
-            Returns the y position of the first clip of the connection (= the output clip). => y1
-        """
-        return self._connection.getClipOut().getCoord()[1]
-
-    def getClipInPosX(self):
-        """
-            Returns the x position of the second clip of the connection (= the input clip). => x2
-        """
-        return self._connection.getClipIn().getCoord()[0]
-
-    def getClipInPosY(self):
-        """
-            Returns the y position of the second clip of the connection (= the input clip). => y2
-        """
-        return self._connection.getClipIn().getCoord()[1]
-
-    ######## setters ########
-
-    def setClipOutPosX(self, posX):
-        """
-            Sets the x position of the first clip of the connection (= the output clip). => x1
-        """
-        self._connection.getClipOut().setXCoord(posX)
-
-    def setClipOutPosY(self, posY):
-        """
-            Sets the y position of the first clip of the connection (= the output clip). => y1
-        """
-        self._connection.getClipOut().setYCoord(posY)
-
-    def setClipInPosX(self, posX):
-        """
-            Sets the x position of the second clip of the connection (= the input clip). => x2
-        """
-        self._connection.getClipIn().setXCoord(posX)
-
-    def setClipInPosY(self, posY):
-        """
-            Sets the y position of the second clip of the connection (= the input clip). => y2
-        """
-        self._connection.getClipIn().setYCoord(posY)
-
-    ################################################## LINK WRAPPER LAYER TO QML ##################################################
-
-    connectionClipOutChanged = connectionClipInChanged = QtCore.pyqtSignal()
-
-    def emitConnectionClipOutChanged(self):
-        """
-            Emits the signal connectionClipOutChanged.
-        """
-        self.connectionClipOutChanged.emit()
-
-    def emitConnectionClipInChanged(self):
-        """
-            Emits the signal connectionClipInChanged.
-        """
-        self.connectionClipInChanged.emit()
+    def getOut_clipNodeName(self):
+        return self._connection.getClipOut().getNodeName()
+    
+    def getOut_clipName(self):
+        return self._connection.getClipOut().getClipName()
+    
+    def getIn_clipNodeName(self):
+        return self._connection.getClipIn().getNodeName()
+    
+    def getIn_clipName(self):
+        return self._connection.getClipIn().getClipName()
 
     ################################################## DATA EXPOSED TO QML ##################################################
 
-    clipOutPosX = QtCore.pyqtProperty(int, getClipOutPosX, setClipOutPosX, notify=connectionClipOutChanged)  # x1
-    clipOutPosY = QtCore.pyqtProperty(int, getClipOutPosY, setClipOutPosX, notify=connectionClipOutChanged)  # y1
-
-    clipInPosX = QtCore.pyqtProperty(int, getClipInPosX, setClipInPosX, notify=connectionClipInChanged)  # x2
-    clipInPosY = QtCore.pyqtProperty(int, getClipInPosY, setClipInPosX, notify=connectionClipInChanged)  # y2
+    in_clipNodeName = QtCore.pyqtProperty(str, getIn_clipNodeName, constant=True)
+    in_clipName = QtCore.pyqtProperty(str, getIn_clipName, constant=True)
+    out_clipNodeName = QtCore.pyqtProperty(str, getOut_clipNodeName, constant=True)
+    out_clipName = QtCore.pyqtProperty(str, getOut_clipName, constant=True)

@@ -4,8 +4,6 @@ import TimerPlayer 1.0
 
 Item {
     id: player
-    implicitWidth: 950
-    implicitHeight: 400
 
     // remark : in python if there are ten frames, they are numbered from 0 to 9 so we need some time to add 1 for display
     property variant node
@@ -119,11 +117,10 @@ Item {
     /********************************Viewer and Tools************************************/
     Rectangle {
         id: viewerAndTools
-        height: parent.height - tabBar.height
-        width: parent.width
+        implicitHeight: parent.height - tabBar.height
+        implicitWidth: parent.width
         y: tabBar.height
         color: "#141414"
-
 
         ColumnLayout {
 
@@ -131,10 +128,12 @@ Item {
             anchors.fill: parent
             Rectangle {
                 id: viewerRegion
-                width: parent.width
+                implicitWidth: parent.width
                 color: "transparent"
                 Layout.minimumHeight: 50
                 Layout.fillHeight: true
+
+                Layout.preferredWidth: parent.width - 10
 
                 Component {
                     id: viewer_component
@@ -153,7 +152,7 @@ Item {
                 Rectangle {
                     id: titleErrorDisplay
                     color: "#00b2a1"
-                    width: titleError.width + 20
+                    implicitWidth: titleError.width + 20
                     height: titleError.lineCount * 20
                     border.width: 2
                     border.color: "black"
@@ -172,7 +171,7 @@ Item {
                         border.color: "black"
                         anchors.top: parent.bottom
                         anchors.left: parent.left
-                        width: errorMessage.width + 20
+                        implicitWidth: errorMessage.width + 20
                         height: errorMessage.lineCount * 20
                         opacity: 0
                         Text {
@@ -219,7 +218,7 @@ Item {
                 property int impHeightValue: 25
 
                 y: parent.height + tabBar.height
-                width: parent.width
+                implicitWidth: parent.width
                 color: "transparent"
                 Layout.minimumWidth : 700
                 Layout.preferredHeight: 25
@@ -228,8 +227,8 @@ Item {
                 // Tools (zoom, timeline buttons, mosquitos)
                 Rectangle {
                     id: tools
-                    width: parent.width
-                    height: parent.height
+                    implicitWidth: parent.width
+                    implicitHeight: parent.height
                     color: "#141414"
                     gradient: Gradient {
                         GradientStop { position: 0.0; color: "#141414" }
@@ -275,6 +274,14 @@ Item {
                         // Mosquito
                         Rectangle {
                             id: mosquitoTool
+                            StateGroup {
+                                id: mosquitoState
+                                states: State {
+                                    name: "dragging"
+                                    when: mosquitoMouseArea.pressed
+                                    PropertyChanges { target: mosquitoTool; x: mosquitoTool.x; y: mosquitoTool.y }
+                                }
+                            }
                             width: 28
                             height: 28
                             color : mosquitoMouseArea.containsMouse ? "#343434" : "transparent"
@@ -282,18 +289,23 @@ Item {
 
                             Image {
                                 id: mosquito
-                                source: _buttleData.buttlePath + "/gui/img/mosquito/mosquito.png"
+                                source: "file:///" + _buttleData.buttlePath + "/gui/img/mosquito/mosquito.png"
                                 anchors.centerIn: parent
                             }
 
+                            Drag.active: mosquitoMouseArea.drag.active
+                            Drag.hotSpot.x: 14
+                            Drag.hotSpot.y: 14
+                            Drag.keys: "mosquitoMouseArea"
+
                             MouseArea {
-                                hoverEnabled: true
                                 id: mosquitoMouseArea
                                 anchors.fill: parent
 
-                                onPressed: {
-                                    //_buttleManager.viewerManager.mosquitoDragEvent()
-                                }
+                                hoverEnabled: true
+
+                                onReleased: parent.Drag.drop()
+								drag.target: parent
                             }
                         }
 
@@ -352,19 +364,19 @@ Item {
             /****************Timeline*******************/
             Item {
                 id: timeline
-                width: parent.width
+                implicitWidth: parent.width
                 implicitHeight: 10
                 anchors.bottom: toolBarRegion.top
 
                 // main container
                 Rectangle {
-                    width: parent.width
+                    implicitWidth: parent.width
                     color: "transparent"
                     y: 10
                     Rectangle {
                         id: barTimeline
                         anchors.verticalCenter: parent.verticalCenter
-                        width: parent.width
+                        implicitWidth: parent.width
                         height: 2
 
                         Rectangle{
@@ -434,7 +446,7 @@ Item {
                     }
                 }
             }
-        } //ColumnLayout
-    } // Viewer & tools
-} // Item player
+        }
+    }
+}
 

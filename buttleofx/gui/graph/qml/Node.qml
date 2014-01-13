@@ -26,8 +26,8 @@ Rectangle {
     }
     objectName: "qmlNode_" + m.nodeWrapper.name
 
-    x: m.nodeWrapper.coord.x
-    y: m.nodeWrapper.coord.y
+    x: ((m.nodeWrapper.coord.x * graphContainer.width) / qml_graphRoot.graphPreviousWidth)
+    y: ((m.nodeWrapper.coord.y * graphContainer.height) / qml_graphRoot.graphPreviousHeight)
     z: _buttleData.graphWrapper.zMax
 
     //height: 40
@@ -45,9 +45,10 @@ Rectangle {
         Drag.keys: "node"
         acceptedButtons: Qt.LeftButton | Qt.RightButton | Qt.MidButton
         onPressed: {
+            console.log("node wrapper x : "+ m.nodeWrapper.coord.x)
+            console.log("node x : "+parent.x)
             // left button : we change the current selected nodes & we start moving
             if (mouse.button == Qt.LeftButton) {
-
                 // we clear the list of selected connections
                 _buttleData.clearCurrentConnectionId()
 
@@ -63,7 +64,7 @@ Rectangle {
 
                 _buttleData.graphWrapper.zMax += 1
                 parent.z = _buttleData.graphWrapper.zMax
-                stateMoving.state = "moving"
+                //stateMoving.state = "moving"
             }
 
             // right button : we change the current param node
@@ -77,8 +78,8 @@ Rectangle {
         onReleased: {
             // left button : we end moving
             if (mouse.button == Qt.LeftButton) {
-                _buttleManager.nodeManager.nodeMoved(m.nodeWrapper.name, parent.x, parent.y)
-                stateMoving.state = "normal"
+                _buttleManager.nodeManager.nodeMoved(m.nodeWrapper.name, m.nodeWrapper.coord.x, m.nodeWrapper.coord.y)
+                //stateMoving.state = "normal"
             }
              //middle button : assign the node to the viewer
             else if (mouse.button == Qt.MidButton){
@@ -274,7 +275,7 @@ Rectangle {
         }
     }
 
-    StateGroup {
+    /*StateGroup {
         id: stateMoving
         state: "normal"
         states: [
@@ -284,10 +285,10 @@ Rectangle {
             },
             State {
                 name: "moving"
-                PropertyChanges { target: m.nodeRoot; x: m.nodeWrapper.coord.x ; y: m.nodeWrapper.coord.y }
+                PropertyChanges { target: m.nodeRoot; x: m.nodeWrapper.coord.x; y: m.nodeWrapper.coord.y }
             }
         ]
-    }
+    }*/
 
     StateGroup {
         id: statePressed

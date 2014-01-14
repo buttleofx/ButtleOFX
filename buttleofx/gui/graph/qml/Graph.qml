@@ -121,17 +121,16 @@ Item {
             if(wheel.angleDelta.y > 0){
                 zoomCoeff += zoomStep
             }else{
-                if(zoomCoeff > zoomStep){ //inferior boundary
-                    zoomCoeff -= zoomStep
-                }
+                zoomCoeff -= zoomStep
             }
+            //mouseRatioX = (mouseX-offsetX)/graphContainer.width
+            //mouseRatioY = (mouseY-offsetY)/graphContainer.height
 
-            console.log(" : " + m.graphRoot.originX)
-            mouseRatioX = (mouseX-offsetX)/graphContainer.width
-            mouseRatioY = (mouseY-offsetY)/graphContainer.height
+            mouseRatioX = 0.5
+            mouseRatioY = 0.5
 
-            graphContainer.x = ((graphPreviousWidth * 0.5) - (graphContainer.width * 0.5)) + offsetX
-            graphContainer.y = ((graphPreviousHeight * 0.5) - (graphContainer.height * 0.5 )) + offsetY
+            graphContainer.x = ((graphPreviousWidth * mouseRatioX) - (graphContainer.width * mouseRatioX)) + offsetX
+            graphContainer.y = ((graphPreviousHeight * mouseRatioY) - (graphContainer.height * mouseRatioY )) + offsetY
         }
     }
     onDrawSelection: {
@@ -160,8 +159,6 @@ Item {
         y: 0
         width: parent.width * zoomCoeff
         height: parent.height * zoomCoeff
-        border.color : "green"
-        border.width : 5
         color: "transparent"
 
         Item {

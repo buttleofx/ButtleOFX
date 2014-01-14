@@ -78,7 +78,7 @@ Rectangle {
         onReleased: {
             // left button : we end moving
             if (mouse.button == Qt.LeftButton) {
-                _buttleManager.nodeManager.nodeMoved(m.nodeWrapper.name, m.nodeWrapper.coord.x, m.nodeWrapper.coord.y)
+                _buttleManager.nodeManager.nodeMoved(m.nodeWrapper.name, (m.nodeWrapper.coord.x * qml_graphRoot.graphPreviousWidth) / graphContainer.width, (m.nodeWrapper.coord.y * qml_graphRoot.graphPreviousHeight) / graphContainer.height)
                 //stateMoving.state = "normal"
             }
              //middle button : assign the node to the viewer
@@ -176,8 +176,7 @@ Rectangle {
         // inputClips
         Item {
             id: inputClipsItem
-            height: parent.height
-            Layout.minimumWidth: 2
+            y: parent.height /2
             Layout.alignment: Qt.AlignVCenter | Qt.AlignLeft
 
 
@@ -186,7 +185,7 @@ Rectangle {
                 anchors.verticalCenter: parent.verticalCenter
                 width: childrenRect.width
                 height: childrenRect.height
-                spacing: 5
+                spacing: 5 * qml_graphRoot.zoomCoeff
                 model: m.nodeWrapper.srcClips
 
                 delegate: Component {
@@ -207,7 +206,7 @@ Rectangle {
 
         }
         Item {
-            height: parent.height
+            y: parent.height /2
             Layout.minimumWidth: 2
             Layout.fillWidth: true
         }
@@ -216,7 +215,7 @@ Rectangle {
         Item {
             id: outputClipContainer
 
-            height: parent.height
+            y: parent.height /2
             implicitWidth: childrenRect.width
             Layout.minimumWidth: childrenRect.width
             Layout.preferredWidth: childrenRect.width

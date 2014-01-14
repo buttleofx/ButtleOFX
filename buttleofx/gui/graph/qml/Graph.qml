@@ -24,6 +24,10 @@ Item {
     property real graphPreviousWidth: width
     property real graphPreviousHeight: height
     property real nodeX
+    property real mouseRatioX
+    property real mouseRatioY
+    property int offsetX: 0
+    property int offsetY: 0
 
     signal clickCreationNode(string nodeType)
     signal drawSelection(int selectionX, int selectionY, int selectionWidth, int selectionHeight)
@@ -38,10 +42,11 @@ Item {
 
         property bool drawingSelection: false
         property bool selectMode: true
+        property bool moveMode: false
 
         anchors.fill: parent
         hoverEnabled: true
-        acceptedButtons: Qt.LeftButton
+        acceptedButtons: Qt.LeftButton | Qt.MiddleButton
         onPressed: {
             xStart = mouse.x
             yStart = mouse.y
@@ -52,13 +57,21 @@ Item {
             rectangleSelection.y = mouse.y;
             rectangleSelection.width = 1;
             rectangleSelection.height = 1;
-            selectMode = ! (mouse.modifiers & Qt.ControlModifier)
+            selectMode = leftMouseArea.pressedButtons & Qt.MiddleButton ? false : true
+            moveMode = leftMouseArea.pressedButtons & Qt.MiddleButton ? true : false
             if( selectMode ) {
                 rectangleSelection.visible = true;
                 drawingSelection = true;
             }
         }
         onReleased: {
+            if(moveMode){
+                moveMode=false
+                var xOffset = mouse.x - xStart
+                var yOffset = mouse.y - yStart
+                offsetX += xOffset
+                offsetY += yOffset
+            }
             if( selectMode ) {
                 rectangleSelection.visible = false;
                 _buttleData.clearCurrentSelectedNodeNames();
@@ -82,7 +95,7 @@ Item {
                 rectangleSelection.height = mouse.y - yStart;
             }
 
-            if( ! selectMode ) {
+            if( moveMode ) {
                 var xOffset = mouse.x - xStart
                 var yOffset = mouse.y - yStart
                 m.graphRoot.originX = graphContainer_xStart + xOffset
@@ -112,12 +125,13 @@ Item {
                     zoomCoeff -= zoomStep
                 }
             }
-            //console.log("width" + graphContainer.width)
-            //console.log("initial width" + graphPreviousWidth)
-            //console.log("graphcontainer x" + graphContainer.x)
-            graphContainer.x = (graphPreviousWidth * 0.5) - (graphContainer.width * 0.5)
-            graphContainer.y = (graphPreviousHeight * 0.5) - (graphContainer.height * 0.5)
-            //console.log("container xstart" + graphContainer_xStart)
+
+            console.log(" : " + m.graphRoot.originX)
+            mouseRatioX = (mouseX-offsetX)/graphContainer.width
+            mouseRatioY = (mouseY-offsetY)/graphContainer.height
+
+            graphContainer.x = ((graphPreviousWidth * 0.5) - (graphContainer.width * 0.5)) + offsetX
+            graphContainer.y = ((graphPreviousHeight * 0.5) - (graphContainer.height * 0.5 )) + offsetY
         }
     }
     onDrawSelection: {
@@ -139,6 +153,7 @@ Item {
         }
     }
     */
+
     Rectangle {
         id: graphContainer
         x: 0
@@ -231,6 +246,7 @@ Item {
             }
         }
     }
+
 
     // Rectangle selection is placed here so it is drawn over the nodes
     Rectangle {

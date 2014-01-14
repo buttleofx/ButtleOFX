@@ -10,6 +10,7 @@ import "gui/viewer/qml"
 import "gui/paramEditor/qml"
 
 ApplicationWindow {
+    property int selectedView : 1
 
     width: 1200
     height: 800
@@ -228,6 +229,7 @@ ApplicationWindow {
                 onTriggered: _buttleManager.deleteSelection()
             }
         }
+
         Menu {
             id: nodesMenu
             title: "Nodes"
@@ -240,6 +242,20 @@ ApplicationWindow {
                 }
                 onObjectAdded: nodesMenu.insertItem(index, object)
                 onObjectRemoved: nodesMenu.removeItem(object)
+            }
+        }
+
+        Menu {
+            title: "View"
+
+            MenuItem {
+                text: "Viewer/Graph"
+                onTriggered: selectedView = 1
+            }
+
+            MenuItem {
+                text: "Graph/Viewer"
+                onTriggered: selectedView = 2
             }
         }
 
@@ -336,38 +352,74 @@ ApplicationWindow {
                 orientation: Qt.Vertical
                 Layout.fillWidth: true
 
-                Player {
-                    id: player
+                Rectangle {
+                    id: topLeftView
+                    color: "#353535"
                     Layout.minimumHeight: 200
                     Layout.fillHeight: true
                     implicitWidth: parent.width
 
-                    node: _buttleData.currentViewerNodeWrapper
+                    children:
+                        switch(selectedView){
+                            case 1:
+                                player
+                                break
+                            case 2:
+                                graphEditor
+                                break
+                        }
+
                 }
 
-                GraphEditor {
-                    id: graphEditor
-
+                Rectangle {
+                    id: bottomLeftView
+                    color: "#353535"
                     Layout.minimumHeight: 200
                     Layout.fillHeight: true
                     implicitHeight: 0.4 * parent.height
                     implicitWidth: parent.width
                     z: -1
+
+                    children:
+                        switch(selectedView){
+                            case 1:
+                                graphEditor
+                                break
+                            case 2:
+                                player
+                                break
+                        }
+
                 }
             }
 
-            ParamEditor {
+            Rectangle {
+                id: rightColumn
                 Layout.minimumWidth: 100
                 width: 0.3*parent.width
-                params: _buttleData.currentParamNodeWrapper ? _buttleData.currentParamNodeWrapper.params : null
-                currentParamNode: _buttleData.currentParamNodeWrapper
+
+                children: paramEditor
             }
         }
     }
-/*
-    attachedObjects: [
-        Tools {
-            id: tools
-        }
-    ]*/
+
+
+    Player {
+        id: player
+        anchors.fill: parent
+        node: _buttleData.currentViewerNodeWrapper
+    }
+
+    GraphEditor {
+        id: graphEditor
+        anchors.fill: parent
+    }
+
+    ParamEditor {
+        id: paramEditor
+        anchors.fill: parent
+        params: _buttleData.currentParamNodeWrapper ? _buttleData.currentParamNodeWrapper.params : null
+        currentParamNode: _buttleData.currentParamNodeWrapper
+    }
+
 }

@@ -75,7 +75,7 @@ Rectangle {
                 }
 		    }
 
-		    Viewer {
+            /*Viewer {
 		    	id: viewer
 
                 Layout.fillWidth: check.checked
@@ -84,7 +84,7 @@ Rectangle {
                 Layout.preferredWidth: 1
 
                 filepath: m.filepath
-		    }
+            }*/
 	    }
 
 	    FooterBar {
@@ -96,11 +96,11 @@ Rectangle {
             fileType : m.fileType
             onChangeFilter: {
                 console.debug("filter has changed to " + newFilter)
-                m.filter= newFilter
+                m.filter = newFilter
             }
             onOpenFolder: {
                 console.debug("folder has changed to " + newFolder)
-                m.directory= newFolder
+                m.directory = newFolder
             }
 	    }
 

@@ -8,6 +8,7 @@ import QuickMamba 1.0
 import "gui/graph/qml"
 import "gui/viewer/qml"
 import "gui/paramEditor/qml"
+import "gui/browser/qml"
 
 ApplicationWindow {
     width: 1200
@@ -348,6 +349,16 @@ ApplicationWindow {
                     implicitWidth: parent.width
                     z: -1
                 }
+                /*Browser {
+                    id: browser
+
+                    Layout.minimumHeight: 200
+                    Layout.fillHeight: true
+                    implicitHeight: 0.4 * parent.height
+                    implicitWidth: parent.width
+                    z: -1
+                }*/
+
             }
 
             ParamEditor {

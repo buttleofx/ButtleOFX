@@ -244,6 +244,58 @@ Item {
         }
     }
 
+    Rectangle{
+        property real scaleFactor : 0.15
+        property real marginTop : 150
+        property real marginLeft : 70
+
+        id: miniGraph
+        width: (parent.width + marginLeft*2) * scaleFactor
+        height: (parent.height + marginTop*2) * scaleFactor
+        opacity: 1
+        color: "#414141"
+        anchors.right: parent.right
+        anchors.bottom: parent.bottom
+        clip: true
+        anchors.rightMargin: 10
+        anchors.bottomMargin: 10
+
+        Item {
+            id: miniNodes
+            anchors.fill: parent
+
+            Repeater {
+                id: miniNodesRepeater
+                model: _buttleData.graphWrapper.nodeWrappers
+                Rectangle {
+                    width : 7
+                    height : 7
+                    radius: width * 0.5
+                    //x: (((model.object.coord.x * graphContainer.width) / qml_graphRoot.graphPreviousWidth) + ((graphPreviousWidth * 0.5) - (graphContainer.width * 0.5)) + miniGraph.marginLeft) * miniGraph.scaleFactor
+                    //y: (((model.object.coord.y * graphContainer.height) / qml_graphRoot.graphPreviousHeight) + ((graphPreviousHeight * 0.5) - (graphContainer.height * 0.5)) + miniGraph.marginTop) * miniGraph.scaleFactor
+                    x: (model.object.coord.x + miniGraph.marginLeft) * miniGraph.scaleFactor
+                    y: (model.object.coord.y + miniGraph.marginTop) * miniGraph.scaleFactor
+                    color: "#00b2a1"
+                    opacity: 0.6
+                }
+            }
+            Rectangle {
+                border.color: "#00b2a1"
+                border.width: 1
+                opacity: 0.2
+                color: "transparent"
+                width: qml_graphRoot.width * zoomCoeff * miniGraph.scaleFactor
+                height: qml_graphRoot.height * zoomCoeff * miniGraph.scaleFactor
+                x: (miniGraph.marginLeft +((graphPreviousWidth * 0.5) - (graphContainer.width * 0.5))) * miniGraph.scaleFactor
+                y: (miniGraph.marginTop + ((graphPreviousHeight * 0.5) - (graphContainer.height * 0.5))) * miniGraph.scaleFactor
+            }
+        }
+
+        MouseArea{
+            anchors.fill: parent
+        }
+    }
+
 
     // Rectangle selection is placed here so it is drawn over the nodes
     Rectangle {

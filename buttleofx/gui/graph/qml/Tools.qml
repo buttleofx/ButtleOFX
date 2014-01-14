@@ -55,9 +55,6 @@ Rectangle {
 
                 onClicked: {
                     finderLoadGraph.open()
-                    //if (FinderLoadGraph.propFile) {
-                    //    _buttleData.loadData(finderLoadGraph.propFile)
-                    //}
                 }
             }
 
@@ -76,9 +73,6 @@ Rectangle {
 
                 onClicked: {
                     finderSaveGraph.open()
-                    //if (finderSaveGraph.propFile) {
-                    //    _buttleData.saveData(finderSaveGraph.propFile)
-                    //}
                 }
             }
 

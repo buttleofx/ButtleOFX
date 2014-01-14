@@ -2,14 +2,15 @@ import QtQuick 2.0
 import QtQuick.Controls 1.0
 import QtQuick.Layouts 1.0
 import QtQml 2.1
-
 import QuickMamba 1.0
+import QtQuick.Dialogs 1.0
 
 import "gui/graph/qml"
 import "gui/viewer/qml"
 import "gui/paramEditor/qml"
 
 ApplicationWindow {
+
     width: 1200
     height: 800
     id: mainWindowQML
@@ -57,10 +58,12 @@ ApplicationWindow {
         if ((event.key == Qt.Key_S) && (event.modifiers & Qt.ControlModifier)){
             if(_buttleData.graphCanBeSaved) {
                 graphEditor.doAction("save")
+                // finderSaveGraph.open()
             }
         }
         if ((event.key == Qt.Key_O) && (event.modifiers & Qt.ControlModifier)){
             graphEditor.doAction("load")
+            // finderLoadGraph.open()
         }
 
         // Viewer
@@ -128,6 +131,9 @@ ApplicationWindow {
         }
     }
 
+    FinderLoadGraph{ id: finderLoadGraph }
+    FinderSaveGraph{ id: finderSaveGraph }
+
     menuBar: MenuBar {
         Menu {
             title: "File"
@@ -135,7 +141,7 @@ ApplicationWindow {
             MenuItem {
                 text: "Open"
                 shortcut: "Ctrl+O"
-                onTriggered: graphEditor.doAction("load")
+                onTriggered: finderLoadGraph.open()
             }
 
             MenuItem {
@@ -143,7 +149,7 @@ ApplicationWindow {
                 shortcut: "Ctrl+S"
                 onTriggered:
                     if(_buttleData.graphCanBeSaved) {
-                        graphEditor.doAction("save")
+                        finderSaveGraph.open()
                     }
             }
 
@@ -358,4 +364,10 @@ ApplicationWindow {
             }
         }
     }
+/*
+    attachedObjects: [
+        Tools {
+            id: tools
+        }
+    ]*/
 }

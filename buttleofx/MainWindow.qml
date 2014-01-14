@@ -59,13 +59,11 @@ ApplicationWindow {
         }
         if ((event.key == Qt.Key_S) && (event.modifiers & Qt.ControlModifier)){
             if(_buttleData.graphCanBeSaved) {
-                graphEditor.doAction("save")
-                // finderSaveGraph.open()
+                finderSaveGraph.open()
             }
         }
         if ((event.key == Qt.Key_O) && (event.modifiers & Qt.ControlModifier)){
-            graphEditor.doAction("load")
-            // finderLoadGraph.open()
+            finderLoadGraph.open()
         }
 
         // Viewer
@@ -255,8 +253,18 @@ ApplicationWindow {
             }
 
             MenuItem {
-                text: "Graph/Viewer"
+                text: "Viewer/Browser"
                 onTriggered: selectedView = 2
+            }
+
+            MenuItem {
+                text: "Browser/Graph"
+                onTriggered: selectedView = 3
+            }
+
+            MenuItem {
+                text: "So Cool View"
+                onTriggered: selectedView = 4
             }
         }
 
@@ -363,10 +371,12 @@ ApplicationWindow {
                     children:
                         switch(selectedView){
                             case 1:
+                            case 2:
+                            case 4:
                                 player
                                 break
-                            case 2:
-                                graphEditor
+                            case 3:
+                                browser
                                 break
                         }
                 }
@@ -383,53 +393,87 @@ ApplicationWindow {
                     children:
                         switch(selectedView){
                             case 1:
+                            case 3:
+                            case 4:
                                 graphEditor
                                 break
                             case 2:
-                                player
+                                browser
                                 break
                         }
-
                 }
             }
 
             Rectangle {
                 id: rightColumn
+                color: "#353535"
                 Layout.minimumWidth: 100
                 width: 0.3*parent.width
 
-                children: paramEditor
+                children:
+                    switch(selectedView){
+                        case 1:
+                        case 2:
+                        case 3:
+                            paramEditor
+                            break
+                        case 4:
+                            browserAndParams
+                            break
+                    }
             }
         }
     }
 
 
-    Player {
-        id: player
-        anchors.fill: parent
-        node: _buttleData.currentViewerNodeWrapper
+    Item {
+        id: subviews
+        visible: false
+
+        Player {
+            id: player
+            anchors.fill: parent
+            node: _buttleData.currentViewerNodeWrapper
+        }
+
+        GraphEditor {
+            id: graphEditor
+            anchors.fill: parent
+        }
+
+        ParamEditor {
+            id: paramEditor
+            anchors.fill: parent
+            params: _buttleData.currentParamNodeWrapper ? _buttleData.currentParamNodeWrapper.params : null
+            currentParamNode: _buttleData.currentParamNodeWrapper
+        }
+
+        Browser {
+            id: browser
+            anchors.fill: parent
+        }
+
+        SplitView {
+            id: browserAndParams
+            anchors.fill: parent
+            orientation: Qt.Vertical
+
+            Rectangle {
+                Layout.minimumHeight: 200
+                Layout.fillHeight: true
+                implicitWidth: parent.width
+                //color: "red"
+                children: browser
+            }
+
+            Rectangle {
+                Layout.minimumHeight: 200
+                Layout.fillHeight: true
+                implicitHeight: 0.4 * parent.height
+                implicitWidth: parent.width
+                //color: "blue"
+                children: paramEditor
+            }
+        }
     }
-
-    GraphEditor {
-        id: graphEditor
-        anchors.fill: parent
-    }
-
-    ParamEditor {
-        id: paramEditor
-        anchors.fill: parent
-        params: _buttleData.currentParamNodeWrapper ? _buttleData.currentParamNodeWrapper.params : null
-        currentParamNode: _buttleData.currentParamNodeWrapper
-    }
-
-    Browser {
-        id: browser
-
-        Layout.minimumHeight: 200
-        Layout.fillHeight: true
-        implicitHeight: 0.4 * parent.height
-        implicitWidth: parent.width
-        z: -1
-    }
-
 }

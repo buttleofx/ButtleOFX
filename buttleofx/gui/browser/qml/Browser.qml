@@ -4,8 +4,6 @@ import QtQuick.Layouts 1.0
 
 Rectangle {
 	id: browser
-	width: 1000
-	height : 600
 
     QtObject {
         id: m

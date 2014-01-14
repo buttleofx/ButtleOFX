@@ -27,12 +27,14 @@ Item {
     Row {
         id: paramChoiceInputContainer
         spacing: 10
-
+        clip: true
         //Title of the param
         Text {
             id: paramChoiceTitle
             text: paramObject.text + " : "
             color: "white"
+            //elide: Text.ElideMiddle
+
             // if param has been modified, title in bold font
             font.bold: paramObject.hasChanged ? true : false
             MouseArea {

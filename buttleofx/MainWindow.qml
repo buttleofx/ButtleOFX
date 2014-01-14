@@ -8,6 +8,7 @@ import QtQuick.Dialogs 1.0
 import "gui/graph/qml"
 import "gui/viewer/qml"
 import "gui/paramEditor/qml"
+import "gui/browser/qml"
 
 ApplicationWindow {
     property int selectedView : 1
@@ -368,7 +369,6 @@ ApplicationWindow {
                                 graphEditor
                                 break
                         }
-
                 }
 
                 Rectangle {
@@ -420,6 +420,16 @@ ApplicationWindow {
         anchors.fill: parent
         params: _buttleData.currentParamNodeWrapper ? _buttleData.currentParamNodeWrapper.params : null
         currentParamNode: _buttleData.currentParamNodeWrapper
+    }
+
+    Browser {
+        id: browser
+
+        Layout.minimumHeight: 200
+        Layout.fillHeight: true
+        implicitHeight: 0.4 * parent.height
+        implicitWidth: parent.width
+        z: -1
     }
 
 }

@@ -12,6 +12,19 @@ Item {
     property alias originX: graphContainer.x
     property alias originY: graphContainer.y
 
+    /*property real zoomCoeff: 1
+    property real zoomStep: 0.05
+    property real graphPreviousWidth: width
+    property real graphPreviousHeight: height
+    property int nodeInitialWidth: 80*/
+    property int nodeWidth: 80
+
+    property real zoomCoeff: 1
+    property real zoomStep: 0.05
+    property real graphPreviousWidth: width
+    property real graphPreviousHeight: height
+    property real nodeX
+
     signal clickCreationNode(string nodeType)
     signal drawSelection(int selectionX, int selectionY, int selectionWidth, int selectionHeight)
 
@@ -27,7 +40,7 @@ Item {
         property bool selectMode: true
 
         anchors.fill: parent
-        // hoverEnabled: true
+        hoverEnabled: true
         acceptedButtons: Qt.LeftButton
         onPressed: {
             xStart = mouse.x
@@ -76,6 +89,36 @@ Item {
                 m.graphRoot.originY = graphContainer_yStart + yOffset
             }
         }
+        /*onWheel: {
+            if(wheel.angleDelta.y > 0){
+                zoomCoeff += zoomStep
+            }else{
+                if(zoomCoeff > zoomStep){ //inferior boundary
+                    zoomCoeff -= zoomStep
+                }
+            }
+
+            _buttleData.zoom(graphContainer.width, graphContainer.height, nodeWidth, zoomCoeff, graphPreviousWidth, graphPreviousHeight, mouseX, mouseY, m.graphRoot.originX, m.graphRoot.originY)
+            graphPreviousWidth = zoomCoeff * graphContainer.width
+            graphPreviousHeight = zoomCoeff * graphContainer.height
+            nodeWidth = zoomCoeff * nodeInitialWidth
+        }*/
+
+        onWheel:{
+            if(wheel.angleDelta.y > 0){
+                zoomCoeff += zoomStep
+            }else{
+                if(zoomCoeff > zoomStep){ //inferior boundary
+                    zoomCoeff -= zoomStep
+                }
+            }
+            //console.log("width" + graphContainer.width)
+            //console.log("initial width" + graphPreviousWidth)
+            //console.log("graphcontainer x" + graphContainer.x)
+            graphContainer.x = (graphPreviousWidth * 0.5) - (graphContainer.width * 0.5)
+            graphContainer.y = (graphPreviousHeight * 0.5) - (graphContainer.height * 0.5)
+            //console.log("container xstart" + graphContainer_xStart)
+        }
     }
     onDrawSelection: {
         _buttleData.addNodeWrappersInRectangleSelection(selectionX, selectionY, selectionWidth, selectionHeight);
@@ -100,15 +143,16 @@ Item {
         id: graphContainer
         x: 0
         y: 0
-        width: parent.width
-        height: parent.height
-
+        width: parent.width * zoomCoeff
+        height: parent.height * zoomCoeff
+        border.color : "green"
+        border.width : 5
         color: "transparent"
 
         Item {
             id: repere
             property color repereColor: "red"
-            property double size: 50
+            property double size: 50 * zoomCoeff
             property double thickness: 2
             Rectangle {
                 id: axeX
@@ -141,6 +185,8 @@ Item {
                 Node {
                     nodeWrapper: model.object
                     graphRoot: m.graphRoot
+                    height: nodeWidth /2 * zoomCoeff
+                    width: nodeWidth * zoomCoeff
                 }
             }
         }
@@ -194,26 +240,4 @@ Item {
         opacity: 0.25
         visible: false
     }
-
-    /*
-    WheelArea {
-        anchors.fill: parent
-        property real nbSteps: 5
-        onVerticalWheel: {
-            if(scale.xScale > 0.3 ) {
-                //scale.origin.x = middleMouseArea.mouseX
-                //scale.origin.y = middleMouseArea.mouseY
-                //console.log(connectnode.width)
-                if(delta < 0 && scale.xScale - 0.2 > 0.3 && scale.yScale - 0.2 > 0.3 ) {
-                    scale.xScale -= 0.1
-                    scale.yScale -= 0.1
-                }
-                if(delta > 0) {
-                    scale.xScale += 0.1
-                    scale.yScale += 0.1
-                }
-            }
-        }
-    }
-    */
 }

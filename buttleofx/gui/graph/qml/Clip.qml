@@ -15,7 +15,7 @@ Rectangle {
     QtObject {
         id: m
         property variant clipWrapper
-        property double clipSize: 10
+        property double clipSize: 9
         property double radius: 0.5 * clipRoot.clipSize
     }
 
@@ -184,9 +184,11 @@ Rectangle {
                    when: handle.Drag.active
                    PropertyChanges {
                       target: handle
-                      opacity: .5
+                      opacity: 1
                       x: 0
                       y: 0
+                      width: 0.6*width
+                      height: 0.6*height
                    }
                 }
             ]
@@ -220,6 +222,9 @@ Rectangle {
                     connections.tmpConnectionX1 = x_inGraph + mouse.x
                     connections.tmpConnectionY1 = y_inGraph + mouse.y
                 }
+                //Hack to position correctly the handle (the drag in QML creates a gap)
+                handle.x = mouseX - handle.width/2
+                handle.y = mouseY - handle.height/2
            }
         }
     }

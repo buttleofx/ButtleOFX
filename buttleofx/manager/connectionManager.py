@@ -159,6 +159,16 @@ class ConnectionManager(QtCore.QObject):
         
         self.connect(id_clipOut, id_clipIn)
         
+    @QtCore.pyqtSlot(QtCore.QObject, QtCore.QObject, QtCore.QObject, QtCore.QObject, QtCore.QObject)
+    def dissociateConnection(self, clipOut, clipIn, middleIn, middleOut, connectionWrapper):
+        id_clipOut = IdClip(clipOut.getNodeName(), clipOut.getClipName())
+        id_clipIn = IdClip(clipIn.getNodeName(), clipIn.getClipName())
+        id_middleIn = IdClip(middleIn.getNodeName(), middleIn.getClipName())
+        id_middleOut = IdClip(middleOut.getNodeName(), middleOut.getClipName())
+        
+        self.connect(id_clipOut, id_middleIn)
+        self.connect(id_middleOut, id_clipIn)
+        self.disconnect(connectionWrapper)
     ############### CREATION AND DESTRUCTION ###############
 
     def connect(self, clipOut, clipIn):

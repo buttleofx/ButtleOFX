@@ -19,6 +19,8 @@ from buttleofx.core.undo_redo.manageTools import CommandManager
 # events
 from buttleofx.event import ButtleEvent
 
+import math
+
 class ButtleData(QtCore.QObject):
     """
         Class ButtleData defined by:
@@ -351,7 +353,31 @@ class ButtleData(QtCore.QObject):
             Returns True if we can paste (= if there is at least one node selected).
         """
         return self._currentCopiedNodesInfo != {}
+        
+    @QtCore.pyqtSlot(int, int, int, float, float, float, float, float, int, int)
+    def zoom(self, width, height, nodeWidth, zoomCoeff, graphPreviousWidth, graphPreviousHeight, mouseX, mouseY, offsetX, offsetY):
+    
+          mouseXRatio = (mouseX - offsetX) / width
+          mouseYRatio = (mouseY - offsetY) / height
+          newWidth = zoomCoeff * width
+          newHeight = zoomCoeff * height
+          reinitOriginX = (width * mouseXRatio) - (graphPreviousWidth * mouseXRatio)
+          reinitOriginY = (height * mouseYRatio) - (graphPreviousHeight * mouseYRatio)
+          newOriginX = (width * mouseXRatio) - (newWidth * mouseXRatio)
+          newOriginY = (height * mouseYRatio) - (newHeight * mouseYRatio)  
 
+          nodes = self._graphWrapper.getNodeWrappers()
+          for i in nodes:
+              if graphPreviousWidth != width :
+                  i.xCoord = ((i.xCoord - reinitOriginX) * width) / graphPreviousWidth
+                  i.yCoord = ((i.yCoord - reinitOriginY) * height) / graphPreviousHeight
+                  
+              i.xCoord = ((i.xCoord * newWidth) / width) + newOriginX #- (nodeWidth * 0.5)
+              i.yCoord = ((i.yCoord * newHeight) / height) + newOriginY #- (nodeWidth * 0.5)
+     
+          self._graphWrapper.updateNodeWrappers()
+          self._graphWrapper.updateConnectionWrappers()
+        
     ################################################## PLUGIN LIST #####################################################
 
     def getPluginsIdentifiers(self):

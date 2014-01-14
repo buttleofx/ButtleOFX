@@ -59,12 +59,13 @@ class GLViewport_tuttleofx(GLViewport):
         self.setImageBounds(QtCore.QRect(bounds.x1, bounds.y1, width, height))
 
     def loadImage(self):
+        # print("glviewport_tuttleofx.loadImage")
         self.img_data = None
         self.tex = None
 
         try:
             self.loadImage_tuttle()
-            #print('Tuttle img_data:', self.img_data)
+            # print('Tuttle img_data:', self.img_data)
         except Exception as e:
             logging.debug('Error while loading image file.\nError: "%s"' % str(e))
             self.img_data = None
@@ -78,8 +79,8 @@ class GLViewport_tuttleofx(GLViewport):
         buttleData = ButtleDataSingleton().get()
         buttleData._mapNodeNameToComputedImage.clear()
 
-    def internPaintGL(self, widget):
-        super(GLViewport_tuttleofx, self).internPaintGL(widget)
+    def internPaintGL(self):
+        super(GLViewport_tuttleofx, self).internPaintGL()
         pixelScale = tuttle.OfxPointD()
         pixelScale.x = self.getScale()
         pixelScale.y = pixelScale.x

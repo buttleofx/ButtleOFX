@@ -7,11 +7,8 @@ currentFilePath = os.path.dirname(os.path.abspath(__file__))
 quickmambaPath = os.path.join(currentFilePath, '../../../QuickMamba')
 sys.path.append(quickmambaPath)
 
-from buttleofx.gui.browser import fileModelBrowser
-
 
 if __name__ == '__main__':
-    QtQml.qmlRegisterType(fileModelBrowser.FileModelBrowser, "ButtleFileModel", 1, 0, "FileModelBrowser")
 
     app = QtWidgets.QApplication(sys.argv)
     view = QtQuick.QQuickView()

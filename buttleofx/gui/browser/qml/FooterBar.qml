@@ -4,7 +4,7 @@ import QtQuick.Controls 1.0
 
 Rectangle {
 	id: footer
-	color: "yellow"
+    color: "#141414"
 
 	property string fileName: "Default file"
     property string fileType: "File"
@@ -24,7 +24,7 @@ Rectangle {
 
        ComboBox {
             width: 200
-            model: [ "*", ".jpg", ".png" ]
+            model: [ "*", ".jpg", ".png", ".raw" ]
 
 
             onCurrentTextChanged: {
@@ -43,13 +43,13 @@ Rectangle {
                 console.debug("Open " + fileName)
             }
 		}
-		Button{
+        /*Button{
 			id: cancelButton
 			text: "Cancel"
 			Layout.fillHeight: true
 
             onClicked: Qt.quit()
-        }
+        }*/
 	}
 }
 

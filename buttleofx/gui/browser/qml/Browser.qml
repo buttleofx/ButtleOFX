@@ -32,10 +32,10 @@ Rectangle {
             }
 	    }
 
-	    CheckBox {
+        /*CheckBox {
 	    	id: check
 	    	text: "Viewer"
-	    }
+        }*/
 
         SplitView {
 	        Layout.fillWidth: true
@@ -53,6 +53,7 @@ Rectangle {
 			    id: files
 		        Layout.fillWidth: true
 	            Layout.fillHeight: true
+                Layout.preferredHeight: 120
 			    
                 folder: m.directory
                 onGoToFolder: {

@@ -87,7 +87,7 @@ class FileModelBrowser(QtQuick.QQuickItem):
                 for f in files:
                     self._fileItems.append(FileItem(folder, f, FileItem.Type.File))
                     
-            if (self._nameFilter == ".jpg") or (self._nameFilter == ".png"):
+            else:
                 for f in files:
                     (shortname, extension) = os.path.splitext(f)
                     if extension == self._nameFilter:

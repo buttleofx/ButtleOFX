@@ -2,7 +2,7 @@ import QtQuick 2.1
 
 Rectangle {
     id: headerBar
-	color : "lightblue"
+    color : "#141414"
 
     property string folder
     signal changeFolder(string folder)
@@ -30,12 +30,12 @@ Rectangle {
 			sourceSize.width: parent.width
 			sourceSize.height: 40
 
-			MouseArea{
+            MouseArea {
 				anchors.fill: parent
                 onClicked: console.log("Redo")
 			}
 		}
-		Image{
+        Image {
 			id: folder
 			source: "./img/Folder-icon.png"
 			sourceSize.width: parent.width
@@ -49,14 +49,17 @@ Rectangle {
 			}
 		}
 
-		TextEdit {
+        TextInput {
 			id : texteditPath
 			y: 10
             height: parent.height
             width: 900
 
             text: headerBar.folder
-            onTextChanged: {
+            color: "white"
+            selectByMouse: true
+            selectionColor: "blue"
+            onAccepted: {
                 changeFolder(text)
             }
 		}

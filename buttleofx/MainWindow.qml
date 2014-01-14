@@ -340,7 +340,7 @@ ApplicationWindow {
                     node: _buttleData.currentViewerNodeWrapper
                 }
 
-                GraphEditor {
+                /*GraphEditor {
                     id: graphEditor
 
                     Layout.minimumHeight: 200
@@ -348,8 +348,8 @@ ApplicationWindow {
                     implicitHeight: 0.4 * parent.height
                     implicitWidth: parent.width
                     z: -1
-                }
-                /*Browser {
+                }*/
+                Browser {
                     id: browser
 
                     Layout.minimumHeight: 200
@@ -357,7 +357,7 @@ ApplicationWindow {
                     implicitHeight: 0.4 * parent.height
                     implicitWidth: parent.width
                     z: -1
-                }*/
+                }
 
             }
 

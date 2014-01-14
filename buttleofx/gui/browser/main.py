@@ -7,7 +7,7 @@ currentFilePath = os.path.dirname(os.path.abspath(__file__))
 quickmambaPath = os.path.join(currentFilePath, '../../../QuickMamba')
 sys.path.append(quickmambaPath)
 
-import fileModelBrowser
+from buttleofx.gui.browser import fileModelBrowser
 
 
 if __name__ == '__main__':

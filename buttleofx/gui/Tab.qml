@@ -8,13 +8,14 @@ Item {
 
     property color tabColor: "#141414"
     property string name: "New tab"
+    signal closeClicked(bool clicked)
 
     Row{
         spacing: 1
         Rectangle {
             id:tab
             implicitWidth: 100
-            implicitHeight: 50
+            implicitHeight: 25
             radius: 7
             color: tabBar.tabColor
             Text {
@@ -49,7 +50,9 @@ Item {
                             color: "transparent"
                         }
                     }
+
+                onClicked: closeClicked(true)
             }
-        }
-    }
-}
+        }//tab
+    }//Row
+}//tabBar

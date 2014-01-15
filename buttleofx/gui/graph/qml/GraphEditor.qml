@@ -6,6 +6,8 @@ import "../../../gui"
 Item {
     id: graphEditor
 
+    signal buttonCloseClicked(bool clicked)
+
     ColumnLayout {
         anchors.fill: parent
         spacing: 2
@@ -13,6 +15,7 @@ Item {
         Tab {
             id: tabBar
             name: "Graph"
+            onCloseClicked: graphEditor.buttonCloseClicked(true)
         }
 
         Tools {

@@ -8,6 +8,8 @@ import "../../../gui"
 Item {
     id: paramEditor
 
+    signal buttonCloseClicked(bool clicked)
+
     property variant params 
     property variant currentParamNode
 
@@ -27,6 +29,7 @@ Item {
     Tab {
         id: tabBar
         name: "Parameters"
+        onCloseClicked: paramEditor.buttonCloseClicked(true)
     }
 
     SplitView {

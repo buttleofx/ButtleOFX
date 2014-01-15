@@ -8,6 +8,8 @@ Rectangle {
 	id: browser
     color: "#353535"
 
+    signal buttonCloseClicked(bool clicked)
+
     QtObject {
         id: m
         property string directory: "/"
@@ -25,6 +27,7 @@ Rectangle {
         Tab {
             id: tabBar
             name: "Browser"
+            onCloseClicked: browser.buttonCloseClicked(true)
         }
 
 	    HeaderBar {

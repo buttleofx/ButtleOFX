@@ -261,6 +261,32 @@ ApplicationWindow {
                 text: "Mikros Mode"
                 onTriggered: selectedView = 3
             }
+
+            MenuSeparator { }
+
+            MenuItem {
+                text: "Browser"
+                onTriggered: browser.parent.visible = true
+                enabled: browser.parent.visible==true ? false : true
+            }
+
+            MenuItem {
+                text: "Viewer"
+                onTriggered: player.parent.visible = true
+                enabled: player.parent.visible==true ? false : true
+            }
+
+            MenuItem {
+                text: "Graph"
+                onTriggered: graphEditor.parent.visible = true
+                enabled: graphEditor.parent.visible==true ? false : true
+            }
+
+            MenuItem {
+                text: "Parameters"
+                onTriggered: paramEditor.parent.visible = true
+                enabled: paramEditor.parent.visible==true ? false : true
+            }
         }
 
 /* A revoir
@@ -368,11 +394,15 @@ ApplicationWindow {
                     children:
                         switch(selectedView){
                             case 1:
+                                visible = true
                                 browser
                                 break
                             case 2:
                             case 3:
+                                visible = true
                                 player
+                                break
+                            default:
                                 break
                         }
                 }//topLeftView
@@ -390,10 +420,14 @@ ApplicationWindow {
                         switch(selectedView){
                             case 1:
                             case 2:
+                                visible = true
                                 paramEditor
                                 break
                             case 3:
+                                visible = true
                                 browser
+                                break
+                            default:
                                 break
                         }
                 }//bottomLeftView
@@ -417,13 +451,18 @@ ApplicationWindow {
                     children:
                         switch(selectedView){
                             case 1:
+                                visible = true
                                 player
                                 break
                             case 2:
+                                visible = true
                                 browser
                                 break
                             case 3:
+                                visible = true
                                 paramEditor
+                                break
+                            default:
                                 break
                         }
                 }//topRightView
@@ -441,13 +480,15 @@ ApplicationWindow {
                         switch(selectedView){
                             case 1:
                             case 2:
-                                bottomRightView.visible = true
+                                visible = true
                                 rightColumn.implicitWidth = 0.7 * rightColumn.parent.width
                                 graphEditor
                                 break
                             case 3:
-                                bottomRightView.visible = false
+                                visible = false
                                 rightColumn.implicitWidth = 0.3 * rightColumn.parent.width
+                                break
+                            default:
                                 break
                         }
                 }//bottomRightView
@@ -464,11 +505,13 @@ ApplicationWindow {
             id: player
             anchors.fill: parent
             node: _buttleData.currentViewerNodeWrapper
+            onButtonCloseClicked: {parent.visible = false; selectedView=-1}
         }
 
         GraphEditor {
             id: graphEditor
             anchors.fill: parent
+            onButtonCloseClicked: {parent.visible = false; selectedView=-1}
         }
 
         ParamEditor {
@@ -476,11 +519,13 @@ ApplicationWindow {
             anchors.fill: parent
             params: _buttleData.currentParamNodeWrapper ? _buttleData.currentParamNodeWrapper.params : null
             currentParamNode: _buttleData.currentParamNodeWrapper
+            onButtonCloseClicked: {parent.visible = false; selectedView=-1}
         }
 
         Browser {
             id: browser
             anchors.fill: parent
+            onButtonCloseClicked: {parent.visible = false; selectedView=-1}
         }
     }
 }

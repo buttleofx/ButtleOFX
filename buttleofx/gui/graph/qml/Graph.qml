@@ -244,6 +244,7 @@ Item {
         }
     }
 
+    //Miniature de graph
     Rectangle{
         property real scaleFactor : 0.15
         property real marginTop : 150
@@ -252,7 +253,7 @@ Item {
         id: miniGraph
         width: (parent.width + marginLeft*2) * scaleFactor
         height: (parent.height + marginTop*2) * scaleFactor
-        opacity: 1
+        opacity: 0.5
         color: "#414141"
         anchors.right: parent.right
         anchors.bottom: parent.bottom
@@ -276,18 +277,20 @@ Item {
                     x: (model.object.coord.x + miniGraph.marginLeft) * miniGraph.scaleFactor
                     y: (model.object.coord.y + miniGraph.marginTop) * miniGraph.scaleFactor
                     color: "#00b2a1"
-                    opacity: 0.6
+                    opacity: 1
                 }
             }
             Rectangle {
+                property int previousW : qml_graphRoot.width * miniGraph.scaleFactor
+                property int previousH : qml_graphRoot.height * miniGraph.scaleFactor
                 border.color: "#00b2a1"
                 border.width: 1
-                opacity: 0.2
+                opacity: 1
                 color: "transparent"
-                width: qml_graphRoot.width * zoomCoeff * miniGraph.scaleFactor
-                height: qml_graphRoot.height * zoomCoeff * miniGraph.scaleFactor
-                x: (miniGraph.marginLeft +((graphPreviousWidth * 0.5) - (graphContainer.width * 0.5))) * miniGraph.scaleFactor
-                y: (miniGraph.marginTop + ((graphPreviousHeight * 0.5) - (graphContainer.height * 0.5))) * miniGraph.scaleFactor
+                width: qml_graphRoot.width / zoomCoeff * miniGraph.scaleFactor
+                height: qml_graphRoot.height / zoomCoeff * miniGraph.scaleFactor
+                x: (miniGraph.marginLeft) * miniGraph.scaleFactor + ((previousW * 0.5) - (width * 0.5))
+                y: (miniGraph.marginTop) * miniGraph.scaleFactor + ((previousH * 0.5) - (height * 0.5))
             }
         }
 

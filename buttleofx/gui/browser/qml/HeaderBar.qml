@@ -1,4 +1,5 @@
 import QtQuick 2.1
+import ButtleSuggestionModel 1.0
 
 Rectangle {
     id: headerBar
@@ -7,6 +8,7 @@ Rectangle {
     property string folder
     signal changeFolder(string folder)
     property string parentFolder
+
 
 	Row{
 		spacing: 10;
@@ -65,7 +67,7 @@ Rectangle {
                 width: parent.width
 
                 text: headerBar.folder
-                color: "white"
+                color: suggestion.exists ? "white" : "red"
                 selectByMouse: true
                 selectionColor: "blue"
                 onAccepted: {
@@ -76,6 +78,34 @@ Rectangle {
                     console.debug("Focus changed")
                     texteditPath.focus ? selectAll() : deselect()
                 }
+                onTextChanged: {
+                    suggestion.folder = text
+
+                }
+            }
+        }
+
+        //console.debug("Suggestion: " + model.object.dirName)
+
+        Column {
+            Repeater {
+                id: list
+
+                model: suggestion.suggestionItems
+                Text {
+                    text: model.object.dirName
+                    color: "blue"
+                }
+            }
+
+        }
+
+        SuggestionBrowser {
+            id: suggestion
+
+            folder: headerBar.folder
+            onFolderChanged: {
+                console.debug("Folder of suggestion :" + suggestion.folder)
             }
         }
 		

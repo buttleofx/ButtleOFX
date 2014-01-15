@@ -91,8 +91,8 @@ Rectangle {
                             }
                         }
                     }
-                }
-            }
+                }// endColumn
+            }//endComponent
         }
     }
 

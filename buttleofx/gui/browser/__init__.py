@@ -1,1 +1,2 @@
 from .fileModelBrowser import FileModelBrowser
+from .suggestionBrowser import SuggestionBrowser

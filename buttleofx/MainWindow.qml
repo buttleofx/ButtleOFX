@@ -159,7 +159,6 @@ ApplicationWindow {
                 id: quitButton
                 text: "Exit"
                 onTriggered: Qt.quit()
-                //connect(quitButton, SIGNAL(quit()), mainWindowQML, SLOT(quit()));
             }
         }
 
@@ -243,101 +242,10 @@ ApplicationWindow {
                 onObjectRemoved: nodesMenu.removeItem(object)
             }
         }
-
-        Menu {
-            title: "View"
-
-            MenuItem {
-                text: "Default"
-                onTriggered: selectedView = 1
-            }
-
-            MenuItem {
-                text: "Browser Mode"
-                onTriggered: selectedView = 2
-            }
-
-            MenuItem {
-                text: "Mikros Mode"
-                onTriggered: selectedView = 3
-            }
-        }
-
-/* A revoir
-        Menu {
-            title: "Add"
-
-            MenuItem {
-                text: "New Node"
-                onTriggered: _addMenu.showMenu(parent.x, mainMenu.height)
-            }
-        }
-*/
     }
-/*
-    Rectangle {
-        id: mainMenu
-        width: parent.width
-        height: 32
-        color: "#141414"
 
-        Row {
-            spacing: 10
-            x: 3
 
-            Image {
-                id: mosquito
-                source: _buttleData.buttlePath + "/gui/img/icons/logo_icon.png"
-                y: 5
-            }
 
-            Text {
-                color: "white"
-                text: "File"
-                y: 11
-                font.pointSize: 10
-
-                MouseArea {
-                    anchors.fill: parent
-                    hoverEnabled: true
-                    onClicked: {
-                        _fileMenu.showMenu(parent.x, mainMenu.height)
-                    }
-                }
-            }
-
-            Text {
-                color: "white"
-                text: "Edit"
-                y: 11
-                font.pointSize: 10
-
-                MouseArea {
-                    anchors.fill: parent
-                    hoverEnabled: true
-                    onClicked: {
-                        _editMenu.showMenu(parent.x, mainMenu.height)
-                    }
-                }
-            }
-
-            Text {
-                color: "white"
-                text: "Add"
-                y: 11
-                font.pointSize: 10
-
-                MouseArea {
-                    anchors.fill: parent
-                    hoverEnabled: true
-                    onClicked: {
-                        _addMenu.showMenu(parent.x, mainMenu.height)
-                    }
-                }
-            }
-        }
-    }
-*/
     //this rectangle represents the zone under the menu, it allows to define the anchors.fill and margins for the SplitterRow
     Rectangle {
         id: modulsContainer
@@ -474,8 +382,8 @@ ApplicationWindow {
         ParamEditor {
             id: paramEditor
             anchors.fill: parent
-            params: _buttleData.currentParamNodeWrapper ? _buttleData.currentParamNodeWrapper.params : null
-            currentParamNode: _buttleData.currentParamNodeWrapper
+            //params: _buttleData.currentParamNodeWrapper ? _buttleData.currentParamNodeWrapper.params : null
+            //currentParamNode: _buttleData.currentParamNodeWrapper
         }
 
         Browser {

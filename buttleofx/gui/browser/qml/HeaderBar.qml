@@ -13,7 +13,7 @@ Rectangle {
 
 		Image{
 			id: previous;
-			source: "./img/previous.png"
+            source: "../../img/buttons/browser/previous.png"
 			sourceSize.width : parent.width
 			sourceSize.height : 40
 
@@ -26,7 +26,7 @@ Rectangle {
 		}
 		Image{
 			id: next
-			source: "./img/next.png"
+            source: "../../img/buttons/browser/next.png"
 			sourceSize.width: parent.width
 			sourceSize.height: 40
 
@@ -37,7 +37,7 @@ Rectangle {
 		}
         Image {
 			id: folder
-			source: "./img/Folder-icon.png"
+            source: "../../img/buttons/browser/Folder-icon.png"
 			sourceSize.width: parent.width
 			sourceSize.height: 40
 
@@ -49,20 +49,34 @@ Rectangle {
 			}
 		}
 
-        TextInput {
-			id : texteditPath
-			y: 10
-            height: parent.height
-            width: 900
+        Rectangle{
+            height: parent.height - 5
+            width: 600
+            y: 2
+            color: "black"
+            border.color: "grey"
+            radius: 5
 
-            text: headerBar.folder
-            color: "white"
-            selectByMouse: true
-            selectionColor: "blue"
-            onAccepted: {
-                changeFolder(text)
+            TextInput {
+                id : texteditPath
+                y: 10
+                x: 5
+                height: parent.height
+                width: parent.width
+
+                text: headerBar.folder
+                color: "white"
+                selectByMouse: true
+                selectionColor: "blue"
+                onAccepted: {
+                    changeFolder(text)
+                }
+                onFocusChanged:{
+                    console.debug("Focus changed")
+                    selectAll()
+                }
             }
-		}
+        }
 		
 	}
 

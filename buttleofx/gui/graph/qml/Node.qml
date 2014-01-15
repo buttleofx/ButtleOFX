@@ -76,9 +76,13 @@ Rectangle {
             m.nodeRoot.forceActiveFocus()
         }
         onReleased: {
+            var dropStatus = parent.Drag.drop()
+            if (dropStatus !== Qt.IgnoreAction)
+                console.log("Accepted!")
+
             // left button : we end moving
             if (mouse.button == Qt.LeftButton) {
-                _buttleManager.nodeManager.nodeMoved(m.nodeWrapper.name, m.nodeWrapper.coord.x, m.nodeWrapper.coord.y)
+                _buttleManager.nodeManager.nodeMoved(m.nodeWrapper.name, (m.nodeWrapper.coord.x * qml_graphRoot.graphPreviousWidth) / graphContainer.width, (m.nodeWrapper.coord.y * qml_graphRoot.graphPreviousHeight) / graphContainer.height)
                 //stateMoving.state = "normal"
             }
              //middle button : assign the node to the viewer
@@ -89,9 +93,7 @@ Rectangle {
                 _buttleData.assignNodeToViewerIndex(m.nodeWrapper, 0)
                 _buttleEvent.emitViewerChangedSignal()
             }
-            var dropStatus = parent.Drag.drop()
-            if (dropStatus !== Qt.IgnoreAction)
-                console.log("Accepted!")
+
         }
 
         // double click : we change the current param node
@@ -176,8 +178,7 @@ Rectangle {
         // inputClips
         Item {
             id: inputClipsItem
-            height: parent.height
-            Layout.minimumWidth: 2
+            y: parent.height /2
             Layout.alignment: Qt.AlignVCenter | Qt.AlignLeft
 
 
@@ -186,7 +187,7 @@ Rectangle {
                 anchors.verticalCenter: parent.verticalCenter
                 width: childrenRect.width
                 height: childrenRect.height
-                spacing: 5
+                spacing: 5 * qml_graphRoot.zoomCoeff
                 model: m.nodeWrapper.srcClips
 
                 delegate: Component {
@@ -207,7 +208,7 @@ Rectangle {
 
         }
         Item {
-            height: parent.height
+            y: parent.height /2
             Layout.minimumWidth: 2
             Layout.fillWidth: true
         }
@@ -216,7 +217,7 @@ Rectangle {
         Item {
             id: outputClipContainer
 
-            height: parent.height
+            y: parent.height /2
             implicitWidth: childrenRect.width
             Layout.minimumWidth: childrenRect.width
             Layout.preferredWidth: childrenRect.width

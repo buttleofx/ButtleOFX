@@ -1,5 +1,5 @@
 import QtQuick 2.1
-import ButtleSuggestionModel 1.0
+import ButtleFileModel 1.0
 
 Rectangle {
     id: headerBar
@@ -95,18 +95,20 @@ Rectangle {
                 Text {
                     text: model.object.dirName
                     color: "blue"
+
+                    onTextChanged: console.debug("suggestion: " + model.object.dirName)
                 }
             }
 
         }
 
-        SuggestionBrowser {
+        FileModelBrowser {
             id: suggestion
 
             folder: headerBar.folder
-            onFolderChanged: {
+            /*onFolderChanged: {
                 console.debug("Folder of suggestion :" + suggestion.folder)
-            }
+            }*/
         }
 		
 	}

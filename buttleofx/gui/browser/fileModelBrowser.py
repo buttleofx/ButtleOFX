@@ -45,6 +45,22 @@ class FileItem(QtCore.QObject):
     isSelected = QtCore.pyqtProperty(bool, getSelected, setSelected, notify=isSelectedChange)
 
 
+class SuggestionItem(QtCore.QObject):
+    
+    def __init__(self, folder, dirName):
+        super(SuggestionItem, self).__init__()
+        self._dirpath = folder + "/" + dirName
+
+    def getDirpath(self):
+        return self._dirpath
+    
+    def getDirName(self):
+        return os.path.basename(self._dirpath)
+
+    dirpath = QtCore.pyqtProperty(str, getDirpath, constant=True)
+    dirName = QtCore.pyqtProperty(str, getDirName, constant=True)
+
+
 class FileModelBrowser(QtQuick.QQuickItem):
     """Class FileModelBrowser"""
     
@@ -53,6 +69,7 @@ class FileModelBrowser(QtQuick.QQuickItem):
     def __init__(self, parent=None):
         super(FileModelBrowser, self).__init__(parent)
         self._fileItemsModel = QObjectListModel(self)
+        self._suggestionItemsModel = QObjectListModel(self)
     
     def getFolder(self):
         return self._folder
@@ -60,6 +77,7 @@ class FileModelBrowser(QtQuick.QQuickItem):
     def setFolder(self, folder):
         self._folder = folder
         self.updateFileItems(folder)
+        self.updateSuggestionItems(folder)
         self.folderChanged.emit()
     
     def getFolderExists(self):
@@ -133,3 +151,26 @@ class FileModelBrowser(QtQuick.QQuickItem):
     fileItems = QtCore.pyqtProperty(QtCore.QObject, getFileItems, notify=folderChanged)
     nameFilterChange = QtCore.pyqtSignal()
     nameFilter = QtCore.pyqtProperty(str, getFilter, setFilter, notify=nameFilterChange)
+    
+    def updateSuggestionItems(self, folder):
+        self._suggestionItems = []
+        self._suggestionItemsModel.clear()
+        import os
+        try:
+            _, dirs, files = next(os.walk(os.path.dirname(folder)))
+            for d in dirs:
+                if d.startswith(os.path.basename(folder)):
+                    self._fileItems.append(SuggestionItem(folder, d))
+            
+        except Exception:
+            pass
+        self._suggestionItemsModel.setObjectList(self._suggestionItems)
+    
+    _suggestionItems = []
+    _suggestionItemsModel = None
+    
+    def getSuggestionItems(self):
+        return self._suggestionItemsModel
+    
+    suggestionItems = QtCore.pyqtProperty(QtCore.QObject, getSuggestionItems, notify=folderChanged)
+

@@ -42,8 +42,7 @@ Item {
             height: parent.height
 
             width: parent.width
-            //color: paramEditor.background
-            color: "red"
+            color: paramEditor.background
 
             /* Params depend on the node type (Tuttle data)*/
             Item {

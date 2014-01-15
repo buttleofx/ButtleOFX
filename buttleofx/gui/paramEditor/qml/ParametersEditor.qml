@@ -34,6 +34,8 @@ Item {
 
     }
 
+
+    // Container of the paramEditors
     Rectangle{
         id: contentParamEditor
         height: parent.height
@@ -41,8 +43,42 @@ Item {
         y: paramTitle.height
         color: "#141414"
 
+        // scroll all the parameditors
+        ScrollView {
+            anchors.fill: parent
+            anchors.topMargin: 5
+            anchors.bottomMargin: 5
+            height: 110
+            width: 110
+
+            // for each node we create a ParamEditor
+            ListView{
+                anchors.fill: parent
+                model:  _buttleData.graphWrapper.nodeWrappers
+                delegate: paramDelegate
+            }
+        }
+
+        // delegate of the list of ParamEditor
+        Component {
+            id: paramDelegate
+            Rectangle{
+                //// to modify ////
+                height: contentParamEditor.height / 2
+                y: (index) * height
+                /////
+
+                ParamEditor {
+                    //height: contentParamEditor.height
+                    width: contentParamEditor.width - 10
+                    params: model.object ?  model.object.params : null
+                    currentParamNode: model.object
+                }
+            }
+        }
 
 
+/*
         // for each node we create a ParamEditor
         ScrollView {
             anchors.fill: parent
@@ -51,28 +87,42 @@ Item {
             height: 110
             width: 110
 
-            // repeater of the node parameters
-            Repeater{
-                model: _buttleData.graphWrapper.nodeWrappers
-                id: repeaterParamEditor
 
 
-                Rectangle{
-                    //// to modify ////
-                    height: contentParamEditor.height / 2
-                    y: (index) * height
-                    /////
+            Flickable{
+                // repeater of the node parameters
+                width: repeaterParamEditor.width
+                height: repeaterParamEditor.height
+                contentWidth: repeaterParamEditor.width
+                contentHeight: repeaterParamEditor.height
 
-                    ParamEditor {
-                        //height: contentParamEditor.height
-                        width: contentParamEditor.width
-                        params: model.object ?  model.object.params : null
-                        currentParamNode: model.object
+
+                Repeater{
+                    model: _buttleData.graphWrapper.nodeWrappers
+                    id: repeaterParamEditor
+
+
+                    Rectangle{
+                        //// to modify ////
+                        height: contentParamEditor.height / 2
+                        y: (index) * height
+                        /////
+
+                        ParamEditor {
+                            //height: contentParamEditor.height
+                            width: contentParamEditor.width
+                            params: model.object ?  model.object.params : null
+                            currentParamNode: model.object
+                        }
                     }
                 }
-            }
 
-        }
+
+
+            } //flickable
+
+        } // scroll view
+        */
 
     }
 }

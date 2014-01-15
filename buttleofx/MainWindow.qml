@@ -280,7 +280,7 @@ ApplicationWindow {
 
             ParametersEditor {
                 Layout.minimumWidth: 100
-                Layout.maximumWidth: 500
+                Layout.maximumWidth: 550
                 Layout.fillHeight: true
                 implicitHeight: parent.height
                 //width: 0.3*parent.width

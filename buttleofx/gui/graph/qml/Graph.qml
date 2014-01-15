@@ -1,7 +1,7 @@
 import QtQuick 2.0
 import QuickMamba 1.0
 
-Item {
+Rectangle {
     id: qml_graphRoot
 
     QtObject {
@@ -28,6 +28,10 @@ Item {
     property real mouseRatioY
     property int offsetX: 0
     property int offsetY: 0
+
+    property bool readOnly
+    property bool miniatureState
+    property real miniatureScale: 0.15
 
     signal clickCreationNode(string nodeType)
     signal drawSelection(int selectionX, int selectionY, int selectionWidth, int selectionHeight)
@@ -127,9 +131,10 @@ Item {
             mouseRatioX = 0.5
             mouseRatioY = 0.5
 
-            console.log((miniGraph.xOffset/miniGraph.scaleFactor))
-            graphContainer.x = ((graphPreviousWidth * mouseRatioX) - (graphContainer.width * mouseRatioX)) + offsetX - ((miniGraph.xOffset/miniGraph.scaleFactor)*zoomCoeff)
-            graphContainer.y = ((graphPreviousHeight * mouseRatioY) - (graphContainer.height * mouseRatioY )) + offsetY - ((miniGraph.yOffset/miniGraph.scaleFactor)*zoomCoeff)
+            //graphContainer.x = ((graphPreviousWidth * mouseRatioX) - (graphContainer.width * mouseRatioX)) + offsetX - ((miniGraph.xOffset/miniGraph.scaleFactor)*zoomCoeff)
+            //graphContainer.y = ((graphPreviousHeight * mouseRatioY) - (graphContainer.height * mouseRatioY )) + offsetY - ((miniGraph.yOffset/miniGraph.scaleFactor)*zoomCoeff)
+            graphContainer.x = ((graphPreviousWidth * mouseRatioX) - (graphContainer.width * mouseRatioX)) + offsetX
+            graphContainer.y = ((graphPreviousHeight * mouseRatioY) - (graphContainer.height * mouseRatioY )) + offsetY
         }
     }
     onDrawSelection: {
@@ -165,6 +170,7 @@ Item {
             property color repereColor: "red"
             property double size: 50 * zoomCoeff
             property double thickness: 2
+            visible: miniatureState ? false : true
             Rectangle {
                 id: axeX
 
@@ -194,10 +200,30 @@ Item {
                 id: nodesRepeater
                 model: _buttleData.graphWrapper.nodeWrappers
                 Node {
+                    id: node
                     nodeWrapper: model.object
                     graphRoot: m.graphRoot
-                    height: nodeWidth /2 * zoomCoeff
                     width: nodeWidth * zoomCoeff
+                    height: nodeWidth /2 * zoomCoeff
+                    readOnly: qml_graphRoot.readOnly
+                    miniatureScale: qml_graphRoot.miniatureScale
+                    miniatureState: qml_graphRoot.miniatureState
+
+                    StateGroup {
+                        id: stateViewerNode
+                         states: [
+                             State {
+                                 name: "miniatureState"
+                                 when: miniatureState
+                                 PropertyChanges {
+                                     target: node
+                                     width: nodeWidth * qml_graphRoot.miniatureScale
+                                     height: nodeWidth /2 * qml_graphRoot.miniatureScale
+                                 }
+                             }
+                         ]
+                    }
+
                 }
             }
         }
@@ -210,6 +236,7 @@ Item {
             Repeater {
                 model : _buttleData.graphWrapper.connectionWrappers
                 Connection {
+                    id: connection
                     connectionWrapper: model.object
                     property variant nodeOut: _buttleData.graphWrapper.getNodeWrapper(connectionWrapper.out_clipNodeName)
                     property variant clipOut: nodeOut.getClip(connectionWrapper.out_clipName)
@@ -217,10 +244,14 @@ Item {
                     property variant nodeIn: _buttleData.graphWrapper.getNodeWrapper(connectionWrapper.in_clipNodeName)
                     property variant clipIn: nodeIn.getClip(connectionWrapper.in_clipName)
 
-                    x1: clipOut.xCoord
-                    y1: clipOut.yCoord
-                    x2: clipIn.xCoord
-                    y2: clipIn.yCoord
+                    readOnly: qml_graphRoot.readOnly
+                    miniatureState: qml_graphRoot.miniatureState
+                    miniatureScale: qml_graphRoot.miniatureScale
+
+                    x1: connection.miniatureState ? clipOut.xCoord * connection.miniatureScale : clipOut.xCoord
+                    y1: connection.miniatureState ? clipOut.yCoord * connection.miniatureScale : clipOut.yCoord
+                    x2: connection.miniatureState ? clipIn.xCoord * connection.miniatureScale : clipIn.xCoord
+                    y2: connection.miniatureState ? clipIn.yCoord * connection.miniatureScale : clipIn.yCoord
                 }
             }
 
@@ -243,7 +274,7 @@ Item {
         }
     }
 
-    //Miniature de graph
+    /*//Miniature de graph
     Rectangle{
         property real scaleFactor : 0.15
         property real marginTop : 150
@@ -329,16 +360,8 @@ Item {
                     graphContainer.y -= (miniGraph.yOffset/parent.scaleFactor)
                 }
             }
-            /*onPositionChanged: {
-                if( moveMode ) {
-                    var xOffset = mouse.x - xStart
-                    var yOffset = mouse.y - yStart
-                    parent.miniOriginX =  xOffset
-                    parent.miniOriginY = yOffset
-                }
-            }*/
         }
-    }
+    }*/
 
 
     // Rectangle selection is placed here so it is drawn over the nodes

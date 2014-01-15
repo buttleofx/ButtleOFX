@@ -19,6 +19,7 @@ class ConnectionManager(QtCore.QObject):
 
     ############### flags ###############
 
+    @QtCore.pyqtSlot(QtCore.QObject, QtCore.QObject, result=bool)
     def canConnect(self, clip1, clip2):
         """
             Returns True if the connection between the nodes is possible, else False.

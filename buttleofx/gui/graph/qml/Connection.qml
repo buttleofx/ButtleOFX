@@ -5,6 +5,10 @@ Item {
     id: connectionItem
     property alias connectionWrapper: m.connectionWrapper
 
+    property bool readOnly
+    property bool miniatureState
+    property real miniatureScale
+
     property int x1
     property int y1
     property int x2
@@ -23,6 +27,10 @@ Item {
         y1: parent.y1
         x2: parent.x2
         y2: parent.y2
+
+        readOnly: connectionItem.readOnly
+        miniatureScale: connectionItem.miniatureScale
+        miniatureState: connectionItem.miniatureState
 
         state: "normal"
         r: 0
@@ -86,9 +94,12 @@ Item {
                         _buttleManager.connectionManager.dissociateConnection(clipOut, clipIn, drop.source.nodeWrapper.getClip("Source"), drop.source.nodeWrapper.getClip(drop.source.nodeWrapper.outputClip.name), m.connectionWrapper)
                 }
                 dropIndicator.state = ""
+
+               // drop.source.nodeWrapper.xCoord = 0
+               // m.nodeWrapper.coord.x
             }
             onEntered: {
-                if(drag.source.nodeWrapper.name != clipIn.nodeName && drag.source.nodeWrapper.name != clipOut.nodeName){
+                if(drag.source.nodeWrapper.name !== clipIn.nodeName && drag.source.nodeWrapper.name !== clipOut.nodeName){
                     dropIndicator.state = "entereddrop"
                 }
             }

@@ -2,10 +2,11 @@ import QtQuick 2.1
 import QtQuick.Controls 1.0
 import QtQuick.Layouts 1.0
 
+import "../../../gui"
+
 Rectangle {
 	id: browser
-	width: 1000
-	height : 600
+    color: "#353535"
 
     QtObject {
         id: m
@@ -16,11 +17,19 @@ Rectangle {
         property string filter:"*"
     }
 
-	ColumnLayout {
+
+
+    ColumnLayout {
 	    anchors.fill: parent
 
+        Tab {
+            id: tabBar
+            name: "Browser"
+        }
+
 	    HeaderBar {
-		    id: headerBar
+            id: headerBar
+            y: tabBar.height
 		    Layout.fillWidth: true
 		    Layout.preferredHeight: 40
 
@@ -90,7 +99,7 @@ Rectangle {
 
 	    FooterBar {
 		    id: footerBar
-	        Layout.fillWidth: true
+            Layout.fillWidth: true
 		    Layout.preferredHeight: 40
 
             fileName: m.filepath

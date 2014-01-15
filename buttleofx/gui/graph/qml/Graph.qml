@@ -4,6 +4,16 @@ import QuickMamba 1.0
 Item {
     id: qml_graphRoot
 
+
+    Keys.onPressed: {
+
+        // Graph toolbar
+        if (event.key == Qt.Key_Delete) {
+           _buttleManager.deleteSelection();
+        }
+    }
+
+
     QtObject {
         id: m
         property variant graphRoot: qml_graphRoot

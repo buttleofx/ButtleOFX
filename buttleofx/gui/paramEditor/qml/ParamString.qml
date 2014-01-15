@@ -91,6 +91,8 @@ Item {
             id: paramStringTitle
             text: paramObject.text + " : "
             color: "white"
+            elide: Text.ElideRight
+            clip: true
             // if param has been modified, title in bold font
             font.bold: paramObject.hasChanged ? true : false
             MouseArea {
@@ -110,6 +112,8 @@ Item {
             border.width: 1
             border.color: "#333"
             radius: 3
+            //elide: Text.ElideRight
+            clip: true
 
             // create the right input, depend on the tuttle param
             onWidthChanged: {

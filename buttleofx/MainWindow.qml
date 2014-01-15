@@ -2,8 +2,8 @@ import QtQuick 2.0
 import QtQuick.Controls 1.0
 import QtQuick.Layouts 1.0
 import QtQml 2.1
-
 import QuickMamba 1.0
+import QtQuick.Dialogs 1.0
 
 import "gui/graph/qml"
 import "gui/viewer/qml"
@@ -11,6 +11,8 @@ import "gui/paramEditor/qml"
 import "gui/browser/qml"
 
 ApplicationWindow {
+    property int selectedView : 1
+
     width: 1200
     height: 800
     id: mainWindowQML
@@ -22,10 +24,10 @@ ApplicationWindow {
     Keys.onPressed: {
 
         // Graph toolbar
-        if (event.key == Qt.Key_Delete) {
+/*        if (event.key == Qt.Key_Delete) {
            _buttleManager.deleteSelection();
         }
-        if ((event.key == Qt.Key_Z) && (event.modifiers & Qt.ControlModifier)) {
+*/        if ((event.key == Qt.Key_Z) && (event.modifiers & Qt.ControlModifier)) {
             if(_buttleManager.canUndo) {
                 _buttleManager.undo();
             }
@@ -57,11 +59,11 @@ ApplicationWindow {
         }
         if ((event.key == Qt.Key_S) && (event.modifiers & Qt.ControlModifier)){
             if(_buttleData.graphCanBeSaved) {
-                graphEditor.doAction("save")
+                finderSaveGraph.open()
             }
         }
         if ((event.key == Qt.Key_O) && (event.modifiers & Qt.ControlModifier)){
-            graphEditor.doAction("load")
+            finderLoadGraph.open()
         }
 
         // Viewer
@@ -129,6 +131,9 @@ ApplicationWindow {
         }
     }
 
+    FinderLoadGraph{ id: finderLoadGraph }
+    FinderSaveGraph{ id: finderSaveGraph }
+
     menuBar: MenuBar {
         Menu {
             title: "File"
@@ -136,7 +141,7 @@ ApplicationWindow {
             MenuItem {
                 text: "Open"
                 shortcut: "Ctrl+O"
-                onTriggered: graphEditor.doAction("load")
+                onTriggered: finderLoadGraph.open()
             }
 
             MenuItem {
@@ -144,7 +149,7 @@ ApplicationWindow {
                 shortcut: "Ctrl+S"
                 onTriggered:
                     if(_buttleData.graphCanBeSaved) {
-                        graphEditor.doAction("save")
+                        finderSaveGraph.open()
                     }
             }
 
@@ -219,10 +224,11 @@ ApplicationWindow {
 
             MenuItem {
                 text: "Delete"
-                shortcut: "del"
+                //shortcut: "del"
                 onTriggered: _buttleManager.deleteSelection()
             }
         }
+
         Menu {
             id: nodesMenu
             title: "Nodes"
@@ -235,6 +241,25 @@ ApplicationWindow {
                 }
                 onObjectAdded: nodesMenu.insertItem(index, object)
                 onObjectRemoved: nodesMenu.removeItem(object)
+            }
+        }
+
+        Menu {
+            title: "View"
+
+            MenuItem {
+                text: "Default"
+                onTriggered: selectedView = 1
+            }
+
+            MenuItem {
+                text: "Browser Mode"
+                onTriggered: selectedView = 2
+            }
+
+            MenuItem {
+                text: "Mikros Mode"
+                onTriggered: selectedView = 3
             }
         }
 
@@ -326,47 +351,136 @@ ApplicationWindow {
             orientation: Qt.Horizontal
 
             SplitView {
-                implicitWidth: 0.7*parent.width
+                id: leftColumn
+                implicitWidth: 0.3 * parent.width
                 implicitHeight: parent.height
                 orientation: Qt.Vertical
                 Layout.fillWidth: true
+                Layout.minimumWidth: 200
 
-                Player {
-                    id: player
+                Rectangle {
+                    id: topLeftView
+                    color: "#353535"
                     Layout.minimumHeight: 200
                     Layout.fillHeight: true
                     implicitWidth: parent.width
 
-                    node: _buttleData.currentViewerNodeWrapper
-                }
+                    children:
+                        switch(selectedView){
+                            case 1:
+                                browser
+                                break
+                            case 2:
+                            case 3:
+                                player
+                                break
+                        }
+                }//topLeftView
 
-                /*GraphEditor {
-                    id: graphEditor
-
+                Rectangle {
+                    id: bottomLeftView
+                    color: "#353535"
                     Layout.minimumHeight: 200
                     Layout.fillHeight: true
-                    implicitHeight: 0.4 * parent.height
                     implicitWidth: parent.width
+                    implicitHeight: 0.5 * parent.height
                     z: -1
-                }*/
-                Browser {
-                    id: browser
 
+                    children:
+                        switch(selectedView){
+                            case 1:
+                            case 2:
+                                paramEditor
+                                break
+                            case 3:
+                                browser
+                                break
+                        }
+                }//bottomLeftView
+            }//leftColumn
+
+            SplitView {
+                id: rightColumn
+                implicitWidth: 0.7 * parent.width
+                implicitHeight: parent.height
+                orientation: Qt.Vertical
+                Layout.fillWidth: true
+                Layout.minimumWidth: 200
+
+                Rectangle {
+                    id: topRightView
+                    color: "#353535"
                     Layout.minimumHeight: 200
                     Layout.fillHeight: true
-                    implicitHeight: 0.4 * parent.height
                     implicitWidth: parent.width
+
+                    children:
+                        switch(selectedView){
+                            case 1:
+                                player
+                                break
+                            case 2:
+                                browser
+                                break
+                            case 3:
+                                paramEditor
+                                break
+                        }
+                }//topRightView
+
+                Rectangle {
+                    id: bottomRightView
+                    color: "#353535"
+                    Layout.minimumHeight: 200
+                    Layout.fillHeight: true
+                    implicitWidth: parent.width
+                    implicitHeight: 0.5 * parent.height
                     z: -1
-                }
 
-            }
+                    children:
+                        switch(selectedView){
+                            case 1:
+                            case 2:
+                                bottomRightView.visible = true
+                                rightColumn.implicitWidth = 0.7 * rightColumn.parent.width
+                                graphEditor
+                                break
+                            case 3:
+                                bottomRightView.visible = false
+                                rightColumn.implicitWidth = 0.3 * rightColumn.parent.width
+                                break
+                        }
+                }//bottomRightView
+            }//rightColumn
+        }//splitview
+    }//modulsContainer
 
-            ParamEditor {
-                Layout.minimumWidth: 100
-                width: 0.3*parent.width
-                params: _buttleData.currentParamNodeWrapper ? _buttleData.currentParamNodeWrapper.params : null
-                currentParamNode: _buttleData.currentParamNodeWrapper
-            }
+
+    Item {
+        id: subviews
+        visible: false
+
+        Player {
+            id: player
+            anchors.fill: parent
+            node: _buttleData.currentViewerNodeWrapper
+        }
+
+        GraphEditor {
+            id: graphEditor
+            anchors.fill: parent
+        }
+
+        ParamEditor {
+            id: paramEditor
+            anchors.fill: parent
+            params: _buttleData.currentParamNodeWrapper ? _buttleData.currentParamNodeWrapper.params : null
+            currentParamNode: _buttleData.currentParamNodeWrapper
+        }
+
+        Browser {
+            id: browser
+            anchors.fill: parent
         }
     }
 }

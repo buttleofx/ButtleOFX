@@ -253,7 +253,7 @@ Item {
         id: miniGraph
         width: (parent.width + marginLeft*2) * scaleFactor
         height: (parent.height + marginTop*2) * scaleFactor
-        opacity: 0.5
+        opacity: 0.8
         color: "#414141"
         anchors.right: parent.right
         anchors.bottom: parent.bottom

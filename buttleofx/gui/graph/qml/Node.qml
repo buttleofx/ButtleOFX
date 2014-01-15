@@ -76,6 +76,10 @@ Rectangle {
             m.nodeRoot.forceActiveFocus()
         }
         onReleased: {
+            var dropStatus = parent.Drag.drop()
+            if (dropStatus !== Qt.IgnoreAction)
+                console.log("Accepted!")
+
             // left button : we end moving
             if (mouse.button == Qt.LeftButton) {
                 _buttleManager.nodeManager.nodeMoved(m.nodeWrapper.name, (m.nodeWrapper.coord.x * qml_graphRoot.graphPreviousWidth) / graphContainer.width, (m.nodeWrapper.coord.y * qml_graphRoot.graphPreviousHeight) / graphContainer.height)
@@ -89,9 +93,7 @@ Rectangle {
                 _buttleData.assignNodeToViewerIndex(m.nodeWrapper, 0)
                 _buttleEvent.emitViewerChangedSignal()
             }
-            var dropStatus = parent.Drag.drop()
-            if (dropStatus !== Qt.IgnoreAction)
-                console.log("Accepted!")
+
         }
 
         // double click : we change the current param node

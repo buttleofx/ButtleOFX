@@ -280,7 +280,10 @@ ApplicationWindow {
 
             ParametersEditor {
                 Layout.minimumWidth: 100
-                width: 0.3*parent.width
+                Layout.maximumWidth: 500
+                Layout.fillHeight: true
+                implicitHeight: parent.height
+                //width: 0.3*parent.width
                 //params: _buttleData.currentParamNodeWrapper ? _buttleData.currentParamNodeWrapper.params : null
                 //currentParamNode: _buttleData.currentParamNodeWrapper
             }

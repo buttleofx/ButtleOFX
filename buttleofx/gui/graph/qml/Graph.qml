@@ -123,14 +123,13 @@ Item {
             }else{
                 zoomCoeff -= zoomStep
             }
-            //mouseRatioX = (mouseX-offsetX)/graphContainer.width
-            //mouseRatioY = (mouseY-offsetY)/graphContainer.height
 
             mouseRatioX = 0.5
             mouseRatioY = 0.5
 
-            graphContainer.x = ((graphPreviousWidth * mouseRatioX) - (graphContainer.width * mouseRatioX)) + offsetX
-            graphContainer.y = ((graphPreviousHeight * mouseRatioY) - (graphContainer.height * mouseRatioY )) + offsetY
+            console.log((miniGraph.xOffset/miniGraph.scaleFactor))
+            graphContainer.x = ((graphPreviousWidth * mouseRatioX) - (graphContainer.width * mouseRatioX)) + offsetX - ((miniGraph.xOffset/miniGraph.scaleFactor)*zoomCoeff)
+            graphContainer.y = ((graphPreviousHeight * mouseRatioY) - (graphContainer.height * mouseRatioY )) + offsetY - ((miniGraph.yOffset/miniGraph.scaleFactor)*zoomCoeff)
         }
     }
     onDrawSelection: {
@@ -249,6 +248,12 @@ Item {
         property real scaleFactor : 0.15
         property real marginTop : 150
         property real marginLeft : 70
+        property alias miniOriginX: visuWindow.x
+        property alias miniOriginY: visuWindow.y
+        property int miniOffsetX: 0
+        property int miniOffsetY: 0
+        property real xOffset
+        property real yOffset
 
         id: miniGraph
         width: (parent.width + marginLeft*2) * scaleFactor
@@ -281,6 +286,7 @@ Item {
                 }
             }
             Rectangle {
+                id: visuWindow
                 property int previousW : qml_graphRoot.width * miniGraph.scaleFactor
                 property int previousH : qml_graphRoot.height * miniGraph.scaleFactor
                 border.color: "#00b2a1"
@@ -289,13 +295,48 @@ Item {
                 color: "transparent"
                 width: qml_graphRoot.width / zoomCoeff * miniGraph.scaleFactor
                 height: qml_graphRoot.height / zoomCoeff * miniGraph.scaleFactor
-                x: (miniGraph.marginLeft) * miniGraph.scaleFactor + ((previousW * 0.5) - (width * 0.5))
-                y: (miniGraph.marginTop) * miniGraph.scaleFactor + ((previousH * 0.5) - (height * 0.5))
+                x: (miniGraph.marginLeft) * miniGraph.scaleFactor + ((previousW * 0.5) - (width * 0.5)) - offsetX * miniGraph.scaleFactor + miniGraph.miniOffsetX
+                y: (miniGraph.marginTop) * miniGraph.scaleFactor + ((previousH * 0.5) - (height * 0.5)) - offsetY * miniGraph.scaleFactor + miniGraph.miniOffsetY
             }
         }
 
         MouseArea{
             anchors.fill: parent
+
+            property int xStart
+            property int yStart
+            property int visuWindowXStart
+            property int visuWindowYStart
+            property bool moveMode: false
+
+            hoverEnabled: true
+            acceptedButtons: Qt.LeftButton
+            onPressed: {
+                xStart = mouse.x
+                yStart = mouse.y
+                visuWindowXStart = visuWindow.x
+                visuWindowYStart = visuWindow.y
+                moveMode = pressedButtons & Qt.LeftButton ? true : false
+            }
+            onReleased: {
+                if(moveMode){
+                    moveMode=false
+                    miniGraph.xOffset = mouse.x - xStart
+                    miniGraph.yOffset = mouse.y - yStart
+                    parent.miniOffsetX += miniGraph.xOffset
+                    parent.miniOffsetY += miniGraph.yOffset
+                    graphContainer.x -= (miniGraph.xOffset/parent.scaleFactor)
+                    graphContainer.y -= (miniGraph.yOffset/parent.scaleFactor)
+                }
+            }
+            /*onPositionChanged: {
+                if( moveMode ) {
+                    var xOffset = mouse.x - xStart
+                    var yOffset = mouse.y - yStart
+                    parent.miniOriginX =  xOffset
+                    parent.miniOriginY = yOffset
+                }
+            }*/
         }
     }
 

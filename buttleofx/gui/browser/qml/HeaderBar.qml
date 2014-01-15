@@ -70,10 +70,11 @@ Rectangle {
                 selectionColor: "blue"
                 onAccepted: {
                     changeFolder(text)
+                    texteditPath.focus = false
                 }
                 onFocusChanged:{
                     console.debug("Focus changed")
-                    selectAll()
+                    texteditPath.focus ? selectAll() : deselect()
                 }
             }
         }

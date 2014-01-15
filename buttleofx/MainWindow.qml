@@ -248,23 +248,18 @@ ApplicationWindow {
             title: "View"
 
             MenuItem {
-                text: "Viewer/Graph"
+                text: "Default"
                 onTriggered: selectedView = 1
             }
 
             MenuItem {
-                text: "Viewer/Browser"
+                text: "Browser Mode"
                 onTriggered: selectedView = 2
             }
 
             MenuItem {
-                text: "Browser/Graph"
+                text: "Mikros Mode"
                 onTriggered: selectedView = 3
-            }
-
-            MenuItem {
-                text: "So Cool View"
-                onTriggered: selectedView = 4
             }
         }
 
@@ -356,10 +351,12 @@ ApplicationWindow {
             orientation: Qt.Horizontal
 
             SplitView {
-                implicitWidth: 0.7*parent.width
+                id: leftColumn
+                implicitWidth: 0.3 * parent.width
                 implicitHeight: parent.height
                 orientation: Qt.Vertical
                 Layout.fillWidth: true
+                Layout.minimumWidth: 200
 
                 Rectangle {
                     id: topLeftView
@@ -371,59 +368,92 @@ ApplicationWindow {
                     children:
                         switch(selectedView){
                             case 1:
-                            case 2:
-                            case 4:
-                                player
-                                break
-                            case 3:
                                 browser
                                 break
+                            case 2:
+                            case 3:
+                                player
+                                break
                         }
-                }
+                }//topLeftView
 
                 Rectangle {
                     id: bottomLeftView
                     color: "#353535"
                     Layout.minimumHeight: 200
                     Layout.fillHeight: true
-                    implicitHeight: 0.4 * parent.height
                     implicitWidth: parent.width
+                    implicitHeight: 0.5 * parent.height
                     z: -1
 
                     children:
                         switch(selectedView){
                             case 1:
+                            case 2:
+                                paramEditor
+                                break
                             case 3:
-                            case 4:
-                                graphEditor
+                                browser
+                                break
+                        }
+                }//bottomLeftView
+            }//leftColumn
+
+            SplitView {
+                id: rightColumn
+                implicitWidth: 0.7 * parent.width
+                implicitHeight: parent.height
+                orientation: Qt.Vertical
+                Layout.fillWidth: true
+                Layout.minimumWidth: 200
+
+                Rectangle {
+                    id: topRightView
+                    color: "#353535"
+                    Layout.minimumHeight: 200
+                    Layout.fillHeight: true
+                    implicitWidth: parent.width
+
+                    children:
+                        switch(selectedView){
+                            case 1:
+                                player
                                 break
                             case 2:
                                 browser
                                 break
+                            case 3:
+                                paramEditor
+                                break
                         }
-                }
-            }
+                }//topRightView
 
-            Rectangle {
-                id: rightColumn
-                color: "#353535"
-                Layout.minimumWidth: 100
-                width: 0.3*parent.width
+                Rectangle {
+                    id: bottomRightView
+                    color: "#353535"
+                    Layout.minimumHeight: 200
+                    Layout.fillHeight: true
+                    implicitWidth: parent.width
+                    implicitHeight: 0.5 * parent.height
+                    z: -1
 
-                children:
-                    switch(selectedView){
-                        case 1:
-                        case 2:
-                        case 3:
-                            paramEditor
-                            break
-                        case 4:
-                            browserAndParams
-                            break
-                    }
-            }
-        }
-    }
+                    children:
+                        switch(selectedView){
+                            case 1:
+                            case 2:
+                                bottomRightView.visible = true
+                                rightColumn.implicitWidth = 0.7 * rightColumn.parent.width
+                                graphEditor
+                                break
+                            case 3:
+                                bottomRightView.visible = false
+                                rightColumn.implicitWidth = 0.3 * rightColumn.parent.width
+                                break
+                        }
+                }//bottomRightView
+            }//rightColumn
+        }//splitview
+    }//modulsContainer
 
 
     Item {
@@ -451,29 +481,6 @@ ApplicationWindow {
         Browser {
             id: browser
             anchors.fill: parent
-        }
-
-        SplitView {
-            id: browserAndParams
-            anchors.fill: parent
-            orientation: Qt.Vertical
-
-            Rectangle {
-                Layout.minimumHeight: 200
-                Layout.fillHeight: true
-                implicitWidth: parent.width
-                //color: "red"
-                children: browser
-            }
-
-            Rectangle {
-                Layout.minimumHeight: 200
-                Layout.fillHeight: true
-                implicitHeight: 0.4 * parent.height
-                implicitWidth: parent.width
-                //color: "blue"
-                children: paramEditor
-            }
         }
     }
 }

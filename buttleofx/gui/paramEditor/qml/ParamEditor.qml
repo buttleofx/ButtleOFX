@@ -24,60 +24,31 @@ Item {
     height: parent.height
 
 
-    ///////////////////////////////////////////////////////
-       // test for change the text of the node (to suppress)
-    /*MouseArea{
-        x : 50
-        y: 0
-        width: 800
-        height: 800
-        onClicked: {
-            console.log("item height: ", parent.height )
-            console.log("item parent height: ", parent.parent.height)
-        }
 
-    }
-    */
-    ///////////////////////////////////////////////////////
-
-
-    /*SplitView {
+    /*TUTTLE PARAMS*/
+   /* SplitView {
         width: parent.width
         height: parent.height
         //handleWidth: 3
         orientation: Qt.Vertical
-    */
-        /*TUTTLE PARAMS*/
+*/
+
+
         Rectangle {
-            //Layout.minimumHeight: tuttleParamTitle.height
+            Layout.minimumHeight: tuttleParamTitle.height
 
             id: tuttleParams
             implicitHeight: parent.height
             height: parent.height
-            //height: 800
+
             width: parent.width
-            color: paramEditor.background
-            ///////////////////////////////////////////////////////
-               // test for change the text of the node (to suppress)
-               /*MouseArea{
-                   x : 50
-                   y: 0
-                   width: 800
-                   height: 800
-                   onClicked: {
-                       console.log("rectangle height: ", parent.height )
-                       console.log(" rectangle parent height: ", parent.parent.height)
-                   }
-
-               }*/
-
-               //////////////////////////////////////////////////////
+            //color: paramEditor.background
+            color: "red"
 
             /* Params depend on the node type (Tuttle data)*/
             Item {
                 id: tuttleParamContent
                 height: parent.height - tuttleParamTitle.height
-                //height: 800
                 width: parent.width
                 y: tuttleParamTitle.height
 
@@ -111,7 +82,7 @@ Item {
                         }
                     }//Listview
                 }//scrollArea
-            }//rectangle param
+            }//item param
 
             //placed here to avoid a bug of display with the listView (should be displayed after the listview)
             Rectangle{
@@ -132,7 +103,6 @@ Item {
                     anchors.leftMargin: 10
                     color: textColor
                     font.pointSize: 11
-                    //text: "Parameters"
                     text: currentParamNode.name
                     clip: true
                 }
@@ -460,5 +430,6 @@ Item {
                 }//component
             }//loader
         }//rectangle of buttleParam
-//    }//splitterColumn */
+*/
+  //   }
 }

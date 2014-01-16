@@ -1,4 +1,5 @@
 import QtQuick 2.1
+import QtQuick.Controls 1.0
 import ButtleFileModel 1.0
 
 Rectangle {
@@ -8,6 +9,7 @@ Rectangle {
     property string folder
     signal changeFolder(string folder)
     property string parentFolder
+    property int indexSelected: -1
 
 	Row{
 		spacing: 10;
@@ -50,6 +52,12 @@ Rectangle {
 			}
 		}
 
+        FileModelBrowser {
+            id: suggestion
+
+            folder: headerBar.folder
+        }
+
         Rectangle{
             height: parent.height - 5
             width: 600
@@ -79,29 +87,50 @@ Rectangle {
                 onTextChanged: {
                     suggestion.folder = text
                 }
+                Keys.onTabPressed: suggestionsMenu.popup()
             }
+
+            Menu {
+                id: suggestionsMenu
+                visible: texteditPath.focus
+
+                Instantiator {
+                    model: suggestion.getFilteredFileItems(suggestion.folder)
+
+                    MenuItem {
+                        id: textComponent
+                        text: model.object.fileName
+                        onTriggered: changeFolder(model.object.filepath)
+                    }
+                }
+
+                MenuItem {
+                    id: test
+                    text: "pouet"
+                    onTriggered: changeFolder("pouet")
+                }
+            }
+
+
         }
 
-        FileModelBrowser {
-            id: suggestion
 
-            folder: headerBar.folder
-        }
 
-        SuggestionBox {
+
+        /*SuggestionBox {
             id: suggestionBox
 
             y: 40
             x: 150
             width: texteditPath.width
             visible: texteditPath.focus
+            selectedIndex: headerBar.indexSelected
 
             model: suggestion.getFilteredFileItems(suggestion.folder)
             onItemSelected: {
-                texteditPath.text = item
+                changeFolder(item)
             }
-
-        }
+        }*/
 
 	}
 

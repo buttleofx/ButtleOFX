@@ -19,7 +19,10 @@ class FileItem(QtCore.QObject):
     
     def __init__(self, folder, fileName, fileType):
         super(FileItem, self).__init__()
-        self._filepath = folder + "/" + fileName
+        if folder == "/":
+            self._filepath = folder + fileName
+        else:
+            self._filepath = folder + "/" + fileName
         self._fileType = fileType
 
     def getFilepath(self):
@@ -81,11 +84,13 @@ class FileModelBrowser(QtQuick.QQuickItem):
         try:
             _, dirs, files = next(os.walk(folder))
             for d in dirs:
-                self._fileItems.append(FileItem(folder, d, FileItem.Type.Folder))
+                if not d.startswith("."):
+                    self._fileItems.append(FileItem(folder, d, FileItem.Type.Folder))
             
             if self._nameFilter == "*":
                 for f in files:
-                    self._fileItems.append(FileItem(folder, f, FileItem.Type.File))
+                    if not f.startswith("."):
+                        self._fileItems.append(FileItem(folder, f, FileItem.Type.File))
                     
             else:
                 for f in files:
@@ -105,7 +110,7 @@ class FileModelBrowser(QtQuick.QQuickItem):
         try:
             _, dirs, files = next(os.walk(os.path.dirname(fileFilter)))
             for d in dirs:
-                if d.startswith(os.path.basename(fileFilter)):
+                if not d.startswith(".") and d.startswith(os.path.basename(fileFilter)) and d != os.path.basename(fileFilter):
                     suggestions.append(FileItem(os.path.dirname(fileFilter), d, FileItem.Type.Folder))
             
         except Exception:

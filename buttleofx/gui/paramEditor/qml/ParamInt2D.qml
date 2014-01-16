@@ -45,6 +45,8 @@ Item {
             border.width: 1
             border.color: "#444"
             radius: 3
+            clip: true
+
             TextInput {
                 id: paramInt2DInput1
                 text: paramObject.value1
@@ -93,6 +95,8 @@ Item {
             border.width: 1
             border.color: "#444"
             radius: 3
+            clip: true
+
             TextInput{
                 id: paramInt2DInput2
                 text: paramObject.value2

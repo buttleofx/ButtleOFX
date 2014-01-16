@@ -29,7 +29,7 @@ Item {
             color: "white"
             text: parent.name
             anchors.horizontalCenter: parent.horizontalCenter
-            y: 3
+            y: 2
             font.pixelSize: 14
 
             Component.onCompleted:

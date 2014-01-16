@@ -149,6 +149,16 @@ Item {
         }
     }
     */
+    DropArea {
+        anchors.fill: parent
+        keys: "fileDrag"
+
+        onDropped: {
+            _buttleManager.nodeManager.dropFile(drag.source.filePath, drag.x - m.graphRoot.originX, drag.y - m.graphRoot.originY)
+            console.log("File dropped : ", drag.source.filePath)
+        }
+    }
+
     Rectangle {
         id: graphContainer
         x: 0

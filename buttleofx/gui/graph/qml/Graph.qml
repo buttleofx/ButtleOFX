@@ -9,32 +9,22 @@ Rectangle {
         property variant graphRoot: qml_graphRoot
     }
 
-    property alias originX: graphContainer.x
-    property alias originY: graphContainer.y
-
-    /*property real zoomCoeff: 1
-    property real zoomStep: 0.05
-    property real graphPreviousWidth: width
-    property real graphPreviousHeight: height
-    property int nodeInitialWidth: 80*/
-    property int nodeWidth: 80
+    signal clickCreationNode(string nodeType)
+    signal drawSelection(int selectionX, int selectionY, int selectionWidth, int selectionHeight)
 
     property real zoomCoeff: 1
     property real zoomStep: 0.05
-    property real graphPreviousWidth: width
-    property real graphPreviousHeight: height
     property real nodeX
-    property real mouseRatioX
-    property real mouseRatioY
     property int offsetX: 0
     property int offsetY: 0
+    property alias originX: graphContainer.x
+    property alias originY: graphContainer.y
 
     property bool readOnly
     property bool miniatureState
-    property real miniatureScale: 0.15
+    property real miniatureScale
 
-    signal clickCreationNode(string nodeType)
-    signal drawSelection(int selectionX, int selectionY, int selectionWidth, int selectionHeight)
+    property var  container: qml_graphRoot.graphContainer
 
     // Selection area
     MouseArea {
@@ -106,20 +96,6 @@ Rectangle {
                 m.graphRoot.originY = graphContainer_yStart + yOffset
             }
         }
-        /*onWheel: {
-            if(wheel.angleDelta.y > 0){
-                zoomCoeff += zoomStep
-            }else{
-                if(zoomCoeff > zoomStep){ //inferior boundary
-                    zoomCoeff -= zoomStep
-                }
-            }
-
-            _buttleData.zoom(graphContainer.width, graphContainer.height, nodeWidth, zoomCoeff, graphPreviousWidth, graphPreviousHeight, mouseX, mouseY, m.graphRoot.originX, m.graphRoot.originY)
-            graphPreviousWidth = zoomCoeff * graphContainer.width
-            graphPreviousHeight = zoomCoeff * graphContainer.height
-            nodeWidth = zoomCoeff * nodeInitialWidth
-        }*/
 
         onWheel:{
             if(wheel.angleDelta.y > 0){
@@ -128,13 +104,13 @@ Rectangle {
                 zoomCoeff -= zoomStep
             }
 
-            mouseRatioX = 0.5
-            mouseRatioY = 0.5
+            var mouseRatioX = 0.5
+            var mouseRatioY = 0.5
 
-            //graphContainer.x = ((graphPreviousWidth * mouseRatioX) - (graphContainer.width * mouseRatioX)) + offsetX - ((miniGraph.xOffset/miniGraph.scaleFactor)*zoomCoeff)
-            //graphContainer.y = ((graphPreviousHeight * mouseRatioY) - (graphContainer.height * mouseRatioY )) + offsetY - ((miniGraph.yOffset/miniGraph.scaleFactor)*zoomCoeff)
-            graphContainer.x = ((graphPreviousWidth * mouseRatioX) - (graphContainer.width * mouseRatioX)) + offsetX
-            graphContainer.y = ((graphPreviousHeight * mouseRatioY) - (graphContainer.height * mouseRatioY )) + offsetY
+            //graphContainer.x = ((qml_graphRoot.width * mouseRatioX) - (graphContainer.width * mouseRatioX)) + offsetX - ((miniGraph.xOffset/miniGraph.scaleFactor)*zoomCoeff)
+            //graphContainer.y = ((qml_graphRoot.height * mouseRatioY) - (graphContainer.height * mouseRatioY )) + offsetY - ((miniGraph.yOffset/miniGraph.scaleFactor)*zoomCoeff)
+            graphContainer.x = ((qml_graphRoot.width * mouseRatioX) - (graphContainer.width * mouseRatioX)) + offsetX
+            graphContainer.y = ((qml_graphRoot.height * mouseRatioY) - (graphContainer.height * mouseRatioY )) + offsetY
         }
     }
     onDrawSelection: {
@@ -200,6 +176,7 @@ Rectangle {
                 id: nodesRepeater
                 model: _buttleData.graphWrapper.nodeWrappers
                 Node {
+                    property int nodeWidth: 80
                     id: node
                     nodeWrapper: model.object
                     graphRoot: m.graphRoot
@@ -217,8 +194,8 @@ Rectangle {
                                  when: miniatureState
                                  PropertyChanges {
                                      target: node
-                                     width: nodeWidth * qml_graphRoot.miniatureScale
-                                     height: nodeWidth /2 * qml_graphRoot.miniatureScale
+                                     width: node.nodeWidth * qml_graphRoot.miniatureScale
+                                     height: node.nodeWidth /2 * qml_graphRoot.miniatureScale
                                  }
                              }
                          ]
@@ -308,8 +285,8 @@ Rectangle {
                     width : 7
                     height : 7
                     radius: width * 0.5
-                    //x: (((model.object.coord.x * graphContainer.width) / qml_graphRoot.graphPreviousWidth) + ((graphPreviousWidth * 0.5) - (graphContainer.width * 0.5)) + miniGraph.marginLeft) * miniGraph.scaleFactor
-                    //y: (((model.object.coord.y * graphContainer.height) / qml_graphRoot.graphPreviousHeight) + ((graphPreviousHeight * 0.5) - (graphContainer.height * 0.5)) + miniGraph.marginTop) * miniGraph.scaleFactor
+                    //x: (((model.object.coord.x * graphContainer.width) / qml_graphRoot.width ) + ((qml_graphRoot.width * 0.5) - (graphContainer.width * 0.5)) + miniGraph.marginLeft) * miniGraph.scaleFactor
+                    //y: (((model.object.coord.y * graphContainer.height) / qml_graphRoot.height ) + ((qml_graphRoot.height * 0.5) - (graphContainer.height * 0.5)) + miniGraph.marginTop) * miniGraph.scaleFactor
                     x: (model.object.coord.x + miniGraph.marginLeft) * miniGraph.scaleFactor
                     y: (model.object.coord.y + miniGraph.marginTop) * miniGraph.scaleFactor
                     color: "#00b2a1"

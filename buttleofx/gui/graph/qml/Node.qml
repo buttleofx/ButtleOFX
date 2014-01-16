@@ -29,8 +29,8 @@ Rectangle {
     }
     objectName: "qmlNode_" + m.nodeWrapper.name
 
-    x: ((m.nodeWrapper.coord.x * graphContainer.width) / qml_graphRoot.graphPreviousWidth)
-    y: ((m.nodeWrapper.coord.y * graphContainer.height) / qml_graphRoot.graphPreviousHeight)
+    x: ((m.nodeWrapper.coord.x * graphContainer.width) / qml_graphRoot.width)
+    y: ((m.nodeWrapper.coord.y * graphContainer.height) / qml_graphRoot.height)
     z: _buttleData.graphWrapper.zMax
 
     //height: 40
@@ -86,7 +86,7 @@ Rectangle {
 
             // left button : we end moving
             if (mouse.button == Qt.LeftButton) {
-                _buttleManager.nodeManager.nodeMoved(m.nodeWrapper.name, (m.nodeWrapper.coord.x * qml_graphRoot.graphPreviousWidth) / graphContainer.width, (m.nodeWrapper.coord.y * qml_graphRoot.graphPreviousHeight) / graphContainer.height)
+                _buttleManager.nodeManager.nodeMoved(m.nodeWrapper.name, (m.nodeWrapper.coord.x * qml_graphRoot.width) / graphContainer.width, (m.nodeWrapper.coord.y * qml_graphRoot.height) / graphContainer.height)
                 //stateMoving.state = "normal"
             }
              //middle button : assign the node to the viewer
@@ -314,8 +314,8 @@ Rectangle {
                 when: miniatureState
                 PropertyChanges {
                       target: m.nodeRoot
-                      x: ((m.nodeWrapper.coord.x * graphContainer.width) / qml_graphRoot.graphPreviousWidth) * miniatureScale
-                      y: ((m.nodeWrapper.coord.y * graphContainer.height) / qml_graphRoot.graphPreviousHeight) * miniatureScale
+                      x: ((m.nodeWrapper.coord.x * graphContainer.width) / qml_graphRoot.width) * miniatureScale
+                      y: ((m.nodeWrapper.coord.y * graphContainer.height) / qml_graphRoot.height) * miniatureScale
                 }
             }
         ]

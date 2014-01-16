@@ -42,6 +42,8 @@ Item {
                     _buttleManager.nodeManager.creationNode(nodeType, -graph.originX + graph.mouseX, -graph.originY + graph.mouseY)
                 }
             }
+
+            //The miniature of the graph
             Rectangle{
                 property real scaleFactor: 0.15
                 property real margins: 300
@@ -57,6 +59,7 @@ Item {
                     id: graphMiniature
                     readOnly: true
                     miniatureState: true
+                    miniatureScale: parent.scaleFactor
                     width: parent.width
                     height: parent.height - (parent.margins * parent.scaleFactor)
                     color: "transparent"

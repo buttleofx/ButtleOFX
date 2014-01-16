@@ -32,6 +32,7 @@ Rectangle {
             y: tabBar.height
 		    Layout.fillWidth: true
 		    Layout.preferredHeight: 40
+            z: files.z + 1
 
             parentFolder: m.fileFolder
             folder: m.directory
@@ -63,6 +64,7 @@ Rectangle {
 		        Layout.fillWidth: true
 	            Layout.fillHeight: true
                 Layout.preferredHeight: 120
+                z: 1
 			    
                 folder: m.directory
                 onGoToFolder: {

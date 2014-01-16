@@ -51,7 +51,7 @@ Rectangle {
                         source: model.object.fileType == "Folder" ? "../../img/buttons/browser/folder-icon.png" : "file:///" + model.object.filepath
                         sourceSize.width: 40
                         sourceSize.height: 40
-
+                        anchors.horizontalCenter: parent.horizontalCenter
 
                         MouseArea {
                             id: mouseRegionImage

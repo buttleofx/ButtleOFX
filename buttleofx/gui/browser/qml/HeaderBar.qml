@@ -9,7 +9,6 @@ Rectangle {
     signal changeFolder(string folder)
     property string parentFolder
 
-
 	Row{
 		spacing: 10;
 
@@ -75,42 +74,35 @@ Rectangle {
                     texteditPath.focus = false
                 }
                 onFocusChanged:{
-                    console.debug("Focus changed")
                     texteditPath.focus ? selectAll() : deselect()
                 }
                 onTextChanged: {
                     suggestion.folder = text
-
                 }
             }
-        }
-
-        //console.debug("Suggestion: " + model.object.dirName)
-
-        Column {
-            Repeater {
-                id: list
-
-                model: suggestion.suggestionItems
-                Text {
-                    text: model.object.dirName
-                    color: "blue"
-
-                    onTextChanged: console.debug("suggestion: " + model.object.dirName)
-                }
-            }
-
         }
 
         FileModelBrowser {
             id: suggestion
 
             folder: headerBar.folder
-            /*onFolderChanged: {
-                console.debug("Folder of suggestion :" + suggestion.folder)
-            }*/
         }
-		
+
+        SuggestionBox {
+            id: suggestionBox
+
+            y: 40
+            x: 150
+            width: texteditPath.width
+            visible: texteditPath.focus
+
+            model: suggestion.getFilteredFileItems(suggestion.folder)
+            onItemSelected: {
+                texteditPath.text = item
+            }
+
+        }
+
 	}
 
 }

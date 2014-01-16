@@ -63,16 +63,8 @@ Item {
                         clip: true
                     }
                 }
-
-                // when we clic on the button, the ParamEditor open or close
-                //property int newHeight : tuttleParam.contentHeight < 500 ? tuttleParam.contentHeight + 20 : 500
-                //property int newHeight : tuttleParam.contentHeight + 20
-
                 onClicked: {
-                    //tuttleParamContent.height > 0 ? tuttleParamContent.height = 0 : tuttleParamContent.height = newHeight
-                    //tuttleParamContent.visible == true ? tuttleParamContent.visible = false : tuttleParamContent.visible = true
-
-                    if (tuttleParamContent.visible == true){
+                     if (tuttleParamContent.visible == true){
                         tuttleParamContent.visible = false
                         tuttleParamContent.height = 0
                     }
@@ -82,8 +74,6 @@ Item {
                         tuttleParamContent.visible = true
                     }
 
-
-                    console.log("tuttleParamContent.height ", tuttleParamContent.height)
                 }
 
             }
@@ -92,8 +82,6 @@ Item {
             /* Params depend on the node type (Tuttle data)*/
             Rectangle {
                 id: tuttleParamContent
-
-                //height: tuttleParam.contentHeight < 500 ? tuttleParam.contentHeight + 20 : 500 // height of the ListView
                 height: tuttleParam.contentHeight + 20
 
                 width: parent.width
@@ -105,68 +93,31 @@ Item {
 
                 property string lastGroupParam : "No Group."
 
-                /*ScrollView {
-                    id: scrollbar_paramEditor
+
+                ListView {
                     anchors.fill: parent
-                    anchors.topMargin: 5
-                    anchors.bottomMargin: 5
-                    height: 20
-                    width: 20
-                    //frame: false
-                    // frameWidth: 0
-                  */
-                    ListView {
-                        anchors.fill: parent
-                        anchors.topMargin: 10
-                        anchors.bottomMargin: 10
+                    anchors.topMargin: 10
+                    anchors.bottomMargin: 10
 
-                        id: tuttleParam
-                        height: count ? contentHeight : 0
-                        y: parent.y + 10
-                        spacing: 6
+                    id: tuttleParam
+                    height: count ? contentHeight : 0
+                    y: parent.y + 10
+                    spacing: 6
 
-                        interactive: false
+                    interactive: false
 
-                        model: params
+                    model: params
 
-                        delegate: Component {
-                            Loader {
-                                id: param
-                                source : model.object.paramType + ".qml"
-                                width: parent.width
-                                x: 15 // here is the distance to the left of the listview
-                            }
+                    delegate: Component {
+                        Loader {
+                            id: param
+                            source : model.object.paramType + ".qml"
+                            width: parent.width
+                            x: 15 // here is the distance to the left of the listview
                         }
-                    }//Listview
-               // }//scrollArea
+                    }
+                }//Listview
             }//item param
-
-            //placed here to avoid a bug of display with the listView (should be displayed after the listview)
-            /*Rectangle{
-                id: tuttleParamTitle
-                width: paramEditor.width
-                height: 40
-                color: paramEditor.background
-                gradient: Gradient {
-                    GradientStop { position: 0.0; color: gradian2 }
-                    GradientStop { position: 0.85; color: gradian2 }
-                    GradientStop { position: 0.86; color: gradian1 }
-                    GradientStop { position: 1; color: gradian2 }
-                }
-
-                Text {
-                    anchors.verticalCenter: parent.verticalCenter
-                    anchors.left: parent.left
-                    anchors.leftMargin: 10
-                    color: textColor
-                    font.pointSize: 11
-                    text: currentParamNode.name
-                    clip: true
-                }
-            }*/
-
-
-
 
 
         }

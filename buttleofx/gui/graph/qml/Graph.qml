@@ -24,114 +24,7 @@ Rectangle {
     property bool miniatureState
     property real miniatureScale
 
-    property var  container: qml_graphRoot.graphContainer
-
-    // Selection area
-    MouseArea {
-        id: leftMouseArea
-        property int xStart
-        property int yStart
-        property int graphContainer_xStart
-        property int graphContainer_yStart
-
-        property bool drawingSelection: false
-        property bool selectMode: true
-        property bool moveMode: false
-
-        anchors.fill: parent
-        hoverEnabled: true
-        acceptedButtons: Qt.LeftButton | Qt.MiddleButton
-        onPressed: {
-            xStart = mouse.x
-            yStart = mouse.y
-            graphContainer_xStart = graphContainer.x
-            graphContainer_yStart = graphContainer.y
-
-            rectangleSelection.x = mouse.x;
-            rectangleSelection.y = mouse.y;
-            rectangleSelection.width = 1;
-            rectangleSelection.height = 1;
-            selectMode = leftMouseArea.pressedButtons & Qt.MiddleButton ? false : true
-            moveMode = leftMouseArea.pressedButtons & Qt.MiddleButton ? true : false
-            if( selectMode ) {
-                rectangleSelection.visible = true;
-                drawingSelection = true;
-            }
-        }
-        onReleased: {
-            if(moveMode){
-                moveMode=false
-                var xOffset = mouse.x - xStart
-                var yOffset = mouse.y - yStart
-                offsetX += xOffset
-                offsetY += yOffset
-            }
-            if( selectMode ) {
-                rectangleSelection.visible = false;
-                _buttleData.clearCurrentSelectedNodeNames();
-                m.graphRoot.drawSelection(rectangleSelection.x - m.graphRoot.originX, rectangleSelection.y - m.graphRoot.originY, rectangleSelection.width, rectangleSelection.height)
-            }
-        }
-
-        onPositionChanged: {
-            if( mouse.x < xStart ) {
-                rectangleSelection.x = mouse.x
-                rectangleSelection.width = xStart - mouse.x;
-            }
-            else {
-                rectangleSelection.width = mouse.x - xStart;
-            }
-            if( mouse.y < yStart ) {
-                rectangleSelection.y = mouse.y
-                rectangleSelection.height = yStart - mouse.y;
-            }
-            else {
-                rectangleSelection.height = mouse.y - yStart;
-            }
-
-            if( moveMode ) {
-                var xOffset = mouse.x - xStart
-                var yOffset = mouse.y - yStart
-                m.graphRoot.originX = graphContainer_xStart + xOffset
-                m.graphRoot.originY = graphContainer_yStart + yOffset
-            }
-        }
-
-        onWheel:{
-            if(wheel.angleDelta.y > 0){
-                zoomCoeff += zoomStep
-            }else{
-                zoomCoeff -= zoomStep
-            }
-
-            var mouseRatioX = 0.5
-            var mouseRatioY = 0.5
-
-            //graphContainer.x = ((qml_graphRoot.width * mouseRatioX) - (graphContainer.width * mouseRatioX)) + offsetX - ((miniGraph.xOffset/miniGraph.scaleFactor)*zoomCoeff)
-            //graphContainer.y = ((qml_graphRoot.height * mouseRatioY) - (graphContainer.height * mouseRatioY )) + offsetY - ((miniGraph.yOffset/miniGraph.scaleFactor)*zoomCoeff)
-            graphContainer.x = ((qml_graphRoot.width * mouseRatioX) - (graphContainer.width * mouseRatioX)) + offsetX
-            graphContainer.y = ((qml_graphRoot.height * mouseRatioY) - (graphContainer.height * mouseRatioY )) + offsetY
-        }
-    }
-    onDrawSelection: {
-        _buttleData.addNodeWrappersInRectangleSelection(selectionX, selectionY, selectionWidth, selectionHeight);
-    }
-
-    /*
-    ExternDropArea {
-        anchors.fill: parent
-        acceptDrop: true
-        onDragEnter: {
-            acceptDrop = hasUrls
-        }
-        onDrop: {
-            console.log("Drop external files:", acceptDrop)
-            if(acceptDrop) {
-                _buttleManager.nodeManager.dropFile(firstUrl, pos.x - m.graphRoot.originX, pos.y - m.graphRoot.originY)
-            }
-        }
-    }
-    */
+    property var container: graphContainer
 
     Rectangle {
         id: graphContainer
@@ -149,7 +42,6 @@ Rectangle {
             visible: miniatureState ? false : true
             Rectangle {
                 id: axeX
-
                 x: -repere.size - 0.5 * repere.thickness
                 y: 0
                 width: 2 * repere.size + repere.thickness
@@ -158,7 +50,6 @@ Rectangle {
             }
             Rectangle {
                 id: axeY
-
                 x: 0
                 y: -repere.size - 0.5 * repere.thickness
                 width: 2
@@ -342,11 +233,5 @@ Rectangle {
 
 
     // Rectangle selection is placed here so it is drawn over the nodes
-    Rectangle {
-        id: rectangleSelection
-        color: "white"
-        border.color: "#00b2a1"
-        opacity: 0.25
-        visible: false
-    }
+
 }

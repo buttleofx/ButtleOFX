@@ -54,7 +54,8 @@ Item {
             // for each node we create a ParamEditor
             ListView{
                 anchors.fill: parent
-                model:  _buttleData.graphWrapper.nodeWrappers
+                //model:  _buttleData.graphWrapper.nodeWrappers
+                model: _buttleData.editedNodesWrapper
                 delegate: paramDelegate
             }
         }

@@ -41,6 +41,103 @@ Item {
                     // console.log("Node created clicking from Graph")
                     _buttleManager.nodeManager.creationNode(nodeType, -graph.originX + graph.mouseX, -graph.originY + graph.mouseY)
                 }
+
+                MouseArea {
+                    id: leftMouseArea
+                    property int xStart
+                    property int yStart
+                    property int graphContainer_xStart
+                    property int graphContainer_yStart
+
+                    property bool drawingSelection: false
+                    property bool selectMode: true
+                    property bool moveMode: false
+
+                    z: -1
+                    anchors.fill: parent
+                    hoverEnabled: true
+                    acceptedButtons: Qt.LeftButton | Qt.MiddleButton
+                    onPressed: {
+                        xStart = mouse.x
+                        yStart = mouse.y
+                        graphContainer_xStart = parent.container.x
+                        graphContainer_yStart = parent.container.y
+
+                        rectangleSelection.x = mouse.x;
+                        rectangleSelection.y = mouse.y;
+                        rectangleSelection.width = 1;
+                        rectangleSelection.height = 1;
+                        selectMode = leftMouseArea.pressedButtons & Qt.MiddleButton ? false : true
+                        moveMode = leftMouseArea.pressedButtons & Qt.MiddleButton ? true : false
+                        if( selectMode ) {
+                            rectangleSelection.visible = true;
+                            drawingSelection = true;
+                        }
+                    }
+                    onReleased: {
+                        if(moveMode){
+                            moveMode=false
+                            var xOffset = mouse.x - xStart
+                            var yOffset = mouse.y - yStart
+                            graph.offsetX += xOffset
+                            graph.offsetY += yOffset
+                        }
+                        if( selectMode ) {
+                            rectangleSelection.visible = false;
+                            _buttleData.clearCurrentSelectedNodeNames();
+                            graph.drawSelection(rectangleSelection.x - graph.originX, rectangleSelection.y - graph.originY, rectangleSelection.width, rectangleSelection.height)
+                        }
+                    }
+
+                    onPositionChanged: {
+                        if( mouse.x < xStart ) {
+                            rectangleSelection.x = mouse.x
+                            rectangleSelection.width = xStart - mouse.x;
+                        }
+                        else {
+                            rectangleSelection.width = mouse.x - xStart;
+                        }
+                        if( mouse.y < yStart ) {
+                            rectangleSelection.y = mouse.y
+                            rectangleSelection.height = yStart - mouse.y;
+                        }
+                        else {
+                            rectangleSelection.height = mouse.y - yStart;
+                        }
+
+                        if( moveMode ) {
+                            var xOffset = mouse.x - xStart
+                            var yOffset = mouse.y - yStart
+                            graph.originX = graphContainer_xStart + xOffset
+                            graph.originY = graphContainer_yStart + yOffset
+                        }
+                    }
+
+                    onWheel:{
+                        if(wheel.angleDelta.y > 0){
+                            graph.zoomCoeff += graph.zoomStep
+                        }else{
+                            graph.zoomCoeff -= graph.zoomStep
+                        }
+
+                        var mouseRatioX = 0.5
+                        var mouseRatioY = 0.5
+
+                        parent.container.x = ((graph.width * mouseRatioX) - (parent.container.width * mouseRatioX)) + graph.offsetX
+                        parent.container.y = ((graph.height * mouseRatioY) - (parent.container.height * mouseRatioY )) + graph.offsetY
+                    }
+                }
+                onDrawSelection: {
+                    _buttleData.addNodeWrappersInRectangleSelection(selectionX, selectionY, selectionWidth, selectionHeight);
+                }
+
+                Rectangle {
+                    id: rectangleSelection
+                    color: "white"
+                    border.color: "#00b2a1"
+                    opacity: 0.25
+                    visible: false
+                }
             }
 
             //The miniature of the graph

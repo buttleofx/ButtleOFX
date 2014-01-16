@@ -110,6 +110,7 @@ Item {
             border.width: 1
             border.color: "#333"
             radius: 3
+            clip: true
 
             // create the right input, depend on the tuttle param
             onWidthChanged: {

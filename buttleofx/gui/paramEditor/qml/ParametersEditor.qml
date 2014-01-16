@@ -19,7 +19,7 @@ Item {
                GradientStop { position: 0.85; color: "#141414" }
                GradientStop { position: 0.86; color: "#010101" }
                GradientStop { position: 1; color: "#010101" }
-           }*/
+        }*/
 
         Text {
             anchors.verticalCenter: parent.verticalCenter
@@ -54,7 +54,6 @@ Item {
             // for each node we create a ParamEditor
             ListView{
                 anchors.fill: parent
-                //model:  _buttleData.graphWrapper.nodeWrappers
                 model: _buttleData.editedNodesWrapper
                 delegate: paramDelegate
             }

@@ -1,6 +1,7 @@
 import QtQuick 2.0
 import QtQuick.Controls 1.0
 import QtQuick.Layouts 1.0
+import QtQuick.Controls.Styles 1.0
 
 //parent of the ParamEditor is the Row of the ButtleAp
 Item {
@@ -78,7 +79,7 @@ Item {
             }//item param
 
             //placed here to avoid a bug of display with the listView (should be displayed after the listview)
-            Rectangle{
+            /*Rectangle{
                 id: tuttleParamTitle
                 width: paramEditor.width
                 height: 40
@@ -99,7 +100,48 @@ Item {
                     text: currentParamNode.name
                     clip: true
                 }
+            }*/
+
+            Button{
+                id: tuttleParamTitle
+                //text: currentParamNode.name
+                style: ButtonStyle {
+                    background: Rectangle {
+                        implicitWidth: paramEditor.width
+                        implicitHeight: 40
+                        color: paramEditor.background
+                        gradient: Gradient {
+                            GradientStop { position: 0.0; color: gradian2 }
+                            GradientStop { position: 0.85; color: gradian2 }
+                            GradientStop { position: 0.86; color: gradian1 }
+                            GradientStop { position: 1; color: gradian2 }
+                        }
+                    }
+
+                    label: Text{
+                        color: textColor
+                        text: currentParamNode.name
+                        anchors.verticalCenter: parent.verticalCenter
+                        anchors.left: parent.left
+                        anchors.leftMargin: 10
+                        font.pointSize: 11
+                        clip: true
+                    }
+                }
+                property int newHeight : tuttleParam.contentHeight < 500 ? tuttleParam.contentHeight + 20 : tuttleParam.contentHeight / 2
+
+                onClicked: {
+                    //tuttleParamContent.height == 0 ? tuttleParamContent.height = newHeight : console.log(tuttleParamContent.height)
+                    tuttleParamContent.height > 0 ? tuttleParamContent.height = 0 : tuttleParamContent.height = newHeight
+
+                    console.log("tuttleParamContent.height ", tuttleParamContent.height)
+
+                }
+
             }
+
+
+
         }
 
         /*BUTTLE PARAMS*/

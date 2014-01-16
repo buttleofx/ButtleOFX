@@ -2,13 +2,10 @@ import QtQuick 2.0
 import QtQuick.Controls 1.0
 import QtQuick.Layouts 1.0
 
-import "../../../gui"
-
 //parent of the ParamEditor is the Row of the ButtleAp
 Item {
     id: paramEditor
 
-    signal buttonCloseClicked(bool clicked)
 
     property variant params 
     property variant currentParamNode
@@ -25,12 +22,6 @@ Item {
 
     implicitWidth: 300
     implicitHeight: 500
-
-    Tab {
-        id: tabBar
-        name: "Parameters"
-        onCloseClicked: paramEditor.buttonCloseClicked(true)
-    }
 
     SplitView {
         width: parent.width

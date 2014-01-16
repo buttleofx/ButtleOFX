@@ -2,13 +2,10 @@ import QtQuick 2.1
 import QtQuick.Controls 1.0
 import QtQuick.Layouts 1.0
 
-import "../../../gui"
-
 Rectangle {
 	id: browser
     color: "#353535"
 
-    signal buttonCloseClicked(bool clicked)
 
     QtObject {
         id: m
@@ -22,17 +19,10 @@ Rectangle {
 
 
     ColumnLayout {
-	    anchors.fill: parent
-
-        Tab {
-            id: tabBar
-            name: "Browser"
-            onCloseClicked: browser.buttonCloseClicked(true)
-        }
+        anchors.fill: parent
 
 	    HeaderBar {
             id: headerBar
-            y: tabBar.height
 		    Layout.fillWidth: true
 		    Layout.preferredHeight: 40
 

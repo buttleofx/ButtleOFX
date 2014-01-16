@@ -2,12 +2,9 @@ import QtQuick 2.0
 import QtQuick.Layouts 1.0
 import TimerPlayer 1.0
 
-import "../../../gui"
-
 Item {
     id: player
 
-    signal buttonCloseClicked(bool clicked)
 
     // remark : in python if there are ten frames, they are numbered from 0 to 9 so we need some time to add 1 for display
     property variant node
@@ -72,18 +69,11 @@ Item {
         //console.log("Node Changed : ", node)
     }
 
-    Tab {
-        id: tabBar
-        name: "Viewer"
-        onCloseClicked: player.buttonCloseClicked(true)
-    }
-
     /********************************Viewer and Tools************************************/
     Rectangle {
         id: viewerAndTools
-        implicitHeight: parent.height - tabBar.height
+        implicitHeight: parent.height
         implicitWidth: parent.width
-        y: tabBar.height
         color: "#141414"
 
         ColumnLayout {
@@ -181,7 +171,7 @@ Item {
 
                 property int impHeightValue: 25
 
-                y: parent.height + tabBar.height
+                y: parent.height
                 implicitWidth: parent.width
                 color: "transparent"
                 Layout.minimumWidth : 700

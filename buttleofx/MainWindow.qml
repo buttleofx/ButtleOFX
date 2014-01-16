@@ -1,5 +1,6 @@
 import QtQuick 2.0
 import QtQuick.Controls 1.0
+import QtQuick.Controls.Styles 1.0
 import QtQuick.Layouts 1.0
 import QtQml 2.1
 import QuickMamba 1.0
@@ -384,53 +385,62 @@ ApplicationWindow {
                 Layout.fillWidth: true
                 Layout.minimumWidth: 200
 
-                Rectangle {
+                TabView {
                     id: topLeftView
-                    color: "#353535"
                     Layout.minimumHeight: 200
                     Layout.fillHeight: true
                     implicitWidth: parent.width
 
-                    children:
+                    style: TabStyle {
+                            onButtonCloseClicked: parent.removeTab(0)
+                        }
+
+                    Component.onCompleted: {
                         switch(selectedView){
                             case 1:
                                 visible = true
-                                browser
+                                addTab("Browser", browser)
                                 break
                             case 2:
                             case 3:
                                 visible = true
-                                player
+                                addTab("Viewer", player)
                                 break
                             default:
                                 break
                         }
+                    }
                 }//topLeftView
 
-                Rectangle {
+                TabView {
                     id: bottomLeftView
-                    color: "#353535"
                     Layout.minimumHeight: 200
                     Layout.fillHeight: true
                     implicitWidth: parent.width
                     implicitHeight: 0.5 * parent.height
                     z: -1
 
-                    children:
+                    style: TabStyle {
+                            onButtonCloseClicked: {parent.removeTab(0); parent.visible = false; selectedView=-1}
+                        }
+
+                    Component.onCompleted: {
                         switch(selectedView){
                             case 1:
                             case 2:
                                 visible = true
-                                paramEditor
+                                addTab("Parameters", paramEditor)
                                 break
                             case 3:
                                 visible = true
-                                browser
+                                addTab("Browser", browser)
                                 break
                             default:
                                 break
                         }
+                    }
                 }//bottomLeftView
+
             }//leftColumn
 
             SplitView {
@@ -441,48 +451,55 @@ ApplicationWindow {
                 Layout.fillWidth: true
                 Layout.minimumWidth: 200
 
-                Rectangle {
+                TabView {
                     id: topRightView
-                    color: "#353535"
                     Layout.minimumHeight: 200
                     Layout.fillHeight: true
                     implicitWidth: parent.width
 
-                    children:
+                    style: TabStyle {
+                            onButtonCloseClicked: {parent.removeTab(0); parent.visible = false; selectedView=-1}
+                        }
+
+                    Component.onCompleted: {
                         switch(selectedView){
                             case 1:
                                 visible = true
-                                player
+                                addTab("Viewer", player)
                                 break
                             case 2:
                                 visible = true
-                                browser
+                                addTab("Browser", browser)
                                 break
                             case 3:
                                 visible = true
-                                paramEditor
+                                addTab("Parameters", paramEditor)
                                 break
                             default:
                                 break
                         }
+                    }
                 }//topRightView
 
-                Rectangle {
+                TabView {
                     id: bottomRightView
-                    color: "#353535"
                     Layout.minimumHeight: 200
                     Layout.fillHeight: true
                     implicitWidth: parent.width
                     implicitHeight: 0.5 * parent.height
                     z: -1
 
-                    children:
+                    style: TabStyle {
+                            onButtonCloseClicked: {parent.removeTab(0); parent.visible = false; selectedView=-1}
+                        }
+
+                    Component.onCompleted: {
                         switch(selectedView){
                             case 1:
                             case 2:
                                 visible = true
                                 rightColumn.implicitWidth = 0.7 * rightColumn.parent.width
-                                graphEditor
+                                addTab("Graph", graphEditor)
                                 break
                             case 3:
                                 visible = false
@@ -491,6 +508,7 @@ ApplicationWindow {
                             default:
                                 break
                         }
+                    }
                 }//bottomRightView
             }//rightColumn
         }//splitview
@@ -501,31 +519,36 @@ ApplicationWindow {
         id: subviews
         visible: false
 
-        Player {
+        Component {
             id: player
-            anchors.fill: parent
-            node: _buttleData.currentViewerNodeWrapper
-            onButtonCloseClicked: {parent.visible = false; selectedView=-1}
+            Player {
+                anchors.fill: parent
+                node: _buttleData.currentViewerNodeWrapper
+            }
         }
 
-        GraphEditor {
+        Component {
             id: graphEditor
-            anchors.fill: parent
-            onButtonCloseClicked: {parent.visible = false; selectedView=-1}
+            GraphEditor {
+                anchors.fill: parent
+            }
+
         }
 
-        ParamEditor {
+        Component {
             id: paramEditor
-            anchors.fill: parent
-            params: _buttleData.currentParamNodeWrapper ? _buttleData.currentParamNodeWrapper.params : null
-            currentParamNode: _buttleData.currentParamNodeWrapper
-            onButtonCloseClicked: {parent.visible = false; selectedView=-1}
+            ParamEditor {
+                anchors.fill: parent
+                params: _buttleData.currentParamNodeWrapper ? _buttleData.currentParamNodeWrapper.params : null
+                currentParamNode: _buttleData.currentParamNodeWrapper
+            }
         }
 
-        Browser {
+        Component {
             id: browser
-            anchors.fill: parent
-            onButtonCloseClicked: {parent.visible = false; selectedView=-1}
+            Browser {
+                anchors.fill: parent
+            }
         }
     }
 }

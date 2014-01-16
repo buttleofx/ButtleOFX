@@ -48,8 +48,8 @@ Item {
             anchors.fill: parent
             anchors.topMargin: 5
             anchors.bottomMargin: 5
-            height: 110
-            width: 110
+            height: 20
+            width: 20
 
             // for each node we create a ParamEditor
             ListView{

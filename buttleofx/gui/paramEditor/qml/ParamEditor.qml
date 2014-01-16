@@ -21,33 +21,33 @@ Item {
 
     implicitWidth: 300
     implicitHeight: 500
-    height: parent.height
+    height: tuttleParamContent.height
 
 
 
     /*TUTTLE PARAMS*/
-   /* SplitView {
-        width: parent.width
-        height: parent.height
-        //handleWidth: 3
-        orientation: Qt.Vertical
-*/
-
 
         Rectangle {
             Layout.minimumHeight: tuttleParamTitle.height
 
             id: tuttleParams
-            implicitHeight: parent.height
-            height: parent.height
+            //implicitHeight: parent.height
+            //height: parent.height
+            //height: tuttleParam.height // height of the ListView
+            //height: children.height
 
             width: parent.width
             color: paramEditor.background
 
+
             /* Params depend on the node type (Tuttle data)*/
             Item {
                 id: tuttleParamContent
-                height: parent.height - tuttleParamTitle.height
+               //height: parent.height - tuttleParamTitle.height
+
+
+                height: tuttleParam.contentHeight < 500 ? tuttleParam.contentHeight + 20 : tuttleParam.contentHeight / 2// height of the ListView
+
                 width: parent.width
                 y: tuttleParamTitle.height
 
@@ -67,6 +67,9 @@ Item {
                         y: parent.y + 10
                         spacing: 6
 
+
+                        //onCountChanged: console.log(count, "   ", contentHeight)
+
                         interactive: false
 
                         model: params
@@ -75,7 +78,7 @@ Item {
                             Loader {
                                 id: param
                                 source : model.object.paramType + ".qml"
-                                width: parent.width
+                                width: parent.width                                
                                 x: 15 // here is the distance to the left of the listview
                             }
                         }

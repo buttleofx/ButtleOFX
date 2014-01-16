@@ -65,16 +65,30 @@ Item {
             id: paramDelegate
             Rectangle{
                 //// to modify ////
-                height: contentParamEditor.height / 2
-                y: (index) * height
+                //height: contentParamEditor.height / 2
+                //y: (index) * height
                 /////
 
+                //property int heightPreviousParam : children.heightParamEditor
+                //y : heightPreviousParam
+
+                height: paramEditor_multiple.height + 40
+
+
+                y: height + 40
+
                 ParamEditor {
+                    id: paramEditor_multiple
                     //height: contentParamEditor.height
                     width: contentParamEditor.width - 10
                     params: model.object ?  model.object.params : null
                     currentParamNode: model.object
+
+                    property int heightParamEditor : height
+
+                    //onHeightChanged: console.log("ParamEditor", height)
                 }
+
             }
         }
 

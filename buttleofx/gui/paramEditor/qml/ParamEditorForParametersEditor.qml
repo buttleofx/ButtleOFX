@@ -36,30 +36,90 @@ Item {
             width: parent.width
             color: paramEditor.background
 
+            // Title of the node
+            Button{
+                id: tuttleParamTitle
+                height: 40
+                style: ButtonStyle {
+                    background: Rectangle {
+                        implicitWidth: paramEditor.width
+                        implicitHeight: 40
+                        color: paramEditor.background
+                        gradient: Gradient {
+                            GradientStop { position: 0.0; color: gradian2 }
+                            GradientStop { position: 0.85; color: gradian2 }
+                            GradientStop { position: 0.86; color: gradian1 }
+                            GradientStop { position: 1; color: gradian2 }
+                        }
+                    }
+
+                    label: Text{
+                        color: textColor
+                        text: currentParamNode.name
+                        anchors.verticalCenter: parent.verticalCenter
+                        anchors.left: parent.left
+                        anchors.leftMargin: 10
+                        font.pointSize: 11
+                        clip: true
+                    }
+                }
+
+                // when we clic on the button, the ParamEditor open or close
+                //property int newHeight : tuttleParam.contentHeight < 500 ? tuttleParam.contentHeight + 20 : 500
+                //property int newHeight : tuttleParam.contentHeight + 20
+
+                onClicked: {
+                    //tuttleParamContent.height > 0 ? tuttleParamContent.height = 0 : tuttleParamContent.height = newHeight
+                    //tuttleParamContent.visible == true ? tuttleParamContent.visible = false : tuttleParamContent.visible = true
+
+                    if (tuttleParamContent.visible == true){
+                        tuttleParamContent.visible = false
+                        tuttleParamContent.height = 0
+                    }
+                    else{
+                        //tuttleParamContent.height = newHeight
+                        tuttleParamContent.height = tuttleParam.contentHeight + 20
+                        tuttleParamContent.visible = true
+                    }
+
+
+                    console.log("tuttleParamContent.height ", tuttleParamContent.height)
+                }
+
+            }
+
 
             /* Params depend on the node type (Tuttle data)*/
             Rectangle {
                 id: tuttleParamContent
 
-                height: tuttleParam.contentHeight < 500 ? tuttleParam.contentHeight + 20 : tuttleParam.contentHeight / 2// height of the ListView
+                //height: tuttleParam.contentHeight < 500 ? tuttleParam.contentHeight + 20 : 500 // height of the ListView
+                height: tuttleParam.contentHeight + 20
 
                 width: parent.width
                 y: tuttleParamTitle.height
 
-                color: "red"
+                visible: true
+
+                color : "transparent"
 
                 property string lastGroupParam : "No Group."
 
-                ScrollView {
+                /*ScrollView {
                     id: scrollbar_paramEditor
                     anchors.fill: parent
                     anchors.topMargin: 5
                     anchors.bottomMargin: 5
-                    height: 110
-                    width: 110
+                    height: 20
+                    width: 20
                     //frame: false
                     // frameWidth: 0
+                  */
                     ListView {
+                        anchors.fill: parent
+                        anchors.topMargin: 10
+                        anchors.bottomMargin: 10
+
                         id: tuttleParam
                         height: count ? contentHeight : 0
                         y: parent.y + 10
@@ -78,7 +138,7 @@ Item {
                             }
                         }
                     }//Listview
-                }//scrollArea
+               // }//scrollArea
             }//item param
 
             //placed here to avoid a bug of display with the listView (should be displayed after the listview)
@@ -105,42 +165,7 @@ Item {
                 }
             }*/
 
-            Button{
-                id: tuttleParamTitle
-                style: ButtonStyle {
-                    background: Rectangle {
-                        implicitWidth: paramEditor.width
-                        implicitHeight: 40
-                        color: paramEditor.background
-                        gradient: Gradient {
-                            GradientStop { position: 0.0; color: gradian2 }
-                            GradientStop { position: 0.85; color: gradian2 }
-                            GradientStop { position: 0.86; color: gradian1 }
-                            GradientStop { position: 1; color: gradian2 }
-                        }
-                    }
 
-                    label: Text{
-                        color: textColor
-                        text: currentParamNode.name
-                        anchors.verticalCenter: parent.verticalCenter
-                        anchors.left: parent.left
-                        anchors.leftMargin: 10
-                        font.pointSize: 11
-                        clip: true
-                    }
-                }
-
-                // when we clic on the button, the ParamEditor open or close
-                property int newHeight : tuttleParam.contentHeight < 500 ? tuttleParam.contentHeight + 20 : tuttleParam.contentHeight / 2
-
-                onClicked: {
-                    tuttleParamContent.height > 0 ? tuttleParamContent.height = 0 : tuttleParamContent.height = newHeight
-
-                    console.log("tuttleParamContent.height ", tuttleParamContent.height)
-                }
-
-            }
 
 
 

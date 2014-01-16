@@ -2,6 +2,8 @@ import QtQuick 2.0
 import QtQuick.Controls 1.0
 import QtQml 2.1
 
+import QtQuick.Controls.Styles 1.0
+
 import QuickMamba 1.0
 
 Item {
@@ -38,7 +40,7 @@ Item {
     // Container of the paramEditors
     Rectangle{
         id: contentParamEditor
-        height: parent.height
+        height: parent.height - paramTitle.height
         width: parent.width
         y: paramTitle.height
         color: "#141414"
@@ -48,8 +50,6 @@ Item {
             anchors.fill: parent
             anchors.topMargin: 5
             anchors.bottomMargin: 5
-            height: 20
-            width: 20
 
             // for each node we create a ParamEditor
             ListView{
@@ -63,12 +63,11 @@ Item {
         Component {
             id: paramDelegate
             Rectangle{
-                height: paramEditor_multiple.height + 40
-
+                height: paramEditor_multiple.height + 50 // 40 : size of paramTitle
 
                 ParamEditorForParametersEditor {
                     id: paramEditor_multiple
-                    width: contentParamEditor.width - 10 // -10 to let place for the general scrollbar
+                    width: contentParamEditor.width
                     params: model.object ?  model.object.params : null
                     currentParamNode: model.object
                 }

@@ -22,79 +22,41 @@ Item {
 
     implicitWidth: 300
     implicitHeight: 500
+    height: tuttleParamContent.height
 
-    SplitView {
-        width: parent.width
-        height: parent.height
-        //handleWidth: 3
-        orientation: Qt.Vertical
 
-        /*TUTTLE PARAMS*/
+
+    /*TUTTLE PARAMS*/
+
         Rectangle {
             Layout.minimumHeight: tuttleParamTitle.height
 
             id: tuttleParams
-            height: 500
+
             width: parent.width
             color: paramEditor.background
 
+
             /* Params depend on the node type (Tuttle data)*/
-            Item {
+            Rectangle {
                 id: tuttleParamContent
-                height: parent.height - tuttleParamTitle.height
+
+                height: tuttleParam.contentHeight < 500 ? tuttleParam.contentHeight + 20 : tuttleParam.contentHeight / 2// height of the ListView
+
                 width: parent.width
-                y: tuttleParamTitle.height + 5
+                y: tuttleParamTitle.height
+
+                color: "red"
 
                 property string lastGroupParam : "No Group."
 
                 ScrollView {
+                    id: scrollbar_paramEditor
                     anchors.fill: parent
                     anchors.topMargin: 5
                     anchors.bottomMargin: 5
                     height: 110
                     width: 110
-
-                    style: ScrollViewStyle {
-                        scrollBarBackground: Rectangle {
-                            id: scrollBar
-                            width:15
-                            color: "#212121"
-                            border.width: 1
-                            border.color: "#333"
-                        }
-                        decrementControl : Rectangle {
-                            id: scrollLower
-                            width:15
-                            height:15
-                            color: styleData.pressed? "#212121" : "#343434"
-                            border.width: 1
-                            border.color: "#333"
-                            radius: 3
-                            Image{
-                                id: arrow
-                                source: "file:///" + _buttleData.buttlePath + "/gui/img/buttons/params/arrow2.png"
-                                x:4
-                                y:4
-                            }
-                        }
-                        incrementControl : Rectangle {
-                            id: scrollHigher
-                            width:15
-                            height:15
-                            color: styleData.pressed? "#212121" : "#343434"
-                            border.width: 1
-                            border.color: "#333"
-                            radius: 3
-                            Image{
-                                id: arrow
-                                source: "file:///" + _buttleData.buttlePath + "/gui/img/buttons/params/arrow.png"
-                                x:4
-                                y:4
-                            }
-                        }
-                    }
-
-
                     //frame: false
                     // frameWidth: 0
                     ListView {
@@ -117,10 +79,10 @@ Item {
                         }
                     }//Listview
                 }//scrollArea
-            }//rectangle param
+            }//item param
 
             //placed here to avoid a bug of display with the listView (should be displayed after the listview)
-            Rectangle{
+            /*Rectangle{
                 id: tuttleParamTitle
                 width: paramEditor.width
                 height: 40
@@ -138,13 +100,54 @@ Item {
                     anchors.leftMargin: 10
                     color: textColor
                     font.pointSize: 11
-                    text: "Parameters"
+                    text: currentParamNode.name
+                    clip: true
                 }
+            }*/
+
+            Button{
+                id: tuttleParamTitle
+                style: ButtonStyle {
+                    background: Rectangle {
+                        implicitWidth: paramEditor.width
+                        implicitHeight: 40
+                        color: paramEditor.background
+                        gradient: Gradient {
+                            GradientStop { position: 0.0; color: gradian2 }
+                            GradientStop { position: 0.85; color: gradian2 }
+                            GradientStop { position: 0.86; color: gradian1 }
+                            GradientStop { position: 1; color: gradian2 }
+                        }
+                    }
+
+                    label: Text{
+                        color: textColor
+                        text: currentParamNode.name
+                        anchors.verticalCenter: parent.verticalCenter
+                        anchors.left: parent.left
+                        anchors.leftMargin: 10
+                        font.pointSize: 11
+                        clip: true
+                    }
+                }
+
+                // when we clic on the button, the ParamEditor open or close
+                property int newHeight : tuttleParam.contentHeight < 500 ? tuttleParam.contentHeight + 20 : tuttleParam.contentHeight / 2
+
+                onClicked: {
+                    tuttleParamContent.height > 0 ? tuttleParamContent.height = 0 : tuttleParamContent.height = newHeight
+
+                    console.log("tuttleParamContent.height ", tuttleParamContent.height)
+                }
+
             }
+
+
+
         }
 
         /*BUTTLE PARAMS*/
-        Rectangle{
+        /*Rectangle{
             Layout.minimumHeight: buttleParamTitle.height
             id: buttleParams
             height: 190
@@ -162,7 +165,7 @@ Item {
                     GradientStop { position: 0.86; color: gradian1 }
                     GradientStop { position: 1; color: gradian2 }
                 }
-
+                clip: true
                 Text {
                     anchors.verticalCenter: parent.verticalCenter
                     anchors.left: parent.left
@@ -175,27 +178,26 @@ Item {
 
             Loader {
                 sourceComponent: currentParamNode ? nodeParamComponent : undefined
-                anchors.top: parent.top
-                anchors.topMargin: 50
                 Component {
                     id: nodeParamComponent
                     Column {
                         spacing: 5
 
                         /*Name of the node (Buttle data)*/
-                        Item {
+          /*              Item {
                             id: nodeNameUserItem
                             implicitWidth: 300
                             implicitHeight: 30
                             anchors.left: parent.left
                             anchors.leftMargin: 10
+                            clip: true
 
                             Row {
                                 id: nodeNameUserContainer
                                 spacing: 5
-
+                                clip: true
                                 /* Title */
-                                Text {
+         /*                       Text {
                                     id: nodeNameUserText
                                     anchors.top: parent.top
                                     anchors.verticalCenter: parent.verticalCenter
@@ -204,7 +206,7 @@ Item {
                                 }
 
                                 /* Input field limited to 50 characters */
-                                Rectangle {
+          /*                      Rectangle {
                                     height: 20
                                     implicitWidth: 200
                                     color: paramEditor.backgroundInput
@@ -221,6 +223,9 @@ Item {
                                         anchors.leftMargin: 5
                                         maximumLength: 100
                                         selectByMouse : true
+
+                                        //elide: Text.ElideRight
+
                                         color: activeFocus ? activeFocusOn : activeFocusOff
 
                                         onAccepted: {
@@ -228,6 +233,9 @@ Item {
                                         }
                                         onActiveFocusChanged: {
                                             currentParamNode.nameUser = nodeNameUserInput.text
+                                            console.log ("nameUser = ", currentParamNode.nameUser )
+                                            console.log ("nameUserInput.text = ", nodeNameUserInput.text )
+                                            console.log (currentParamNode.nameUser == nodeNameUserInput.text)
                                         }
 
                                         KeyNavigation.backtab: nodeCoordYInput
@@ -243,7 +251,7 @@ Item {
                         }
 
                         /* Type of the node (Buttle data) */
-                        Item {
+            /*            Item {
                             id: nodeTypeItem
                             implicitWidth: 300
                             implicitHeight: 30
@@ -255,7 +263,7 @@ Item {
                                 spacing: 10
 
                                 /* Title */
-                                Text {
+             /*                   Text {
                                     id: nodeTypeText
                                     text: "Type : "
                                     color: textColor
@@ -264,10 +272,9 @@ Item {
                                 }
 
                                 /* Input field limited to 50 characters */
-                                Rectangle{
+              /*                  Rectangle{
                                     height: 20
                                     implicitWidth: 200
-                                    clip: true
                                     color: "transparent"
                                     Text{
                                         id: nodeTypeInput
@@ -275,34 +282,36 @@ Item {
                                         anchors.left: parent.left
                                         anchors.leftMargin: 5
                                         color: "grey"
+                                        //elide: Text.ElideRight
                                     }
                                 }
                             }
                         }
 
                         /* Color of the node (Buttle data) */
-                        Item {
+             /*           Item {
                             id: nodecolorItem
                             implicitWidth: 300
                             implicitHeight: 30
                             anchors.left: parent.left
                             anchors.leftMargin: 10
-
                             Row {
                                 id: nodeColorContainer
                                 spacing: 10
+                                clip: true
 
                                 /* Title */
-                                Text {
+                 /*               Text {
                                     id: nodeColorText
                                     text: "Color : "
                                     color: textColor
                                     anchors.top: parent.top
                                     anchors.verticalCenter: parent.verticalCenter
+                                    //elide: Text.ElideRight
                                 }
 
                                 /* Input field limited : rgb */
-                                Rectangle {
+                /*                Rectangle {
                                     height: 20
                                     implicitWidth: 80
                                     color: paramEditor.backgroundInput
@@ -320,6 +329,9 @@ Item {
                                         height: parent.height
                                         maximumLength: 50
                                         selectByMouse : true
+
+                                        //elide: Text.ElideRight
+
                                         color: activeFocus ? activeFocusOn : activeFocusOff
 
                                         onAccepted: currentParamNode.color = nodeColorRGBInput.text
@@ -341,7 +353,7 @@ Item {
                         }//item nodeColorItem
 
                         /* Coord of the node (Buttle data) */
-                        Item {
+           /*             Item {
                             id: nodecoordItem
                             implicitWidth: 300
                             implicitHeight: 30
@@ -353,20 +365,22 @@ Item {
                                 spacing: 10
 
                                 /* Input label : "x : " */
-                                Rectangle {
+               /*                 Rectangle {
                                     height: 20
                                     implicitWidth: 15
                                     color: "transparent"
+                                    clip: true
                                     Text{
                                         id: nodeCoordXLabel
                                         text: "x :"
                                         anchors.left: parent.left
                                         anchors.leftMargin: 5
                                         color: textColor
+                                        //elide: Text.ElideRight
                                     }
                                 }
                                 /* Input field limited : x */
-                                Rectangle {
+                   /*             Rectangle {
                                     height: 20
                                     implicitWidth: 35
                                     color: paramEditor.backgroundInput
@@ -384,6 +398,8 @@ Item {
                                         color: activeFocus ? activeFocusOn : activeFocusOff
                                         selectByMouse : true
 
+                                        //elide: Text.ElideRight
+
                                         onAccepted: {
                                             currentParamNode.xCoord = nodeCoordXInput.text
                                         }
@@ -398,20 +414,23 @@ Item {
                                 }
 
                                 /* Input label : "y : " */
-                                Rectangle {
+                   /*             Rectangle {
                                     height: 20
                                     implicitWidth: 15
                                     color: "transparent"
+                                    clip: true
                                     Text {
                                         id: nodeCoordYLabel
                                         text: "y :"
                                         anchors.left: parent.left
                                         anchors.leftMargin: 5
                                         color: textColor
+                                        //elide: Text.ElideRight
+
                                     }
                                 }
                                 /* Input field limited : y */
-                                Rectangle {
+                     /*           Rectangle {
                                     height: 20
                                     implicitWidth: 35
                                     color: paramEditor.backgroundInput
@@ -428,6 +447,8 @@ Item {
                                         height: parent.height
                                         color: activeFocus ? activeFocusOn : activeFocusOff
                                         selectByMouse : true
+
+                                        //elide: Text.ElideRight
 
                                         onAccepted: {
                                             currentParamNode.yCoord = nodeCoordYInput.text
@@ -446,5 +467,6 @@ Item {
                 }//component
             }//loader
         }//rectangle of buttleParam
-    }//splitterColumn
+*/
+  //   }
 }

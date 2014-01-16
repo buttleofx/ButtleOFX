@@ -66,15 +66,11 @@ Item {
                 height: paramEditor_multiple.height + 40
 
 
-                y: height + 40
-
-                ParamEditor {
+                ParamEditorForParametersEditor {
                     id: paramEditor_multiple
-                    width: contentParamEditor.width - 10
+                    width: contentParamEditor.width - 10 // -10 to let place for the general scrollbar
                     params: model.object ?  model.object.params : null
                     currentParamNode: model.object
-
-                    property int heightParamEditor : height
                 }
 
             }

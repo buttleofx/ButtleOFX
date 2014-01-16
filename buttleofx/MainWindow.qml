@@ -266,26 +266,30 @@ ApplicationWindow {
 
             MenuItem {
                 text: "Browser"
-                onTriggered: browser.parent.visible = true
-                enabled: browser.parent.visible==true ? false : true
+                checkable: true
+                checked: browser.parent.visible==true ? true : false
+                onTriggered: browser.parent.visible == false ? browser.parent.visible=true : browser.parent.visible=false
             }
 
             MenuItem {
                 text: "Viewer"
-                onTriggered: player.parent.visible = true
-                enabled: player.parent.visible==true ? false : true
+                checkable: true
+                checked: player.parent.visible==true ? true : false
+                onTriggered: player.parent.visible == false ? player.parent.visible=true : player.parent.visible=false
             }
 
             MenuItem {
                 text: "Graph"
-                onTriggered: graphEditor.parent.visible = true
-                enabled: graphEditor.parent.visible==true ? false : true
+                checkable: true
+                checked: graphEditor.parent.visible==true ? true : false
+                onTriggered: graphEditor.parent.visible == false ? graphEditor.parent.visible=true : graphEditor.parent.visible=false
             }
 
             MenuItem {
                 text: "Parameters"
-                onTriggered: paramEditor.parent.visible = true
-                enabled: paramEditor.parent.visible==true ? false : true
+                checkable: true
+                checked: paramEditor.parent.visible==true ? true : false
+                onTriggered: paramEditor.parent.visible == false ? paramEditor.parent.visible=true : paramEditor.parent.visible=false
             }
         }
 
@@ -384,10 +388,12 @@ ApplicationWindow {
                 Layout.fillWidth: true
                 Layout.minimumWidth: 200
 
+                visible: visibleChildren==0 ? false : true
+
                 Rectangle {
                     id: topLeftView
                     color: "#353535"
-                    Layout.minimumHeight: 200
+                    Layout.minimumHeight: visible ? 200 : 0
                     Layout.fillHeight: true
                     implicitWidth: parent.width
 
@@ -413,7 +419,7 @@ ApplicationWindow {
                     Layout.minimumHeight: 200
                     Layout.fillHeight: true
                     implicitWidth: parent.width
-                    implicitHeight: 0.5 * parent.height
+                    implicitHeight: topLeftView.visible ? 0.5 * parent.height : parent.height
                     z: -1
 
                     children:
@@ -441,10 +447,12 @@ ApplicationWindow {
                 Layout.fillWidth: true
                 Layout.minimumWidth: 200
 
+                visible: visibleChildren==0 ? false : true
+
                 Rectangle {
                     id: topRightView
                     color: "#353535"
-                    Layout.minimumHeight: 200
+                    Layout.minimumHeight: visible ? 200 : 0
                     Layout.fillHeight: true
                     implicitWidth: parent.width
 
@@ -473,7 +481,7 @@ ApplicationWindow {
                     Layout.minimumHeight: 200
                     Layout.fillHeight: true
                     implicitWidth: parent.width
-                    implicitHeight: 0.5 * parent.height
+                    implicitHeight: topRightView.visible ? 0.5 * parent.height : parent.height
                     z: -1
 
                     children:

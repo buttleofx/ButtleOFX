@@ -19,22 +19,21 @@ Rectangle {
         property string filter:"*"
     }
 
-
+    Tab {
+        id: tabBar
+        name: "Browser"
+        onCloseClicked: browser.buttonCloseClicked(true)
+    }
 
     ColumnLayout {
-	    anchors.fill: parent
-
-        Tab {
-            id: tabBar
-            name: "Browser"
-            onCloseClicked: browser.buttonCloseClicked(true)
-        }
+        anchors.fill: parent
+        anchors.topMargin: tabBar.height
 
 	    HeaderBar {
             id: headerBar
             y: tabBar.height
-		    Layout.fillWidth: true
-		    Layout.preferredHeight: 40
+            Layout.fillWidth: true
+            Layout.preferredHeight: 40
 
             parentFolder: m.fileFolder
             folder: m.directory
@@ -63,7 +62,7 @@ Rectangle {
 
 		    WindowFiles {
 			    id: files
-		        Layout.fillWidth: true
+                Layout.fillWidth: true
 	            Layout.fillHeight: true
                 Layout.preferredHeight: 120
 			    
@@ -103,7 +102,7 @@ Rectangle {
 	    FooterBar {
 		    id: footerBar
             Layout.fillWidth: true
-		    Layout.preferredHeight: 40
+            Layout.preferredHeight: 40
 
             fileName: m.filepath
             fileType : m.fileType

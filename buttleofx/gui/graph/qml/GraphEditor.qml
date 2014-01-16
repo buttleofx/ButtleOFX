@@ -8,15 +8,16 @@ Item {
 
     signal buttonCloseClicked(bool clicked)
 
+    Tab {
+        id: tabBar
+        name: "Graph"
+        onCloseClicked: graphEditor.buttonCloseClicked(true)
+    }
+
     ColumnLayout {
         anchors.fill: parent
+        anchors.topMargin: tabBar.height
         spacing: 2
-
-        Tab {
-            id: tabBar
-            name: "Graph"
-            onCloseClicked: graphEditor.buttonCloseClicked(true)
-        }
 
         Tools {
             id: tools

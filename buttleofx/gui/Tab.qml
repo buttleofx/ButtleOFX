@@ -5,6 +5,8 @@ import QtQuick.Controls.Styles 1.0
 Item {
     id: tabBar
     implicitHeight: 15
+    width: parent.width
+    implicitWidth: 100
 
     property color tabColor: "#141414"
     property string name: "New tab"
@@ -12,20 +14,21 @@ Item {
 
     Row{
         spacing: 1
+        width: parent.width
+
         Rectangle {
             id:tab
+            width: parent.width
             implicitWidth: 100
             implicitHeight: 25
-            radius: 7
             color: tabBar.tabColor
             Text {
                 id: tabLabel
                 anchors.top: parent.top
                 anchors.left: parent.left
-                anchors.margins: 3
-                anchors.leftMargin: 8
+                anchors.leftMargin: 4
                 text: tabBar.name
-                color: "white"
+                color: "#cccccc"
                 font.pointSize: 8
             }
 
@@ -34,7 +37,8 @@ Item {
                 height: 12
                 anchors.top: parent.top
                 anchors.right: parent.right
-                anchors.margins: 4
+                anchors.rightMargin: 4
+                anchors.topMargin: 2
 
                 iconSource:
                     if (pressed){

@@ -85,14 +85,22 @@ Rectangle {
                     texteditPath.focus ? selectAll() : deselect()
                 }
                 onTextChanged: {
-                    suggestion.folder = text
+                    suggestion.folder = texteditPath.getText(0, texteditPath.cursorPosition + 1)
                 }
-                Keys.onTabPressed: suggestionsMenu.popup()
+                onCursorPositionChanged: {
+                    suggestion.folder = texteditPath.getText(0, texteditPath.cursorPosition + 1)
+                }
+
+                Keys.onTabPressed: {
+                    suggestionsMenu.popup()
+                    texteditPath.forceActiveFocus()
+                }
             }
 
             Menu {
                 id: suggestionsMenu
                 visible: texteditPath.focus
+                // x: texteditPath.x + texteditPath.cursorRectangle.x
 
                 Instantiator {
                     model: suggestion.getFilteredFileItems(suggestion.folder)

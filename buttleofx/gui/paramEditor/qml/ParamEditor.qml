@@ -31,10 +31,6 @@ Item {
             Layout.minimumHeight: tuttleParamTitle.height
 
             id: tuttleParams
-            //implicitHeight: parent.height
-            //height: parent.height
-            //height: tuttleParam.height // height of the ListView
-            //height: children.height
 
             width: parent.width
             color: paramEditor.background
@@ -43,8 +39,6 @@ Item {
             /* Params depend on the node type (Tuttle data)*/
             Item {
                 id: tuttleParamContent
-               //height: parent.height - tuttleParamTitle.height
-
 
                 height: tuttleParam.contentHeight < 500 ? tuttleParam.contentHeight + 20 : tuttleParam.contentHeight / 2// height of the ListView
 
@@ -66,9 +60,6 @@ Item {
                         height: count ? contentHeight : 0
                         y: parent.y + 10
                         spacing: 6
-
-
-                        //onCountChanged: console.log(count, "   ", contentHeight)
 
                         interactive: false
 

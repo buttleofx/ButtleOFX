@@ -64,14 +64,6 @@ Item {
         Component {
             id: paramDelegate
             Rectangle{
-                //// to modify ////
-                //height: contentParamEditor.height / 2
-                //y: (index) * height
-                /////
-
-                //property int heightPreviousParam : children.heightParamEditor
-                //y : heightPreviousParam
-
                 height: paramEditor_multiple.height + 40
 
 
@@ -79,65 +71,15 @@ Item {
 
                 ParamEditor {
                     id: paramEditor_multiple
-                    //height: contentParamEditor.height
                     width: contentParamEditor.width - 10
                     params: model.object ?  model.object.params : null
                     currentParamNode: model.object
 
                     property int heightParamEditor : height
-
-                    //onHeightChanged: console.log("ParamEditor", height)
                 }
 
             }
         }
-
-
-/*
-        // for each node we create a ParamEditor
-        ScrollView {
-            anchors.fill: parent
-            anchors.topMargin: 5
-            anchors.bottomMargin: 5
-            height: 110
-            width: 110
-
-
-
-            Flickable{
-                // repeater of the node parameters
-                width: repeaterParamEditor.width
-                height: repeaterParamEditor.height
-                contentWidth: repeaterParamEditor.width
-                contentHeight: repeaterParamEditor.height
-
-
-                Repeater{
-                    model: _buttleData.graphWrapper.nodeWrappers
-                    id: repeaterParamEditor
-
-
-                    Rectangle{
-                        //// to modify ////
-                        height: contentParamEditor.height / 2
-                        y: (index) * height
-                        /////
-
-                        ParamEditor {
-                            //height: contentParamEditor.height
-                            width: contentParamEditor.width
-                            params: model.object ?  model.object.params : null
-                            currentParamNode: model.object
-                        }
-                    }
-                }
-
-
-
-            } //flickable
-
-        } // scroll view
-        */
 
     }
 }

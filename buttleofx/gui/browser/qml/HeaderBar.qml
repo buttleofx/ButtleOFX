@@ -102,6 +102,8 @@ Rectangle {
                         text: model.object.fileName
                         onTriggered: changeFolder(model.object.filepath)
                     }
+                    onObjectAdded: suggestionsMenu.insertItem(index, object)
+                    onObjectRemoved: suggestionsMenu.removeItem(object)
                 }
 
                 MenuItem {

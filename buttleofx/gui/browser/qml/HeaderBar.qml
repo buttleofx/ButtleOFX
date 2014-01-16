@@ -11,23 +11,23 @@ Rectangle {
     property string parentFolder
     property int indexSelected: -1
 
-	Row{
-		spacing: 10;
+    Row {
+        spacing: 10
 
-		Image{
+        Image {
 			id: previous;
             source: "../../img/buttons/browser/previous.png"
 			sourceSize.width : parent.width
 			sourceSize.height : 40
 
-			MouseArea{
+            MouseArea {
 				anchors.fill: parent
                 onClicked: {
                     console.debug("Undo")
                 }
 			}
 		}
-		Image{
+        Image {
 			id: next
             source: "../../img/buttons/browser/next.png"
 			sourceSize.width: parent.width
@@ -44,7 +44,7 @@ Rectangle {
 			sourceSize.width: parent.width
 			sourceSize.height: 40
 
-			MouseArea{
+            MouseArea {
 				anchors.fill: parent
                 onClicked: {
                     changeFolder(parentFolder)
@@ -58,7 +58,7 @@ Rectangle {
             folder: headerBar.folder
         }
 
-        Rectangle{
+        Rectangle {
             height: parent.height - 5
             width: 600
             y: 2
@@ -74,6 +74,7 @@ Rectangle {
                 width: parent.width
 
                 text: headerBar.folder
+
                 color: suggestion.exists ? "white" : "red"
                 selectByMouse: true
                 selectionColor: "blue"

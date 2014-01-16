@@ -122,7 +122,6 @@ Item {
 
                         var mouseRatioX = 0.5
                         var mouseRatioY = 0.5
-
                         parent.container.x = ((graph.width * mouseRatioX) - (parent.container.width * mouseRatioX)) + graph.offsetX
                         parent.container.y = ((graph.height * mouseRatioY) - (parent.container.height * mouseRatioY )) + graph.offsetY
                     }
@@ -142,13 +141,20 @@ Item {
 
             //The miniature of the graph
             Rectangle{
+                id: miniGraph
                 property real scaleFactor: 0.15
-                property real margins: 300
+                property real marginTop: 300
+                property real marginLeft: 0
+                property real xOffset
+                property real yOffset
+                property int miniOffsetX: 0
+                property int miniOffsetY: 0
+
                 anchors.top: graph.top
                 anchors.right: graph.right
                 anchors.margins: 10
                 width: graph.width * scaleFactor
-                height: (graph.height + margins) * scaleFactor
+                height: (graph.height + marginTop) * scaleFactor
                 color: "#434343"
                 opacity: 0.7
 
@@ -158,18 +164,54 @@ Item {
                     miniatureState: true
                     miniatureScale: parent.scaleFactor
                     width: parent.width
-                    height: parent.height - (parent.margins * parent.scaleFactor)
+                    height: parent.height - (parent.marginTop * parent.scaleFactor)
                     color: "transparent"
-                    y: (parent.margins * 0.5) * parent.scaleFactor
+                    y: (parent.marginTop * 0.5) * parent.scaleFactor
                     opacity: 1
+
+                    MouseArea{
+                        anchors.fill: parent
+
+                        property int xStart
+                        property int yStart
+                        property int visuWindowXStart
+                        property int visuWindowYStart
+                        property bool moveMode: false
+
+                        hoverEnabled: true
+                        acceptedButtons: Qt.LeftButton
+                        onPressed: {
+                            xStart = mouse.x
+                            yStart = mouse.y
+                            visuWindowXStart = visuWindow.x
+                            visuWindowYStart = visuWindow.y
+                            moveMode = pressedButtons & Qt.LeftButton ? true : false
+                        }
+                        onReleased: {
+                            if(moveMode){
+                                moveMode=false
+                                miniGraph.xOffset = mouse.x - xStart
+                                miniGraph.yOffset = mouse.y - yStart
+                                miniGraph.miniOffsetX += miniGraph.xOffset
+                                miniGraph.miniOffsetY += miniGraph.yOffset
+                                graph.container.x -= (miniGraph.xOffset/miniGraph.scaleFactor)
+                                graph.container.y -= (miniGraph.yOffset/miniGraph.scaleFactor)
+                            }
+                        }
+                    }
                 }
 
                 Rectangle {
                     id: visuWindow
+                    property int previousW : graph.width * miniGraph.scaleFactor
+                    property int previousH : graph.height * miniGraph.scaleFactor
                     border.color: "white"
                     border.width: 1
                     color: "transparent"
-                    anchors.fill: graphMiniature
+                    width: graph.width / graph.zoomCoeff * miniGraph.scaleFactor
+                    height: graph.height / graph.zoomCoeff * miniGraph.scaleFactor
+                    x: (miniGraph.marginLeft * 0.5) * miniGraph.scaleFactor + ((previousW * 0.5) - (width * 0.5)) - graph.offsetX * miniGraph.scaleFactor + miniGraph.miniOffsetX
+                    y: (miniGraph.marginTop * 0.5) * miniGraph.scaleFactor + ((previousH * 0.5) - (height * 0.5)) - graph.offsetY * miniGraph.scaleFactor + miniGraph.miniOffsetY
                 }
             }
         }

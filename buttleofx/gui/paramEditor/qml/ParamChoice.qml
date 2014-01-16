@@ -6,6 +6,7 @@ Item {
     id: choiceList
     implicitWidth: 300
     implicitHeight: 30
+    y:10
 
     property variant paramObject: model.object
     // property variant menuItems: paramObject.listValue
@@ -52,6 +53,7 @@ Item {
             model: menuItems
             width: 200
             height: 30
+            y:-6
 
 
             style: ComboBoxStyle {

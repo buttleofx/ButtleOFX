@@ -134,8 +134,8 @@ Item {
 
                         var mouseRatioX = 0.5
                         var mouseRatioY = 0.5
-                        parent.container.x = ((graph.width * mouseRatioX) - (parent.container.width * mouseRatioX)) + graph.offsetX - miniGraph.miniOffsetX / miniGraph.scaleFactor
-                        parent.container.y = ((graph.height * mouseRatioY) - (parent.container.height * mouseRatioY )) + graph.offsetY - miniGraph.miniOffsetY / miniGraph.scaleFactor
+                        parent.container.x = ((graph.width * mouseRatioX) - (parent.container.width * mouseRatioX)) + graph.offsetX - miniGraph.miniOffsetX / miniGraph.scaleFactor *graph.zoomCoeff
+                        parent.container.y = ((graph.height * mouseRatioY) - (parent.container.height * mouseRatioY )) + graph.offsetY - miniGraph.miniOffsetY / miniGraph.scaleFactor *graph.zoomCoeff
                     }
                 }
                 onDrawSelection: {
@@ -203,8 +203,8 @@ Item {
                             miniGraph.yOffset = mouse.y - yStart
                             miniGraph.miniOffsetX += miniGraph.xOffset
                             miniGraph.miniOffsetY += miniGraph.yOffset
-                            graph.container.x -= (miniGraph.xOffset/miniGraph.scaleFactor)
-                            graph.container.y -= (miniGraph.yOffset/miniGraph.scaleFactor)
+                            graph.container.x -= (miniGraph.xOffset/miniGraph.scaleFactor*graph.zoomCoeff)
+                            graph.container.y -= (miniGraph.yOffset/miniGraph.scaleFactor*graph.zoomCoeff)
 
                             //to map the tmpVisuWindow (zoom)
                             miniGraph.originX = visuWindow.x
@@ -250,8 +250,8 @@ Item {
                     width: graph.width / graph.zoomCoeff * miniGraph.scaleFactor
                     height: graph.height / graph.zoomCoeff * miniGraph.scaleFactor
                     visible: !miniGraph.tmpMode
-                    x: (miniGraph.marginLeft * 0.5) * miniGraph.scaleFactor + ((miniGraph.previousW * 0.5) - (width * 0.5)) - graph.offsetX * miniGraph.scaleFactor + miniGraph.miniOffsetX
-                    y: (miniGraph.marginTop * 0.5) * miniGraph.scaleFactor + ((miniGraph.previousH * 0.5) - (height * 0.5)) - graph.offsetY * miniGraph.scaleFactor + miniGraph.miniOffsetY
+                    x: (miniGraph.marginLeft * 0.5) * miniGraph.scaleFactor + ((miniGraph.previousW * 0.5) - (width * 0.5)) - graph.offsetX * miniGraph.scaleFactor / graph.zoomCoeff + miniGraph.miniOffsetX
+                    y: (miniGraph.marginTop * 0.5) * miniGraph.scaleFactor + ((miniGraph.previousH * 0.5) - (height * 0.5)) - graph.offsetY * miniGraph.scaleFactor / graph.zoomCoeff+ miniGraph.miniOffsetY
                 }
 
                 Rectangle {
@@ -262,8 +262,8 @@ Item {
                     visible: miniGraph.tmpMode
                     width: graph.width / graph.zoomCoeff * miniGraph.scaleFactor
                     height: graph.height / graph.zoomCoeff * miniGraph.scaleFactor+15
-                    x: (miniGraph.marginLeft * 0.5) * miniGraph.scaleFactor + ((miniGraph.previousW * 0.5) - (width * 0.5)) - graph.offsetX * miniGraph.scaleFactor + miniGraph.miniOffsetX
-                    y: (miniGraph.marginTop * 0.5) * miniGraph.scaleFactor + ((miniGraph.previousH * 0.5) - (height * 0.5)) - graph.offsetY * miniGraph.scaleFactor + miniGraph.miniOffsetY
+                    x: (miniGraph.marginLeft * 0.5) * miniGraph.scaleFactor + ((miniGraph.previousW * 0.5) - (width * 0.5)) - graph.offsetX * miniGraph.scaleFactor / graph.zoomCoeff+ miniGraph.miniOffsetX
+                    y: (miniGraph.marginTop * 0.5) * miniGraph.scaleFactor + ((miniGraph.previousH * 0.5) - (height * 0.5)) - graph.offsetY * miniGraph.scaleFactor / graph.zoomCoeff+ miniGraph.miniOffsetY
                 }
             }
         }

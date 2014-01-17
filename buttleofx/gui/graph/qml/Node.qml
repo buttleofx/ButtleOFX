@@ -149,7 +149,7 @@ Rectangle {
         id: nodeRectangle
         anchors.centerIn: parent
         anchors.fill: parent
-        anchors.margins: miniatureState ? 4 * miniatureScale : 4
+        anchors.margins: miniatureState ? 4 * miniatureScale : 4 * graph.zoomCoeff
         color: "#bbbbbb"
         radius: 8
         clip: true

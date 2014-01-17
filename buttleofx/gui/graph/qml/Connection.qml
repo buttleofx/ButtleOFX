@@ -28,6 +28,8 @@ Item {
         x2: parent.x2
         y2: parent.y2
 
+        visible : miniatureState ? false : true
+
         readOnly: connectionItem.readOnly
         miniatureScale: connectionItem.miniatureScale
         miniatureState: connectionItem.miniatureState

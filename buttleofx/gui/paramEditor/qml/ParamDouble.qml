@@ -60,7 +60,7 @@ Item {
                 id: sliderInput
                 width: barSlider.width / 2
                 x: barSlider.width / 2 - width / 2
-                y:-10
+                y:-8
                 horizontalAlignment: TextInput.AlignHCenter
                 text: paramObject.value
                 font.family: "Helvetica"

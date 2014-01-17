@@ -359,7 +359,7 @@ ApplicationWindow {
                 Layout.fillWidth: true
 
                 ParamTuttleEditor {
-                    Layout.minimumHeight: parent.height
+                    Layout.fillHeight: true
                     visible: paramSelected ? true:false
                     width: 300
                     params:_buttleData.currentParamNodeWrapper ? _buttleData.currentParamNodeWrapper.params : null

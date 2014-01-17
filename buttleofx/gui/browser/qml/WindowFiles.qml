@@ -56,19 +56,20 @@ Rectangle {
 
                     Image {
                         x: 25
-                        source: model.object.fileType == "Folder" ? "./img/folder-icon.png" : "file:///" + model.object.filepath
+                        source: model.object.fileType == "Folder" ? "../../img/buttons/browser/folder-icon.png" : "file:///" + model.object.filepath
                         sourceSize.width: 40
                         sourceSize.height: 40
 
-                        StateGroup {
+                        /*StateGroup {
                             id: fileState
                             states: State {
                                 name: "dragging"
                                 when: mouseRegionImage.pressed
                                 PropertyChanges { target: file; x: file.x; y: file.y }
                             }
-                        }
+                        }*/
 
+                        anchors.horizontalCenter: parent.horizontalCenter
 
 
                         MouseArea {
@@ -155,8 +156,8 @@ Rectangle {
                             }
                         }
                     }
-                }
-            }
+                }// endColumn
+            }//endComponent
         }
     }
 

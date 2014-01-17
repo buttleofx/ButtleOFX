@@ -9,13 +9,17 @@ Rectangle {
     property variant graphRoot
     //nodeRoot est récupéré de Node.qml, il désigne le node auquel appartient le clip
     property variant nodeRoot
-
     property alias clipSize: m.clipSize
+    property bool accept: false
+
+    property bool readOnly
+    property real miniatureScale
+    property bool miniatureState
 
     QtObject {
         id: m
         property variant clipWrapper
-        property double clipSize: 10
+        property double clipSize: 9
         property double radius: 0.5 * clipRoot.clipSize
     }
 
@@ -23,7 +27,7 @@ Rectangle {
     height: m.clipSize
     width: m.clipSize
     color: clipMouseArea.containsMouse ? "#00b2a1" : "#55bbbb"
-    radius: 4
+    radius: width * 0.5
 
     // Synchronize QML graphic information (clip position) into the model,
     // to share it with connection objects
@@ -89,6 +93,8 @@ Rectangle {
         onEntered: {
             // The handle is displayed to show that a connection is available
             dropHandle.state = "entereddrop"
+            //accept = _buttleManager.connectionManager.canConnect(drag.source.clipWrapper, m.clipWrapper);
+            console.log(accept)
         }
         onExited: {
             // Erase the handle
@@ -124,10 +130,13 @@ Rectangle {
 
     // MouseArea dedicated to the QML drag and drop
     MouseArea {
+        enabled: !readOnly
         id: clipMouseArea
         anchors.fill: parent
         hoverEnabled: true
         drag.target: handle
+        Drag.active: true
+
 
         // position of the center of the clip when starting a mouse event
         property int xStart
@@ -181,12 +190,22 @@ Rectangle {
                 },
                 State {
                    name: "dragging"
+                   when: drag.source.clipWrapper
+                   PropertyChanges {
+                      target: handle
+                      opacity: 1
+                      x: 0
+                      y: 0
+                      width: 0.6*width
+                      height: 0.6*height
+                   }
+                },
+                State {
+                   name: "draggable"
                    when: handle.Drag.active
                    PropertyChanges {
                       target: handle
-                      opacity: .5
-                      x: 0
-                      y: 0
+                      Drag.keys: "clip_connection"
                    }
                 }
             ]
@@ -220,6 +239,9 @@ Rectangle {
                     connections.tmpConnectionX1 = x_inGraph + mouse.x
                     connections.tmpConnectionY1 = y_inGraph + mouse.y
                 }
+                //Hack to position correctly the handle (the drag in QML creates a gap)
+                handle.x = mouseX - handle.width/2
+                handle.y = mouseY - handle.height/2
            }
         }
     }

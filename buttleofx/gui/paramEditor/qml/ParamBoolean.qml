@@ -49,7 +49,7 @@ Item {
             Rectangle{
                 id: interiorBox
                 anchors.centerIn: parent
-                width: box.width/2 + 1
+                width: box.width/2+2
                 height: width
                 radius: 1
 

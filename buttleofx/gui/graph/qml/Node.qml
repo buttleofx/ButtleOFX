@@ -9,6 +9,9 @@ Rectangle {
 
     property variant graphRoot
     property alias nodeWrapper: m.nodeWrapper
+    property bool readOnly
+    property real miniatureScale
+    property bool miniatureState
 
     Drag.active: nodeMouseArea.drag.active
 
@@ -18,7 +21,7 @@ Rectangle {
         property variant nodeRoot: qml_nodeRoot
 
         property int inputSpacing: 10
-        property int clipSize: 10
+        property int clipSize: 9
         property int nbInput: m.nodeWrapper.nbInput
         property int inputTopMargin: 10
         property int outputTopMargin: 10
@@ -26,12 +29,12 @@ Rectangle {
     }
     objectName: "qmlNode_" + m.nodeWrapper.name
 
-    x: m.nodeWrapper.coord.x
-    y: m.nodeWrapper.coord.y
+    x: ((m.nodeWrapper.coord.x * graphContainer.width) / qml_graphRoot.width)
+    y: ((m.nodeWrapper.coord.y * graphContainer.height) / qml_graphRoot.height)
     z: _buttleData.graphWrapper.zMax
 
-    height: 40
-    width: 80
+    //height: 40
+    //width: 120
 
     signal drawSelection(int x, int y, int width, int height)
 
@@ -42,11 +45,14 @@ Rectangle {
         anchors.fill: parent
         drag.target: parent
         drag.axis: Drag.XandYAxis
+        Drag.keys: "node"
+        enabled: !readOnly
         acceptedButtons: Qt.LeftButton | Qt.RightButton | Qt.MidButton
         onPressed: {
+            console.log("node wrapper x : "+ m.nodeWrapper.coord.x)
+            console.log("node x : "+parent.x)
             // left button : we change the current selected nodes & we start moving
             if (mouse.button == Qt.LeftButton) {
-
                 // we clear the list of selected connections
                 _buttleData.clearCurrentConnectionId()
 
@@ -62,22 +68,28 @@ Rectangle {
 
                 _buttleData.graphWrapper.zMax += 1
                 parent.z = _buttleData.graphWrapper.zMax
-                stateMoving.state = "moving"
+                //stateMoving.state = "moving"
             }
 
             // right button : we change the current param node
            else if (mouse.button == Qt.RightButton) {
-                // here display contextual menu
+                // Param buttle
+                paramSelected = false
+                _buttleData.currentParamNodeWrapper = m.nodeWrapper
             }
 
             // take the focus
             m.nodeRoot.forceActiveFocus()
         }
         onReleased: {
+            var dropStatus = parent.Drag.drop()
+            if (dropStatus !== Qt.IgnoreAction)
+                console.log("Accepted!")
+
             // left button : we end moving
             if (mouse.button == Qt.LeftButton) {
-                _buttleManager.nodeManager.nodeMoved(m.nodeWrapper.name, parent.x, parent.y)
-                stateMoving.state = "normal"
+                _buttleManager.nodeManager.nodeMoved(m.nodeWrapper.name, (m.nodeWrapper.coord.x * qml_graphRoot.width) / graphContainer.width, (m.nodeWrapper.coord.y * qml_graphRoot.height) / graphContainer.height)
+                //stateMoving.state = "normal"
             }
              //middle button : assign the node to the viewer
             else if (mouse.button == Qt.MidButton){
@@ -87,13 +99,12 @@ Rectangle {
                 _buttleData.assignNodeToViewerIndex(m.nodeWrapper, 0)
                 _buttleEvent.emitViewerChangedSignal()
             }
-            var dropStatus = parent.Drag.drop()
-            if (dropStatus !== Qt.IgnoreAction)
-                console.log("Accepted!")
+
         }
 
         // double click : we change the current param node
         onDoubleClicked: {
+            paramSelected = true
             _buttleData.currentParamNodeWrapper = m.nodeWrapper
         }
 
@@ -141,14 +152,16 @@ Rectangle {
         id: nodeRectangle
         anchors.centerIn: parent
         anchors.fill: parent
-        anchors.margins: 4
+        anchors.margins: miniatureState ? 4 * miniatureScale : 4
         color: "#bbbbbb"
         radius: 8
+        clip: true
         Text {
             id: nodeText
-            anchors.centerIn: parent
+            anchors.verticalCenter: parent.verticalCenter
+            x: miniatureState ? 5 * miniatureScale : 5
             text: m.nodeWrapper.nameUser
-            font.pointSize: 10
+            font.pointSize: miniatureState ? 10 * miniatureScale : 10
             property bool isSelected: _buttleData.nodeIsSelected(m.nodeWrapper)
             
             // onTextChanged: {
@@ -172,8 +185,7 @@ Rectangle {
         // inputClips
         Item {
             id: inputClipsItem
-            height: parent.height
-            Layout.minimumWidth: 20
+            y: parent.height /2
             Layout.alignment: Qt.AlignVCenter | Qt.AlignLeft
 
 
@@ -182,8 +194,9 @@ Rectangle {
                 anchors.verticalCenter: parent.verticalCenter
                 width: childrenRect.width
                 height: childrenRect.height
-                spacing: 5
+                spacing: 5 * qml_graphRoot.zoomCoeff
                 model: m.nodeWrapper.srcClips
+
                 delegate: Component {
                     Clip {
                         id: in_clip
@@ -195,14 +208,18 @@ Rectangle {
                         graphRoot: m.nodeRoot.graphRoot
                         nodeRoot: m.nodeRoot
                         clipSize: m.clipSize
+                        x:-10
+                        readOnly: qml_nodeRoot.readOnly
+                        miniatureScale: qml_nodeRoot.miniatureScale
+                        miniatureState: qml_nodeRoot.miniatureState
+                        visible: miniatureState ? false : true
                     }
                 }
             }
 
         }
         Item {
-            height: parent.height
-            Layout.minimumWidth: 40
+            y: parent.height /2
             Layout.fillWidth: true
         }
 
@@ -210,9 +227,8 @@ Rectangle {
         Item {
             id: outputClipContainer
 
-            height: parent.height
+            y: parent.height /2
             implicitWidth: childrenRect.width
-            Layout.minimumWidth: childrenRect.width
             Layout.preferredWidth: childrenRect.width
             Layout.alignment: Qt.AlignVCenter | Qt.AlignRight
             // always only one output clip
@@ -227,6 +243,11 @@ Rectangle {
                 graphRoot: m.nodeRoot.graphRoot
                 nodeRoot: m.nodeRoot
                 clipSize: m.clipSize
+                x:10
+                readOnly: qml_nodeRoot.readOnly
+                miniatureScale: qml_nodeRoot.miniatureScale
+                miniatureState: qml_nodeRoot.miniatureState
+                visible: miniatureState ? false : true
             }
         }
     }
@@ -261,14 +282,14 @@ Rectangle {
                      when: m.nodeWrapper == _buttleData.currentViewerNodeWrapper
                      PropertyChanges {
                          target: deadMosquitoImage;
-                         source: _buttleData.buttlePath + "/gui/img/mosquito/mosquito_dead.png"
+                         source: "file:///" + _buttleData.buttlePath + "/gui/img/mosquito/mosquito_dead.png"
                      }
                  }
              ]
         }
     }
 
-    StateGroup {
+    /*StateGroup {
         id: stateMoving
         state: "normal"
         states: [
@@ -278,18 +299,27 @@ Rectangle {
             },
             State {
                 name: "moving"
-                PropertyChanges { target: m.nodeRoot; x: m.nodeWrapper.coord.x ; y: m.nodeWrapper.coord.y }
+                PropertyChanges { target: m.nodeRoot; x: m.nodeWrapper.coord.x; y: m.nodeWrapper.coord.y }
             }
         ]
-    }
+    }*/
 
     StateGroup {
         id: statePressed
         states: [
             State {
-            name: "pressed"
-            when: nodeMouseArea.pressed
-            PropertyChanges { target: m.nodeRoot; opacity: .5 }
+                name: "pressed"
+                when: nodeMouseArea.pressed
+                PropertyChanges { target: m.nodeRoot; opacity: .5 }
+            },
+            State {
+                name: "miniature"
+                when: miniatureState
+                PropertyChanges {
+                      target: m.nodeRoot
+                      x: ((m.nodeWrapper.coord.x * graphContainer.width) / qml_graphRoot.width) * miniatureScale
+                      y: ((m.nodeWrapper.coord.y * graphContainer.height) / qml_graphRoot.height) * miniatureScale
+                }
             }
         ]
     }

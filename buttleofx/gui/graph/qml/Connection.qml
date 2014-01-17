@@ -5,10 +5,15 @@ Item {
     id: connectionItem
     property alias connectionWrapper: m.connectionWrapper
 
+    property bool readOnly
+    property bool miniatureState
+    property real miniatureScale
+
     property int x1
     property int y1
     property int x2
     property int y2
+
 
     QtObject {
         id: m
@@ -22,6 +27,10 @@ Item {
         y1: parent.y1
         x2: parent.x2
         y2: parent.y2
+
+        readOnly: connectionItem.readOnly
+        miniatureScale: connectionItem.miniatureScale
+        miniatureState: connectionItem.miniatureState
 
         state: "normal"
         r: 0
@@ -76,16 +85,50 @@ Item {
             id: droparea1
             objectName: "DropArea"
             anchors.fill: parent
+            Drag.keys: "node"
             onDropped: {
-                drop.accept()
-                console.log("drop : " + drag.source)
+                //we assure that the node dropped is not part of the actual connection
+                if(drop.source.nodeWrapper.name != clipIn.nodeName && drop.source.nodeWrapper.name != clipOut.nodeName){
+                        drop.accept()
+                        //Create two connections from one and delete the previous one
+                        _buttleManager.connectionManager.dissociateConnection(clipOut, clipIn, drop.source.nodeWrapper.getClip("Source"), drop.source.nodeWrapper.getClip(drop.source.nodeWrapper.outputClip.name), m.connectionWrapper)
+                }
+                dropIndicator.state = ""
+
+               // drop.source.nodeWrapper.xCoord = 0
+               // m.nodeWrapper.coord.x
             }
             onEntered: {
+                if(drag.source.nodeWrapper.name !== clipIn.nodeName && drag.source.nodeWrapper.name !== clipOut.nodeName){
+                    dropIndicator.state = "entereddrop"
+                }
+            }
+            onExited: {
                 console.log("dropConnection")
+                dropIndicator.state = ""
             }
             Item{
                 anchors.fill: parent
             }
+        }
+
+        Rectangle{
+            id: dropIndicator
+            anchors.centerIn: parent
+            width: 12
+            height: 12
+            radius: 0.5 * width
+            color: "#00b2a1"
+            visible: false
+            states: [
+                State {
+                   name: "entereddrop"
+                   PropertyChanges {
+                      target: dropIndicator
+                      visible: true
+                   }
+                }
+            ]
         }
 
     }

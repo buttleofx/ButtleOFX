@@ -128,6 +128,8 @@ ApplicationWindow {
         }
     }
 
+    property bool paramSelected
+
     menuBar: MenuBar {
         Menu {
             title: "File"
@@ -287,6 +289,27 @@ ApplicationWindow {
                 //params: _buttleData.currentParamNodeWrapper ? _buttleData.currentParamNodeWrapper.params : null
                 //currentParamNode: _buttleData.currentParamNodeWrapper
             }
+			/*SplitView {
+                implicitWidth: 0.7*parent.width
+                implicitHeight: parent.height
+                orientation: Qt.Vertical
+                Layout.fillWidth: true
+
+                ParamTuttleEditor {
+                    Layout.minimumHeight: parent.height
+                    visible: paramSelected ? true:false
+                    width: 300
+                    params:_buttleData.currentParamNodeWrapper ? _buttleData.currentParamNodeWrapper.params : null
+                    currentParamNode: _buttleData.currentParamNodeWrapper
+                }
+
+                ParamButtleEditor {
+                    Layout.minimumHeight: parent.height
+                    visible: paramSelected ? false:true
+                    width: 300
+                    params:_buttleData.currentParamNodeWrapper ? _buttleData.currentParamNodeWrapper.params : null
+                    currentParamNode: _buttleData.currentParamNodeWrapper
+                }*/
         }
     }
 }

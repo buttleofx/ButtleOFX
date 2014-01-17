@@ -180,7 +180,7 @@ class NodeManager(QtCore.QObject):
         """
         buttleData = ButtleDataSingleton().get()
         buttleData.getGraph().nodeMoved(nodeName, x, y)
-
+        buttleData.getGraph().nodesChanged()
         # update undo/redo display
         self.undoRedoChanged()
 

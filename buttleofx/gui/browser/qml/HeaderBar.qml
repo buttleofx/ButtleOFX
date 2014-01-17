@@ -114,12 +114,6 @@ Rectangle {
                     onObjectAdded: suggestionsMenu.insertItem(index, object)
                     onObjectRemoved: suggestionsMenu.removeItem(object)
                 }
-
-                MenuItem {
-                    id: test
-                    text: "pouet"
-                    onTriggered: changeFolder("pouet")
-                }
             }
 
 

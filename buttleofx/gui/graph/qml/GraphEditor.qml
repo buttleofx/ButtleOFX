@@ -147,8 +147,8 @@ Item {
                 property real marginLeft: 0
                 property real xOffset
                 property real yOffset
-                property int miniOffsetX: 0
-                property int miniOffsetY: 0
+                property real miniOffsetX: 0
+                property real miniOffsetY: 0
                 property alias originX : tmpVisuWindow.x
                 property alias originY : tmpVisuWindow.y
                 property int previousW : graph.width * scaleFactor

@@ -77,6 +77,7 @@ Rectangle {
                     miniatureScale: qml_graphRoot.miniatureScale
                     miniatureState: qml_graphRoot.miniatureState
 
+
                     StateGroup {
                         id: stateViewerNode
                          states: [
@@ -230,8 +231,5 @@ Rectangle {
             }
         }
     }*/
-
-
-    // Rectangle selection is placed here so it is drawn over the nodes
 
 }

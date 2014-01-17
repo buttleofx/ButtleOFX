@@ -42,16 +42,8 @@ Rectangle {
 
             ToolElement {
 
-                FileDialog {
+                FinderLoadGraph{
                     id: finderLoadGraph
-                    title: "Open a graph"
-                    folder: _buttleData.buttlePath
-                    nameFilters: [ "ButtleOFX Graph files (*.bofx)", "All files (*)" ]
-                    selectedNameFilter: "All files (*)"
-                    onAccepted: {
-                        console.log(finderLoadGraph.fileUrl)
-                        _buttleData.loadData(finderLoadGraph.fileUrl)
-                    }
                 }
 
                 imageSource: parent.imgPath + "open.png"
@@ -62,23 +54,14 @@ Rectangle {
                 locked: false
 
                 onClicked: {
-                    finderLoadGraph.browseFile()
-                    if (finderLoadGraph.propFile) {
-                        _buttleData.loadData(finderLoadGraph.propFile)
-                    }
+                    finderLoadGraph.open()
                 }
             }
 
             ToolElement {
 
-                FileDialog {
+                FinderSaveGraph{
                     id: finderSaveGraph
-                    title: "Save the graph"
-                    folder: _buttleData.buttlePath
-                    nameFilters: [ "ButtleOFX Graph files (*.bofx)", "All files (*)" ]
-                    selectedNameFilter: "All files (*)"
-                    onAccepted: _buttleData.saveData(finderSaveGraph.fileUrl)
-                    selectExisting: false
                 }
 
                 imageSource: parent.imgPath + "save.png"
@@ -89,10 +72,7 @@ Rectangle {
                 locked: !_buttleData.graphCanBeSaved
 
                 onClicked: {
-                    finderSaveGraph.browseFile()
-                    if (finderSaveGraph.propFile) {
-                        _buttleData.saveData(finderSaveGraph.propFile)
-                    }
+                    finderSaveGraph.open()
                 }
             }
 

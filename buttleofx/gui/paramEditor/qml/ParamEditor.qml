@@ -2,9 +2,13 @@ import QtQuick 2.0
 import QtQuick.Controls 1.0
 import QtQuick.Layouts 1.0
 
+import "../../../gui"
+
 //parent of the ParamEditor is the Row of the ButtleAp
 Item {
     id: paramEditor
+
+    signal buttonCloseClicked(bool clicked)
 
     property variant params 
     property variant currentParamNode
@@ -22,9 +26,16 @@ Item {
     implicitWidth: 300
     implicitHeight: 500
 
+    Tab {
+        id: tabBar
+        name: "Parameters"
+        onCloseClicked: paramEditor.buttonCloseClicked(true)
+    }
+
     SplitView {
         width: parent.width
         height: parent.height
+        y: tabBar.height
         //handleWidth: 3
         orientation: Qt.Vertical
 
@@ -96,6 +107,7 @@ Item {
                     color: textColor
                     font.pointSize: 11
                     text: "Parameters"
+                    clip: true
                 }
             }
         }
@@ -119,7 +131,7 @@ Item {
                     GradientStop { position: 0.86; color: gradian1 }
                     GradientStop { position: 1; color: gradian2 }
                 } 
-
+                clip: true
                 Text {
                     anchors.verticalCenter: parent.verticalCenter
                     anchors.left: parent.left
@@ -144,11 +156,12 @@ Item {
                             implicitHeight: 30
                             anchors.left: parent.left
                             anchors.leftMargin: 10
+                            clip: true
 
                             Row {
                                 id: nodeNameUserContainer
                                 spacing: 5
-
+                                clip: true
                                 /* Title */
                                 Text {
                                     id: nodeNameUserText
@@ -166,6 +179,7 @@ Item {
                                     border.width: 1
                                     border.color: paramEditor.borderInput
                                     radius: 3
+                                    clip: true
                                     TextInput {
                                         id: nodeNameUserInput
                                         text: currentParamNode ? currentParamNode.nameUser : ""
@@ -175,6 +189,9 @@ Item {
                                         anchors.leftMargin: 5
                                         maximumLength: 100
                                         selectByMouse : true
+
+                                        //elide: Text.ElideRight
+
                                         color: activeFocus ? activeFocusOn : activeFocusOff
 
                                         onAccepted: {
@@ -228,6 +245,7 @@ Item {
                                         anchors.left: parent.left
                                         anchors.leftMargin: 5
                                         color: "grey"
+                                        //elide: Text.ElideRight
                                     }
                                 }
                             }
@@ -240,10 +258,10 @@ Item {
                             implicitHeight: 30
                             anchors.left: parent.left
                             anchors.leftMargin: 10
-
                             Row {
                                 id: nodeColorContainer
                                 spacing: 10
+                                clip: true
 
                                 /* Title */
                                 Text {
@@ -252,6 +270,7 @@ Item {
                                     color: textColor
                                     anchors.top: parent.top
                                     anchors.verticalCenter: parent.verticalCenter
+                                    //elide: Text.ElideRight
                                 }
 
                                 /* Input field limited : rgb */
@@ -262,6 +281,7 @@ Item {
                                     border.width: 1
                                     border.color: paramEditor.borderInput
                                     radius: 3
+                                    clip: true
                                     TextInput {
                                         id: nodeColorRGBInput
                                         //text: currentParamNode ? currentParamNode.color : ""
@@ -272,6 +292,9 @@ Item {
                                         height: parent.height
                                         maximumLength: 50
                                         selectByMouse : true
+
+                                        //elide: Text.ElideRight
+
                                         color: activeFocus ? activeFocusOn : activeFocusOff
 
                                         onAccepted: currentParamNode.color = nodeColorRGBInput.text
@@ -309,12 +332,14 @@ Item {
                                     height: 20
                                     implicitWidth: 15
                                     color: "transparent"
+                                    clip: true
                                     Text{
                                         id: nodeCoordXLabel
                                         text: "x :"
                                         anchors.left: parent.left
                                         anchors.leftMargin: 5
                                         color: textColor
+                                        //elide: Text.ElideRight
                                     }
                                 }
                                 /* Input field limited : x */
@@ -325,6 +350,7 @@ Item {
                                     border.width: 1
                                     border.color: paramEditor.borderInput
                                     radius: 3
+                                    clip: true
                                     TextInput {
                                         id: nodeCoordXInput
                                         text: currentParamNode ? currentParamNode.coord.x : ""
@@ -334,6 +360,8 @@ Item {
                                         height: parent.height
                                         color: activeFocus ? activeFocusOn : activeFocusOff
                                         selectByMouse : true
+
+                                        //elide: Text.ElideRight
 
                                         onAccepted: {
                                             currentParamNode.xCoord = nodeCoordXInput.text
@@ -353,12 +381,15 @@ Item {
                                     height: 20
                                     implicitWidth: 15
                                     color: "transparent"
+                                    clip: true
                                     Text {
                                         id: nodeCoordYLabel
                                         text: "y :"
                                         anchors.left: parent.left
                                         anchors.leftMargin: 5
                                         color: textColor
+                                        //elide: Text.ElideRight
+
                                     }
                                 }
                                 /* Input field limited : y */
@@ -369,6 +400,7 @@ Item {
                                     border.width: 1
                                     border.color: paramEditor.borderInput
                                     radius: 3
+                                    clip: true
                                     TextInput {
                                         id: nodeCoordYInput
                                         text: currentParamNode ? currentParamNode.coord.y : ""
@@ -378,6 +410,8 @@ Item {
                                         height: parent.height
                                         color: activeFocus ? activeFocusOn : activeFocusOff
                                         selectByMouse : true
+
+                                        //elide: Text.ElideRight
 
                                         onAccepted: {
                                             currentParamNode.yCoord = nodeCoordYInput.text

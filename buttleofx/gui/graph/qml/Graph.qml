@@ -4,6 +4,16 @@ import QuickMamba 1.0
 Rectangle {
     id: qml_graphRoot
 
+
+    Keys.onPressed: {
+
+        // Graph toolbar
+        if (event.key == Qt.Key_Delete) {
+           _buttleManager.deleteSelection();
+        }
+    }
+
+
     QtObject {
         id: m
         property variant graphRoot: qml_graphRoot
@@ -25,6 +35,31 @@ Rectangle {
     property real miniatureScale
 
     property var container: graphContainer
+
+    /*
+    ExternDropArea {
+        anchors.fill: parent
+        acceptDrop: true
+        onDragEnter: {
+            acceptDrop = hasUrls
+        }
+        onDrop: {
+            console.log("Drop external files:", acceptDrop)
+            if(acceptDrop) {
+                _buttleManager.nodeManager.dropFile(firstUrl, pos.x - m.graphRoot.originX, pos.y - m.graphRoot.originY)
+            }
+        }
+    }
+    */
+    DropArea {
+        anchors.fill: parent
+        keys: "fileDrag"
+
+        onDropped: {
+            _buttleManager.nodeManager.dropFile(drag.source.filePath, drag.x - m.graphRoot.originX, drag.y - m.graphRoot.originY)
+            console.log("File dropped : ", drag.source.filePath)
+        }
+    }
 
     Rectangle {
         id: graphContainer

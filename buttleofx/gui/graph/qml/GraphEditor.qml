@@ -1,15 +1,27 @@
 import QtQuick 2.0
 import QtQuick.Layouts 1.0
 
+import "../../../gui"
+
 Item {
     id: graphEditor
 
+    signal buttonCloseClicked(bool clicked)
+
+    Tab {
+        id: tabBar
+        name: "Graph"
+        onCloseClicked: graphEditor.buttonCloseClicked(true)
+    }
+
     ColumnLayout {
         anchors.fill: parent
+        anchors.topMargin: tabBar.height
         spacing: 2
 
         Tools {
             id: tools
+            //y: tabBar.height
             implicitWidth : parent.width
             Layout.minimumHeight: 40
             Layout.preferredHeight: 40

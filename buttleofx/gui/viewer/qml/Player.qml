@@ -2,8 +2,12 @@ import QtQuick 2.0
 import QtQuick.Layouts 1.0
 import TimerPlayer 1.0
 
+import "../../../gui"
+
 Item {
     id: player
+
+    signal buttonCloseClicked(bool clicked)
 
     // remark : in python if there are ten frames, they are numbered from 0 to 9 so we need some time to add 1 for display
     property variant node
@@ -68,50 +72,10 @@ Item {
         //console.log("Node Changed : ", node)
     }
 
-    /*************************** TabBar*************************************/
-    Item {
+    Tab {
         id: tabBar
-        implicitWidth: 950
-        implicitHeight: 30
-        property color tabColor: "#141414"
-
-        Row{
-            spacing: 1
-            Rectangle {
-                id:tab1
-                implicitWidth: 100
-                implicitHeight: 200
-                radius: 10
-                color: tabBar.tabColor
-                Text {
-                    id: tabLabel
-                    anchors.horizontalCenter: parent.horizontalCenter
-                    y:10
-                    text: "Viewer"
-                    color: "white"
-                    font.pointSize: 10
-                }
-            }
-
-            /*Rectangle {
-                id: tab2
-                implicitWidth: 30
-                implicitHeight: 200
-                radius: 10
-                color: tabBar.tabColor
-                gradient: Gradient {
-                    GradientStop { position: 0.0; color: "#141414" }
-                    GradientStop { position: 0.11; color: "#141414" }
-                    GradientStop { position: 0.15; color: "#111111" }
-                    GradientStop { position: 0.16; color: "#111111" }
-                }
-                Image {
-                    id: addButton
-                    source: "../img/plus.png"
-                    anchors.centerIn: parent
-                }
-            }*/
-        }
+        name: "Viewer"
+        onCloseClicked: player.buttonCloseClicked(true)
     }
 
     /********************************Viewer and Tools************************************/

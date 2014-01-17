@@ -101,7 +101,7 @@ Item {
                // m.nodeWrapper.coord.x
             }
             onEntered: {
-                if(drag.source.nodeWrapper.name !== clipIn.nodeName && drag.source.nodeWrapper.name !== clipOut.nodeName){
+                if(drag.source.nodeWrapper !== undefined && drag.source.nodeWrapper.name !== clipIn.nodeName && drag.source.nodeWrapper.name !== clipOut.nodeName){
                     dropIndicator.state = "entereddrop"
                 }
             }

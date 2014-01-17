@@ -44,10 +44,10 @@ Item {
 
                 MouseArea {
                     id: leftMouseArea
-                    property int xStart
-                    property int yStart
-                    property int graphContainer_xStart
-                    property int graphContainer_yStart
+                    property real xStart
+                    property real yStart
+                    property real graphContainer_xStart
+                    property real graphContainer_yStart
 
                     property bool drawingSelection: false
                     property bool selectMode: true
@@ -151,14 +151,14 @@ Item {
                 property real miniOffsetY: 0
                 property alias originX : tmpVisuWindow.x
                 property alias originY : tmpVisuWindow.y
-                property int previousW : graph.width * scaleFactor
-                property int previousH : graph.height * scaleFactor
+                property real previousW : graph.width * scaleFactor
+                property real previousH : graph.height * scaleFactor
                 property bool tmpMode : false
 
                 anchors.top: graph.top
                 anchors.right: graph.right
                 anchors.margins: 10
-                width: graph.width * scaleFactor
+                width: (graph.width + marginLeft) * scaleFactor
                 height: (graph.height + marginTop) * scaleFactor
                 color: "#434343"
                 opacity: 0.7
@@ -168,10 +168,10 @@ Item {
                     width: miniGraph.width
                     height: miniGraph.height
                     id: miniatureArea
-                    property int xStart
-                    property int yStart
-                    property int visuWindowXStart
-                    property int visuWindowYStart
+                    property real xStart
+                    property real yStart
+                    property real visuWindowXStart
+                    property real visuWindowYStart
                     property bool moveMode: false
 
                     hoverEnabled: true
@@ -222,9 +222,10 @@ Item {
                     readOnly: true
                     miniatureState: true
                     miniatureScale: parent.scaleFactor
-                    width: parent.width
+                    width: parent.width - (parent.marginLeft * parent.scaleFactor)
                     height: parent.height - (parent.marginTop * parent.scaleFactor)
                     color: "transparent"
+                    x: (parent.marginLeft * 0.5) * parent.scaleFactor
                     y: (parent.marginTop * 0.5) * parent.scaleFactor
                     opacity: 1
                 }
@@ -248,7 +249,7 @@ Item {
                     color: "transparent"
                     visible: miniGraph.tmpMode
                     width: graph.width / graph.zoomCoeff * miniGraph.scaleFactor
-                    height: graph.height / graph.zoomCoeff * miniGraph.scaleFactor
+                    height: graph.height / graph.zoomCoeff * miniGraph.scaleFactor+15
                     x: (miniGraph.marginLeft * 0.5) * miniGraph.scaleFactor + ((miniGraph.previousW * 0.5) - (width * 0.5)) - graph.offsetX * miniGraph.scaleFactor + miniGraph.miniOffsetX
                     y: (miniGraph.marginTop * 0.5) * miniGraph.scaleFactor + ((miniGraph.previousH * 0.5) - (height * 0.5)) - graph.offsetY * miniGraph.scaleFactor + miniGraph.miniOffsetY
                 }

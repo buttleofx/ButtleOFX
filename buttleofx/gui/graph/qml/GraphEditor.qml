@@ -194,6 +194,7 @@ Item {
                             graph.container.x -= (miniGraph.xOffset/miniGraph.scaleFactor)
                             graph.container.y -= (miniGraph.yOffset/miniGraph.scaleFactor)
 
+                            //to map the tmpVisuWindow (zoom)
                             miniGraph.originX = visuWindow.x
                             miniGraph.originY = visuWindow.y
                             tmpVisuWindow.width = visuWindow.width
@@ -207,7 +208,7 @@ Item {
                             var yOffset = mouse.y - yStart
                             miniGraph.originX = visuWindowXStart + xOffset
                             miniGraph.originY = visuWindowYStart + yOffset
-                        }else{
+                        }else{ //to map the tmpVisuWindow (zoom)
                             miniGraph.originX = visuWindow.x
                             miniGraph.originY = visuWindow.y
                             tmpVisuWindow.width = visuWindow.width
@@ -230,7 +231,7 @@ Item {
 
                 Rectangle {
                     id: visuWindow
-                    border.color: "white"
+                    border.color: height > miniGraph.height ? "transparent" : "white"
                     border.width: 1
                     color: "transparent"
                     width: graph.width / graph.zoomCoeff * miniGraph.scaleFactor

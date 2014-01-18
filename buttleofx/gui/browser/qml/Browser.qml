@@ -42,10 +42,10 @@ Rectangle {
             }
 	    }
 
-        /*CheckBox {
+        CheckBox {
 	    	id: check
-	    	text: "Viewer"
-        }*/
+            text: "List"
+        }
 
         SplitView {
 	        Layout.fillWidth: true
@@ -66,6 +66,7 @@ Rectangle {
                 Layout.preferredHeight: 120
                 z: 1
 			    
+                viewGrid: check.checked
                 folder: m.directory
                 onGoToFolder: {
                     console.debug("folder has changed to " + newFolder)

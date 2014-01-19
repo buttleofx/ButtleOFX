@@ -29,9 +29,10 @@ Rectangle {
 
 	    HeaderBar {
             id: headerBar
-            y: tabBar.height
+
 		    Layout.fillWidth: true
 		    Layout.preferredHeight: 40
+
             z: files.z + 1
 
             parentFolder: m.fileFolder

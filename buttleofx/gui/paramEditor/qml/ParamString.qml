@@ -1,6 +1,7 @@
 import QtQuick 2.0
 import FolderListViewItem 1.0
 import QtQuick.Dialogs 1.0
+import "qmlComponents"
 
 /*ParamString is an input field*/
 
@@ -8,6 +9,7 @@ Item {
     id: containerParamString
     implicitWidth: 300
     implicitHeight: 30
+    y:10
 
     property variant paramObject: model.object
 
@@ -93,11 +95,25 @@ Item {
             color: "white"
             // if param has been modified, title in bold font
             font.bold: paramObject.hasChanged ? true : false
+
+            ToolTip{
+                id:tooltip
+                visible: false
+                paramHelp: paramObject.doc
+            }
+
             MouseArea {
                 anchors.fill: parent
                 acceptedButtons: Qt.RightButton
+                hoverEnabled:true
                 onClicked: {
                     paramObject.value = paramObject.getDefaultValue()
+                }
+                onEntered: {
+                    tooltip.visible=true
+                }
+                onExited: {
+                    tooltip.visible=false
                 }
             }
         }

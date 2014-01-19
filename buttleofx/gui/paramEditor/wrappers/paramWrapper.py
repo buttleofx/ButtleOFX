@@ -22,6 +22,9 @@ class ParamWrapper(QtCore.QObject):
     def getParamType(self):
         return self._param.getParamType()
 
+    def getParamDoc(self):
+        return self._param.getParamDoc()
+
     def getName(self):
         return self._param.getName()
         
@@ -44,4 +47,5 @@ class ParamWrapper(QtCore.QObject):
 
     paramType = QtCore.pyqtProperty(str, getParamType, constant=True)
     text = QtCore.pyqtProperty(str, getText, constant=True)
+    doc = QtCore.pyqtProperty(str, getParamDoc, constant=True)
     isSecret = QtCore.pyqtProperty(bool, isSecret, notify=otherParamOfTheNodeChanged)

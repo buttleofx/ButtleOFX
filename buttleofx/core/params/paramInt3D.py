@@ -30,6 +30,9 @@ class ParamInt3D(Param):
     def getParamType(self):
         return "ParamInt3D"
 
+    def getParamDoc(self):
+        return self._tuttleParam.getProperties().getStringProperty("OfxParamPropHint")
+
     def getDefaultValue1(self):
         return self._tuttleParam.getProperties().getIntProperty("OfxParamPropDefault", 0)
 

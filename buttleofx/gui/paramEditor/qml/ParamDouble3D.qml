@@ -1,4 +1,5 @@
 import QtQuick 2.0
+import "qmlComponents"
 
 /*ParamDouble3D containts two input field*/
 
@@ -6,6 +7,7 @@ Item {
     id: containerParamDouble3D
     implicitWidth: 300
     implicitHeight: 30
+    y:10
 
     property variant paramObject: model.object
 
@@ -25,9 +27,17 @@ Item {
             color: "white"
             // if param has been modified, title in bold font
             font.bold: (paramObject.value1HasChanged || paramObject.value2HasChanged || paramObject.value3HasChanged) ? true : false
+
+            ToolTip{
+                id:tooltip
+                visible: false
+                paramHelp:paramObject.doc
+            }
+
             MouseArea {
                 anchors.fill: parent
                 acceptedButtons: Qt.RightButton
+                hoverEnabled:true
                 //reinitialise the values of the params
                 onClicked: {
                     paramObject.value1HasChanged = false
@@ -36,6 +46,12 @@ Item {
                     paramObject.value1 = paramObject.getDefaultValue1()
                     paramObject.value2 = paramObject.getDefaultValue2()
                     paramObject.value3 = paramObject.getDefaultValue3() 
+                }
+                onEntered: {
+                    tooltip.visible=true
+                }
+                onExited: {
+                    tooltip.visible=false
                 }
             }
         }  

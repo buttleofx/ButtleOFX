@@ -1,10 +1,12 @@
 import QtQuick 2.0
+import "qmlComponents"
 
 
 Item {
     id: containerParamInt2D
     implicitWidth: 300
     implicitHeight: 30
+    y:10
 
     property variant paramObject: model.object
 
@@ -24,15 +26,29 @@ Item {
             color: "white"
             // if param has been modified, title in bold font
             font.bold: (paramObject.value1HasChanged || paramObject.value2HasChanged) ? true : false
+
+            ToolTip{
+                id:tooltip
+                visible: false
+                paramHelp:paramObject.doc
+            }
+
             MouseArea {
                 anchors.fill: parent
                 acceptedButtons: Qt.RightButton
+                hoverEnabled:true
                 // reinitialise the value of the param to her default value
                 onClicked: {
                     paramObject.value1HasChanged = false
                     paramObject.value2HasChanged = false
                     paramObject.value1 = paramObject.getDefaultValue1()
                     paramObject.value2 = paramObject.getDefaultValue2()
+                }
+                onEntered: {
+                    tooltip.visible=true
+                }
+                onExited: {
+                    tooltip.visible=false
                 }
             }
         }

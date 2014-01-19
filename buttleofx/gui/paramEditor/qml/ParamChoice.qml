@@ -1,6 +1,7 @@
 import QtQuick 2.0
 import QtQuick.Controls 1.0
 import QtQuick.Controls.Styles 1.0
+import "qmlComponents"
 
 Item {
     id: choiceList
@@ -37,13 +38,27 @@ Item {
             color: "white"
             // if param has been modified, title in bold font
             font.bold: paramObject.hasChanged ? true : false
+
+            ToolTip{
+                id:tooltip
+                visible: false
+                paramHelp: paramObject.doc
+            }
+
             MouseArea {
                 anchors.fill: parent
                 acceptedButtons: Qt.RightButton
+                hoverEnabled:true
                 onClicked: {
                     paramObject.hasChanged = false
                     paramObject.value = paramObject.getDefaultValue()
                     paramObject.pushValue(paramObject.value)
+                }
+                onEntered: {
+                    tooltip.visible=true
+                }
+                onExited: {
+                    tooltip.visible=false
                 }
             }
         }

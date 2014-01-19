@@ -1,4 +1,5 @@
 import QtQuick 2.0
+import "qmlComponents"
 
 Item {
     id: paramDouble
@@ -31,13 +32,27 @@ Item {
             text: paramObject.text + " : "
             color: "white"
             font.bold: paramObject.hasChanged ? true : false
+
+            ToolTip{
+                id:tooltip
+                visible: false
+                paramHelp:paramObject.doc
+            }
+
             MouseArea {
                 anchors.fill: parent
                 acceptedButtons: Qt.RightButton
+                hoverEnabled:true
                 onClicked: {
                     paramObject.hasChanged = false
                     paramObject.value = paramObject.getDefaultValue()
                     paramObject.pushValue(paramObject.value)
+                }
+                onEntered: {
+                    tooltip.visible=true
+                }
+                onExited: {
+                    tooltip.visible=false
                 }
             }
         }

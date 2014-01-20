@@ -87,6 +87,7 @@ Item {
             id: droparea1
             objectName: "DropArea"
             anchors.fill: parent
+            anchors.margins: 25
             Drag.keys: "node"
             onDropped: {
                 //we assure that the node dropped is not part of the actual connection

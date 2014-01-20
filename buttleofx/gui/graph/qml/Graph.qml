@@ -1,7 +1,7 @@
 import QtQuick 2.0
 import QuickMamba 1.0
 
-Item {
+Rectangle {
     id: qml_graphRoot
 
 
@@ -19,132 +19,22 @@ Item {
         property variant graphRoot: qml_graphRoot
     }
 
-    property alias originX: graphContainer.x
-    property alias originY: graphContainer.y
-
-    /*property real zoomCoeff: 1
-    property real zoomStep: 0.05
-    property real graphPreviousWidth: width
-    property real graphPreviousHeight: height
-    property int nodeInitialWidth: 80*/
-    property int nodeWidth: 80
-
-    property real zoomCoeff: 1
-    property real zoomStep: 0.05
-    property real graphPreviousWidth: width
-    property real graphPreviousHeight: height
-    property real nodeX
-    property real mouseRatioX
-    property real mouseRatioY
-    property int offsetX: 0
-    property int offsetY: 0
-
     signal clickCreationNode(string nodeType)
     signal drawSelection(int selectionX, int selectionY, int selectionWidth, int selectionHeight)
 
-    // Selection area
-    MouseArea {
-        id: leftMouseArea
-        property int xStart
-        property int yStart
-        property int graphContainer_xStart
-        property int graphContainer_yStart
+    property real zoomCoeff: 1
+    property real zoomStep: 0.05
+    property real nodeX
+    property int offsetX: 0
+    property int offsetY: 0
+    property alias originX: graphContainer.x
+    property alias originY: graphContainer.y
 
-        property bool drawingSelection: false
-        property bool selectMode: true
-        property bool moveMode: false
+    property bool readOnly
+    property bool miniatureState
+    property real miniatureScale
 
-        anchors.fill: parent
-        hoverEnabled: true
-        acceptedButtons: Qt.LeftButton | Qt.MiddleButton
-        onPressed: {
-            xStart = mouse.x
-            yStart = mouse.y
-            graphContainer_xStart = graphContainer.x
-            graphContainer_yStart = graphContainer.y
-
-            rectangleSelection.x = mouse.x;
-            rectangleSelection.y = mouse.y;
-            rectangleSelection.width = 1;
-            rectangleSelection.height = 1;
-            selectMode = leftMouseArea.pressedButtons & Qt.MiddleButton ? false : true
-            moveMode = leftMouseArea.pressedButtons & Qt.MiddleButton ? true : false
-            if( selectMode ) {
-                rectangleSelection.visible = true;
-                drawingSelection = true;
-            }
-        }
-        onReleased: {
-            if(moveMode){
-                moveMode=false
-                var xOffset = mouse.x - xStart
-                var yOffset = mouse.y - yStart
-                offsetX += xOffset
-                offsetY += yOffset
-            }
-            if( selectMode ) {
-                rectangleSelection.visible = false;
-                _buttleData.clearCurrentSelectedNodeNames();
-                m.graphRoot.drawSelection(rectangleSelection.x - m.graphRoot.originX, rectangleSelection.y - m.graphRoot.originY, rectangleSelection.width, rectangleSelection.height)
-            }
-        }
-
-        onPositionChanged: {
-            if( mouse.x < xStart ) {
-                rectangleSelection.x = mouse.x
-                rectangleSelection.width = xStart - mouse.x;
-            }
-            else {
-                rectangleSelection.width = mouse.x - xStart;
-            }
-            if( mouse.y < yStart ) {
-                rectangleSelection.y = mouse.y
-                rectangleSelection.height = yStart - mouse.y;
-            }
-            else {
-                rectangleSelection.height = mouse.y - yStart;
-            }
-
-            if( moveMode ) {
-                var xOffset = mouse.x - xStart
-                var yOffset = mouse.y - yStart
-                m.graphRoot.originX = graphContainer_xStart + xOffset
-                m.graphRoot.originY = graphContainer_yStart + yOffset
-            }
-        }
-        /*onWheel: {
-            if(wheel.angleDelta.y > 0){
-                zoomCoeff += zoomStep
-            }else{
-                if(zoomCoeff > zoomStep){ //inferior boundary
-                    zoomCoeff -= zoomStep
-                }
-            }
-
-            _buttleData.zoom(graphContainer.width, graphContainer.height, nodeWidth, zoomCoeff, graphPreviousWidth, graphPreviousHeight, mouseX, mouseY, m.graphRoot.originX, m.graphRoot.originY)
-            graphPreviousWidth = zoomCoeff * graphContainer.width
-            graphPreviousHeight = zoomCoeff * graphContainer.height
-            nodeWidth = zoomCoeff * nodeInitialWidth
-        }*/
-
-        onWheel:{
-            if(wheel.angleDelta.y > 0){
-                zoomCoeff += zoomStep
-            }else{
-                zoomCoeff -= zoomStep
-            }
-
-            mouseRatioX = 0.5
-            mouseRatioY = 0.5
-
-            console.log((miniGraph.xOffset/miniGraph.scaleFactor))
-            graphContainer.x = ((graphPreviousWidth * mouseRatioX) - (graphContainer.width * mouseRatioX)) + offsetX - ((miniGraph.xOffset/miniGraph.scaleFactor)*zoomCoeff)
-            graphContainer.y = ((graphPreviousHeight * mouseRatioY) - (graphContainer.height * mouseRatioY )) + offsetY - ((miniGraph.yOffset/miniGraph.scaleFactor)*zoomCoeff)
-        }
-    }
-    onDrawSelection: {
-        _buttleData.addNodeWrappersInRectangleSelection(selectionX, selectionY, selectionWidth, selectionHeight);
-    }
+    property var container: graphContainer
 
     /*
     ExternDropArea {
@@ -161,6 +51,15 @@ Item {
         }
     }
     */
+    DropArea {
+        anchors.fill: parent
+        keys: "fileDrag"
+
+        onDropped: {
+            _buttleManager.nodeManager.dropFile(drag.source.filePath, drag.x - m.graphRoot.originX, drag.y - m.graphRoot.originY)
+            console.log("File dropped : ", drag.source.filePath)
+        }
+    }
 
     Rectangle {
         id: graphContainer
@@ -170,14 +69,14 @@ Item {
         height: parent.height * zoomCoeff
         color: "transparent"
 
-        Item {
+        /*Item {
             id: repere
             property color repereColor: "red"
             property double size: 50 * zoomCoeff
             property double thickness: 2
+            visible: miniatureState ? false : true
             Rectangle {
                 id: axeX
-
                 x: -repere.size - 0.5 * repere.thickness
                 y: 0
                 width: 2 * repere.size + repere.thickness
@@ -186,14 +85,13 @@ Item {
             }
             Rectangle {
                 id: axeY
-
                 x: 0
                 y: -repere.size - 0.5 * repere.thickness
                 width: 2
                 height: 2 * repere.size + repere.thickness
                 color: repere.repereColor
             }
-        }
+        }*/
 
         Item {
             id: nodes
@@ -204,10 +102,32 @@ Item {
                 id: nodesRepeater
                 model: _buttleData.graphWrapper.nodeWrappers
                 Node {
+                    property int nodeWidth: 80
+                    id: node
                     nodeWrapper: model.object
                     graphRoot: m.graphRoot
-                    height: nodeWidth /2 * zoomCoeff
                     width: nodeWidth * zoomCoeff
+                    height: nodeWidth /2 * zoomCoeff
+                    readOnly: qml_graphRoot.readOnly
+                    miniatureScale: qml_graphRoot.miniatureScale
+                    miniatureState: qml_graphRoot.miniatureState
+
+
+                    StateGroup {
+                        id: stateViewerNode
+                         states: [
+                             State {
+                                 name: "miniatureState"
+                                 when: miniatureState
+                                 PropertyChanges {
+                                     target: node
+                                     width: node.nodeWidth * qml_graphRoot.miniatureScale
+                                     height: node.nodeWidth /2 * qml_graphRoot.miniatureScale
+                                 }
+                             }
+                         ]
+                    }
+
                 }
             }
         }
@@ -220,6 +140,7 @@ Item {
             Repeater {
                 model : _buttleData.graphWrapper.connectionWrappers
                 Connection {
+                    id: connection
                     connectionWrapper: model.object
                     property variant nodeOut: _buttleData.graphWrapper.getNodeWrapper(connectionWrapper.out_clipNodeName)
                     property variant clipOut: nodeOut.getClip(connectionWrapper.out_clipName)
@@ -227,10 +148,14 @@ Item {
                     property variant nodeIn: _buttleData.graphWrapper.getNodeWrapper(connectionWrapper.in_clipNodeName)
                     property variant clipIn: nodeIn.getClip(connectionWrapper.in_clipName)
 
-                    x1: clipOut.xCoord
-                    y1: clipOut.yCoord
-                    x2: clipIn.xCoord
-                    y2: clipIn.yCoord
+                    readOnly: qml_graphRoot.readOnly
+                    miniatureState: qml_graphRoot.miniatureState
+                    miniatureScale: qml_graphRoot.miniatureScale
+
+                    x1: connection.miniatureState ? clipOut.xCoord * connection.miniatureScale : clipOut.xCoord
+                    y1: connection.miniatureState ? clipOut.yCoord * connection.miniatureScale : clipOut.yCoord
+                    x2: connection.miniatureState ? clipIn.xCoord * connection.miniatureScale : clipIn.xCoord
+                    y2: connection.miniatureState ? clipIn.yCoord * connection.miniatureScale : clipIn.yCoord
                 }
             }
 
@@ -253,7 +178,7 @@ Item {
         }
     }
 
-    //Miniature de graph
+    /*//Miniature de graph
     Rectangle{
         property real scaleFactor : 0.15
         property real marginTop : 150
@@ -287,8 +212,8 @@ Item {
                     width : 7
                     height : 7
                     radius: width * 0.5
-                    //x: (((model.object.coord.x * graphContainer.width) / qml_graphRoot.graphPreviousWidth) + ((graphPreviousWidth * 0.5) - (graphContainer.width * 0.5)) + miniGraph.marginLeft) * miniGraph.scaleFactor
-                    //y: (((model.object.coord.y * graphContainer.height) / qml_graphRoot.graphPreviousHeight) + ((graphPreviousHeight * 0.5) - (graphContainer.height * 0.5)) + miniGraph.marginTop) * miniGraph.scaleFactor
+                    //x: (((model.object.coord.x * graphContainer.width) / qml_graphRoot.width ) + ((qml_graphRoot.width * 0.5) - (graphContainer.width * 0.5)) + miniGraph.marginLeft) * miniGraph.scaleFactor
+                    //y: (((model.object.coord.y * graphContainer.height) / qml_graphRoot.height ) + ((qml_graphRoot.height * 0.5) - (graphContainer.height * 0.5)) + miniGraph.marginTop) * miniGraph.scaleFactor
                     x: (model.object.coord.x + miniGraph.marginLeft) * miniGraph.scaleFactor
                     y: (model.object.coord.y + miniGraph.marginTop) * miniGraph.scaleFactor
                     color: "#00b2a1"
@@ -339,24 +264,7 @@ Item {
                     graphContainer.y -= (miniGraph.yOffset/parent.scaleFactor)
                 }
             }
-            /*onPositionChanged: {
-                if( moveMode ) {
-                    var xOffset = mouse.x - xStart
-                    var yOffset = mouse.y - yStart
-                    parent.miniOriginX =  xOffset
-                    parent.miniOriginY = yOffset
-                }
-            }*/
         }
-    }
+    }*/
 
-
-    // Rectangle selection is placed here so it is drawn over the nodes
-    Rectangle {
-        id: rectangleSelection
-        color: "white"
-        border.color: "#00b2a1"
-        opacity: 0.25
-        visible: false
-    }
 }

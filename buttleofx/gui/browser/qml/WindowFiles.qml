@@ -77,12 +77,30 @@ Rectangle {
 
                     Column {
                         id : file
+
+                        property string filePath : model.object.filepath
+
+                        Drag.active: mouseRegionImage.drag.active
+                        Drag.hotSpot.x: 20
+                        Drag.hotSpot.y: 20
+                        Drag.keys: "fileDrag"
+
                         Image {
                             x: 25
                             source: model.object.fileType == "Folder" ? "../../img/buttons/browser/folder-icon.png" : "file:///" + model.object.filepath
                             sourceSize.width: 40
                             sourceSize.height: 40
-                            anchors.horizontalCenter: parent.horizontalCenter
+
+                            StateGroup {
+                                id: fileState
+                                states: State {
+                                    name: "dragging"
+                                    when: mouseRegionImage.pressed
+                                    PropertyChanges { target: file; x: file.x; y: file.y }
+                                }
+                            }
+
+
 
                             MouseArea {
                                 id: mouseRegionImage
@@ -141,6 +159,10 @@ Rectangle {
                                 onDoubleClicked: {
                                     model.object.fileType == "Folder" ? winFile.goToFolder(model.object.filepath) : Qt.openUrlExternally("file:///" + model.object.filepath)
                                 }
+
+                                hoverEnabled: true
+                                onReleased: file.Drag.drop()
+                                drag.target: file
                             }
                         }
                     }// endColumn

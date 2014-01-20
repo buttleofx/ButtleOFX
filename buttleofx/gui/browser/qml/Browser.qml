@@ -8,6 +8,8 @@ Rectangle {
 	id: browser
     color: "#353535"
 
+    signal buttonCloseClicked(bool clicked)
+
     QtObject {
         id: m
         property string directory: "/"
@@ -17,19 +19,23 @@ Rectangle {
         property string filter:"*"
     }
 
-    ColumnLayout {
-	    anchors.fill: parent
 
-        Tab {
-            id: tabBar
-            name: "Browser"
-        }
+    Tab {
+        id: tabBar
+        name: "Browser"
+        onCloseClicked: browser.buttonCloseClicked(true)
+    }
+
+
+    ColumnLayout {
+        anchors.fill: parent
+        anchors.topMargin: tabBar.height
 
 	    HeaderBar {
             id: headerBar
-
-		    Layout.fillWidth: true
-		    Layout.preferredHeight: 40
+            y: tabBar.height
+            Layout.fillWidth: true
+            Layout.preferredHeight: 40
 
             z: files.z + 1
 
@@ -53,7 +59,7 @@ Rectangle {
 
 		    WindowFiles {
 			    id: files
-		        Layout.fillWidth: true
+                Layout.fillWidth: true
 	            Layout.fillHeight: true
                 Layout.preferredHeight: 120
                 z: 1
@@ -85,7 +91,7 @@ Rectangle {
 	    FooterBar {
 		    id: footerBar
             Layout.fillWidth: true
-		    Layout.preferredHeight: 40
+            Layout.preferredHeight: 40
 
             fileName: m.filepath
             fileType : m.fileType

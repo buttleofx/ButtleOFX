@@ -7,10 +7,13 @@ Rectangle {
     property string port
     property alias clipWrapper: m.clipWrapper
     property variant graphRoot
-    //nodeRoot est récupéré de Node.qml, il désigne le node auquel appartient le clip
     property variant nodeRoot
-
     property alias clipSize: m.clipSize
+    property bool accept: false
+
+    property bool readOnly
+    property real miniatureScale
+    property bool miniatureState
 
     QtObject {
         id: m
@@ -23,7 +26,7 @@ Rectangle {
     height: m.clipSize
     width: m.clipSize
     color: clipMouseArea.containsMouse ? "#00b2a1" : "#55bbbb"
-    radius: 4
+    radius: width * 0.5
 
     // Synchronize QML graphic information (clip position) into the model,
     // to share it with connection objects
@@ -84,11 +87,15 @@ Rectangle {
                 clipOut = drag.source.clipWrapper
                 clipIn = m.clipWrapper
             }
-            _buttleManager.connectionManager.connectWrappers(clipOut, clipIn)
+            if(accept)
+                _buttleManager.connectionManager.connectWrappers(clipOut, clipIn)
         }
         onEntered: {
-            // The handle is displayed to show that a connection is available
-            dropHandle.state = "entereddrop"
+            accept = _buttleManager.connectionManager.canConnect(m.clipWrapper, drag.source.clipWrapper)
+            if(accept)
+                dropHandle.state = "entereddrop"
+            else
+                dropHandle.state = "cantconnect"
         }
         onExited: {
             // Erase the handle
@@ -118,16 +125,27 @@ Rectangle {
                   target: dropVisualHandle
                   opacity: 0.6
                }
+            },
+            State {
+               name: "cantconnect"
+               PropertyChanges {
+                  target: dropVisualHandle
+                  opacity: 0.6
+                  color: "red"
+               }
             }
         ]
     }
 
     // MouseArea dedicated to the QML drag and drop
     MouseArea {
+        enabled: !readOnly
         id: clipMouseArea
         anchors.fill: parent
         hoverEnabled: true
         drag.target: handle
+        Drag.active: true
+
 
         // position of the center of the clip when starting a mouse event
         property int xStart
@@ -181,7 +199,7 @@ Rectangle {
                 },
                 State {
                    name: "dragging"
-                   when: handle.Drag.active
+                   when: drag.source.clipWrapper
                    PropertyChanges {
                       target: handle
                       opacity: 1
@@ -189,6 +207,14 @@ Rectangle {
                       y: 0
                       width: 0.6*width
                       height: 0.6*height
+                   }
+                },
+                State {
+                   name: "draggable"
+                   when: handle.Drag.active
+                   PropertyChanges {
+                      target: handle
+                      Drag.keys: "clip_connection"
                    }
                 }
             ]

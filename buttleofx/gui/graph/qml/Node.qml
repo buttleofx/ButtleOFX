@@ -9,6 +9,9 @@ Rectangle {
 
     property variant graphRoot
     property alias nodeWrapper: m.nodeWrapper
+    property bool readOnly
+    property real miniatureScale
+    property bool miniatureState
 
     Drag.active: nodeMouseArea.drag.active
 
@@ -26,8 +29,8 @@ Rectangle {
     }
     objectName: "qmlNode_" + m.nodeWrapper.name
 
-    x: ((m.nodeWrapper.coord.x * graphContainer.width) / qml_graphRoot.graphPreviousWidth)
-    y: ((m.nodeWrapper.coord.y * graphContainer.height) / qml_graphRoot.graphPreviousHeight)
+    x: ((m.nodeWrapper.coord.x * graphContainer.width) / qml_graphRoot.width)
+    y: ((m.nodeWrapper.coord.y * graphContainer.height) / qml_graphRoot.height)
     z: _buttleData.graphWrapper.zMax
 
     //height: 40
@@ -43,10 +46,9 @@ Rectangle {
         drag.target: parent
         drag.axis: Drag.XandYAxis
         Drag.keys: "node"
+        enabled: !readOnly
         acceptedButtons: Qt.LeftButton | Qt.RightButton | Qt.MidButton
         onPressed: {
-            console.log("node wrapper x : "+ m.nodeWrapper.coord.x)
-            console.log("node x : "+parent.x)
             // left button : we change the current selected nodes & we start moving
             if (mouse.button == Qt.LeftButton) {
                 // we clear the list of selected connections
@@ -82,7 +84,7 @@ Rectangle {
 
             // left button : we end moving
             if (mouse.button == Qt.LeftButton) {
-                _buttleManager.nodeManager.nodeMoved(m.nodeWrapper.name, (m.nodeWrapper.coord.x * qml_graphRoot.graphPreviousWidth) / graphContainer.width, (m.nodeWrapper.coord.y * qml_graphRoot.graphPreviousHeight) / graphContainer.height)
+                _buttleManager.nodeManager.nodeMoved(m.nodeWrapper.name, (m.nodeWrapper.coord.x * qml_graphRoot.width) / graphContainer.width, (m.nodeWrapper.coord.y * qml_graphRoot.height) / graphContainer.height)
                 //stateMoving.state = "normal"
             }
              //middle button : assign the node to the viewer
@@ -145,16 +147,16 @@ Rectangle {
         id: nodeRectangle
         anchors.centerIn: parent
         anchors.fill: parent
-        anchors.margins: 4
+        anchors.margins: miniatureState ? 4 * miniatureScale : 4 * graph.zoomCoeff
         color: "#bbbbbb"
         radius: 8
         clip: true
         Text {
             id: nodeText
             anchors.verticalCenter: parent.verticalCenter
-            x: 5
+            x: miniatureState ? 5 * miniatureScale : 5
             text: m.nodeWrapper.nameUser
-            font.pointSize: 10
+            font.pointSize: miniatureState ? 10 * miniatureScale : 10
             property bool isSelected: _buttleData.nodeIsSelected(m.nodeWrapper)
             
             // onTextChanged: {
@@ -202,6 +204,10 @@ Rectangle {
                         nodeRoot: m.nodeRoot
                         clipSize: m.clipSize
                         x:-10
+                        readOnly: qml_nodeRoot.readOnly
+                        miniatureScale: qml_nodeRoot.miniatureScale
+                        miniatureState: qml_nodeRoot.miniatureState
+                        visible: miniatureState ? false : true
                     }
                 }
             }
@@ -209,7 +215,6 @@ Rectangle {
         }
         Item {
             y: parent.height /2
-            Layout.minimumWidth: 2
             Layout.fillWidth: true
         }
 
@@ -219,7 +224,6 @@ Rectangle {
 
             y: parent.height /2
             implicitWidth: childrenRect.width
-            Layout.minimumWidth: childrenRect.width
             Layout.preferredWidth: childrenRect.width
             Layout.alignment: Qt.AlignVCenter | Qt.AlignRight
             // always only one output clip
@@ -235,6 +239,10 @@ Rectangle {
                 nodeRoot: m.nodeRoot
                 clipSize: m.clipSize
                 x:10
+                readOnly: qml_nodeRoot.readOnly
+                miniatureScale: qml_nodeRoot.miniatureScale
+                miniatureState: qml_nodeRoot.miniatureState
+                visible: miniatureState ? false : true
             }
         }
     }
@@ -295,9 +303,18 @@ Rectangle {
         id: statePressed
         states: [
             State {
-            name: "pressed"
-            when: nodeMouseArea.pressed
-            PropertyChanges { target: m.nodeRoot; opacity: .5 }
+                name: "pressed"
+                when: nodeMouseArea.pressed
+                PropertyChanges { target: m.nodeRoot; opacity: .5 }
+            },
+            State {
+                name: "miniature"
+                when: miniatureState
+                PropertyChanges {
+                      target: m.nodeRoot
+                      x: ((m.nodeWrapper.coord.x * graphContainer.width) / qml_graphRoot.width) * miniatureScale
+                      y: ((m.nodeWrapper.coord.y * graphContainer.height) / qml_graphRoot.height) * miniatureScale
+                }
             }
         ]
     }

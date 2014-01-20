@@ -132,6 +132,18 @@ class FileModelBrowser(QtQuick.QQuickItem):
             self._fileItems[index].isSelected = True
         else:
             print("not index", len(self._fileItems))
+
+    @QtCore.pyqtSlot(int)
+    def selectItems(self, index):
+        if index < len(self._fileItems):
+            self._fileItems[index].isSelected = True
+            
+    @QtCore.pyqtSlot(int, int)
+    def selectItemsByShift(self, begin, end):
+        for i in range(begin, end + 1):
+            if i < len(self._fileItems):
+                self._fileItems[i].isSelected = True
+
     
 #    class NameFilter():
 #        """ Enum """

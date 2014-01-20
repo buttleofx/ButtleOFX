@@ -17,8 +17,6 @@ Rectangle {
         property string filter:"*"
     }
 
-
-
     ColumnLayout {
 	    anchors.fill: parent
 
@@ -53,13 +51,6 @@ Rectangle {
 	        Layout.fillHeight: true
             orientation: Qt.Horizontal
 
-            /*LeftCol {
-                id: left
-                Layout.minimumWidth: 80
-                Layout.preferredWidth: 150
-	            Layout.fillHeight: true
-            }*/
-
 		    WindowFiles {
 			    id: files
 		        Layout.fillWidth: true
@@ -89,16 +80,6 @@ Rectangle {
                 }
 		    }
 
-            /*Viewer {
-		    	id: viewer
-
-                Layout.fillWidth: check.checked
-                Layout.fillHeight: true
-
-                Layout.preferredWidth: 1
-
-                filepath: m.filepath
-            }*/
 	    }
 
 	    FooterBar {

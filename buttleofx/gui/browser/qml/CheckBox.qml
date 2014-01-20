@@ -29,6 +29,7 @@ FocusScope {
 
         Text {
             text: checkbox.text
+            color: "white"
         }
     }
 

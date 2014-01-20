@@ -15,6 +15,28 @@ Rectangle {
     signal changeFile(string file)
     signal changeFileType(string fileType)
     property bool viewGrid: true
+    property bool ctrlPressed: false
+    property bool shiftPressed: false
+
+    Keys.onPressed: {
+        if (event.modifiers & Qt.ControlModifier) {
+            winFile.ctrlPressed = true
+        }
+        if (event.modifiers & Qt.ShiftModifier) {
+            winFile.shiftPressed = true
+        }
+    }
+
+    Keys.onReleased: {
+        if (event.modifiers & Qt.ControlModifier) {
+            winFile.ctrlPressed = false
+        }
+        if (event.modifiers & Qt.ShiftModifier) {
+            winFile.shiftPressed = false
+        }
+    }
+
+
 
     FileModelBrowser {
         id: fileModel
@@ -66,12 +88,22 @@ Rectangle {
                                 id: mouseRegionImage
                                 anchors.fill : parent
                                 onClicked: {
+                                    //if shift:
+                                    console.debug("shiftPressed :" + winFile.shiftPressed)
+                                    if(winFile.shiftPressed)
+                                        fileModel.selectItemsByShift(gridview.currentIndex, index)
                                     gridview.currentIndex = index
-                                    fileModel.selectItem(index)
                                     winFile.changeFile(model.object.filepath)
                                     winFile.changeFileType(model.object.fileType)
                                     //if ctrl:
-                                    //if shift:
+                                    console.debug("ctrlPressed :" + winFile.ctrlPressed)
+                                    if (winFile.ctrlPressed == true) {
+                                        fileModel.selectItems(index)
+                                    }
+                                    else if (!winFile.shiftPressed){
+                                        fileModel.selectItem(index)
+                                    }
+
                                 }
                                 onDoubleClicked: {
                                     model.object.fileType == "Folder" ? winFile.goToFolder(model.object.filepath) : Qt.openUrlExternally("file:///" + model.object.filepath)
@@ -90,12 +122,21 @@ Rectangle {
                                 id: mouseRegionText
                                 anchors.fill : parent
                                 onClicked: {
+                                    //if shift:
+                                    console.debug("shiftPressed :" + winFile.shiftPressed)
+                                    if(winFile.shiftPressed)
+                                        fileModel.selectItemsByShift(gridview.currentIndex, index)
                                     gridview.currentIndex = index
-                                    fileModel.selectItem(index)
                                     winFile.changeFile(model.object.filepath)
                                     winFile.changeFileType(model.object.fileType)
                                     //if ctrl:
-                                    //if shift:
+                                    console.debug("ctrlPressed :" + winFile.ctrlPressed)
+                                    if (winFile.ctrlPressed == true) {
+                                        fileModel.selectItems(index)
+                                    }
+                                    else if (!winFile.shiftPressed){
+                                        fileModel.selectItem(index)
+                                    }
                                 }
                                 onDoubleClicked: {
                                     model.object.fileType == "Folder" ? winFile.goToFolder(model.object.filepath) : Qt.openUrlExternally("file:///" + model.object.filepath)
@@ -127,61 +168,79 @@ Rectangle {
                     id: background
                     color: model.object.isSelected ? "#888888FF" : "transparent"
                     radius: 5
-                    height: 30
+                    height: 25
                     width: listview.width
 
-                Row {
-                    width: parent.width
-                    spacing: 10
-                    Image {
-                        x: 25
-                        source: model.object.fileType == "Folder" ? "../../img/buttons/browser/folder-icon.png" : "file:///" + model.object.filepath
-                        sourceSize.width: 20
-                        sourceSize.height: 20
+                    Row {
+                        width: parent.width
+                        spacing: 10
+                        Image {
+                            x: 25
+                            source: model.object.fileType == "Folder" ? "../../img/buttons/browser/folder-icon.png" : "file:///" + model.object.filepath
+                            sourceSize.width: 20
+                            sourceSize.height: 20
 
 
-                        MouseArea {
-                            id: mouseRegionImage
-                            anchors.fill : parent
-                            onClicked: {
-                                listview.currentIndex = index
-                                fileModel.selectItem(index)
-                                winFile.changeFile(model.object.filepath)
-                                winFile.changeFileType(model.object.fileType)
-                                //if ctrl:
-                                //if shift:
-                            }
-                            onDoubleClicked: {
-                                model.object.fileType == "Folder" ? winFile.goToFolder(model.object.filepath) : Qt.openUrlExternally("file:///" + model.object.filepath)
-                            }
-                        }
-                    }
-                    Text {
-                        text: model.object.fileName
-                        color: model.object.isSelected ? "black" : "white"
-                        font.bold: model.object.isSelected
-                        width: 125
-                        elide: Text.ElideRight
-
-
-                        MouseArea {
-                            id: mouseRegionText
-                            anchors.fill : parent
-                            onClicked: {
-                                listview.currentIndex = index
-                                fileModel.selectItem(index)
-                                winFile.changeFile(model.object.filepath)
-                                winFile.changeFileType(model.object.fileType)
-                                //if ctrl:
-                                //if shift:
-                            }
-                            onDoubleClicked: {
-                                model.object.fileType == "Folder" ? winFile.goToFolder(model.object.filepath) : Qt.openUrlExternally("file:///" + model.object.filepath)
+                            MouseArea {
+                                id: mouseRegionImage
+                                anchors.fill : parent
+                                onClicked: {
+                                    //if shift:
+                                    console.debug("shiftPressed :" + winFile.shiftPressed)
+                                    if(winFile.shiftPressed)
+                                        fileModel.selectItemsByShift(listview.currentIndex, index)
+                                    listview.currentIndex = index
+                                    winFile.changeFile(model.object.filepath)
+                                    winFile.changeFileType(model.object.fileType)
+                                    //if ctrl:
+                                    console.debug("ctrlPressed :" + winFile.ctrlPressed)
+                                    if (winFile.ctrlPressed == true) {
+                                        fileModel.selectItems(index)
+                                    }
+                                    else if (!winFile.shiftPressed){
+                                        fileModel.selectItem(index)
+                                    }
+                                }
+                                onDoubleClicked: {
+                                    model.object.fileType == "Folder" ? winFile.goToFolder(model.object.filepath) : Qt.openUrlExternally("file:///" + model.object.filepath)
+                                }
                             }
                         }
-                    }
-                }// endRow
-                }
+                        Text {
+                            text: model.object.fileName
+                            color: model.object.isSelected ? "black" : "white"
+                            font.bold: model.object.isSelected
+                            width: parent.width
+                            elide: Text.ElideRight
+
+
+                            MouseArea {
+                                id: mouseRegionText
+                                anchors.fill : parent
+                                onClicked: {
+                                    //if shift:
+                                    console.debug("shiftPressed :" + winFile.shiftPressed)
+                                    if(winFile.shiftPressed)
+                                        fileModel.selectItemsByShift(listview.currentIndex, index)
+                                    listview.currentIndex = index
+                                    winFile.changeFile(model.object.filepath)
+                                    winFile.changeFileType(model.object.fileType)
+                                    //if ctrl:
+                                    console.debug("ctrlPressed :" + winFile.ctrlPressed)
+                                    if (winFile.ctrlPressed == true) {
+                                        fileModel.selectItems(index)
+                                    }
+                                    else if (!winFile.shiftPressed){
+                                        fileModel.selectItem(index)
+                                    }
+                                }
+                                onDoubleClicked: {
+                                    model.object.fileType == "Folder" ? winFile.goToFolder(model.object.filepath) : Qt.openUrlExternally("file:///" + model.object.filepath)
+                                }
+                            }
+                        }
+                    }// endRow
+                }// end Rectangle
             }//endComponent
         }
     }

@@ -12,7 +12,12 @@ Rectangle {
     property string folder
     signal changeFolder(string folder)
     property string parentFolder
-    property int indexSelected: -1
+
+    Keys.onPressed: {
+         if ((event.key == Qt.Key_L) && (event.modifiers & Qt.ControlModifier)) {
+            texteditPath.focus = true
+        }
+    }
 
     FileModelBrowser {
         id: suggestion
@@ -140,21 +145,6 @@ Rectangle {
                 }
             }
         }
-
-        /*SuggestionBox {
-            id: suggestionBox
-
-            y: 40
-            x: 150
-            width: texteditPath.width
-            visible: texteditPath.focus
-            selectedIndex: headerBar.indexSelected
-
-            model: suggestion.getFilteredFileItems(suggestion.folder)
-            onItemSelected: {
-                changeFolder(item)
-            }
-        }*/
 
 	}
 

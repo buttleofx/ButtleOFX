@@ -15,6 +15,9 @@ Rectangle {
     signal changeFile(string file)
     signal changeFileType(string fileType)
 
+
+    property variant readerNode
+
     FileModelBrowser {
         id: fileModel
         folder: winFile.folder
@@ -90,7 +93,8 @@ Rectangle {
                                 if (model.object.fileType != "Folder"){
                                     console.log ("coucou")
 
-                                    readerNode =  fileModel.createNodeWrappertotheViewer(model.object.filePath)
+
+                                    readerNode =  fileModel.createNodeWrappertotheViewer(model.object.filepath)
 
                                     console.log ("newNode", fileModel.readerNode)
 

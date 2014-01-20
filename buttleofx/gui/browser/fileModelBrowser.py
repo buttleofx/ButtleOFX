@@ -163,14 +163,13 @@ class FileModelBrowser(QtQuick.QQuickItem):
 
     @QtCore.pyqtSlot(str, result=QtCore.QObject)
     def createNodeWrappertotheViewer(self, url):
-        print ("url", url)
+        #print ("url", url)
         graphForTheBrowser = Graph() #create a graph
-        print ( "graphForTheBrowser", graphForTheBrowser)
+        #print ( "graphForTheBrowser", graphForTheBrowser)
         graphForTheBrowserWrapper = GraphWrapper(graphForTheBrowser, QtQuick.QQuickView())
-        print ( "graphForTheBrowserWrapper", graphForTheBrowserWrapper)
-        print ("graphForTheBrowserWrapper._view", graphForTheBrowserWrapper._view)
+        #print ( "graphForTheBrowserWrapper", graphForTheBrowserWrapper)
+        #print ("graphForTheBrowserWrapper._view", graphForTheBrowserWrapper._view)
         readerNode = graphForTheBrowser.createReaderNode(url, 0, 0) # create a reader node (like for the drag & drop of file)
-        print ("readerNode.getParams()", readerNode.getParams())
         readerNodeWrapper = NodeWrapper(readerNode, graphForTheBrowserWrapper._view) # wrapper of the reader file
         return readerNodeWrapper
 

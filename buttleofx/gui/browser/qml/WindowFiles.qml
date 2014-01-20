@@ -91,12 +91,10 @@ Rectangle {
                                 model.object.fileType == "Folder" ? winFile.goToFolder(model.object.filepath) : console.log("A lier au viewer")
 
                                 if (model.object.fileType != "Folder"){
-                                    console.log ("coucou")
-
 
                                     readerNode =  fileModel.createNodeWrappertotheViewer(model.object.filepath)
 
-                                    console.log ("newNode", fileModel.readerNode)
+                                    console.log ("newNode", readerNode)
 
                                     _buttleData.currentViewerNodeWrapper = readerNode
                                     _buttleData.currentViewerFrame = 0

@@ -42,6 +42,8 @@ class CmdCreateReaderNode(CmdCreateNode):
             Creates a node by calling the function doCmd() of the class CmdCreateNode.
             Then sets the value of the param 'filename'.
         """
-        CmdCreateNode.doCmd(self)
+        node = CmdCreateNode.doCmd(self)
         self._node.getTuttleNode().getParam('filename').setValue(str(self._filename))
         self._graphTarget.nodesChanged()
+        return node
+

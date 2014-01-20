@@ -49,8 +49,6 @@ Rectangle {
         enabled: !readOnly
         acceptedButtons: Qt.LeftButton | Qt.RightButton | Qt.MidButton
         onPressed: {
-            console.log("node wrapper x : "+ m.nodeWrapper.coord.x)
-            console.log("node x : "+parent.x)
             // left button : we change the current selected nodes & we start moving
             if (mouse.button == Qt.LeftButton) {
                 // we clear the list of selected connections

@@ -87,13 +87,15 @@ Rectangle {
                 clipOut = drag.source.clipWrapper
                 clipIn = m.clipWrapper
             }
-            _buttleManager.connectionManager.connectWrappers(clipOut, clipIn)
+            if(accept)
+                _buttleManager.connectionManager.connectWrappers(clipOut, clipIn)
         }
         onEntered: {
-            // The handle is displayed to show that a connection is available
-            dropHandle.state = "entereddrop"
-            //accept = _buttleManager.connectionManager.canConnect(drag.source.clipWrapper, m.clipWrapper);
-            console.log(accept)
+            accept = _buttleManager.connectionManager.canConnect(m.clipWrapper, drag.source.clipWrapper)
+            if(accept)
+                dropHandle.state = "entereddrop"
+            else
+                dropHandle.state = "cantconnect"
         }
         onExited: {
             // Erase the handle
@@ -122,6 +124,14 @@ Rectangle {
                PropertyChanges {
                   target: dropVisualHandle
                   opacity: 0.6
+               }
+            },
+            State {
+               name: "cantconnect"
+               PropertyChanges {
+                  target: dropVisualHandle
+                  opacity: 0.6
+                  color: "red"
                }
             }
         ]

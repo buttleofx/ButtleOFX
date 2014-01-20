@@ -63,14 +63,14 @@ Rectangle {
                         sourceSize.width: 40
                         sourceSize.height: 40
 
-                        /*StateGroup {
+                        StateGroup {
                             id: fileState
                             states: State {
                                 name: "dragging"
                                 when: mouseRegionImage.pressed
                                 PropertyChanges { target: file; x: file.x; y: file.y }
                             }
-                        }*/
+                        }
 
                         anchors.horizontalCenter: parent.horizontalCenter
 

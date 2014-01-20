@@ -71,7 +71,9 @@ Rectangle {
 
             // right button : we change the current param node
            else if (mouse.button == Qt.RightButton) {
-                // here display contextual menu
+                // Param buttle
+                paramSelected = false
+                _buttleData.currentParamNodeWrapper = m.nodeWrapper
             }
 
             // take the focus
@@ -100,6 +102,7 @@ Rectangle {
 
         // double click : we change the current param node
         onDoubleClicked: {
+            paramSelected = true
             _buttleData.currentParamNodeWrapper = m.nodeWrapper
         }
 

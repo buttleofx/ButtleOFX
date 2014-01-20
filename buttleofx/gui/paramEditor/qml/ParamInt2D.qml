@@ -1,10 +1,10 @@
 import QtQuick 2.0
 
-
 Item {
     id: containerParamInt2D
     implicitWidth: 300
     implicitHeight: 30
+    y:10
 
     property variant paramObject: model.object
 
@@ -34,6 +34,7 @@ Item {
                     paramObject.value1 = paramObject.getDefaultValue1()
                     paramObject.value2 = paramObject.getDefaultValue2()
                 }
+
             }
         }
 
@@ -45,6 +46,8 @@ Item {
             border.width: 1
             border.color: "#444"
             radius: 3
+            clip: true
+
             TextInput {
                 id: paramInt2DInput1
                 text: paramObject.value1
@@ -93,6 +96,8 @@ Item {
             border.width: 1
             border.color: "#444"
             radius: 3
+            clip: true
+
             TextInput{
                 id: paramInt2DInput2
                 text: paramObject.value2

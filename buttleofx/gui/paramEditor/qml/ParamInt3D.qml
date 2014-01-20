@@ -6,6 +6,7 @@ Item {
     id: containerParamDouble3D
     implicitWidth: 300
     implicitHeight: 30
+    y:10
 
     property variant paramObject: model.object
 
@@ -48,6 +49,8 @@ Item {
             border.width: 1
             border.color: "#444"
             radius: 3
+            clip: true
+
             TextInput{
                 id: paramDouble3Dinput1
                 text: paramObject.value1
@@ -96,6 +99,8 @@ Item {
             border.width: 1
             border.color: "#444"
             radius: 3
+            clip: true
+
             TextInput{
                 id: paramDouble3Dinput2
                 text: paramObject.value2
@@ -143,6 +148,8 @@ Item {
             border.width: 1
             border.color: "#444"
             radius: 3
+            clip: true
+
             TextInput{
                 id: paramDouble3Dinput3
                 text: paramObject.value3

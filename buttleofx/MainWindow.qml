@@ -131,8 +131,11 @@ ApplicationWindow {
         }
     }
 
+
     FinderLoadGraph{ id: finderLoadGraph }
     FinderSaveGraph{ id: finderSaveGraph }
+
+    property bool paramSelected
 
     menuBar: MenuBar {
         Menu {
@@ -460,7 +463,8 @@ ApplicationWindow {
             onButtonCloseClicked: {parent.visible = false; selectedView=-1}
         }
 
-        ParamEditor {
+
+        /*ParamTuttleEditor {
             id: paramEditor
             anchors.fill: parent
 
@@ -468,7 +472,22 @@ ApplicationWindow {
             currentParamNode: _buttleData.currentParamNodeWrapper
             onButtonCloseClicked: {parent.visible = false; selectedView=-1}
 
+        }*/
+        ParamTuttleEditor {
+            Layout.fillHeight: true
+            visible: paramSelected ? true:false
+            width: 300
+            params:_buttleData.currentParamNodeWrapper ? _buttleData.currentParamNodeWrapper.params : null
+            currentParamNode: _buttleData.currentParamNodeWrapper
         }
+
+        /*ParamButtleEditor {
+            Layout.minimumHeight: parent.height
+            visible: paramSelected ? false:true
+            width: 300
+            params:_buttleData.currentParamNodeWrapper ? _buttleData.currentParamNodeWrapper.params : null
+            currentParamNode: _buttleData.currentParamNodeWrapper
+        }*/
 
         Browser {
             id: browser

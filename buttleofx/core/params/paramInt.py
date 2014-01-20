@@ -25,6 +25,9 @@ class ParamInt(Param):
     def getParamType(self):
         return "ParamInt"
 
+    def getParamDoc(self):
+        return self._tuttleParam.getProperties().getStringProperty("OfxParamPropHint")
+
     def getDefaultValue(self):
         return self._tuttleParam.getProperties().getIntProperty("OfxParamPropDefault")
 

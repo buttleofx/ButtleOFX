@@ -38,9 +38,8 @@ class ConnectionManager(QtCore.QObject):
             return False
 
         # if the input clip is already taken : False
-        #if (clip1.getClipName() != "Output" and graph.contains(clip1, idclip1)) or (clip2.getClipName() != "Output" and graph.contains(clip2, idclip2)):
-           # print("8")
-            #return False
+        if (clip1.getClipName() != "Output" and graph.contains(clip1)) or (clip2.getClipName() != "Output" and graph.contains(clip2)):
+            return False
 
         # if the nodes containing the clips are already connected : False
         if(graph.nodesConnected(clip2, clip1)):

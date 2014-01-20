@@ -223,7 +223,7 @@ class Graph(object):
             Returns True if the clip is already connected, else False.
         """
         for connection in self._connections:
-            if (clip.getId() == connection.getClipOut().getId() or clip.getId() == connection.getClipIn().getId()):
+            if((clip.getNodeName() == connection.getClipOut().getNodeName() and clip.getClipName() == connection.getClipOut().getClipName()) or (clip.getNodeName() == connection.getClipIn().getNodeName() and clip.getClipName() == connection.getClipIn().getClipName())):
                 return True
         return False
 

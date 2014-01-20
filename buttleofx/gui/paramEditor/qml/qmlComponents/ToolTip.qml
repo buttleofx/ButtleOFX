@@ -13,8 +13,8 @@ Item{
 		radius: 3
 		width:text.contentWidth
 		height:text.contentHeight
-		x:15
-        y:20
+		x:30
+        y:30
 	}
 
 	Text{

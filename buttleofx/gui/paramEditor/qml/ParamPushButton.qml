@@ -1,5 +1,4 @@
 import QtQuick 2.0
-import "qmlComponents"
 
 Item {
     implicitWidth: 120
@@ -33,13 +32,6 @@ Item {
             anchors.horizontalCenter: parent.horizontalCenter
             y: 2
             font.pixelSize: 14
-
-            ToolTip{
-                id:tooltip
-                visible: false
-                paramHelp:paramObject.doc
-            }
-
             Component.onCompleted:
             {
                 pushButton.height = font.pixelSize + 6
@@ -49,19 +41,11 @@ Item {
         MouseArea {
             id: buttonmousearea
             anchors.fill: parent
-            hoverEnabled:true
-
             onPressed:
             {
                 pushButton.state = (pushButton.state == "enabled" ? "disabled" : "enabled")
                 // take the focus of the MainWindow
                 pushButton.forceActiveFocus()
-            }
-            onEntered: {
-                tooltip.visible=true
-            }
-            onExited: {
-                tooltip.visible=false
             }
         }
 

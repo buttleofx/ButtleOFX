@@ -2,6 +2,7 @@ import QtQuick 2.0
 import QtQuick.Controls 1.0
 import QtQuick.Layouts 1.0
 import QtQuick.Controls.Styles 1.0
+import "qmlComponents"
 
 //parent of the ParamEditor is the Row of the ButtleAp
 Item {
@@ -113,6 +114,30 @@ Item {
                                 source : model.object.paramType + ".qml"
                                 width: parent.width
                                 x: 15 // here is the distance to the left of the listview
+                                z:0
+
+                                ToolTip{
+                                    id:tooltip
+                                    visible: false
+                                    paramHelp: model.object.doc
+                                    z:param.z+1
+                                }
+                                MouseArea {
+                                    anchors.fill: parent
+                                    acceptedButtons: Qt.RightButton               
+                                    hoverEnabled:true
+                                    onClicked: {
+                                        model.object.hasChanged = false
+                                        model.object.value = model.object.getDefaultValue()
+                                        model.object.pushValue(model.object.value)
+                                    }
+                                    onEntered: {
+                                        tooltip.visible=true
+                                    }
+                                    onExited: {
+                                        tooltip.visible=false
+                                    }
+                                }
                             }
                         }
                     }//Listview

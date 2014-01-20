@@ -37,14 +37,29 @@ class ConnectionManager(QtCore.QObject):
         if (clip1.getClipName() == "Output" and clip2.getClipName() == "Output") or (clip1.getClipName() != "Output" and clip2.getClipName() != "Output"):
             return False
 
-        # if the input clip is already taken : False
-        if (clip1.getClipName() != "Output" and graph.contains(clip1)) or (clip2.getClipName() != "Output" and graph.contains(clip2)):
-            return False
-
         # if the nodes containing the clips are already connected : False
         if(graph.nodesConnected(clip2, clip1)):
             return False
         return True
+        
+    @QtCore.pyqtSlot(QtCore.QObject, QtCore.QObject, result=bool)
+    def canReplace(self, clip1, clip2):
+        """
+            Returns True if the connection between the nodes is possible, else False.
+            A connection is possible if the clip isn't already taken, and if the clips are from 2 different nodes, not already connected.
+        """
+        
+        buttleData = ButtleDataSingleton().get()
+        graph = buttleData.getGraph()
+
+        # if the input clip is already taken : False
+        if (clip1.getClipName() != "Output" and graph.contains(clip1)) or (clip2.getClipName() != "Output" and graph.contains(clip2)):
+            return True
+        
+        if (clip1.getClipName() != "Source" and graph.contains(clip1)) or (clip2.getClipName() != "Source" and graph.contains(clip2)):
+            return True
+            
+        return False
 
     @QtCore.pyqtSlot(str, QtCore.QObject, int, result=bool)
     def canConnectTmpNodes(self, dataTmpClip, clip, clipIndex):

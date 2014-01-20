@@ -10,6 +10,7 @@ Rectangle {
     property variant nodeRoot
     property alias clipSize: m.clipSize
     property bool accept: false
+    property bool replace: false
 
     property bool readOnly
     property real miniatureScale
@@ -87,15 +88,19 @@ Rectangle {
                 clipOut = drag.source.clipWrapper
                 clipIn = m.clipWrapper
             }
-            if(accept)
+            if(accept && !replace)
                 _buttleManager.connectionManager.connectWrappers(clipOut, clipIn)
         }
         onEntered: {
             accept = _buttleManager.connectionManager.canConnect(m.clipWrapper, drag.source.clipWrapper)
-            if(accept)
+            replace = _buttleManager.connectionManager.canReplace(m.clipWrapper, drag.source.clipWrapper)
+            if(accept){
                 dropHandle.state = "entereddrop"
-            else
-                dropHandle.state = "cantconnect"
+            }else{
+                    dropHandle.state = "cantconnect"
+            }
+            if(replace && accept)
+                dropHandle.state = "canreplace"
         }
         onExited: {
             // Erase the handle
@@ -132,6 +137,14 @@ Rectangle {
                   target: dropVisualHandle
                   opacity: 0.6
                   color: "red"
+               }
+            },
+            State {
+               name: "canreplace"
+               PropertyChanges {
+                  target: dropVisualHandle
+                  opacity: 0.6
+                  color: "yellow"
                }
             }
         ]

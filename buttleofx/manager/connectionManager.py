@@ -177,7 +177,7 @@ class ConnectionManager(QtCore.QObject):
         self.connect(id_clipOut, id_clipIn)
         
     @QtCore.pyqtSlot(QtCore.QObject, QtCore.QObject, QtCore.QObject, QtCore.QObject, QtCore.QObject)
-    def dissociateConnection(self, clipOut, clipIn, middleIn, middleOut, connectionWrapper):
+    def dissociate(self, clipOut, clipIn, middleIn, middleOut, connectionWrapper):
         id_clipOut = IdClip(clipOut.getNodeName(), clipOut.getClipName())
         id_clipIn = IdClip(clipIn.getNodeName(), clipIn.getClipName())
         id_middleIn = IdClip(middleIn.getNodeName(), middleIn.getClipName())
@@ -186,6 +186,20 @@ class ConnectionManager(QtCore.QObject):
         self.connect(id_clipOut, id_middleIn)
         self.connect(id_middleOut, id_clipIn)
         self.disconnect(connectionWrapper)
+      
+    @QtCore.pyqtSlot(QtCore.QObject, QtCore.QObject, QtCore.QObject)
+    def replace(self, clip, clipOut, clipIn):
+        buttleData = ButtleDataSingleton().get()
+        for connection in  buttleData.getGraph()._connections:
+            if((clip.getNodeName() == connection.getClipOut().getNodeName() and clip.getClipName() == connection.getClipOut().getClipName()) or (clip.getNodeName() == connection.getClipIn().getNodeName() and clip.getClipName() == connection.getClipIn().getClipName())):
+                buttleData.getGraph().deleteConnection(connection)
+                
+        id_clipOut = IdClip(clipOut.getNodeName(), clipOut.getClipName())
+        id_clipIn = IdClip(clipIn.getNodeName(), clipIn.getClipName())
+        self.connect(id_clipOut, id_clipIn)
+        
+        return False
+        
     ############### CREATION AND DESTRUCTION ###############
 
     def connect(self, clipOut, clipIn):

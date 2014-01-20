@@ -90,6 +90,9 @@ Rectangle {
             }
             if(accept && !replace)
                 _buttleManager.connectionManager.connectWrappers(clipOut, clipIn)
+
+            if(accept && replace)
+                _buttleManager.connectionManager.replace(m.clipWrapper, clipOut, clipIn)
         }
         onEntered: {
             accept = _buttleManager.connectionManager.canConnect(m.clipWrapper, drag.source.clipWrapper)

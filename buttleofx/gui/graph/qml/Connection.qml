@@ -94,7 +94,7 @@ Item {
                 if(drop.source.nodeWrapper !== undefined && drop.source.nodeWrapper.name != clipIn.nodeName && drop.source.nodeWrapper.name != clipOut.nodeName){
                         drop.accept()
                         //Create two connections from one and delete the previous one
-                        _buttleManager.connectionManager.dissociateConnection(clipOut, clipIn, drop.source.nodeWrapper.getClip("Source"), drop.source.nodeWrapper.getClip(drop.source.nodeWrapper.outputClip.name), m.connectionWrapper)
+                        _buttleManager.connectionManager.dissociate(clipOut, clipIn, drop.source.nodeWrapper.getClip("Source"), drop.source.nodeWrapper.getClip(drop.source.nodeWrapper.outputClip.name), m.connectionWrapper)
                 }
                 dropIndicator.state = ""
 

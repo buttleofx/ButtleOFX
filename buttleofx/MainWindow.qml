@@ -8,8 +8,10 @@ import QuickMamba 1.0
 import "gui/graph/qml"
 import "gui/viewer/qml"
 import "gui/paramEditor/qml"
+import "gui/helper"
 
 ApplicationWindow {
+    title:"ButtleOFX"
     width: 1200
     height: 800
     id: mainWindowQML
@@ -128,7 +130,29 @@ ApplicationWindow {
         }
     }
 
-    property bool paramSelected
+    property bool editNode:false
+    property bool docSelected:false
+
+    //Window of hint for plugins
+    PluginWindow {
+        title: "Plugin's Documentation"
+        visible: docSelected
+    }
+
+    //Node properties window
+
+    ApplicationWindow{
+        title: "Node Properties"
+        visible: editNode ? true:false
+        maximumHeight: 150
+        maximumWidth: 280
+        minimumHeight: maximumHeight
+        minimumWidth: maximumWidth
+        ParamButtleEditor {
+            params:_buttleData.currentParamNodeWrapper ? _buttleData.currentParamNodeWrapper.params : null
+            currentParamNode: _buttleData.currentParamNodeWrapper
+        }
+    }
 
     menuBar: MenuBar {
         Menu {
@@ -238,6 +262,19 @@ ApplicationWindow {
                 onObjectRemoved: nodesMenu.removeItem(object)
             }
         }
+        Menu {
+            id: help
+            title: "Help"
+
+            MenuItem {
+                text: "Shortcut"
+            }
+            MenuItem {
+                text: "Plugin's Documentation"
+                onTriggered: docSelected=true
+            }
+        }
+
 
 /* A revoir
         Menu {
@@ -360,16 +397,7 @@ ApplicationWindow {
 
                 ParamTuttleEditor {
                     Layout.fillHeight: true
-                    visible: paramSelected ? true:false
-                    width: 300
-                    params:_buttleData.currentParamNodeWrapper ? _buttleData.currentParamNodeWrapper.params : null
-                    currentParamNode: _buttleData.currentParamNodeWrapper
-                }
-
-                ParamButtleEditor {
-                    Layout.minimumHeight: parent.height
-                    visible: paramSelected ? false:true
-                    width: 300
+                    width: 350
                     params:_buttleData.currentParamNodeWrapper ? _buttleData.currentParamNodeWrapper.params : null
                     currentParamNode: _buttleData.currentParamNodeWrapper
                 }

@@ -137,6 +137,7 @@ ApplicationWindow {
     PluginWindow {
         title: "Plugin's Documentation"
         visible: docSelected
+        currentParamNode: _buttleData.currentParamNodeWrapper
     }
 
     //Node properties window

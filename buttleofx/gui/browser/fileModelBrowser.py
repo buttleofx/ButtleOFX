@@ -106,6 +106,7 @@ class FileModelBrowser(QtQuick.QQuickItem):
         except Exception:
             pass
         self._fileItemsModel.setObjectList(self._fileItems)
+        #self._fileItemsModel.setObjectList(self._fileItems.sort(key=lambda fileItem: fileItem.fileName))
         
     @QtCore.pyqtSlot(str, result=QtCore.QObject)
     def getFilteredFileItems(self, fileFilter):
@@ -120,9 +121,19 @@ class FileModelBrowser(QtQuick.QQuickItem):
         except Exception:
             pass
         return suggestions
+        #return suggestions.sort(key=lambda fileItem: fileItem.fileName)
     
     _fileItems = []
     _fileItemsModel = None
+    
+    @QtCore.pyqtSlot(result=QtCore.QObject)
+    def getSelectedItems(self):
+        selectedList = QObjectListModel(self)
+        for item in self._fileItems:
+            if item.isSelected == True:
+                selectedList.append(item)
+
+        return selectedList
     
     def getFileItems(self):
         return self._fileItemsModel
@@ -136,12 +147,17 @@ class FileModelBrowser(QtQuick.QQuickItem):
             self._fileItems[index].isSelected = True
         else:
             print("not index", len(self._fileItems))
-    
-#    class NameFilter():
-#        """ Enum """
-#        All = '*'
-#        Jpeg = '.jpg'
-#        Png = 'png'
+
+    @QtCore.pyqtSlot(int)
+    def selectItems(self, index):
+        if index < len(self._fileItems):
+            self._fileItems[index].isSelected = True
+            
+    @QtCore.pyqtSlot(int, int)
+    def selectItemsByShift(self, begin, end):
+        for i in range(begin, end + 1):
+            if i < len(self._fileItems):
+                self._fileItems[i].isSelected = True
     
     def getFilter(self):
         return self._nameFilter

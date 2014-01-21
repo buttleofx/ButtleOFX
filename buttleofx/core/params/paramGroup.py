@@ -17,6 +17,9 @@ class ParamGroup(Param):
     def getParamType(self):
         return "ParamGroup"
 
+    def getParamDoc(self):
+        return self._tuttleParam.getProperties().getStringProperty("OfxParamPropHint")
+
     def getLabel(self):
         return self._tuttleParam.getProperties().fetchProperty("OfxPropLabel").getStringValue(0)
     

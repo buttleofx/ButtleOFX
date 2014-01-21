@@ -49,8 +49,6 @@ Rectangle {
         enabled: !readOnly
         acceptedButtons: Qt.LeftButton | Qt.RightButton | Qt.MidButton
         onPressed: {
-            console.log("node wrapper x : "+ m.nodeWrapper.coord.x)
-            console.log("node x : "+parent.x)
             // left button : we change the current selected nodes & we start moving
             if (mouse.button == Qt.LeftButton) {
                 // we clear the list of selected connections
@@ -73,7 +71,9 @@ Rectangle {
 
             // right button : we change the current param node
            else if (mouse.button == Qt.RightButton) {
-                // here display contextual menu
+                // Param buttle
+                editNode = true
+                _buttleData.currentParamNodeWrapper = m.nodeWrapper
             }
 
             // take the focus
@@ -97,11 +97,11 @@ Rectangle {
                 _buttleData.assignNodeToViewerIndex(m.nodeWrapper, 0)
                 _buttleEvent.emitViewerChangedSignal()
             }
-
         }
 
         // double click : we change the current param node
         onDoubleClicked: {
+            editNode = false
             _buttleData.currentParamNodeWrapper = m.nodeWrapper
         }
 

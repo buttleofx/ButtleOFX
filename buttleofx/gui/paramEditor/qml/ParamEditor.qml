@@ -1,6 +1,7 @@
 import QtQuick 2.0
 import QtQuick.Controls 1.0
 import QtQuick.Layouts 1.0
+import QtQuick.Controls.Styles 1.0
 
 import "../../../gui"
 
@@ -48,14 +49,14 @@ Item {
             id: tuttleParams
             height: 500
             width: parent.width
-            color: paramEditor.background           
+            color: paramEditor.background
 
             /* Params depend on the node type (Tuttle data)*/
             Item {
                 id: tuttleParamContent
                 height: parent.height - tuttleParamTitle.height
                 width: parent.width
-                y: tuttleParamTitle.height
+                y: tuttleParamTitle.height + 5
 
                 property string lastGroupParam : "No Group."
 
@@ -65,6 +66,48 @@ Item {
                     anchors.bottomMargin: 5
                     height: 110
                     width: 110
+
+                    style: ScrollViewStyle {
+                        scrollBarBackground: Rectangle {
+                            id: scrollBar
+                            width:15
+                            color: "#212121"
+                            border.width: 1
+                            border.color: "#333"
+                        }
+                        decrementControl : Rectangle {
+                            id: scrollLower
+                            width:15
+                            height:15
+                            color: styleData.pressed? "#212121" : "#343434"
+                            border.width: 1
+                            border.color: "#333"
+                            radius: 3
+                            Image{
+                                id: arrow
+                                source: "file:///" + _buttleData.buttlePath + "/gui/img/buttons/params/arrow2.png"
+                                x:4
+                                y:4
+                            }
+                        }
+                        incrementControl : Rectangle {
+                            id: scrollHigher
+                            width:15
+                            height:15
+                            color: styleData.pressed? "#212121" : "#343434"
+                            border.width: 1
+                            border.color: "#333"
+                            radius: 3
+                            Image{
+                                id: arrow
+                                source: "file:///" + _buttleData.buttlePath + "/gui/img/buttons/params/arrow.png"
+                                x:4
+                                y:4
+                            }
+                        }
+                    }
+
+
                     //frame: false
                     // frameWidth: 0
                     ListView {
@@ -76,7 +119,7 @@ Item {
                         interactive: false
 
                         model: params
-                        
+
                         delegate: Component {
                             Loader {
                                 id: param
@@ -146,6 +189,8 @@ Item {
 
             Loader {
                 sourceComponent: currentParamNode ? nodeParamComponent : undefined
+                anchors.top: parent.top
+                anchors.topMargin: 50
                 Component {
                     id: nodeParamComponent
                     Column {
@@ -214,7 +259,7 @@ Item {
                                 }
                             }
                         }
-                    
+
                         /* Type of the node (Buttle data) */
                         Item {
                             id: nodeTypeItem
@@ -240,6 +285,7 @@ Item {
                                 Rectangle{
                                     height: 20
                                     implicitWidth: 200
+                                    clip: true
                                     color: "transparent"
                                     Text{
                                         id: nodeTypeInput

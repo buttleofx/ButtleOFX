@@ -124,6 +124,9 @@ class Node(object):
     def getPluginVersion(self):
         return self._tuttleNode.getVersionStr()
 
+    def getPluginDescription(self):
+        return self._tuttleNode.getProperties().getStringProperty("OfxPropPluginDescription")
+
     ######## setters ########
 
     def setName(self, name):

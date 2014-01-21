@@ -92,7 +92,7 @@ Rectangle {
         height: parent.height * zoomCoeff
         color: "transparent"
 
-        Item {
+        /*Item {
             id: repere
             property color repereColor: "red"
             property double size: 50 * zoomCoeff
@@ -114,7 +114,7 @@ Rectangle {
                 height: 2 * repere.size + repere.thickness
                 color: repere.repereColor
             }
-        }
+        }*/
 
         Item {
             id: nodes

@@ -11,7 +11,6 @@ Rectangle {
     property alias clipSize: m.clipSize
     property bool accept: false
     property bool replace: false
-    property bool enabled: m.enabled
 
     property bool readOnly
     property real miniatureScale
@@ -22,7 +21,6 @@ Rectangle {
         property variant clipWrapper
         property double clipSize: 9
         property double radius: 0.5 * clipRoot.clipSize
-        property bool enabled: true
     }
 
     objectName: "qmlClip_" + m.clipWrapper.fullName
@@ -92,14 +90,10 @@ Rectangle {
             }
             if(accept && !replace){
                 _buttleManager.connectionManager.connectWrappers(clipOut, clipIn)
-                drag.source.enabled = false
-                m.enabled = false
             }
 
             if(accept && replace){
                 _buttleManager.connectionManager.replace(m.clipWrapper, clipOut, clipIn)
-                drag.source.enabled = false
-                m.enabled = false
             }
 
         }
@@ -182,8 +176,6 @@ Rectangle {
         onReleased: {
             var dropStatus = handle.Drag.drop()
             connections.tmpConnectionExists = false
-            if (dropStatus !== Qt.IgnoreAction)
-                console.log("Clip connexion accepted!")
         }
 
         // Invisble rectangle which is dragged from an output to an input

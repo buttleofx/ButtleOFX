@@ -40,7 +40,7 @@ Item {
     // Container of the paramEditors
     Rectangle{
         id: contentParamEditor
-        height: parent.height - paramTitle.height
+        height: parent.height - paramTitle.height - addNode.height
         width: parent.width
         y: paramTitle.height
         color: "#141414"
@@ -48,7 +48,9 @@ Item {
         // scroll all the parameditors
         ScrollView {
             id: scrollParam
-            anchors.fill: parent
+            //anchors.fill: parent
+            width : parent.width
+            height: parent.height
             anchors.topMargin: 5
             anchors.bottomMargin: 5
 
@@ -58,30 +60,6 @@ Item {
                 //anchors.fill: parent
                 model: _buttleData.editedNodesWrapper
                 delegate: paramDelegate
-            }
-
-        }
-
-        MouseArea{
-            id: addNode
-            y : listViewParam.height
-            width : parent.width
-            height : imageAddNode.height + 120
-            //color : "transparent"
-
-
-
-            Image{
-                id: imageAddNode
-                //anchors.verticalCenter: parent.verticalCenter
-                anchors.horizontalCenter: parent.verticalCenter
-                source: _buttleData.buttlePath +  "/gui/img/buttons/tools/plus.png"
-
-            }
-
-            onClicked : {
-                console.log("Clic on Add a Node!")
-
             }
 
         }
@@ -100,6 +78,31 @@ Item {
                 }
 
             }
+        }
+
+    }
+
+    // Add a node
+    MouseArea{
+        id: addNode
+        y : listViewParam.height + paramTitle.height
+        width : parent.width
+        height : imageAddNode.height + 30
+        //anchors.fill: parent
+        //color : "transparent"
+
+        Image{
+            id: imageAddNode
+            width: 30
+            height : 30
+            anchors.verticalCenter: parent.verticalCenter
+            anchors.horizontalCenter: parent.horizontalCenter
+            source: _buttleData.buttlePath +  "/gui/img/buttons/tools/plus.png"
+
+        }
+
+        onClicked : {
+            console.log("Clic on Add a Node!")
         }
 
     }

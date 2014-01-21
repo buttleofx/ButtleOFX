@@ -106,6 +106,7 @@ class FileModelBrowser(QtQuick.QQuickItem):
         except Exception:
             pass
         self._fileItemsModel.setObjectList(self._fileItems)
+        #self._fileItemsModel.setObjectList(self._fileItems.sort(key=lambda fileItem: fileItem.fileName))
         
     @QtCore.pyqtSlot(str, result=QtCore.QObject)
     def getFilteredFileItems(self, fileFilter):
@@ -120,6 +121,7 @@ class FileModelBrowser(QtQuick.QQuickItem):
         except Exception:
             pass
         return suggestions
+        #return suggestions.sort(key=lambda fileItem: fileItem.fileName)
     
     _fileItems = []
     _fileItemsModel = None

@@ -7,7 +7,6 @@ Rectangle {
     property string port
     property alias clipWrapper: m.clipWrapper
     property variant graphRoot
-    //nodeRoot est récupéré de Node.qml, il désigne le node auquel appartient le clip
     property variant nodeRoot
     property alias clipSize: m.clipSize
     property bool accept: false

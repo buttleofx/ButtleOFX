@@ -2,14 +2,17 @@ import QtQuick 2.0
 import QtQuick.Controls 1.0
 import QtQuick.Layouts 1.0
 import QtQml 2.1
-
 import QuickMamba 1.0
+import QtQuick.Dialogs 1.0
 
 import "gui/graph/qml"
 import "gui/viewer/qml"
 import "gui/paramEditor/qml"
+import "gui/browser/qml"
 
 ApplicationWindow {
+    property int selectedView : 1
+
     width: 1200
     height: 800
     id: mainWindowQML
@@ -56,11 +59,11 @@ ApplicationWindow {
         }
         if ((event.key == Qt.Key_S) && (event.modifiers & Qt.ControlModifier)){
             if(_buttleData.graphCanBeSaved) {
-                graphEditor.doAction("save")
+                finderSaveGraph.open()
             }
         }
         if ((event.key == Qt.Key_O) && (event.modifiers & Qt.ControlModifier)){
-            graphEditor.doAction("load")
+            finderLoadGraph.open()
         }
 
         // Viewer
@@ -130,6 +133,10 @@ ApplicationWindow {
 
     property bool paramSelected
 
+    FinderLoadGraph{ id: finderLoadGraph }
+    FinderSaveGraph{ id: finderSaveGraph }
+
+
     menuBar: MenuBar {
         Menu {
             title: "File"
@@ -137,7 +144,7 @@ ApplicationWindow {
             MenuItem {
                 text: "Open"
                 shortcut: "Ctrl+O"
-                onTriggered: graphEditor.doAction("load")
+                onTriggered: finderLoadGraph.open()
             }
 
             MenuItem {
@@ -145,7 +152,7 @@ ApplicationWindow {
                 shortcut: "Ctrl+S"
                 onTriggered:
                     if(_buttleData.graphCanBeSaved) {
-                        graphEditor.doAction("save")
+                        finderSaveGraph.open()
                     }
             }
 
@@ -231,18 +238,75 @@ ApplicationWindow {
                 model: _buttleData.pluginsIdentifiers
                 MenuItem {
                     text: object
-                    onTriggered: _buttleManager.nodeManager.creationNode(object, 0, 0)
+                    onTriggered: _buttleManager.nodeManager.creationNode(_buttleData.graph, object, 0, 0)
                 }
                 onObjectAdded: nodesMenu.insertItem(index, object)
                 onObjectRemoved: nodesMenu.removeItem(object)
             }
         }
 
-    }
+        Menu {
+            title: "View"
 
+            MenuItem {
+                text: "Default"
+                onTriggered: selectedView = 1
+            }
 
+            MenuItem {
+                text: "Browser Mode"
+                onTriggered: selectedView = 2
+            }
 
-    //this rectangle represents the zone under the menu, it allows to define the anchors.fill and margins for the SplitterRow
+            MenuItem {
+                text: "Mikros Mode"
+                onTriggered: selectedView = 3
+            }
+
+            MenuSeparator { }
+
+            MenuItem {
+                text: "Browser"
+                checkable: true
+                checked: browser.parent.visible==true ? true : false
+                onTriggered: browser.parent.visible == false ? browser.parent.visible=true : browser.parent.visible=false
+            }
+
+            MenuItem {
+                text: "Viewer"
+                checkable: true
+                checked: player.parent.visible==true ? true : false
+                onTriggered: player.parent.visible == false ? player.parent.visible=true : player.parent.visible=false
+            }
+
+            MenuItem {
+                text: "Graph"
+                checkable: true
+                checked: graphEditor.parent.visible==true ? true : false
+                onTriggered: graphEditor.parent.visible == false ? graphEditor.parent.visible=true : graphEditor.parent.visible=false
+            }
+
+            MenuItem {
+                text: "Parameters"
+                checkable: true
+                checked: paramEditor.parent.visible==true ? true : false
+                onTriggered: paramEditor.parent.visible == false ? paramEditor.parent.visible=true : paramEditor.parent.visible=false
+            }
+        }
+	}
+/* A revoir
+        Menu {
+            title: "Add"
+
+            MenuItem {
+                text: "New Node"
+                onTriggered: _addMenu.showMenu(parent.x, mainMenu.height)
+            }
+        }
+*/
+
+    
+   //this rectangle represents the zone under the menu, it allows to define the anchors.fill and margins for the SplitterRow
     Rectangle {
         id: modulsContainer
         width: parent.width
@@ -255,40 +319,133 @@ ApplicationWindow {
             orientation: Qt.Horizontal
 
             SplitView {
-                implicitWidth: 0.7*parent.width
+                id: leftColumn
+                implicitWidth: 0.3 * parent.width
                 implicitHeight: parent.height
                 orientation: Qt.Vertical
                 Layout.fillWidth: true
+                Layout.minimumWidth: 200
 
-                Player {
-                    id: player
-                    Layout.minimumHeight: 200
+                visible: visibleChildren==0 ? false : true
+
+                Rectangle {
+                    id: topLeftView
+                    color: "#353535"
+                    Layout.minimumHeight: visible ? 200 : 0
                     Layout.fillHeight: true
                     implicitWidth: parent.width
 
-                    node: _buttleData.currentViewerNodeWrapper
-                }
+                    children:
+                        switch(selectedView){
+                            case 1:
+                                visible = true
+                                browser
+                                break
+                            case 2:
+                            case 3:
+                                visible = true
+                                player
+                                break
+                            default:
+                                break
+                        }
+                }//topLeftView
 
-                GraphEditor {
-                    id: graphEditor
-
+                Rectangle {
+                    id: bottomLeftView
+                    color: "#353535"
                     Layout.minimumHeight: 200
                     Layout.fillHeight: true
-                    implicitHeight: 0.4 * parent.height
                     implicitWidth: parent.width
+                    implicitHeight: topLeftView.visible ? 0.5 * parent.height : parent.height
                     z: -1
-                }
-            }
 
-            ParametersEditor {
-                Layout.minimumWidth: 100
-                Layout.maximumWidth: 550
-                Layout.fillHeight: true
+                    children:
+                        switch(selectedView){
+                            case 1:
+                            case 2:
+                                visible = true
+                                paramEditor
+                                break
+                            case 3:
+                                visible = true
+                                browser
+                                break
+                            default:
+                                break
+                        }
+                }//bottomLeftView
+            }//leftColumn
+
+            SplitView {
+                id: rightColumn
+                implicitWidth: 0.7 * parent.width
                 implicitHeight: parent.height
-                //width: 0.3*parent.width
-                //params: _buttleData.currentParamNodeWrapper ? _buttleData.currentParamNodeWrapper.params : null
-                //currentParamNode: _buttleData.currentParamNodeWrapper
-            }
+                orientation: Qt.Vertical
+                Layout.fillWidth: true
+                Layout.minimumWidth: 200
+
+                visible: visibleChildren==0 ? false : true
+
+                Rectangle {
+                    id: topRightView
+                    color: "#353535"
+                    Layout.minimumHeight: visible ? 200 : 0
+                    Layout.fillHeight: true
+                    implicitWidth: parent.width
+
+                    children:
+                        switch(selectedView){
+                            case 1:
+                                visible = true
+                                player
+                                break
+                            case 2:
+                                visible = true
+                                browser
+                                break
+                            case 3:
+                                visible = true
+                                paramEditor
+                                break
+                            default:
+                                break
+                        }
+                }//topRightView
+
+                Rectangle {
+                    id: bottomRightView
+                    color: "#353535"
+                    Layout.minimumHeight: 200
+                    Layout.fillHeight: true
+                    implicitWidth: parent.width
+                    implicitHeight: topRightView.visible ? 0.5 * parent.height : parent.height
+                    z: -1
+
+
+
+                    children:
+                        switch(selectedView){
+                            case 1:
+                            case 2:
+                                visible = true
+                                rightColumn.implicitWidth = 0.7 * rightColumn.parent.width
+                                graphEditor
+                                break
+                            case 3:
+                                visible = false
+                                rightColumn.implicitWidth = 0.3 * rightColumn.parent.width
+                                break
+                            default:
+                                break
+                        }
+                }//bottomRightView
+            }//rightColumn
+        }//splitview
+    }//modulsContainer
+
+	
+
 			/*SplitView {
                 implicitWidth: 0.7*parent.width
                 implicitHeight: parent.height
@@ -310,6 +467,45 @@ ApplicationWindow {
                     params:_buttleData.currentParamNodeWrapper ? _buttleData.currentParamNodeWrapper.params : null
                     currentParamNode: _buttleData.currentParamNodeWrapper
                 }*/
+
+    Item {
+        id: subviews
+        visible: false
+
+        Player {
+            id: player
+            anchors.fill: parent
+            node: _buttleData.currentViewerNodeWrapper
+            onButtonCloseClicked: {parent.visible = false; selectedView=-1}
+        }
+
+        GraphEditor {
+            id: graphEditor
+            anchors.fill: parent
+            onButtonCloseClicked: {parent.visible = false; selectedView=-1}
+        }
+
+        ParamTuttleEditor {
+            //id: paramEditor
+            anchors.fill: parent
+            params: _buttleData.currentParamNodeWrapper ? _buttleData.currentParamNodeWrapper.params : null
+            currentParamNode: _buttleData.currentParamNodeWrapper
+            //onButtonCloseClicked: {parent.visible = false; selectedView=-1}
+        }
+
+        ParametersEditor {
+            id: paramEditor
+            Layout.minimumWidth: 100
+            Layout.maximumWidth: 550
+            Layout.fillHeight: true
+            implicitHeight: parent.height
+
+        }
+
+        Browser {
+            id: browser
+            anchors.fill: parent
+            onButtonCloseClicked: {parent.visible = false; selectedView=-1}
         }
     }
 }

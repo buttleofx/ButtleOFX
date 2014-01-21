@@ -43,6 +43,8 @@ from buttleofx.event import ButtleEventSingleton
 from buttleofx.data import Finder
 #TimerPlayer
 from buttleofx.gui.viewer import TimerPlayer
+#FileModelBrowser
+from buttleofx.gui.browser import FileModelBrowser
 # undo_redo
 from buttleofx.core.undo_redo.manageTools import CommandManager
 # Menu
@@ -89,8 +91,11 @@ def main(argv, app):
 
     # give to QML acces to TimerPlayer defined in buttleofx/gui/viewer
     QtQml.qmlRegisterType(TimerPlayer, "TimerPlayer", 1, 0, "TimerPlayer")
+    # give to QML access to FileModelBrowser defined in buttleofx/gui/browser
+    QtQml.qmlRegisterType(FileModelBrowser, "ButtleFileModel", 1, 0, "FileModelBrowser")
     # add new QML type
     QtQml.qmlRegisterType(Finder, "FolderListViewItem", 1, 0, "FolderListView")
+    
     if tuttleofx_installed:
         QtQml.qmlRegisterType(GLViewport_tuttleofx, "Viewport", 1, 0, "GLViewport")
     else:

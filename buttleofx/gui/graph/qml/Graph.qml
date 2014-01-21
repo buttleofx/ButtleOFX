@@ -51,9 +51,32 @@ Rectangle {
         }
     }
     */
+
+    // Drag&Drop from outside the app
+    DropArea {
+        id: graphDropArea
+        anchors.fill: parent
+        keys: ["text/uri-list"]
+
+        onDropped: {
+            if( ! drop.hasUrls )
+            {
+                drop.accepted = false
+                return
+            }
+
+            for(var urlIndex in drop.urls)
+            {
+                _buttleManager.nodeManager.dropFile(drop.urls[urlIndex], drag.x - m.graphRoot.originX, drag.y - m.graphRoot.originY)
+            }
+            drop.accepted = true
+        }
+    }
+
+    // Drag&Drop from Browser to Graph
     DropArea {
         anchors.fill: parent
-        keys: "fileDrag"
+        keys: "internFileDrag"
 
         onDropped: {
             _buttleManager.nodeManager.dropFile(drag.source.filePath, drag.x - m.graphRoot.originX, drag.y - m.graphRoot.originY)

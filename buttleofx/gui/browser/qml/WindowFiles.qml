@@ -52,7 +52,20 @@ Rectangle {
                     Drag.active: mouseRegionImage.drag.active
                     Drag.hotSpot.x: 20
                     Drag.hotSpot.y: 20
-                    Drag.keys: "fileDrag"
+                    //Drag.dragType: Drag.Automatic
+                    Drag.mimeData: {"urls": [file.filePath]}
+                    //Drag.mimeData: {"text/plain": file.filePath, "text/uri-list": ""}
+                    // Drag.keys: "text/uri-list"
+                    Drag.keys: "internFileDrag"
+
+                    StateGroup {
+                        id: fileState
+                        states: State {
+                            name: "dragging"
+                            when: mouseRegionImage.pressed
+                            PropertyChanges { target: file; x: file.x; y: file.y }
+                        }
+                    }
 
                     Image {
                         x: 25
@@ -60,21 +73,13 @@ Rectangle {
                         sourceSize.width: 40
                         sourceSize.height: 40
 
-                        /*StateGroup {
-                            id: fileState
-                            states: State {
-                                name: "dragging"
-                                when: mouseRegionImage.pressed
-                                PropertyChanges { target: file; x: file.x; y: file.y }
-                            }
-                        }*/
-
                         anchors.horizontalCenter: parent.horizontalCenter
 
 
                         MouseArea {
                             id: mouseRegionImage
                             anchors.fill : parent
+
                             onClicked: {
                                 gridview.currentIndex = index
                                 fileModel.selectItem(index)
@@ -129,7 +134,7 @@ Rectangle {
                                 }
                             }
 
-                            hoverEnabled: true
+                            // hoverEnabled: true
                             onReleased: file.Drag.drop()
                             drag.target: file
                         }

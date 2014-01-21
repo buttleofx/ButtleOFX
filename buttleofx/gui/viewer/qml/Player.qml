@@ -260,6 +260,7 @@ Item {
                             Drag.active: mosquitoMouseArea.drag.active
                             Drag.hotSpot.x: 14
                             Drag.hotSpot.y: 14
+                            //Drag.dragType: Drag.Automatic
                             Drag.keys: "mosquitoMouseArea"
 
                             MouseArea {

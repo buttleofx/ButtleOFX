@@ -135,6 +135,12 @@ class ButtleData(QtCore.QObject):
         """
         return self._currentViewerIndex
 
+    def getEditedNodesWrapper(self):
+        """
+            Returns the total of param nodeWrapper.
+        """
+        return self._graphWrapper.getNodeWrappers()
+
     @QtCore.pyqtSlot(int, result=QtCore.QObject)
     def getNodeWrapperByViewerIndex(self, index):
         """
@@ -536,6 +542,9 @@ class ButtleData(QtCore.QObject):
 
     currentViewerIndexChanged = QtCore.pyqtSignal()
     currentViewerIndex = QtCore.pyqtProperty(int, getCurrentViewerIndex, setCurrentViewerIndex, notify=currentViewerIndexChanged)
+
+    # total of the nodes
+    editedNodesWrapper = QtCore.pyqtProperty(QtCore.QObject, getEditedNodesWrapper, constant=True)
 
     # paste possibility
     pastePossibilityChanged = QtCore.pyqtSignal()

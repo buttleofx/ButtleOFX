@@ -20,6 +20,10 @@ Rectangle {
         property variant selected
     }
 
+    ListModel {
+        id: listPrevious
+    }
+
     focus: true
 
     Tab {
@@ -41,6 +45,7 @@ Rectangle {
 
            	z: files.z + 1
 
+            listPrevious: listPrevious
             parentFolder: m.fileFolder
             folder: m.directory
             onChangeFolder: {
@@ -69,6 +74,7 @@ Rectangle {
                 viewGrid: check.checked
                 folder: m.directory
                 onGoToFolder: {
+                    listPrevious.append({"url": m.directory})
                     console.debug("folder has changed to " + newFolder)
                     m.directory= newFolder
                 }
@@ -106,6 +112,7 @@ Rectangle {
                 m.filter = newFilter
             }
             onOpenFolder: {
+                listPrevious.append({"url": m.directory})
                 console.debug("folder has changed to " + newFolder)
                 m.directory = newFolder
             }

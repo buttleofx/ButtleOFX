@@ -44,7 +44,6 @@ Rectangle {
                 {
                     console.debug("selected: " + i + " -> " + selected.get(i).fileName)
                     footer.fileType == "Folder" ? footer.openFolder(fileName) : Qt.openUrlExternally("file:///" + selected.get(i).filepath)
-                    console.debug("Open " + fileName)
                 }
             }
 		}

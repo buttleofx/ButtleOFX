@@ -11,6 +11,7 @@ Rectangle {
     property alias clipSize: m.clipSize
     property bool accept: false
     property bool replace: false
+    property bool enabled: m.enabled
 
     property bool readOnly
     property real miniatureScale
@@ -21,6 +22,7 @@ Rectangle {
         property variant clipWrapper
         property double clipSize: 9
         property double radius: 0.5 * clipRoot.clipSize
+        property bool enabled: true
     }
 
     objectName: "qmlClip_" + m.clipWrapper.fullName
@@ -88,15 +90,22 @@ Rectangle {
                 clipOut = drag.source.clipWrapper
                 clipIn = m.clipWrapper
             }
-            if(accept && !replace)
+            if(accept && !replace){
                 _buttleManager.connectionManager.connectWrappers(clipOut, clipIn)
+                drag.source.enabled = false
+                m.enabled = false
+            }
 
-            if(accept && replace)
+            if(accept && replace){
                 _buttleManager.connectionManager.replace(m.clipWrapper, clipOut, clipIn)
+                drag.source.enabled = false
+                m.enabled = false
+            }
+
         }
         onEntered: {
             accept = _buttleManager.connectionManager.canConnect(m.clipWrapper, drag.source.clipWrapper)
-            replace = _buttleManager.connectionManager.canReplace(m.clipWrapper, drag.source.clipWrapper)
+            replace = _buttleManager.connectionManager.connectionExists(m.clipWrapper, drag.source.clipWrapper)
             if(accept){
                 dropHandle.state = "entereddrop"
             }else{
@@ -139,7 +148,7 @@ Rectangle {
                PropertyChanges {
                   target: dropVisualHandle
                   opacity: 0.6
-                  color: "red"
+                  color: "#212121"
                }
             },
             State {
@@ -147,7 +156,7 @@ Rectangle {
                PropertyChanges {
                   target: dropVisualHandle
                   opacity: 0.6
-                  color: "yellow"
+                  color: "#f7ff76"
                }
             }
         ]
@@ -205,7 +214,7 @@ Rectangle {
             states: [
                 State {
                    name: "nodragging"
-                   when: ! handle.Drag.active
+                   when: ! handle.Drag.active || (_buttleManager.connectionManager.connectionExists(m.clipWrapper, m.clipWrapper))
                    PropertyChanges {
                       target: handle
                       opacity: 0
@@ -239,34 +248,35 @@ Rectangle {
         onPressed: {
             // take the focus of the MainWindow
             clipRoot.forceActiveFocus()
+                mouseXStart = mouse.x
+                mouseYStart = mouse.y
+                xStart = xCenter_inGraph
+                yStart = yCenter_inGraph
 
-            mouseXStart = mouse.x
-            mouseYStart = mouse.y
-            xStart = xCenter_inGraph
-            yStart = yCenter_inGraph
+                // display of the tmpConnection with right coordinates
+                connections.tmpConnectionExists = true
+                connections.tmpClipName = m.clipWrapper.name
 
-            // display of the tmpConnection with right coordinates
-            connections.tmpConnectionExists = true
-            connections.tmpClipName = m.clipWrapper.name
-
-            connections.tmpConnectionX1 = xCenter_inGraph
-            connections.tmpConnectionY1 = yCenter_inGraph
-            connections.tmpConnectionX2 = xCenter_inGraph
-            connections.tmpConnectionY2 = yCenter_inGraph
+                connections.tmpConnectionX1 = xCenter_inGraph
+                connections.tmpConnectionY1 = yCenter_inGraph
+                connections.tmpConnectionX2 = xCenter_inGraph
+                connections.tmpConnectionY2 = yCenter_inGraph
        }
        onPositionChanged: {
-           // Update of the connection during the drag
-           if(clipMouseArea.drag.active) {
-                if (connections.tmpClipName == "Output") {
-                    connections.tmpConnectionX2 = x_inGraph + mouse.x
-                    connections.tmpConnectionY2 = y_inGraph + mouse.y
-                } else {
-                    connections.tmpConnectionX1 = x_inGraph + mouse.x
-                    connections.tmpConnectionY1 = y_inGraph + mouse.y
-                }
-                //Hack to position correctly the handle (the drag in QML creates a gap)
-                handle.x = mouseX - handle.width/2
-                handle.y = mouseY - handle.height/2
+           if(!(_buttleManager.connectionManager.connectionExists(m.clipWrapper, m.clipWrapper))){
+               // Update of the connection during the drag
+               if(clipMouseArea.drag.active) {
+                    if (connections.tmpClipName == "Output") {
+                        connections.tmpConnectionX2 = x_inGraph + mouse.x
+                        connections.tmpConnectionY2 = y_inGraph + mouse.y
+                    } else {
+                        connections.tmpConnectionX1 = x_inGraph + mouse.x
+                        connections.tmpConnectionY1 = y_inGraph + mouse.y
+                    }
+                    //Hack to position correctly the handle (the drag in QML creates a gap)
+                    handle.x = mouseX - handle.width/2
+                    handle.y = mouseY - handle.height/2
+               }
            }
         }
     }

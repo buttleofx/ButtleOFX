@@ -43,9 +43,9 @@ class ConnectionManager(QtCore.QObject):
         return True
         
     @QtCore.pyqtSlot(QtCore.QObject, QtCore.QObject, result=bool)
-    def canReplace(self, clip1, clip2):
+    def connectionExists(self, clip1, clip2):
         """
-            Returns True if the connection between the nodes is possible, else False.
+            Returns True if a connection between the nodes already exists, else False.
             A connection is possible if the clip isn't already taken, and if the clips are from 2 different nodes, not already connected.
         """
         
@@ -190,13 +190,14 @@ class ConnectionManager(QtCore.QObject):
     @QtCore.pyqtSlot(QtCore.QObject, QtCore.QObject, QtCore.QObject)
     def replace(self, clip, clipOut, clipIn):
         buttleData = ButtleDataSingleton().get()
-        for connection in  buttleData.getGraph()._connections:
-            if((clip.getNodeName() == connection.getClipOut().getNodeName() and clip.getClipName() == connection.getClipOut().getClipName()) or (clip.getNodeName() == connection.getClipIn().getNodeName() and clip.getClipName() == connection.getClipIn().getClipName())):
-                buttleData.getGraph().deleteConnection(connection)
-                
+                  
         id_clipOut = IdClip(clipOut.getNodeName(), clipOut.getClipName())
         id_clipIn = IdClip(clipIn.getNodeName(), clipIn.getClipName())
         self.connect(id_clipOut, id_clipIn)
+        
+        for connection in  buttleData.getGraph()._connections:
+            if((clip.getNodeName() == connection.getClipOut().getNodeName() and clip.getClipName() == connection.getClipOut().getClipName()) or (clip.getNodeName() == connection.getClipIn().getNodeName() and clip.getClipName() == connection.getClipIn().getClipName())):
+                buttleData.getGraph().deleteConnection(connection)
         
         return False
         

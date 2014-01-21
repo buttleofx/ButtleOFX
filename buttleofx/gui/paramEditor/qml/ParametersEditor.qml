@@ -47,16 +47,43 @@ Item {
 
         // scroll all the parameditors
         ScrollView {
+            id: scrollParam
             anchors.fill: parent
             anchors.topMargin: 5
             anchors.bottomMargin: 5
 
             // for each node we create a ParamEditor
             ListView{
-                anchors.fill: parent
+                id: listViewParam
+                //anchors.fill: parent
                 model: _buttleData.editedNodesWrapper
                 delegate: paramDelegate
             }
+
+        }
+
+        MouseArea{
+            id: addNode
+            y : listViewParam.height
+            width : parent.width
+            height : imageAddNode.height + 120
+            //color : "transparent"
+
+
+
+            Image{
+                id: imageAddNode
+                //anchors.verticalCenter: parent.verticalCenter
+                anchors.horizontalCenter: parent.verticalCenter
+                source: _buttleData.buttlePath +  "/gui/img/buttons/tools/plus.png"
+
+            }
+
+            onClicked : {
+                console.log("Clic on Add a Node!")
+
+            }
+
         }
 
         // delegate of the list of ParamEditor

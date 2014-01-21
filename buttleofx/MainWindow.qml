@@ -9,9 +9,11 @@ import "gui/graph/qml"
 import "gui/viewer/qml"
 import "gui/paramEditor/qml"
 import "gui/browser/qml"
+import "gui/helper"
 
 ApplicationWindow {
     property int selectedView : 1
+    title:"ButtleOFX"
 
     width: 1200
     height: 800
@@ -136,6 +138,30 @@ ApplicationWindow {
     FinderSaveGraph{ id: finderSaveGraph }
 
     property bool paramSelected
+    property bool editNode:false
+    property bool docSelected:false
+
+    //Window of hint for plugins
+    PluginWindow {
+        title: "Plugin's Documentation"
+        visible: docSelected
+        currentParamNode: _buttleData.currentParamNodeWrapper
+    }
+
+    //Node properties window
+
+    ApplicationWindow{
+        title: "Node Properties"
+        visible: editNode ? true:false
+        maximumHeight: 150
+        maximumWidth: 280
+        minimumHeight: maximumHeight
+        minimumWidth: maximumWidth
+        ParamButtleEditor {
+            params:_buttleData.currentParamNodeWrapper ? _buttleData.currentParamNodeWrapper.params : null
+            currentParamNode: _buttleData.currentParamNodeWrapper
+        }
+    }
 
     menuBar: MenuBar {
         Menu {
@@ -245,6 +271,19 @@ ApplicationWindow {
                 onObjectRemoved: nodesMenu.removeItem(object)
             }
         }
+        Menu {
+            id: help
+            title: "Help"
+
+            MenuItem {
+                text: "Shortcut"
+            }
+            MenuItem {
+                text: "Plugin's Documentation"
+                onTriggered: docSelected=true
+            }
+        }
+
 
         Menu {
             title: "View"
@@ -492,6 +531,10 @@ ApplicationWindow {
             id: browser
             anchors.fill: parent
             onButtonCloseClicked: {parent.visible = false; selectedView=-1}
-        }
-    }
+                    width: 350
+                    params:_buttleData.currentParamNodeWrapper ? _buttleData.currentParamNodeWrapper.params : null
+                    currentParamNode: _buttleData.currentParamNodeWrapper
+                }
+            }
+
 }

@@ -42,24 +42,17 @@ class ConnectionManager(QtCore.QObject):
             return False
         return True
         
-    @QtCore.pyqtSlot(QtCore.QObject, QtCore.QObject, result=bool)
-    def connectionExists(self, clip1, clip2):
+    @QtCore.pyqtSlot(QtCore.QObject, result=bool)
+    def connectionExists(self, clip):
         """
             Returns True if a connection between the nodes already exists, else False.
             A connection is possible if the clip isn't already taken, and if the clips are from 2 different nodes, not already connected.
         """
-        
         buttleData = ButtleDataSingleton().get()
         graph = buttleData.getGraph()
 
         # if the input clip is already taken : False
-        if (clip1.getClipName() != "Output" and graph.contains(clip1)) or (clip2.getClipName() != "Output" and graph.contains(clip2)):
-            return True
-        
-        if (clip1.getClipName() != "Source" and graph.contains(clip1)) or (clip2.getClipName() != "Source" and graph.contains(clip2)):
-            return True
-            
-        return False
+        return graph.contains(clip)
 
     @QtCore.pyqtSlot(str, QtCore.QObject, int, result=bool)
     def canConnectTmpNodes(self, dataTmpClip, clip, clipIndex):

@@ -83,12 +83,10 @@ Rectangle {
         onReleased: {
             var dropStatus = parent.Drag.drop()
             if (dropStatus !== Qt.IgnoreAction)
-                console.log("Accepted!")
-
             // left button : we end moving
             if (mouse.button == Qt.LeftButton) {
-                _buttleManager.nodeManager.nodeMoved(m.nodeWrapper.name, (m.nodeWrapper.coord.x * qml_graphRoot.width) / graphContainer.width, (m.nodeWrapper.coord.y * qml_graphRoot.height) / graphContainer.height)
-                //stateMoving.state = "normal"
+                if(m.nodeWrapper.coord.x - (qml_nodeRoot.x * qml_graphRoot.width / graphContainer.width) > 0.5)
+                     _buttleManager.nodeManager.nodeMoved(m.nodeWrapper.name, (m.nodeWrapper.coord.x * qml_graphRoot.width) / graphContainer.width, (m.nodeWrapper.coord.y * qml_graphRoot.height) / graphContainer.height)
             }
              //middle button : assign the node to the viewer
             else if (mouse.button == Qt.MidButton){

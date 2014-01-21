@@ -131,7 +131,8 @@ Item {
                         if(wheel.angleDelta.y > 0){
                             graph.zoomCoeff += graph.zoomStep
                         }else{
-                            graph.zoomCoeff -= graph.zoomStep
+                            if(graph.zoomCoeff - graph.zoomStep >= 0)
+                                graph.zoomCoeff -= graph.zoomStep
                         }
 
                         var mouseRatioX = 0.5

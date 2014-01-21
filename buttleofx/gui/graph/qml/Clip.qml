@@ -87,6 +87,11 @@ Rectangle {
             {
                 // Drop on input
                 clipOut = drag.source.clipWrapper
+                /*
+                clipOut_tmp = _buttleManager.connectionManager.connectedClip(clipOut)
+                if( clipOut_tmp )
+                    clipOut = clipOut_tmp
+                */
                 clipIn = m.clipWrapper
             }
             if(accept && !replace){
@@ -100,7 +105,7 @@ Rectangle {
         }
         onEntered: {
             accept = _buttleManager.connectionManager.canConnect(m.clipWrapper, drag.source.clipWrapper)
-            replace = _buttleManager.connectionManager.connectionExists(m.clipWrapper, drag.source.clipWrapper)
+            replace = m.clipWrapper.name != "Output" && _buttleManager.connectionManager.connectionExists(m.clipWrapper)
             if(accept){
                 dropHandle.state = "entereddrop"
             }else{
@@ -242,25 +247,32 @@ Rectangle {
         onPressed: {
             // take the focus of the MainWindow
             clipRoot.forceActiveFocus()
-                mouseXStart = mouse.x
-                mouseYStart = mouse.y
-                xStart = xCenter_inGraph
-                yStart = yCenter_inGraph
+            mouseXStart = mouse.x
+            mouseYStart = mouse.y
+            xStart = xCenter_inGraph
+            yStart = yCenter_inGraph
 
-                // display of the tmpConnection with right coordinates
-                connections.tmpConnectionExists = true
-                connections.tmpClipName = m.clipWrapper.name
+            // display of the tmpConnection with right coordinates
+            connections.tmpConnectionExists = true
+            connections.tmpClipName = m.clipWrapper.name
 
-                connections.tmpConnectionX1 = xCenter_inGraph
-                connections.tmpConnectionY1 = yCenter_inGraph
-                connections.tmpConnectionX2 = xCenter_inGraph
-                connections.tmpConnectionY2 = yCenter_inGraph
+            // if connected output
+            //   connectedClip = _buttleData.graphWrapper.getConnectedClipWrapper(m.clipWrapper)
+            // python: _buttleData.graphWrapper.getNodeWrapper(connectionWrapper.out_clipNodeName).getClip(connectionWrapper.out_clipName)
 
-                unHookEnabled = true
+            //   connectedClip.xCoord
+            // else
+            connections.tmpConnectionX1 = xCenter_inGraph
+            connections.tmpConnectionY1 = yCenter_inGraph
+            connections.tmpConnectionX2 = xCenter_inGraph
+            connections.tmpConnectionY2 = yCenter_inGraph
+
+            unHookEnabled = true
        }
 
        onPositionChanged: {
-           if(!(_buttleManager.connectionManager.connectionExists(m.clipWrapper, m.clipWrapper))){
+           if(!(_buttleManager.connectionManager.connectionExists(m.clipWrapper)))
+           {
                // Update of the connection during the drag
                if(clipMouseArea.drag.active) {
                     if (connections.tmpClipName == "Output") {

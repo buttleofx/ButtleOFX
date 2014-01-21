@@ -43,7 +43,6 @@ Rectangle {
                     if (listPrevious.count > 0)
                     {
                         nextList.append({"url": headerBar.folder})
-                        console.debug("Go to "+ listPrevious.get(listPrevious.count - 1).url)
                         changeFolder(listPrevious.get(listPrevious.count - 1).url)
                         listPrevious.remove(listPrevious.count - 1)
                     }
@@ -60,9 +59,8 @@ Rectangle {
                 onClicked: {
                     if (nextList.count > 0)
                     {
-                        console.debug("Go to "+ nextList.get(nextList.count - 1).url)
+                        listPrevious.append({"url": headerBar.folder})
                         changeFolder(nextList.get(nextList.count - 1).url)
-                        listPrevious.append({"url": nextList.get(nextList.count - 1).url})
                         nextList.remove(nextList.count - 1)
                     }
                 }
@@ -109,7 +107,6 @@ Rectangle {
                     listPrevious.append({"url": headerBar.folder})
                     changeFolder(text)
                     textEditContainer.forceActiveFocus()
-
                 }
                 onFocusChanged:{
                     texteditPath.focus ? selectAll() : deselect()

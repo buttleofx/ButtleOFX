@@ -303,6 +303,8 @@ class ButtleData(QtCore.QObject):
         else:
             self._currentViewerNodeName = nodeWrapper.getName()
         # emit signal
+        print ("setCurrentViewerId buttleData.getCurrentGraphWrapper()", self.getCurrentGraphWrapper())
+        print ("setCurrentViewerId nodeWrapper.getName()", nodeWrapper.getName())
         self.currentViewerNodeChanged.emit()
 
     def setCurrentConnectionWrapper(self, connectionWrapper):
@@ -478,8 +480,10 @@ class ButtleData(QtCore.QObject):
     def nodeReaderWrapperForBrowser(self, url):
         self._graphBrowser._nodes = []  # clear the graph
         self._currentGraphWrapper = self._graphBrowserWrapper
+        print ("nodeReaderWrapperForBrowser self.getCurrentGraphWrapper", self.getCurrentGraphWrapper())
         readerNode = self._graphBrowser.createReaderNode(url, 0, 0) # create a reader node (like for the drag & drop of file)
         readerNodeWrapper = NodeWrapper(readerNode, self._graphBrowserWrapper._view) # wrapper of the reader file
+        print ("nodeReaderWrapperForBrowser self.getCurrentGraphWrapper._nodeWrappers", self.getCurrentGraphWrapper()._nodeWrappers)
         return readerNodeWrapper
 
 
@@ -496,7 +500,6 @@ class ButtleData(QtCore.QObject):
         filepath = QtCore.QUrl(url).toLocalFile()
         if not (filepath.endswith(".bofx")):
             filepath = filepath + ".bofx"
-
 
         with io.open(filepath, 'w', encoding='utf-8') as f:
             dictJson = {

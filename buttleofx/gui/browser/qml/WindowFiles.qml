@@ -130,7 +130,7 @@ Rectangle {
                                 //if shift:
                             }
                             onDoubleClicked: {
-                                model.object.fileType == "Folder" ? winFile.goToFolder(model.object.filepath) : Qt.openUrlExternally("file:///" + model.object.filepath)
+                                //model.object.fileType == "Folder" ? winFile.goToFolder(model.object.filepath) : Qt.openUrlExternally("file:///" + model.object.filepath)
                             }
                         }
                     }

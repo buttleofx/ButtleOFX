@@ -262,12 +262,13 @@ Rectangle {
 
     Rectangle {
         id: deadMosquito
-        width: 23
-        height: 21
+        width: miniatureState ? 23 * miniatureScale : 23
+        height: miniatureState ? 21 * miniatureScale : 21
         x: m.nodeRoot.width - 12
         y: -10
         state: "normal"
         color: "transparent"
+        visible: miniatureState ? false : true
 
         Image {
             id: deadMosquitoImage

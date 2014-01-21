@@ -24,425 +24,97 @@ Item {
     implicitHeight: 500
     height: tuttleParamContent.height
 
-
-
     /*TUTTLE PARAMS*/
 
-        Rectangle {
-            Layout.minimumHeight: tuttleParamTitle.height
+    Rectangle {
+        Layout.minimumHeight: tuttleParamTitle.height
 
-            id: tuttleParams
+        id: tuttleParams
 
-            width: parent.width
-            color: paramEditor.background
+        width: parent.width
+        color: paramEditor.background
 
-            // Title of the node
-            Button{
-                id: tuttleParamTitle
-                height: 40
-                style: ButtonStyle {
-                    background: Rectangle {
-                        implicitWidth: paramEditor.width
-                        implicitHeight: 40
-                        color: paramEditor.background
-                        gradient: Gradient {
-                            GradientStop { position: 0.0; color: gradian2 }
-                            GradientStop { position: 0.85; color: gradian2 }
-                            GradientStop { position: 0.86; color: gradian1 }
-                            GradientStop { position: 1; color: gradian2 }
-                        }
-                    }
-
-                    label: Text{
-                        color: textColor
-                        text: currentParamNode.name
-                        anchors.verticalCenter: parent.verticalCenter
-                        anchors.left: parent.left
-                        anchors.leftMargin: 10
-                        font.pointSize: 11
-                        clip: true
+        // Title of the node
+        Button{
+            id: tuttleParamTitle
+            height: 40
+            style: ButtonStyle {
+                background: Rectangle {
+                    implicitWidth: paramEditor.width
+                    implicitHeight: 40
+                    color: paramEditor.background
+                    gradient: Gradient {
+                        GradientStop { position: 0.0; color: gradian2 }
+                        GradientStop { position: 0.85; color: gradian2 }
+                        GradientStop { position: 0.86; color: gradian1 }
+                        GradientStop { position: 1; color: gradian2 }
                     }
                 }
-                onClicked: {
-                     if (tuttleParamContent.visible == true){
-                        tuttleParamContent.visible = false
-                        tuttleParamContent.height = 0
-                    }
-                    else{
-                        //tuttleParamContent.height = newHeight
-                        tuttleParamContent.height = tuttleParam.contentHeight + 20
-                        tuttleParamContent.visible = true
-                    }
 
-                }
-
-            }
-
-
-            /* Params depend on the node type (Tuttle data)*/
-            Rectangle {
-                id: tuttleParamContent
-                height: tuttleParam.contentHeight + 20
-
-                width: parent.width
-                y: tuttleParamTitle.height
-
-                visible: true
-
-                color : "transparent"
-
-                property string lastGroupParam : "No Group."
-
-
-                ListView {
-                    anchors.fill: parent
-                    anchors.topMargin: 10
-                    anchors.bottomMargin: 10
-
-                    id: tuttleParam
-                    height: count ? contentHeight : 0
-                    y: parent.y + 10
-                    spacing: 6
-
-                    interactive: false
-
-                    model: params
-
-                    delegate: Component {
-                        Loader {
-                            id: param
-                            source : model.object.paramType + ".qml"
-                            width: parent.width
-                            x: 15 // here is the distance to the left of the listview
-                        }
-                    }
-                }//Listview
-            }//item param
-
-
-        }
-
-        /*BUTTLE PARAMS*/
-        /*Rectangle{
-            Layout.minimumHeight: buttleParamTitle.height
-            id: buttleParams
-            height: 190
-            width: paramEditor.width
-            color: paramEditor.background
-
-            Rectangle{
-                id: buttleParamTitle
-                width: parent.width
-                height: 40
-                color: paramEditor.background
-                gradient: Gradient {
-                    GradientStop { position: 0.0; color: gradian2 }
-                    GradientStop { position: 0.85; color: gradian2 }
-                    GradientStop { position: 0.86; color: gradian1 }
-                    GradientStop { position: 1; color: gradian2 }
-                }
-                clip: true
-                Text {
+                label: Text{
+                    color: textColor
+                    text: currentParamNode.name
                     anchors.verticalCenter: parent.verticalCenter
                     anchors.left: parent.left
                     anchors.leftMargin: 10
-                    color: textColor
                     font.pointSize: 11
-                    text: "Node properties"
+                    clip: true
                 }
             }
+            onClicked: {
+                 if (tuttleParamContent.visible == true){
+                    tuttleParamContent.visible = false
+                    tuttleParamContent.height = 0
+                }
+                else{
+                    //tuttleParamContent.height = newHeight
+                    tuttleParamContent.height = tuttleParam.contentHeight + 20
+                    tuttleParamContent.visible = true
+                }
 
-            Loader {
-                sourceComponent: currentParamNode ? nodeParamComponent : undefined
-                Component {
-                    id: nodeParamComponent
-                    Column {
-                        spacing: 5
+            }
 
-                        /*Name of the node (Buttle data)*/
-          /*              Item {
-                            id: nodeNameUserItem
-                            implicitWidth: 300
-                            implicitHeight: 30
-                            anchors.left: parent.left
-                            anchors.leftMargin: 10
-                            clip: true
+        }
 
-                            Row {
-                                id: nodeNameUserContainer
-                                spacing: 5
-                                clip: true
-                                /* Title */
-         /*                       Text {
-                                    id: nodeNameUserText
-                                    anchors.top: parent.top
-                                    anchors.verticalCenter: parent.verticalCenter
-                                    color: textColor
-                                    text: "Name : "
-                                }
 
-                                /* Input field limited to 50 characters */
-          /*                      Rectangle {
-                                    height: 20
-                                    implicitWidth: 200
-                                    color: paramEditor.backgroundInput
-                                    border.width: 1
-                                    border.color: paramEditor.borderInput
-                                    radius: 3
-                                    clip: true
-                                    TextInput {
-                                        id: nodeNameUserInput
-                                        text: currentParamNode ? currentParamNode.nameUser : ""
-                                        anchors.left: parent.left
-                                        width: parent.width - 10
-                                        height: parent.height
-                                        anchors.leftMargin: 5
-                                        maximumLength: 100
-                                        selectByMouse : true
+        /* Params depend on the node type (Tuttle data)*/
+        Rectangle {
+            id: tuttleParamContent
+            height: tuttleParam.contentHeight + 20
 
-                                        //elide: Text.ElideRight
+            width: parent.width
+            y: tuttleParamTitle.height
 
-                                        color: activeFocus ? activeFocusOn : activeFocusOff
+            visible: true
 
-                                        onAccepted: {
-                                            currentParamNode.nameUser = nodeNameUserInput.text
-                                        }
-                                        onActiveFocusChanged: {
-                                            currentParamNode.nameUser = nodeNameUserInput.text
-                                            console.log ("nameUser = ", currentParamNode.nameUser )
-                                            console.log ("nameUserInput.text = ", nodeNameUserInput.text )
-                                            console.log (currentParamNode.nameUser == nodeNameUserInput.text)
-                                        }
+            color : "transparent"
 
-                                        KeyNavigation.backtab: nodeCoordYInput
-                                        KeyNavigation.tab: nodeColorRGBInput
-                                    }
-                                    MouseArea {
-                                        anchors.fill: parent
-                                        acceptedButtons: Qt.RightButton
-                                        onClicked: currentParamNode.nameUser = currentParamNode.getDefaultNameUser()
-                                    }
-                                }
-                            }
-                        }
+            property string lastGroupParam : "No Group."
 
-                        /* Type of the node (Buttle data) */
-            /*            Item {
-                            id: nodeTypeItem
-                            implicitWidth: 300
-                            implicitHeight: 30
-                            anchors.left: parent.left
-                            anchors.leftMargin: 10
 
-                            Row {
-                                id: nodeTypeContainer
-                                spacing: 10
+            ListView {
+                anchors.fill: parent
+                anchors.topMargin: 10
+                anchors.bottomMargin: 10
 
-                                /* Title */
-             /*                   Text {
-                                    id: nodeTypeText
-                                    text: "Type : "
-                                    color: textColor
-                                    anchors.top: parent.top
-                                    anchors.verticalCenter: parent.verticalCenter
-                                }
+                id: tuttleParam
+                height: count ? contentHeight : 0
+                y: parent.y + 10
+                spacing: 6
 
-                                /* Input field limited to 50 characters */
-              /*                  Rectangle{
-                                    height: 20
-                                    implicitWidth: 200
-                                    color: "transparent"
-                                    Text{
-                                        id: nodeTypeInput
-                                        text: currentParamNode ? currentParamNode.nodeType : ""
-                                        anchors.left: parent.left
-                                        anchors.leftMargin: 5
-                                        color: "grey"
-                                        //elide: Text.ElideRight
-                                    }
-                                }
-                            }
-                        }
+                interactive: false
 
-                        /* Color of the node (Buttle data) */
-             /*           Item {
-                            id: nodecolorItem
-                            implicitWidth: 300
-                            implicitHeight: 30
-                            anchors.left: parent.left
-                            anchors.leftMargin: 10
-                            Row {
-                                id: nodeColorContainer
-                                spacing: 10
-                                clip: true
+                model: params
 
-                                /* Title */
-                 /*               Text {
-                                    id: nodeColorText
-                                    text: "Color : "
-                                    color: textColor
-                                    anchors.top: parent.top
-                                    anchors.verticalCenter: parent.verticalCenter
-                                    //elide: Text.ElideRight
-                                }
-
-                                /* Input field limited : rgb */
-                /*                Rectangle {
-                                    height: 20
-                                    implicitWidth: 80
-                                    color: paramEditor.backgroundInput
-                                    border.width: 1
-                                    border.color: paramEditor.borderInput
-                                    radius: 3
-                                    clip: true
-                                    TextInput {
-                                        id: nodeColorRGBInput
-                                        //text: currentParamNode ? currentParamNode.color : ""
-                                        anchors.left: parent.left
-                                        anchors.verticalCenter: parent.verticalCenter
-                                        anchors.leftMargin: 5
-                                        width: parent.width - 10
-                                        height: parent.height
-                                        maximumLength: 50
-                                        selectByMouse : true
-
-                                        //elide: Text.ElideRight
-
-                                        color: activeFocus ? activeFocusOn : activeFocusOff
-
-                                        onAccepted: currentParamNode.color = nodeColorRGBInput.text
-                                        onActiveFocusChanged: currentParamNode.color = nodeColorRGBInput.text
-
-                                        KeyNavigation.backtab: nodeNameUserInput
-                                        KeyNavigation.tab: nodeCoordXInput
-                                    }//textinput
-                                    MouseArea {
-                                        anchors.fill: parent
-                                        acceptedButtons: Qt.RightButton
-                                        onClicked: {
-                                            currentParamNode.color = currentParamNode.getDefaultColor();
-                                            console.log("Clicked");
-                                        }
-                                    }
-                                }//rectangle of nodeColorContainer
-                            }//row nodeColorContainer
-                        }//item nodeColorItem
-
-                        /* Coord of the node (Buttle data) */
-           /*             Item {
-                            id: nodecoordItem
-                            implicitWidth: 300
-                            implicitHeight: 30
-                            anchors.left: parent.left
-                            anchors.leftMargin: 10
-
-                            Row {
-                                id: nodeCoordContainer
-                                spacing: 10
-
-                                /* Input label : "x : " */
-               /*                 Rectangle {
-                                    height: 20
-                                    implicitWidth: 15
-                                    color: "transparent"
-                                    clip: true
-                                    Text{
-                                        id: nodeCoordXLabel
-                                        text: "x :"
-                                        anchors.left: parent.left
-                                        anchors.leftMargin: 5
-                                        color: textColor
-                                        //elide: Text.ElideRight
-                                    }
-                                }
-                                /* Input field limited : x */
-                   /*             Rectangle {
-                                    height: 20
-                                    implicitWidth: 35
-                                    color: paramEditor.backgroundInput
-                                    border.width: 1
-                                    border.color: paramEditor.borderInput
-                                    radius: 3
-                                    clip: true
-                                    TextInput {
-                                        id: nodeCoordXInput
-                                        text: currentParamNode ? currentParamNode.coord.x : ""
-                                        anchors.left: parent.left
-                                        anchors.leftMargin: 5
-                                        width: parent.width - 10
-                                        height: parent.height
-                                        color: activeFocus ? activeFocusOn : activeFocusOff
-                                        selectByMouse : true
-
-                                        //elide: Text.ElideRight
-
-                                        onAccepted: {
-                                            currentParamNode.xCoord = nodeCoordXInput.text
-                                        }
-                                        onActiveFocusChanged: {
-                                            currentParamNode.xCoord = nodeCoordXInput.text
-                                        }
-
-                                        KeyNavigation.backtab: nodeColorRGBInput
-                                        KeyNavigation.tab: nodeCoordYInput
-
-                                    }
-                                }
-
-                                /* Input label : "y : " */
-                   /*             Rectangle {
-                                    height: 20
-                                    implicitWidth: 15
-                                    color: "transparent"
-                                    clip: true
-                                    Text {
-                                        id: nodeCoordYLabel
-                                        text: "y :"
-                                        anchors.left: parent.left
-                                        anchors.leftMargin: 5
-                                        color: textColor
-                                        //elide: Text.ElideRight
-
-                                    }
-                                }
-                                /* Input field limited : y */
-                     /*           Rectangle {
-                                    height: 20
-                                    implicitWidth: 35
-                                    color: paramEditor.backgroundInput
-                                    border.width: 1
-                                    border.color: paramEditor.borderInput
-                                    radius: 3
-                                    clip: true
-                                    TextInput {
-                                        id: nodeCoordYInput
-                                        text: currentParamNode ? currentParamNode.coord.y : ""
-                                        anchors.left: parent.left
-                                        anchors.leftMargin: 5
-                                        width: parent.width - 10
-                                        height: parent.height
-                                        color: activeFocus ? activeFocusOn : activeFocusOff
-                                        selectByMouse : true
-
-                                        //elide: Text.ElideRight
-
-                                        onAccepted: {
-                                            currentParamNode.yCoord = nodeCoordYInput.text
-                                        }
-                                        onActiveFocusChanged: {
-                                            currentParamNode.yCoord = nodeCoordYInput.text
-                                        }
-
-                                        KeyNavigation.backtab: nodeCoordXInput
-                                        KeyNavigation.tab: nodeNameUserInput
-                                    }
-                                }
-                            }
-                        }
-                    }//column
-                }//component
-            }//loader
-        }//rectangle of buttleParam
-*/
-  //   }
+                delegate: Component {
+                    Loader {
+                        id: param
+                        source : model.object.paramType + ".qml"
+                        width: parent.width
+                        x: 15 // here is the distance to the left of the listview
+                    }
+                }
+            }//Listview
+        }//item param
+    }
 }

@@ -143,7 +143,10 @@ Rectangle {
                     MenuItem {
                         id: textComponent
                         text: model.object.fileName
-                        onTriggered: changeFolder(model.object.filepath)
+                        onTriggered: {
+                            listPrevious.append({"url": headerBar.folder})
+                            changeFolder(model.object.filepath)
+                        }
                         // checkable: true
                         // exclusiveGroup: eg
                     }

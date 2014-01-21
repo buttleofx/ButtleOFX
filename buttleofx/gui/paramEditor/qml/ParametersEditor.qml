@@ -114,7 +114,11 @@ Item {
                 model: _buttleData.pluginsIdentifiers
                 MenuItem {
                     text: object
-                    //onTriggered: _buttleManager.nodeManager.creationNode(object, 0, 0)
+                    onTriggered: {
+                        _buttleData.currentGraphWrapper = _buttleData.graphParametersEditorWrapper
+                        _buttleManager.nodeManager.creationNode(_buttleData.graphParametersEditor, object, 0, 0)
+                    }
+
                 }
                 onObjectAdded: nodesMenu.insertItem(index, object)
                 onObjectRemoved: nodesMenu.removeItem(object)

@@ -14,6 +14,7 @@ import "gui/helper"
 
 ApplicationWindow {
     property int selectedView : 1
+
     property variant lastSelectedDefaultView: view1
     property variant view1: [browser, paramEditor, player, graphEditor]
     property variant view2: [player, paramEditor, browser, graphEditor]

@@ -39,6 +39,7 @@ Item {
     SplitView {
         width: parent.width
         height: parent.height
+        y: tabBar.height
         //handleWidth: 3
         orientation: Qt.Vertical
 
@@ -167,7 +168,7 @@ Item {
                     GradientStop { position: 0.85; color: gradian2 }
                     GradientStop { position: 0.86; color: gradian1 }
                     GradientStop { position: 1; color: gradian2 }
-                } 
+                }
 
                 Text {
                     anchors.verticalCenter: parent.verticalCenter

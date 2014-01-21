@@ -88,8 +88,7 @@ Item {
         y : listViewParam.height + paramTitle.height
         width : parent.width
         height : imageAddNode.height + 30
-        //anchors.fill: parent
-        //color : "transparent"
+
 
         Image{
             id: imageAddNode
@@ -103,7 +102,25 @@ Item {
 
         onClicked : {
             console.log("Clic on Add a Node!")
+            nodesMenu.popup();
+
         }
+
+        Menu {
+            id: nodesMenu
+            title: "Nodes"
+
+            Instantiator {
+                model: _buttleData.pluginsIdentifiers
+                MenuItem {
+                    text: object
+                    //onTriggered: _buttleManager.nodeManager.creationNode(object, 0, 0)
+                }
+                onObjectAdded: nodesMenu.insertItem(index, object)
+                onObjectRemoved: nodesMenu.removeItem(object)
+            }
+        }
+
 
     }
 }

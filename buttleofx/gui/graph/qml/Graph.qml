@@ -102,7 +102,6 @@ Rectangle {
                 id: nodesRepeater
                 model: _buttleData.graphWrapper.nodeWrappers
                 Node {
-                    property int nodeWidth: 80
                     id: node
                     nodeWrapper: model.object
                     graphRoot: m.graphRoot

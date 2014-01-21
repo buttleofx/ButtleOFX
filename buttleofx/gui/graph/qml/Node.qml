@@ -12,6 +12,7 @@ Rectangle {
     property bool readOnly
     property real miniatureScale
     property bool miniatureState
+    property int nodeWidth: 80
 
     Drag.active: nodeMouseArea.drag.active
 
@@ -152,11 +153,21 @@ Rectangle {
         anchors.margins: miniatureState ? 4 * miniatureScale : 4 * graph.zoomCoeff
         color: "#bbbbbb"
         radius: 8
-        clip: true
+        clip: nodeText.isSelected ? false : true
+        Rectangle{
+            id: background
+            anchors.fill: nodeText
+            color: "black"
+            opacity: 0.2
+            visible: nodeText.isSelected ? true : false
+        }
+
         Text {
             id: nodeText
-            anchors.verticalCenter: parent.verticalCenter
+            anchors.verticalCenter: isSelected ? undefined : parent.verticalCenter
+            anchors.horizontalCenter: isSelected ? parent.horizontalCenter : undefined
             x: miniatureState ? 5 * miniatureScale : 5
+            y: isSelected ? miniatureState ? nodeWidth * 0.5 * miniatureScale : nodeWidth * 0.5 : 0
             text: m.nodeWrapper.nameUser
             font.pointSize: miniatureState ? 10 * miniatureScale : 10
             property bool isSelected: _buttleData.nodeIsSelected(m.nodeWrapper)

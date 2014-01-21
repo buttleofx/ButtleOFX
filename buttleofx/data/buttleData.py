@@ -24,8 +24,11 @@ import math
 class ButtleData(QtCore.QObject):
     """
         Class ButtleData defined by:
+        - _mapGraph : map of graph
         - _graphWrapper : the graphWrapper
         - _graph : the graph (core)
+        - _graphBrowser : the graph of the browser
+        - _graphBrowserWrapper : the graphWrapper of the browser
         - _currentViewerNodeName : the name of the node currently in the viewer
         - _currentSelectedNodeNames : list of the names of the nodes currently selected
         - _currentParamNodeName : the name of the node currently displayed in the paramEditor
@@ -39,6 +42,11 @@ class ButtleData(QtCore.QObject):
 
     _graph = None
     _graphWrapper = None
+
+    _graphBrowser = None
+    _graphBrowserWrapper = None
+
+    _mapGraph = {}
 
     _graphCanBeSaved = False
 
@@ -67,6 +75,15 @@ class ButtleData(QtCore.QObject):
     def init(self, view, filePath):
         self._graph = Graph()
         self._graphWrapper = GraphWrapper(self._graph, view)
+
+        self._graphBrowser = Graph()
+        self._graphBrowserWrapper = GraphWrapper(self._graph, view)
+
+        self._mapGraph = {
+            "graph": self._graph,
+            "graphBrowser": self._graphBrowser
+        }
+
         self._buttlePath = filePath
         for index in range(1, 10):
             self._mapViewerIndextoNodeName[str(index)] = None
@@ -80,8 +97,14 @@ class ButtleData(QtCore.QObject):
     def getGraph(self):
         return self._graph
 
+    def getGraphBrowser(self):
+        return self._graphBrowser
+
     def getGraphWrapper(self):
         return self._graphWrapper
+
+    def getGraphBrowserWrapper(self):
+        return self._graphBrowserWrapper
 
     def getButtlePath(self):
         return self._buttlePath
@@ -160,11 +183,17 @@ class ButtleData(QtCore.QObject):
             return nodeViewerInfos[1]
 
 
-    def getCurrentViewerNodeWrapper(self):
+    #def getCurrentViewerNodeWrapper(self):
+    #    """
+    #        Returns the current viewer nodeWrapper.
+    #    """
+    #    return self._graphWrapper.getNodeWrapper(self.getCurrentViewerNodeName())
+
+    def getCurrentViewerNodeWrapper(self, graph, nodeName):
         """
             Returns the current viewer nodeWrapper.
         """
-        return self._graphWrapper.getNodeWrapper(self.getCurrentViewerNodeName())
+        return self.graph.getNodeWrapper(nodeName)
 
     def getCurrentViewerFrame(self):
         """
@@ -513,6 +542,8 @@ class ButtleData(QtCore.QObject):
 
     pluginsIdentifiers = QtCore.pyqtProperty(QtCore.QObject, getPluginsIdentifiers, constant=True)
 
+    #graph = QtCore.pyqtProperty(QtCore.QObject, getGraph, constant=True)
+
     # graphWrapper
     graphWrapper = QtCore.pyqtProperty(QtCore.QObject, getGraphWrapper, constant=True)
 
@@ -527,6 +558,8 @@ class ButtleData(QtCore.QObject):
     currentViewerNodeWrapper = QtCore.pyqtProperty(QtCore.QObject, getCurrentViewerNodeWrapper, setCurrentViewerNodeWrapper, notify=currentViewerNodeChanged)
     currentViewerFrameChanged = QtCore.pyqtSignal()
     currentViewerFrame = QtCore.pyqtProperty(int, getCurrentViewerFrame, setCurrentViewerFrame, notify=currentViewerFrameChanged)
+
+    #currentViewerNodeName = QtCore.pyqtProperty(int, getCurrentViewerNodeName, constant=True)
 
     currentSelectedNodesChanged = QtCore.pyqtSignal()
     currentSelectedNodeWrappers = QtCore.pyqtProperty("QVariant", getCurrentSelectedNodeWrappers, setCurrentSelectedNodeWrappers, notify=currentSelectedNodesChanged)

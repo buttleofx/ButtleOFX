@@ -131,8 +131,11 @@ ApplicationWindow {
         }
     }
 
+
     FinderLoadGraph{ id: finderLoadGraph }
     FinderSaveGraph{ id: finderSaveGraph }
+
+    property bool paramSelected
 
     menuBar: MenuBar {
         Menu {
@@ -159,7 +162,6 @@ ApplicationWindow {
                 id: quitButton
                 text: "Exit"
                 onTriggered: Qt.quit()
-                //connect(quitButton, SIGNAL(quit()), mainWindowQML, SLOT(quit()));
             }
         }
 
@@ -292,7 +294,7 @@ ApplicationWindow {
                 onTriggered: paramEditor.parent.visible == false ? paramEditor.parent.visible=true : paramEditor.parent.visible=false
             }
         }
-
+	}
 /* A revoir
         Menu {
             title: "Add"
@@ -303,72 +305,9 @@ ApplicationWindow {
             }
         }
 */
-    }
-/*
-    Rectangle {
-        id: mainMenu
-        width: parent.width
-        height: 32
-        color: "#141414"
 
-        Row {
-            spacing: 10
-            x: 3
-
-            Image {
-                id: mosquito
-                source: _buttleData.buttlePath + "/gui/img/icons/logo_icon.png"
-                y: 5
-            }
-
-            Text {
-                color: "white"
-                text: "File"
-                y: 11
-                font.pointSize: 10
-
-                MouseArea {
-                    anchors.fill: parent
-                    hoverEnabled: true
-                    onClicked: {
-                        _fileMenu.showMenu(parent.x, mainMenu.height)
-                    }
-                }
-            }
-
-            Text {
-                color: "white"
-                text: "Edit"
-                y: 11
-                font.pointSize: 10
-
-                MouseArea {
-                    anchors.fill: parent
-                    hoverEnabled: true
-                    onClicked: {
-                        _editMenu.showMenu(parent.x, mainMenu.height)
-                    }
-                }
-            }
-
-            Text {
-                color: "white"
-                text: "Add"
-                y: 11
-                font.pointSize: 10
-
-                MouseArea {
-                    anchors.fill: parent
-                    hoverEnabled: true
-                    onClicked: {
-                        _addMenu.showMenu(parent.x, mainMenu.height)
-                    }
-                }
-            }
-        }
-    }
-*/
-    //this rectangle represents the zone under the menu, it allows to define the anchors.fill and margins for the SplitterRow
+    
+   //this rectangle represents the zone under the menu, it allows to define the anchors.fill and margins for the SplitterRow
     Rectangle {
         id: modulsContainer
         width: parent.width
@@ -522,13 +461,32 @@ ApplicationWindow {
             onButtonCloseClicked: {parent.visible = false; selectedView=-1}
         }
 
-        ParamEditor {
+
+        /*ParamTuttleEditor {
             id: paramEditor
             anchors.fill: parent
+
             params: _buttleData.currentParamNodeWrapper ? _buttleData.currentParamNodeWrapper.params : null
             currentParamNode: _buttleData.currentParamNodeWrapper
             onButtonCloseClicked: {parent.visible = false; selectedView=-1}
+
+        }*/
+        ParamTuttleEditor {
+            id: paramEditor
+            Layout.fillHeight: true
+            visible: paramSelected ? true:false
+            width: 300
+            params:_buttleData.currentParamNodeWrapper ? _buttleData.currentParamNodeWrapper.params : null
+            currentParamNode: _buttleData.currentParamNodeWrapper
         }
+
+        /*ParamButtleEditor {
+            Layout.minimumHeight: parent.height
+            visible: paramSelected ? false:true
+            width: 300
+            params:_buttleData.currentParamNodeWrapper ? _buttleData.currentParamNodeWrapper.params : null
+            currentParamNode: _buttleData.currentParamNodeWrapper
+        }*/
 
         Browser {
             id: browser

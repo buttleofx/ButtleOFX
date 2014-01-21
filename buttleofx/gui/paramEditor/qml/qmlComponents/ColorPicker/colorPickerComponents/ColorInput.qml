@@ -36,7 +36,7 @@ Row {
         radius: 2
         border.width: 1
         border.color: "#FF525255"
-        color: "transparent"
+        color: "#333"
         clip: true
         TextInput {
             id: input

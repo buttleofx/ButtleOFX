@@ -6,7 +6,7 @@ Rectangle {
     id: colorFields
     implicitWidth: 80
     implicitHeight: 200
-    color: "black"
+    color: "transparent"
 
     // properties used to change the text int the boxes r, g, b with default values here
     property color currentColor: "white"
@@ -36,7 +36,7 @@ Rectangle {
         Rectangle {
             id: currentColorBox
             width: parent.width
-            height: parent.height / 5
+            height: parent.height / 5 + 1
             SquaresGrid { 
                 cellSide: 3
                 height: currentColorBox.height
@@ -62,7 +62,7 @@ Rectangle {
             radius: 2
             border.width: 1
             border.color: "#FF525255"
-            color: "transparent"
+            color: "#333"
             clip: true
             anchors.horizontalCenter: parent.horizontalCenter
             TextInput {

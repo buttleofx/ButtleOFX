@@ -17,13 +17,21 @@ Rectangle {
         property string fileFolder: "/"
         property string fileType: ""
         property string filter:"*"
+        property variant selected
     }
+
+    ListModel {
+        id: listPrevious
+    }
+
+    focus: true
 
     Tab {
         id: tabBar
         name: "Browser"
         onCloseClicked: browser.buttonCloseClicked(true)
     }
+
 
     ColumnLayout {
         anchors.fill: parent
@@ -35,6 +43,9 @@ Rectangle {
             Layout.fillWidth: true
             Layout.preferredHeight: 40
 
+           	z: files.z + 1
+
+            listPrevious: listPrevious
             parentFolder: m.fileFolder
             folder: m.directory
             onChangeFolder: {
@@ -43,31 +54,27 @@ Rectangle {
             }
 	    }
 
-        /*CheckBox {
+        CheckBox {
 	    	id: check
-	    	text: "Viewer"
-        }*/
+            text: "List"
+        }
 
         SplitView {
 	        Layout.fillWidth: true
 	        Layout.fillHeight: true
             orientation: Qt.Horizontal
 
-            /*LeftCol {
-                id: left
-                Layout.minimumWidth: 80
-                Layout.preferredWidth: 150
-	            Layout.fillHeight: true
-            }*/
-
 		    WindowFiles {
 			    id: files
                 Layout.fillWidth: true
 	            Layout.fillHeight: true
                 Layout.preferredHeight: 120
+                z: 1
 			    
+                viewGrid: check.checked
                 folder: m.directory
                 onGoToFolder: {
+                    listPrevious.append({"url": m.directory})
                     console.debug("folder has changed to " + newFolder)
                     m.directory= newFolder
                 }
@@ -85,18 +92,11 @@ Rectangle {
                     m.fileType = fileType
                     console.debug("fileType has changed to " + m.fileType)
                 }
+                onChangeSelectedList: {
+                    m.selected = selected
+                }
 		    }
 
-            /*Viewer {
-		    	id: viewer
-
-                Layout.fillWidth: check.checked
-                Layout.fillHeight: true
-
-                Layout.preferredWidth: 1
-
-                filepath: m.filepath
-            }*/
 	    }
 
 	    FooterBar {
@@ -104,6 +104,7 @@ Rectangle {
             Layout.fillWidth: true
             Layout.preferredHeight: 40
 
+            selected: m.selected
             fileName: m.filepath
             fileType : m.fileType
             onChangeFilter: {
@@ -111,11 +112,21 @@ Rectangle {
                 m.filter = newFilter
             }
             onOpenFolder: {
+                listPrevious.append({"url": m.directory})
                 console.debug("folder has changed to " + newFolder)
                 m.directory = newFolder
             }
 	    }
 
     }
+
+
+    Keys.onPressed: {
+        if ((event.key == Qt.Key_L) && (event.modifiers & Qt.ControlModifier)) {
+            headerBar.forceActiveFocusOnPath()
+            event.accepted = true
+        }
+    }
+
 }
 

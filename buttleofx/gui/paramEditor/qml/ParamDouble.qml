@@ -4,6 +4,7 @@ Item {
     id: paramDouble
     implicitWidth : 300
     implicitHeight : 30
+    y:10
 
     property variant paramObject: model.object
 
@@ -59,7 +60,7 @@ Item {
                 id: sliderInput
                 width: barSlider.width / 2
                 x: barSlider.width / 2 - width / 2
-                y:-10
+                y:-8
                 horizontalAlignment: TextInput.AlignHCenter
                 text: paramObject.value
                 font.family: "Helvetica"

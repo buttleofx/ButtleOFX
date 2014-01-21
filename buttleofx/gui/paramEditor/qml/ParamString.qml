@@ -8,6 +8,7 @@ Item {
     id: containerParamString
     implicitWidth: 300
     implicitHeight: 30
+    y:10
 
     property variant paramObject: model.object
 
@@ -112,7 +113,10 @@ Item {
             border.width: 1
             border.color: "#333"
             radius: 3
+<<<<<<< HEAD
             //elide: Text.ElideRight
+=======
+>>>>>>> 3614442b243d3d8dedcfc7f2be223364bc94e39c
             clip: true
 
             // create the right input, depend on the tuttle param

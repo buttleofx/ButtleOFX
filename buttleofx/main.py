@@ -43,7 +43,7 @@ from buttleofx.event import ButtleEventSingleton
 from buttleofx.data import Finder
 #TimerPlayer
 from buttleofx.gui.viewer import TimerPlayer
-#TimerPlayer
+#FileModelBrowser
 from buttleofx.gui.browser import FileModelBrowser
 # undo_redo
 from buttleofx.core.undo_redo.manageTools import CommandManager

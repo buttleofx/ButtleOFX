@@ -1,10 +1,12 @@
 import QtQuick 2.0
 import QtQuick.Controls 1.0
+import QtQuick.Controls.Styles 1.0
 
 Item {
     id: choiceList
     implicitWidth: 300
     implicitHeight: 30
+    y:10
 
     property variant paramObject: model.object
     // property variant menuItems: paramObject.listValue
@@ -53,7 +55,33 @@ Item {
             model: menuItems
             width: 200
             height: 30
-            y: -7
+            y:-6
+
+
+            style: ComboBoxStyle {
+
+                background: Rectangle {
+                    id: choiceButton
+                    color: "#212121"
+                    border.width: 1
+                    border.color: "#333"
+                    radius: 3
+                    Image{
+                        id: arrow
+                        source: "file:///" + _buttleData.buttlePath + "/gui/img/buttons/params/arrow.png"
+                        y: 12
+                        x: 187
+                    }
+                }
+                label: Text {
+                        color: "white"
+                        text: control.currentText
+                        width: comboBox.width
+                        y: 2
+                        x: -2
+                        elide:Text.ElideRight
+                      }
+            }
 
             // usefull to avoid setting paramObject.value when loaded the comboBox
             property int comboBoxCharged: 0

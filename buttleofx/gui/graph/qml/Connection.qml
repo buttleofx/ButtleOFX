@@ -28,6 +28,8 @@ Item {
         x2: parent.x2
         y2: parent.y2
 
+        visible : miniatureState ? false : true
+
         readOnly: connectionItem.readOnly
         miniatureScale: connectionItem.miniatureScale
         miniatureState: connectionItem.miniatureState
@@ -85,13 +87,14 @@ Item {
             id: droparea1
             objectName: "DropArea"
             anchors.fill: parent
+            anchors.margins: 25
             Drag.keys: "node"
             onDropped: {
                 //we assure that the node dropped is not part of the actual connection
-                if(drop.source.nodeWrapper.name != clipIn.nodeName && drop.source.nodeWrapper.name != clipOut.nodeName){
+                if(drop.source.nodeWrapper !== undefined && drop.source.nodeWrapper.name != clipIn.nodeName && drop.source.nodeWrapper.name != clipOut.nodeName){
                         drop.accept()
                         //Create two connections from one and delete the previous one
-                        _buttleManager.connectionManager.dissociateConnection(clipOut, clipIn, drop.source.nodeWrapper.getClip("Source"), drop.source.nodeWrapper.getClip(drop.source.nodeWrapper.outputClip.name), m.connectionWrapper)
+                        _buttleManager.connectionManager.dissociate(clipOut, clipIn, drop.source.nodeWrapper.getClip("Source"), drop.source.nodeWrapper.getClip(drop.source.nodeWrapper.outputClip.name), m.connectionWrapper)
                 }
                 dropIndicator.state = ""
 
@@ -99,7 +102,7 @@ Item {
                // m.nodeWrapper.coord.x
             }
             onEntered: {
-                if(drag.source.nodeWrapper.name !== clipIn.nodeName && drag.source.nodeWrapper.name !== clipOut.nodeName){
+                if(drag.source.nodeWrapper !== undefined && drag.source.nodeWrapper.name !== clipIn.nodeName && drag.source.nodeWrapper.name !== clipOut.nodeName){
                     dropIndicator.state = "entereddrop"
                 }
             }

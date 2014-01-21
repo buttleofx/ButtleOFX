@@ -92,6 +92,8 @@ Item {
             id: paramStringTitle
             text: paramObject.text + " : "
             color: "white"
+            elide: Text.ElideRight
+            clip: true
             // if param has been modified, title in bold font
             font.bold: paramObject.hasChanged ? true : false
             MouseArea {

@@ -4,6 +4,16 @@ import QuickMamba 1.0
 Rectangle {
     id: qml_graphRoot
 
+
+    Keys.onPressed: {
+
+        // Graph toolbar
+        if (event.key == Qt.Key_Delete) {
+           _buttleManager.deleteSelection();
+        }
+    }
+
+
     QtObject {
         id: m
         property variant graphRoot: qml_graphRoot
@@ -26,6 +36,31 @@ Rectangle {
 
     property var container: graphContainer
 
+    /*
+    ExternDropArea {
+        anchors.fill: parent
+        acceptDrop: true
+        onDragEnter: {
+            acceptDrop = hasUrls
+        }
+        onDrop: {
+            console.log("Drop external files:", acceptDrop)
+            if(acceptDrop) {
+                _buttleManager.nodeManager.dropFile(firstUrl, pos.x - m.graphRoot.originX, pos.y - m.graphRoot.originY)
+            }
+        }
+    }
+    */
+    DropArea {
+        anchors.fill: parent
+        keys: "fileDrag"
+
+        onDropped: {
+            _buttleManager.nodeManager.dropFile(drag.source.filePath, drag.x - m.graphRoot.originX, drag.y - m.graphRoot.originY)
+            console.log("File dropped : ", drag.source.filePath)
+        }
+    }
+
     Rectangle {
         id: graphContainer
         x: 0
@@ -34,7 +69,7 @@ Rectangle {
         height: parent.height * zoomCoeff
         color: "transparent"
 
-        Item {
+        /*Item {
             id: repere
             property color repereColor: "red"
             property double size: 50 * zoomCoeff
@@ -56,7 +91,7 @@ Rectangle {
                 height: 2 * repere.size + repere.thickness
                 color: repere.repereColor
             }
-        }
+        }*/
 
         Item {
             id: nodes
@@ -76,6 +111,7 @@ Rectangle {
                     readOnly: qml_graphRoot.readOnly
                     miniatureScale: qml_graphRoot.miniatureScale
                     miniatureState: qml_graphRoot.miniatureState
+
 
                     StateGroup {
                         id: stateViewerNode
@@ -230,8 +266,5 @@ Rectangle {
             }
         }
     }*/
-
-
-    // Rectangle selection is placed here so it is drawn over the nodes
 
 }

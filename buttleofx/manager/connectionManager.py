@@ -201,6 +201,13 @@ class ConnectionManager(QtCore.QObject):
         
         return False
         
+    @QtCore.pyqtSlot(QtCore.QObject)
+    def unHook(self, clip):
+        buttleData = ButtleDataSingleton().get()
+        for connection in  buttleData.getGraph()._connections:
+            if((clip.getNodeName() == connection.getClipOut().getNodeName() and clip.getClipName() == connection.getClipOut().getClipName()) or (clip.getNodeName() == connection.getClipIn().getNodeName() and clip.getClipName() == connection.getClipIn().getClipName())):
+                buttleData.getGraph().deleteConnection(connection)
+        
     ############### CREATION AND DESTRUCTION ###############
 
     def connect(self, clipOut, clipIn):

@@ -11,6 +11,7 @@ Rectangle {
     property alias clipSize: m.clipSize
     property bool accept: false
     property bool replace: false
+    property bool unHookEnabled: false
 
     property bool readOnly
     property real miniatureScale
@@ -176,6 +177,7 @@ Rectangle {
         onReleased: {
             var dropStatus = handle.Drag.drop()
             connections.tmpConnectionExists = false
+            unHookEnabled = false
         }
 
         // Invisble rectangle which is dragged from an output to an input
@@ -253,7 +255,10 @@ Rectangle {
                 connections.tmpConnectionY1 = yCenter_inGraph
                 connections.tmpConnectionX2 = xCenter_inGraph
                 connections.tmpConnectionY2 = yCenter_inGraph
+
+                unHookEnabled = true
        }
+
        onPositionChanged: {
            if(!(_buttleManager.connectionManager.connectionExists(m.clipWrapper, m.clipWrapper))){
                // Update of the connection during the drag
@@ -269,6 +274,9 @@ Rectangle {
                     handle.x = mouseX - handle.width/2
                     handle.y = mouseY - handle.height/2
                }
+           }else{
+               if(unHookEnabled)
+                    _buttleManager.connectionManager.unHook(m.clipWrapper)
            }
         }
     }

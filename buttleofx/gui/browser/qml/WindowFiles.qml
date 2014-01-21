@@ -15,28 +15,7 @@ Rectangle {
     signal changeFile(string file)
     signal changeFileType(string fileType)
     property bool viewGrid: true
-    property bool ctrlPressed: false
-    property bool shiftPressed: false
-
-    Keys.onPressed: {
-        if (event.modifiers & Qt.ControlModifier) {
-            winFile.ctrlPressed = true
-        }
-        if (event.modifiers & Qt.ShiftModifier) {
-            winFile.shiftPressed = true
-        }
-    }
-
-    Keys.onReleased: {
-        if (event.modifiers & Qt.ControlModifier) {
-            winFile.ctrlPressed = false
-        }
-        if (event.modifiers & Qt.ShiftModifier) {
-            winFile.shiftPressed = false
-        }
-    }
-
-
+    signal changeSelectedList(variant selected)
 
     FileModelBrowser {
         id: fileModel
@@ -58,6 +37,7 @@ Rectangle {
         anchors.bottomMargin: 5
         height: 120
         width: 110
+        visible: viewGrid ? false : true
 
         GridView {
             id: gridview
@@ -70,7 +50,7 @@ Rectangle {
             delegate: Component {
                 Rectangle {
                     id: background
-                    color: model.object.isSelected ? "#888888FF" : "transparent"
+                    color: model.object.isSelected ? "#00b2a1" : "transparent"
                     radius: 5
                     height: 80
                     width: 100
@@ -99,29 +79,33 @@ Rectangle {
                                     PropertyChanges { target: file; x: file.x; y: file.y }
                                 }
                             }
-
-
+                            anchors.horizontalCenter: parent.horizontalCenter
 
                             MouseArea {
                                 id: mouseRegionImage
                                 anchors.fill : parent
                                 onClicked: {
                                     //if shift:
-                                    console.debug("shiftPressed :" + winFile.shiftPressed)
-                                    if(winFile.shiftPressed)
+                                    if(mouse.modifiers & Qt.ShiftModifier)
                                         fileModel.selectItemsByShift(gridview.currentIndex, index)
+
                                     gridview.currentIndex = index
                                     winFile.changeFile(model.object.filepath)
                                     winFile.changeFileType(model.object.fileType)
                                     //if ctrl:
-                                    console.debug("ctrlPressed :" + winFile.ctrlPressed)
-                                    if (winFile.ctrlPressed == true) {
+                                    if(mouse.modifiers & Qt.ControlModifier)
                                         fileModel.selectItems(index)
-                                    }
-                                    else if (!winFile.shiftPressed){
-                                        fileModel.selectItem(index)
-                                    }
 
+                                    else if(!(mouse.modifiers & Qt.ShiftModifier))
+                                        fileModel.selectItem(index)
+
+                                    var sel = fileModel.getSelectedItems()
+                                    console.debug("sel.count: " + sel.count)
+                                    for(var selIndex = 0; selIndex < sel.count; ++selIndex)
+                                    {
+                                        console.debug("sel: " + selIndex + " -> " + sel.get(selIndex).fileName)
+                                    }
+                                    winFile.changeSelectedList(sel)
                                 }
                                 onDoubleClicked: {
                                     model.object.fileType == "Folder" ? winFile.goToFolder(model.object.filepath) : Qt.openUrlExternally("file:///" + model.object.filepath)
@@ -141,20 +125,21 @@ Rectangle {
                                 anchors.fill : parent
                                 onClicked: {
                                     //if shift:
-                                    console.debug("shiftPressed :" + winFile.shiftPressed)
-                                    if(winFile.shiftPressed)
+                                    if(mouse.modifiers & Qt.ShiftModifier)
                                         fileModel.selectItemsByShift(gridview.currentIndex, index)
+
                                     gridview.currentIndex = index
                                     winFile.changeFile(model.object.filepath)
                                     winFile.changeFileType(model.object.fileType)
                                     //if ctrl:
-                                    console.debug("ctrlPressed :" + winFile.ctrlPressed)
-                                    if (winFile.ctrlPressed == true) {
+                                    if(mouse.modifiers & Qt.ControlModifier)
                                         fileModel.selectItems(index)
-                                    }
-                                    else if (!winFile.shiftPressed){
+
+                                    else if(!(mouse.modifiers & Qt.ShiftModifier))
                                         fileModel.selectItem(index)
-                                    }
+
+                                    var sel = fileModel.getSelectedItems()
+                                    winFile.changeSelectedList(sel)
                                 }
                                 onDoubleClicked: {
                                     model.object.fileType == "Folder" ? winFile.goToFolder(model.object.filepath) : Qt.openUrlExternally("file:///" + model.object.filepath)
@@ -177,6 +162,7 @@ Rectangle {
         anchors.bottomMargin: 5
         height: 120
         width: 110
+        visible: viewGrid
 
         ListView {
             id: listview
@@ -188,7 +174,7 @@ Rectangle {
             delegate: Component {
                 Rectangle {
                     id: background
-                    color: model.object.isSelected ? "#888888FF" : "transparent"
+                    color: model.object.isSelected ? "#00b2a1" : "transparent"
                     radius: 5
                     height: 25
                     width: listview.width
@@ -202,26 +188,26 @@ Rectangle {
                             sourceSize.width: 20
                             sourceSize.height: 20
 
-
                             MouseArea {
                                 id: mouseRegionImage
                                 anchors.fill : parent
                                 onClicked: {
                                     //if shift:
-                                    console.debug("shiftPressed :" + winFile.shiftPressed)
-                                    if(winFile.shiftPressed)
-                                        fileModel.selectItemsByShift(listview.currentIndex, index)
-                                    listview.currentIndex = index
+                                    if(mouse.modifiers & Qt.ShiftModifier)
+                                        fileModel.selectItemsByShift(gridview.currentIndex, index)
+
+                                    gridview.currentIndex = index
                                     winFile.changeFile(model.object.filepath)
                                     winFile.changeFileType(model.object.fileType)
                                     //if ctrl:
-                                    console.debug("ctrlPressed :" + winFile.ctrlPressed)
-                                    if (winFile.ctrlPressed == true) {
+                                    if(mouse.modifiers & Qt.ControlModifier)
                                         fileModel.selectItems(index)
-                                    }
-                                    else if (!winFile.shiftPressed){
+
+                                    else if(!(mouse.modifiers & Qt.ShiftModifier))
                                         fileModel.selectItem(index)
-                                    }
+
+                                    var sel = fileModel.getSelectedItems()
+                                    winFile.changeSelectedList(sel)
                                 }
                                 onDoubleClicked: {
                                     model.object.fileType == "Folder" ? winFile.goToFolder(model.object.filepath) : Qt.openUrlExternally("file:///" + model.object.filepath)
@@ -235,26 +221,26 @@ Rectangle {
                             width: parent.width
                             elide: Text.ElideRight
 
-
                             MouseArea {
                                 id: mouseRegionText
                                 anchors.fill : parent
                                 onClicked: {
                                     //if shift:
-                                    console.debug("shiftPressed :" + winFile.shiftPressed)
-                                    if(winFile.shiftPressed)
-                                        fileModel.selectItemsByShift(listview.currentIndex, index)
-                                    listview.currentIndex = index
+                                    if(mouse.modifiers & Qt.ShiftModifier)
+                                        fileModel.selectItemsByShift(gridview.currentIndex, index)
+
+                                    gridview.currentIndex = index
                                     winFile.changeFile(model.object.filepath)
                                     winFile.changeFileType(model.object.fileType)
                                     //if ctrl:
-                                    console.debug("ctrlPressed :" + winFile.ctrlPressed)
-                                    if (winFile.ctrlPressed == true) {
+                                    if(mouse.modifiers & Qt.ControlModifier)
                                         fileModel.selectItems(index)
-                                    }
-                                    else if (!winFile.shiftPressed){
+
+                                    else if(!(mouse.modifiers & Qt.ShiftModifier))
                                         fileModel.selectItem(index)
-                                    }
+
+                                    var sel = fileModel.getSelectedItems()
+                                    winFile.changeSelectedList(sel)
                                 }
                                 onDoubleClicked: {
                                     model.object.fileType == "Folder" ? winFile.goToFolder(model.object.filepath) : Qt.openUrlExternally("file:///" + model.object.filepath)

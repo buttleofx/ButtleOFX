@@ -13,10 +13,8 @@ Rectangle {
     signal changeFolder(string folder)
     property string parentFolder
 
-    Keys.onPressed: {
-         if ((event.key == Qt.Key_L) && (event.modifiers & Qt.ControlModifier)) {
-            texteditPath.focus = true
-        }
+    function forceActiveFocusOnPath() {
+        texteditPath.forceActiveFocus()
     }
 
     FileModelBrowser {
@@ -86,7 +84,7 @@ Rectangle {
                 color: suggestion.exists ? "white" : "red"
                 selectByMouse: true
 
-                selectionColor: "blue"
+                selectionColor: "#00b2a1"
 
                 onAccepted: {
                     changeFolder(text)

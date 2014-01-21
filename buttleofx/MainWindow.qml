@@ -294,7 +294,7 @@ ApplicationWindow {
                 onTriggered: paramEditor.parent.visible == false ? paramEditor.parent.visible=true : paramEditor.parent.visible=false
             }
         }
-
+	}
 /* A revoir
         Menu {
             title: "Add"
@@ -305,11 +305,9 @@ ApplicationWindow {
             }
         }
 */
-    }
 
-
-
-    //this rectangle represents the zone under the menu, it allows to define the anchors.fill and margins for the SplitterRow
+    
+   //this rectangle represents the zone under the menu, it allows to define the anchors.fill and margins for the SplitterRow
     Rectangle {
         id: modulsContainer
         width: parent.width
@@ -474,6 +472,7 @@ ApplicationWindow {
 
         }*/
         ParamTuttleEditor {
+            id: paramEditor
             Layout.fillHeight: true
             visible: paramSelected ? true:false
             width: 300

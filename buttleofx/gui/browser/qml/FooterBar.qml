@@ -9,6 +9,7 @@ Rectangle {
 	property string fileName: "Default file"
     property string fileType: "File"
     property string filter: "*"
+    property variant selected
 
     signal changeFilter(string newFilter)
     signal openFolder(string newFolder)
@@ -36,20 +37,17 @@ Rectangle {
 		Button{
 			id: openButton
 			text: "Open"
-			Layout.fillHeight: true
+            height: parent.height
 
             onClicked: {
-                footer.fileType == "Folder" ? footer.openFolder(fileName) : Qt.openUrlExternally("file:///" + fileName)
-                console.debug("Open " + fileName)
+                for(var i=0; i< selected.count; ++i)
+                {
+                    console.debug("selected: " + i + " -> " + selected.get(i).fileName)
+                    footer.fileType == "Folder" ? footer.openFolder(fileName) : Qt.openUrlExternally("file:///" + selected.get(i).filepath)
+                    console.debug("Open " + fileName)
+                }
             }
 		}
-        /*Button{
-			id: cancelButton
-			text: "Cancel"
-			Layout.fillHeight: true
-
-            onClicked: Qt.quit()
-        }*/
 	}
 }
 

@@ -17,8 +17,10 @@ Rectangle {
         property string fileFolder: "/"
         property string fileType: ""
         property string filter:"*"
+        property variant selected
     }
 
+    focus: true
 
     Tab {
         id: tabBar
@@ -37,7 +39,7 @@ Rectangle {
             Layout.fillWidth: true
             Layout.preferredHeight: 40
 
-            z: files.z + 1
+           	z: files.z + 1
 
             parentFolder: m.fileFolder
             folder: m.directory
@@ -84,6 +86,9 @@ Rectangle {
                     m.fileType = fileType
                     console.debug("fileType has changed to " + m.fileType)
                 }
+                onChangeSelectedList: {
+                    m.selected = selected
+                }
 		    }
 
 	    }
@@ -93,6 +98,7 @@ Rectangle {
             Layout.fillWidth: true
             Layout.preferredHeight: 40
 
+            selected: m.selected
             fileName: m.filepath
             fileType : m.fileType
             onChangeFilter: {
@@ -106,5 +112,14 @@ Rectangle {
 	    }
 
     }
+
+
+    Keys.onPressed: {
+        if ((event.key == Qt.Key_L) && (event.modifiers & Qt.ControlModifier)) {
+            headerBar.forceActiveFocusOnPath()
+            event.accepted = true
+        }
+    }
+
 }
 

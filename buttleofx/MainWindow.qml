@@ -4,6 +4,7 @@ import QtQuick.Layouts 1.0
 import QtQml 2.1
 import QuickMamba 1.0
 import QtQuick.Dialogs 1.0
+import QtQuick.Window 2.1
 
 import "gui/graph/qml"
 import "gui/viewer/qml"
@@ -469,12 +470,14 @@ ApplicationWindow {
             anchors.fill: parent
             node: _buttleData.currentViewerNodeWrapper
             onButtonCloseClicked: {selectedView=-1; parent.visible = false}
+            onButtonFullscreenClicked: {fullscreenWindow.visible = true; fullscreenContent.children = player}
         }
 
         GraphEditor {
             id: graphEditor
             anchors.fill: parent
             onButtonCloseClicked: {selectedView=-1; parent.visible = false}
+            onButtonFullscreenClicked: {fullscreenWindow.visible = true; fullscreenContent.children = graphEditor}
         }
 
         ParamEditor {
@@ -483,16 +486,27 @@ ApplicationWindow {
             params: _buttleData.currentParamNodeWrapper ? _buttleData.currentParamNodeWrapper.params : null
             currentParamNode: _buttleData.currentParamNodeWrapper
             onButtonCloseClicked: {selectedView=-1; parent.visible = false}
+            onButtonFullscreenClicked: {fullscreenWindow.visible = true; fullscreenContent.children = paramEditor}
         }
 
         Browser {
             id: browser
             anchors.fill: parent
             onButtonCloseClicked: {selectedView=-1; parent.visible = false}
+            onButtonFullscreenClicked: {fullscreenWindow.visible = true; fullscreenContent.children = browser}
         }
 
         Item {
             id: empty
+        }
+
+        Window {
+            id: fullscreenWindow
+            visibility: Window.Maximized
+            visible: false
+            Item {
+                id: fullscreenContent
+            }
         }
     }
 }

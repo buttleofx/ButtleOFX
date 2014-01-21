@@ -11,6 +11,7 @@ Item {
     property color tabColor: "#141414"
     property string name: "New tab"
     signal closeClicked(bool clicked)
+    signal fullscreenClicked(bool clicked)
 
     Row{
         spacing: 1
@@ -56,6 +57,32 @@ Item {
                     }
 
                 onClicked: closeClicked(true)
+            }
+
+            Button {
+                width: 12
+                height: 12
+                anchors.top: parent.top
+                anchors.right: parent.right
+                anchors.rightMargin: 16
+                anchors.topMargin: 2
+
+                iconSource:
+                    if (pressed){
+                        "img/icons/fullscreen_hover.png"
+                    }else{
+                        "img/icons/fullscreen.png"
+                    }
+
+                style:
+                    ButtonStyle {
+                        background: Rectangle {
+                            anchors.fill: parent
+                            color: "transparent"
+                        }
+                    }
+
+                onClicked: fullscreenClicked(true)
             }
         }//tab
     }//Row

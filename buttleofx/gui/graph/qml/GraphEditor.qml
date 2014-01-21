@@ -6,12 +6,14 @@ import "../../../gui"
 Item {
     id: graphEditor
 
-    signal buttonCloseClicked(bool clicked)
+    signal buttonCloseClicked(bool clicked)  
+    signal buttonFullscreenClicked(bool clicked)
 
     Tab {
         id: tabBar
         name: "Graph"
         onCloseClicked: graphEditor.buttonCloseClicked(true)
+        onFullscreenClicked: graphEditor.buttonFullscreenClicked(true)
     }
 
     ColumnLayout {

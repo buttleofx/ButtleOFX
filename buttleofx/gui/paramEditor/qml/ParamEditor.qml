@@ -9,6 +9,7 @@ Item {
     id: paramEditor
 
     signal buttonCloseClicked(bool clicked)
+    signal buttonFullscreenClicked(bool clicked)
 
     property variant params 
     property variant currentParamNode
@@ -30,6 +31,7 @@ Item {
         id: tabBar
         name: "Parameters"
         onCloseClicked: paramEditor.buttonCloseClicked(true)
+        onFullscreenClicked: paramEditor.buttonFullscreenClicked(true)
     }
 
     SplitView {

@@ -8,6 +8,7 @@ Item {
     id: player
 
     signal buttonCloseClicked(bool clicked)
+    signal buttonFullscreenClicked(bool clicked)
 
     // remark : in python if there are ten frames, they are numbered from 0 to 9 so we need some time to add 1 for display
     property variant node
@@ -76,6 +77,7 @@ Item {
         id: tabBar
         name: "Viewer"
         onCloseClicked: player.buttonCloseClicked(true)
+        onFullscreenClicked: player.buttonFullscreenClicked(true)
     }
 
     /********************************Viewer and Tools************************************/

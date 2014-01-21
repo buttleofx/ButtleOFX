@@ -9,6 +9,7 @@ Rectangle {
     color: "#353535"
 
     signal buttonCloseClicked(bool clicked)
+    signal buttonFullscreenClicked(bool clicked)
 
     QtObject {
         id: m
@@ -23,6 +24,7 @@ Rectangle {
         id: tabBar
         name: "Browser"
         onCloseClicked: browser.buttonCloseClicked(true)
+        onFullscreenClicked: browser.buttonFullscreenClicked(true)
     }
 
     ColumnLayout {

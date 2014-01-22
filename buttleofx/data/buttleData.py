@@ -175,7 +175,7 @@ class ButtleData(QtCore.QObject):
 
     def getEditedNodesWrapper(self):
         """
-            Returns the total of param nodeWrapper.
+            Returns the total of param nodeWrapper for the parametersEditor.
         """
         return self.getCurrentGraphWrapper().getNodeWrappers()
 
@@ -189,7 +189,7 @@ class ButtleData(QtCore.QObject):
         if nodeViewerInfos is None:
             return None
         else:
-            return self._graphWrapper.getNodeWrapper(nodeViewerInfos[0])
+            return self._currentGraphWrapper.getNodeWrapper(nodeViewerInfos[0])
 
     @QtCore.pyqtSlot(int, result=int)
     def getFrameByViewerIndex(self, index):

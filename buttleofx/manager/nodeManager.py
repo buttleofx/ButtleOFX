@@ -175,6 +175,8 @@ class NodeManager(QtCore.QObject):
         """
         buttleData = ButtleDataSingleton().get()
 
+        if QtCore.QUrl(url).isLocalFile():
+            url = QtCore.QUrl(url).toLocalFile()
         extension = url.split(".")[-1].lower()
         if extension == 'bofx':
             buttleData.loadData(url)  # also need to verify the json format

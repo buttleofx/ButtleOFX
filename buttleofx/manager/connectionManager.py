@@ -25,6 +25,7 @@ class ConnectionManager(QtCore.QObject):
             Returns True if the connection between the nodes is possible, else False.
             A connection is possible if the clip isn't already taken, and if the clips are from 2 different nodes, not already connected.
         """
+        
         buttleData = ButtleDataSingleton().get()
         graph = buttleData.getGraph()
 
@@ -36,15 +37,29 @@ class ConnectionManager(QtCore.QObject):
         if (clip1.getClipName() == "Output" and clip2.getClipName() == "Output") or (clip1.getClipName() != "Output" and clip2.getClipName() != "Output"):
             return False
 
-        # if the input clip is already taken : False
-        if (clip1.getClipName() != "Output" and graph.contains(clip1)) or (clip2.getClipName() != "Output" and graph.contains(clip2)):
-            return False
-
         # if the nodes containing the clips are already connected : False
         if(graph.nodesConnected(clip2, clip1)):
             return False
-
         return True
+        
+    @QtCore.pyqtSlot(QtCore.QObject, QtCore.QObject, result=bool)
+    def connectionExists(self, clip1, clip2):
+        """
+            Returns True if a connection between the nodes already exists, else False.
+            A connection is possible if the clip isn't already taken, and if the clips are from 2 different nodes, not already connected.
+        """
+        
+        buttleData = ButtleDataSingleton().get()
+        graph = buttleData.getGraph()
+
+        # if the input clip is already taken : False
+        if (clip1.getClipName() != "Output" and graph.contains(clip1)) or (clip2.getClipName() != "Output" and graph.contains(clip2)):
+            return True
+        
+        if (clip1.getClipName() != "Source" and graph.contains(clip1)) or (clip2.getClipName() != "Source" and graph.contains(clip2)):
+            return True
+            
+        return False
 
     @QtCore.pyqtSlot(str, QtCore.QObject, int, result=bool)
     def canConnectTmpNodes(self, dataTmpClip, clip, clipIndex):
@@ -55,23 +70,24 @@ class ConnectionManager(QtCore.QObject):
         """
         buttleData = ButtleDataSingleton().get()
 
+        print("-----------------------------------------------------------------------")
         # we split the data of the tmpClip (from mimeData) to find needed informations about this clip.
         infosTmpClip = dataTmpClip.split("/")
-
-        if infosTmpClip[0] != "clip" or len(infosTmpClip) != 4:
-            return False
-        else:
-            tmpClipNodeName, tmpClipName, tmpClipIndex = infosTmpClip[1], infosTmpClip[2], int(infosTmpClip[3])
-
+        #if infosTmpClip[0] != "clip" or len(infosTmpClip) != 4:
+            #return False
+        #else:
+            #tmpClipNodeName, tmpClipName, tmpClipIndex = infosTmpClip[1], infosTmpClip[2], int(infosTmpClip[3])
+        tmpClipNodeName = str(clip.getNodeName())
+        tmpClipName = str(clip.getClipName())
+        tmpClipIndex = str(clipIndex)
         # we find the position of this tmpClip to be able to create a IdClip object.
         positionTmpClip = buttleData.getGraphWrapper().getPositionClip(tmpClipNodeName, tmpClipName, tmpClipIndex)
-        tmpClip = IdClip(tmpClipNodeName, tmpClipName, clipIndex, positionTmpClip)
+        tmpClip = IdClip(tmpClipNodeName, tmpClipName)
 
         if tmpClip:
             # idem, for the "dropped" clip = newClip
             positionNewClip = buttleData.getGraphWrapper().getPositionClip(clip.getNodeName(), clip.getClipName(), clipIndex)
-            newClip = IdClip(clip.getNodeName(), clip.getClipName(), clipIndex, positionNewClip)
-
+            newClip = IdClip(clip.getNodeName(), clip.getClipName())
             # finally we return if the clips can be connected
             return self.canConnect(tmpClip, newClip)
 
@@ -86,22 +102,22 @@ class ConnectionManager(QtCore.QObject):
             Function called when a clip is pressed (but not released yet).
             The function sends mimeData to identify the clip.
         """
-        widget = QtGui.QWidget()
-        drag = QtGui.QDrag(widget)
+        #widget = QtGui.QWidget()
+        #drag = QtGui.QDrag(widget)
         mimeData = QtCore.QMimeData()
 
         # Sets informations of the first clip to the mimedata, as text.
         # Example of mimeData : "clip/TuttleJpegReader_1/Output/1"
         mimeData.setText("clip/" + str(clip.getNodeName()) + "/" + str(clip.getClipName()) + "/" + str(clipIndex))
-        drag.setMimeData(mimeData)
+        #drag.setMimeData(mimeData)
 
         # transparent pixmap
-        pixmap = QtGui.QPixmap(1, 1)
-        pixmap.fill(QtCore.Qt.transparent)
-        drag.setPixmap(pixmap)
+        #pixmap = QtGui.QPixmap(1, 1)
+        #pixmap.fill(QtCore.Qt.transparent)
+        #drag.setPixmap(pixmap)
 
         # starts the drag
-        drag.exec_(QtCore.Qt.MoveAction)
+        #drag.exec_(QtCore.Qt.MoveAction)
 
     @QtCore.pyqtSlot(str, QtCore.QObject, int)
     def connectionDropEvent(self, dataTmpClip, clip, clipIndex):
@@ -161,7 +177,7 @@ class ConnectionManager(QtCore.QObject):
         self.connect(id_clipOut, id_clipIn)
         
     @QtCore.pyqtSlot(QtCore.QObject, QtCore.QObject, QtCore.QObject, QtCore.QObject, QtCore.QObject)
-    def dissociateConnection(self, clipOut, clipIn, middleIn, middleOut, connectionWrapper):
+    def dissociate(self, clipOut, clipIn, middleIn, middleOut, connectionWrapper):
         id_clipOut = IdClip(clipOut.getNodeName(), clipOut.getClipName())
         id_clipIn = IdClip(clipIn.getNodeName(), clipIn.getClipName())
         id_middleIn = IdClip(middleIn.getNodeName(), middleIn.getClipName())
@@ -170,6 +186,28 @@ class ConnectionManager(QtCore.QObject):
         self.connect(id_clipOut, id_middleIn)
         self.connect(id_middleOut, id_clipIn)
         self.disconnect(connectionWrapper)
+      
+    @QtCore.pyqtSlot(QtCore.QObject, QtCore.QObject, QtCore.QObject)
+    def replace(self, clip, clipOut, clipIn):
+        buttleData = ButtleDataSingleton().get()
+                  
+        id_clipOut = IdClip(clipOut.getNodeName(), clipOut.getClipName())
+        id_clipIn = IdClip(clipIn.getNodeName(), clipIn.getClipName())
+        self.connect(id_clipOut, id_clipIn)
+        
+        for connection in  buttleData.getGraph()._connections:
+            if((clip.getNodeName() == connection.getClipOut().getNodeName() and clip.getClipName() == connection.getClipOut().getClipName()) or (clip.getNodeName() == connection.getClipIn().getNodeName() and clip.getClipName() == connection.getClipIn().getClipName())):
+                buttleData.getGraph().deleteConnection(connection)
+        
+        return False
+        
+    @QtCore.pyqtSlot(QtCore.QObject)
+    def unHook(self, clip):
+        buttleData = ButtleDataSingleton().get()
+        for connection in  buttleData.getGraph()._connections:
+            if((clip.getNodeName() == connection.getClipOut().getNodeName() and clip.getClipName() == connection.getClipOut().getClipName()) or (clip.getNodeName() == connection.getClipIn().getNodeName() and clip.getClipName() == connection.getClipIn().getClipName())):
+                buttleData.getGraph().deleteConnection(connection)
+        
     ############### CREATION AND DESTRUCTION ###############
 
     def connect(self, clipOut, clipIn):

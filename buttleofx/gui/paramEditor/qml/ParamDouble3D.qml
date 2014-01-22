@@ -6,6 +6,7 @@ Item {
     id: containerParamDouble3D
     implicitWidth: 300
     implicitHeight: 30
+    y:10
 
     property variant paramObject: model.object
 

@@ -1,10 +1,10 @@
 import QtQuick 2.0
 
-
 Item {
     id: containerParamInt2D
     implicitWidth: 300
     implicitHeight: 30
+    y:10
 
     property variant paramObject: model.object
 
@@ -34,6 +34,7 @@ Item {
                     paramObject.value1 = paramObject.getDefaultValue1()
                     paramObject.value2 = paramObject.getDefaultValue2()
                 }
+
             }
         }
 

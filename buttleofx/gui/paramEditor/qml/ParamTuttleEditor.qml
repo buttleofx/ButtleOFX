@@ -2,10 +2,16 @@ import QtQuick 2.0
 import QtQuick.Controls 1.0
 import QtQuick.Layouts 1.0
 import QtQuick.Controls.Styles 1.0
+import "qmlComponents"
+
+import "../../../gui"
 
 //parent of the ParamEditor is the Row of the ButtleAp
 Item {
     id: paramEditor
+
+    signal buttonCloseClicked(bool clicked)
+    signal buttonFullscreenClicked(bool clicked)
 
     property variant params 
     property variant currentParamNode
@@ -23,9 +29,17 @@ Item {
     implicitWidth: 300
     implicitHeight: 500
 
+    Tab {
+        id: tabBar
+        name: "Parameters"
+        onCloseClicked: paramEditor.buttonCloseClicked(true)
+        onFullscreenClicked: paramEditor.buttonFullscreenClicked(true)
+    }
+
     SplitView {
         width: parent.width
         height: parent.height
+        y: tabBar.height
         //handleWidth: 3
         orientation: Qt.Vertical
 
@@ -113,6 +127,30 @@ Item {
                                 source : model.object.paramType + ".qml"
                                 width: parent.width
                                 x: 15 // here is the distance to the left of the listview
+                                z:0
+
+                                ToolTip{
+                                    id:tooltip
+                                    visible: false
+                                    paramHelp: model.object.doc
+                                    z:param.z+1
+                                }
+                                MouseArea {
+                                    anchors.fill: parent
+                                    acceptedButtons: Qt.RightButton               
+                                    hoverEnabled:true
+                                    onClicked: {
+                                        model.object.hasChanged = false
+                                        model.object.value = model.object.getDefaultValue()
+                                        model.object.pushValue(model.object.value)
+                                    }
+                                    onEntered: {
+                                        tooltip.visible=true
+                                    }
+                                    onExited: {
+                                        tooltip.visible=false
+                                    }
+                                }
                             }
                         }
                     }//Listview
@@ -130,7 +168,7 @@ Item {
                     GradientStop { position: 0.85; color: gradian2 }
                     GradientStop { position: 0.86; color: gradian1 }
                     GradientStop { position: 1; color: gradian2 }
-                } 
+                }
 
                 Text {
                     anchors.verticalCenter: parent.verticalCenter

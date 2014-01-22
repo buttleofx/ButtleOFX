@@ -35,7 +35,6 @@ Item {
             id: paramChoiceTitle
             text: paramObject.text + " : "
             color: "white"
-            //elide: Text.ElideMiddle
 
             // if param has been modified, title in bold font
             font.bold: paramObject.hasChanged ? true : false

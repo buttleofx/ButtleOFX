@@ -51,9 +51,32 @@ Rectangle {
         }
     }
     */
+
+    // Drag&Drop from outside the app
+    DropArea {
+        id: graphDropArea
+        anchors.fill: parent
+        keys: ["text/uri-list"]
+
+        onDropped: {
+            if( ! drop.hasUrls )
+            {
+                drop.accepted = false
+                return
+            }
+
+            for(var urlIndex in drop.urls)
+            {
+                _buttleManager.nodeManager.dropFile(drop.urls[urlIndex], drag.x - m.graphRoot.originX, drag.y - m.graphRoot.originY)
+            }
+            drop.accepted = true
+        }
+    }
+
+    // Drag&Drop from Browser to Graph
     DropArea {
         anchors.fill: parent
-        keys: "fileDrag"
+        keys: "internFileDrag"
 
         onDropped: {
             _buttleManager.nodeManager.dropFile(drag.source.filePath, drag.x - m.graphRoot.originX, drag.y - m.graphRoot.originY)
@@ -69,7 +92,7 @@ Rectangle {
         height: parent.height * zoomCoeff
         color: "transparent"
 
-        Item {
+        /*Item {
             id: repere
             property color repereColor: "red"
             property double size: 50 * zoomCoeff
@@ -91,7 +114,7 @@ Rectangle {
                 height: 2 * repere.size + repere.thickness
                 color: repere.repereColor
             }
-        }
+        }*/
 
         Item {
             id: nodes
@@ -102,7 +125,6 @@ Rectangle {
                 id: nodesRepeater
                 model: _buttleData.graphWrapper.nodeWrappers
                 Node {
-                    property int nodeWidth: 80
                     id: node
                     nodeWrapper: model.object
                     graphRoot: m.graphRoot

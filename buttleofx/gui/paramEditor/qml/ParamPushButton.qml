@@ -3,6 +3,7 @@ import QtQuick 2.0
 Item {
     implicitWidth: 120
     implicitHeight: 30
+    y:10
 
     property variant paramObject: model.object
 
@@ -31,7 +32,6 @@ Item {
             anchors.horizontalCenter: parent.horizontalCenter
             y: 2
             font.pixelSize: 14
-
             Component.onCompleted:
             {
                 pushButton.height = font.pixelSize + 6
@@ -41,7 +41,6 @@ Item {
         MouseArea {
             id: buttonmousearea
             anchors.fill: parent
-
             onPressed:
             {
                 pushButton.state = (pushButton.state == "enabled" ? "disabled" : "enabled")

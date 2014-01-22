@@ -30,6 +30,9 @@ class ParamDouble3D(Param):
     def getParamType(self):
         return "ParamDouble3D"
 
+    def getParamDoc(self):
+        return self._tuttleParam.getProperties().getStringProperty("OfxParamPropHint")
+
     def getDefaultValue1(self):
         return self._tuttleParam.getProperties().getDoubleProperty("OfxParamPropDefault", 0)
 

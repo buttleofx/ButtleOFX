@@ -1,20 +1,31 @@
 import QtQuick 2.0
 import QtQuick.Controls 1.0
 import QtQml 2.1
-
 import QtQuick.Controls.Styles 1.0
-
 import QuickMamba 1.0
+
+import "../../../gui"
 
 Item {
     id: parametersEditor
     implicitWidth: 325
     implicitHeight: parent.height
 
+    signal buttonCloseClicked(bool clicked)
+    signal buttonFullscreenClicked(bool clicked)
+
+    Tab {
+        id: tabBar
+        name: "Parameters - Advanced Mode"
+        onCloseClicked: parametersEditor.buttonCloseClicked(true)
+        onFullscreenClicked: parametersEditor.buttonFullscreenClicked(true)
+    }
+
     Rectangle{
         id: paramTitle
         width: parent.width
         height: 40
+        y: tabBar.height
         color: "#141414"
         /*gradient: Gradient {
                GradientStop { position: 0.0; color: "#141414" }

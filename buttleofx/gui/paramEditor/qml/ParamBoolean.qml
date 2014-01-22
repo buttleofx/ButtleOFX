@@ -4,6 +4,7 @@ Item {
     id: paramBoolean
     implicitWidth: 100
     implicitHeight: 30
+    y:10
 
     property alias title: paramBooleanTitle.text
     property variant paramObject: model.object
@@ -23,6 +24,7 @@ Item {
             color: "white"
             // if param has been modified, title in bold font
             font.bold: paramObject.hasChanged ? true : false
+
             MouseArea {
                 anchors.fill: parent
                 acceptedButtons: Qt.RightButton

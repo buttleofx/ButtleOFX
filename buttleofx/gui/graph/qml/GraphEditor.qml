@@ -6,12 +6,14 @@ import "../../../gui"
 Item {
     id: graphEditor
 
-    signal buttonCloseClicked(bool clicked)
+    signal buttonCloseClicked(bool clicked)  
+    signal buttonFullscreenClicked(bool clicked)
 
     Tab {
         id: tabBar
         name: "Graph"
         onCloseClicked: graphEditor.buttonCloseClicked(true)
+        onFullscreenClicked: graphEditor.buttonFullscreenClicked(true)
     }
 
     ColumnLayout {
@@ -156,9 +158,9 @@ Item {
             //The miniature of the graph
             Rectangle{
                 id: miniGraph
-                property real scaleFactor: 0.15
-                property real marginTop: 300
-                property real marginLeft: 0
+                property real scaleFactor: 0.12
+                property real marginTop: 500
+                property real marginLeft: 350
                 property real xOffset
                 property real yOffset
                 property real miniOffsetX: 0

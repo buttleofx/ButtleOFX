@@ -7,10 +7,12 @@ ApplicationWindow {
     property variant currentParamNode
 	property color gradian1: "#010101"
     property color gradian2: "#141414"
+    property string truc
 
 	id:pluginsIdentifiers
 	x: 400
 	y: 400
+    flags:Qt.WindowCancelButtonHint
 	minimumWidth: 800
 	minimumHeight: 600
     maximumWidth: minimumWidth
@@ -102,6 +104,7 @@ ApplicationWindow {
                                 nodes.border.color= "transparent"
                             }
                             onClicked: {
+                                truc=object
                             }
                         }
                         Text{
@@ -144,7 +147,7 @@ ApplicationWindow {
         color: "#141414"
         x:list.width
         Text{
-            text:currentParamNode.nameUser
+            text:aNodeIsSelected? currentParamNode.nodeType : truc
             color: "white"
             font.pointSize: 11
             horizontalAlignment: Text.Center
@@ -156,7 +159,7 @@ ApplicationWindow {
         }
 
         Text{
-            text: currentParamNode.pluginDoc
+            text:aNodeIsSelected? currentParamNode.pluginDoc : truc
             color: "white"
             width: parent.width-15
             height: parent.height-15

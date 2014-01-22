@@ -10,7 +10,7 @@ import "gui/graph/qml"
 import "gui/viewer/qml"
 import "gui/paramEditor/qml"
 import "gui/browser/qml"
-import "gui/helper"
+import "gui/helper/qml"
 
 ApplicationWindow {
     property int selectedView : 1

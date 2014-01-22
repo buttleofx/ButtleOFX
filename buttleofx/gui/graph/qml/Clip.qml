@@ -108,8 +108,11 @@ Rectangle {
             replace = m.clipWrapper.name != "Output" && _buttleManager.connectionManager.connectionExists(m.clipWrapper)
             if(accept){
                 dropHandle.state = "entereddrop"
+                connections.alpha = 1
             }else{
-                    dropHandle.state = "cantconnect"
+                dropHandle.state = "cantconnect"
+                if(m.clipWrapper.nodeName !== drag.source.clipWrapper.nodeName)
+                    connections.alpha = 0.2
             }
             if(replace && accept)
                 dropHandle.state = "canreplace"
@@ -117,6 +120,7 @@ Rectangle {
         onExited: {
             // Erase the handle
             dropHandle.state = ""
+            connections.alpha = 1
         }
     }
     // Area that accepts the drop

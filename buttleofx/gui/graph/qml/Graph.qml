@@ -187,6 +187,7 @@ Rectangle {
             property int tmpConnectionY1
             property int tmpConnectionX2
             property int tmpConnectionY2
+            property real alpha: 1
 
             CanvasConnection {
                 id: tmpCanvasConnection
@@ -196,6 +197,7 @@ Rectangle {
                 y1: connections.tmpConnectionY1
                 x2: connections.tmpConnectionX2
                 y2: connections.tmpConnectionY2
+                opacity: connections.alpha
             }
         }
     }

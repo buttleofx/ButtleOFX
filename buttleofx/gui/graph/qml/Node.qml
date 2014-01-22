@@ -49,6 +49,7 @@ Rectangle {
         Drag.keys: "node"
         enabled: !readOnly
         acceptedButtons: Qt.LeftButton | Qt.RightButton | Qt.MidButton
+        property int xstart
         onPressed: {
             // left button : we change the current selected nodes & we start moving
             if (mouse.button == Qt.LeftButton) {
@@ -67,6 +68,7 @@ Rectangle {
 
                 _buttleData.graphWrapper.zMax += 1
                 parent.z = _buttleData.graphWrapper.zMax
+                xstart = mouse.x
                 //stateMoving.state = "moving"
             }
 
@@ -82,11 +84,10 @@ Rectangle {
         }
         onReleased: {
             var dropStatus = parent.Drag.drop()
-            if (dropStatus !== Qt.IgnoreAction)
+            //if (dropStatus !== Qt.IgnoreAction)
             // left button : we end moving
-            if (mouse.button == Qt.LeftButton) {
-                if(m.nodeWrapper.coord.x - (qml_nodeRoot.x * qml_graphRoot.width / graphContainer.width) > 0.5)
-                     _buttleManager.nodeManager.nodeMoved(m.nodeWrapper.name, (m.nodeWrapper.coord.x * qml_graphRoot.width) / graphContainer.width, (m.nodeWrapper.coord.y * qml_graphRoot.height) / graphContainer.height)
+            if (mouse.button == Qt.LeftButton && ((xstart - mouse.x) > 0.5 || (xstart - mouse.x < -0.5))) {
+                _buttleManager.nodeManager.nodeMoved(m.nodeWrapper.name, (m.nodeWrapper.coord.x * qml_graphRoot.width) / graphContainer.width, (m.nodeWrapper.coord.y * qml_graphRoot.height) / graphContainer.height)
             }
              //middle button : assign the node to the viewer
             else if (mouse.button == Qt.MidButton){

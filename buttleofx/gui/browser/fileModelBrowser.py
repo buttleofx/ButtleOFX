@@ -38,6 +38,9 @@ class FileItem(QtCore.QObject):
     def getFileName(self):
         return os.path.basename(self._filepath)
     
+    def setFileName(self, newName):
+        os.rename(self.filepath, os.path.dirname(self._filepath) + "/" + newName)
+    
     def getSelected(self):
         return self._isSelected
     
@@ -47,7 +50,7 @@ class FileItem(QtCore.QObject):
 
     filepath = QtCore.pyqtProperty(str, getFilepath, constant=True)
     fileType = QtCore.pyqtProperty(str, getFileType, constant=True)
-    fileName = QtCore.pyqtProperty(str, getFileName, constant=True)
+    fileName = QtCore.pyqtProperty(str, getFileName, setFileName, constant=True)
     isSelectedChange = QtCore.pyqtSignal()
     isSelected = QtCore.pyqtProperty(bool, getSelected, setSelected, notify=isSelectedChange)
 
@@ -68,6 +71,10 @@ class FileModelBrowser(QtQuick.QQuickItem):
         self._folder = folder
         self.updateFileItems(folder)
         self.folderChanged.emit()
+        
+    @QtCore.pyqtSlot(str)
+    def createFolder(self, path):
+        os.mkdir(path)
     
     def getFolderExists(self):
         import os
@@ -81,6 +88,7 @@ class FileModelBrowser(QtQuick.QQuickItem):
     exists = QtCore.pyqtProperty(bool, getFolderExists, notify=folderChanged)
     parentFolder = QtCore.pyqtProperty(str, getParentFolder, constant=True)
     
+    @QtCore.pyqtSlot(str)
     def updateFileItems(self, folder):
         self._fileItems = []
         self._fileItemsModel.clear()
@@ -93,8 +101,49 @@ class FileModelBrowser(QtQuick.QQuickItem):
             
             if self._nameFilter == "*":
                 for f in files:
-                    if not f.startswith("."):
-                        self._fileItems.append(FileItem(folder, f, FileItem.Type.File))
+                    if extension in ['jpeg', 'jpg', 'jpe', 'jfif', 'jfi', 
+                                     'png','mkv', 'mpeg', 'mp4', 'avi', 'mov',
+                                     'aac', 'ac3', 'adf', 'adx', 'aea', 'ape',
+                                     'apl', 'mac', 'bin', 'bit', 'bmv', 'cdg',
+                                     'cdxl', 'xl', '302', 'daud', 'dts', 'dv',
+                                     'dif', 'cdata', 'eac3', 'flm', 'flac', 'flv',
+                                     'g722', '722', 'tco', 'rco', 'g723_1', 'g729',
+                                     'gsm', 'h261', 'h26l', 'h264', '264', 'idf',
+                                     'cgi', 'latm', 'm4v', 'mjpg', 'mjpeg', 'mpo',
+                                     'mlp', 'mp2', 'mp3', 'm2a', 'mpc', 'mvi', 'mxg',
+                                     'v', 'nut', 'ogg', 'oma', 'omg', 'aa3', 'al', 'ul',
+                                     'sw', 'sb', 'uw', 'ub', 'yuv', 'cif', 'qcif', 'rgb',
+                                     'rt', 'rso', 'smi', 'sami', 'sbg', 'shn', 'vb', 'son',
+                                     'mjpg', 'sub', 'thd', 'tta', 'ans', 'art', 'asc',
+                                     'diz', 'ice', 'nfo', 'txt', 'vt', 'vc1', 'vqf', 'vql',
+                                     'vqe', 'vtt', 'yop', 'y4m','3fr', 'ari', 'arw', 'bay',
+                                     'crw', 'cr2', 'cap', 'dng', 'dcs', 'dcr', 'dng', 'drf',
+                                     'eip', 'erf', 'fff', 'iiq', 'k25', 'kdc', 'mef', 'mos',
+                                     'mrw', 'nef', 'nrw', 'obm', 'orf', 'pef', 'ptx', 'pxn',
+                                     'r3d', 'rad', 'raf', 'rw2', 'raw', 'rwl', 'rwz', 'srf',
+                                     'sr2', 'srw', 'x3f','aai', 'art', 'arw', 'avi', 'avs',
+                                     'bmp', 'bmp2', 'bmp3', 'cals', 'cgm', 'cin', 'cmyk',
+                                     'cmyka', 'cr2', 'crw', 'cur', 'cut', 'dcm', 'dcr', 'dcx',
+                                     'dib', 'djvu', 'dng', 'dot', 'dpx', 'emf', 'epdf', 'epi',
+                                     'eps', 'eps2', 'eps3', 'epsf', 'epsi', 'ept', 'exr', 'fax',
+                                     'fig', 'fits', 'fpx', 'gif', 'gplt', 'gray', 'hdr', 'hpgl',
+                                     'hrz', 'html', 'ico', 'info', 'inline', 'jbig', 'jng',
+                                     'jp2', 'jpc', 'jpg', 'jpeg', 'man', 'mat', 'miff', 'mono',
+                                     'mng', 'm2v', 'mpeg', 'mpc', 'mpr', 'mrw', 'msl', 'mtv',
+                                     'mvg', 'nef', 'orf', 'otb', 'p7', 'palm', 'pam', 'pbm', 
+                                     'pcd', 'pcds', 'pcl', 'pcx', 'pdb', 'pdf', 'pef', 'pfa', 'pfb',
+                                     'pfm', 'pgm', 'picon', 'pict', 'pix', 'png', 'png8', 'png16',
+                                     'png32', 'pnm', 'ppm', 'ps', 'ps2', 'ps3', 'psb', 'psd', 'ptif',
+                                     'pwp', 'rad', 'rgb', 'rgba', 'rla', 'rle', 'sct', 'sfw', 'sgi',
+                                     'shtml', 'sid', 'mrsid', 'sun', 'svg', 'tga', 'tiff', 'tim',
+                                     'tif', 'txt', 'uil', 'uyvy', 'vicar', 'viff', 'wbmp', 'webp',
+                                     'wmf', 'wpg', 'x', 'xbm', 'xcf', 'xpm', 'xwd', 'x3f', 'ycbcr',
+                                     'ycbcra', 'yuv','bmp', 'cin', 'dds', 'dpx', 'exr', 'fits', 'hdr',
+                                     'ico', 'j2k', 'j2c', 'jp2', 'jpeg', 'jpg', 'jpe', 'jfif', 'jfi',
+                                     'pbm', 'pgm', 'png', 'pnm', 'ppm', 'pic', 'psd', 'rgbe', 'sgi',
+                                     'tga', 'tif', 'tiff', 'tpic', 'tx', 'webp']:
+                        if not f.startswith("."):
+                            self._fileItems.append(FileItem(folder, f, FileItem.Type.File))
                     
             else:
                 for f in files:
@@ -126,6 +175,20 @@ class FileModelBrowser(QtQuick.QQuickItem):
     _fileItems = []
     _fileItemsModel = None
     
+    @QtCore.pyqtSlot(str, int)
+    def changeFileName(self, newName, index):
+        if index < len(self._fileItems):
+            self._fileItems[index].fileName = newName
+            
+    @QtCore.pyqtSlot(int)
+    def deleteItem(self, index):
+        if index < len(self._fileItems):
+            if self._fileItems[index].fileType == FileItem.Type.Folder:
+                import shutil
+                shutil.rmtree(self._fileItems[index].filepath)
+            if self._fileItems[index].fileType == FileItem.Type.File:
+                os.remove(self._fileItems[index].filepath)
+                
     @QtCore.pyqtSlot(result=QtCore.QObject)
     def getSelectedItems(self):
         selectedList = QObjectListModel(self)

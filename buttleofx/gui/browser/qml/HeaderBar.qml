@@ -73,7 +73,7 @@ Rectangle {
 
             MouseArea {
 				anchors.fill: parent
-                onClicked: {
+                onDoubleClicked: {
                     changeFolder(parentFolder)
                 }
 			}
@@ -141,7 +141,6 @@ Rectangle {
                         id: textComponent
                         text: model.object.fileName
                         onTriggered: {
-                            listPrevious.append({"url": headerBar.folder})
                             changeFolder(model.object.filepath)
                         }
                         // checkable: true

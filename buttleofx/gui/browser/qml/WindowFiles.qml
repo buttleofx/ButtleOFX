@@ -103,12 +103,13 @@ Rectangle {
                         color: model.object.isSelected ? "#00b2a1" : "transparent"
                         radius: 5
                         height: 80
-                        width: 100
+                        width: 125
 
                         property variant selectedFiles
 
                         Column {
                             id : file
+                            anchors.horizontalCenter: parent.horizontalCenter
 
                             Image {
                                 x: 25
@@ -120,13 +121,13 @@ Rectangle {
                             }
 
                             Text {
-                                id: textElement
+                                id: textInColumn
                                 text: model.object.fileName
                                 color: model.object.isSelected ? "black" : "white"
                                 font.bold: model.object.isSelected
-                                width: 125
+                                width: 120
                                 elide: Text.ElideRight
-                                anchors.horizontalCenter: parent.horizontalCenter
+                                horizontalAlignment: Text.AlignHCenter
                             }
                         }// endColumn
 
@@ -158,7 +159,7 @@ Rectangle {
                             onClicked: {
                                 if (mouse.button == Qt.RightButton)
                                     options.popup()
-                                    winFile.fileName = textElement.text
+                                    winFile.fileName = textInColumn.text
 
                                 //if shift:
                                 if(mouse.modifiers & Qt.ShiftModifier)
@@ -230,6 +231,7 @@ Rectangle {
                         }
 
                         Text {
+                            id: textInRow
                             text: model.object.fileName
                             color: model.object.isSelected ? "black" : "white"
                             font.bold: model.object.isSelected
@@ -267,7 +269,7 @@ Rectangle {
                         onClicked: {
                             if (mouse.button == Qt.RightButton)
                                 options.popup()
-                                winFile.fileName = textElement.text
+                                winFile.fileName = textInRow.text
 
                             //if shift:
                             if(mouse.modifiers & Qt.ShiftModifier)

@@ -57,7 +57,7 @@ Rectangle {
                         height: 80
                         width: 100
 
-                        property string filePath : model.object.filepath
+                        property variant selectedFiles
 
                         Column {
                             id : file
@@ -85,7 +85,7 @@ Rectangle {
                         Drag.hotSpot.x: 20
                         Drag.hotSpot.y: 20
                         //Drag.dragType: Drag.Automatic
-                        Drag.mimeData: {"urls": [fileInColumn.filePath]}
+                        Drag.mimeData: {"urls": [fileInColumn.selectedFiles]}
                         //Drag.mimeData: {"text/plain": file.filePath, "text/uri-list": ""}
                         // Drag.keys: "text/uri-list"
                         Drag.keys: "internFileDrag"
@@ -121,11 +121,12 @@ Rectangle {
                                     fileModel.selectItem(index)
 
                                 var sel = fileModel.getSelectedItems()
-                                console.debug("sel.count: " + sel.count)
+                                var selection = new Array()
                                 for(var selIndex = 0; selIndex < sel.count; ++selIndex)
                                 {
-                                    console.debug("sel: " + selIndex + " -> " + sel.get(selIndex).fileName)
+                                    selection[selIndex] = sel.get(selIndex).filepath
                                 }
+                                fileInColumn.selectedFiles = selection
                                 winFile.changeSelectedList(sel)
                             }
 
@@ -161,7 +162,7 @@ Rectangle {
                     height: 25
                     width: listview.width
 
-                    property string filePath : model.object.filepath
+                    property variant selectedFiles
 
                     Row {
                         width: parent.width
@@ -186,7 +187,7 @@ Rectangle {
                     Drag.hotSpot.x: 20
                     Drag.hotSpot.y: 20
                     //Drag.dragType: Drag.Automatic
-                    Drag.mimeData: {"urls": [fileInRow.filePath]}
+                    Drag.mimeData: {"urls": [fileInRow.selectedFiles]}
                     //Drag.mimeData: {"text/plain": file.filePath, "text/uri-list": ""}
                     // Drag.keys: "text/uri-list"
                     Drag.keys: "internFileDrag"
@@ -222,11 +223,12 @@ Rectangle {
                                 fileModel.selectItem(index)
 
                             var sel = fileModel.getSelectedItems()
-                            console.debug("sel.count: " + sel.count)
+                            var selection = new Array()
                             for(var selIndex = 0; selIndex < sel.count; ++selIndex)
                             {
-                                console.debug("sel: " + selIndex + " -> " + sel.get(selIndex).fileName)
+                                selection[selIndex] = sel.get(selIndex).filepath
                             }
+                            fileInRow.selectedFiles = selection
                             winFile.changeSelectedList(sel)
                         }
 

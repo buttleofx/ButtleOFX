@@ -596,7 +596,7 @@ class ButtleData(QtCore.QObject):
 
     # graphWrapper
     graphWrapper = QtCore.pyqtProperty(QtCore.QObject, getGraphWrapper, constant=True)
-    graphBrowserWrapper = QtCore.pyqtProperty(QtCore.QObject, getCurrentGraphWrapper, constant=True)
+    graphBrowserWrapper = QtCore.pyqtProperty(QtCore.QObject, getGraphBrowserWrapper, constant=True)
 
     # filePath
     buttlePath = QtCore.pyqtProperty(str, getButtlePath, constant=True)

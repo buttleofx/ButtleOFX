@@ -51,34 +51,16 @@ Rectangle {
                 Component {
 
                     Rectangle {
-                        id: background
+                        id: fileInColumn
                         color: model.object.isSelected ? "#00b2a1" : "transparent"
                         radius: 5
                         height: 80
                         width: 100
 
+                        property string filePath : model.object.filepath
+
                         Column {
                             id : file
-
-                            property string filePath : model.object.filepath
-
-                            Drag.active: mouseRegionImage.drag.active
-                            Drag.hotSpot.x: 20
-                            Drag.hotSpot.y: 20
-                            //Drag.dragType: Drag.Automatic
-                            Drag.mimeData: {"urls": [file.filePath]}
-                            //Drag.mimeData: {"text/plain": file.filePath, "text/uri-list": ""}
-                            // Drag.keys: "text/uri-list"
-                            Drag.keys: "internFileDrag"
-
-                            StateGroup {
-                              id: fileState
-                              states: State {
-                                  name: "dragging"
-                                  when: mouseRegionImage.pressed
-                                  PropertyChanges { target: file; x: file.x; y: file.y }
-                              }
-                            }
 
                             Image {
                                 x: 25
@@ -87,42 +69,6 @@ Rectangle {
                                 sourceSize.height: 40
 
                                 anchors.horizontalCenter: parent.horizontalCenter
-
-                                MouseArea {
-                                    id: mouseRegionImage
-                                    anchors.fill : parent
-                                    onClicked: {
-                                        //if shift:
-                                        if(mouse.modifiers & Qt.ShiftModifier)
-                                            fileModel.selectItemsByShift(gridview.currentIndex, index)
-
-                                        gridview.currentIndex = index
-                                        winFile.changeFile(model.object.filepath)
-                                        winFile.changeFileType(model.object.fileType)
-                                        //if ctrl:
-                                        if(mouse.modifiers & Qt.ControlModifier)
-                                            fileModel.selectItems(index)
-
-                                        else if(!(mouse.modifiers & Qt.ShiftModifier))
-                                            fileModel.selectItem(index)
-
-                                        var sel = fileModel.getSelectedItems()
-                                        console.debug("sel.count: " + sel.count)
-                                        for(var selIndex = 0; selIndex < sel.count; ++selIndex)
-                                        {
-                                            console.debug("sel: " + selIndex + " -> " + sel.get(selIndex).fileName)
-                                        }
-                                        winFile.changeSelectedList(sel)
-                                    }
-
-                                    onDoubleClicked: {
-                                        model.object.fileType == "Folder" ? winFile.goToFolder(model.object.filepath) : Qt.openUrlExternally("file:///" + model.object.filepath)
-                                    }
-
-                                    //hoverEnabled: true
-                                    onReleased: file.Drag.drop()
-                                    drag.target: file
-                                }
                             }
 
                             Text {
@@ -132,34 +78,61 @@ Rectangle {
                                 width: 125
                                 elide: Text.ElideRight
                                 anchors.horizontalCenter: parent.horizontalCenter
-
-                                MouseArea {
-                                    id: mouseRegionText
-                                    anchors.fill : parent
-                                    onClicked: {
-                                        //if shift:
-                                        if(mouse.modifiers & Qt.ShiftModifier)
-                                            fileModel.selectItemsByShift(gridview.currentIndex, index)
-
-                                        gridview.currentIndex = index
-                                        winFile.changeFile(model.object.filepath)
-                                        winFile.changeFileType(model.object.fileType)
-                                        //if ctrl:
-                                        if(mouse.modifiers & Qt.ControlModifier)
-                                            fileModel.selectItems(index)
-
-                                        else if(!(mouse.modifiers & Qt.ShiftModifier))
-                                            fileModel.selectItem(index)
-
-                                        var sel = fileModel.getSelectedItems()
-                                        winFile.changeSelectedList(sel)
-                                    }
-                                    onDoubleClicked: {
-                                        model.object.fileType == "Folder" ? winFile.goToFolder(model.object.filepath) : Qt.openUrlExternally("file:///" + model.object.filepath)
-                                    }
-                                }
                             }
                         }// endColumn
+
+                        Drag.active: dragMouseAreaColumn.drag.active
+                        Drag.hotSpot.x: 20
+                        Drag.hotSpot.y: 20
+                        //Drag.dragType: Drag.Automatic
+                        Drag.mimeData: {"urls": [fileInColumn.filePath]}
+                        //Drag.mimeData: {"text/plain": file.filePath, "text/uri-list": ""}
+                        // Drag.keys: "text/uri-list"
+                        Drag.keys: "internFileDrag"
+
+                        StateGroup {
+                          id: fileStateColumn
+                          states: State {
+                              name: "dragging"
+                              when: dragMouseAreaColumn.pressed
+                              PropertyChanges { target: fileInColumn; x: fileInColumn.x; y: fileInColumn.y }
+                          }
+                        }
+
+                        MouseArea {
+                            id: dragMouseAreaColumn
+                            anchors.fill: parent
+                            onReleased: fileInColumn.Drag.drop()
+                            drag.target: fileInColumn
+
+                            onClicked: {
+                                //if shift:
+                                if(mouse.modifiers & Qt.ShiftModifier)
+                                    fileModel.selectItemsByShift(gridview.currentIndex, index)
+
+                                gridview.currentIndex = index
+                                winFile.changeFile(model.object.filepath)
+                                winFile.changeFileType(model.object.fileType)
+                                //if ctrl:
+                                if(mouse.modifiers & Qt.ControlModifier)
+                                    fileModel.selectItems(index)
+
+                                else if(!(mouse.modifiers & Qt.ShiftModifier))
+                                    fileModel.selectItem(index)
+
+                                var sel = fileModel.getSelectedItems()
+                                console.debug("sel.count: " + sel.count)
+                                for(var selIndex = 0; selIndex < sel.count; ++selIndex)
+                                {
+                                    console.debug("sel: " + selIndex + " -> " + sel.get(selIndex).fileName)
+                                }
+                                winFile.changeSelectedList(sel)
+                            }
+
+                            onDoubleClicked: {
+                                model.object.fileType == "Folder" ? winFile.goToFolder(model.object.filepath) : Qt.openUrlExternally("file:///" + model.object.filepath)
+                            }
+                        }
                     }
                 }//endComponent
         }
@@ -182,11 +155,13 @@ Rectangle {
             model: fileModel.fileItems
             delegate: Component {
                 Rectangle {
-                    id: background
+                    id: fileInRow
                     color: model.object.isSelected ? "#00b2a1" : "transparent"
                     radius: 5
                     height: 25
                     width: listview.width
+
+                    property string filePath : model.object.filepath
 
                     Row {
                         width: parent.width
@@ -196,32 +171,6 @@ Rectangle {
                             source: model.object.fileType == "Folder" ? "../../img/buttons/browser/folder-icon.png" : "file:///" + model.object.filepath
                             sourceSize.width: 20
                             sourceSize.height: 20
-
-                            MouseArea {
-                                id: mouseRegionImage
-                                anchors.fill : parent
-                                onClicked: {
-                                    //if shift:
-                                    if(mouse.modifiers & Qt.ShiftModifier)
-                                        fileModel.selectItemsByShift(gridview.currentIndex, index)
-
-                                    gridview.currentIndex = index
-                                    winFile.changeFile(model.object.filepath)
-                                    winFile.changeFileType(model.object.fileType)
-                                    //if ctrl:
-                                    if(mouse.modifiers & Qt.ControlModifier)
-                                        fileModel.selectItems(index)
-
-                                    else if(!(mouse.modifiers & Qt.ShiftModifier))
-                                        fileModel.selectItem(index)
-
-                                    var sel = fileModel.getSelectedItems()
-                                    winFile.changeSelectedList(sel)
-                                }
-                                onDoubleClicked: {
-                                    model.object.fileType == "Folder" ? winFile.goToFolder(model.object.filepath) : Qt.openUrlExternally("file:///" + model.object.filepath)
-                                }
-                            }
                         }
 
                         Text {
@@ -230,34 +179,61 @@ Rectangle {
                             font.bold: model.object.isSelected
                             width: parent.width
                             elide: Text.ElideRight
-
-                            MouseArea {
-                                id: mouseRegionText
-                                anchors.fill : parent
-                                onClicked: {
-                                    //if shift:
-                                    if(mouse.modifiers & Qt.ShiftModifier)
-                                        fileModel.selectItemsByShift(gridview.currentIndex, index)
-
-                                    gridview.currentIndex = index
-                                    winFile.changeFile(model.object.filepath)
-                                    winFile.changeFileType(model.object.fileType)
-                                    //if ctrl:
-                                    if(mouse.modifiers & Qt.ControlModifier)
-                                        fileModel.selectItems(index)
-
-                                    else if(!(mouse.modifiers & Qt.ShiftModifier))
-                                        fileModel.selectItem(index)
-
-                                    var sel = fileModel.getSelectedItems()
-                                    winFile.changeSelectedList(sel)
-                                }
-                                onDoubleClicked: {
-                                    model.object.fileType == "Folder" ? winFile.goToFolder(model.object.filepath) : Qt.openUrlExternally("file:///" + model.object.filepath)
-                                }
-                            }
                         }
                     }// endRow
+
+                    Drag.active: dragMouseAreaRow.drag.active
+                    Drag.hotSpot.x: 20
+                    Drag.hotSpot.y: 20
+                    //Drag.dragType: Drag.Automatic
+                    Drag.mimeData: {"urls": [fileInRow.filePath]}
+                    //Drag.mimeData: {"text/plain": file.filePath, "text/uri-list": ""}
+                    // Drag.keys: "text/uri-list"
+                    Drag.keys: "internFileDrag"
+
+                    StateGroup {
+                      id: fileStateRow
+                      states: State {
+                          name: "dragging"
+                          when: dragMouseAreaRow.pressed
+                          PropertyChanges { target: fileInRow; x: fileInRow.x; y: fileInRow.y }
+                      }
+                    }
+
+                    MouseArea {
+                        id: dragMouseAreaRow
+                        anchors.fill: parent
+                        onReleased: fileInRow.Drag.drop()
+                        drag.target: fileInRow
+
+                        onClicked: {
+                            //if shift:
+                            if(mouse.modifiers & Qt.ShiftModifier)
+                                fileModel.selectItemsByShift(gridview.currentIndex, index)
+
+                            gridview.currentIndex = index
+                            winFile.changeFile(model.object.filepath)
+                            winFile.changeFileType(model.object.fileType)
+                            //if ctrl:
+                            if(mouse.modifiers & Qt.ControlModifier)
+                                fileModel.selectItems(index)
+
+                            else if(!(mouse.modifiers & Qt.ShiftModifier))
+                                fileModel.selectItem(index)
+
+                            var sel = fileModel.getSelectedItems()
+                            console.debug("sel.count: " + sel.count)
+                            for(var selIndex = 0; selIndex < sel.count; ++selIndex)
+                            {
+                                console.debug("sel: " + selIndex + " -> " + sel.get(selIndex).fileName)
+                            }
+                            winFile.changeSelectedList(sel)
+                        }
+
+                        onDoubleClicked: {
+                            model.object.fileType == "Folder" ? winFile.goToFolder(model.object.filepath) : Qt.openUrlExternally("file:///" + model.object.filepath)
+                        }
+                    }
                 }// end Rectangle
             }//endComponent
         }

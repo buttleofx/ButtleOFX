@@ -548,13 +548,13 @@ ApplicationWindow {
             id: empty
         }
 
-        Window {
+        /*Window {
             id: fullscreenWindow
             visibility: Window.Maximized
             visible: false
             Item {
                 id: fullscreenContent
             }
-        }
+        }*/
     }
 }

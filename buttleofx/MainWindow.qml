@@ -506,19 +506,39 @@ ApplicationWindow {
         id: subviews
         visible: false
 
+        property variant parentBeforeFullscreen
+
         Player {
             id: player
             anchors.fill: parent
             node: _buttleData.currentViewerNodeWrapper
-            onButtonCloseClicked: {selectedView=-1; parent.visible = false}
-            onButtonFullscreenClicked: {fullscreenWindow.visible = true; fullscreenContent.children = player}
+            onButtonCloseClicked: {
+                if(parent!=fullscreenContent){
+                    selectedView=-1
+                    parent.visible = false
+                }
+                else{
+                    fullscreenWindow.visibility = Window.Hidden
+                    subviews.parentBeforeFullscreen.children = player
+                }
+            }
+            onButtonFullscreenClicked: {subviews.parentBeforeFullscreen = parent; fullscreenWindow.visibility = Window.FullScreen; fullscreenContent.children = player}
         }
 
         GraphEditor {
             id: graphEditor
             anchors.fill: parent
-            onButtonCloseClicked: {selectedView=-1; parent.visible = false}
-            onButtonFullscreenClicked: {fullscreenWindow.visible = true; fullscreenContent.children = graphEditor}
+            onButtonCloseClicked: {
+                if(parent!=fullscreenContent){
+                    selectedView=-1
+                    parent.visible = false
+                }
+                else{
+                    fullscreenWindow.visibility = Window.Hidden
+                    subviews.parentBeforeFullscreen.children = graphEditor
+                }
+            }
+            onButtonFullscreenClicked: {subviews.parentBeforeFullscreen = parent; fullscreenWindow.visibility = Window.FullScreen; fullscreenContent.children = graphEditor}
         }
 
         ParamTuttleEditor {
@@ -526,22 +546,49 @@ ApplicationWindow {
             anchors.fill: parent
             params: _buttleData.currentParamNodeWrapper ? _buttleData.currentParamNodeWrapper.params : null
             currentParamNode: _buttleData.currentParamNodeWrapper
-            onButtonCloseClicked: {selectedView=-1; parent.visible = false}
-            onButtonFullscreenClicked: {fullscreenWindow.visible = true; fullscreenContent.children = paramEditor}
+            onButtonCloseClicked: {
+                if(parent!=fullscreenContent){
+                    selectedView=-1
+                    parent.visible = false
+                }
+                else{
+                    fullscreenWindow.visibility = Window.Hidden
+                    subviews.parentBeforeFullscreen.children = paramEditor
+                }
+            }
+            onButtonFullscreenClicked: {subviews.parentBeforeFullscreen = parent; fullscreenWindow.visibility = Window.FullScreen; fullscreenContent.children = paramEditor}
         }
 
         ParametersEditor {
             id: advancedParamEditor
             anchors.fill: parent
-            onButtonCloseClicked: {selectedView=-1; parent.visible = false}
-            onButtonFullscreenClicked: {fullscreenWindow.visible = true; fullscreenContent.children = advancedParamEditor}
+            onButtonCloseClicked: {
+                if(parent!=fullscreenContent){
+                    selectedView=-1
+                    parent.visible = false
+                }
+                else{
+                    fullscreenWindow.visibility = Window.Hidden
+                    subviews.parentBeforeFullscreen.children = advancedParamEditor
+                }
+            }
+            onButtonFullscreenClicked: {subviews.parentBeforeFullscreen = parent; fullscreenWindow.visibility = Window.FullScreen; fullscreenContent.children = advancedParamEditor}
         }
 
         Browser {
             id: browser
             anchors.fill: parent
-            onButtonCloseClicked: {selectedView=-1; parent.visible = false}
-            onButtonFullscreenClicked: {fullscreenWindow.visible = true; fullscreenContent.children = browser}
+            onButtonCloseClicked: {
+                if(parent!=fullscreenContent){
+                    selectedView=-1
+                    parent.visible = false
+                }
+                else{
+                    fullscreenWindow.visibility = Window.Hidden
+                    subviews.parentBeforeFullscreen.children = browser
+                }
+            }
+            onButtonFullscreenClicked: {subviews.parentBeforeFullscreen = parent; fullscreenWindow.visibility = Window.FullScreen; fullscreenContent.children = browser}
         }
 
         Item {
@@ -550,10 +597,12 @@ ApplicationWindow {
 
         Window {
             id: fullscreenWindow
-            visibility: Window.Maximized
+            visibility: Window.Hidden
             visible: false
-            Item {
+            Rectangle {
                 id: fullscreenContent
+                anchors.fill: parent
+                color: "#353535"
             }
         }
     }

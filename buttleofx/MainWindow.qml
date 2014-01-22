@@ -139,7 +139,6 @@ ApplicationWindow {
         }
     }
 
-    property bool editNode:false
     property bool docSelected:false
 
     //Window of hint for plugins
@@ -147,21 +146,6 @@ ApplicationWindow {
         title: "Plugin's Documentation"
         visible: docSelected
         currentParamNode: _buttleData.currentParamNodeWrapper
-    }
-
-    //Node properties window
-
-    ApplicationWindow{
-        title: "Node Properties"
-        visible: editNode ? true:false
-        maximumHeight: 150
-        maximumWidth: 280
-        minimumHeight: maximumHeight
-        minimumWidth: maximumWidth
-        ParamButtleEditor {
-            params:_buttleData.currentParamNodeWrapper ? _buttleData.currentParamNodeWrapper.params : null
-            currentParamNode: _buttleData.currentParamNodeWrapper
-        }
     }
 
     FinderLoadGraph{ id: finderLoadGraph }

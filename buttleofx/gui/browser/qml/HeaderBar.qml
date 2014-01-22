@@ -97,6 +97,7 @@ Rectangle {
                 x: 5
                 height: parent.height
                 width: parent.width
+                clip: true
 
                 text: headerBar.folder
 

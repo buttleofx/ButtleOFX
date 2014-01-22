@@ -25,14 +25,12 @@ Item {
 
     /*BUTTLE PARAMS*/
     Rectangle{
-        Layout.minimumHeight: buttleParamTitle.height
         id: buttleParams
-        height: 150
+        height: 160
         width: paramEditor.width
         color: paramEditor.background
         border.width: 1
         border.color: "#333"
-        radius: 3
 
         Loader {
             sourceComponent: currentParamNode ? nodeParamComponent : undefined

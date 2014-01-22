@@ -101,6 +101,8 @@ class FileModelBrowser(QtQuick.QQuickItem):
             
             if self._nameFilter == "*":
                 for f in files:
+                    (shortname, extension) = os.path.splitext(f)
+                    extension = extension.split(".")[-1].lower()
                     if extension in ['jpeg', 'jpg', 'jpe', 'jfif', 'jfi', 
                                      'png','mkv', 'mpeg', 'mp4', 'avi', 'mov',
                                      'aac', 'ac3', 'adf', 'adx', 'aea', 'ape',

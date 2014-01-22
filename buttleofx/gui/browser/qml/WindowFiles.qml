@@ -99,76 +99,16 @@ Rectangle {
                 Component {
 
                     Rectangle {
-                        id: background
+                        id: fileInColumn
                         color: model.object.isSelected ? "#00b2a1" : "transparent"
                         radius: 5
                         height: 80
                         width: 100
 
-                        MouseArea {
-                            id: mouseRegionImage
-                            anchors.fill : parent
-                            acceptedButtons: Qt.LeftButton | Qt.RightButton
-                            onClicked: {
-                                if (mouse.button == Qt.RightButton)
-                                    options.popup()
-                                    winFile.fileName = textElement.text
-
-                                //if shift:
-                                if(mouse.modifiers & Qt.ShiftModifier)
-                                    fileModel.selectItemsByShift(gridview.currentIndex, index)
-
-                                itemIndex = index
-                                gridview.currentIndex = index
-                                winFile.changeFile(model.object.filepath)
-                                winFile.changeFileType(model.object.fileType)
-                                //if ctrl:
-                                if(mouse.modifiers & Qt.ControlModifier)
-                                    fileModel.selectItems(index)
-
-                                else if(!(mouse.modifiers & Qt.ShiftModifier))
-                                    fileModel.selectItem(index)
-
-                                var sel = fileModel.getSelectedItems()
-                                console.debug("sel.count: " + sel.count)
-                                for(var selIndex = 0; selIndex < sel.count; ++selIndex)
-                                {
-                                    console.debug("sel: " + selIndex + " -> " + sel.get(selIndex).fileName)
-                                }
-                                winFile.changeSelectedList(sel)
-                            }
-
-                            onDoubleClicked: {
-                                model.object.fileType == "Folder" ? winFile.goToFolder(model.object.filepath) : Qt.openUrlExternally("file:///" + model.object.filepath)
-                            }
-
-                            //hoverEnabled: true
-                            onReleased: file.Drag.drop()
-                            drag.target: file
-                        }
+                        property variant selectedFiles
 
                         Column {
                             id : file
-
-                            property string filePath : model.object.filepath
-
-                            Drag.active: mouseRegionImage.drag.active
-                            Drag.hotSpot.x: 20
-                            Drag.hotSpot.y: 20
-                            //Drag.dragType: Drag.Automatic
-                            Drag.mimeData: {"urls": [file.filePath]}
-                            //Drag.mimeData: {"text/plain": file.filePath, "text/uri-list": ""}
-                            // Drag.keys: "text/uri-list"
-                            Drag.keys: "internFileDrag"
-
-                            StateGroup {
-                              id: fileState
-                              states: State {
-                                  name: "dragging"
-                                  when: mouseRegionImage.pressed
-                                  PropertyChanges { target: file; x: file.x; y: file.y }
-                              }
-                            }
 
                             Image {
                                 x: 25
@@ -189,6 +129,65 @@ Rectangle {
                                 anchors.horizontalCenter: parent.horizontalCenter
                             }
                         }// endColumn
+
+                        Drag.active: dragMouseAreaColumn.drag.active
+                        Drag.hotSpot.x: 20
+                        Drag.hotSpot.y: 20
+                        //Drag.dragType: Drag.Automatic
+                        Drag.mimeData: {"urls": [fileInColumn.selectedFiles]}
+                        //Drag.mimeData: {"text/plain": file.filePath, "text/uri-list": ""}
+                        // Drag.keys: "text/uri-list"
+                        Drag.keys: "internFileDrag"
+
+                        StateGroup {
+                          id: fileStateColumn
+                          states: State {
+                              name: "dragging"
+                              when: dragMouseAreaColumn.pressed
+                              PropertyChanges { target: fileInColumn; x: fileInColumn.x; y: fileInColumn.y }
+                          }
+                        }
+
+                        MouseArea {
+                            id: dragMouseAreaColumn
+                            anchors.fill: parent
+                            acceptedButtons: Qt.LeftButton | Qt.RightButton
+                            onReleased: fileInColumn.Drag.drop()
+                            drag.target: fileInColumn
+
+                            onClicked: {
+                                if (mouse.button == Qt.RightButton)
+                                    options.popup()
+                                    winFile.fileName = textElement.text
+
+                                //if shift:
+                                if(mouse.modifiers & Qt.ShiftModifier)
+                                    fileModel.selectItemsByShift(gridview.currentIndex, index)
+
+                                gridview.currentIndex = index
+                                winFile.changeFile(model.object.filepath)
+                                winFile.changeFileType(model.object.fileType)
+                                //if ctrl:
+                                if(mouse.modifiers & Qt.ControlModifier)
+                                    fileModel.selectItems(index)
+
+                                else if(!(mouse.modifiers & Qt.ShiftModifier))
+                                    fileModel.selectItem(index)
+
+                                var sel = fileModel.getSelectedItems()
+                                var selection = new Array()
+                                for(var selIndex = 0; selIndex < sel.count; ++selIndex)
+                                {
+                                    selection[selIndex] = sel.get(selIndex).filepath
+                                }
+                                fileInColumn.selectedFiles = selection
+                                winFile.changeSelectedList(sel)
+                            }
+
+                            onDoubleClicked: {
+                                model.object.fileType == "Folder" ? winFile.goToFolder(model.object.filepath) : Qt.openUrlExternally("file:///" + model.object.filepath)
+                            }
+                        }
                     }
                 }//endComponent
         }
@@ -211,15 +210,60 @@ Rectangle {
             model: fileModel.fileItems
             delegate: Component {
                 Rectangle {
-                    id: background
+                    id: fileInRow
                     color: model.object.isSelected ? "#00b2a1" : "transparent"
                     radius: 5
                     height: 25
                     width: listview.width
 
+                    property variant selectedFiles
+
+
+                    Row {
+                        width: parent.width
+                        spacing: 10
+                        Image {
+                            x: 25
+                            source: model.object.fileType == "Folder" ? "../../img/buttons/browser/folder-icon.png" : "file:///" + model.object.filepath
+                            sourceSize.width: 20
+                            sourceSize.height: 20
+                        }
+
+                        Text {
+                            text: model.object.fileName
+                            color: model.object.isSelected ? "black" : "white"
+                            font.bold: model.object.isSelected
+                            width: parent.width
+                            elide: Text.ElideRight
+
+                        }
+                    }// endRow
+
+                    Drag.active: dragMouseAreaRow.drag.active
+                    Drag.hotSpot.x: 20
+                    Drag.hotSpot.y: 20
+                    //Drag.dragType: Drag.Automatic
+                    Drag.mimeData: {"urls": [fileInRow.selectedFiles]}
+                    //Drag.mimeData: {"text/plain": file.filePath, "text/uri-list": ""}
+                    // Drag.keys: "text/uri-list"
+                    Drag.keys: "internFileDrag"
+
+                    StateGroup {
+                      id: fileStateRow
+                      states: State {
+                          name: "dragging"
+                          when: dragMouseAreaRow.pressed
+                          PropertyChanges { target: fileInRow; x: fileInRow.x; y: fileInRow.y }
+                      }
+                    }
+
                     MouseArea {
-                        id: mouseRegionImage
-                        anchors.fill : parent
+                        id: dragMouseAreaRow
+                        anchors.fill: parent
+                        acceptedButtons: Qt.LeftButton | Qt.RightButton
+                        onReleased: fileInRow.Drag.drop()
+                        drag.target: fileInRow
+
                         onClicked: {
                             if (mouse.button == Qt.RightButton)
                                 options.popup()
@@ -240,41 +284,19 @@ Rectangle {
                                 fileModel.selectItem(index)
 
                             var sel = fileModel.getSelectedItems()
-                            console.debug("sel.count: " + sel.count)
+                            var selection = new Array()
                             for(var selIndex = 0; selIndex < sel.count; ++selIndex)
                             {
-                                console.debug("sel: " + selIndex + " -> " + sel.get(selIndex).fileName)
+                                selection[selIndex] = sel.get(selIndex).filepath
                             }
+                            fileInRow.selectedFiles = selection
                             winFile.changeSelectedList(sel)
                         }
 
                         onDoubleClicked: {
                             model.object.fileType == "Folder" ? winFile.goToFolder(model.object.filepath) : Qt.openUrlExternally("file:///" + model.object.filepath)
                         }
-
-                        //hoverEnabled: true
-                        onReleased: file.Drag.drop()
-                        drag.target: file
                     }
-
-                    Row {
-                        width: parent.width
-                        spacing: 10
-                        Image {
-                            x: 25
-                            source: model.object.fileType == "Folder" ? "../../img/buttons/browser/folder-icon.png" : "file:///" + model.object.filepath
-                            sourceSize.width: 20
-                            sourceSize.height: 20
-                        }
-
-                        Text {
-                            text: model.object.fileName
-                            color: model.object.isSelected ? "black" : "white"
-                            font.bold: model.object.isSelected
-                            width: parent.width
-                            elide: Text.ElideRight
-                        }
-                    }// endRow
                 }// end Rectangle
             }//endComponent
         }

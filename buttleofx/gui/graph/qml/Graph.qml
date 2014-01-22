@@ -67,7 +67,7 @@ Rectangle {
 
             for(var urlIndex in drop.urls)
             {
-                _buttleManager.nodeManager.dropFile(drop.urls[urlIndex], drag.x - m.graphRoot.originX, drag.y - m.graphRoot.originY)
+                _buttleManager.nodeManager.dropFile(drop.urls[urlIndex], drag.x - m.graphRoot.originX + 10*urlIndex, drag.y - m.graphRoot.originY + 10*urlIndex)
             }
             drop.accepted = true
         }
@@ -79,8 +79,10 @@ Rectangle {
         keys: "internFileDrag"
 
         onDropped: {
-            _buttleManager.nodeManager.dropFile(drag.source.filePath, drag.x - m.graphRoot.originX, drag.y - m.graphRoot.originY)
-            console.log("File dropped : ", drag.source.filePath)
+            for(var urlIndex in drag.source.selectedFiles)
+            {
+                _buttleManager.nodeManager.dropFile(drag.source.selectedFiles[urlIndex], drag.x - m.graphRoot.originX + 10*urlIndex, drag.y - m.graphRoot.originY + 10*urlIndex)
+            }
         }
     }
 

@@ -18,7 +18,7 @@ ApplicationWindow {
     property variant lastSelectedDefaultView: view1
     property variant view1: [browser, paramEditor, player, graphEditor]
     property variant view2: [player, paramEditor, browser, graphEditor]
-    property variant view3: [player, browser, paramEditor, empty]
+    property variant view3: [player, browser, advancedParamEditor, empty]
 
     width: 1200
     height: 800
@@ -307,7 +307,7 @@ ApplicationWindow {
             }
 
             MenuItem {
-                text: "Mikros Mode"
+                text: "Advanced Mode"
                 checkable: true
                 checked: selectedView==3 ? true : false
                 onTriggered: {selectedView = 3; lastSelectedDefaultView = view3; topLeftView.visible=true; bottomLeftView.visible=true; topRightView.visible=true; bottomRightView.visible=false}
@@ -528,6 +528,13 @@ ApplicationWindow {
             currentParamNode: _buttleData.currentParamNodeWrapper
             onButtonCloseClicked: {selectedView=-1; parent.visible = false}
             onButtonFullscreenClicked: {fullscreenWindow.visible = true; fullscreenContent.children = paramEditor}
+        }
+
+        ParametersEditor {
+            id: advancedParamEditor
+            anchors.fill: parent
+            onButtonCloseClicked: {selectedView=-1; parent.visible = false}
+            onButtonFullscreenClicked: {fullscreenWindow.visible = true; fullscreenContent.children = advancedParamEditor}
         }
 
         Browser {

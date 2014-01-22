@@ -34,8 +34,8 @@ Item {
             }
 
             Button {
-                width: 12
-                height: 12
+                width: 10
+                height: 10
                 anchors.top: parent.top
                 anchors.right: parent.right
                 anchors.rightMargin: 4
@@ -60,8 +60,8 @@ Item {
             }
 
             Button {
-                width: 12
-                height: 12
+                width: 10
+                height: 10
                 anchors.top: parent.top
                 anchors.right: parent.right
                 anchors.rightMargin: 16

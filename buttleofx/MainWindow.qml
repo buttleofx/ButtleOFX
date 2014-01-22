@@ -238,7 +238,7 @@ ApplicationWindow {
                 model: _buttleData.pluginsIdentifiers
                 MenuItem {
                     text: object
-                    onTriggered: _buttleManager.nodeManager.creationNode(_buttleData.graph, object, 0, 0)
+                    onTriggered: _buttleManager.nodeManager.creationNode("_buttleData.graph", object, 0, 0)
                 }
                 onObjectAdded: nodesMenu.insertItem(index, object)
                 onObjectRemoved: nodesMenu.removeItem(object)

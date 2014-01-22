@@ -28,7 +28,16 @@ class NodeManager(QtCore.QObject):
         """
         buttleData = ButtleDataSingleton().get()
         #buttleData.getGraph().createNode(nodeType, x, y)
-        graph.createNode(nodeType, x, y)
+        #graph.createNode(nodeType, x, y)
+
+        if (graph == "_buttleData.graph"):
+            buttleData.getGraph().createNode(nodeType, x, y)
+        elif (graph == "_buttleData.graphParametersEditor"):
+            buttleData.getGraphParametersEditor.createNode(nodeType, x, y)
+        elif (graph == "_buttleData.graphBrowser"):
+            buttleData.getGraphBrowser.createNode(nodeType, x, y)
+        #by default creation is on the graph in grapheditor
+        else: buttleData.getGraph().createNode(nodeType, x, y)
 
         # update undo/redo display
         self.undoRedoChanged()

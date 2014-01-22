@@ -116,7 +116,7 @@ Item {
                     text: object
                     onTriggered: {
                         _buttleData.currentGraphWrapper = _buttleData.graphParametersEditorWrapper
-                        _buttleManager.nodeManager.creationNode(_buttleData.graphParametersEditor, object, 0, 0)
+                        _buttleManager.nodeManager.creationNode("_buttleData.graphParametersEditor", object, 0, 0)
                     }
 
                 }

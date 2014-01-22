@@ -160,6 +160,7 @@ Rectangle {
                                 if (mouse.button == Qt.RightButton)
                                     options.popup()
                                     winFile.fileName = textInColumn.text
+                                    winFile.itemIndex = index
 
                                 //if shift:
                                 if(mouse.modifiers & Qt.ShiftModifier)
@@ -270,6 +271,7 @@ Rectangle {
                             if (mouse.button == Qt.RightButton)
                                 options.popup()
                                 winFile.fileName = textInRow.text
+                                winFile.itemIndex = index
 
                             //if shift:
                             if(mouse.modifiers & Qt.ShiftModifier)
@@ -312,13 +314,11 @@ Rectangle {
         standardButtons: StandardButton.Yes | StandardButton.No
         onYes: {
             fileModel.deleteItem(itemIndex)
-            //fileModel.updateFileItems(winFile.folder)
             console.log("deleted")
-            deleteMessage.close()
+            //fileModel.updateFileItems(winFile.folder)
         }
         onNo: {
             console.log("didn't delete")
-            deleteMessage.close()
         }
     }
 
@@ -344,11 +344,9 @@ Rectangle {
         onAccepted: {
             fileModel.changeFileName(newName.text, itemIndex)
             console.log("Renamed")
-            renameMessage.close()
         }
         onRejected: {
             console.log("didn't Rename")
-            renameMessage.close()
         }
     }
 

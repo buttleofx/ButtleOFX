@@ -202,8 +202,22 @@ Item {
                         if(moveMode){
                             moveMode = false
                             miniGraph.tmpMode = false
-                            miniGraph.xOffset = mouse.x - xStart
-                            miniGraph.yOffset = mouse.y - yStart
+                            if(mouse.x>0 && mouse.x < miniGraph.width){
+                                miniGraph.xOffset = mouse.x - xStart
+                            }else if(mouse.x > miniGraph.width){
+                                miniGraph.xOffset = miniGraph.width - xStart
+                            }else{
+                                miniGraph.xOffset = -xStart
+                            }
+
+                            if(mouse.y > 0 && mouse.y < miniGraph.height){
+                                miniGraph.yOffset = mouse.y - yStart
+                            }else if (mouse.y > miniGraph.height){
+                                miniGraph.yOffset = miniGraph.height - yStart
+                            }else{
+                                miniGraph.yOffset = -yStart
+                            }
+
                             miniGraph.miniOffsetX += miniGraph.xOffset
                             miniGraph.miniOffsetY += miniGraph.yOffset
                             graph.container.x -= (miniGraph.xOffset/miniGraph.scaleFactor*graph.zoomCoeff)
@@ -219,10 +233,12 @@ Item {
                     onPositionChanged: {
                         if(moveMode){
                             miniGraph.tmpMode = true
-                            var xOffset = mouse.x - xStart
-                            var yOffset = mouse.y - yStart
-                            miniGraph.originX = visuWindowXStart + xOffset
-                            miniGraph.originY = visuWindowYStart + yOffset
+                            if((mouse.x > 0 && mouse.x < miniGraph.width) && (mouse.y > 0 && mouse.y < miniGraph.height)){
+                                var xOffset = mouse.x - xStart
+                                var yOffset = mouse.y - yStart
+                                miniGraph.originX = visuWindowXStart + xOffset
+                                miniGraph.originY = visuWindowYStart + yOffset
+                            }
                         }else{ //to map the tmpVisuWindow (zoom)
                             miniGraph.originX = visuWindow.x
                             miniGraph.originY = visuWindow.y

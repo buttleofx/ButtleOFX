@@ -241,7 +241,7 @@ Rectangle {
 
         Text {
             id: nodeText
-            anchors.verticalCenter: parent.verticalCenter
+            anchors.verticalCenter: isSelected ? undefined : parent.verticalCenter
             anchors.horizontalCenter: isSelected ? parent.horizontalCenter : undefined
             x: miniatureState ? 5 * miniatureScale : 5
             y: isSelected ? miniatureState ? nodeWidth * 0.5 * miniatureScale : nodeWidth * 0.5 : 0

@@ -19,8 +19,8 @@ class ConnectionManager(QtCore.QObject):
 
     ############### flags ###############
 
-    @QtCore.pyqtSlot(QtCore.QObject, QtCore.QObject, result=bool)
-    def canConnect(self, clip1, clip2):
+    @QtCore.pyqtSlot(QtCore.QObject, QtCore.QObject, bool, result=bool)
+    def canConnect(self, clip1, clip2, connected):
         """
             Returns True if the connection between the nodes is possible, else False.
             A connection is possible if the clip isn't already taken, and if the clips are from 2 different nodes, not already connected.
@@ -31,11 +31,16 @@ class ConnectionManager(QtCore.QObject):
 
         # if the clips are from the same node : False
         if (clip1.getNodeName() == clip2.getNodeName()):
-            return False
+            if(not connected):
+                return False
 
         # if the clips are 2 inputs or 2 outputs : False
-        if (clip1.getClipName() == "Output" and clip2.getClipName() == "Output") or (clip1.getClipName() != "Output" and clip2.getClipName() != "Output"):
-            return False
+        if(connected):
+          if (clip1.getClipName() == "Output" and clip2.getClipName() != "Output") or (clip1.getClipName() != "Output" and clip2.getClipName() == "Output"):
+              return False
+        else:
+          if (clip1.getClipName() == "Output" and clip2.getClipName() == "Output") or (clip1.getClipName() != "Output" and clip2.getClipName() != "Output"):
+              return False
 
         # if the nodes containing the clips are already connected : False
         if(graph.nodesConnected(clip2, clip1)):
@@ -88,6 +93,16 @@ class ConnectionManager(QtCore.QObject):
             return False
 
     ############### EVENTS FROM QML ###############
+    
+    @QtCore.pyqtSlot(QtCore.QObject, result=QtCore.QObject)
+    def connectedClip(self, clip):
+        buttleData = ButtleDataSingleton().get()
+        
+        for connection in  buttleData.getGraph()._connections:
+            if(clip.getNodeName() == connection.getClipIn().getNodeName() and clip.getClipName() == connection.getClipIn().getClipName()):
+                return connection.getClipOut()
+        
+        return None
 
     @QtCore.pyqtSlot(QtCore.QObject, int)
     def connectionDragEvent(self, clip, clipIndex):
@@ -183,16 +198,13 @@ class ConnectionManager(QtCore.QObject):
     @QtCore.pyqtSlot(QtCore.QObject, QtCore.QObject, QtCore.QObject)
     def replace(self, clip, clipOut, clipIn):
         buttleData = ButtleDataSingleton().get()
-                  
-        id_clipOut = IdClip(clipOut.getNodeName(), clipOut.getClipName())
-        id_clipIn = IdClip(clipIn.getNodeName(), clipIn.getClipName())
-        self.connect(id_clipOut, id_clipIn)
-        
         for connection in  buttleData.getGraph()._connections:
             if((clip.getNodeName() == connection.getClipOut().getNodeName() and clip.getClipName() == connection.getClipOut().getClipName()) or (clip.getNodeName() == connection.getClipIn().getNodeName() and clip.getClipName() == connection.getClipIn().getClipName())):
                 buttleData.getGraph().deleteConnection(connection)
-        
-        return False
+                
+        id_clipOut = IdClip(clipOut.getNodeName(), clipOut.getClipName())
+        id_clipIn = IdClip(clipIn.getNodeName(), clipIn.getClipName())
+        self.connect(id_clipOut, id_clipIn)
         
     @QtCore.pyqtSlot(QtCore.QObject)
     def unHook(self, clip):

@@ -11,17 +11,18 @@ Rectangle {
     property alias clipSize: m.clipSize
     property bool accept: false
     property bool replace: false
-    property bool unHookEnabled: false
 
     property bool readOnly
     property real miniatureScale
-    property bool miniatureState
+    property bool miniatureState   
+    property bool invertState : m.invertState
 
     QtObject {
         id: m
         property variant clipWrapper
         property double clipSize: 9
         property double radius: 0.5 * clipRoot.clipSize
+        property bool invertState: false
     }
 
     objectName: "qmlClip_" + m.clipWrapper.fullName
@@ -87,11 +88,13 @@ Rectangle {
             {
                 // Drop on input
                 clipOut = drag.source.clipWrapper
-                /*
-                clipOut_tmp = _buttleManager.connectionManager.connectedClip(clipOut)
-                if( clipOut_tmp )
+
+                var clipOut_tmp = _buttleData.graphWrapper.getConnectedClipWrapper(clipOut)
+                if( clipOut_tmp ){
                     clipOut = clipOut_tmp
-                */
+                    _buttleManager.connectionManager.unHook(drag.source.clipWrapper)
+                }
+
                 clipIn = m.clipWrapper
             }
             if(accept && !replace){
@@ -104,8 +107,14 @@ Rectangle {
 
         }
         onEntered: {
-            accept = _buttleManager.connectionManager.canConnect(m.clipWrapper, drag.source.clipWrapper)
+            var connected = false
+            if(_buttleData.graphWrapper.getConnectedClipWrapper(drag.source.clipWrapper)){
+                accept = !accept
+                connected = true
+            }
+            accept = _buttleManager.connectionManager.canConnect(m.clipWrapper, drag.source.clipWrapper, connected)
             replace = m.clipWrapper.name != "Output" && _buttleManager.connectionManager.connectionExists(m.clipWrapper)
+
             if(accept){
                 dropHandle.state = "entereddrop"
                 connections.alpha = 1
@@ -182,11 +191,13 @@ Rectangle {
         // position of the mouse when starting a mouse event
         property int mouseXStart
         property int mouseYStart
+        property variant connectedClip
 
         onReleased: {
             var dropStatus = handle.Drag.drop()
             connections.tmpConnectionExists = false
-            unHookEnabled = false
+            if(invertState == true)
+                _buttleManager.connectionManager.unHook(m.clipWrapper)
         }
 
         // Invisble rectangle which is dragged from an output to an input
@@ -217,7 +228,7 @@ Rectangle {
             states: [
                 State {
                    name: "nodragging"
-                   when: ! handle.Drag.active || (_buttleManager.connectionManager.connectionExists(m.clipWrapper, m.clipWrapper))
+                   when: ! handle.Drag.active
                    PropertyChanges {
                       target: handle
                       opacity: 0
@@ -260,25 +271,26 @@ Rectangle {
             connections.tmpConnectionExists = true
             connections.tmpClipName = m.clipWrapper.name
 
-            // if connected output
-            //   connectedClip = _buttleData.graphWrapper.getConnectedClipWrapper(m.clipWrapper)
-            // python: _buttleData.graphWrapper.getNodeWrapper(connectionWrapper.out_clipNodeName).getClip(connectionWrapper.out_clipName)
-
-            //   connectedClip.xCoord
-            // else
-            connections.tmpConnectionX1 = xCenter_inGraph
-            connections.tmpConnectionY1 = yCenter_inGraph
-            connections.tmpConnectionX2 = xCenter_inGraph
-            connections.tmpConnectionY2 = yCenter_inGraph
-
-            unHookEnabled = true
+            if(_buttleManager.connectionManager.connectionExists(m.clipWrapper)){
+                connectedClip = _buttleData.graphWrapper.getConnectedClipWrapper(m.clipWrapper)
+                connections.tmpConnectionX1 = connectedClip.xCoord
+                connections.tmpConnectionY1 = connectedClip.yCoord
+                connections.tmpConnectionX2 = xCenter_inGraph
+                connections.tmpConnectionY2 = yCenter_inGraph
+                m.invertState = true
+            }else{
+                connections.tmpConnectionX1 = xCenter_inGraph
+                connections.tmpConnectionY1 = yCenter_inGraph
+                connections.tmpConnectionX2 = xCenter_inGraph
+                connections.tmpConnectionY2 = yCenter_inGraph
+                m.invertState = false
+            }
        }
 
        onPositionChanged: {
-           if(!(_buttleManager.connectionManager.connectionExists(m.clipWrapper)))
-           {
-               // Update of the connection during the drag
-               if(clipMouseArea.drag.active) {
+           // Update of the connection during the drag
+           if(clipMouseArea.drag.active) {
+                if(!m.invertState){
                     if (connections.tmpClipName == "Output") {
                         connections.tmpConnectionX2 = x_inGraph + mouse.x
                         connections.tmpConnectionY2 = y_inGraph + mouse.y
@@ -286,13 +298,19 @@ Rectangle {
                         connections.tmpConnectionX1 = x_inGraph + mouse.x
                         connections.tmpConnectionY1 = y_inGraph + mouse.y
                     }
-                    //Hack to position correctly the handle (the drag in QML creates a gap)
-                    handle.x = mouseX - handle.width/2
-                    handle.y = mouseY - handle.height/2
-               }
-           }else{
-               if(unHookEnabled)
-                    _buttleManager.connectionManager.unHook(m.clipWrapper)
+                }else{
+                    if (connections.tmpClipName == "Output") {
+                        connections.tmpConnectionX1 = x_inGraph + mouse.x
+                        connections.tmpConnectionY1 = y_inGraph + mouse.y
+                    } else {
+                        connections.tmpConnectionX2 = x_inGraph + mouse.x
+                        connections.tmpConnectionY2 = y_inGraph + mouse.y
+                    }
+                }
+
+                //Hack to position correctly the handle (the drag in QML creates a gap)
+                handle.x = mouseX - handle.width/2
+                handle.y = mouseY - handle.height/2
            }
         }
     }

@@ -88,6 +88,19 @@ class GraphWrapper(QtCore.QObject):
             if nodeWrapper.getName() == nodeName:
                 return nodeWrapper
         return None  # QtCore.QObject(self)
+        
+    @QtCore.pyqtSlot(QtCore.QObject, result=QtCore.QObject)
+    def getConnectedClipWrapper(self, clipWrapper):
+        """
+            Returns the clip connected to an input clip if it exists.
+        """
+        for connection in self._connectionWrappers:
+            if((clipWrapper.getNodeName() == connection.getIn_clipNodeName() and clipWrapper.getClipName() == connection.getIn_clipName())):
+                connection.setEnabled(False)
+                connection.currentConnectionStateChanged.emit()
+                return self.getNodeWrapper(connection.out_clipNodeName).getClip(connection.out_clipName)
+                
+        return None
 
     def getConnectionWrappers(self):
         """

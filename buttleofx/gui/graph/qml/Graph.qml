@@ -178,6 +178,8 @@ Rectangle {
                     y1: connection.miniatureState ? clipOut.yCoord * connection.miniatureScale : clipOut.yCoord
                     x2: connection.miniatureState ? clipIn.xCoord * connection.miniatureScale : clipIn.xCoord
                     y2: connection.miniatureState ? clipIn.yCoord * connection.miniatureScale : clipIn.yCoord
+
+                    visible: connectionWrapper.enabled ? true : false
                 }
             }
 

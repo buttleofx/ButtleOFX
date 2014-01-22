@@ -27,6 +27,12 @@ class Param:
             Returns the type of the param.
         """
 
+    def getParamDoc(self):
+        """
+            Virtual function.
+            Returns the doc of the param.
+        """
+
     def getName(self):
         return self._tuttleParam.getName()
 

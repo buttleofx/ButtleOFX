@@ -4,18 +4,26 @@ import QtQuick.Layouts 1.0
 import QtQml 2.1
 import QuickMamba 1.0
 import QtQuick.Dialogs 1.0
+import QtQuick.Window 2.1
 
 import "gui/graph/qml"
 import "gui/viewer/qml"
 import "gui/paramEditor/qml"
 import "gui/browser/qml"
+import "gui/helper"
 
 ApplicationWindow {
     property int selectedView : 1
 
+    property variant lastSelectedDefaultView: view1
+    property variant view1: [browser, paramEditor, player, graphEditor]
+    property variant view2: [player, paramEditor, browser, graphEditor]
+    property variant view3: [player, browser, advancedParamEditor, empty]
+
     width: 1200
     height: 800
     id: mainWindowQML
+    title:"ButtleOFX"
 
     //TopFocusHandler {
     // //anchors.fill: parent
@@ -131,6 +139,31 @@ ApplicationWindow {
         }
     }
 
+    property bool editNode:false
+    property bool docSelected:false
+
+    //Window of hint for plugins
+    PluginWindow {
+        title: "Plugin's Documentation"
+        visible: docSelected
+        currentParamNode: _buttleData.currentParamNodeWrapper
+    }
+
+    //Node properties window
+
+    ApplicationWindow{
+        title: "Node Properties"
+        visible: editNode ? true:false
+        maximumHeight: 150
+        maximumWidth: 280
+        minimumHeight: maximumHeight
+        minimumWidth: maximumWidth
+        ParamButtleEditor {
+            params:_buttleData.currentParamNodeWrapper ? _buttleData.currentParamNodeWrapper.params : null
+            currentParamNode: _buttleData.currentParamNodeWrapper
+        }
+    }
+
     FinderLoadGraph{ id: finderLoadGraph }
     FinderSaveGraph{ id: finderSaveGraph }
 
@@ -227,7 +260,6 @@ ApplicationWindow {
                 onTriggered: _buttleManager.deleteSelection()
             }
         }
-
         Menu {
             id: nodesMenu
             title: "Nodes"
@@ -236,32 +268,51 @@ ApplicationWindow {
                 model: _buttleData.pluginsIdentifiers
                 MenuItem {
                     text: object
-                    onTriggered: _buttleManager.nodeManager.creationNode(object, 0, 0)
+                    onTriggered: _buttleManager.nodeManager.creationNode("_buttleData.graph", object, 0, 0)
                 }
                 onObjectAdded: nodesMenu.insertItem(index, object)
                 onObjectRemoved: nodesMenu.removeItem(object)
             }
         }
+        Menu {
+            id: help
+            title: "Help"
+
+            MenuItem {
+                text: "Shortcut"
+            }
+            MenuItem {
+                text: "Plugin's Documentation"
+                onTriggered: docSelected=true
+            }
+        }
+
 
         Menu {
             title: "View"
 
             MenuItem {
                 text: "Default"
-                onTriggered: selectedView = 1
+                checkable: true
+                checked: selectedView==1 ? true : false
+                onTriggered: {selectedView = 1; lastSelectedDefaultView = view1; topLeftView.visible=true; bottomLeftView.visible=true; topRightView.visible=true; bottomRightView.visible=true}
             }
 
             MenuItem {
                 text: "Browser Mode"
-                onTriggered: selectedView = 2
+                checkable: true
+                checked: selectedView==2 ? true : false
+                onTriggered: {selectedView = 2; lastSelectedDefaultView = view2; topLeftView.visible=true; bottomLeftView.visible=true; topRightView.visible=true; bottomRightView.visible=true}
             }
 
             MenuItem {
-                text: "Mikros Mode"
-                onTriggered: selectedView = 3
+                text: "Advanced Mode"
+                checkable: true
+                checked: selectedView==3 ? true : false
+                onTriggered: {selectedView = 3; lastSelectedDefaultView = view3; topLeftView.visible=true; bottomLeftView.visible=true; topRightView.visible=true; bottomRightView.visible=false}
             }
 
-            MenuSeparator { }
+/*            MenuSeparator { }
 
             MenuItem {
                 text: "Browser"
@@ -289,7 +340,7 @@ ApplicationWindow {
                 checkable: true
                 checked: paramEditor.parent.visible==true ? true : false
                 onTriggered: paramEditor.parent.visible == false ? paramEditor.parent.visible=true : paramEditor.parent.visible=false
-            }
+            }*/
         }
 	}
 /* A revoir
@@ -336,15 +387,16 @@ ApplicationWindow {
                     children:
                         switch(selectedView){
                             case 1:
-                                visible = true
-                                browser
+                                view1[0]
                                 break
                             case 2:
+                                view2[0]
+                                break
                             case 3:
-                                visible = true
-                                player
+                                view3[0]
                                 break
                             default:
+                                lastSelectedDefaultView[0]
                                 break
                         }
                 }//topLeftView
@@ -361,15 +413,16 @@ ApplicationWindow {
                     children:
                         switch(selectedView){
                             case 1:
+                                view1[1]
+                                break
                             case 2:
-                                visible = true
-                                paramEditor
+                                view2[1]
                                 break
                             case 3:
-                                visible = true
-                                browser
+                                view3[1]
                                 break
                             default:
+                                lastSelectedDefaultView[1]
                                 break
                         }
                 }//bottomLeftView
@@ -382,8 +435,17 @@ ApplicationWindow {
                 orientation: Qt.Vertical
                 Layout.fillWidth: true
                 Layout.minimumWidth: 200
+                width: switch(selectedView){
+                        case 1:
+                        case 2:
+                            0.7 * rightColumn.parent.width
+                            break
+                        case 3:
+                            0.3 * rightColumn.parent.width
+                            break
+                       }
 
-                visible: visibleChildren==0 ? false : true
+                //visible: visibleChildren==0 ? false : true
 
                 Rectangle {
                     id: topRightView
@@ -395,18 +457,16 @@ ApplicationWindow {
                     children:
                         switch(selectedView){
                             case 1:
-                                visible = true
-                                player
+                                view1[2]
                                 break
                             case 2:
-                                visible = true
-                                browser
+                                view2[2]
                                 break
                             case 3:
-                                visible = true
-                                paramEditor
+                                view3[2]
                                 break
                             default:
+                                lastSelectedDefaultView[2]
                                 break
                         }
                 }//topRightView
@@ -423,23 +483,22 @@ ApplicationWindow {
                     children:
                         switch(selectedView){
                             case 1:
+                                view1[3]
+                                break
                             case 2:
-                                visible = true
-                                rightColumn.implicitWidth = 0.7 * rightColumn.parent.width
-                                graphEditor
+                                view2[3]
                                 break
                             case 3:
-                                visible = false
-                                rightColumn.implicitWidth = 0.3 * rightColumn.parent.width
+                                view3[3]
                                 break
                             default:
+                                lastSelectedDefaultView[3]
                                 break
                         }
                 }//bottomRightView
             }//rightColumn
         }//splitview
     }//modulsContainer
-
 
     Item {
         id: subviews
@@ -449,27 +508,51 @@ ApplicationWindow {
             id: player
             anchors.fill: parent
             node: _buttleData.currentViewerNodeWrapper
-            onButtonCloseClicked: {parent.visible = false; selectedView=-1}
+            onButtonCloseClicked: {selectedView=-1; parent.visible = false}
+            onButtonFullscreenClicked: {fullscreenWindow.visible = true; fullscreenContent.children = player}
         }
 
         GraphEditor {
             id: graphEditor
             anchors.fill: parent
-            onButtonCloseClicked: {parent.visible = false; selectedView=-1}
+            onButtonCloseClicked: {selectedView=-1; parent.visible = false}
+            onButtonFullscreenClicked: {fullscreenWindow.visible = true; fullscreenContent.children = graphEditor}
         }
 
-        ParamEditor {
+        ParamTuttleEditor {
             id: paramEditor
             anchors.fill: parent
             params: _buttleData.currentParamNodeWrapper ? _buttleData.currentParamNodeWrapper.params : null
             currentParamNode: _buttleData.currentParamNodeWrapper
-            onButtonCloseClicked: {parent.visible = false; selectedView=-1}
+            onButtonCloseClicked: {selectedView=-1; parent.visible = false}
+            onButtonFullscreenClicked: {fullscreenWindow.visible = true; fullscreenContent.children = paramEditor}
+        }
+
+        ParametersEditor {
+            id: advancedParamEditor
+            anchors.fill: parent
+            onButtonCloseClicked: {selectedView=-1; parent.visible = false}
+            onButtonFullscreenClicked: {fullscreenWindow.visible = true; fullscreenContent.children = advancedParamEditor}
         }
 
         Browser {
             id: browser
             anchors.fill: parent
-            onButtonCloseClicked: {parent.visible = false; selectedView=-1}
+            onButtonCloseClicked: {selectedView=-1; parent.visible = false}
+            onButtonFullscreenClicked: {fullscreenWindow.visible = true; fullscreenContent.children = browser}
         }
+
+        Item {
+            id: empty
+        }
+
+        /*Window {
+            id: fullscreenWindow
+            visibility: Window.Maximized
+            visible: false
+            Item {
+                id: fullscreenContent
+            }
+        }*/
     }
 }

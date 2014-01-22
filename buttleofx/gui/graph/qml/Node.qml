@@ -12,6 +12,7 @@ Rectangle {
     property bool readOnly
     property real miniatureScale
     property bool miniatureState
+    property int nodeWidth: 80
 
     Drag.active: nodeMouseArea.drag.active
 
@@ -49,8 +50,6 @@ Rectangle {
         enabled: !readOnly
         acceptedButtons: Qt.LeftButton | Qt.RightButton | Qt.MidButton
         onPressed: {
-            console.log("node wrapper x : "+ m.nodeWrapper.coord.x)
-            console.log("node x : "+parent.x)
             // left button : we change the current selected nodes & we start moving
             if (mouse.button == Qt.LeftButton) {
                 // we clear the list of selected connections
@@ -73,7 +72,9 @@ Rectangle {
 
             // right button : we change the current param node
            else if (mouse.button == Qt.RightButton) {
-                // here display contextual menu
+                // Param buttle
+                editNode = true
+                _buttleData.currentParamNodeWrapper = m.nodeWrapper
             }
 
             // take the focus
@@ -98,11 +99,11 @@ Rectangle {
                 _buttleData.assignNodeToViewerIndex(m.nodeWrapper, 0)
                 _buttleEvent.emitViewerChangedSignal()
             }
-
         }
 
         // double click : we change the current param node
         onDoubleClicked: {
+            editNode = false
             _buttleData.currentParamNodeWrapper = m.nodeWrapper
         }
 
@@ -154,11 +155,21 @@ Rectangle {
         anchors.margins: miniatureState ? 4 * miniatureScale : 4 * graph.zoomCoeff
         color: "#bbbbbb"
         radius: 8
-        clip: true
+        clip: nodeText.isSelected ? false : true
+        Rectangle{
+            id: background
+            anchors.fill: nodeText
+            color: "black"
+            opacity: 0.2
+            visible: nodeText.isSelected ? true : false
+        }
+
         Text {
             id: nodeText
-            anchors.verticalCenter: parent.verticalCenter
+            anchors.verticalCenter: isSelected ? undefined : parent.verticalCenter
+            anchors.horizontalCenter: isSelected ? parent.horizontalCenter : undefined
             x: miniatureState ? 5 * miniatureScale : 5
+            y: isSelected ? miniatureState ? nodeWidth * 0.5 * miniatureScale : nodeWidth * 0.5 : 0
             text: m.nodeWrapper.nameUser
             font.pointSize: miniatureState ? 10 * miniatureScale : 10
             property bool isSelected: _buttleData.nodeIsSelected(m.nodeWrapper)

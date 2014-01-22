@@ -28,6 +28,9 @@ class ParamDouble2D(Param):
     def getParamType(self):
         return "ParamDouble2D"
 
+    def getParamDoc(self):
+        return self._tuttleParam.getProperties().getStringProperty("OfxParamPropHint")
+
     def getDefaultValue1(self):
         return self._tuttleParam.getProperties().getDoubleProperty("OfxParamPropDefault", 0)
 

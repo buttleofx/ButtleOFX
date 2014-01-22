@@ -1,6 +1,7 @@
 import QtQuick 2.0
 import QtQuick.Controls 1.0
 import QtQuick.Layouts 1.0
+import QtQuick.Controls.Styles 1.0
 
 import "../../../gui"
 
@@ -9,8 +10,9 @@ Item {
     id: paramEditor
 
     signal buttonCloseClicked(bool clicked)
+    signal buttonFullscreenClicked(bool clicked)
 
-    property variant params 
+    property variant params
     property variant currentParamNode
 
     property color background: "#141414"
@@ -30,6 +32,7 @@ Item {
         id: tabBar
         name: "Parameters"
         onCloseClicked: paramEditor.buttonCloseClicked(true)
+        onFullscreenClicked: paramEditor.buttonFullscreenClicked(true)
     }
 
     SplitView {
@@ -46,14 +49,14 @@ Item {
             id: tuttleParams
             height: 500
             width: parent.width
-            color: paramEditor.background           
+            color: paramEditor.background
 
             /* Params depend on the node type (Tuttle data)*/
             Item {
                 id: tuttleParamContent
                 height: parent.height - tuttleParamTitle.height
                 width: parent.width
-                y: tuttleParamTitle.height
+                y: tuttleParamTitle.height + 5
 
                 property string lastGroupParam : "No Group."
 
@@ -63,6 +66,48 @@ Item {
                     anchors.bottomMargin: 5
                     height: 110
                     width: 110
+
+                    style: ScrollViewStyle {
+                        scrollBarBackground: Rectangle {
+                            id: scrollBar
+                            width:15
+                            color: "#212121"
+                            border.width: 1
+                            border.color: "#333"
+                        }
+                        decrementControl : Rectangle {
+                            id: scrollLower
+                            width:15
+                            height:15
+                            color: styleData.pressed? "#212121" : "#343434"
+                            border.width: 1
+                            border.color: "#333"
+                            radius: 3
+                            Image{
+                                id: arrow
+                                source: "file:///" + _buttleData.buttlePath + "/gui/img/buttons/params/arrow2.png"
+                                x:4
+                                y:4
+                            }
+                        }
+                        incrementControl : Rectangle {
+                            id: scrollHigher
+                            width:15
+                            height:15
+                            color: styleData.pressed? "#212121" : "#343434"
+                            border.width: 1
+                            border.color: "#333"
+                            radius: 3
+                            Image{
+                                id: arrow
+                                source: "file:///" + _buttleData.buttlePath + "/gui/img/buttons/params/arrow.png"
+                                x:4
+                                y:4
+                            }
+                        }
+                    }
+
+
                     //frame: false
                     // frameWidth: 0
                     ListView {
@@ -74,7 +119,7 @@ Item {
                         interactive: false
 
                         model: params
-                        
+
                         delegate: Component {
                             Loader {
                                 id: param
@@ -98,7 +143,7 @@ Item {
                     GradientStop { position: 0.85; color: gradian2 }
                     GradientStop { position: 0.86; color: gradian1 }
                     GradientStop { position: 1; color: gradian2 }
-                } 
+                }
 
                 Text {
                     anchors.verticalCenter: parent.verticalCenter
@@ -107,7 +152,6 @@ Item {
                     color: textColor
                     font.pointSize: 11
                     text: "Parameters"
-                    clip: true
                 }
             }
         }
@@ -130,8 +174,8 @@ Item {
                     GradientStop { position: 0.85; color: gradian2 }
                     GradientStop { position: 0.86; color: gradian1 }
                     GradientStop { position: 1; color: gradian2 }
-                } 
-                clip: true
+                }
+
                 Text {
                     anchors.verticalCenter: parent.verticalCenter
                     anchors.left: parent.left
@@ -144,6 +188,8 @@ Item {
 
             Loader {
                 sourceComponent: currentParamNode ? nodeParamComponent : undefined
+                anchors.top: parent.top
+                anchors.topMargin: 50
                 Component {
                     id: nodeParamComponent
                     Column {
@@ -156,12 +202,11 @@ Item {
                             implicitHeight: 30
                             anchors.left: parent.left
                             anchors.leftMargin: 10
-                            clip: true
 
                             Row {
                                 id: nodeNameUserContainer
                                 spacing: 5
-                                clip: true
+
                                 /* Title */
                                 Text {
                                     id: nodeNameUserText
@@ -189,9 +234,6 @@ Item {
                                         anchors.leftMargin: 5
                                         maximumLength: 100
                                         selectByMouse : true
-
-                                        //elide: Text.ElideRight
-
                                         color: activeFocus ? activeFocusOn : activeFocusOff
 
                                         onAccepted: {
@@ -212,7 +254,7 @@ Item {
                                 }
                             }
                         }
-                    
+
                         /* Type of the node (Buttle data) */
                         Item {
                             id: nodeTypeItem
@@ -238,6 +280,7 @@ Item {
                                 Rectangle{
                                     height: 20
                                     implicitWidth: 200
+                                    clip: true
                                     color: "transparent"
                                     Text{
                                         id: nodeTypeInput
@@ -245,7 +288,6 @@ Item {
                                         anchors.left: parent.left
                                         anchors.leftMargin: 5
                                         color: "grey"
-                                        //elide: Text.ElideRight
                                     }
                                 }
                             }
@@ -258,10 +300,10 @@ Item {
                             implicitHeight: 30
                             anchors.left: parent.left
                             anchors.leftMargin: 10
+
                             Row {
                                 id: nodeColorContainer
                                 spacing: 10
-                                clip: true
 
                                 /* Title */
                                 Text {
@@ -270,7 +312,6 @@ Item {
                                     color: textColor
                                     anchors.top: parent.top
                                     anchors.verticalCenter: parent.verticalCenter
-                                    //elide: Text.ElideRight
                                 }
 
                                 /* Input field limited : rgb */
@@ -292,9 +333,6 @@ Item {
                                         height: parent.height
                                         maximumLength: 50
                                         selectByMouse : true
-
-                                        //elide: Text.ElideRight
-
                                         color: activeFocus ? activeFocusOn : activeFocusOff
 
                                         onAccepted: currentParamNode.color = nodeColorRGBInput.text
@@ -332,14 +370,12 @@ Item {
                                     height: 20
                                     implicitWidth: 15
                                     color: "transparent"
-                                    clip: true
                                     Text{
                                         id: nodeCoordXLabel
                                         text: "x :"
                                         anchors.left: parent.left
                                         anchors.leftMargin: 5
                                         color: textColor
-                                        //elide: Text.ElideRight
                                     }
                                 }
                                 /* Input field limited : x */
@@ -361,8 +397,6 @@ Item {
                                         color: activeFocus ? activeFocusOn : activeFocusOff
                                         selectByMouse : true
 
-                                        //elide: Text.ElideRight
-
                                         onAccepted: {
                                             currentParamNode.xCoord = nodeCoordXInput.text
                                         }
@@ -381,15 +415,12 @@ Item {
                                     height: 20
                                     implicitWidth: 15
                                     color: "transparent"
-                                    clip: true
                                     Text {
                                         id: nodeCoordYLabel
                                         text: "y :"
                                         anchors.left: parent.left
                                         anchors.leftMargin: 5
                                         color: textColor
-                                        //elide: Text.ElideRight
-
                                     }
                                 }
                                 /* Input field limited : y */
@@ -410,8 +441,6 @@ Item {
                                         height: parent.height
                                         color: activeFocus ? activeFocusOn : activeFocusOff
                                         selectByMouse : true
-
-                                        //elide: Text.ElideRight
 
                                         onAccepted: {
                                             currentParamNode.yCoord = nodeCoordYInput.text

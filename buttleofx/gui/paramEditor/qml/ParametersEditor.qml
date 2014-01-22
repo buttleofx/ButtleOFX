@@ -1,69 +1,164 @@
 import QtQuick 2.0
 import QtQuick.Controls 1.0
 import QtQml 2.1
-
+import QtQuick.Controls.Styles 1.0
 import QuickMamba 1.0
 
+import "../../../gui"
+
 Item {
-   id: parametersEditor
+    id: parametersEditor
+    implicitWidth: 325
+    implicitHeight: parent.height
 
-   /*   ParamEditor {
-          id : paramModel
-           params: _buttleData.currentParamNodeWrapper ? _buttleData.currentParamNodeWrapper.params : null
-           currentParamNode: _buttleData.currentParamNodeWrapper
-       }
+    signal buttonCloseClicked(bool clicked)
+    signal buttonFullscreenClicked(bool clicked)
 
+    property variant newNode
+    property variant previousNode
 
-      Component {
-           id: paramsDelegate
-           Item {
-               width: 200; height: 50
-               Text { id: nameField; text: name }
-               Text { text: '$' + cost; anchors.left: nameField.right }
-               Row {
-                   anchors.top: nameField.bottom
-                   spacing: 5
-                   Text { text: "Attributes:" }
-                   Repeater {
-                       model: attributes
-                       Text { text: description }
-                   }
-               }
-           }
+    Tab {
+        id: tabBar
+        name: "Parameters - Advanced Mode"
+        onCloseClicked: parametersEditor.buttonCloseClicked(true)
+        onFullscreenClicked: parametersEditor.buttonFullscreenClicked(true)
+    }
 
-       }
+    Rectangle{
+        id: paramTitle
+        width: parent.width
+        height: 40
+        y: tabBar.height
+        color: "#141414"
+        /*gradient: Gradient {
+               GradientStop { position: 0.0; color: "#141414" }
+               GradientStop { position: 0.85; color: "#141414" }
+               GradientStop { position: 0.86; color: "#010101" }
+               GradientStop { position: 1; color: "#010101" }
+        }*/
 
-       ListView {
-           anchors.fill: parent
-           model: 3
-           delegate: paramModel
-       }
-
-*/
-   ///////////////////////// TO SUPPRESS ////////////////////////////
-   MouseArea{
-       x : 50
-       y: 0
-       width: 800
-       height: 800
-       onClicked:   console.log(_buttleData.graphWrapper.nodeWrappers.object)
-   }
-   ////////////////////////////////////////////////////////////////////
-
-
-    // for each node we create a ParamEditor
-   Repeater{
-        model: _buttleData.graphWrapper.nodeWrappers
-
-        /*Text{
-            text: model.object.name
+        Text {
+            anchors.verticalCenter: parent.verticalCenter
+            anchors.horizontalCenter: parent.horizontalCenter
+            anchors.leftMargin: 10
+            color: "white"
+            font.pointSize: 11
+            text: "Parameters"
+            clip: true
         }
-        */
 
-        ParamEditor {
-            params: model.object ?  model.object.params : null
-            currentParamNode: model.object
+
+    }
+
+
+    // Container of the paramEditors
+    Rectangle{
+        id: contentParamEditor
+        height: parent.height - paramTitle.height - addNode.height
+        width: parent.width
+        y: paramTitle.height
+        color: "#141414"
+
+        // scroll all the parameditors
+        ScrollView {
+            id: scrollParam
+            //anchors.fill: parent
+            width : parent.width
+            height: parent.height
+            anchors.topMargin: 5
+            anchors.bottomMargin: 5
+
+            // for each node we create a ParamEditor
+            ListView{
+                id: listViewParam
+                //anchors.fill: parent
+                model: _buttleData.editedNodesWrapper
+                delegate: paramDelegate
+            }
+
+        }
+
+        // delegate of the list of ParamEditor
+        Component {
+            id: paramDelegate
+            Rectangle{
+                height: paramEditor_multiple.height + 50 // 40 : size of paramTitle
+
+                ParamEditorForParametersEditor {
+                    id: paramEditor_multiple
+                    width: contentParamEditor.width
+                    params: model.object ?  model.object.params : null
+                    currentParamNode: model.object
+                }
+
+            }
+        }
+
+    }
+
+    // Add a node
+    MouseArea{
+        id: addNode
+        y : listViewParam.height + paramTitle.height
+        width : parent.width
+        height : imageAddNode.height + 30
+
+
+        Image{
+            id: imageAddNode
+            width: 30
+            height : 30
+            anchors.verticalCenter: parent.verticalCenter
+            anchors.horizontalCenter: parent.horizontalCenter
+            source: _buttleData.buttlePath +  "/gui/img/buttons/tools/plus.png"
+
+        }
+
+        onClicked : {
+            console.log("Clic on Add a Node!")
+            nodesMenu.popup();
+
         }
     }
 
+        Menu {
+            id: nodesMenu
+            title: "Nodes"
+
+            Instantiator {
+                model: _buttleData.pluginsIdentifiers
+                MenuItem {
+                    text: object
+                    onTriggered: {
+                        // we create a new node and connect it to the last but one node of the concerned graph
+
+                        previousNode =_buttleData.nodeOfParametersEditorToConnect()
+
+                        _buttleData.currentGraphWrapper = _buttleData.graphWrapper
+                        _buttleManager.nodeManager.creationNode("_buttleData.graph", object, 0, 0)
+
+                        //console.log ("_buttleData.nodeOfParametersEditorToConnect()", _buttleData.nodeOfParametersEditorToConnect())
+
+                        // if there is only one node, we don't connect it
+                        if (_buttleData.nodeOfParametersEditorToConnect().size > 1){
+                            console.debug ("_buttleData.nodeOfParametersEditorToConnect()", _buttleData.nodeOfParametersEditorToConnect())
+                            newNode = _buttleData.nodeOfParametersEditorToConnect()
+                            console.debug("new node qml", newNode)
+
+                            _buttleManager.connectionManager.connectWrappers(previousNode, newNode)
+                        }
+
+
+
+
+                    }
+
+                }// menuItem
+                onObjectAdded: nodesMenu.insertItem(index, object)
+                onObjectRemoved: nodesMenu.removeItem(object)
+            } // Instantiator
+        } //Menu
+
+
+    //}
 }

@@ -21,7 +21,7 @@ class NodeManager(QtCore.QObject):
 
     ############### EVENTS FROM QML ###############
 
-    @QtCore.pyqtSlot(QtCore.QObject, str, int, int)
+    @QtCore.pyqtSlot(str, str, int, int)
     def creationNode(self, graph, nodeType, x=20, y=20):
         """
             Creates a node.
@@ -32,12 +32,12 @@ class NodeManager(QtCore.QObject):
 
         if (graph == "_buttleData.graph"):
             buttleData.getGraph().createNode(nodeType, x, y)
-        elif (graph == "_buttleData.graphParametersEditor"):
-            buttleData.getGraphParametersEditor.createNode(nodeType, x, y)
         elif (graph == "_buttleData.graphBrowser"):
-            buttleData.getGraphBrowser.createNode(nodeType, x, y)
+            buttleData.getGraphBrowser().createNode(nodeType, x, y)
         #by default creation is on the graph in grapheditor
-        else: buttleData.getGraph().createNode(nodeType, x, y)
+        else:
+            buttleData.getGraph().createNode(nodeType, x, y)
+            print ("creationNode buttleData.graph", buttleData._graph)
 
         # update undo/redo display
         self.undoRedoChanged()

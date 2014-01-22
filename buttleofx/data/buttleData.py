@@ -35,9 +35,7 @@ class ButtleData(QtCore.QObject):
         - _graph : the graph (core)
         - _graphBrowser : the graph of the browser
         - _graphBrowserWrapper : the graphWrapper of the browser
-        - _graphParametersEditor : the graph of the ParametersEditor
-        - _graphParametersEditorWrapper : the graphWrapper of the ParametersEditor
-        - _currentViewerNodeName : the name of the node currently in the viewer
+       	- _currentViewerNodeName : the name of the node currently in the viewer
         - _currentSelectedNodeNames : list of the names of the nodes currently selected
         - _currentParamNodeName : the name of the node currently displayed in the paramEditor
         - _currentConnectionId : the list of the id of the connections currently selected
@@ -53,9 +51,6 @@ class ButtleData(QtCore.QObject):
 
     _graphBrowser = None
     _graphBrowserWrapper = None
-
-    _graphParametersEditor = None
-    _graphParametersEditorWrapper = None
 
     _currentGraphWrapper = None
 
@@ -92,13 +87,10 @@ class ButtleData(QtCore.QObject):
         self._graphBrowser = Graph()
         self._graphBrowserWrapper = GraphWrapper(self._graphBrowser, view)
 
-        self._graphParametersEditor = Graph()
-        self._graphParametersEditorWrapper = GraphWrapper(self._graphParametersEditor, view)
 
         self._mapGraph = {
             "graph": self._graph,
             "graphBrowser": self._graphBrowser,
-            "graphParametersEditor": self._graphParametersEditor
         }
 
         self._currentGraph = self._graph #by default, the current graph is the graph of the graphEditor
@@ -123,17 +115,11 @@ class ButtleData(QtCore.QObject):
     def getGraphBrowser(self):
         return self._graphBrowser
 
-    def getGraphParametersEditor(self):
-        return self._graphParametersEditor
-
     def getGraphWrapper(self):
         return self._graphWrapper
 
     def getGraphBrowserWrapper(self):
         return self._graphBrowserWrapper
-
-    def getGraphParametersEditorWrapper(self):
-        return self._graphParametersEditorWrapper
 
     def getButtlePath(self):
         return self._buttlePath
@@ -191,7 +177,7 @@ class ButtleData(QtCore.QObject):
         """
             Returns the total of param nodeWrapper.
         """
-        return self._graphWrapper.getNodeWrappers()
+        return self.getCurrentGraphWrapper().getNodeWrappers()
 
     @QtCore.pyqtSlot(int, result=QtCore.QObject)
     def getNodeWrapperByViewerIndex(self, index):
@@ -504,6 +490,26 @@ class ButtleData(QtCore.QObject):
         readerNodeWrapper = NodeWrapper(readerNode, self._graphBrowserWrapper._view) # wrapper of the reader file
         return readerNodeWrapper
 
+    @QtCore.pyqtSlot(result=QtCore.QObject)
+    def nodeOfParametersEditorToConnect(self):
+        # return the last but one node to connect to the new node
+
+        sizeOfGraph = self._currentGraphWrapper._nodeWrappers.size()
+        print ("sizeOfGraph", sizeOfGraph)
+
+        if (sizeOfGraph > 1):
+            #nodes to connect
+            lastButOneNode = self._currentGraphWrapper._nodeWrappers[sizeOfGraph-2]
+
+        elif (sizeOfGraph == 1 ) :
+            lastButOneNode = self._currentGraphWrapper._nodeWrappers[sizeOfGraph-1]
+            #the lastButOne is the same than the last if the list contains only one element
+
+        else : lastButOneNode = None
+
+
+        return lastButOneNode
+
 
 
     ################################################## SAVE / LOAD ##################################################
@@ -613,12 +619,10 @@ class ButtleData(QtCore.QObject):
 
     graph = QtCore.pyqtProperty(QtCore.QObject, getGraph, constant=True)
     graphBrowser = QtCore.pyqtProperty(QtCore.QObject, getGraphBrowser, constant=True)
-    graphParametersEditor = QtCore.pyqtProperty(QtCore.QObject, getGraphParametersEditor, constant=True)
 
     # graphWrapper
     graphWrapper = QtCore.pyqtProperty(QtCore.QObject, getGraphWrapper, constant=True)
     graphBrowserWrapper = QtCore.pyqtProperty(QtCore.QObject, getGraphBrowserWrapper, constant=True)
-    graphParametersEditorWrapper = QtCore.pyqtProperty(QtCore.QObject, getGraphParametersEditorWrapper, constant=True)
 
     # filePath
     buttlePath = QtCore.pyqtProperty(str, getButtlePath, constant=True)

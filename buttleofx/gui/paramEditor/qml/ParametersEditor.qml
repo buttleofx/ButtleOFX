@@ -14,6 +14,9 @@ Item {
     signal buttonCloseClicked(bool clicked)
     signal buttonFullscreenClicked(bool clicked)
 
+    property variant newNode
+    property variant previousNode
+
     Tab {
         id: tabBar
         name: "Parameters - Advanced Mode"
@@ -116,6 +119,7 @@ Item {
             nodesMenu.popup();
 
         }
+    }
 
         Menu {
             id: nodesMenu
@@ -126,16 +130,35 @@ Item {
                 MenuItem {
                     text: object
                     onTriggered: {
-                        _buttleData.currentGraphWrapper = _buttleData.graphParametersEditorWrapper
-                        _buttleManager.nodeManager.creationNode("_buttleData.graphParametersEditor", object, 0, 0)
+                        // we create a new node and connect it to the last but one node of the concerned graph
+
+                        previousNode =_buttleData.nodeOfParametersEditorToConnect()
+
+                        _buttleData.currentGraphWrapper = _buttleData.graphWrapper
+                        _buttleManager.nodeManager.creationNode("_buttleData.graph", object, 0, 0)
+
+                        //console.log ("_buttleData.nodeOfParametersEditorToConnect()", _buttleData.nodeOfParametersEditorToConnect())
+
+                        // if there is only one node, we don't connect it
+                        if (_buttleData.nodeOfParametersEditorToConnect().size > 1){
+                            console.debug ("_buttleData.nodeOfParametersEditorToConnect()", _buttleData.nodeOfParametersEditorToConnect())
+                            newNode = _buttleData.nodeOfParametersEditorToConnect()
+                            console.debug("new node qml", newNode)
+
+                            _buttleManager.connectionManager.connectWrappers(previousNode, newNode)
+                        }
+
+
+
+
                     }
 
-                }
+                }// menuItem
                 onObjectAdded: nodesMenu.insertItem(index, object)
                 onObjectRemoved: nodesMenu.removeItem(object)
-            }
-        }
+            } // Instantiator
+        } //Menu
 
 
-    }
+    //}
 }

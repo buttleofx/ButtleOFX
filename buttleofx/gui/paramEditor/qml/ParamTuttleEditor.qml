@@ -13,7 +13,7 @@ Item {
     signal buttonCloseClicked(bool clicked)
     signal buttonFullscreenClicked(bool clicked)
 
-    property variant params 
+    property variant params
     property variant currentParamNode
 
     property color background: "#141414"
@@ -45,7 +45,6 @@ Item {
 
         /*TUTTLE PARAMS*/
         Rectangle {
-            Layout.minimumHeight: tuttleParamTitle.height
 
             id: tuttleParams
             height: 500
@@ -55,7 +54,7 @@ Item {
             /* Params depend on the node type (Tuttle data)*/
             Item {
                 id: tuttleParamContent
-                height: parent.height - tuttleParamTitle.height
+                height: parent.height
                 width: parent.width
                 y: tuttleParamTitle.height + 5
 
@@ -64,9 +63,10 @@ Item {
                 ScrollView {
                     anchors.fill: parent
                     anchors.topMargin: 5
-                    anchors.bottomMargin: 5
+                    anchors.bottomMargin: 15
                     height: 110
                     width: 110
+                    z:0
 
                     style: ScrollViewStyle {
                         scrollBarBackground: Rectangle {
@@ -137,7 +137,7 @@ Item {
                                 }
                                 MouseArea {
                                     anchors.fill: parent
-                                    acceptedButtons: Qt.RightButton               
+                                    acceptedButtons: Qt.RightButton
                                     hoverEnabled:true
                                     onClicked: {
                                         model.object.hasChanged = false
@@ -156,29 +156,6 @@ Item {
                     }//Listview
                 }//scrollArea
             }//rectangle param
-
-            //placed here to avoid a bug of display with the listView (should be displayed after the listview)
-            Rectangle{
-                id: tuttleParamTitle
-                width: paramEditor.width
-                height: 40
-                color: paramEditor.background
-                gradient: Gradient {
-                    GradientStop { position: 0.0; color: gradian2 }
-                    GradientStop { position: 0.85; color: gradian2 }
-                    GradientStop { position: 0.86; color: gradian1 }
-                    GradientStop { position: 1; color: gradian2 }
-                }
-
-                Text {
-                    anchors.verticalCenter: parent.verticalCenter
-                    anchors.left: parent.left
-                    anchors.leftMargin: 10
-                    color: textColor
-                    font.pointSize: 11
-                    text: "Parameters"
-                }
-            }
         }
     }//splitterColumn
 }

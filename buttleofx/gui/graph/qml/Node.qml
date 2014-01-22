@@ -145,46 +145,7 @@ Rectangle {
         }
     }
 
-    Rectangle {
-        id: nodeRectangle
-        anchors.centerIn: parent
-        anchors.fill: parent
-        anchors.margins: miniatureState ? 4 * miniatureScale : 4 * graph.zoomCoeff
-        color: "#bbbbbb"
-        radius: 8
-        clip: nodeText.isSelected ? false : true
-        Rectangle{
-            id: background
-            anchors.fill: nodeText
-            color: "black"
-            opacity: 0.2
-            visible: nodeText.isSelected ? true : false
-        }
 
-        Text {
-            id: nodeText
-            anchors.verticalCenter: isSelected ? undefined : parent.verticalCenter
-            anchors.horizontalCenter: isSelected ? parent.horizontalCenter : undefined
-            x: miniatureState ? 5 * miniatureScale : 5
-            y: isSelected ? miniatureState ? nodeWidth * 0.5 * miniatureScale : nodeWidth * 0.5 : 0
-            text: m.nodeWrapper.nameUser
-            font.pointSize: miniatureState ? 10 * miniatureScale : 10
-            property bool isSelected: _buttleData.nodeIsSelected(m.nodeWrapper)
-            
-            // onTextChanged: {
-            //     m.nodeWrapper.fitWidth(nodeText.width);
-            //     // _buttleData.graphWrapper.updateConnectionsCoord(m.nodeWrapper);
-            // }
-
-            Connections {
-                target: _buttleData
-                onCurrentSelectedNodeWrappersChanged: {
-                    nodeText.isSelected = _buttleData.nodeIsSelected(m.nodeWrapper)
-                }
-            }
-            color: isSelected ? m.nodeWrapper.color : "black"
-        }
-    }
     RowLayout {
         id: inputClipsLayout
         anchors.fill: parent
@@ -256,6 +217,50 @@ Rectangle {
                 miniatureState: qml_nodeRoot.miniatureState
                 visible: miniatureState ? false : true
             }
+        }
+    }
+
+    Rectangle {
+        id: nodeRectangle
+        anchors.centerIn: parent
+        anchors.fill: parent
+        anchors.margins: miniatureState ? 4 * miniatureScale : 4 * graph.zoomCoeff
+        color: "#bbbbbb"
+        radius: 8
+        clip: nodeText.isSelected ? false : true
+        Rectangle{
+            id: background
+            anchors.fill: nodeText
+            anchors.leftMargin: -4
+            anchors.rightMargin: -4
+            color: "#212121"
+            opacity: 0.6
+            radius: 2
+            visible: nodeText.isSelected ? true : false
+        }
+
+        Text {
+            id: nodeText
+            anchors.verticalCenter: parent.verticalCenter
+            anchors.horizontalCenter: isSelected ? parent.horizontalCenter : undefined
+            x: miniatureState ? 5 * miniatureScale : 5
+            y: isSelected ? miniatureState ? nodeWidth * 0.5 * miniatureScale : nodeWidth * 0.5 : 0
+            text: m.nodeWrapper.nameUser
+            font.pointSize: miniatureState ? 10 * miniatureScale : 10
+            property bool isSelected: _buttleData.nodeIsSelected(m.nodeWrapper)
+
+            // onTextChanged: {
+            //     m.nodeWrapper.fitWidth(nodeText.width);
+            //     // _buttleData.graphWrapper.updateConnectionsCoord(m.nodeWrapper);
+            // }
+
+            Connections {
+                target: _buttleData
+                onCurrentSelectedNodeWrappersChanged: {
+                    nodeText.isSelected = _buttleData.nodeIsSelected(m.nodeWrapper)
+                }
+            }
+            color: isSelected ? m.nodeWrapper.color : "black"
         }
     }
 

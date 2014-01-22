@@ -17,8 +17,10 @@ Rectangle {
     property bool viewGrid: true
     signal changeSelectedList(variant selected)
 
-
-    property variant readerNode
+    QtObject {
+        id: readerNode
+        property variant nodeWrapper
+    }
 
     FileModelBrowser {
         id: fileModel
@@ -124,13 +126,15 @@ Rectangle {
 
                                         if (model.object.fileType != "Folder"){
 
-                                            readerNode = _buttleData.nodeReaderWrapperForBrowser(model.object.filepath)
-                                            console.log ("newNode", readerNode)
+                                            readerNode.nodeWrapper = _buttleData.nodeReaderWrapperForBrowser(model.object.filepath)
+                                            console.log ("New node from the browser", readerNode.nodeWrapper.name)
                                             _buttleData.currentGraphWrapper = _buttleData.graphBrowserWrapper
-                                            _buttleData.currentViewerNodeWrapper = readerNode
+                                            //_buttleData.currentGraphWrapper = _buttleData.graphWrapper
+
+                                            _buttleData.currentViewerNodeWrapper = readerNode.nodeWrapper
                                             _buttleData.currentViewerFrame = 0
                                             // we assign the node to the viewer, at the frame 0
-                                            _buttleData.assignNodeToViewerIndex(readerNode, 0)
+                                            _buttleData.assignNodeToViewerIndex(readerNode.nodeWrapper, 0)
                                             _buttleEvent.emitViewerChangedSignal()
 
                                         }

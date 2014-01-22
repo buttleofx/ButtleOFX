@@ -93,7 +93,7 @@ class ButtleData(QtCore.QObject):
             "graphBrowser": self._graphBrowser,
         }
 
-        self._currentGraph = self._graph #by default, the current graph is the graph of the graphEditor
+        #self._currentGraph = self._graph #by default, the current graph is the graph of the graphEditor
         self._currentGraphWrapper = self._graphWrapper #by default, the current graph is the graph of the graphEditor
 
         self._buttlePath = filePath
@@ -157,7 +157,7 @@ class ButtleData(QtCore.QObject):
         """
             Returns the current param nodeWrapper.
         """
-        return self._graphWrapper.getNodeWrapper(self.getCurrentParamNodeName())
+        return self._currentGraphWrapper.getNodeWrapper(self.getCurrentParamNodeName())
 
     def getCurrentSelectedNodeWrappers(self):
         """
@@ -210,7 +210,7 @@ class ButtleData(QtCore.QObject):
     #    """
     #    return self._graphWrapper.getNodeWrapper(self.getCurrentViewerNodeName())
 
-    def getCurrentViewerId(self):
+    def getCurrentViewerNodeWrapper(self):
         """
             Returns the current viewer nodeWrapper.
         """
@@ -300,7 +300,7 @@ class ButtleData(QtCore.QObject):
     #    # emit signal
     #    self.currentViewerNodeChanged.emit()
 
-    def setCurrentViewerId(self, nodeWrapper):
+    def setCurrentViewerNodeWrapper(self, nodeWrapper):
         """
             Changes the current viewer node and emits the change.
         """
@@ -487,7 +487,18 @@ class ButtleData(QtCore.QObject):
         self._graphBrowser._nodes = []  # clear the graph
         self._currentGraphWrapper = self._graphBrowserWrapper
         readerNode = self._graphBrowser.createReaderNode(url, 0, 0) # create a reader node (like for the drag & drop of file)
+        #print ("nodeReaderWrapperForBrowser self._graphBrowser ", self._graphBrowser)
         readerNodeWrapper = NodeWrapper(readerNode, self._graphBrowserWrapper._view) # wrapper of the reader file
+        #print ("nodeReaderWrapperForBrowser self._graphBrowserWrapper ", self._graphBrowserWrapper)
+
+        for param in readerNode._params:
+            print ("parameters ", param)
+
+        #self._graph._nodes = []  # clear the graph
+        #self._currentGraphWrapper = self._graphWrapper
+        #readerNode = self._graph.createReaderNode(url, 0, 0) # create a reader node (like for the drag & drop of file)
+        #readerNodeWrapper = NodeWrapper(readerNode, self._graphWrapper._view) # wrapper of the reader file
+
         return readerNodeWrapper
 
     @QtCore.pyqtSlot(result=QtCore.QObject)
@@ -507,6 +518,8 @@ class ButtleData(QtCore.QObject):
 
         else : lastButOneNode = None
 
+        # update undo/redo display
+        #self.undoRedoChanged()
 
         return lastButOneNode
 
@@ -632,7 +645,7 @@ class ButtleData(QtCore.QObject):
     currentParamNodeWrapper = QtCore.pyqtProperty(QtCore.QObject, getCurrentParamNodeWrapper, setCurrentParamNodeWrapper, notify=currentParamNodeChanged)
 
     currentViewerNodeChanged = QtCore.pyqtSignal()
-    currentViewerNodeWrapper = QtCore.pyqtProperty(QtCore.QObject, getCurrentViewerId, setCurrentViewerId, notify=currentViewerNodeChanged)
+    currentViewerNodeWrapper = QtCore.pyqtProperty(QtCore.QObject, getCurrentViewerNodeWrapper, setCurrentViewerNodeWrapper, notify=currentViewerNodeChanged)
     currentViewerFrameChanged = QtCore.pyqtSignal()
     currentViewerFrame = QtCore.pyqtProperty(int, getCurrentViewerFrame, setCurrentViewerFrame, notify=currentViewerFrameChanged)
 

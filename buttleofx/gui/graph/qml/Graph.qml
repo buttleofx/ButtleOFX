@@ -123,6 +123,7 @@ Rectangle {
 
             Repeater {
                 id: nodesRepeater
+                //model: _buttleData.graphBrowserWrapper.nodeWrappers
                 model: _buttleData.graphWrapper.nodeWrappers
                 Node {
                     id: node

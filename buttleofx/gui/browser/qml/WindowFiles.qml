@@ -27,8 +27,6 @@ Rectangle {
             text: "Create a Directory"
             onTriggered: {
                 fileModel.createFolder(fileModel.folder + "/New Directory")
-                //Update the folder to see the new directory
-                fileModel.updateFileItems(winFile.folder)
             }
         }
     }
@@ -85,6 +83,7 @@ Rectangle {
 
                         property variant selectedFiles
 
+
                         Column {
                             id : file
                             anchors.horizontalCenter: parent.horizontalCenter
@@ -125,7 +124,6 @@ Rectangle {
                                     textInColumn.selectAll()
                                     fileModel.changeFileName(textInColumn.getText(0, textInColumn.cursorPosition + 1), itemIndex)
                                     textInColumn.forceActiveFocus()
-                                    fileModel.updateFileItems(winFile.folder)
                                 }
                             }
                         }// endColumn
@@ -198,17 +196,13 @@ Rectangle {
                                 onTriggered: {
                                     //Open a TextEdit
                                     textInColumn.forceActiveFocus()
-
-                                    //fileModel.changeFileName("New Name", itemIndex)
-                                    //Update the folder
-                                    //fileModel.updateFileItems(winFile.folder)
                                 }
                             }
                             MenuItem {
                                 text: "Delete"
                                 onTriggered: {
-                                    deleteMessage.open()
-                                    fileModel.updateFileItems(winFile.folder)
+                                    fileModel.deleteItem(itemIndex)
+                                    //deleteMessage.open()
                                 }
                             }
                         }
@@ -234,6 +228,7 @@ Rectangle {
 
             model: fileModel.fileItems
             delegate: Component {
+
                 Rectangle {
                     id: fileInRow
                     color: model.object.isSelected ? "#00b2a1" : "transparent"
@@ -242,7 +237,6 @@ Rectangle {
                     width: listview.width
 
                     property variant selectedFiles
-
 
                     Row {
                         width: parent.width
@@ -281,7 +275,6 @@ Rectangle {
                                 textInRow.selectAll()
                                 fileModel.changeFileName(textInRow.getText(0, textInRow.cursorPosition + 1), itemIndex)
                                 textInRow.forceActiveFocus()
-                                fileModel.updateFileItems(winFile.folder)
                             }
                         }
                     }// endRow
@@ -353,17 +346,13 @@ Rectangle {
                             onTriggered: {
                                 //Open a TextEdit
                                 textInRow.forceActiveFocus()
-
-                                //fileModel.changeFileName("New Name", itemIndex)
-                                //Update the folder
-                                //fileModel.updateFileItems(winFile.folder)
                             }
                         }
                         MenuItem {
                             text: "Delete"
                             onTriggered: {
-                                deleteMessage.open()
-                                fileModel.updateFileItems(winFile.folder)
+                                fileModel.deleteItem(itemIndex)
+                                //deleteMessage.open()
                             }
                         }
                     }
@@ -372,20 +361,18 @@ Rectangle {
         }
     }
 
-    MessageDialog {
+    /*MessageDialog {
         id: deleteMessage
         title: "Delete?"
         icon: StandardIcon.Warning
         text: "Do you really want to delete " + winFile.fileName + "?"
-        standardButtons: StandardButton.Yes | StandardButton.No
+        standardButtons: StandardButton.No | StandardButton.Yes
         onYes: {
-            fileModel.deleteItem(itemIndex)
+            //fileModel.deleteItem(itemIndex)
             console.log("deleted")
-            //fileModel.updateFileItems(winFile.folder)
         }
         onNo: {
             console.log("didn't delete")
         }
-    }
-
+    }*/
 }

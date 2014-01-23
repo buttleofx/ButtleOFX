@@ -32,6 +32,10 @@ class FileItem(QtCore.QObject):
     def getFilepath(self):
         return self._filepath
     
+    def setFilepath(self, newpath):
+        import shutil
+        shutil.move(self.filepath, newpath + "/" + self.fileName)
+    
     def getFileType(self):
         return self._fileType
     
@@ -48,7 +52,7 @@ class FileItem(QtCore.QObject):
         self._isSelected = isSelected
         self.isSelectedChange.emit()
 
-    filepath = QtCore.pyqtProperty(str, getFilepath, constant=True)
+    filepath = QtCore.pyqtProperty(str, getFilepath, setFilepath, constant=True)
     fileType = QtCore.pyqtProperty(str, getFileType, constant=True)
     fileName = QtCore.pyqtProperty(str, getFileName, setFileName, constant=True)
     isSelectedChange = QtCore.pyqtSignal()
@@ -75,6 +79,13 @@ class FileModelBrowser(QtQuick.QQuickItem):
     @QtCore.pyqtSlot(str)
     def createFolder(self, path):
         os.mkdir(path)
+        self.updateFileItems(self._folder)
+        
+    @QtCore.pyqtSlot(int, str)
+    def moveItem(self, index, newpath):
+        if index < len(self._fileItems):
+            self._fileItems[index].filepath = newpath
+        self.updateFileItems(self._folder)
     
     def getFolderExists(self):
         import os
@@ -88,7 +99,6 @@ class FileModelBrowser(QtQuick.QQuickItem):
     exists = QtCore.pyqtProperty(bool, getFolderExists, notify=folderChanged)
     parentFolder = QtCore.pyqtProperty(str, getParentFolder, constant=True)
     
-    @QtCore.pyqtSlot(str)
     def updateFileItems(self, folder):
         self._fileItems = []
         self._fileItemsModel.clear()
@@ -181,6 +191,7 @@ class FileModelBrowser(QtQuick.QQuickItem):
     def changeFileName(self, newName, index):
         if index < len(self._fileItems):
             self._fileItems[index].fileName = newName
+        self.updateFileItems(self._folder)
             
     @QtCore.pyqtSlot(int)
     def deleteItem(self, index):
@@ -190,6 +201,7 @@ class FileModelBrowser(QtQuick.QQuickItem):
                 shutil.rmtree(self._fileItems[index].filepath)
             if self._fileItems[index].fileType == FileItem.Type.File:
                 os.remove(self._fileItems[index].filepath)
+        self.updateFileItems(self._folder)
                 
     @QtCore.pyqtSlot(result=QtCore.QObject)
     def getSelectedItems(self):

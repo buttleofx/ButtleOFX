@@ -64,7 +64,8 @@ Rectangle {
                 drop.accepted = false
                 return
             }
-
+            _buttleData.currentGraphWrapper = _buttleData.graphWrapper
+            _buttleData.currentGraphIsGraph()
             for(var urlIndex in drop.urls)
             {
                 _buttleManager.nodeManager.dropFile(drop.urls[urlIndex], drag.x - m.graphRoot.originX, drag.y - m.graphRoot.originY)
@@ -79,6 +80,8 @@ Rectangle {
         keys: "internFileDrag"
 
         onDropped: {
+            _buttleData.currentGraphWrapper = _buttleData.graphWrapper
+            _buttleData.currentGraphIsGraph()
             _buttleManager.nodeManager.dropFile(drag.source.filePath, drag.x - m.graphRoot.originX, drag.y - m.graphRoot.originY)
             console.log("File dropped : ", drag.source.filePath)
         }

@@ -117,8 +117,6 @@ class NodeWrapper(QtCore.QObject):
         from buttleofx.data import ButtleDataSingleton
         buttleData = ButtleDataSingleton().get()
 
-        #print ("getFPS buttleData.getCurrentGraph()", buttleData.getCurrentGraph())
-        #print ("getFPS buttleData.getGraphBrowser()", buttleData.getGraphBrowser())
         graph = buttleData.getCurrentGraph().getGraphTuttle()
         node = self._node.getTuttleNode().asImageEffectNode()
         try:

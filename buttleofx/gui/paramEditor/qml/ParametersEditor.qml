@@ -138,8 +138,6 @@ Item {
                         _buttleData.currentGraphWrapper = _buttleData.graphWrapper
                         _buttleManager.nodeManager.creationNode("_buttleData.graph", object, 0, 0)
 
-                        //console.log ("_buttleData.nodeOfParametersEditorToConnect()", _buttleData.nodeOfParametersEditorToConnect())
-
                         // if there is only one node, we don't connect it
                         if (_buttleData.nodeOfParametersEditorToConnect().size > 1){
                             console.debug ("_buttleData.nodeOfParametersEditorToConnect()", _buttleData.nodeOfParametersEditorToConnect())

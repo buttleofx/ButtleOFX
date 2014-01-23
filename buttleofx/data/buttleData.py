@@ -357,14 +357,14 @@ class ButtleData(QtCore.QObject):
         self.currentGraphChanged.emit()
 
     @QtCore.pyqtSlot()
-    def currentGraphIsGraphBrowser():
+    def currentGraphIsGraphBrowser(self):
         """
             Set the _currentGraph to graphBrowser // work in QML
         """
         self._currentGraph = self._graphBrowser
 
     @QtCore.pyqtSlot()
-    def currentGraphIsGraph():
+    def currentGraphIsGraph(self):
         """
             Set the _currentGraph to graph // work in QML
         """
@@ -522,20 +522,10 @@ class ButtleData(QtCore.QObject):
         self._graphBrowser._graphTuttle = tuttle.Graph()  # clear the graphTuttle
         self._currentGraph = self._graphBrowser
         self._currentGraphWrapper = self._graphBrowserWrapper
-        #print ("nodeReaderWrapperForBrowser self.getCurrentGraphWrapper", self.getCurrentGraphWrapper())
-        readerNode = self._graphBrowser.createReaderNode(url, 0, 0) # create a reader node (like for the drag & drop of file)
-        #print ("nodeReaderWrapperForBrowser self._graphBrowser ", self._graphBrowser)
-        readerNodeWrapper = NodeWrapper(readerNode, self._graphBrowserWrapper._view) # wrapper of the reader file
-        #print ("self._currentGraph", self._currentGraph)
-        #print ("nodeReaderWrapperForBrowser self._graphBrowser._graphTuttle", self._graphBrowser._graphTuttle)
-       
-        #for param in readerNode._params:
-        #    print ("parameters ", param)
 
-        #self._graph._nodes = []  # clear the graph
-        #self._currentGraphWrapper = self._graphWrapper
-        #readerNode = self._graph.createReaderNode(url, 0, 0) # create a reader node (like for the drag & drop of file)
-        #readerNodeWrapper = NodeWrapper(readerNode, self._graphWrapper._view) # wrapper of the reader file
+        readerNode = self._graphBrowser.createReaderNode(url, 0, 0) # create a reader node (like for the drag & drop of file)
+
+        readerNodeWrapper = NodeWrapper(readerNode, self._graphBrowserWrapper._view) # wrapper of the reader file
 
         return readerNodeWrapper
 
@@ -544,7 +534,6 @@ class ButtleData(QtCore.QObject):
         # return the last but one node to connect to the new node
 
         sizeOfGraph = self._currentGraphWrapper._nodeWrappers.size()
-        print ("sizeOfGraph", sizeOfGraph)
 
         if (sizeOfGraph > 1):
             #nodes to connect

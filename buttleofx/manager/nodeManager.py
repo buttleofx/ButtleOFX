@@ -37,7 +37,6 @@ class NodeManager(QtCore.QObject):
         #by default creation is on the graph in grapheditor
         else:
             buttleData.getGraph().createNode(nodeType, x, y)
-            print ("creationNode buttleData.graph", buttleData._graph)
 
         # update undo/redo display
         self.undoRedoChanged()

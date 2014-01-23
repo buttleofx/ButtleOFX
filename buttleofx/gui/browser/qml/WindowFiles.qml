@@ -121,9 +121,8 @@ Rectangle {
                                     }
 
                                     onDoubleClicked: {
-                                        //model.object.fileType == "Folder" ? winFile.goToFolder(model.object.filepath) : Qt.openUrlExternally("file:///" + model.object.filepath)
-                                        //model.object.fileType == "Folder" ? winFile.goToFolder(model.object.filepath) : console.log("A lier au viewer")
 
+                                       // if it's an image, we assign it to the viewer
                                         if (model.object.fileType != "Folder"){
 
                                             readerNode.nodeWrapper = _buttleData.nodeReaderWrapperForBrowser(model.object.filepath)
@@ -134,8 +133,10 @@ Rectangle {
                                             _buttleData.currentViewerNodeWrapper = readerNode.nodeWrapper
                                             _buttleData.currentViewerFrame = 0
                                             // we assign the node to the viewer, at the frame 0
-                                            _buttleData.assignNodeToViewerIndex(readerNode.nodeWrapper, 0)
+                                            _buttleData.assignNodeToViewerIndex(readerNode.nodeWrapper, 10)
+                                            _buttleData.currentViewerIndex = 10 // we assign to the viewer the 10th view
                                             _buttleEvent.emitViewerChangedSignal()
+                                            player.changeViewer(10)
 
                                         }
                                         else{

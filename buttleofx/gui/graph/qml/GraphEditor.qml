@@ -34,6 +34,13 @@ Item {
                 // console.log("Node created clicking from Tools")
                 _buttleData.currentGraphIsGraph()
                 _buttleData.currentGraphWrapper = _buttleData.graphWrapper
+                // if before the viewer was showing an image from the brower, we change the currentView
+                if (_buttleData.currentViewerIndex > 9){
+                    _buttleData.currentViewerIndex = 1
+                    player.changeViewer(1)
+                    _buttleEvent.emitViewerChangedSignal()
+
+                }
                 _buttleManager.nodeManager.creationNode("_buttleData.graph", nodeType, -graph.originX + 20, -graph.originY + 20)
             }
         }
@@ -57,6 +64,12 @@ Item {
                     // console.log("Node created clicking from Graph")
                     _buttleData.currentGraphIsGraph()
                     _buttleData.currentGraphWrapper = _buttleData.graphWrapper
+                    // if before the viewer was showing an image from the brower, we change the currentView
+                    if (_buttleData.currentViewerIndex > 9){
+                        _buttleData.currentViewerIndex = 1
+                        player.changeViewer(1)
+                        _buttleEvent.emitViewerChangedSignal()
+                    }
                     _buttleManager.nodeManager.creationNode("_buttleData.graph", nodeType, -graph.originX + graph.mouseX, -graph.originY + graph.mouseY)
                 }
 

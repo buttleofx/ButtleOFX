@@ -64,8 +64,16 @@ Rectangle {
                 drop.accepted = false
                 return
             }
+
             _buttleData.currentGraphWrapper = _buttleData.graphWrapper
             _buttleData.currentGraphIsGraph()
+            // if before the viewer was showing an image from the brower, we change the currentView
+            if (_buttleData.currentViewerIndex > 9){
+                _buttleData.currentViewerIndex = 1
+                player.changeViewer(1)
+                _buttleEvent.emitViewerChangedSignal()
+            }
+
             for(var urlIndex in drop.urls)
             {
                 _buttleManager.nodeManager.dropFile(drop.urls[urlIndex], drag.x - m.graphRoot.originX, drag.y - m.graphRoot.originY)
@@ -82,6 +90,12 @@ Rectangle {
         onDropped: {
             _buttleData.currentGraphWrapper = _buttleData.graphWrapper
             _buttleData.currentGraphIsGraph()
+            // if before the viewer was showing an image from the brower, we change the currentView
+            if (_buttleData.currentViewerIndex > 9){
+                _buttleData.currentViewerIndex = 1
+                player.changeViewer(1)
+                _buttleEvent.emitViewerChangedSignal()
+            }
             _buttleManager.nodeManager.dropFile(drag.source.filePath, drag.x - m.graphRoot.originX, drag.y - m.graphRoot.originY)
             console.log("File dropped : ", drag.source.filePath)
         }

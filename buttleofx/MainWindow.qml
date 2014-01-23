@@ -271,6 +271,14 @@ ApplicationWindow {
                     onTriggered: {
                         _buttleData.currentGraphIsGraph()
                         _buttleData.currentGraphWrapper = _buttleData.graphWrapper
+
+                        // if before the viewer was showing an image from the brower, we change the currentView
+                        if (_buttleData.currentViewerIndex > 9){
+                            _buttleData.currentViewerIndex = 1
+                            player.changeViewer(1)
+                            _buttleEvent.emitViewerChangedSignal()
+                        }
+
                         _buttleManager.nodeManager.creationNode("_buttleData.graph", object, 0, 0)
                     }
                 }

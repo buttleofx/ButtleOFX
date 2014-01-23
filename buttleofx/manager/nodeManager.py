@@ -104,6 +104,8 @@ class NodeManager(QtCore.QObject):
                 copyNode.update({"color": node.getNode().getColor()})
                 copyNode.update({"params": node.getNode().getTuttleNode().getParamSet()})
                 copyNode.update({"mode": "_copy"})
+                copyNode.update({"x": node.getNode().getCoord()[0]})
+                copyNode.update({"y": node.getNode().getCoord()[1]})
                 buttleData.getCurrentCopiedNodesInfo()[node.getName()] = copyNode
                 # Emit the change for the toolbar
                 buttleData.pastePossibilityChanged.emit()
@@ -118,7 +120,7 @@ class NodeManager(QtCore.QObject):
         if buttleData.getCurrentCopiedNodesInfo():
             # Create a copy for each node copied
             for node in buttleData.getCurrentCopiedNodesInfo():
-                buttleData.getGraph().createNode(buttleData.getCurrentCopiedNodesInfo()[node]["nodeType"], 20, 20)
+                buttleData.getGraph().createNode(buttleData.getCurrentCopiedNodesInfo()[node]["nodeType"], buttleData.getCurrentCopiedNodesInfo()[node]["x"] + 20, buttleData.getCurrentCopiedNodesInfo()[node]["y"] + 20)
                 newNode = buttleData.getGraph().getNodes()[-1]
                 newNode.setColor(buttleData.getCurrentCopiedNodesInfo()[node]["color"])
                 newNode.setNameUser(buttleData.getCurrentCopiedNodesInfo()[node]["nameUser"] + buttleData.getCurrentCopiedNodesInfo()[node]["mode"])

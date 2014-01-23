@@ -42,7 +42,7 @@ Item {
                 anchors.topMargin: 2
 
                 iconSource:
-                    if (pressed){
+                    if (hovered){
                         "img/icons/close_hover.png"
                     }else{
                         "img/icons/close.png"
@@ -68,7 +68,7 @@ Item {
                 anchors.topMargin: 2
 
                 iconSource:
-                    if (pressed){
+                    if (hovered){
                         "img/icons/fullscreen_hover.png"
                     }else{
                         "img/icons/fullscreen.png"

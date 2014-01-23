@@ -152,6 +152,13 @@ ApplicationWindow {
 
     property bool aNodeIsSelected:false
 
+    //List of plugins
+    PluginBrowser {
+        id: pluginBrowser
+        z:1
+        height: 300
+    }
+
     //Window of hint for plugins
     PluginWindow {
         id: doc

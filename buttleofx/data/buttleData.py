@@ -411,6 +411,22 @@ class ButtleData(QtCore.QObject):
             pluginsWModel.append(p)
         return pluginsWModel
 
+    pluginSearchedChanged = QtCore.pyqtSignal()
+
+    @QtCore.pyqtSlot(str, result=QtCore.QObject)
+    def getPluginsWrappersSuggestions(self, pluginSearched):
+        from pyTuttle import tuttle
+        pluginCache = tuttle.core().getImageEffectPluginCache()
+        plugins = pluginCache.getPlugins()         
+
+        pluginsW = [PluginWrapper(plugin) for plugin in plugins]
+        pluginsWModel = QObjectListModel(self)
+        for p in pluginsW:
+            if (p.pluginType.startswith(pluginSearched)) :
+                print ('blabla')
+                pluginsWModel.append(p)
+        return pluginsWModel
+
     @QtCore.pyqtSlot(str, result=QtCore.QObject)
     def getQObjectPluginsIdentifiersByParentPath(self, pathname):
         """

@@ -506,7 +506,6 @@ class ButtleData(QtCore.QObject):
         # return the last but one node to connect to the new node
 
         sizeOfGraph = self._currentGraphWrapper._nodeWrappers.size()
-        print ("sizeOfGraph", sizeOfGraph)
 
         if (sizeOfGraph > 1):
             #nodes to connect

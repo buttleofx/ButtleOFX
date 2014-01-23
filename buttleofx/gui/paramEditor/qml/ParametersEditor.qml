@@ -97,27 +97,60 @@ Item {
     }
 
     // Add a node
-    MouseArea{
+/*    MouseArea{
         id: addNode
         y : listViewParam.height + paramTitle.height
         width : parent.width
         height : imageAddNode.height + 30
-
-
-        Image{
-            id: imageAddNode
-            width: 30
-            height : 30
-            anchors.verticalCenter: parent.verticalCenter
-            anchors.horizontalCenter: parent.horizontalCenter
-            source: _buttleData.buttlePath +  "/gui/img/buttons/tools/plus.png"
-
-        }
+        hoverEnabled: true
 
         onClicked : {
             console.log("Clic on Add a Node!")
             nodesMenu.popup();
 
+        }
+        onEntered : {
+            imageAddNode.source = _buttleData.buttlePath +  "/gui/img/buttons/tools/bigplus_hover.png"
+
+        }
+        onExited : {
+            imageAddNode.source = _buttleData.buttlePath +  "/gui/img/buttons/tools/bigplus.png"
+
+        }
+    }
+    Image{
+        id: imageAddNode
+        anchors.verticalCenter: parent.verticalCenter
+        anchors.horizontalCenter: parent.horizontalCenter
+        source: _buttleData.buttlePath +  "/gui/img/buttons/tools/bigplus.png"
+
+
+    }
+*/
+    // Add node part
+    Button {
+        id: addNode
+        y : listViewParam.height + paramTitle.height
+        width : parent.width
+
+        iconSource:
+            if (hovered){
+                _buttleData.buttlePath +  "/gui/img/buttons/tools/bigplus_hover.png"
+            }else{
+                _buttleData.buttlePath +  "/gui/img/buttons/tools/bigplus.png"
+            }
+
+        style:
+            ButtonStyle {
+                background: Rectangle {
+                    anchors.fill: parent
+                    color: "transparent"
+                }
+            }
+
+        onClicked: {
+            console.log("Clic on Add a Node!")
+            nodesMenu.popup();
         }
     }
 
@@ -136,8 +169,6 @@ Item {
 
                         _buttleData.currentGraphWrapper = _buttleData.graphWrapper
                         _buttleManager.nodeManager.creationNode("_buttleData.graph", object, 0, 0)
-
-                        //console.log ("_buttleData.nodeOfParametersEditorToConnect()", _buttleData.nodeOfParametersEditorToConnect())
 
                         // if there is only one node, we don't connect it
                         if (_buttleData.nodeOfParametersEditorToConnect().size > 1){

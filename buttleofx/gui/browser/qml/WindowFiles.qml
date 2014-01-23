@@ -133,10 +133,13 @@ Rectangle {
                                             _buttleData.currentViewerNodeWrapper = readerNode.nodeWrapper
                                             _buttleData.currentViewerFrame = 0
                                             // we assign the node to the viewer, at the frame 0
+                                            //_buttleData.assignNodeToViewerIndex(readerNode.nodeWrapper, 10)
                                             _buttleData.assignNodeToViewerIndex(readerNode.nodeWrapper, 10)
                                             _buttleData.currentViewerIndex = 10 // we assign to the viewer the 10th view
+
+                                            _buttleData.currentViewerNodeWrapper = _buttleData.getNodeWrapperByViewerIndex(10)
                                             _buttleEvent.emitViewerChangedSignal()
-                                            player.changeViewer(10)
+                                            //player.changeViewer(10)
 
                                         }
                                         else{

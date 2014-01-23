@@ -300,6 +300,9 @@ Item {
                                  MouseArea {
                                     anchors.fill: parent
                                     onClicked: {
+                                        _buttleData.currentGraphWrapper = _buttleData.graphWrapper
+                                        _buttleData.currentGraphIsGraph()
+
                                         player.changeViewer(index+1)
                                     }
                                 }

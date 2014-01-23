@@ -202,24 +202,24 @@ class ConnectionManager(QtCore.QObject):
                 inputs = buttleData.getGraphWrapper().getNodeWrapper(node.getName())._srcClips
                        
                 cpt = 0
+                saveConnection = False
                 for input in inputs:
                     testConnection = self.connectionExists(input)
                     if(testConnection):
                         copyConnection.update({"inputNodeName": node.getNode().getName()})
-                        copyConnection.update({"input"+str(cpt) : input.getClipName()})
-                    cpt = cpt + 1 
+                        copyConnection.update({"input"+str(cpt) : input.getClipName()}) 
                     connectedClip = buttleData.graphWrapper.getConnectedClipWrapper(input, False)
-                    saveConnection = False
                     if(connectedClip):
                         connectedNode = buttleData.getGraphWrapper().getNodeWrapper(connectedClip.getNodeName())
                         for nodeSelected in buttleData.getCurrentSelectedNodeWrappers():
                             if(nodeSelected.getName() == connectedNode.getName()):
-                                copyConnection.update({"outputNodeName": connectedNode.getName()})
-                                copyConnection.update({"output" : connectedClip.getClipName()})
+                                copyConnection.update({"outputNodeName"+str(cpt) : connectedNode.getName()})
+                                copyConnection.update({"output"+str(cpt) : connectedClip.getClipName()})
                                 saveConnection = True
                                 break
                             else:
                                 saveConnection = False
+                    cpt = cpt + 1
                 if(saveConnection):
                     buttleData.getCurrentCopiedConnectionsInfo()[node.getName()] = copyConnection
             
@@ -237,18 +237,16 @@ class ConnectionManager(QtCore.QObject):
                 length = len(buttleData.getCurrentCopiedConnectionsInfo()[connection])
                     
                 copiedNodeInName = buttleData.getCurrentCopiedNodesInfo()[buttleData.getCurrentCopiedConnectionsInfo()[connection]["inputNodeName"]] [buttleData.getCurrentCopiedConnectionsInfo()[connection]["inputNodeName"]]
-                copiedNodeOutName = buttleData.getCurrentCopiedNodesInfo()[buttleData.getCurrentCopiedConnectionsInfo()[connection]["outputNodeName"]] [buttleData.getCurrentCopiedConnectionsInfo()[connection]["outputNodeName"]]
                 copiedNodeIn = buttleData.getGraphWrapper().getNodeWrapper(copiedNodeInName)
-                copiedNodeOut = buttleData.getGraphWrapper().getNodeWrapper(copiedNodeOutName)
-                    
-                #for i in range(0, length-3):
-                copiedInputName = buttleData.getCurrentCopiedConnectionsInfo()[connection]["input0"]  
-                copiedInput = copiedNodeIn.getClip(copiedInputName)
-                
-                copiedOutputName = buttleData.getCurrentCopiedConnectionsInfo()[connection]["output"]  
-                copiedOutput = copiedNodeOut.getClip(copiedOutputName)
-                
-                self.connectWrappers(copiedOutput, copiedInput)
+
+                for i in range(0, length-5):   
+                    copiedNodeOutName = buttleData.getCurrentCopiedNodesInfo()[buttleData.getCurrentCopiedConnectionsInfo()[connection]["outputNodeName"+str(i)]] [buttleData.getCurrentCopiedConnectionsInfo()[connection]["outputNodeName"+str(i)]]
+                    copiedNodeOut = buttleData.getGraphWrapper().getNodeWrapper(copiedNodeOutName)
+                    copiedInputName = buttleData.getCurrentCopiedConnectionsInfo()[connection]["input"+str(i)]  
+                    copiedInput = copiedNodeIn.getClip(copiedInputName)
+                    copiedOutputName = buttleData.getCurrentCopiedConnectionsInfo()[connection]["output"+str(i)]  
+                    copiedOutput = copiedNodeOut.getClip(copiedOutputName)
+                    self.connectWrappers(copiedOutput, copiedInput)
         self.undoRedoChanged()
         
 

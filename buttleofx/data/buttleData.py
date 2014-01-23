@@ -23,6 +23,8 @@ from buttleofx.event import ButtleEvent
 from buttleofx.core.graph.node import Node
 from buttleofx.gui.graph.node import NodeWrapper
 
+from pyTuttle import tuttle
+
 
 import math
 
@@ -31,6 +33,7 @@ class ButtleData(QtCore.QObject):
         Class ButtleData defined by:
         - _mapGraph : map of graph
         - _graphWrapper : the graphWrapper
+        - _currentGraph : the currentGraph
         - _currentGraphWrapper : the current graph wrapper between graph and graphBrowser
         - _graph : the graph (core)
         - _graphBrowser : the graph of the browser
@@ -52,6 +55,7 @@ class ButtleData(QtCore.QObject):
     _graphBrowser = None
     _graphBrowserWrapper = None
 
+    _currentGraph = None
     _currentGraphWrapper = None
 
     _mapGraph = {}
@@ -93,7 +97,7 @@ class ButtleData(QtCore.QObject):
             "graphBrowser": self._graphBrowser,
         }
 
-        #self._currentGraph = self._graph #by default, the current graph is the graph of the graphEditor
+        self._currentGraph = self._graph #by default, the current graph is the graph of the graphEditor
         self._currentGraphWrapper = self._graphWrapper #by default, the current graph is the graph of the graphEditor
 
         self._buttlePath = filePath
@@ -111,6 +115,9 @@ class ButtleData(QtCore.QObject):
 
     def getCurrentGraphWrapper(self):
         return self._currentGraphWrapper
+
+    def getCurrentGraph(self):
+        return self._currentGraph
 
     def getGraphBrowser(self):
         return self._graphBrowser
@@ -311,8 +318,11 @@ class ButtleData(QtCore.QObject):
         else:
             self._currentViewerNodeName = nodeWrapper.getName()
         # emit signal
-        print ("setCurrentViewerId buttleData.getCurrentGraphWrapper()", self.getCurrentGraphWrapper())
-        print ("setCurrentViewerId nodeWrapper.getName()", nodeWrapper.getName())
+        #print ("setCurrentViewerId buttleData.getCurrentGraphWrapper()", self.getCurrentGraphWrapper())
+        #print ("setCurrentViewerId nodeWrapper.getName()", nodeWrapper.getName())
+
+        #print ("setCurrentViewerId self._graphBrowser._graphTuttle", self._graphBrowser._graphTuttle)
+
         self.currentViewerNodeChanged.emit()
 
     def setCurrentConnectionWrapper(self, connectionWrapper):
@@ -338,6 +348,28 @@ class ButtleData(QtCore.QObject):
         """
         self._currentGraphWrapper = currentGraphWrapper
         self.currentGraphWrapperChanged.emit()
+
+    def setCurrentGraph(self, currentGraph):
+        """
+            Set the _currentGraph // doesn't work in QML
+        """
+        self._currentGraph = currentGraph
+        self.currentGraphChanged.emit()
+
+    @QtCore.pyqtSlot()
+    def currentGraphIsGraphBrowser():
+        """
+            Set the _currentGraph to graphBrowser // work in QML
+        """
+        self._currentGraph = self._graphBrowser
+
+    @QtCore.pyqtSlot()
+    def currentGraphIsGraph():
+        """
+            Set the _currentGraph to graph // work in QML
+        """
+        self._currentGraph = self._graph
+
 
 
     ############################################### VIDEO FONCTIONS ##################################################
@@ -487,15 +519,18 @@ class ButtleData(QtCore.QObject):
     @QtCore.pyqtSlot(str, result=QtCore.QObject)
     def nodeReaderWrapperForBrowser(self, url):
         self._graphBrowser._nodes = []  # clear the graph
+        self._graphBrowser._graphTuttle = tuttle.Graph()  # clear the graphTuttle
+        self._currentGraph = self._graphBrowser
         self._currentGraphWrapper = self._graphBrowserWrapper
-        print ("nodeReaderWrapperForBrowser self.getCurrentGraphWrapper", self.getCurrentGraphWrapper())
+        #print ("nodeReaderWrapperForBrowser self.getCurrentGraphWrapper", self.getCurrentGraphWrapper())
         readerNode = self._graphBrowser.createReaderNode(url, 0, 0) # create a reader node (like for the drag & drop of file)
         #print ("nodeReaderWrapperForBrowser self._graphBrowser ", self._graphBrowser)
         readerNodeWrapper = NodeWrapper(readerNode, self._graphBrowserWrapper._view) # wrapper of the reader file
-
+        #print ("self._currentGraph", self._currentGraph)
+        #print ("nodeReaderWrapperForBrowser self._graphBrowser._graphTuttle", self._graphBrowser._graphTuttle)
        
-        for param in readerNode._params:
-            print ("parameters ", param)
+        #for param in readerNode._params:
+        #    print ("parameters ", param)
 
         #self._graph._nodes = []  # clear the graph
         #self._currentGraphWrapper = self._graphWrapper
@@ -667,6 +702,9 @@ class ButtleData(QtCore.QObject):
 
     currentGraphWrapperChanged = QtCore.pyqtSignal()
     currentGraphWrapper = QtCore.pyqtProperty(QtCore.QObject, getCurrentGraphWrapper, setCurrentGraphWrapper, notify=currentGraphWrapperChanged)
+
+    currentGraphChanged = QtCore.pyqtSignal()
+    currentGraph = QtCore.pyqtProperty(QtCore.QObject, getCurrentGraph, setCurrentGraph, notify=currentGraphChanged)
 
     # paste possibility
     pastePossibilityChanged = QtCore.pyqtSignal()

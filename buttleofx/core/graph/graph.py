@@ -189,7 +189,7 @@ class Graph(object):
 
         from buttleofx.data import ButtleDataSingleton
         buttleData = ButtleDataSingleton().get()
-        node = buttleData.getGraph().getNode(nodeName)
+        node = buttleData.getCurrentGraph().getNode(nodeName)
 
         # What is the value of the movement (compared to the old position) ?
         oldX, oldY = node.getOldCoord()

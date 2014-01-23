@@ -116,7 +116,10 @@ class NodeWrapper(QtCore.QObject):
         #import which needs to be changed in the future
         from buttleofx.data import ButtleDataSingleton
         buttleData = ButtleDataSingleton().get()
-        graph = buttleData.getGraph().getGraphTuttle()
+
+        #print ("getFPS buttleData.getCurrentGraph()", buttleData.getCurrentGraph())
+        #print ("getFPS buttleData.getGraphBrowser()", buttleData.getGraphBrowser())
+        graph = buttleData.getCurrentGraph().getGraphTuttle()
         node = self._node.getTuttleNode().asImageEffectNode()
         try:
             self.setFpsError("")
@@ -143,7 +146,7 @@ class NodeWrapper(QtCore.QObject):
         #import which needs to be changed in the future
         from buttleofx.data import ButtleDataSingleton
         buttleData = ButtleDataSingleton().get()
-        graph = buttleData.getGraph().getGraphTuttle()
+        graph = buttleData.getCurrentGraph().getGraphTuttle()
         node = self._node.getTuttleNode().asImageEffectNode()
         try:
             self.setFrameError("")

@@ -128,6 +128,8 @@ Rectangle {
 
                                             readerNode.nodeWrapper = _buttleData.nodeReaderWrapperForBrowser(model.object.filepath)
                                             console.log ("New node from the browser", readerNode.nodeWrapper.name)
+                                            _buttleData.currentGraphIsGraphBrowser()
+                                            //console.log ("_buttleData.currentGraph",_buttleData.currentGraph)
                                             _buttleData.currentGraphWrapper = _buttleData.graphBrowserWrapper
                                             //_buttleData.currentGraphWrapper = _buttleData.graphWrapper
 

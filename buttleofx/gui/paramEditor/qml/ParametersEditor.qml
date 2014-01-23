@@ -134,6 +134,7 @@ Item {
 
                         previousNode =_buttleData.nodeOfParametersEditorToConnect()
 
+                        _buttleData.currentGraphIsGraph()
                         _buttleData.currentGraphWrapper = _buttleData.graphWrapper
                         _buttleManager.nodeManager.creationNode("_buttleData.graph", object, 0, 0)
 

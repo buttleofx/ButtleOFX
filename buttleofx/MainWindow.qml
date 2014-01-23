@@ -588,7 +588,8 @@ ApplicationWindow {
                     browser.parent = subviews.parentBeforeFullscreen
                 }
             }
-            onButtonFullscreenClicked: if(parent!=fullscreenContent){subviews.parentBeforeFullscreen = parent; fullscreenWindow.visibility = Window.FullScreen; fullscreenContent.children = browser}
+            //Prevent browser from putting in fullscreen mode in first because of causing an OS' display bug
+            onButtonFullscreenClicked: if(parent!=fullscreenContent && subviews.parentBeforeFullscreen!=null){subviews.parentBeforeFullscreen = parent; fullscreenWindow.visibility = Window.FullScreen; fullscreenContent.children = browser}
         }
 
         Item {

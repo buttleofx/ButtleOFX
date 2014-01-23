@@ -48,7 +48,6 @@ class NodeManager(QtCore.QObject):
             buttleData.setCurrentViewerNodeName(None)
         # if the viewer display a node affected by the destruction
         # need something from Tuttle
-
         # if at least one node in the graph
         if len(buttleData.getGraphWrapper().getNodeWrappers()) > 0 and len(buttleData.getGraph().getNodes()) > 0:
             # if a node is selected
@@ -119,13 +118,16 @@ class NodeManager(QtCore.QObject):
         # If nodes have been copied previously
         if buttleData.getCurrentCopiedNodesInfo():
             # Create a copy for each node copied
+            i=0
             for node in buttleData.getCurrentCopiedNodesInfo():
                 buttleData.getGraph().createNode(buttleData.getCurrentCopiedNodesInfo()[node]["nodeType"], buttleData.getCurrentCopiedNodesInfo()[node]["x"] + 20, buttleData.getCurrentCopiedNodesInfo()[node]["y"] + 20)
                 newNode = buttleData.getGraph().getNodes()[-1]
                 newNode.setColor(buttleData.getCurrentCopiedNodesInfo()[node]["color"])
                 newNode.setNameUser(buttleData.getCurrentCopiedNodesInfo()[node]["nameUser"] + buttleData.getCurrentCopiedNodesInfo()[node]["mode"])
                 newNode.getTuttleNode().getParamSet().copyParamsValues(buttleData.getCurrentCopiedNodesInfo()[node]["params"])
-
+                buttleData.getGraph().nodesChanged()
+                buttleData.getCurrentCopiedNodesInfo()[node].update({node : newNode._name})
+                i = i + 1
         # update undo/redo display
         self.undoRedoChanged()
 

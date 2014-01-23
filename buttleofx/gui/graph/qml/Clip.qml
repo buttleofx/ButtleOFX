@@ -89,7 +89,7 @@ Rectangle {
                 // Drop on input
                 clipOut = drag.source.clipWrapper
 
-                var clipOut_tmp = _buttleData.graphWrapper.getConnectedClipWrapper(clipOut)
+                var clipOut_tmp = _buttleData.graphWrapper.getConnectedClipWrapper(clipOut, true)
                 if( clipOut_tmp ){
                     clipOut = clipOut_tmp
                     _buttleManager.connectionManager.unHook(drag.source.clipWrapper)
@@ -108,7 +108,7 @@ Rectangle {
         }
         onEntered: {
             var connected = false
-            if(_buttleData.graphWrapper.getConnectedClipWrapper(drag.source.clipWrapper)){
+            if(_buttleData.graphWrapper.getConnectedClipWrapper(drag.source.clipWrapper, true)){
                 accept = !accept
                 connected = true
             }
@@ -272,7 +272,7 @@ Rectangle {
             connections.tmpClipName = m.clipWrapper.name
 
             if(_buttleManager.connectionManager.connectionExists(m.clipWrapper) && m.clipWrapper.name != "Output"){
-                connectedClip = _buttleData.graphWrapper.getConnectedClipWrapper(m.clipWrapper)
+                connectedClip = _buttleData.graphWrapper.getConnectedClipWrapper(m.clipWrapper, true)
                 connections.tmpConnectionX1 = connectedClip.xCoord
                 connections.tmpConnectionY1 = connectedClip.yCoord
                 connections.tmpConnectionX2 = xCenter_inGraph

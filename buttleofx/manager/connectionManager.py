@@ -184,6 +184,74 @@ class ConnectionManager(QtCore.QObject):
         
         self.connect(id_clipOut, id_clipIn)
         
+        
+    @QtCore.pyqtSlot()
+    def copyConnections(self):
+        """
+            Copies the connection(s) of the current node(s).
+        """
+        buttleData = ButtleDataSingleton().get()
+        
+        buttleData.clearCurrentCopiedConnectionsInfo()
+         
+        if buttleData.getCurrentSelectedNodeWrappers():
+            for node in buttleData.getCurrentSelectedNodeWrappers():
+                copyConnection = {}    
+                
+                output = self.connectionExists(buttleData.getGraphWrapper().getNodeWrapper(node.getName()).getOutputClip())
+                inputs = buttleData.getGraphWrapper().getNodeWrapper(node.getName())._srcClips
+                       
+                cpt = 0
+                for input in inputs:
+                    testConnection = self.connectionExists(input)
+                    if(testConnection):
+                        copyConnection.update({"inputNodeName": node.getNode().getName()})
+                        copyConnection.update({"input"+str(cpt) : input.getClipName()})
+                    cpt = cpt + 1 
+                    connectedClip = buttleData.graphWrapper.getConnectedClipWrapper(input, False)
+                    saveConnection = False
+                    if(connectedClip):
+                        connectedNode = buttleData.getGraphWrapper().getNodeWrapper(connectedClip.getNodeName())
+                        for nodeSelected in buttleData.getCurrentSelectedNodeWrappers():
+                            if(nodeSelected.getName() == connectedNode.getName()):
+                                copyConnection.update({"outputNodeName": connectedNode.getName()})
+                                copyConnection.update({"output" : connectedClip.getClipName()})
+                                saveConnection = True
+                                break
+                            else:
+                                saveConnection = False
+                if(saveConnection):
+                    buttleData.getCurrentCopiedConnectionsInfo()[node.getName()] = copyConnection
+            
+                
+    @QtCore.pyqtSlot()
+    def pasteConnection(self):
+        """
+            Pasts the connection of the current node(s).
+        """
+        buttleData = ButtleDataSingleton().get()
+        # If nodes have been copied previously
+        if buttleData.getCurrentCopiedNodesInfo():
+            # Create a copy for each node copied
+            for connection in buttleData.getCurrentCopiedConnectionsInfo():
+                length = len(buttleData.getCurrentCopiedConnectionsInfo()[connection])
+                    
+                copiedNodeInName = buttleData.getCurrentCopiedNodesInfo()[buttleData.getCurrentCopiedConnectionsInfo()[connection]["inputNodeName"]] [buttleData.getCurrentCopiedConnectionsInfo()[connection]["inputNodeName"]]
+                copiedNodeOutName = buttleData.getCurrentCopiedNodesInfo()[buttleData.getCurrentCopiedConnectionsInfo()[connection]["outputNodeName"]] [buttleData.getCurrentCopiedConnectionsInfo()[connection]["outputNodeName"]]
+                copiedNodeIn = buttleData.getGraphWrapper().getNodeWrapper(copiedNodeInName)
+                copiedNodeOut = buttleData.getGraphWrapper().getNodeWrapper(copiedNodeOutName)
+                    
+                #for i in range(0, length-3):
+                copiedInputName = buttleData.getCurrentCopiedConnectionsInfo()[connection]["input0"]  
+                copiedInput = copiedNodeIn.getClip(copiedInputName)
+                
+                copiedOutputName = buttleData.getCurrentCopiedConnectionsInfo()[connection]["output"]  
+                copiedOutput = copiedNodeOut.getClip(copiedOutputName)
+                
+                self.connectWrappers(copiedOutput, copiedInput)
+        self.undoRedoChanged()
+        
+
     @QtCore.pyqtSlot(QtCore.QObject, QtCore.QObject, QtCore.QObject, QtCore.QObject, QtCore.QObject)
     def dissociate(self, clipOut, clipIn, middleIn, middleOut, connectionWrapper):
         id_clipOut = IdClip(clipOut.getNodeName(), clipOut.getClipName())

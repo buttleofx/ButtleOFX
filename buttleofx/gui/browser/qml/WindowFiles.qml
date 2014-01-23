@@ -15,10 +15,23 @@ Rectangle {
     property string file
     signal changeFile(string file)
     signal changeFileType(string fileType)
-    property bool viewList: true
+    signal changeFileSize(real fileSize)
+    property bool viewList: false
     signal changeSelectedList(variant selected)
     property int itemIndex: 0
     property string fileName
+
+    function forceActiveFocusOnCreate() {
+        fileModel.createFolder(fileModel.folder + "/New Directory")
+    }
+
+    function forceActiveFocusOnRename() {
+        viewList ? fileInRow.forceActiveFocusInRow() : fileInColumn.forceActiveFocusInColumn()
+    }
+
+    function forceActiveFocusOnDelete() {
+        fileModel.deleteItem(itemIndex)
+    }
 
     Menu {
         id: creation
@@ -73,6 +86,7 @@ Rectangle {
             model: fileModel.fileItems
             delegate:
                 Component {
+                    id: componentInColumn
 
                     Rectangle {
                         id: fileInColumn
@@ -82,6 +96,23 @@ Rectangle {
                         width: 125
 
                         property variant selectedFiles
+                        property variant filePath: model.object.filepath
+
+                        function forceActiveFocusInColumn() {
+                            textInColumn.forceActiveFocus()
+                        }
+
+                        DropArea {
+                            id: moveItemInColumn
+                            anchors.fill: parent
+                            keys: ["internFileDrag"]
+
+                            onDropped: {
+                                console.debug("file: " + filePath)
+                                console.debug("Index: " + itemIndex)
+                                //fileModel.moveItem(itemIndex, )
+                            }
+                        }
 
 
                         Column {
@@ -97,15 +128,6 @@ Rectangle {
                                 anchors.horizontalCenter: parent.horizontalCenter
                             }
 
-                            /*Text {
-                                id: textInColumn
-                                text: model.object.fileName
-                                color: model.object.isSelected ? "black" : "white"
-                                font.bold: model.object.isSelected
-                                width: 120
-                                elide: Text.ElideRight
-                                horizontalAlignment: Text.AlignHCenter
-                            }*/
                             TextInput {
                                 id: textInColumn
                                 text: model.object.fileName
@@ -172,6 +194,7 @@ Rectangle {
 
                                 else if(!(mouse.modifiers & Qt.ShiftModifier))
                                     fileModel.selectItem(index)
+                                    winFile.changeFileSize(model.object.fileSize)
 
                                 var sel = fileModel.getSelectedItems()
                                 var selection = new Array()
@@ -236,7 +259,22 @@ Rectangle {
                     height: 25
                     width: listview.width
 
+                    function forceActiveFocusInRow() {
+                        textInRow.forceActiveFocus()
+                    }
+
                     property variant selectedFiles
+
+                    DropArea {
+                        id: moveItemInRow
+                        anchors.fill: parent
+                        keys: ["internFileDrag"]
+
+                        onDropped: {
+                            console.debug("Drag: " + drag.source.filepath)
+                            //fileModel.moveItem(itemIndex, drag.source.filepath)
+                        }
+                    }
 
                     Row {
                         width: parent.width
@@ -248,15 +286,6 @@ Rectangle {
                             sourceSize.height: 20
                         }
 
-                        /*Text {
-                            id: textInRow
-                            text: model.object.fileName
-                            color: model.object.isSelected ? "black" : "white"
-                            font.bold: model.object.isSelected
-                            width: parent.width
-                            elide: Text.ElideRight
-
-                        }*/
                         TextInput {
                             id: textInRow
                             x: 10

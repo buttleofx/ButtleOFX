@@ -44,6 +44,12 @@ class FileItem(QtCore.QObject):
     
     def setFileName(self, newName):
         os.rename(self.filepath, os.path.dirname(self._filepath) + "/" + newName)
+        
+    def getFileSize(self):
+        return os.stat(self._filepath).st_size
+    
+    def getFileLastModif(self):
+        return os.stat(self._filepath).st_mtime
     
     def getSelected(self):
         return self._isSelected
@@ -55,6 +61,8 @@ class FileItem(QtCore.QObject):
     filepath = QtCore.pyqtProperty(str, getFilepath, setFilepath, constant=True)
     fileType = QtCore.pyqtProperty(str, getFileType, constant=True)
     fileName = QtCore.pyqtProperty(str, getFileName, setFileName, constant=True)
+    fileSize = QtCore.pyqtProperty(float, getFileSize, constant=True)
+    fileLastModif = QtCore.pyqtProperty(int, getFileLastModif, constant=True)
     isSelectedChange = QtCore.pyqtSignal()
     isSelected = QtCore.pyqtProperty(bool, getSelected, setSelected, notify=isSelectedChange)
 

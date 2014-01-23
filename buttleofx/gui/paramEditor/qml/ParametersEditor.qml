@@ -17,6 +17,8 @@ Item {
     property variant newNode
     property variant previousNode
 
+//    property variant clipWrapper
+
     Tab {
         id: tabBar
         name: "Parameters - Advanced Mode"
@@ -97,37 +99,6 @@ Item {
     }
 
     // Add a node
-/*    MouseArea{
-        id: addNode
-        y : listViewParam.height + paramTitle.height
-        width : parent.width
-        height : imageAddNode.height + 30
-        hoverEnabled: true
-
-        onClicked : {
-            console.log("Clic on Add a Node!")
-            nodesMenu.popup();
-
-        }
-        onEntered : {
-            imageAddNode.source = _buttleData.buttlePath +  "/gui/img/buttons/tools/bigplus_hover.png"
-
-        }
-        onExited : {
-            imageAddNode.source = _buttleData.buttlePath +  "/gui/img/buttons/tools/bigplus.png"
-
-        }
-    }
-    Image{
-        id: imageAddNode
-        anchors.verticalCenter: parent.verticalCenter
-        anchors.horizontalCenter: parent.horizontalCenter
-        source: _buttleData.buttlePath +  "/gui/img/buttons/tools/bigplus.png"
-
-
-    }
-*/
-    // Add node part
     Button {
         id: addNode
         y : listViewParam.height + paramTitle.height
@@ -154,42 +125,34 @@ Item {
         }
     }
 
-        Menu {
-            id: nodesMenu
-            title: "Nodes"
+    Menu {
+        id: nodesMenu
+        title: "Nodes"
 
-            Instantiator {
-                model: _buttleData.pluginsIdentifiers
-                MenuItem {
-                    text: object
-                    onTriggered: {
-                        // we create a new node and connect it to the last but one node of the concerned graph
+        Instantiator {
+            model: _buttleData.pluginsIdentifiers
+            MenuItem {
+                text: object
+                onTriggered: {
+                    // we create a new node and connect it to the last but one node of the concerned graph
+                    previousNode =_buttleData.nodeOfParametersEditorToConnect()
 
-                        previousNode =_buttleData.nodeOfParametersEditorToConnect()
+                    _buttleData.currentGraphWrapper = _buttleData.graphWrapper
+                    _buttleManager.nodeManager.creationNode("_buttleData.graph", object, 0, 0)
 
-                        _buttleData.currentGraphWrapper = _buttleData.graphWrapper
-                        _buttleManager.nodeManager.creationNode("_buttleData.graph", object, 0, 0)
+                    // if there is only one node, we don't connect it
+                    if (previousNode != undefined){
+                        newNode = _buttleData.nodeOfParametersEditorToConnect()
 
-                        // if there is only one node, we don't connect it
-                        if (_buttleData.nodeOfParametersEditorToConnect().size > 1){
-                            console.debug ("_buttleData.nodeOfParametersEditorToConnect()", _buttleData.nodeOfParametersEditorToConnect())
-                            newNode = _buttleData.nodeOfParametersEditorToConnect()
-                            console.debug("new node qml", newNode)
-
-                            _buttleManager.connectionManager.connectWrappers(previousNode, newNode)
-                        }
-
-
-
+                        console.debug ("newNode.srcClips.first", newNode.srcClips.first)
+                        _buttleManager.connectionManager.connectWrappers(previousNode.outputClip, newNode.srcClips.first)
 
                     }
+                }
+            }// menuItem
+            onObjectAdded: nodesMenu.insertItem(index, object)
+            onObjectRemoved: nodesMenu.removeItem(object)
+        } // Instantiator
+    } //Menu
 
-                }// menuItem
-                onObjectAdded: nodesMenu.insertItem(index, object)
-                onObjectRemoved: nodesMenu.removeItem(object)
-            } // Instantiator
-        } //Menu
-
-
-    //}
 }

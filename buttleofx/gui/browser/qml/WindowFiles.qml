@@ -15,7 +15,7 @@ Rectangle {
     property string file
     signal changeFile(string file)
     signal changeFileType(string fileType)
-    property bool viewGrid: true
+    property bool viewList: true
     signal changeSelectedList(variant selected)
     property int itemIndex: 0
     property string fileName
@@ -33,28 +33,6 @@ Rectangle {
         }
     }
 
-    Menu {
-        id: options
-
-        MenuItem {
-            text: "Rename"
-            onTriggered: {
-                //Open a TextEdit
-                //renameMessage.open()
-
-                fileModel.changeFileName("New Name", itemIndex)
-                //Update the folder
-                fileModel.updateFileItems(winFile.folder)
-            }
-        }
-        MenuItem {
-            text: "Delete"
-            onTriggered: {
-                deleteMessage.open()
-                fileModel.updateFileItems(winFile.folder)
-            }
-        }
-    }
 
     FileModelBrowser {
         id: fileModel
@@ -85,14 +63,14 @@ Rectangle {
         anchors.bottomMargin: 5
         height: 120
         width: 110
-        visible: viewGrid ? false : true
+        visible: viewList ? false : true
 
         GridView {
             id: gridview
             height : parent.height
             width : parent.width
             cellWidth: 150
-            visible: viewGrid ? false : true
+            visible: viewList ? false : true
 
             model: fileModel.fileItems
             delegate:
@@ -120,7 +98,7 @@ Rectangle {
                                 anchors.horizontalCenter: parent.horizontalCenter
                             }
 
-                            Text {
+                            /*Text {
                                 id: textInColumn
                                 text: model.object.fileName
                                 color: model.object.isSelected ? "black" : "white"
@@ -128,6 +106,27 @@ Rectangle {
                                 width: 120
                                 elide: Text.ElideRight
                                 horizontalAlignment: Text.AlignHCenter
+                            }*/
+                            TextInput {
+                                id: textInColumn
+                                text: model.object.fileName
+                                color: model.object.isSelected ? "black" : "white"
+                                font.bold: model.object.isSelected
+                                width: 120
+                                horizontalAlignment: TextInput.AlignHCenter
+                                selectByMouse: true
+                                selectionColor: "#5a5e6b"
+
+                                onFocusChanged:{
+                                    textInColumn.focus ? selectAll() : deselect()
+                                }
+
+                                onAccepted: {
+                                    textInColumn.selectAll()
+                                    fileModel.changeFileName(textInColumn.getText(0, textInColumn.cursorPosition + 1), itemIndex)
+                                    textInColumn.forceActiveFocus()
+                                    fileModel.updateFileItems(winFile.folder)
+                                }
                             }
                         }// endColumn
 
@@ -190,6 +189,30 @@ Rectangle {
                                 model.object.fileType == "Folder" ? winFile.goToFolder(model.object.filepath) : Qt.openUrlExternally("file:///" + model.object.filepath)
                             }
                         }
+
+                        Menu {
+                            id: options
+
+                            MenuItem {
+                                text: "Rename"
+                                onTriggered: {
+                                    //Open a TextEdit
+                                    textInColumn.forceActiveFocus()
+
+                                    //fileModel.changeFileName("New Name", itemIndex)
+                                    //Update the folder
+                                    //fileModel.updateFileItems(winFile.folder)
+                                }
+                            }
+                            MenuItem {
+                                text: "Delete"
+                                onTriggered: {
+                                    deleteMessage.open()
+                                    fileModel.updateFileItems(winFile.folder)
+                                }
+                            }
+                        }
+
                     }
                 }//endComponent
         }
@@ -201,13 +224,13 @@ Rectangle {
         anchors.bottomMargin: 5
         height: 120
         width: 110
-        visible: viewGrid
+        visible: viewList
 
         ListView {
             id: listview
             height : parent.height
             width : parent.width
-            visible: viewGrid
+            visible: viewList
 
             model: fileModel.fileItems
             delegate: Component {
@@ -231,7 +254,7 @@ Rectangle {
                             sourceSize.height: 20
                         }
 
-                        Text {
+                        /*Text {
                             id: textInRow
                             text: model.object.fileName
                             color: model.object.isSelected ? "black" : "white"
@@ -239,6 +262,27 @@ Rectangle {
                             width: parent.width
                             elide: Text.ElideRight
 
+                        }*/
+                        TextInput {
+                            id: textInRow
+                            x: 10
+                            text: model.object.fileName
+                            color: model.object.isSelected ? "black" : "white"
+                            font.bold: model.object.isSelected
+                            width: parent.width
+                            selectByMouse: true
+                            selectionColor: "#5a5e6b"
+
+                            onFocusChanged:{
+                                textInRow.focus ? selectAll() : deselect()
+                            }
+
+                            onAccepted: {
+                                textInRow.selectAll()
+                                fileModel.changeFileName(textInRow.getText(0, textInRow.cursorPosition + 1), itemIndex)
+                                textInRow.forceActiveFocus()
+                                fileModel.updateFileItems(winFile.folder)
+                            }
                         }
                     }// endRow
 
@@ -301,6 +345,28 @@ Rectangle {
                             model.object.fileType == "Folder" ? winFile.goToFolder(model.object.filepath) : Qt.openUrlExternally("file:///" + model.object.filepath)
                         }
                     }
+                    Menu {
+                        id: options
+
+                        MenuItem {
+                            text: "Rename"
+                            onTriggered: {
+                                //Open a TextEdit
+                                textInRow.forceActiveFocus()
+
+                                //fileModel.changeFileName("New Name", itemIndex)
+                                //Update the folder
+                                //fileModel.updateFileItems(winFile.folder)
+                            }
+                        }
+                        MenuItem {
+                            text: "Delete"
+                            onTriggered: {
+                                deleteMessage.open()
+                                fileModel.updateFileItems(winFile.folder)
+                            }
+                        }
+                    }
                 }// end Rectangle
             }//endComponent
         }
@@ -319,34 +385,6 @@ Rectangle {
         }
         onNo: {
             console.log("didn't delete")
-        }
-    }
-
-    MessageDialog {
-        id: renameMessage
-        title: "Rename"
-        icon: StandardIcon.Question
-        text: "Please enter the new name of " + winFile.fileName + ":"
-
-        /*TextInput {
-            id: newName
-            text: model.object.fileName
-            color: "white"
-            width: parent.width
-            selectByMouse: true
-            selectionColor: "#00b2a1"
-            onFocusChanged:{
-                texteditPath.focus ? selectAll() : deselect()
-            }
-        }*/
-
-        standardButtons: StandardButton.Ok | StandardButton.Cancel
-        onAccepted: {
-            fileModel.changeFileName(newName.text, itemIndex)
-            console.log("Renamed")
-        }
-        onRejected: {
-            console.log("didn't Rename")
         }
     }
 

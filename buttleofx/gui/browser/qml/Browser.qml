@@ -73,7 +73,7 @@ Rectangle {
                 Layout.preferredHeight: 120
                 z: 1
 			    
-                viewGrid: check.checked
+                viewList: check.checked
                 folder: m.directory
                 onGoToFolder: {
                     listPrevious.append({"url": m.directory})

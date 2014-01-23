@@ -143,7 +143,7 @@ Item {
                     }
                 }
                 onDrawSelection: {
-                    _buttleData.addNodeWrappersInRectangleSelection(selectionX, selectionY, selectionWidth, selectionHeight);
+                    _buttleData.addNodeWrappersInRectangleSelection(selectionX / container.width * graph.width, selectionY / container.width * graph.width, selectionWidth / graph.zoomCoeff, selectionHeight / graph.zoomCoeff);
                 }
 
                 Rectangle {

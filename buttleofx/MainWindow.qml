@@ -137,15 +137,25 @@ ApplicationWindow {
                 _buttleData.currentParamNodeWrapper = node
             }
         }
+
+        //Plugin window
+        if (event.key == Qt.Key_H) {
+            var selectedNodes = _buttleData.currentSelectedNodeWrappers
+
+            // we send the node only if there is only one node selected
+            if(selectedNodes.count == 1) {
+                var node = selectedNodes.get(0)
+                doc.show()
+            }
+        }
     }
 
-    property bool docSelected:false
     property bool aNodeIsSelected:false
 
     //Window of hint for plugins
     PluginWindow {
+        id: doc
         title: "Plugin's Documentation"
-        visible: docSelected
         currentParamNode: _buttleData.currentParamNodeWrapper
     }
 
@@ -269,7 +279,7 @@ ApplicationWindow {
             }
             MenuItem {
                 text: "Plugin's Documentation"
-                onTriggered: docSelected=true
+                onTriggered: doc.show()
             }
         }
 

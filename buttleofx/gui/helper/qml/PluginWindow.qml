@@ -15,7 +15,6 @@ ApplicationWindow {
 	id:pluginsIdentifiers
 	x: 400
 	y: 400
-    flags:Qt.WindowCancelButtonHint
 	minimumWidth: 800
 	minimumHeight: 600
     maximumWidth: minimumWidth

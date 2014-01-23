@@ -271,7 +271,7 @@ Rectangle {
             connections.tmpConnectionExists = true
             connections.tmpClipName = m.clipWrapper.name
 
-            if(_buttleManager.connectionManager.connectionExists(m.clipWrapper)){
+            if(_buttleManager.connectionManager.connectionExists(m.clipWrapper) && m.clipWrapper.name != "Output"){
                 connectedClip = _buttleData.graphWrapper.getConnectedClipWrapper(m.clipWrapper)
                 connections.tmpConnectionX1 = connectedClip.xCoord
                 connections.tmpConnectionY1 = connectedClip.yCoord

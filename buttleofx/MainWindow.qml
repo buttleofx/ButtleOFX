@@ -296,21 +296,36 @@ ApplicationWindow {
                 text: "Default"
                 checkable: true
                 checked: selectedView==1 ? true : false
-                onTriggered: {selectedView = 1; lastSelectedDefaultView = view1; topLeftView.visible=true; bottomLeftView.visible=true; topRightView.visible=true; bottomRightView.visible=true}
+                onTriggered: {
+                    selectedView = 1
+                    lastSelectedDefaultView = view1
+                    topLeftView.visible=true; bottomLeftView.visible=true; topRightView.visible=true; bottomRightView.visible=true
+                    rightColumn.width = 0.7*mainWindowQML.width
+                }
             }
 
             MenuItem {
                 text: "Browser Mode"
                 checkable: true
                 checked: selectedView==2 ? true : false
-                onTriggered: {selectedView = 2; lastSelectedDefaultView = view2; topLeftView.visible=true; bottomLeftView.visible=true; topRightView.visible=true; bottomRightView.visible=true}
+                onTriggered: {
+                    selectedView = 2
+                    lastSelectedDefaultView = view2
+                    topLeftView.visible=true; bottomLeftView.visible=true; topRightView.visible=true; bottomRightView.visible=true
+                    rightColumn.width = 0.7*mainWindowQML.width
+                }
             }
 
             MenuItem {
                 text: "Advanced Mode"
                 checkable: true
                 checked: selectedView==3 ? true : false
-                onTriggered: {selectedView = 3; lastSelectedDefaultView = view3; topLeftView.visible=true; bottomLeftView.visible=true; topRightView.visible=true; bottomRightView.visible=false}
+                onTriggered: {
+                    selectedView = 3
+                    lastSelectedDefaultView = view3
+                    topLeftView.visible=true; bottomLeftView.visible=true; topRightView.visible=true; bottomRightView.visible=false
+                    rightColumn.width = 0.3*mainWindowQML.width
+                }
             }
 
 /*            MenuSeparator { }
@@ -374,9 +389,7 @@ ApplicationWindow {
                 implicitHeight: parent.height
                 orientation: Qt.Vertical
                 Layout.fillWidth: true
-                Layout.minimumWidth: 200
-
-                visible: visibleChildren==0 ? false : true
+                Layout.minimumWidth: (topRightView.visible==true || bottomRightView.visible==true) ? 0 : parent.width
 
                 Rectangle {
                     id: topLeftView
@@ -405,7 +418,8 @@ ApplicationWindow {
                 Rectangle {
                     id: bottomLeftView
                     color: "#353535"
-                    Layout.minimumHeight: 200
+                    //Layout.minimumHeight: 200
+                    Layout.minimumHeight: topLeftView.visible ? 200 : parent.height
                     Layout.fillHeight: true
                     implicitWidth: parent.width
                     implicitHeight: topLeftView.visible ? 0.5 * parent.height : parent.height
@@ -435,18 +449,7 @@ ApplicationWindow {
                 implicitHeight: parent.height
                 orientation: Qt.Vertical
                 Layout.fillWidth: true
-                Layout.minimumWidth: 200
-                width: switch(selectedView){
-                        case 1:
-                        case 2:
-                            0.7 * rightColumn.parent.width
-                            break
-                        case 3:
-                            0.3 * rightColumn.parent.width
-                            break
-                       }
-
-                //visible: visibleChildren==0 ? false : true
+                Layout.minimumWidth: (topLeftView.visible==true || bottomLeftView.visible==true) ? 0 : parent.width
 
                 Rectangle {
                     id: topRightView
@@ -475,7 +478,8 @@ ApplicationWindow {
                 Rectangle {
                     id: bottomRightView
                     color: "#353535"
-                    Layout.minimumHeight: 200
+                    //Layout.minimumHeight: 200
+                    Layout.minimumHeight: topRightView.visible ? 200 : parent.height
                     Layout.fillHeight: true
                     implicitWidth: parent.width
                     implicitHeight: topRightView.visible ? 0.5 * parent.height : parent.height

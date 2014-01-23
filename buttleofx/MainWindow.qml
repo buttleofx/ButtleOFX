@@ -506,7 +506,7 @@ ApplicationWindow {
         id: subviews
         visible: false
 
-        property variant parentBeforeFullscreen
+        property variant parentBeforeFullscreen : null
 
         Player {
             id: player
@@ -519,10 +519,10 @@ ApplicationWindow {
                 }
                 else{
                     fullscreenWindow.visibility = Window.Hidden
-                    subviews.parentBeforeFullscreen.children = player
+                    player.parent = subviews.parentBeforeFullscreen
                 }
             }
-            onButtonFullscreenClicked: {subviews.parentBeforeFullscreen = parent; fullscreenWindow.visibility = Window.FullScreen; fullscreenContent.children = player}
+            onButtonFullscreenClicked: if(parent!=fullscreenContent){subviews.parentBeforeFullscreen = parent; fullscreenWindow.visibility = Window.FullScreen; fullscreenContent.children = player}
         }
 
         GraphEditor {
@@ -535,10 +535,10 @@ ApplicationWindow {
                 }
                 else{
                     fullscreenWindow.visibility = Window.Hidden
-                    subviews.parentBeforeFullscreen.children = graphEditor
+                    graphEditor.parent = subviews.parentBeforeFullscreen
                 }
             }
-            onButtonFullscreenClicked: {subviews.parentBeforeFullscreen = parent; fullscreenWindow.visibility = Window.FullScreen; fullscreenContent.children = graphEditor}
+            onButtonFullscreenClicked: if(parent!=fullscreenContent){subviews.parentBeforeFullscreen = parent; fullscreenWindow.visibility = Window.FullScreen; fullscreenContent.children = graphEditor}
         }
 
         ParamTuttleEditor {
@@ -553,10 +553,10 @@ ApplicationWindow {
                 }
                 else{
                     fullscreenWindow.visibility = Window.Hidden
-                    subviews.parentBeforeFullscreen.children = paramEditor
+                    paramEditor.parent = subviews.parentBeforeFullscreen
                 }
             }
-            onButtonFullscreenClicked: {subviews.parentBeforeFullscreen = parent; fullscreenWindow.visibility = Window.FullScreen; fullscreenContent.children = paramEditor}
+            onButtonFullscreenClicked: if(parent!=fullscreenContent){ subviews.parentBeforeFullscreen = parent; fullscreenWindow.visibility = Window.FullScreen; fullscreenContent.children = paramEditor}
         }
 
         ParametersEditor {
@@ -569,10 +569,10 @@ ApplicationWindow {
                 }
                 else{
                     fullscreenWindow.visibility = Window.Hidden
-                    subviews.parentBeforeFullscreen.children = advancedParamEditor
+                    advancedParamEditor.parent = subviews.parentBeforeFullscreen
                 }
             }
-            onButtonFullscreenClicked: {subviews.parentBeforeFullscreen = parent; fullscreenWindow.visibility = Window.FullScreen; fullscreenContent.children = advancedParamEditor}
+            onButtonFullscreenClicked: if(parent!=fullscreenContent){subviews.parentBeforeFullscreen = parent; fullscreenWindow.visibility = Window.FullScreen; fullscreenContent.children = advancedParamEditor}
         }
 
         Browser {
@@ -585,10 +585,10 @@ ApplicationWindow {
                 }
                 else{
                     fullscreenWindow.visibility = Window.Hidden
-                    subviews.parentBeforeFullscreen.children = browser
+                    browser.parent = subviews.parentBeforeFullscreen
                 }
             }
-            onButtonFullscreenClicked: {subviews.parentBeforeFullscreen = parent; fullscreenWindow.visibility = Window.FullScreen; fullscreenContent.children = browser}
+            onButtonFullscreenClicked: if(parent!=fullscreenContent){subviews.parentBeforeFullscreen = parent; fullscreenWindow.visibility = Window.FullScreen; fullscreenContent.children = browser}
         }
 
         Item {

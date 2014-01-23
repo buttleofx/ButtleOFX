@@ -14,6 +14,8 @@ from buttleofx.core.graph import Graph
 from buttleofx.core.graph.connection import IdClip
 # gui : graphWrapper
 from buttleofx.gui.graph import GraphWrapper
+# gui : pluginWrapper
+from buttleofx.gui.helper import PluginWrapper
 # commands
 from buttleofx.core.undo_redo.manageTools import CommandManager
 # events
@@ -398,6 +400,17 @@ class ButtleData(QtCore.QObject):
             pluginsIdsModel.append(p)
         return pluginsIdsModel
 
+    def getPluginsWrappers(self):
+        from pyTuttle import tuttle
+        pluginCache = tuttle.core().getImageEffectPluginCache()
+        plugins = pluginCache.getPlugins()         
+
+        pluginsW = [PluginWrapper(plugin) for plugin in plugins]
+        pluginsWModel = QObjectListModel(self)
+        for p in pluginsW:
+            pluginsWModel.append(p)
+        return pluginsWModel
+
     @QtCore.pyqtSlot(str, result=QtCore.QObject)
     def getQObjectPluginsIdentifiersByParentPath(self, pathname):
         """
@@ -518,6 +531,7 @@ class ButtleData(QtCore.QObject):
     ################################################## DATA EXPOSED TO QML ##################################################
 
     pluginsIdentifiers = QtCore.pyqtProperty(QtCore.QObject, getPluginsIdentifiers, constant=True)
+    pluginsDocs = QtCore.pyqtProperty(QtCore.QObject, getPluginsWrappers, constant=True)
 
     # graphWrapper
     graphWrapper = QtCore.pyqtProperty(QtCore.QObject, getGraphWrapper, constant=True)

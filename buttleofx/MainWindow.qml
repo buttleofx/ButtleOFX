@@ -140,6 +140,7 @@ ApplicationWindow {
     }
 
     property bool docSelected:false
+    property bool aNodeIsSelected:false
 
     //Window of hint for plugins
     PluginWindow {

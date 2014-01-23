@@ -5,6 +5,9 @@ import QtQuick.Controls.Styles 1.0
 ApplicationWindow {
 
     property variant currentParamNode
+
+    property string currentPluginType
+    property string currentPluginDoc
 	property color gradian1: "#010101"
     property color gradian2: "#141414"
     property string truc
@@ -79,7 +82,7 @@ ApplicationWindow {
                 height: count ? contentHeight : 0
                 interactive: false
 
-                model: _buttleData.pluginsIdentifiers
+                model: _buttleData.pluginsDocs
 
                 delegate: Component {
                     Rectangle {
@@ -104,11 +107,13 @@ ApplicationWindow {
                                 nodes.border.color= "transparent"
                             }
                             onClicked: {
-                                truc=object
+                                aNodeIsSelected=false
+                                currentPluginType=object.pluginType
+                                currentPluginDoc=object.pluginDescription
                             }
                         }
                         Text{
-                            text: object
+                            text: object.pluginType
                             color: "white"
                             y:6
                             x:15
@@ -147,7 +152,7 @@ ApplicationWindow {
         color: "#141414"
         x:list.width
         Text{
-            text:aNodeIsSelected? currentParamNode.nodeType : truc
+            text:aNodeIsSelected? currentParamNode.nodeType : currentPluginType
             color: "white"
             font.pointSize: 11
             horizontalAlignment: Text.Center
@@ -159,7 +164,7 @@ ApplicationWindow {
         }
 
         Text{
-            text:aNodeIsSelected? currentParamNode.pluginDoc : truc
+            text:aNodeIsSelected? currentParamNode.pluginDoc : currentPluginDoc
             color: "white"
             width: parent.width-15
             height: parent.height-15

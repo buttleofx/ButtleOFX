@@ -56,7 +56,7 @@ Item {
                 id: tuttleParamContent
                 height: parent.height
                 width: parent.width
-                y: tuttleParamTitle.height + 5
+                y: 5
 
                 property string lastGroupParam : "No Group."
 

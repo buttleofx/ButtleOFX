@@ -63,6 +63,7 @@ Rectangle {
 
                 // we add the node to the list of selected nodes (if it's not already selected)
                 if(!_buttleData.nodeIsSelected(m.nodeWrapper)) {
+                    aNodeIsSelected=true
                     _buttleData.appendToCurrentSelectedNodeWrappers(m.nodeWrapper)
                 }
 

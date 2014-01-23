@@ -15,7 +15,7 @@ from buttleofx.core.graph.connection import IdClip
 # gui : graphWrapper
 from buttleofx.gui.graph import GraphWrapper
 # gui : pluginWrapper
-from buttleofx.gui.helper import PluginWrapper
+from buttleofx.gui.plugin import PluginWrapper
 # commands
 from buttleofx.core.undo_redo.manageTools import CommandManager
 # events

@@ -10,7 +10,6 @@ ApplicationWindow {
     property string currentPluginDoc
 	property color gradian1: "#010101"
     property color gradian2: "#141414"
-    property string truc
 
 	id:pluginsIdentifiers
 	x: 400

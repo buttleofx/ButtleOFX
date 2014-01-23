@@ -166,10 +166,10 @@ class GLViewport(QtQuick.QQuickPaintedItem):
         GL.glLineStipple(1, 0xAAAA)
 
         GL.glColor3d(1., 0., 0.)
-        self.drawRect(self._rodValue)  # RoD
+        #self.drawRect(self._rodValue)  # RoD
 
         GL.glColor3d(1., 1., 1.)
-        self.drawRect(self._rowValue)  # RoW
+        #self.drawRect(self._rowValue)  # RoW
 
         GL.glDisable(GL.GL_LINE_STIPPLE)
 

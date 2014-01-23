@@ -8,8 +8,8 @@ import "../../../gui"
 
 Item {
     id: parametersEditor
-    implicitWidth: 325
-    implicitHeight: parent.height
+    implicitWidth: 300
+    implicitHeight: 500
 
     signal buttonCloseClicked(bool clicked)
     signal buttonFullscreenClicked(bool clicked)

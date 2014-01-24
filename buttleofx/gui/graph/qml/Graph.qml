@@ -97,8 +97,6 @@ Rectangle {
                 if (player.lastNodeWrapper != undefined)
                     _buttleData.currentViewerNodeWrapper = player.lastNodeWrapper
                 player.changeViewer(player.lastView)
-                //_buttleEvent.emitViewerChangedSignal()
-                console.debug("_buttleData.currentViewerNodeWrapper", _buttleData.currentViewerNodeWrapper)
             }
             _buttleManager.nodeManager.dropFile(drag.source.filePath, drag.x - m.graphRoot.originX, drag.y - m.graphRoot.originY)
             console.log("File dropped : ", drag.source.filePath)

@@ -70,8 +70,6 @@ Item {
                         if (player.lastNodeWrapper != undefined)
                             _buttleData.currentViewerNodeWrapper = player.lastNodeWrapper
                         player.changeViewer(player.lastView)
-                        _buttleEvent.emitViewerChangedSignal()
-                        //console.debug("_buttleData.currentViewerNodeWrapper", _buttleData.currentViewerNodeWrapper)
                     }
                     _buttleManager.nodeManager.creationNode("_buttleData.graph", nodeType, -graph.originX + graph.mouseX, -graph.originY + graph.mouseY)
                 }

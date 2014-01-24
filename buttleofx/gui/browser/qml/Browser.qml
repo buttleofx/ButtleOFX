@@ -113,7 +113,7 @@ Rectangle {
             selected: m.selected
             fileName: m.filepath
             fileType : m.fileType
-            fileSize: m.fileSize
+            fileSize: m.fileSize / 1024
             onChangeFilter: {
                 console.debug("filter has changed to " + newFilter)
                 m.filter = newFilter

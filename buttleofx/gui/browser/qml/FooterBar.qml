@@ -26,7 +26,8 @@ Rectangle {
 
 
         Text {
-            text: fileSize > 0 ? "Size: " + fileSize + " bytes" : ""
+
+            text: fileSize > 0 ? "Size: " + fileSize.toFixed(2) + " Ko" : ""
             color: "white"
         }
 

@@ -94,6 +94,7 @@ Rectangle {
                         radius: 5
                         height: 80
                         width: 125
+                        objectName: index
 
                         property variant selectedFiles
                         property variant filePath: model.object.filepath
@@ -105,12 +106,13 @@ Rectangle {
                         DropArea {
                             id: moveItemInColumn
                             anchors.fill: parent
+                            objectName: model.object.filepath
                             keys: ["internFileDrag"]
 
                             onDropped: {
-                                console.debug("file: " + filePath)
-                                console.debug("Index: " + itemIndex)
-                                //fileModel.moveItem(itemIndex, )
+                                console.debug("file: " + Drag.source.objectName)
+                                console.debug("Index: " + drop.source.objectName)
+                                //fileModel.moveItem(drop.source.objectName, )
                             }
                         }
 
@@ -352,6 +354,7 @@ Rectangle {
 
                             else if(!(mouse.modifiers & Qt.ShiftModifier))
                                 fileModel.selectItem(index)
+                                winFile.changeFileSize(model.object.fileSize)
 
                             var sel = fileModel.getSelectedItems()
                             var selection = new Array()

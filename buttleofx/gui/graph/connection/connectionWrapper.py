@@ -7,6 +7,7 @@ class ConnectionWrapper(QtCore.QObject):
         Class ConnectionWrapper defined by :
             - _connection : the buttle connection
     """
+    _enabled = True
 
     def __init__(self, connection, view):
         # print("ConnectionWrapper constructor")
@@ -26,6 +27,9 @@ class ConnectionWrapper(QtCore.QObject):
 
     def getConnection(self):
         return self._connection
+    
+    def enabled(self):
+        return self._enabled
 
     def getId(self):
         return self._connection.getId()
@@ -41,6 +45,12 @@ class ConnectionWrapper(QtCore.QObject):
     
     def getIn_clipName(self):
         return self._connection.getClipIn().getClipName()
+        
+    ######## setters ########
+    
+    def setEnabled(self, value):
+        self._enabled = value
+        self.currentConnectionStateChanged.emit()
 
     ################################################## DATA EXPOSED TO QML ##################################################
 
@@ -48,3 +58,7 @@ class ConnectionWrapper(QtCore.QObject):
     in_clipName = QtCore.pyqtProperty(str, getIn_clipName, constant=True)
     out_clipNodeName = QtCore.pyqtProperty(str, getOut_clipNodeName, constant=True)
     out_clipName = QtCore.pyqtProperty(str, getOut_clipName, constant=True)
+    
+        
+    currentConnectionStateChanged = QtCore.pyqtSignal()
+    enabled = QtCore.pyqtProperty(bool, enabled, notify=currentConnectionStateChanged)

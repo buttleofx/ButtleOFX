@@ -49,24 +49,25 @@ Rectangle {
         Drag.keys: "node"
         enabled: !readOnly
         acceptedButtons: Qt.LeftButton | Qt.RightButton | Qt.MidButton
+        property int xstart
+
         onPressed: {
             // left button : we change the current selected nodes & we start moving
             if (mouse.button == Qt.LeftButton) {
                 // we clear the list of selected connections
                 _buttleData.clearCurrentConnectionId()
 
-                // if the Control Key is not pressed, we clear the list of selected nodes
-                if (!(mouse.modifiers & Qt.ControlModifier)) {
-                    _buttleData.clearCurrentSelectedNodeNames()
-                }
-
                 // we add the node to the list of selected nodes (if it's not already selected)
                 if(!_buttleData.nodeIsSelected(m.nodeWrapper)) {
+                    // if the Control Key is not pressed, we clear the list of selected nodes
+                    if(!(mouse.modifiers & Qt.ControlModifier))
+                          _buttleData.clearCurrentSelectedNodeNames()
                     _buttleData.appendToCurrentSelectedNodeWrappers(m.nodeWrapper)
                 }
 
                 _buttleData.graphWrapper.zMax += 1
                 parent.z = _buttleData.graphWrapper.zMax
+                xstart = mouse.x
                 //stateMoving.state = "moving"
             }
 
@@ -82,13 +83,10 @@ Rectangle {
         }
         onReleased: {
             var dropStatus = parent.Drag.drop()
-            if (dropStatus !== Qt.IgnoreAction)
-                console.log("Accepted!")
-
+            //if (dropStatus !== Qt.IgnoreAction)
             // left button : we end moving
             if (mouse.button == Qt.LeftButton) {
-                _buttleManager.nodeManager.nodeMoved(m.nodeWrapper.name, (m.nodeWrapper.coord.x * qml_graphRoot.width) / graphContainer.width, (m.nodeWrapper.coord.y * qml_graphRoot.height) / graphContainer.height)
-                //stateMoving.state = "normal"
+                _buttleManager.nodeManager.nodeMoved(m.nodeWrapper.name, (qml_nodeRoot.x * qml_graphRoot.width) / graphContainer.width, (qml_nodeRoot.y * qml_graphRoot.height) / graphContainer.height)
             }
              //middle button : assign the node to the viewer
             else if (mouse.button == Qt.MidButton){
@@ -152,46 +150,7 @@ Rectangle {
         }
     }
 
-    Rectangle {
-        id: nodeRectangle
-        anchors.centerIn: parent
-        anchors.fill: parent
-        anchors.margins: miniatureState ? 4 * miniatureScale : 4 * graph.zoomCoeff
-        color: "#bbbbbb"
-        radius: 8
-        clip: nodeText.isSelected ? false : true
-        Rectangle{
-            id: background
-            anchors.fill: nodeText
-            color: "black"
-            opacity: 0.2
-            visible: nodeText.isSelected ? true : false
-        }
 
-        Text {
-            id: nodeText
-            anchors.verticalCenter: isSelected ? undefined : parent.verticalCenter
-            anchors.horizontalCenter: isSelected ? parent.horizontalCenter : undefined
-            x: miniatureState ? 5 * miniatureScale : 5
-            y: isSelected ? miniatureState ? nodeWidth * 0.5 * miniatureScale : nodeWidth * 0.5 : 0
-            text: m.nodeWrapper.nameUser
-            font.pointSize: miniatureState ? 10 * miniatureScale : 10
-            property bool isSelected: _buttleData.nodeIsSelected(m.nodeWrapper)
-            
-            // onTextChanged: {
-            //     m.nodeWrapper.fitWidth(nodeText.width);
-            //     // _buttleData.graphWrapper.updateConnectionsCoord(m.nodeWrapper);
-            // }
-
-            Connections {
-                target: _buttleData
-                onCurrentSelectedNodeWrappersChanged: {
-                    nodeText.isSelected = _buttleData.nodeIsSelected(m.nodeWrapper)
-                }
-            }
-            color: isSelected ? m.nodeWrapper.color : "black"
-        }
-    }
     RowLayout {
         id: inputClipsLayout
         anchors.fill: parent
@@ -226,7 +185,6 @@ Rectangle {
                         readOnly: qml_nodeRoot.readOnly
                         miniatureScale: qml_nodeRoot.miniatureScale
                         miniatureState: qml_nodeRoot.miniatureState
-                        visible: miniatureState ? false : true
                     }
                 }
             }
@@ -261,19 +219,64 @@ Rectangle {
                 readOnly: qml_nodeRoot.readOnly
                 miniatureScale: qml_nodeRoot.miniatureScale
                 miniatureState: qml_nodeRoot.miniatureState
-                visible: miniatureState ? false : true
             }
         }
     }
 
     Rectangle {
+        id: nodeRectangle
+        anchors.centerIn: parent
+        anchors.fill: parent
+        anchors.margins: miniatureState ? 4 * miniatureScale : 4 * graph.zoomCoeff
+        color: "#bbbbbb"
+        radius: 8
+        clip: nodeText.isSelected ? false : true
+        Rectangle{
+            id: background
+            anchors.fill: nodeText
+            anchors.leftMargin: -4
+            anchors.rightMargin: -4
+            color: "#212121"
+            opacity: 0.6
+            radius: 2
+            visible: nodeText.isSelected ? miniatureState ? false : true : false
+        }
+
+        Text {
+            id: nodeText
+            anchors.verticalCenter: isSelected ? undefined : parent.verticalCenter
+            anchors.horizontalCenter: isSelected ? parent.horizontalCenter : undefined
+            x: 5
+            y: isSelected ? nodeWidth * 0.5 * zoomCoeff : 0
+            text: m.nodeWrapper.nameUser
+            font.pointSize: zoomCoeff < 0.7 ? zoomCoeff < 0.4 ? 6 : 7 : 10
+            visible: miniatureState ? false : true
+            property bool isSelected: _buttleData.nodeIsSelected(m.nodeWrapper)
+
+            // onTextChanged: {
+            //     m.nodeWrapper.fitWidth(nodeText.width);
+            //     // _buttleData.graphWrapper.updateConnectionsCoord(m.nodeWrapper);
+            // }
+
+            Connections {
+                target: _buttleData
+                onCurrentSelectedNodeWrappersChanged: {
+                    nodeText.isSelected = _buttleData.nodeIsSelected(m.nodeWrapper)
+                }
+            }
+            color: isSelected ? m.nodeWrapper.color : "black"
+        }
+    }
+
+    Rectangle {
         id: deadMosquito
-        width: 23
-        height: 21
+        width: miniatureState ? 23 * miniatureScale : 23
+        height: miniatureState ? 21 * miniatureScale : 21
         x: m.nodeRoot.width - 12
         y: -10
         state: "normal"
         color: "transparent"
+        visible: miniatureState ? false : true
 
         Image {
             id: deadMosquitoImage

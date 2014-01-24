@@ -86,17 +86,24 @@ Item {
         DropArea{
             id: droparea1
             objectName: "DropArea"
-            anchors.fill: parent
-            anchors.margins: 25
+            anchors.verticalCenter: parent.verticalCenter
+            anchors.horizontalCenter: parent.horizontalCenter
+            //anchors.fill: parent
+            //anchors.margins: 30
+            width : 50 * zoomCoeff
+            height : 50 * zoomCoeff
             Drag.keys: "node"
             onDropped: {
-                //we assure that the node dropped is not part of the actual connection
-                if(drop.source.nodeWrapper !== undefined && drop.source.nodeWrapper.name != clipIn.nodeName && drop.source.nodeWrapper.name != clipOut.nodeName){
-                        drop.accept()
-                        //Create two connections from one and delete the previous one
-                        _buttleManager.connectionManager.dissociate(clipOut, clipIn, drop.source.nodeWrapper.getClip("Source"), drop.source.nodeWrapper.getClip(drop.source.nodeWrapper.outputClip.name), m.connectionWrapper)
+
+                if(!_buttleManager.connectionManager.connectionExists(drop.source.nodeWrapper.srcClips.get(0))){
+                    //we assure that the node dropped is not part of the actual connection
+                    if(drop.source.nodeWrapper !== undefined && drop.source.nodeWrapper.name != clipIn.nodeName && drop.source.nodeWrapper.name != clipOut.nodeName){
+                            drop.accept()
+                            //Create two connections from one and delete the previous one
+                            _buttleManager.connectionManager.dissociate(clipOut, clipIn, drop.source.nodeWrapper.getClip("Source"), drop.source.nodeWrapper.getClip(drop.source.nodeWrapper.outputClip.name), m.connectionWrapper)
+                    }
+                    dropIndicator.state = ""
                 }
-                dropIndicator.state = ""
 
                // drop.source.nodeWrapper.xCoord = 0
                // m.nodeWrapper.coord.x
@@ -107,7 +114,6 @@ Item {
                 }
             }
             onExited: {
-                console.log("dropConnection")
                 dropIndicator.state = ""
             }
             Item{

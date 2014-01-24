@@ -112,6 +112,7 @@ Rectangle {
 
                 onClicked: {
                     _buttleManager.nodeManager.copyNode()
+                    _buttleManager.connectionManager.copyConnections()
                 }
             }
 
@@ -138,6 +139,7 @@ Rectangle {
 
                 onClicked: {
                     _buttleManager.nodeManager.pasteNode()
+                    _buttleManager.connectionManager.pasteConnection()
                 }
             }
 

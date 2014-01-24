@@ -42,6 +42,7 @@ class ButtleData(QtCore.QObject):
         - _currentSelectedNodeNames : list of the names of the nodes currently selected
         - _currentParamNodeName : the name of the node currently displayed in the paramEditor
         - _currentConnectionId : the list of the id of the connections currently selected
+        - _currentCopiedConnectionsInfo : the list of buttle info for the connections of the current nodes copied
         - _currentCopiedNodesInfo : the list of buttle info for the current node(s) copied
         - _mapNodeNameToComputedImage : this map makes the correspondance between a gloablHash and a computed image (max 20 images stored)
         - _buttlePath : the path of the root directory (useful to import images)
@@ -71,6 +72,9 @@ class ButtleData(QtCore.QObject):
 
     # to eventually save current nodes data
     _currentCopiedNodesInfo = {}
+    
+    # to eventually save current connections data
+    _currentCopiedConnectionsInfo = {}
 
     # for the viewer
     _currentViewerIndex = 1
@@ -153,6 +157,13 @@ class ButtleData(QtCore.QObject):
             Returns the name of the current viewer node.
         """
         return self._currentViewerNodeName
+        
+    def getCurrentCopiedConnectionsInfo(self):
+        """
+            Returns the list of buttle info for the connection(s) of the current nodes copied.
+        """
+        return self._currentCopiedConnectionsInfo
+
 
     def getCurrentCopiedNodesInfo(self):
         """
@@ -267,6 +278,9 @@ class ButtleData(QtCore.QObject):
     def setCurrentViewerFrame(self, frame):
         self._currentViewerFrame = frame
         self.currentViewerFrameChanged.emit()
+        
+    def setCurrentCopiedConnectionsInfo(self, connectionsInfo):
+        self._currentCopiedConnectionsInfo = connectionsInfo
 
     def setCurrentCopiedNodesInfo(self, nodesInfo):
         self._currentCopiedNodesInfo = nodesInfo
@@ -451,6 +465,9 @@ class ButtleData(QtCore.QObject):
     def clearCurrentConnectionId(self):
         self._currentConnectionId = None
         self.currentConnectionWrapperChanged.emit()
+        
+    def clearCurrentCopiedConnectionsInfo(self):
+        self._currentCopiedConnectionsInfo.clear()
 
     def clearCurrentCopiedNodesInfo(self):
         self._currentCopiedNodesInfo.clear()

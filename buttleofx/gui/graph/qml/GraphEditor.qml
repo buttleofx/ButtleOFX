@@ -149,7 +149,8 @@ Item {
                         if(wheel.angleDelta.y > 0){
                             graph.zoomCoeff += graph.zoomStep
                         }else{
-                            graph.zoomCoeff -= graph.zoomStep
+                            if(graph.zoomCoeff - graph.zoomStep >= 0)
+                                graph.zoomCoeff -= graph.zoomStep
                         }
 
                         var mouseRatioX = 0.5
@@ -159,7 +160,7 @@ Item {
                     }
                 }
                 onDrawSelection: {
-                    _buttleData.addNodeWrappersInRectangleSelection(selectionX, selectionY, selectionWidth, selectionHeight);
+                    _buttleData.addNodeWrappersInRectangleSelection(selectionX / container.width * graph.width, selectionY / container.width * graph.width, selectionWidth / graph.zoomCoeff, selectionHeight / graph.zoomCoeff);
                 }
 
                 Rectangle {
@@ -174,9 +175,9 @@ Item {
             //The miniature of the graph
             Rectangle{
                 id: miniGraph
-                property real scaleFactor: 0.12
-                property real marginTop: 500
-                property real marginLeft: 350
+                property real scaleFactor: 0.05
+                property real marginTop: 1600
+                property real marginLeft: 2000
                 property real xOffset
                 property real yOffset
                 property real miniOffsetX: 0
@@ -194,6 +195,7 @@ Item {
                 height: (graph.height + marginTop) * scaleFactor
                 color: "#434343"
                 opacity: 0.7
+                clip: true
 
                 MouseArea{
                     anchors.fill: parent
@@ -219,8 +221,22 @@ Item {
                         if(moveMode){
                             moveMode = false
                             miniGraph.tmpMode = false
-                            miniGraph.xOffset = mouse.x - xStart
-                            miniGraph.yOffset = mouse.y - yStart
+                            if(mouse.x>0 && mouse.x < miniGraph.width){
+                                miniGraph.xOffset = mouse.x - xStart
+                            }else if(mouse.x > miniGraph.width){
+                                miniGraph.xOffset = miniGraph.width - xStart
+                            }else{
+                                miniGraph.xOffset = -xStart
+                            }
+
+                            if(mouse.y > 0 && mouse.y < miniGraph.height){
+                                miniGraph.yOffset = mouse.y - yStart
+                            }else if (mouse.y > miniGraph.height){
+                                miniGraph.yOffset = miniGraph.height - yStart
+                            }else{
+                                miniGraph.yOffset = -yStart
+                            }
+
                             miniGraph.miniOffsetX += miniGraph.xOffset
                             miniGraph.miniOffsetY += miniGraph.yOffset
                             graph.container.x -= (miniGraph.xOffset/miniGraph.scaleFactor*graph.zoomCoeff)
@@ -236,10 +252,12 @@ Item {
                     onPositionChanged: {
                         if(moveMode){
                             miniGraph.tmpMode = true
-                            var xOffset = mouse.x - xStart
-                            var yOffset = mouse.y - yStart
-                            miniGraph.originX = visuWindowXStart + xOffset
-                            miniGraph.originY = visuWindowYStart + yOffset
+                            if((mouse.x > 0 && mouse.x < miniGraph.width) && (mouse.y > 0 && mouse.y < miniGraph.height)){
+                                var xOffset = mouse.x - xStart
+                                var yOffset = mouse.y - yStart
+                                miniGraph.originX = visuWindowXStart + xOffset
+                                miniGraph.originY = visuWindowYStart + yOffset
+                            }
                         }else{ //to map the tmpVisuWindow (zoom)
                             miniGraph.originX = visuWindow.x
                             miniGraph.originY = visuWindow.y
@@ -264,7 +282,7 @@ Item {
 
                 Rectangle {
                     id: visuWindow
-                    border.color: height > miniGraph.height ? "transparent" : "white"
+                    border.color: "white"
                     border.width: 1
                     color: "transparent"
                     width: graph.width / graph.zoomCoeff * miniGraph.scaleFactor

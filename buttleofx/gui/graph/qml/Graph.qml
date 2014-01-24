@@ -23,7 +23,7 @@ Rectangle {
     signal drawSelection(int selectionX, int selectionY, int selectionWidth, int selectionHeight)
 
     property real zoomCoeff: 1
-    property real zoomStep: 0.05
+    property real zoomStep: 0.1
     property real nodeX
     property int offsetX: 0
     property int offsetY: 0
@@ -201,6 +201,8 @@ Rectangle {
                     y1: connection.miniatureState ? clipOut.yCoord * connection.miniatureScale : clipOut.yCoord
                     x2: connection.miniatureState ? clipIn.xCoord * connection.miniatureScale : clipIn.xCoord
                     y2: connection.miniatureState ? clipIn.yCoord * connection.miniatureScale : clipIn.yCoord
+
+                    visible: connectionWrapper.enabled ? true : false
                 }
             }
 
@@ -210,6 +212,7 @@ Rectangle {
             property int tmpConnectionY1
             property int tmpConnectionX2
             property int tmpConnectionY2
+            property real alpha: 1
 
             CanvasConnection {
                 id: tmpCanvasConnection
@@ -219,97 +222,8 @@ Rectangle {
                 y1: connections.tmpConnectionY1
                 x2: connections.tmpConnectionX2
                 y2: connections.tmpConnectionY2
+                opacity: connections.alpha
             }
         }
     }
-
-    /*//Miniature de graph
-    Rectangle{
-        property real scaleFactor : 0.15
-        property real marginTop : 150
-        property real marginLeft : 70
-        property alias miniOriginX: visuWindow.x
-        property alias miniOriginY: visuWindow.y
-        property int miniOffsetX: 0
-        property int miniOffsetY: 0
-        property real xOffset
-        property real yOffset
-
-        id: miniGraph
-        width: (parent.width + marginLeft*2) * scaleFactor
-        height: (parent.height + marginTop*2) * scaleFactor
-        opacity: 0.8
-        color: "#414141"
-        anchors.right: parent.right
-        anchors.bottom: parent.bottom
-        clip: true
-        anchors.rightMargin: 10
-        anchors.bottomMargin: 10
-
-        Item {
-            id: miniNodes
-            anchors.fill: parent
-
-            Repeater {
-                id: miniNodesRepeater
-                model: _buttleData.graphWrapper.nodeWrappers
-                Rectangle {
-                    width : 7
-                    height : 7
-                    radius: width * 0.5
-                    //x: (((model.object.coord.x * graphContainer.width) / qml_graphRoot.width ) + ((qml_graphRoot.width * 0.5) - (graphContainer.width * 0.5)) + miniGraph.marginLeft) * miniGraph.scaleFactor
-                    //y: (((model.object.coord.y * graphContainer.height) / qml_graphRoot.height ) + ((qml_graphRoot.height * 0.5) - (graphContainer.height * 0.5)) + miniGraph.marginTop) * miniGraph.scaleFactor
-                    x: (model.object.coord.x + miniGraph.marginLeft) * miniGraph.scaleFactor
-                    y: (model.object.coord.y + miniGraph.marginTop) * miniGraph.scaleFactor
-                    color: "#00b2a1"
-                    opacity: 1
-                }
-            }
-            Rectangle {
-                id: visuWindow
-                property int previousW : qml_graphRoot.width * miniGraph.scaleFactor
-                property int previousH : qml_graphRoot.height * miniGraph.scaleFactor
-                border.color: "#00b2a1"
-                border.width: 1
-                opacity: 1
-                color: "transparent"
-                width: qml_graphRoot.width / zoomCoeff * miniGraph.scaleFactor
-                height: qml_graphRoot.height / zoomCoeff * miniGraph.scaleFactor
-                x: (miniGraph.marginLeft) * miniGraph.scaleFactor + ((previousW * 0.5) - (width * 0.5)) - offsetX * miniGraph.scaleFactor + miniGraph.miniOffsetX
-                y: (miniGraph.marginTop) * miniGraph.scaleFactor + ((previousH * 0.5) - (height * 0.5)) - offsetY * miniGraph.scaleFactor + miniGraph.miniOffsetY
-            }
-        }
-
-        MouseArea{
-            anchors.fill: parent
-
-            property int xStart
-            property int yStart
-            property int visuWindowXStart
-            property int visuWindowYStart
-            property bool moveMode: false
-
-            hoverEnabled: true
-            acceptedButtons: Qt.LeftButton
-            onPressed: {
-                xStart = mouse.x
-                yStart = mouse.y
-                visuWindowXStart = visuWindow.x
-                visuWindowYStart = visuWindow.y
-                moveMode = pressedButtons & Qt.LeftButton ? true : false
-            }
-            onReleased: {
-                if(moveMode){
-                    moveMode=false
-                    miniGraph.xOffset = mouse.x - xStart
-                    miniGraph.yOffset = mouse.y - yStart
-                    parent.miniOffsetX += miniGraph.xOffset
-                    parent.miniOffsetY += miniGraph.yOffset
-                    graphContainer.x -= (miniGraph.xOffset/parent.scaleFactor)
-                    graphContainer.y -= (miniGraph.yOffset/parent.scaleFactor)
-                }
-            }
-        }
-    }*/
-
 }

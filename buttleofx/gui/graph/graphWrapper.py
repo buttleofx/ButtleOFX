@@ -21,6 +21,8 @@ class GraphWrapper(QtCore.QObject):
 
         This class is a view (= a map) of a graph.
     """
+    
+    _resize = False
 
     def __init__(self, graph, view):
         super(GraphWrapper, self).__init__(view)
@@ -63,6 +65,34 @@ class GraphWrapper(QtCore.QObject):
         str_list.append((self.getGraphMapped()).__str__())
 
         return ''.join(str_list)
+               
+    @QtCore.pyqtSlot(int, result=float)
+    def maxHeight(self, height):
+        """
+            Browse all the nodes to calculate a height based on the extreme coordinates
+        """
+        max = height
+        min = 0
+        for nodeWrapper in self._nodeWrappers:
+            if(max < nodeWrapper.yCoord):
+              max = nodeWrapper.yCoord
+            if(min > nodeWrapper.yCoord):
+              min = nodeWrapper.yCoord
+        return max - min
+        
+    @QtCore.pyqtSlot(int, result=float)
+    def maxWidth(self, width):
+        """
+            Browse all the nodes to calculate a width based on the extreme coordinates
+        """
+        max = width
+        min = 0
+        for nodeWrapper in self._nodeWrappers:
+            if(max < nodeWrapper.xCoord):
+              max = nodeWrapper.xCoord
+            if(min > nodeWrapper.xCoord):
+              min = nodeWrapper.xCoord
+        return max - min
 
     ################################################## ACCESSORS ##################################################
 
@@ -89,6 +119,20 @@ class GraphWrapper(QtCore.QObject):
             if nodeWrapper.getName() == nodeName:
                 return nodeWrapper
         return None  # QtCore.QObject(self)
+        
+    @QtCore.pyqtSlot(QtCore.QObject, bool, result=QtCore.QObject)
+    def getConnectedClipWrapper(self, clipWrapper, disable):
+        """
+            Returns the clip connected to an input clip if it exists.
+        """
+        for connection in self._connectionWrappers:
+            if((clipWrapper.getNodeName() == connection.getIn_clipNodeName() and clipWrapper.getClipName() == connection.getIn_clipName())):
+                if(disable):
+                    connection.setEnabled(False)
+                connection.currentConnectionStateChanged.emit()
+                return self.getNodeWrapper(connection.out_clipNodeName).getClip(connection.out_clipName)
+                
+        return None
 
     def getConnectionWrappers(self):
         """
@@ -117,8 +161,15 @@ class GraphWrapper(QtCore.QObject):
             Returns the depth of the QML graph
         """
         return self._zMax
+        
+    def resize(self):
+        return self._resize
 
     #################### setters ####################
+    
+    def setResize(self, value):
+        self._resize = value
+        self.currentSizeChanged.emit()
 
     def setZMax(self, zMax):
         """
@@ -180,3 +231,6 @@ class GraphWrapper(QtCore.QObject):
     # z index for QML (good superposition of nodes in the graph)
     zMaxChanged = QtCore.pyqtSignal()
     zMax = QtCore.pyqtProperty(int, getZMax, setZMax, notify=zMaxChanged)
+    
+    currentSizeChanged = QtCore.pyqtSignal()
+    resize = QtCore.pyqtProperty(bool, resize, notify=currentSizeChanged)

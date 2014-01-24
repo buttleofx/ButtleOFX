@@ -115,6 +115,7 @@ class NodeManager(QtCore.QObject):
             Pasts the current node(s).
         """
         buttleData = ButtleDataSingleton().get()
+        buttleData.clearCurrentSelectedNodeNames()
         # If nodes have been copied previously
         if buttleData.getCurrentCopiedNodesInfo():
             # Create a copy for each node copied
@@ -122,6 +123,7 @@ class NodeManager(QtCore.QObject):
             for node in buttleData.getCurrentCopiedNodesInfo():
                 buttleData.getGraph().createNode(buttleData.getCurrentCopiedNodesInfo()[node]["nodeType"], buttleData.getCurrentCopiedNodesInfo()[node]["x"] + 20, buttleData.getCurrentCopiedNodesInfo()[node]["y"] + 20)
                 newNode = buttleData.getGraph().getNodes()[-1]
+                buttleData.appendToCurrentSelectedNodeNames(newNode._name)
                 newNode.setColor(buttleData.getCurrentCopiedNodesInfo()[node]["color"])
                 newNode.setNameUser(buttleData.getCurrentCopiedNodesInfo()[node]["nameUser"] + buttleData.getCurrentCopiedNodesInfo()[node]["mode"])
                 newNode.getTuttleNode().getParamSet().copyParamsValues(buttleData.getCurrentCopiedNodesInfo()[node]["params"])

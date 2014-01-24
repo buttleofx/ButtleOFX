@@ -305,12 +305,7 @@ Item {
                                     onClicked: {
                                         _buttleData.currentGraphWrapper = _buttleData.graphWrapper
                                         _buttleData.currentGraphIsGraph()
-
-                                        // if we were viewing browser files, we assign the last Node the mosquito had
-                                        if (player.lastView == index+1){
-                                           _buttleData.currentViewerNodeWrapper = player.lastNodeWrapper
-                                         }
-
+                 
                                         player.changeViewer(index+1)
                                         player.lastView = index+1                                        
                                     }

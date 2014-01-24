@@ -124,8 +124,10 @@ Rectangle {
 
                                        // if it's an image, we assign it to the viewer
                                         if (model.object.fileType != "Folder"){
+                                            player.changeViewer(11) // we come to the temporary viewer
                                             // we save the last node wrapper of the last view
                                             player.lastNodeWrapper = _buttleData.getNodeWrapperByViewerIndex(player.lastView)
+                                            //_buttleData.assignNodeToViewerIndex(player.lastNodeWrapper, player.lastView)
 
                                             console.debug ("player.lastNodeWrapper", player.lastNodeWrapper)
 

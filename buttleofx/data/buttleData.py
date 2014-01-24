@@ -101,7 +101,9 @@ class ButtleData(QtCore.QObject):
         self._currentGraphWrapper = self._graphWrapper #by default, the current graph is the graph of the graphEditor
 
         self._buttlePath = filePath
-        for index in range(1, 10):
+
+        # 9 views for the viewer, the 10th for the browser, the 11th temporary
+        for index in range(1, 12):
             self._mapViewerIndextoNodeName[str(index)] = None
 
         return self

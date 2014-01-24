@@ -103,7 +103,7 @@ Rectangle {
                             textInColumn.forceActiveFocus()
                         }
 
-                        DropArea {
+                        /*DropArea {
                             id: moveItemInColumn
                             anchors.fill: parent
                             objectName: model.object.filepath
@@ -114,7 +114,7 @@ Rectangle {
                                 console.debug("Index: " + drop.source.objectName)
                                 //fileModel.moveItem(drop.source.objectName, )
                             }
-                        }
+                        }*/
 
 
                         Column {
@@ -269,7 +269,7 @@ Rectangle {
                     property variant currentFile: model.object
                     property variant filePath: model.object.filepath
 
-                    DropArea {
+                    /*DropArea {
                         id: moveItemInRow
                         anchors.fill: parent
                         keys: ["internFileDrag"]
@@ -278,7 +278,7 @@ Rectangle {
                             console.debug("Drag: " + drag.source.filepath)
                             //fileModel.moveItem(itemIndex, drag.source.filepath)
                         }
-                    }
+                    }*/
 
                     Row {
                         width: parent.width

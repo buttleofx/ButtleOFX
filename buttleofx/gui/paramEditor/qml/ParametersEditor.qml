@@ -9,8 +9,8 @@ import "../../../gui"
 
 Item {
     id: parametersEditor
-    implicitWidth: 325
-    implicitHeight: parent.height
+    implicitWidth: 300
+    implicitHeight: 500
 
     signal buttonCloseClicked(bool clicked)
     signal buttonFullscreenClicked(bool clicked)
@@ -27,39 +27,12 @@ Item {
         onFullscreenClicked: parametersEditor.buttonFullscreenClicked(true)
     }
 
-    Rectangle{
-        id: paramTitle
-        width: parent.width
-        height: 40
-        y: tabBar.height
-        color: "#141414"
-        /*gradient: Gradient {
-               GradientStop { position: 0.0; color: "#141414" }
-               GradientStop { position: 0.85; color: "#141414" }
-               GradientStop { position: 0.86; color: "#010101" }
-               GradientStop { position: 1; color: "#010101" }
-        }*/
-
-        Text {
-            anchors.verticalCenter: parent.verticalCenter
-            anchors.horizontalCenter: parent.horizontalCenter
-            anchors.leftMargin: 10
-            color: "white"
-            font.pointSize: 11
-            text: "Parameters"
-            clip: true
-        }
-
-
-    }
-
-
     // Container of the paramEditors
     Rectangle{
         id: contentParamEditor
-        height: parent.height - paramTitle.height - addNode.height
+        height: parent.height - tabBar.height - addNode.height - 10
         width: parent.width
-        y: paramTitle.height
+        y: tabBar.height + 10
         color: "#141414"
 
         // scroll all the parameditors
@@ -107,6 +80,7 @@ Item {
                 Button{
                     id: tuttleParamTitle
                     height: 40
+
                     style: ButtonStyle {
                         background: Rectangle {
                             implicitWidth: paramEditor.width
@@ -115,8 +89,18 @@ Item {
                             gradient: Gradient {
                                 GradientStop { position: 0.0; color: "#141414" }
                                 GradientStop { position: 0.85; color: "#141414" }
-                                GradientStop { position: 0.86; color: "#010101" }
+                                GradientStop { position: 0.86; color: "#00b2a1" }
                                 GradientStop { position: 1; color: "#141414" }
+                            }
+
+                            Image {
+                                source: tuttleParamContent.visible ? _buttleData.buttlePath +  "/gui/img/buttons/params/arrow_hover.png" : _buttleData.buttlePath +  "/gui/img/buttons/params/arrow_right.png"
+                                width: 12
+                                height: 12
+                                anchors.right: parent.right
+                                anchors.top: parent.top
+                                anchors.topMargin: 8
+                                anchors.rightMargin: 20
                             }
                         }
 
@@ -148,7 +132,7 @@ Item {
                 /* Params depend on the node type (Tuttle data)*/
                 Rectangle {
                     id: tuttleParamContent
-                    height: index == listViewParam.count-1 ? tuttleParam.contentHeight : 0
+                    height: index == listViewParam.count-1 ? tuttleParam.contentHeight + 20 : 0
                     width: parent.width
                     y: tuttleParamTitle.height
                     visible: index == listViewParam.count-1 ? true : false
@@ -157,12 +141,11 @@ Item {
                     property string lastGroupParam : "No Group."
 
                     ListView {
+                        id: tuttleParam
                         anchors.fill: parent
                         anchors.topMargin: 10
                         anchors.bottomMargin: 10
-
-                        id: tuttleParam
-                        height: count ? contentHeight : 0
+                        height: count ? tuttleParam.contentHeight : 0
                         y: parent.y + 10
                         spacing: 6
 
@@ -188,8 +171,10 @@ Item {
     // Add a node
     Button {
         id: addNode
-        y : listViewParam.height + paramTitle.height
+        anchors.bottom: parent.bottom
+        //y : listViewParam.height
         width : parent.width
+        height: 50
 
         iconSource:
             if (hovered){

@@ -6,10 +6,6 @@ from quickmamba.models import QObjectListModel
 from PyQt5 import QtGui, QtCore, QtQuick
 from PyQt5.QtWidgets import QWidget, QFileDialog
 
-from buttleofx.core.graph import Graph
-
-from buttleofx.gui.graph.node import NodeWrapper
-
 
 class FileItem(QtCore.QObject):
     
@@ -143,7 +139,7 @@ class FileModelBrowser(QtQuick.QQuickItem):
         for item in self._fileItems:
             item.isSelected = False
         if index < len(self._fileItems):
-            print("index", len(self._fileItems))
+            #print("index", len(self._fileItems))
             self._fileItems[index].isSelected = True
         else:
             print("not index", len(self._fileItems))
@@ -171,17 +167,4 @@ class FileModelBrowser(QtQuick.QQuickItem):
     nameFilterChange = QtCore.pyqtSignal()
     nameFilter = QtCore.pyqtProperty(str, getFilter, setFilter, notify=nameFilterChange)
 
-    ###########################################
-    # about how to connect browser to the viewer
-
-    @QtCore.pyqtSlot(str, result=QtCore.QObject)
-    def createNodeWrappertotheViewer(self, url):
-        graphForTheBrowser = Graph() #create a graph
-        readerNode = graphForTheBrowser.createReaderNode(url, 0, 0) # create a reader node (like for the drag & drop of file)
-        readerNodeWrapper = NodeWrapper(readerNode, graphForTheBrowser._view) # wrapper of the reader file
-        return readerNodeWrapper
-
-
-    # newReaderNode = QtCore.pyqtSignal()
-    # readerNode = QtCore.pyqtProperty(str, createNodeWrappertotheViewer(), notify=newReaderNode)
 

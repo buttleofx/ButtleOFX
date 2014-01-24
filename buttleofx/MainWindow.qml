@@ -260,7 +260,6 @@ ApplicationWindow {
                 onTriggered: _buttleManager.deleteSelection()
             }
         }
-
         Menu {
             id: nodesMenu
             title: "Nodes"
@@ -269,7 +268,7 @@ ApplicationWindow {
                 model: _buttleData.pluginsIdentifiers
                 MenuItem {
                     text: object
-                    onTriggered: _buttleManager.nodeManager.creationNode(object, 0, 0)
+                    onTriggered: _buttleManager.nodeManager.creationNode("_buttleData.graph", object, 0, 0)
                 }
                 onObjectAdded: nodesMenu.insertItem(index, object)
                 onObjectRemoved: nodesMenu.removeItem(object)
@@ -505,7 +504,6 @@ ApplicationWindow {
         }//splitview
     }//modulsContainer
 
-
     Item {
         id: subviews
         visible: false
@@ -600,7 +598,7 @@ ApplicationWindow {
             id: empty
         }
 
-        Window {
+        /*Window {
             id: fullscreenWindow
             visibility: Window.Hidden
             visible: false
@@ -609,6 +607,6 @@ ApplicationWindow {
                 anchors.fill: parent
                 color: "#353535"
             }
-        }
+        }*/
     }
 }

@@ -26,6 +26,7 @@ class GraphWrapper(QtCore.QObject):
         super(GraphWrapper, self).__init__(view)
 
         self._view = view
+        print ("view", view)
 
         self._nodeWrappers = QObjectListModel(self)
         self._connectionWrappers = QObjectListModel(self)

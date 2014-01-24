@@ -32,7 +32,8 @@ Item {
 
             onClickCreationNode: {
                 // console.log("Node created clicking from Tools")
-                _buttleManager.nodeManager.creationNode(nodeType, -graph.originX + 20, -graph.originY + 20)
+                _buttleData.currentGraphWrapper = _buttleData.graphWrapper
+                _buttleManager.nodeManager.creationNode("_buttleData.graph", nodeType, -graph.originX + 20, -graph.originY + 20)
             }
         }
         Item {
@@ -53,7 +54,8 @@ Item {
                 miniatureState: false
                 onClickCreationNode: {
                     // console.log("Node created clicking from Graph")
-                    _buttleManager.nodeManager.creationNode(nodeType, -graph.originX + graph.mouseX, -graph.originY + graph.mouseY)
+                    _buttleData.currentGraphWrapper = _buttleData.graphWrapper
+                    _buttleManager.nodeManager.creationNode("_buttleData.graph", nodeType, -graph.originX + graph.mouseX, -graph.originY + graph.mouseY)
                 }
 
                 MouseArea {

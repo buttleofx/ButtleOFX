@@ -92,6 +92,7 @@ Rectangle {
             }
              //middle button : assign the node to the viewer
             else if (mouse.button == Qt.MidButton){
+                _buttleData.currentGraphWrapper = _buttleData.graphWrapper
                 _buttleData.currentViewerNodeWrapper = m.nodeWrapper
                 _buttleData.currentViewerFrame = 0
                 // we assign the node to the viewer, at the frame 0
@@ -113,6 +114,7 @@ Rectangle {
         keys: "mosquitoMouseArea"
 
         onDropped: {
+            _buttleData.currentGraphWrapper = _buttleData.graphWrapper
             _buttleData.currentViewerNodeWrapper = m.nodeWrapper
             _buttleData.currentViewerFrame = 0
             // we assign the node to the viewer, at the frame 0

@@ -17,6 +17,11 @@ Rectangle {
     property bool viewGrid: true
     signal changeSelectedList(variant selected)
 
+    QtObject {
+        id: readerNode
+        property variant nodeWrapper
+    }
+
     FileModelBrowser {
         id: fileModel
         folder: winFile.folder
@@ -116,7 +121,26 @@ Rectangle {
                                     }
 
                                     onDoubleClicked: {
-                                        model.object.fileType == "Folder" ? winFile.goToFolder(model.object.filepath) : Qt.openUrlExternally("file:///" + model.object.filepath)
+                                        //model.object.fileType == "Folder" ? winFile.goToFolder(model.object.filepath) : Qt.openUrlExternally("file:///" + model.object.filepath)
+                                        //model.object.fileType == "Folder" ? winFile.goToFolder(model.object.filepath) : console.log("A lier au viewer")
+
+                                        if (model.object.fileType != "Folder"){
+
+                                            readerNode.nodeWrapper = _buttleData.nodeReaderWrapperForBrowser(model.object.filepath)
+                                            console.log ("New node from the browser", readerNode.nodeWrapper.name)
+                                            _buttleData.currentGraphWrapper = _buttleData.graphBrowserWrapper
+                                            //_buttleData.currentGraphWrapper = _buttleData.graphWrapper
+
+                                            _buttleData.currentViewerNodeWrapper = readerNode.nodeWrapper
+                                            _buttleData.currentViewerFrame = 0
+                                            // we assign the node to the viewer, at the frame 0
+                                            _buttleData.assignNodeToViewerIndex(readerNode.nodeWrapper, 0)
+                                            _buttleEvent.emitViewerChangedSignal()
+
+                                        }
+                                        else{
+                                            winFile.goToFolder(model.object.filepath)
+                                        }
                                     }
 
                                     //hoverEnabled: true
@@ -155,7 +179,7 @@ Rectangle {
                                         winFile.changeSelectedList(sel)
                                     }
                                     onDoubleClicked: {
-                                        model.object.fileType == "Folder" ? winFile.goToFolder(model.object.filepath) : Qt.openUrlExternally("file:///" + model.object.filepath)
+                                        //model.object.fileType == "Folder" ? winFile.goToFolder(model.object.filepath) : Qt.openUrlExternally("file:///" + model.object.filepath)
                                     }
                                 }
                             }
@@ -253,7 +277,7 @@ Rectangle {
                                     winFile.changeSelectedList(sel)
                                 }
                                 onDoubleClicked: {
-                                    model.object.fileType == "Folder" ? winFile.goToFolder(model.object.filepath) : Qt.openUrlExternally("file:///" + model.object.filepath)
+                                    //model.object.fileType == "Folder" ? winFile.goToFolder(model.object.filepath) : Qt.openUrlExternally("file:///" + model.object.filepath)
                                 }
                             }
                         }

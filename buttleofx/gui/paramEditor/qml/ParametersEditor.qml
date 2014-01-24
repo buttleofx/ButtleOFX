@@ -27,15 +27,15 @@ Item {
         onFullscreenClicked: parametersEditor.buttonFullscreenClicked(true)
     }
 
-    // Container of the paramEditors
+    // Container of the paramNodes
     Rectangle{
-        id: contentParamEditor
+        id: contentparamNode
         height: parent.height - tabBar.height - addNode.height - 10
         width: parent.width
         y: tabBar.height + 10
         color: "#141414"
 
-        // scroll all the parameditors
+        // scroll all the paramNodes
         ScrollView {
             id: scrollParam
             //anchors.fill: parent
@@ -44,7 +44,7 @@ Item {
             anchors.topMargin: 5
             anchors.bottomMargin: 5
 
-            // for each node we create a ParamEditor
+            // for each node we create a paramNode
             ListView{
                 id: listViewParam
                 //anchors.fill: parent
@@ -54,14 +54,14 @@ Item {
 
         }
 
-        // delegate of the list of ParamEditor
+        // delegate of the list of paramNode
         Component {
             id: paramDelegate
 
             Rectangle{
-                id: paramEditor
+                id: paramNode
                 height: tuttleParamContent.height + tuttleParamTitle.height + 10
-                width: contentParamEditor.width
+                width: contentparamNode.width
                 implicitWidth: 300
                 implicitHeight: 500
                 Layout.minimumHeight: tuttleParamTitle.height
@@ -76,56 +76,68 @@ Item {
                 property color activeFocusOn : "white"
                 property color activeFocusOff : "grey"
 
+
                 // Title of the node
-                Button{
+                Rectangle {
                     id: tuttleParamTitle
                     height: 40
 
-                    style: ButtonStyle {
-                        background: Rectangle {
-                            implicitWidth: paramEditor.width
-                            implicitHeight: 40
-                            color: "#141414"
-                            gradient: Gradient {
-                                GradientStop { position: 0.0; color: "#141414" }
-                                GradientStop { position: 0.85; color: "#141414" }
-                                GradientStop { position: 0.86; color: "#00b2a1" }
-                                GradientStop { position: 1; color: "#141414" }
-                            }
-
-                            Image {
-                                source: tuttleParamContent.visible ? _buttleData.buttlePath +  "/gui/img/buttons/params/arrow_hover.png" : _buttleData.buttlePath +  "/gui/img/buttons/params/arrow_right.png"
-                                width: 12
-                                height: 12
-                                anchors.right: parent.right
-                                anchors.top: parent.top
-                                anchors.topMargin: 8
-                                anchors.rightMargin: 20
-                            }
-                        }
-
-                        label: Text{
-                            color: "white"
-                            text: currentParamNode.name
-                            anchors.verticalCenter: parent.verticalCenter
-                            anchors.left: parent.left
-                            anchors.leftMargin: 10
-                            font.pointSize: 11
-                            clip: true
-                        }
-                    }
-                    onClicked: {
-                         if (tuttleParamContent.visible == true){
-                            tuttleParamContent.visible = false
-                            tuttleParamContent.height = 0
-                        }
-                        else{
-                            //tuttleParamContent.height = newHeight
-                            tuttleParamContent.height = tuttleParam.contentHeight + 20
-                            tuttleParamContent.visible = true
-                        }
+                    implicitWidth: paramNode.width
+                    implicitHeight: 40
+                    color: "#141414"
+                    gradient: Gradient {
+                        GradientStop { position: 0.0; color: "#141414" }
+                        GradientStop { position: 0.85; color: "#141414" }
+                        GradientStop { position: 0.86; color: "#00b2a1" }
+                        GradientStop { position: 1; color: "#141414" }
                     }
 
+                    Image {
+                        source: tuttleParamContent.visible ? _buttleData.buttlePath +  "/gui/img/buttons/params/arrow_hover.png" : _buttleData.buttlePath +  "/gui/img/buttons/params/arrow_right.png"
+                        width: 12
+                        height: 12
+                        anchors.right: parent.right
+                        anchors.top: parent.top
+                        anchors.topMargin: 8
+                        anchors.rightMargin: 20
+                    }
+
+                    Text{
+                        color: "white"
+                        text: currentParamNode.name
+                        anchors.verticalCenter: parent.verticalCenter
+                        anchors.left: parent.left
+                        anchors.leftMargin: 10
+                        font.pointSize: 11
+                        clip: true
+                    }
+
+                    MouseArea {
+                        anchors.fill: parent
+                        acceptedButtons: Qt.LeftButton | Qt.MidButton
+
+                        onPressed: {
+                            if (mouse.button == Qt.LeftButton) {
+                                 if (tuttleParamContent.visible == true){
+                                    tuttleParamContent.visible = false
+                                    tuttleParamContent.height = 0
+                                }
+                                else{
+                                    //tuttleParamContent.height = newHeight
+                                    tuttleParamContent.height = tuttleParam.contentHeight + 20
+                                    tuttleParamContent.visible = true
+                                }
+                            }
+                            else if (mouse.button == Qt.MidButton) {
+                                _buttleData.currentGraphWrapper = _buttleData.graphWrapper
+                                _buttleData.currentViewerNodeWrapper = paramNode.currentParamNode
+                                _buttleData.currentViewerFrame = 0
+                                // we assign the node to the viewer, at the frame 0
+                                _buttleData.assignNodeToViewerIndex(paramNode.currentParamNode, 0)
+                                _buttleEvent.emitViewerChangedSignal()
+                            }
+                        }
+                    }
                 }
 
 
@@ -151,7 +163,7 @@ Item {
 
                         interactive: false
 
-                        model: paramEditor.params
+                        model: paramNode.params
 
                         delegate: Component {
                             Loader {

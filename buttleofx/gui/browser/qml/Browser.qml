@@ -53,7 +53,6 @@ Rectangle {
             folder: m.directory
             onChangeFolder: {
                 m.directory = folder
-                console.debug("folder has changed to " + folder)
             }
 	    }
 
@@ -78,17 +77,14 @@ Rectangle {
                 folder: m.directory
                 onGoToFolder: {
                     listPrevious.append({"url": m.directory})
-                    console.debug("folder has changed to " + newFolder)
                     m.directory= newFolder
                 }
                 filterName: m.filter
                 onChangeFile: {
                     m.filepath = file
-                    console.debug("filepath has changed to " + m.filepath)
                 }
                 onChangeFileFolder: {
                     m.fileFolder = fileFolder
-                    console.debug("fileFolder has changed to " + m.fileFolder)
                 }
                 onChangeFileSize: {
                     m.fileSize = fileSize
@@ -96,7 +92,6 @@ Rectangle {
 
                 onChangeFileType: {
                     m.fileType = fileType
-                    console.debug("fileType has changed to " + m.fileType)
                 }
                 onChangeSelectedList: {
                     m.selected = selected
@@ -115,12 +110,10 @@ Rectangle {
             fileType : m.fileType
             fileSize: m.fileSize / 1024
             onChangeFilter: {
-                console.debug("filter has changed to " + newFilter)
                 m.filter = newFilter
             }
             onOpenFolder: {
                 listPrevious.append({"url": m.directory})
-                console.debug("folder has changed to " + newFolder)
                 m.directory = newFolder
             }
 	    }

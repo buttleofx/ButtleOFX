@@ -224,10 +224,7 @@ class FileModelBrowser(QtQuick.QQuickItem):
         for item in self._fileItems:
             item.isSelected = False
         if index < len(self._fileItems):
-            print("index", len(self._fileItems))
             self._fileItems[index].isSelected = True
-        else:
-            print("not index", len(self._fileItems))
 
     @QtCore.pyqtSlot(int)
     def selectItems(self, index):

@@ -1,6 +1,8 @@
 import QtQuick 2.0
 import QtQuick.Dialogs 1.0
 
+import "../../plugin/qml"
+
 Rectangle {
     id: tools
 
@@ -36,7 +38,8 @@ Rectangle {
                 buttonText: "Create a new node"
                 locked: false
                 onClicked: {
-                    // TODO
+                    if(pluginVisible==true){pluginVisible=false}
+                    else{pluginVisible=true}
                 }
             }
 
@@ -54,6 +57,7 @@ Rectangle {
                 locked: false
 
                 onClicked: {
+                    pluginVisible=false
                     finderLoadGraph.open()
                 }
             }
@@ -72,6 +76,7 @@ Rectangle {
                 locked: !_buttleData.graphCanBeSaved
 
                 onClicked: {
+                    pluginVisible=false
                     finderSaveGraph.open()
                 }
             }
@@ -85,6 +90,7 @@ Rectangle {
                 locked: _buttleManager.canUndo ? false : true
 
                 onClicked: {
+                    pluginVisible=false
                     _buttleManager.undo()
                 }
             }
@@ -98,6 +104,7 @@ Rectangle {
                 locked: _buttleManager.canRedo ? false : true
 
                 onClicked: {
+                    pluginVisible=false
                     _buttleManager.redo()
                 }
             }
@@ -111,6 +118,7 @@ Rectangle {
                 locked: _buttleData.currentSelectedNodeWrappers.isEmpty() ? true : false
 
                 onClicked: {
+                    pluginVisible=false
                     _buttleManager.nodeManager.copyNode()
                 }
             }
@@ -124,6 +132,7 @@ Rectangle {
                 locked: _buttleData.currentSelectedNodeWrappers.isEmpty() ? true : false
 
                 onClicked: {
+                    pluginVisible=false
                     _buttleManager.nodeManager.cutNode()
                 }
             }
@@ -137,6 +146,7 @@ Rectangle {
                 locked: _buttleData.canPaste ? false : true
 
                 onClicked: {
+                    pluginVisible=false
                     _buttleManager.nodeManager.pasteNode()
                 }
             }
@@ -150,6 +160,7 @@ Rectangle {
                 locked: _buttleData.currentSelectedNodeWrappers.isEmpty() ? true : false
 
                 onClicked: {
+                    pluginVisible=false
                     _buttleManager.nodeManager.duplicationNode()
                 }
             }
@@ -163,6 +174,7 @@ Rectangle {
                 locked: (!_buttleData.currentSelectedNodeWrappers.isEmpty() || _buttleData.currentConnectionWrapper)? false : true
 
                 onClicked: {
+                    pluginVisible=false
                     _buttleManager.deleteSelection()
                 }
             }            

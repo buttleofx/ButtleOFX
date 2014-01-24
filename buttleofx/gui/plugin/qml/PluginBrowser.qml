@@ -121,9 +121,9 @@ Item {
                         border.color:"transparent"
                         border.width: 1
                         radius: 3
-                        width: 200
+                        width: 200-10
                         height: 30
-                        x: 1
+                        x: 3
 
                         MouseArea {
                             anchors.fill: parent
@@ -137,6 +137,7 @@ Item {
                                 nodes.border.color= "transparent"
                             }
                             onClicked: {
+                                pluginVisible=false
                                 onTriggered: _buttleManager.nodeManager.creationNode(object.pluginType, 0, 0)
                             }
                         }

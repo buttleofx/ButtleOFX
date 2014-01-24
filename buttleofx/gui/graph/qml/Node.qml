@@ -51,6 +51,7 @@ Rectangle {
         enabled: !readOnly
         acceptedButtons: Qt.LeftButton | Qt.RightButton | Qt.MidButton
         onPressed: {
+            pluginVisible=false
             // left button : we change the current selected nodes & we start moving
             if (mouse.button == Qt.LeftButton) {
                 // we clear the list of selected connections

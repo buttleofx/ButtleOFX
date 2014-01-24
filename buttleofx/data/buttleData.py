@@ -422,8 +422,7 @@ class ButtleData(QtCore.QObject):
         pluginsW = [PluginWrapper(plugin) for plugin in plugins]
         pluginsWModel = QObjectListModel(self)
         for p in pluginsW:
-            if (p.pluginType.startswith(pluginSearched)) :
-                print ('blabla')
+            if (pluginSearched in p.pluginType) :
                 pluginsWModel.append(p)
         return pluginsWModel
 

@@ -72,6 +72,7 @@ Item {
                     hoverEnabled: true
                     acceptedButtons: Qt.LeftButton | Qt.MiddleButton
                     onPressed: {
+                        pluginVisible=false
                         xStart = mouse.x
                         yStart = mouse.y
                         graphContainer_xStart = parent.container.x

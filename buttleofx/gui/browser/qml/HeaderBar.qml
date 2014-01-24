@@ -95,12 +95,12 @@ Rectangle {
                 x: 5
                 height: parent.height
                 width: parent.width
+                autoScroll: false
 
                 text: headerBar.folder
 
                 color: suggestion.exists ? "white" : "red"
                 selectByMouse: true
-
                 selectionColor: "#00b2a1"
 
                 onAccepted: {

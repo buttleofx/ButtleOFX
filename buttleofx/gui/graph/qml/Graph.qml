@@ -70,7 +70,8 @@ Rectangle {
             // if before the viewer was showing an image from the brower, we change the currentView
             if (_buttleData.currentViewerIndex > 9){
                 _buttleData.currentViewerIndex = player.lastView
-                _buttleData.currentViewerNodeWrapper = player.lastNodeWrapper
+                if (player.lastNodeWrapper != undefined)
+                    _buttleData.currentViewerNodeWrapper = player.lastNodeWrapper
                 player.changeViewer(player.lastView)                
             }
 
@@ -93,7 +94,8 @@ Rectangle {
             // if before the viewer was showing an image from the brower, we change the currentView
             if (_buttleData.currentViewerIndex > 9){
                 _buttleData.currentViewerIndex = player.lastView
-                _buttleData.currentViewerNodeWrapper = player.lastNodeWrapper
+                if (player.lastNodeWrapper != undefined)
+                    _buttleData.currentViewerNodeWrapper = player.lastNodeWrapper
                 player.changeViewer(player.lastView)
                 //_buttleEvent.emitViewerChangedSignal()
                 console.debug("_buttleData.currentViewerNodeWrapper", _buttleData.currentViewerNodeWrapper)

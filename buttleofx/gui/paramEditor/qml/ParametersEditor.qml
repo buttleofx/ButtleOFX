@@ -139,7 +139,8 @@ Item {
                         // if before the viewer was showing an image from the brower, we change the currentView
                         if (_buttleData.currentViewerIndex > 9){
                             _buttleData.currentViewerIndex = player.lastView
-                            _buttleData.currentViewerNodeWrapper = player.lastNodeWrapper
+                            if (player.lastNodeWrapper != undefined)
+                                _buttleData.currentViewerNodeWrapper = player.lastNodeWrapper
                             player.changeViewer(player.lastView)
                         }
                         _buttleManager.nodeManager.creationNode("_buttleData.graph", object, 0, 0)

@@ -224,6 +224,7 @@ Rectangle {
                             drag.target: fileInColumn
 
                             onClicked: {
+                                winFile.changeFileSize(0)
                                 if (mouse.button == Qt.RightButton)
                                     options.popup()
                                     winFile.fileName = textInColumn.text
@@ -446,6 +447,7 @@ Rectangle {
                         drag.target: fileInRow
 
                         onClicked: {
+                            winFile.changeFileSize(0)
                             if (mouse.button == Qt.RightButton)
                                 options.popup()
                                 winFile.fileName = textInRow.text

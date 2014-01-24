@@ -112,11 +112,11 @@ Rectangle {
                                             fileModel.selectItem(index)
 
                                         var sel = fileModel.getSelectedItems()
-                                        console.debug("sel.count: " + sel.count)
+                                        /*console.debug("sel.count: " + sel.count)
                                         for(var selIndex = 0; selIndex < sel.count; ++selIndex)
                                         {
                                             console.debug("sel: " + selIndex + " -> " + sel.get(selIndex).fileName)
-                                        }
+                                        }*/
                                         winFile.changeSelectedList(sel)
                                     }
 
@@ -124,6 +124,11 @@ Rectangle {
 
                                        // if it's an image, we assign it to the viewer
                                         if (model.object.fileType != "Folder"){
+                                            // we save the last node wrapper of the last view
+                                            player.lastNodeWrapper = _buttleData.getNodeWrapperByViewerIndex(player.lastView)
+
+                                            console.debug ("player.lastNodeWrapper", player.lastNodeWrapper)
+
 
                                             readerNode.nodeWrapper = _buttleData.nodeReaderWrapperForBrowser(model.object.filepath)
 
@@ -133,11 +138,11 @@ Rectangle {
                                             _buttleData.currentViewerNodeWrapper = readerNode.nodeWrapper
                                             _buttleData.currentViewerFrame = 0
                                             // we assign the node to the viewer, at the frame 0
-                                            //_buttleData.assignNodeToViewerIndex(readerNode.nodeWrapper, 10)
                                             _buttleData.assignNodeToViewerIndex(readerNode.nodeWrapper, 10)
                                             _buttleData.currentViewerIndex = 10 // we assign to the viewer the 10th view
 
-                                            _buttleData.currentViewerNodeWrapper = _buttleData.getNodeWrapperByViewerIndex(10)
+                                           
+                                            //_buttleData.currentViewerNodeWrapper = _buttleData.getNodeWrapperByViewerIndex(10)
                                             _buttleEvent.emitViewerChangedSignal()
                                             //player.changeViewer(10)
 

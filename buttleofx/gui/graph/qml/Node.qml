@@ -99,6 +99,7 @@ Rectangle {
                 // we assign the node to the viewer, at the frame 0
                 _buttleData.assignNodeToViewerIndex(m.nodeWrapper, 0)
                 _buttleEvent.emitViewerChangedSignal()
+                player.lastNodeWrapper = _buttleData.currentViewerNodeWrapper
             }
         }
 
@@ -122,6 +123,7 @@ Rectangle {
             // we assign the node to the viewer, at the frame 0
             _buttleData.assignNodeToViewerIndex(m.nodeWrapper, 0)
             _buttleEvent.emitViewerChangedSignal()
+            player.lastNodeWrapper = _buttleData.currentViewerNodeWrapper
         }
     }
 

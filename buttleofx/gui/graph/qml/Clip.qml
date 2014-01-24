@@ -30,6 +30,7 @@ Rectangle {
     width: m.clipSize
     color: clipMouseArea.containsMouse ? "#00b2a1" : "#55bbbb"
     radius: width * 0.5
+    visible: miniatureState ? false : zoomCoeff < 0.3 ? false : true
 
     // Synchronize QML graphic information (clip position) into the model,
     // to share it with connection objects

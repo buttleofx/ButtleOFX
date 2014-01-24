@@ -187,6 +187,7 @@ class NodeManager(QtCore.QObject):
         buttleData = ButtleDataSingleton().get()
         buttleData.getGraph().nodeMoved(nodeName, x, y)
         buttleData.getGraph().nodesChanged()
+        buttleData.getGraphWrapper().setResize(True)
         # update undo/redo display
         self.undoRedoChanged()
 

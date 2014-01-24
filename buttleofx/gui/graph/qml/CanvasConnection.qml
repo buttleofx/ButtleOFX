@@ -31,7 +31,7 @@ Canvas {
         var startY = 0
         var endX = 0
         var endY = 0
-        var controlPointXOffset = miniatureState ? 40 * miniatureScale : 40;
+        var controlPointXOffset = miniatureState ? 40 * zoomCoeff * miniatureScale : 40 * zoomCoeff;
         ctx.strokeStyle = "rgb("+r+", "+g+", "+b+")";
         ctx.lineWidth = miniatureState ? 2 * miniatureScale : 2;
 

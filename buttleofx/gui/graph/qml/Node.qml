@@ -86,8 +86,8 @@ Rectangle {
             var dropStatus = parent.Drag.drop()
             //if (dropStatus !== Qt.IgnoreAction)
             // left button : we end moving
-            if (mouse.button == Qt.LeftButton && ((xstart - mouse.x) > 0.5 || (xstart - mouse.x < -0.5))) {
-                _buttleManager.nodeManager.nodeMoved(m.nodeWrapper.name, (m.nodeWrapper.coord.x * qml_graphRoot.width) / graphContainer.width, (m.nodeWrapper.coord.y * qml_graphRoot.height) / graphContainer.height)
+            if (mouse.button == Qt.LeftButton) {
+                _buttleManager.nodeManager.nodeMoved(m.nodeWrapper.name, (qml_nodeRoot.x * qml_graphRoot.width) / graphContainer.width, (qml_nodeRoot.y * qml_graphRoot.height) / graphContainer.height)
             }
              //middle button : assign the node to the viewer
             else if (mouse.button == Qt.MidButton){
@@ -180,7 +180,6 @@ Rectangle {
                         readOnly: qml_nodeRoot.readOnly
                         miniatureScale: qml_nodeRoot.miniatureScale
                         miniatureState: qml_nodeRoot.miniatureState
-                        visible: miniatureState ? false : true
                     }
                 }
             }
@@ -215,7 +214,6 @@ Rectangle {
                 readOnly: qml_nodeRoot.readOnly
                 miniatureScale: qml_nodeRoot.miniatureScale
                 miniatureState: qml_nodeRoot.miniatureState
-                visible: miniatureState ? false : true
             }
         }
     }
@@ -236,17 +234,18 @@ Rectangle {
             color: "#212121"
             opacity: 0.6
             radius: 2
-            visible: nodeText.isSelected ? true : false
+            visible: nodeText.isSelected ? miniatureState ? false : true : false
         }
 
         Text {
             id: nodeText
             anchors.verticalCenter: isSelected ? undefined : parent.verticalCenter
             anchors.horizontalCenter: isSelected ? parent.horizontalCenter : undefined
-            x: miniatureState ? 5 * miniatureScale : 5
-            y: isSelected ? miniatureState ? nodeWidth * 0.5 * miniatureScale : nodeWidth * 0.5 : 0
+            x: 5
+            y: isSelected ? nodeWidth * 0.5 * zoomCoeff : 0
             text: m.nodeWrapper.nameUser
-            font.pointSize: miniatureState ? 10 * miniatureScale : 10
+            font.pointSize: zoomCoeff < 0.7 ? zoomCoeff < 0.4 ? 6 : 7 : 10
+            visible: miniatureState ? false : true
             property bool isSelected: _buttleData.nodeIsSelected(m.nodeWrapper)
 
             // onTextChanged: {

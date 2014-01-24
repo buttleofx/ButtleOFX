@@ -86,8 +86,12 @@ Item {
         DropArea{
             id: droparea1
             objectName: "DropArea"
-            anchors.fill: parent
-            anchors.margins: 25
+            anchors.verticalCenter: parent.verticalCenter
+            anchors.horizontalCenter: parent.horizontalCenter
+            //anchors.fill: parent
+            //anchors.margins: 30
+            width : 50 * zoomCoeff
+            height : 50 * zoomCoeff
             Drag.keys: "node"
             onDropped: {
                 //we assure that the node dropped is not part of the actual connection
@@ -107,7 +111,6 @@ Item {
                 }
             }
             onExited: {
-                console.log("dropConnection")
                 dropIndicator.state = ""
             }
             Item{

@@ -72,7 +72,6 @@ Item {
                     hoverEnabled: true
                     acceptedButtons: Qt.LeftButton | Qt.MiddleButton
                     onPressed: {
-                        console.log(miniGraph.scaleFactor)
                         xStart = mouse.x
                         yStart = mouse.y
                         graphContainer_xStart = parent.container.x
@@ -158,9 +157,9 @@ Item {
             //The miniature of the graph
             Rectangle{
                 id: miniGraph
-                property real scaleFactor: 0.12 / (_buttleData.graphWrapper.maxHeight(graph.height)/graph.height)
-                property real marginTop: 500
-                property real marginLeft: 350
+                property real scaleFactor: 0.06
+                property real marginTop: 1100
+                property real marginLeft: 1400
                 property real xOffset
                 property real yOffset
                 property real miniOffsetX: 0
@@ -170,7 +169,6 @@ Item {
                 property real previousW : graph.width * scaleFactor
                 property real previousH : graph.height * scaleFactor
                 property bool tmpMode : false
-                property real heightExtension: 0
 
                 anchors.top: graph.top
                 anchors.right: graph.right
@@ -266,7 +264,7 @@ Item {
 
                 Rectangle {
                     id: visuWindow
-                    border.color: height > miniGraph.height ? "transparent" : "white"
+                    border.color: "white"
                     border.width: 1
                     color: "transparent"
                     width: graph.width / graph.zoomCoeff * miniGraph.scaleFactor

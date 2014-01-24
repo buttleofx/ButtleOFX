@@ -29,7 +29,7 @@ class TimerPlayer(QtQuick.QQuickItem):
         #Get the name of the currentNode of the viewer
         node = buttleData.getCurrentViewerNodeName()
         # initialization of the process graph
-        graph = buttleData.getGraph().getGraphTuttle()
+        graph = buttleData.getCurrentGraph().getGraphTuttle()
 
         # timeRange between the frames of beginning and end (first frame, last frame, step)
         timeRange = tuttle.TimeRange(self._frame, self._nbFrames, 1)
@@ -50,7 +50,7 @@ class TimerPlayer(QtQuick.QQuickItem):
         #Get the name of the currentNode of the viewer
         node = buttleData.getCurrentViewerNodeName()
         # initialization of the process graph
-        graph = buttleData.getGraph().getGraphTuttle()
+        graph = buttleData.getCurrentGraph().getGraphTuttle()
 
         # timeRange between the frames of beginning and end (first frame, last frame, step)
         timeRange = tuttle.TimeRange(self._frame, self._nbFrames, 1)

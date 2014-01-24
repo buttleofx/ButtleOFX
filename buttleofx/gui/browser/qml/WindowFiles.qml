@@ -133,7 +133,6 @@ Rectangle {
                                 sourceSize.height: 40
 
                                 anchors.horizontalCenter: parent.horizontalCenter
-
                             }
 
                             TextInput {
@@ -215,7 +214,27 @@ Rectangle {
                             }
 
                             onDoubleClicked: {
-                                model.object.fileType == "Folder" ? winFile.goToFolder(model.object.filepath) : Qt.openUrlExternally("file:///" + model.object.filepath)
+                                // if it's an image, we assign it to the viewer
+                                 if (model.object.fileType != "Folder"){
+                                     player.changeViewer(11) // we come to the temporary viewer
+                                     // we save the last node wrapper of the last view
+                                     player.lastNodeWrapper = _buttleData.getNodeWrapperByViewerIndex(player.lastView)
+
+                                     readerNode.nodeWrapper = _buttleData.nodeReaderWrapperForBrowser(model.object.filepath)
+
+                                     _buttleData.currentGraphIsGraphBrowser()
+                                     _buttleData.currentGraphWrapper = _buttleData.graphBrowserWrapper
+
+                                     _buttleData.currentViewerNodeWrapper = readerNode.nodeWrapper
+                                     _buttleData.currentViewerFrame = 0
+                                     // we assign the node to the viewer, at the frame 0
+                                     _buttleData.assignNodeToViewerIndex(readerNode.nodeWrapper, 10)
+                                     _buttleData.currentViewerIndex = 10 // we assign to the viewer the 10th view
+                                     _buttleEvent.emitViewerChangedSignal()
+                                 }
+                                 else{
+                                     winFile.goToFolder(model.object.filepath)
+                                 }
                             }
                         }
 
@@ -299,6 +318,7 @@ Rectangle {
                         TextInput {
                             id: textInRow
                             x: 10
+
                             text: model.object.fileName
                             color: model.object.isSelected ? "black" : "white"
                             font.bold: model.object.isSelected
@@ -376,7 +396,27 @@ Rectangle {
                         }
 
                         onDoubleClicked: {
-                            model.object.fileType == "Folder" ? winFile.goToFolder(model.object.filepath) : Qt.openUrlExternally("file:///" + model.object.filepath)
+                            // if it's an image, we assign it to the viewer
+                             if (model.object.fileType != "Folder"){
+                                 player.changeViewer(11) // we come to the temporary viewer
+                                 // we save the last node wrapper of the last view
+                                 player.lastNodeWrapper = _buttleData.getNodeWrapperByViewerIndex(player.lastView)
+
+                                 readerNode.nodeWrapper = _buttleData.nodeReaderWrapperForBrowser(model.object.filepath)
+
+                                 _buttleData.currentGraphIsGraphBrowser()
+                                 _buttleData.currentGraphWrapper = _buttleData.graphBrowserWrapper
+
+                                 _buttleData.currentViewerNodeWrapper = readerNode.nodeWrapper
+                                 _buttleData.currentViewerFrame = 0
+                                 // we assign the node to the viewer, at the frame 0
+                                 _buttleData.assignNodeToViewerIndex(readerNode.nodeWrapper, 10)
+                                 _buttleData.currentViewerIndex = 10 // we assign to the viewer the 10th view
+                                 _buttleEvent.emitViewerChangedSignal()
+                             }
+                             else{
+                                 winFile.goToFolder(model.object.filepath)
+                             }
                         }
                     }
                     Menu {

@@ -17,6 +17,9 @@ Item {
     property real nodeDurationSeconds: node ? node.nbFrames/node.fps : 0
     property bool isPlaying: false
 
+    property int lastView: 1 // the last view where the user was
+    property variant lastNodeWrapper
+
     TimerPlayer {
         //class Timer defined in python
         //property associated : frame, acces with timer.frame
@@ -300,7 +303,11 @@ Item {
                                  MouseArea {
                                     anchors.fill: parent
                                     onClicked: {
+                                        _buttleData.currentGraphWrapper = _buttleData.graphWrapper
+                                        _buttleData.currentGraphIsGraph()
+                 
                                         player.changeViewer(index+1)
+                                        player.lastView = index+1                                        
                                     }
                                 }
 

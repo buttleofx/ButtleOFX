@@ -65,6 +65,16 @@ Rectangle {
                 return
             }
 
+            _buttleData.currentGraphWrapper = _buttleData.graphWrapper
+            _buttleData.currentGraphIsGraph()
+            // if before the viewer was showing an image from the brower, we change the currentView
+            if (_buttleData.currentViewerIndex > 9){
+                _buttleData.currentViewerIndex = player.lastView
+                if (player.lastNodeWrapper != undefined)
+                    _buttleData.currentViewerNodeWrapper = player.lastNodeWrapper
+                player.changeViewer(player.lastView)                
+            }
+
             for(var urlIndex in drop.urls)
             {
                 _buttleManager.nodeManager.dropFile(drop.urls[urlIndex], drag.x - m.graphRoot.originX + 10*urlIndex, drag.y - m.graphRoot.originY + 10*urlIndex)
@@ -79,6 +89,16 @@ Rectangle {
         keys: "internFileDrag"
 
         onDropped: {
+            _buttleData.currentGraphWrapper = _buttleData.graphWrapper
+            _buttleData.currentGraphIsGraph()
+            // if before the viewer was showing an image from the brower, we change the currentView
+            if (_buttleData.currentViewerIndex > 9){
+                _buttleData.currentViewerIndex = player.lastView
+                if (player.lastNodeWrapper != undefined)
+                    _buttleData.currentViewerNodeWrapper = player.lastNodeWrapper
+                player.changeViewer(player.lastView)
+            }
+
             for(var urlIndex in drag.source.selectedFiles)
             {
                 _buttleManager.nodeManager.dropFile(drag.source.selectedFiles[urlIndex], drag.x - m.graphRoot.originX + 10*urlIndex, drag.y - m.graphRoot.originY + 10*urlIndex)

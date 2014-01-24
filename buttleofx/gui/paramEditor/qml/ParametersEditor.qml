@@ -281,7 +281,6 @@ Item {
                     if (previousNode != undefined){
                         newNode = _buttleData.lastNode()
                         _buttleManager.connectionManager.connectWrappers(previousNode.outputClip, newNode.srcClips.get(0))
-
                     }
                 }
             }// menuItem
@@ -289,5 +288,4 @@ Item {
             onObjectRemoved: nodesMenu.removeItem(object)
         } // Instantiator
     } //Menu
-
 }

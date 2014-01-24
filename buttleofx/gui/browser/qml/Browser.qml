@@ -84,11 +84,11 @@ Rectangle {
                 filterName: m.filter
                 onChangeFile: {
                     m.filepath = file
-                    console.debug("filepath has changed to " + m.filepath)
+                    //console.debug("filepath has changed to " + m.filepath)
                 }
                 onChangeFileFolder: {
                     m.fileFolder = fileFolder
-                    console.debug("fileFolder has changed to " + m.fileFolder)
+                    //console.debug("fileFolder has changed to " + m.fileFolder)
                 }
                 onChangeFileSize: {
                     m.fileSize = fileSize
@@ -96,7 +96,7 @@ Rectangle {
 
                 onChangeFileType: {
                     m.fileType = fileType
-                    console.debug("fileType has changed to " + m.fileType)
+                    //console.debug("fileType has changed to " + m.fileType)
                 }
                 onChangeSelectedList: {
                     m.selected = selected

@@ -2,6 +2,7 @@ import QtQuick 2.0
 import QtQuick.Controls 1.0
 import QtQml 2.1
 import QtQuick.Controls.Styles 1.0
+import QtQuick.Layouts 1.0
 import QuickMamba 1.0
 
 import "../../../gui"
@@ -83,16 +84,102 @@ Item {
         // delegate of the list of ParamEditor
         Component {
             id: paramDelegate
-            Rectangle{
-                height: paramEditor_multiple.height + 50 // 40 : size of paramTitle
 
-                ParamEditorForParametersEditor {
-                    id: paramEditor_multiple
-                    width: contentParamEditor.width
-                    params: model.object ?  model.object.params : null
-                    currentParamNode: model.object
+            Rectangle{
+                id: paramEditor
+                height: tuttleParamContent.height + tuttleParamTitle.height + 10
+                width: contentParamEditor.width
+                implicitWidth: 300
+                implicitHeight: 500
+                Layout.minimumHeight: tuttleParamTitle.height
+                color: "#141414"
+
+                property variant params : model.object ? model.object.params : null
+                property variant currentParamNode : model.object
+
+                property color backgroundInput: "#343434"
+                property color borderInput: "#444"
+
+                property color activeFocusOn : "white"
+                property color activeFocusOff : "grey"
+
+                // Title of the node
+                Button{
+                    id: tuttleParamTitle
+                    height: 40
+                    style: ButtonStyle {
+                        background: Rectangle {
+                            implicitWidth: paramEditor.width
+                            implicitHeight: 40
+                            color: "#141414"
+                            gradient: Gradient {
+                                GradientStop { position: 0.0; color: "#141414" }
+                                GradientStop { position: 0.85; color: "#141414" }
+                                GradientStop { position: 0.86; color: "#010101" }
+                                GradientStop { position: 1; color: "#141414" }
+                            }
+                        }
+
+                        label: Text{
+                            color: "white"
+                            text: currentParamNode.name
+                            anchors.verticalCenter: parent.verticalCenter
+                            anchors.left: parent.left
+                            anchors.leftMargin: 10
+                            font.pointSize: 11
+                            clip: true
+                        }
+                    }
+                    onClicked: {
+                         if (tuttleParamContent.visible == true){
+                            tuttleParamContent.visible = false
+                            tuttleParamContent.height = 0
+                        }
+                        else{
+                            //tuttleParamContent.height = newHeight
+                            tuttleParamContent.height = tuttleParam.contentHeight + 20
+                            tuttleParamContent.visible = true
+                        }
+                    }
+
                 }
 
+
+                /* Params depend on the node type (Tuttle data)*/
+                Rectangle {
+                    id: tuttleParamContent
+                    height: index == listViewParam.count-1 ? tuttleParam.contentHeight : 0
+                    width: parent.width
+                    y: tuttleParamTitle.height
+                    visible: index == listViewParam.count-1 ? true : false
+                    color : "transparent"
+
+                    property string lastGroupParam : "No Group."
+
+                    ListView {
+                        anchors.fill: parent
+                        anchors.topMargin: 10
+                        anchors.bottomMargin: 10
+
+                        id: tuttleParam
+                        height: count ? contentHeight : 0
+                        y: parent.y + 10
+                        spacing: 6
+
+                        interactive: false
+
+                        model: paramEditor.params
+
+                        delegate: Component {
+                            Loader {
+                                id: param
+                                source : model.object.paramType + ".qml"
+                                width: parent.width
+                                x: 15 // here is the distance to the left of the listview
+                            }
+                        }
+                    }//Listview
+                }//item param
             }
         }
 

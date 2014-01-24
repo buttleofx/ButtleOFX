@@ -501,26 +501,23 @@ class ButtleData(QtCore.QObject):
 
         return readerNodeWrapper
 
+
     @QtCore.pyqtSlot(result=QtCore.QObject)
-    def nodeOfParametersEditorToConnect(self):
-        # return the last but one node to connect to the new node
+    def lastNode(self):
+        # return the last node to connect to the new node
 
         sizeOfGraph = self._currentGraphWrapper._nodeWrappers.size()
 
-        if (sizeOfGraph > 1):
+        if (sizeOfGraph >= 1):
             #nodes to connect
-            lastButOneNode = self._currentGraphWrapper._nodeWrappers[sizeOfGraph-2]
+            lastNode = self._currentGraphWrapper._nodeWrappers[sizeOfGraph-1]
 
-        elif (sizeOfGraph == 1 ) :
-            lastButOneNode = self._currentGraphWrapper._nodeWrappers[sizeOfGraph-1]
-            #the lastButOne is the same than the last if the list contains only one element
-
-        else : lastButOneNode = None
+        else : lastNode = None
 
         # update undo/redo display
         #self.undoRedoChanged()
 
-        return lastButOneNode
+        return lastNode
 
 
 

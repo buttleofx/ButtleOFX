@@ -207,17 +207,15 @@ Item {
                 text: object
                 onTriggered: {
                     // we create a new node and connect it to the last but one node of the concerned graph
-                    previousNode =_buttleData.nodeOfParametersEditorToConnect()
+                    previousNode =_buttleData.lastNode()
 
                     _buttleData.currentGraphWrapper = _buttleData.graphWrapper
                     _buttleManager.nodeManager.creationNode("_buttleData.graph", object, 0, 0)
 
                     // if there is only one node, we don't connect it
                     if (previousNode != undefined){
-                        newNode = _buttleData.nodeOfParametersEditorToConnect()
-
-                        console.debug ("newNode.srcClips.first", newNode.srcClips.first)
-                        _buttleManager.connectionManager.connectWrappers(previousNode.outputClip, newNode.srcClips.first)
+                        newNode = _buttleData.lastNode()
+                        _buttleManager.connectionManager.connectWrappers(previousNode.outputClip, newNode.srcClips.get(0))
 
                     }
                 }

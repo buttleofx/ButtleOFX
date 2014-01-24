@@ -26,7 +26,7 @@ Rectangle {
     }
 
     function forceActiveFocusOnRename() {
-        viewList ? fileInRow.forceActiveFocusInRow() : fileInColumn.forceActiveFocusInColumn()
+        viewList ? listview.currentItem.forceActiveFocusInRow() : gridview.currentItem.forceActiveFocusInColumn()
     }
 
     function forceActiveFocusOnDelete() {
@@ -266,6 +266,8 @@ Rectangle {
                     }
 
                     property variant selectedFiles
+                    property variant currentFile: model.object
+                    property variant filePath: model.object.filepath
 
                     DropArea {
                         id: moveItemInRow

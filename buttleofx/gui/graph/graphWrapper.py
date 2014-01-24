@@ -21,6 +21,8 @@ class GraphWrapper(QtCore.QObject):
 
         This class is a view (= a map) of a graph.
     """
+    
+    _resize = False
 
     def __init__(self, graph, view):
         super(GraphWrapper, self).__init__(view)
@@ -158,8 +160,15 @@ class GraphWrapper(QtCore.QObject):
             Returns the depth of the QML graph
         """
         return self._zMax
+        
+    def resize(self):
+        return self._resize
 
     #################### setters ####################
+    
+    def setResize(self, value):
+        self._resize = value
+        self.currentSizeChanged.emit()
 
     def setZMax(self, zMax):
         """
@@ -221,3 +230,6 @@ class GraphWrapper(QtCore.QObject):
     # z index for QML (good superposition of nodes in the graph)
     zMaxChanged = QtCore.pyqtSignal()
     zMax = QtCore.pyqtProperty(int, getZMax, setZMax, notify=zMaxChanged)
+    
+    currentSizeChanged = QtCore.pyqtSignal()
+    resize = QtCore.pyqtProperty(bool, resize, notify=currentSizeChanged)

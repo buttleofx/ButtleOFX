@@ -138,7 +138,7 @@ Item {
                             }
                             onClicked: {
                                 pluginVisible=false
-                                onTriggered: _buttleManager.nodeManager.creationNode(object.pluginType, 0, 0)
+                                onTriggered: _buttleManager.nodeManager.creationNode("_buttleData.graph", object.pluginType, 0, 0)
                             }
                         }
                         Text{

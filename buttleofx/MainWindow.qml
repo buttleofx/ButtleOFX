@@ -598,7 +598,7 @@ ApplicationWindow {
             id: empty
         }
 
-        /*Window {
+        Window {
             id: fullscreenWindow
             visibility: Window.Hidden
             visible: false
@@ -607,6 +607,6 @@ ApplicationWindow {
                 anchors.fill: parent
                 color: "#353535"
             }
-        }*/
+        }
     }
 }

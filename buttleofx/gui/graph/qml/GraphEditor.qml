@@ -157,9 +157,9 @@ Item {
             //The miniature of the graph
             Rectangle{
                 id: miniGraph
-                property real scaleFactor: 0.06
-                property real marginTop: 1100
-                property real marginLeft: 1400
+                property real scaleFactor: 0.05
+                property real marginTop: 1600
+                property real marginLeft: 2000
                 property real xOffset
                 property real yOffset
                 property real miniOffsetX: 0

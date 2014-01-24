@@ -50,19 +50,18 @@ Rectangle {
         enabled: !readOnly
         acceptedButtons: Qt.LeftButton | Qt.RightButton | Qt.MidButton
         property int xstart
+
         onPressed: {
             // left button : we change the current selected nodes & we start moving
             if (mouse.button == Qt.LeftButton) {
                 // we clear the list of selected connections
                 _buttleData.clearCurrentConnectionId()
 
-                // if the Control Key is not pressed, we clear the list of selected nodes
-                if (!(mouse.modifiers & Qt.ControlModifier)) {
-                    _buttleData.clearCurrentSelectedNodeNames()
-                }
-
                 // we add the node to the list of selected nodes (if it's not already selected)
                 if(!_buttleData.nodeIsSelected(m.nodeWrapper)) {
+                    // if the Control Key is not pressed, we clear the list of selected nodes
+                    if(!(mouse.modifiers & Qt.ControlModifier))
+                          _buttleData.clearCurrentSelectedNodeNames()
                     _buttleData.appendToCurrentSelectedNodeWrappers(m.nodeWrapper)
                 }
 

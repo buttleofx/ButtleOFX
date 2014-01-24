@@ -151,13 +151,13 @@ class GLViewport(QtQuick.QQuickPaintedItem):
         GL.glColor3d(1.0, 1.0, 1.0)
         GL.glBegin(GL.GL_QUADS)
         GL.glTexCoord2d(0.0, 1.0)
-        GL.glVertex2d(imgRect.left(), imgRect.top())
-        GL.glTexCoord2d(1.0, 1.0)
-        GL.glVertex2d(imgRect.right(), imgRect.top())
-        GL.glTexCoord2d(1.0, 0.0)
-        GL.glVertex2d(imgRect.right(), imgRect.bottom())
-        GL.glTexCoord2d(0.0, 0.0)
         GL.glVertex2d(imgRect.left(), imgRect.bottom())
+        GL.glTexCoord2d(1.0, 1.0)
+        GL.glVertex2d(imgRect.right(), imgRect.bottom())
+        GL.glTexCoord2d(1.0, 0.0)
+        GL.glVertex2d(imgRect.right(), imgRect.top())
+        GL.glTexCoord2d(0.0, 0.0)
+        GL.glVertex2d(imgRect.left(), imgRect.top())
         GL.glEnd()
 
     def drawRegions(self):
@@ -166,10 +166,10 @@ class GLViewport(QtQuick.QQuickPaintedItem):
         GL.glLineStipple(1, 0xAAAA)
 
         GL.glColor3d(1., 0., 0.)
-        self.drawRect(self._rodValue)  # RoD
+        #self.drawRect(self._rodValue)  # RoD
 
         GL.glColor3d(1., 1., 1.)
-        self.drawRect(self._rowValue)  # RoW
+        #self.drawRect(self._rowValue)  # RoW
 
         GL.glDisable(GL.GL_LINE_STIPPLE)
 

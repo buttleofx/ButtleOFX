@@ -10,7 +10,7 @@ import "gui/graph/qml"
 import "gui/viewer/qml"
 import "gui/paramEditor/qml"
 import "gui/browser/qml"
-import "gui/helper"
+import "gui/plugin/qml"
 
 ApplicationWindow {
     property int selectedView : 1
@@ -137,31 +137,37 @@ ApplicationWindow {
                 _buttleData.currentParamNodeWrapper = node
             }
         }
+
+        //Plugin window
+        if (event.key == Qt.Key_H) {
+            var selectedNodes = _buttleData.currentSelectedNodeWrappers
+
+            // we send the node only if there is only one node selected
+            if(selectedNodes.count == 1) {
+                var node = selectedNodes.get(0)
+                doc.show()
+            }
+        }
     }
 
-    property bool editNode:false
-    property bool docSelected:false
+    property bool aNodeIsSelected:false
+    property bool pluginVisible:false
+
+    //List of plugins
+    PluginBrowser {
+        id: pluginBrowser
+        z:1
+        height: 250
+        visible:pluginVisible
+        y:player.height+50
+        x:paramEditor.width+13
+    }
 
     //Window of hint for plugins
     PluginWindow {
+        id: doc
         title: "Plugin's Documentation"
-        visible: docSelected
         currentParamNode: _buttleData.currentParamNodeWrapper
-    }
-
-    //Node properties window
-
-    ApplicationWindow{
-        title: "Node Properties"
-        visible: editNode ? true:false
-        maximumHeight: 150
-        maximumWidth: 280
-        minimumHeight: maximumHeight
-        minimumWidth: maximumWidth
-        ParamButtleEditor {
-            params:_buttleData.currentParamNodeWrapper ? _buttleData.currentParamNodeWrapper.params : null
-            currentParamNode: _buttleData.currentParamNodeWrapper
-        }
     }
 
     FinderLoadGraph{ id: finderLoadGraph }
@@ -299,7 +305,7 @@ ApplicationWindow {
             }
             MenuItem {
                 text: "Plugin's Documentation"
-                onTriggered: docSelected=true
+                onTriggered: doc.show()
             }
         }
 

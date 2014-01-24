@@ -3,6 +3,7 @@ import QtQuick.Controls 1.0
 import QtQuick.Dialogs 1.1
 import QtQuick.Layouts 1.0
 import ButtleFileModel 1.0
+import QtQuick.Controls.Styles 1.0
 
 Rectangle {
     id: winFile
@@ -80,6 +81,46 @@ Rectangle {
         height: 120
         width: 110
         visible: viewList ? false : true
+
+        style: ScrollViewStyle {
+                        scrollBarBackground: Rectangle {
+                            id: scrollBar
+                            width:15
+                            color: "#212121"
+                            border.width: 1
+                            border.color: "#333"
+                        }
+                        decrementControl : Rectangle {
+                            id: scrollLower
+                            width:15
+                            height:15
+                            color: styleData.pressed? "#212121" : "#343434"
+                            border.width: 1
+                            border.color: "#333"
+                            radius: 3
+                            Image{
+                                id: arrow
+                                source: "file:///" + _buttleData.buttlePath + "/gui/img/buttons/params/arrow2.png"
+                                x:4
+                                y:4
+                            }
+                        }
+                        incrementControl : Rectangle {
+                            id: scrollHigher
+                            width:15
+                            height:15
+                            color: styleData.pressed? "#212121" : "#343434"
+                            border.width: 1
+                            border.color: "#333"
+                            radius: 3
+                            Image{
+                                id: arrow
+                                source: "file:///" + _buttleData.buttlePath + "/gui/img/buttons/params/arrow.png"
+                                x:4
+                                y:4
+                            }
+                        }
+                    }
 
         GridView {
             id: gridview
@@ -269,6 +310,46 @@ Rectangle {
         height: 120
         width: 110
         visible: viewList
+
+        style: ScrollViewStyle {
+                        scrollBarBackground: Rectangle {
+                            id: scrollBar
+                            width:15
+                            color: "#212121"
+                            border.width: 1
+                            border.color: "#333"
+                        }
+                        decrementControl : Rectangle {
+                            id: scrollLower
+                            width:15
+                            height:15
+                            color: styleData.pressed? "#212121" : "#343434"
+                            border.width: 1
+                            border.color: "#333"
+                            radius: 3
+                            Image{
+                                id: arrow
+                                source: "file:///" + _buttleData.buttlePath + "/gui/img/buttons/params/arrow2.png"
+                                x:4
+                                y:4
+                            }
+                        }
+                        incrementControl : Rectangle {
+                            id: scrollHigher
+                            width:15
+                            height:15
+                            color: styleData.pressed? "#212121" : "#343434"
+                            border.width: 1
+                            border.color: "#333"
+                            radius: 3
+                            Image{
+                                id: arrow
+                                source: "file:///" + _buttleData.buttlePath + "/gui/img/buttons/params/arrow.png"
+                                x:4
+                                y:4
+                            }
+                        }
+                    }
 
         ListView {
             id: listview

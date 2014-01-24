@@ -50,7 +50,7 @@ Rectangle {
                 var mouseOffsetY = (mouseY - posYOnPress) / viewport.imgScale
                 viewport.setOffset_xy(
                     offsetXOnPress - mouseOffsetX,
-                    offsetYOnPress - mouseOffsetY )
+                    offsetYOnPress + mouseOffsetY )
             }
             onPressed: {
                 posXOnPress = mouse.x

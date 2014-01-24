@@ -7,19 +7,18 @@ Item{
 	
 	Rectangle{
 		id:rectangle
-		color: "#212121"
-		border.width: 1
+        color: "#D8D9CB"
+        border.width: 1
 		border.color: "#333"
 		radius: 3
 		width:text.contentWidth
 		height:text.contentHeight
-		x:30
-        y:30
+        y:-height+10
 	}
 
 	Text{
 		id: text
-		color: "white"
+        color: "black"
 		text:  paramHelp
 		width: 250
 		wrapMode:Text.Wrap

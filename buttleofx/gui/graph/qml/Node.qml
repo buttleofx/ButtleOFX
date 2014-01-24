@@ -2,6 +2,7 @@ import QtQuick 2.0
 import QtQuick.Layouts 1.0
 
 import QuickMamba 1.0
+import "../../paramEditor/qml"
 
 
 Rectangle {
@@ -52,6 +53,7 @@ Rectangle {
         property int xstart
 
         onPressed: {
+            pluginVisible=false
             // left button : we change the current selected nodes & we start moving
             if (mouse.button == Qt.LeftButton) {
                 // we clear the list of selected connections
@@ -62,6 +64,8 @@ Rectangle {
                     // if the Control Key is not pressed, we clear the list of selected nodes
                     if(!(mouse.modifiers & Qt.ControlModifier))
                           _buttleData.clearCurrentSelectedNodeNames()
+
+                    aNodeIsSelected=true
                     _buttleData.appendToCurrentSelectedNodeWrappers(m.nodeWrapper)
                 }
 
@@ -74,7 +78,10 @@ Rectangle {
             // right button : we change the current param node
            else if (mouse.button == Qt.RightButton) {
                 // Param buttle
-                editNode = true
+                if(editNode == true)
+                    editNode=false
+                else
+                    editNode = true
                 _buttleData.currentParamNodeWrapper = m.nodeWrapper
             }
 
@@ -103,7 +110,6 @@ Rectangle {
 
         // double click : we change the current param node
         onDoubleClicked: {
-            editNode = false
             _buttleData.currentParamNodeWrapper = m.nodeWrapper
         }
 
@@ -123,6 +129,18 @@ Rectangle {
             _buttleEvent.emitViewerChangedSignal()
             player.lastNodeWrapper = _buttleData.currentViewerNodeWrapper
         }
+    }
+
+    property bool editNode:false
+
+    //Node properties window
+    ParamButtleEditor {
+        visible: editNode ? true:false
+        z:1
+        x:nodeMouseArea.mouseX
+        y:nodeMouseArea.mouseY
+        params:_buttleData.currentParamNodeWrapper ? _buttleData.currentParamNodeWrapper.params : null
+        currentParamNode: _buttleData.currentParamNodeWrapper
     }
 
     Rectangle {

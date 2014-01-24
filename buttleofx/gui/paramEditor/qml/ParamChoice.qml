@@ -6,7 +6,7 @@ Item {
     id: choiceList
     implicitWidth: 300
     implicitHeight: 30
-    y:10
+    y:5
 
     property variant paramObject: model.object
     // property variant menuItems: paramObject.listValue
@@ -35,6 +35,7 @@ Item {
             id: paramChoiceTitle
             text: paramObject.text + " : "
             color: "white"
+            y:5
 
             // if param has been modified, title in bold font
             font.bold: paramObject.hasChanged ? true : false
@@ -54,8 +55,6 @@ Item {
             model: menuItems
             width: 200
             height: 30
-            y:-6
-
 
             style: ComboBoxStyle {
 

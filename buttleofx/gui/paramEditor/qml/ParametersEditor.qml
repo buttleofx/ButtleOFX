@@ -107,9 +107,46 @@ Item {
                         text: currentParamNode.name
                         anchors.verticalCenter: parent.verticalCenter
                         anchors.left: parent.left
-                        anchors.leftMargin: 10
+                        anchors.leftMargin: 30
                         font.pointSize: 11
                         clip: true
+                    }
+
+                    Rectangle {
+                        id: deadMosquito
+                        width: 23
+                        height: 21
+                        x: tuttleParamTitle.x + 3
+                        y: tuttleParamTitle.y + 3
+                        state: "normal"
+                        color: "transparent"
+
+                        Image {
+                            id: deadMosquitoImage
+                            anchors.fill: parent
+                         }
+
+                        StateGroup {
+                            id: stateViewerNode
+                             states: [
+                                 State {
+                                     name: "normal"
+                                     when: paramNode.currentParamNode != _buttleData.currentViewerNodeWrapper
+                                     PropertyChanges {
+                                         target: deadMosquitoImage;
+                                         source: ""
+                                     }
+                                 },
+                                 State {
+                                     name: "currentViewerNode"
+                                     when: paramNode.currentParamNode == _buttleData.currentViewerNodeWrapper
+                                     PropertyChanges {
+                                         target: deadMosquitoImage;
+                                         source: "file:///" + _buttleData.buttlePath + "/gui/img/mosquito/mosquito_dead.png"
+                                     }
+                                 }
+                             ]
+                        }
                     }
 
                     MouseArea {
@@ -136,6 +173,20 @@ Item {
                                 _buttleData.assignNodeToViewerIndex(paramNode.currentParamNode, 0)
                                 _buttleEvent.emitViewerChangedSignal()
                             }
+                        }
+                    }
+
+                    DropArea {
+                        anchors.fill: parent
+                        keys: "mosquitoMouseArea"
+
+                        onDropped: {
+                            _buttleData.currentGraphWrapper = _buttleData.graphWrapper
+                            _buttleData.currentViewerNodeWrapper = paramNode.currentParamNode
+                            _buttleData.currentViewerFrame = 0
+                            // we assign the node to the viewer, at the frame 0
+                            _buttleData.assignNodeToViewerIndex(paramNode.currentParamNode, 0)
+                            _buttleEvent.emitViewerChangedSignal()
                         }
                     }
                 }
@@ -204,7 +255,6 @@ Item {
             }
 
         onClicked: {
-            console.log("Clic on Add a Node!")
             nodesMenu.popup();
         }
     }
@@ -222,7 +272,10 @@ Item {
                     previousNode =_buttleData.lastNode()
 
                     _buttleData.currentGraphWrapper = _buttleData.graphWrapper
-                    _buttleManager.nodeManager.creationNode("_buttleData.graph", object, 0, 0)
+                    if (previousNode == undefined)
+                        _buttleManager.nodeManager.creationNode("_buttleData.graph", object, 0, 0)
+                    else
+                        _buttleManager.nodeManager.creationNode("_buttleData.graph", object, previousNode.xCoord+140, 0)
 
                     // if there is only one node, we don't connect it
                     if (previousNode != undefined){

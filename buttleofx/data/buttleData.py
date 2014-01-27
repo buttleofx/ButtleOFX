@@ -538,7 +538,7 @@ class ButtleData(QtCore.QObject):
         pluginsW = [PluginWrapper(plugin) for plugin in plugins]
         pluginsWModel = QObjectListModel(self)
         for p in pluginsW:
-            if (pluginSearched in p.pluginType) :
+            if (pluginSearched==p.pluginType) :
                 pluginsWModel.append(p)
         return pluginsWModel
 
@@ -555,7 +555,7 @@ class ButtleData(QtCore.QObject):
             while "/" in path :
                 listOfPath = path.split("/")
                 path = path.replace(listOfPath[0] + "/","")
-            if menuPath in path :
+            if menuPath == path :
                 pluginsWModel.append(p)
         return pluginsWModel
 
@@ -574,10 +574,13 @@ class ButtleData(QtCore.QObject):
                 for i in range(nb) :
                     listOfPath = path.split("/")
                     path = path.replace(listOfPath[0] + "/","")
-                    print (path)
                 if not pluginsListMenu.contains(listOfPath[0]) and listOfPath[0] :
-                    if parentMenuPath in parentPath :
-                        pluginsListMenu.append(listOfPath[0])
+                    if nb>2 :
+                        if "/" + parentMenuPath + "/" in parentPath :
+                            pluginsListMenu.append(listOfPath[0])
+                    else:
+                        if parentMenuPath + "/" in parentPath :
+                            pluginsListMenu.append(listOfPath[0])
         return pluginsListMenu
         
     @QtCore.pyqtSlot(str, result=QtCore.QObject)

@@ -24,9 +24,11 @@ class PluginWrapper(QtCore.QObject):
     def getPluginDescription(self):
         return self._plugin.getDescriptor().getProperties().getStringProperty("OfxPropPluginDescription")
 
-
+    def getPluginGroup(self):
+        return self._plugin.getDescriptor().getProperties().getStringProperty("OfxImageEffectPluginPropGrouping")
 
     ################################################## DATA EXPOSED TO QML ##################################################
-
+           
+    pluginGroup = QtCore.pyqtProperty(str, getPluginGroup, constant=True)   
     pluginType = QtCore.pyqtProperty(str, getType, constant=True)
     pluginDescription = QtCore.pyqtProperty(str, getPluginDescription, constant=True)

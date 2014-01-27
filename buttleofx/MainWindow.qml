@@ -271,25 +271,164 @@ ApplicationWindow {
         Menu {
             id: nodesMenu
             title: "Nodes"
-
             Instantiator {
-                model: _buttleData.pluginsIdentifiers
-                MenuItem {
-                    text: object
-                    onTriggered: {
-                        _buttleData.currentGraphIsGraph()
-                        _buttleData.currentGraphWrapper = _buttleData.graphWrapper
+                model: _buttleData.getMenu(1,"")
+                Menu{
+                    id: firstMenu
+                    title:object
 
-                        // if before the viewer was showing an image from the brower, we change the currentView
-                        if (_buttleData.currentViewerIndex > 9){
-                            _buttleData.currentViewerIndex = player.lastView
-                            if (player.lastNodeWrapper != undefined)
-                                _buttleData.currentViewerNodeWrapper = player.lastNodeWrapper
-                            player.changeViewer(player.lastView)
-                            
+                    Instantiator {
+                        model: _buttleData.getPluginsByPath(firstMenu.title)
+                        MenuItem {
+                            text: object.pluginType
+                            onTriggered: {
+                                _buttleData.currentGraphIsGraph()
+                                _buttleData.currentGraphWrapper = _buttleData.graphWrapper
+
+                                // if before the viewer was showing an image from the brower, we change the currentView
+                                if (_buttleData.currentViewerIndex > 9){
+                                    _buttleData.currentViewerIndex = player.lastView
+                                    if (player.lastNodeWrapper != undefined)
+                                        _buttleData.currentViewerNodeWrapper = player.lastNodeWrapper
+                                    player.changeViewer(player.lastView)
+                                }
+
+                                _buttleManager.nodeManager.creationNode("_buttleData.graph", object.pluginType, 0, 0)
+                            }
                         }
+                        onObjectAdded: firstMenu.insertItem(index, object)
+                        onObjectRemoved: firstMenu.removeItem(object)
+                    }
 
-                        _buttleManager.nodeManager.creationNode("_buttleData.graph", object, 0, 0)
+                    Instantiator {
+                        model: _buttleData.getMenu(2,firstMenu.title)
+                        Menu{
+                            id: secondMenu
+                            title:object
+
+                            Instantiator {
+                                model: _buttleData.getPluginsByPath(secondMenu.title)
+                                MenuItem {
+                                    text: object.pluginType
+                                    onTriggered: {
+                                        _buttleData.currentGraphIsGraph()
+                                        _buttleData.currentGraphWrapper = _buttleData.graphWrapper
+
+                                        // if before the viewer was showing an image from the brower, we change the currentView
+                                        if (_buttleData.currentViewerIndex > 9){
+                                            _buttleData.currentViewerIndex = player.lastView
+                                            if (player.lastNodeWrapper != undefined)
+                                                _buttleData.currentViewerNodeWrapper = player.lastNodeWrapper
+                                            player.changeViewer(player.lastView)
+                                        }
+
+                                        _buttleManager.nodeManager.creationNode("_buttleData.graph", object.pluginType, 0, 0)
+                                    }
+                                }
+                                onObjectAdded: secondMenu.insertItem(index, object)
+                                onObjectRemoved: secondMenu.removeItem(object)
+                            }
+
+                            Instantiator {
+                                model: _buttleData.getMenu(3,secondMenu.title)
+                                Menu{
+                                    id: thirdMenu
+                                    title:object
+
+                                    Instantiator {
+                                        model: _buttleData.getPluginsByPath(thirdMenu.title)
+                                        MenuItem {
+                                            text: object.pluginType
+                                            onTriggered: {
+                                                _buttleData.currentGraphIsGraph()
+                                                _buttleData.currentGraphWrapper = _buttleData.graphWrapper
+
+                                                // if before the viewer was showing an image from the brower, we change the currentView
+                                                if (_buttleData.currentViewerIndex > 9){
+                                                    _buttleData.currentViewerIndex = player.lastView
+                                                    if (player.lastNodeWrapper != undefined)
+                                                        _buttleData.currentViewerNodeWrapper = player.lastNodeWrapper
+                                                    player.changeViewer(player.lastView)
+                                                }
+
+                                                _buttleManager.nodeManager.creationNode("_buttleData.graph", object.pluginType, 0, 0)
+                                            }
+                                        }
+                                        onObjectAdded: thirdMenu.insertItem(index, object)
+                                        onObjectRemoved: thirdMenu.removeItem(object)
+                                    }
+
+                                    Instantiator {
+                                        model: _buttleData.getMenu(4,thirdMenu.title)
+                                        Menu{
+                                            id:fourthMenu
+                                            title: object
+
+                                            Instantiator {
+                                                model: _buttleData.getPluginsByPath(fourthMenu.title)
+                                                MenuItem {
+                                                    text: object.pluginType
+                                                    onTriggered: {
+                                                        _buttleData.currentGraphIsGraph()
+                                                        _buttleData.currentGraphWrapper = _buttleData.graphWrapper
+
+                                                        // if before the viewer was showing an image from the brower, we change the currentView
+                                                        if (_buttleData.currentViewerIndex > 9){
+                                                            _buttleData.currentViewerIndex = player.lastView
+                                                            if (player.lastNodeWrapper != undefined)
+                                                                _buttleData.currentViewerNodeWrapper = player.lastNodeWrapper
+                                                            player.changeViewer(player.lastView)
+                                                        }
+
+                                                        _buttleManager.nodeManager.creationNode("_buttleData.graph", object.pluginType, 0, 0)
+                                                    }
+                                                }
+                                                onObjectAdded: fourthMenu.insertItem(index, object)
+                                                onObjectRemoved: fourthMenu.removeItem(object)
+                                            }
+
+                                            Instantiator {
+                                                model: _buttleData.getMenu(5,fourthMenu.title)
+                                                Menu{
+                                                    id: fifthMenu
+                                                    title:object
+                                                    Instantiator {
+                                                        model: _buttleData.getPluginsByPath(fifthMenu.title)
+                                                        MenuItem {
+                                                            text: object.pluginType
+                                                            onTriggered: {
+                                                                _buttleData.currentGraphIsGraph()
+                                                                _buttleData.currentGraphWrapper = _buttleData.graphWrapper
+
+                                                                // if before the viewer was showing an image from the brower, we change the currentView
+                                                                if (_buttleData.currentViewerIndex > 9){
+                                                                    _buttleData.currentViewerIndex = player.lastView
+                                                                    if (player.lastNodeWrapper != undefined)
+                                                                        _buttleData.currentViewerNodeWrapper = player.lastNodeWrapper
+                                                                    player.changeViewer(player.lastView)
+                                                                }
+
+                                                                _buttleManager.nodeManager.creationNode("_buttleData.graph", object.pluginType, 0, 0)
+                                                            }
+                                                        }
+                                                        onObjectAdded: fifthMenu.insertItem(index, object)
+                                                        onObjectRemoved: fifthMenu.removeItem(object)
+                                                    }
+                                                }
+                                                onObjectAdded: fourthMenu.insertItem(index, object)
+                                                onObjectRemoved: fourthMenu.removeItem(object)
+                                            }
+                                        }
+                                        onObjectAdded: thirdMenu.insertItem(index, object)
+                                        onObjectRemoved: thirdMenu.removeItem(object)
+                                    }
+                                }
+                                onObjectAdded: secondMenu.insertItem(index, object)
+                                onObjectRemoved: secondMenu.removeItem(object)
+                            }
+                        }
+                        onObjectAdded: firstMenu.insertItem(index, object)
+                        onObjectRemoved: firstMenu.removeItem(object)
                     }
                 }
                 onObjectAdded: nodesMenu.insertItem(index, object)
@@ -613,7 +752,7 @@ ApplicationWindow {
                 }
             }
             //Prevent browser from putting in fullscreen mode in first because of causing an OS' display bug
-            onButtonFullscreenClicked: if(parent!=fullscreenContent && subviews.parentBeforeFullscreen!=null){subviews.parentBeforeFullscreen = parent; fullscreenWindow.visibility = Window.FullScreen; fullscreenContent.children = browser}
+            onButtonFullscreenClicked: if(parent!=fullscreenContent){subviews.parentBeforeFullscreen = parent; fullscreenWindow.visibility = Window.FullScreen; fullscreenContent.children = browser}
         }
 
         Item {

@@ -4,8 +4,10 @@ import QtQml 2.1
 import QtQuick.Controls.Styles 1.0
 import QtQuick.Layouts 1.0
 import QuickMamba 1.0
+import "qmlComponents"
 
 import "../../../gui"
+import "../../plugin/qml"
 
 Item {
     id: parametersEditor
@@ -27,6 +29,16 @@ Item {
         onFullscreenClicked: parametersEditor.buttonFullscreenClicked(true)
     }
 
+    //plugin list
+    PluginBrowser {
+        id: pluginBrowser
+        z:1
+        height: 250
+        visible:pluginVisible
+        y:player.height+50
+        x:paramEditor.width+13
+    }
+
     // Container of the paramNodes
     Rectangle{
         id: contentparamNode
@@ -43,6 +55,46 @@ Item {
             height: parent.height
             anchors.topMargin: 5
             anchors.bottomMargin: 5
+
+            style: ScrollViewStyle {
+                        scrollBarBackground: Rectangle {
+                            id: scrollBar
+                            width:15
+                            color: "#212121"
+                            border.width: 1
+                            border.color: "#333"
+                        }
+                        decrementControl : Rectangle {
+                            id: scrollLower
+                            width:15
+                            height:15
+                            color: styleData.pressed? "#212121" : "#343434"
+                            border.width: 1
+                            border.color: "#333"
+                            radius: 3
+                            Image{
+                                id: arrow
+                                source: "file:///" + _buttleData.buttlePath + "/gui/img/buttons/params/arrow2.png"
+                                x:4
+                                y:4
+                            }
+                        }
+                        incrementControl : Rectangle {
+                            id: scrollHigher
+                            width:15
+                            height:15
+                            color: styleData.pressed? "#212121" : "#343434"
+                            border.width: 1
+                            border.color: "#333"
+                            radius: 3
+                            Image{
+                                id: arrow
+                                source: "file:///" + _buttleData.buttlePath + "/gui/img/buttons/params/arrow.png"
+                                x:4
+                                y:4
+                            }
+                        }
+                    }
 
             // for each node we create a paramNode
             ListView{
@@ -222,6 +274,30 @@ Item {
                                 source : model.object.paramType + ".qml"
                                 width: parent.width
                                 x: 15 // here is the distance to the left of the listview
+                                z:0
+
+                                ToolTip{
+                                    id:tooltip
+                                    visible: false
+                                    paramHelp: model.object.doc
+                                    z:param.z+1
+                                }
+                                MouseArea {
+                                    anchors.fill: parent
+                                    acceptedButtons: Qt.RightButton
+                                    hoverEnabled:true
+                                    onClicked: {
+                                        model.object.hasChanged = false
+                                        model.object.value = model.object.getDefaultValue()
+                                        model.object.pushValue(model.object.value)
+                                    }
+                                    onEntered: {
+                                        tooltip.visible=true
+                                    }
+                                    onExited: {
+                                        tooltip.visible=false
+                                    }
+                                }
                             }
                         }
                     }//Listview
@@ -255,7 +331,8 @@ Item {
             }
 
         onClicked: {
-            nodesMenu.popup();
+            if(pluginVisible==false) {pluginVisible=true}
+            else {pluginVisible=false}
         }
     }
 

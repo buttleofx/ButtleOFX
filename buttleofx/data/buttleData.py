@@ -529,8 +529,6 @@ class ButtleData(QtCore.QObject):
             pluginsWModel.append(p)
         return pluginsWModel
 
-    pluginSearchedChanged = QtCore.pyqtSignal()
-
     @QtCore.pyqtSlot(str, result=QtCore.QObject)
     def getPluginsWrappersSuggestions(self, pluginSearched):
         from pyTuttle import tuttle
@@ -544,6 +542,44 @@ class ButtleData(QtCore.QObject):
                 pluginsWModel.append(p)
         return pluginsWModel
 
+    @QtCore.pyqtSlot(str, result=QtCore.QObject)
+    def getPluginsByPath(self, menuPath):
+        from pyTuttle import tuttle
+        pluginCache = tuttle.core().getImageEffectPluginCache()
+        plugins = pluginCache.getPlugins()         
+
+        pluginsW = [PluginWrapper(plugin) for plugin in plugins]
+        pluginsWModel = QObjectListModel(self)
+        for p in pluginsW:
+            path = p.pluginGroup
+            while "/" in path :
+                listOfPath = path.split("/")
+                path = path.replace(listOfPath[0] + "/","")
+            if menuPath in path :
+                pluginsWModel.append(p)
+        return pluginsWModel
+
+    @QtCore.pyqtSlot(int, str, result=QtCore.QObject)
+    def getMenu(self, nb, parentMenuPath):
+        from pyTuttle import tuttle
+        pluginCache = tuttle.core().getImageEffectPluginCache()
+        plugins = pluginCache.getPlugins()         
+
+        pluginsW = [PluginWrapper(plugin) for plugin in plugins]
+        pluginsListMenu = QObjectListModel(self)
+        for p in pluginsW:
+            path = p.pluginGroup + "/"
+            parentPath = path
+            if path.count("/") >= nb :
+                for i in range(nb) :
+                    listOfPath = path.split("/")
+                    path = path.replace(listOfPath[0] + "/","")
+                    print (path)
+                if not pluginsListMenu.contains(listOfPath[0]) and listOfPath[0] :
+                    if parentMenuPath in parentPath :
+                        pluginsListMenu.append(listOfPath[0])
+        return pluginsListMenu
+        
     @QtCore.pyqtSlot(str, result=QtCore.QObject)
     def getQObjectPluginsIdentifiersByParentPath(self, pathname):
         """

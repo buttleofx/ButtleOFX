@@ -296,6 +296,7 @@ class ConnectionManager(QtCore.QObject):
         """
         buttleData = ButtleDataSingleton().get()
         buttleData.getGraph().createConnection(clipOut, clipIn)
+        self.colorChildAsParent(clipOut, clipIn)
 
     @QtCore.pyqtSlot(QtCore.QObject)
     def disconnect(self, connectionWrapper):
@@ -304,3 +305,14 @@ class ConnectionManager(QtCore.QObject):
         """
         buttleData = ButtleDataSingleton().get()
         buttleData.getGraph().deleteConnection(connectionWrapper.getConnection())
+
+    ############### COLORS ###############
+
+    def colorChildAsParent(self, clipOut, clipIn):
+        """
+            When two nodes are connected, the child take the color of its parent
+        """
+        buttleData = ButtleDataSingleton().get()
+        parentNode = buttleData.getGraphWrapper().getNodeWrapper(clipOut.getNodeName()).getNode()
+        childNode = buttleData.getGraphWrapper().getNodeWrapper(clipIn.getNodeName()).getNode()
+        childNode.setColor(parentNode.getColor())

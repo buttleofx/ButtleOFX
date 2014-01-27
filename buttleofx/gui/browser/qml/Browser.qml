@@ -56,49 +56,42 @@ Rectangle {
             }
 	    }
 
-        CheckBox {
+        /*CheckBox {
 	    	id: check
             text: "List"
+        }*/
+
+        WindowFiles {
+            id: files
+            Layout.fillWidth: true
+            Layout.fillHeight: true
+            Layout.preferredHeight: 120
+            z: 1
+
+            viewList: headerBar.isInListView
+            folder: m.directory
+            onGoToFolder: {
+                listPrevious.append({"url": m.directory})
+                m.directory= newFolder
+            }
+            filterName: m.filter
+            onChangeFile: {
+                m.filepath = file
+            }
+            onChangeFileFolder: {
+                m.fileFolder = fileFolder
+            }
+            onChangeFileSize: {
+                m.fileSize = fileSize
+            }
+
+            onChangeFileType: {
+                m.fileType = fileType
+            }
+            onChangeSelectedList: {
+                m.selected = selected
+            }
         }
-
-        SplitView {
-	        Layout.fillWidth: true
-	        Layout.fillHeight: true
-            orientation: Qt.Horizontal
-
-		    WindowFiles {
-			    id: files
-                Layout.fillWidth: true
-	            Layout.fillHeight: true
-                Layout.preferredHeight: 120
-                z: 1
-			    
-                viewList: check.checked
-                folder: m.directory
-                onGoToFolder: {
-                    listPrevious.append({"url": m.directory})
-                    m.directory= newFolder
-                }
-                filterName: m.filter
-                onChangeFile: {
-                    m.filepath = file
-                }
-                onChangeFileFolder: {
-                    m.fileFolder = fileFolder
-                }
-                onChangeFileSize: {
-                    m.fileSize = fileSize
-                }
-
-                onChangeFileType: {
-                    m.fileType = fileType
-                }
-                onChangeSelectedList: {
-                    m.selected = selected
-                }
-		    }
-
-	    }
 
 	    FooterBar {
 		    id: footerBar

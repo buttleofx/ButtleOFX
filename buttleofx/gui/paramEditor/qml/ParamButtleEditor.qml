@@ -26,16 +26,44 @@ Item {
     /*BUTTLE PARAMS*/
     Rectangle{
         id: buttleParams
-        height: 160
+        height: 170
         width: paramEditor.width
         color: paramEditor.background
         border.width: 1
         border.color: "#333"
 
+        Rectangle{
+            id:headerBar
+            height: 15
+            width:parent.width
+            color: "transparent"
+            Image{
+                id: close
+                source: "file:///" + _buttleData.buttlePath + "/gui/img/icons/close.png"
+                x:headerBar.width-15
+                y:5
+
+                MouseArea {
+                    anchors.fill: parent
+                    hoverEnabled: true
+                    onEntered: {
+                        close.source = "file:///" + _buttleData.buttlePath + "/gui/img/icons/close_hover.png"
+                    }
+                    onExited: {
+                        close.source = "file:///" + _buttleData.buttlePath + "/gui/img/icons/close.png"
+                    }
+                    onClicked: {
+                        editNode=false
+                    }
+                }
+            }
+        }
+
+
         Loader {
             sourceComponent: currentParamNode ? nodeParamComponent : undefined
             anchors.top: parent.top
-            anchors.topMargin: 10
+            anchors.topMargin: 20
             Component {
                 id: nodeParamComponent
                 Column {

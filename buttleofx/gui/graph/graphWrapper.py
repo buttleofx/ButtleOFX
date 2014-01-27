@@ -196,6 +196,21 @@ class GraphWrapper(QtCore.QObject):
         conWrapper = ConnectionWrapper(connection, self._view)
         self._connectionWrappers.append(conWrapper)
 
+    ###################### COLORS ########################
+
+    #@QtCore.pyqtSlot(QtCore.QObject)
+    def highlightParentNodes(self, currentSelectedNodeNames):
+        # for all selected nodes
+        for nodeName in currentSelectedNodeNames:
+            currentNodeWrapper = self.getNodeWrapper(nodeName)
+            # while the node has parents
+            while currentNodeWrapper.getNbInput() > 0 :
+                currentNodeSrcClips = currentNodeWrapper.getSrcClips()
+                # for all parents
+                for currentNodeSrcClip in currentNodeSrcClips:
+                    parentNode = self.getNodeWrapper(currentNodeSrcClip.getNodeName()).getNode()
+                    parentNode.setColorRGB(255, 255, 255)
+
     ################################################ UPDATE WRAPPER LAYER ################################################
 
     def updateWrappers(self):

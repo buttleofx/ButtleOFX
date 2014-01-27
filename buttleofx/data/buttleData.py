@@ -151,6 +151,7 @@ class ButtleData(QtCore.QObject):
         """
             Returns the names of the current selected nodes.
         """
+        #self.getGraphWrapper().highlightParentNodes(self._currentSelectedNodeNames)
         return self._currentSelectedNodeNames
 
     @QtCore.pyqtSlot()

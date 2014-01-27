@@ -166,8 +166,9 @@ class FileModelBrowser(QtQuick.QQuickItem):
                           
         except Exception:
             pass
+        self._fileItems = sorted(self._fileItems, key=lambda fileItem: fileItem.fileName.upper())
         self._fileItemsModel.setObjectList(self._fileItems)
-        #self._fileItemsModel.setObjectList(self._fileItems.sort(key=lambda fileItem: fileItem.fileName))
+        #self._fileItemsModel.setObjectList(sorted(self._fileItems, key=lambda fileItem: fileItem.fileName))
         
     @QtCore.pyqtSlot(str, result=QtCore.QObject)
     def getFilteredFileItems(self, fileFilter):
@@ -175,14 +176,15 @@ class FileModelBrowser(QtQuick.QQuickItem):
 
         try:
             _, dirs, files = next(os.walk(os.path.dirname(fileFilter)))
+            dirs = sorted(dirs, key=lambda v: v.upper())
             for d in dirs:
                 if not d.startswith(".") and d.startswith(os.path.basename(fileFilter)) and d != os.path.basename(fileFilter):
                     suggestions.append(FileItem(os.path.dirname(fileFilter), d, FileItem.Type.Folder))
             
         except Exception:
             pass
+        
         return suggestions
-        #return suggestions.sort(key=lambda fileItem: fileItem.fileName)
     
     _fileItems = []
     _fileItemsModel = None

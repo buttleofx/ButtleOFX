@@ -62,10 +62,15 @@ Rectangle {
             winFile.changeFileType(fileModel.fileItems.get(0).fileType)
             winFile.changeFile(fileModel.fileItems.get(0).filepath)
             winFile.changeFileFolder(fileModel.parentFolder)
+            winFile.changeSelectedList(fileModel.getSelectedItems())
         }
         onNameFilterChanged: {
             fileModel.selectItem(0)
             winFile.changeFileSize(fileModel.fileItems.get(0).fileSize)
+            winFile.changeFileType(fileModel.fileItems.get(0).fileType)
+            winFile.changeFile(fileModel.fileItems.get(0).filepath)
+            winFile.changeFileFolder(fileModel.parentFolder)
+            winFile.changeSelectedList(fileModel.getSelectedItems())
         }
     }
 
@@ -103,7 +108,7 @@ Rectangle {
                             border.color: "#333"
                             radius: 3
                             Image{
-                                id: arrow
+                                id: arrow2
                                 source: "file:///" + _buttleData.buttlePath + "/gui/img/buttons/params/arrow2.png"
                                 x:4
                                 y:4
@@ -231,10 +236,11 @@ Rectangle {
                             drag.target: fileInColumn
 
                             onClicked: {
+                                winFile.itemIndex = index
                                 if (mouse.button == Qt.RightButton)
                                     options.popup()
                                     winFile.fileName = textInColumn.text
-                                    winFile.itemIndex = index
+
 
                                 //if shift:
                                 if(mouse.modifiers & Qt.ShiftModifier)
@@ -320,14 +326,14 @@ Rectangle {
 
         style: ScrollViewStyle {
                         scrollBarBackground: Rectangle {
-                            id: scrollBar
+                            id: scrollBar2
                             width:15
                             color: "#212121"
                             border.width: 1
                             border.color: "#333"
                         }
                         decrementControl : Rectangle {
-                            id: scrollLower
+                            id: scrollLower2
                             width:15
                             height:15
                             color: styleData.pressed? "#212121" : "#343434"
@@ -335,14 +341,14 @@ Rectangle {
                             border.color: "#333"
                             radius: 3
                             Image{
-                                id: arrow
+                                id: arrowBis2
                                 source: "file:///" + _buttleData.buttlePath + "/gui/img/buttons/params/arrow2.png"
                                 x:4
                                 y:4
                             }
                         }
                         incrementControl : Rectangle {
-                            id: scrollHigher
+                            id: scrollHigher2
                             width:15
                             height:15
                             color: styleData.pressed? "#212121" : "#343434"
@@ -350,7 +356,7 @@ Rectangle {
                             border.color: "#333"
                             radius: 3
                             Image{
-                                id: arrow
+                                id: arrowBis
                                 source: "file:///" + _buttleData.buttlePath + "/gui/img/buttons/params/arrow.png"
                                 x:4
                                 y:4
@@ -453,11 +459,10 @@ Rectangle {
                         drag.target: fileInRow
 
                         onClicked: {
-                            winFile.changeFileSize(0)
+                            winFile.itemIndex = index
                             if (mouse.button == Qt.RightButton)
                                 options.popup()
                                 winFile.fileName = textInRow.text
-                                winFile.itemIndex = index
 
                             //if shift:
                             if(mouse.modifiers & Qt.ShiftModifier)

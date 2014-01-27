@@ -39,7 +39,9 @@ class GraphWrapper(QtCore.QObject):
 
         # links core signals to wrapper layer
         self._graph.nodesChanged.connect(self.updateWrappers)
-        self._graph.connectionsChanged.connect(self.updateConnectionWrappers)
+        self._graph.connectionsChanged.connect(self.updateConnectionWrappers)  
+        
+        self.tmpMoveNode = [0,0]
 
         logging.info("Gui : GraphWrapper created")
 
@@ -183,6 +185,14 @@ class GraphWrapper(QtCore.QObject):
             Returns the wrapper of the last node created.
         """
         return self._nodeWrappers[-1]
+        
+    @QtCore.pyqtSlot(result=float)
+    def getTmpMoveNodeX(self):
+        return self.tmpMoveNode[0]
+        
+    @QtCore.pyqtSlot(result=float)
+    def getTmpMoveNodeY(self):
+        return self.tmpMoveNode[1]
 
     def getZMax(self):
         """
@@ -198,7 +208,19 @@ class GraphWrapper(QtCore.QObject):
     def setResize(self, value):
         self._resize = value
         self.currentSizeChanged.emit()
-
+    
+    @QtCore.pyqtSlot(str)
+    def setTmpMoveNode(self, name):
+        node = self.getNodeWrapper(name)
+        self.tmpMoveNode[0] = node.xCoord
+        self.tmpMoveNode[1] = node.yCoord
+    
+    def setTmpMoveNodeX(self, value):
+        self.tmpMoveNode[0] = value
+     
+    def setTmpMoveNodeY(self, value):
+        self.tmpMoveNode[1] = value
+        
     def setZMax(self, zMax):
         """
             Sets the depth of the QML graph

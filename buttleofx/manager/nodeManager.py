@@ -13,7 +13,7 @@ class NodeManager(QtCore.QObject):
     """
         This class manages actions about nodes.
     """
-
+    
     def __init__(self):
         super(NodeManager, self).__init__()
 
@@ -210,14 +210,21 @@ class NodeManager(QtCore.QObject):
         """
         buttleData = ButtleDataSingleton().get()
         node = buttleData.getGraph().getNode(nodeName)
-
+        graphWrapper = buttleData.getGraphWrapper()
+        
+        oldX = graphWrapper.getTmpMoveNodeX()
+        oldY = graphWrapper.getTmpMoveNodeY()
+        
         # What is the value of the movement (compared to the old position) ?
-        oldX, oldY = node.getCoord()
+        #oldX, oldY = node.getCoord()
         xMovement = newX - oldX
         yMovement = newY - oldY
+        graphWrapper.setTmpMoveNodeX(newX)
+        graphWrapper.setTmpMoveNodeY(newY)
 
         # for each selected node, we update the position considering the value of the movement
         for selectedNodeWrapper in buttleData.getCurrentSelectedNodeWrappers():
             selectedNode = selectedNodeWrapper.getNode()
             currentX, currentY = selectedNode.getCoord()
-            selectedNode.setCoord(currentX + xMovement, currentY + yMovement)
+            if(selectedNode._name != nodeName):
+                selectedNode.setCoord(currentX + xMovement, currentY + yMovement)

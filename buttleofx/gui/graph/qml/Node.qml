@@ -73,6 +73,7 @@ Rectangle {
                 parent.z = _buttleData.graphWrapper.zMax
                 xstart = mouse.x
                 //stateMoving.state = "moving"
+                _buttleData.graphWrapper.setTmpMoveNode(m.nodeWrapper.name)
             }
 
             // right button : we change the current param node
@@ -371,6 +372,6 @@ Rectangle {
     }
 
     function nodeIsMoving() {
-        //_buttleManager.nodeManager.nodeIsMoving(m.nodeWrapper.name, m.nodeRoot.x / graph.zoomCoeff, m.nodeRoot.y / graph.zoomCoeff)
+        _buttleManager.nodeManager.nodeIsMoving(m.nodeWrapper.name, m.nodeRoot.x / graph.zoomCoeff, m.nodeRoot.y / graph.zoomCoeff)
     }
 }

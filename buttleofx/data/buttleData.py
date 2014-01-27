@@ -550,11 +550,15 @@ class ButtleData(QtCore.QObject):
 
         pluginsW = [PluginWrapper(plugin) for plugin in plugins]
         pluginsWModel = QObjectListModel(self)
+        #for each plugin
         for p in pluginsW:
             path = p.pluginGroup
+
+            #while path is not the final submenu, path is cropped
             while "/" in path :
                 listOfPath = path.split("/")
                 path = path.replace(listOfPath[0] + "/","")
+            #if the parentMenu name is in the parentPath of the plugin, we add the plugin to the list
             if menuPath == path :
                 pluginsWModel.append(p)
         return pluginsWModel
@@ -567,15 +571,26 @@ class ButtleData(QtCore.QObject):
 
         pluginsW = [PluginWrapper(plugin) for plugin in plugins]
         pluginsListMenu = QObjectListModel(self)
+
+        #for each plugin
         for p in pluginsW:
             path = p.pluginGroup + "/"
             parentPath = path
+
+            #if the number of submenus of the plugin is higher than nb 
             if path.count("/") >= nb :
+
+                #withdraw one submenu per loop from the path
                 for i in range(nb) :
                     listOfPath = path.split("/")
                     path = path.replace(listOfPath[0] + "/","")
+
+                #if the submenu is not already in the list of submenu
                 if not pluginsListMenu.contains(listOfPath[0]) and listOfPath[0] :
+
+                    #if the submenu is not the first
                     if nb>2 :
+                        #if the parentMenu name is in the parentPath of the plugin, the plugin is add to the list
                         if "/" + parentMenuPath + "/" in parentPath :
                             pluginsListMenu.append(listOfPath[0])
                     else:

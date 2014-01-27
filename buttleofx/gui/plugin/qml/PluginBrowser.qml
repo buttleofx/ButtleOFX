@@ -51,6 +51,8 @@ Item {
                 height: parent.height
                 width: parent.width
                 clip: true
+                selectByMouse: true
+                selectionColor: "#00b2a1"
 
                 color: "white"
 

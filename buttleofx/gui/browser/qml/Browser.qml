@@ -61,44 +61,37 @@ Rectangle {
             text: "List"
         }*/
 
-        SplitView {
-	        Layout.fillWidth: true
-	        Layout.fillHeight: true
-            orientation: Qt.Horizontal
+        WindowFiles {
+            id: files
+            Layout.fillWidth: true
+            Layout.fillHeight: true
+            Layout.preferredHeight: 120
+            z: 1
 
-		    WindowFiles {
-			    id: files
-                Layout.fillWidth: true
-	            Layout.fillHeight: true
-                Layout.preferredHeight: 120
-                z: 1
-			    
-                viewList: headerBar.isInListView
-                folder: m.directory
-                onGoToFolder: {
-                    listPrevious.append({"url": m.directory})
-                    m.directory= newFolder
-                }
-                filterName: m.filter
-                onChangeFile: {
-                    m.filepath = file
-                }
-                onChangeFileFolder: {
-                    m.fileFolder = fileFolder
-                }
-                onChangeFileSize: {
-                    m.fileSize = fileSize
-                }
+            viewList: headerBar.isInListView
+            folder: m.directory
+            onGoToFolder: {
+                listPrevious.append({"url": m.directory})
+                m.directory= newFolder
+            }
+            filterName: m.filter
+            onChangeFile: {
+                m.filepath = file
+            }
+            onChangeFileFolder: {
+                m.fileFolder = fileFolder
+            }
+            onChangeFileSize: {
+                m.fileSize = fileSize
+            }
 
-                onChangeFileType: {
-                    m.fileType = fileType
-                }
-                onChangeSelectedList: {
-                    m.selected = selected
-                }
-		    }
-
-	    }
+            onChangeFileType: {
+                m.fileType = fileType
+            }
+            onChangeSelectedList: {
+                m.selected = selected
+            }
+        }
 
 	    FooterBar {
 		    id: footerBar

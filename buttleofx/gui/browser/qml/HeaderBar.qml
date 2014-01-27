@@ -131,7 +131,7 @@ Rectangle {
                 y: 4
                 x: 5
                 height: parent.height
-                width: parent.width
+                width: parent.width - 10
                 autoScroll: false
                 clip: true
 

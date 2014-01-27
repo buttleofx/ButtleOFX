@@ -27,7 +27,7 @@ Rectangle {
 
         Text {
 
-            text: fileSize > 0.0 ? "Size: " + fileSize.toFixed(2) + " Ko" : ""
+            text: footer.fileType == "Folder" | fileSize < 0.0 ? "" : "Size: " + fileSize.toFixed(2) + " Ko"
             color: "white"
         }
 

@@ -58,10 +58,14 @@ Rectangle {
 
         onFolderChanged: {
             fileModel.selectItem(0)
+            winFile.changeFileSize(fileModel.fileItems.get(0).fileSize)
+            winFile.changeFileType(fileModel.fileItems.get(0).fileType)
+            winFile.changeFile(fileModel.fileItems.get(0).filepath)
             winFile.changeFileFolder(fileModel.parentFolder)
         }
         onNameFilterChanged: {
             fileModel.selectItem(0)
+            winFile.changeFileSize(fileModel.fileItems.get(0).fileSize)
         }
     }
 
@@ -149,19 +153,22 @@ Rectangle {
                             textInColumn.forceActiveFocus()
                         }
 
-                        /*DropArea {
-                            id: moveItemInColumn
-                            anchors.fill: parent
-                            objectName: model.object.filepath
-                            keys: ["internFileDrag"]
+                        Item {
+                            id: dropArea
 
-                            onDropped: {
-                                console.debug("file: " + Drag.source.objectName)
-                                console.debug("Index: " + drop.source.objectName)
-                                //fileModel.moveItem(drop.source.objectName, )
+                            DropArea {
+                                id: moveItemInColumn
+                                anchors.fill: parent
+                                objectName: model.object.filepath
+                                keys: ["internFileDrag"]
+
+                                onDropped: {
+                                    console.debug("file: " + Drag.source.objectName)
+                                    console.debug("Index: " + drop.source.objectName)
+                                    //fileModel.moveItem(drop.source.objectName, )
+                                }
                             }
-                        }*/
-
+                        }
 
                         Column {
                             id : file
@@ -224,7 +231,6 @@ Rectangle {
                             drag.target: fileInColumn
 
                             onClicked: {
-                                winFile.changeFileSize(0)
                                 if (mouse.button == Qt.RightButton)
                                     options.popup()
                                     winFile.fileName = textInColumn.text

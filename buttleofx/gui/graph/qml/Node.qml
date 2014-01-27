@@ -371,6 +371,6 @@ Rectangle {
     }
 
     function nodeIsMoving() {
-        _buttleManager.nodeManager.nodeIsMoving(m.nodeWrapper.name, m.nodeRoot.x / graph.zoomCoeff, m.nodeRoot.y / graph.zoomCoeff)
+        //_buttleManager.nodeManager.nodeIsMoving(m.nodeWrapper.name, m.nodeRoot.x / graph.zoomCoeff, m.nodeRoot.y / graph.zoomCoeff)
     }
 }

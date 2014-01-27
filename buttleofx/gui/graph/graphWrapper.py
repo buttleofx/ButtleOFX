@@ -109,7 +109,12 @@ class GraphWrapper(QtCore.QObject):
             cpt += 1
         averageX = averageX / cpt
         averageY = averageY / cpt  
-        zoomCoeff = height / self.maxHeight(height)    
+        heightCoeff = height/self.maxHeight(height)
+        widthCoeff = width/self.maxWidth(width)
+        if(heightCoeff < widthCoeff):
+            zoomCoeff = height / self.maxHeight(height) 
+        else:
+            zoomCoeff = width / self.maxWidth(width) 
         
         coords.append(averageX)
         coords.append(averageY)

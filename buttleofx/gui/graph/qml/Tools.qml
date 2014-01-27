@@ -179,7 +179,27 @@ Rectangle {
                     pluginVisible=false
                     _buttleManager.deleteSelection()
                 }
-            }            
+            }
+
+            ToolElement {
+                imageSource: parent.imgPath + "center.png"
+                imageSourceHover: parent.imgPath + "center_hover.png"
+                imageSourceLocked: parent.imgPath + "delete_locked.png"
+                buttonName: "centerGraph"
+                buttonText: "Center the graph"
+                locked: false
+
+                onClicked: {
+                    pluginVisible=false
+                    graph.zoomCoeff = _buttleData.graphWrapper.fitInScreenSize(graph.width, graph.height).get(2)
+                    graph.offsetX = (graph.container.width * 0.5 ) - (_buttleData.graphWrapper.fitInScreenSize(graph.width, graph.height).get(0) * graph.zoomCoeff)
+                    graph.offsetY = (graph.container.height * 0.5 ) - (_buttleData.graphWrapper.fitInScreenSize(graph.width, graph.height).get(1) * graph.zoomCoeff)
+                    miniGraph.miniOffsetX = 0
+                    miniGraph.miniOffsetY = 0
+                    graph.container.x = ((graph.width * 0.5) - (graph.container.width * 0.5)) + graph.offsetX - (miniGraph.miniOffsetX / miniGraph.scaleFactor *graph.zoomCoeff)
+                    graph.container.y = ((graph.height * 0.5) - (graph.container.height * 0.5 )) + graph.offsetY - (miniGraph.miniOffsetY / miniGraph.scaleFactor *graph.zoomCoeff)
+                }
+            }
         }
     }
 }

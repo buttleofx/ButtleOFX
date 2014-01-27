@@ -93,6 +93,29 @@ class GraphWrapper(QtCore.QObject):
             if(min > nodeWrapper.xCoord):
               min = nodeWrapper.xCoord
         return max - min
+        
+    @QtCore.pyqtSlot(int, int, result=QtCore.QObject)    
+    def fitInScreenSize(self, width, height):
+        """
+            Calculate average coordinates of all the nodes to center the graph in the screen
+        """
+        coords = QObjectListModel(self)
+        averageX = 0
+        averageY = 0
+        cpt = 0
+        for nodeWrapper in self._nodeWrappers:
+            averageX += nodeWrapper.xCoord
+            averageY += nodeWrapper.yCoord
+            cpt += 1
+        averageX = averageX / cpt
+        averageY = averageY / cpt  
+        zoomCoeff = height / self.maxHeight(height)    
+        
+        coords.append(averageX)
+        coords.append(averageY)
+        coords.append(zoomCoeff)
+        
+        return coords
 
     ################################################## ACCESSORS ##################################################
 

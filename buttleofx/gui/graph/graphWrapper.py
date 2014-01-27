@@ -249,7 +249,7 @@ class GraphWrapper(QtCore.QObject):
     ###################### COLORS ########################
 
     #@QtCore.pyqtSlot(QtCore.QObject)
-    def highlightParentNodes(self, nodeName):
+    """def highlightParentNodes(self, nodeName):
         currentNodeWrapper = self.getNodeWrapper(nodeName)
         if currentNodeWrapper != None:
             # if the node has inputs
@@ -263,6 +263,28 @@ class GraphWrapper(QtCore.QObject):
                         print(">>>>>>>>>>>>>>>>>>>>> parentNode : ", parentNodeName)
                         self.highlightParentNodes(parentNodeName)
             currentNodeWrapper.getNode().setColorRGB(255, 255, 255)
+    """
+    def highlightParentNodes(self, nodeName):
+        currentNodeWrapper = self.getNodeWrapper(nodeName)
+        while currentNodeWrapper != None:
+            currentNodeWrapper.getNode().setColorRGB(255, 255, 255)
+            # if the node has one input, we get immediately the parent node
+            if currentNodeWrapper.getNbInput() == 1 :
+                currentNodeWrapper = self.getNodeWrapper(self.getConnectedClipWrapper(currentNodeWrapper.getSrcClips()[0], False).getNodeName())
+            # if the node has several inputs, we get the parents recursively
+            elif currentNodeWrapper.getNbInput() > 1 :
+                currentNodeSrcClips = currentNodeWrapper.getSrcClips()
+                # for all inputs
+                for currentNodeSrcClip in currentNodeSrcClips:
+                    # if the input is connected to a parent
+                    if self.getConnectedClipWrapper(currentNodeSrcClip, False) != None:
+                        parentNodeName = self.getNodeWrapper(self.getConnectedClipWrapper(currentNodeSrcClip, False).getNodeName())
+                        #print(">>>>>>>>>>>>>>>>>>>>> parentNode : ", parentNodeName)
+                        self.highlightParentNodes(parentNodeName)
+                return
+            else :
+                break
+
 
     ################################################ UPDATE WRAPPER LAYER ################################################
 

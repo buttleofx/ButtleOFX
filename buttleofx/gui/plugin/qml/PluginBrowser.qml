@@ -37,7 +37,7 @@ Item {
 
             Image{
                 id: searchPicture
-                source: _buttleData.buttlePath + "/gui/img/icons/search.png"
+                source: "file:///" + _buttleData.buttlePath + "/gui/img/icons/search.png"
                 height:10
                 width:10
                 x:5

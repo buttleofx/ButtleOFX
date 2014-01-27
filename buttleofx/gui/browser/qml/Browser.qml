@@ -56,10 +56,10 @@ Rectangle {
             }
 	    }
 
-        CheckBox {
+        /*CheckBox {
 	    	id: check
             text: "List"
-        }
+        }*/
 
         SplitView {
 	        Layout.fillWidth: true
@@ -73,7 +73,7 @@ Rectangle {
                 Layout.preferredHeight: 120
                 z: 1
 			    
-                viewList: check.checked
+                viewList: headerBar.isInListView
                 folder: m.directory
                 onGoToFolder: {
                     listPrevious.append({"url": m.directory})

@@ -11,6 +11,7 @@ Item {
     y:10
 
     property variant paramObject: model.object
+    property bool isReader: _buttleData.currentParamNodeWrapper.nodeType.indexOf("reader") != -1
 
     // Is this param secret ?
     visible: !paramObject.isSecret
@@ -186,11 +187,11 @@ Item {
                 anchors.fill: parent
 
                 onPressed: {
-                    folderfiledialog.open()
+                    if(isReader){finderLoadFile.open()}else{finderSaveFile.open()}
                 }
 
                 // open a file dialog to select a file
-                FileDialog {
+                /*FileDialog {
 
                     id: folderfiledialog
                     title: "Open"
@@ -203,6 +204,35 @@ Item {
                             paramObject.pushValue(paramObject.value)
                         }
                     }
+                }*/
+
+                FileDialog {
+                    id: finderLoadFile
+                    title: "Open"
+                    folder: _buttleData.buttlePath
+                    nameFilters: [ "All files (*)" ]
+                    selectedNameFilter: "All files (*)"
+                    onAccepted: {
+                        if (finderLoadFile.fileUrl){
+                            paramObject.value = finderLoadFile.fileUrl
+                            paramObject.pushValue(paramObject.value)
+                        }
+                    }
+                }
+
+                FileDialog {
+                    id: finderSaveFile
+                    title: "Save"
+                    folder: _buttleData.buttlePath
+                    nameFilters:  [ "All files (*)" ]
+                    selectedNameFilter: "All files (*)"
+                    onAccepted: {
+                        if (finderSaveFile.fileUrl){
+                            paramObject.value = finderSaveFile.fileUrl
+                            paramObject.pushValue(paramObject.value)
+                        }
+                    }
+                    selectExisting: false
                 }
             }//MouseArea
         }//Image

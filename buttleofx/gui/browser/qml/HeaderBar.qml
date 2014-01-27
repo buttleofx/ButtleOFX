@@ -132,7 +132,6 @@ Rectangle {
                 x: 5
                 height: parent.height
                 width: parent.width - 10
-                autoScroll: false
                 clip: true
 
                 text: headerBar.folder

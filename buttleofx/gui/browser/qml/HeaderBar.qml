@@ -1,5 +1,6 @@
 import QtQuick 2.1
 import QtQuick.Controls 1.0
+import QtQuick.Controls.Styles 1.0
 import QtQuick.Layouts 1.0
 
 import ButtleFileModel 1.0
@@ -13,6 +14,7 @@ Rectangle {
     signal changeFolder(string folder)
     property string parentFolder
     property variant listPrevious
+    property bool isInListView : false
 
     function forceActiveFocusOnPath() {
         texteditPath.forceActiveFocus()
@@ -32,57 +34,92 @@ Rectangle {
         spacing: 10
         anchors.fill: parent
 
-        Image {
-			id: previous;
-            source: "../../img/buttons/browser/previous.png"
-            sourceSize.height: 40
+        Button {
+            id: previous
+            width: 15
+            height: 15
 
-            MouseArea {
-				anchors.fill: parent
-                onClicked: {
-                    if (listPrevious.count > 0)
-                    {
-                        nextList.append({"url": headerBar.folder})
-                        changeFolder(listPrevious.get(listPrevious.count - 1).url)
-                        listPrevious.remove(listPrevious.count - 1)
+            iconSource:
+                if (hovered){
+                    "../../img/buttons/browser/previous_hover.png"
+                }else{
+                    "../../img/buttons/browser/previous.png"
+                }
+
+            style:
+                ButtonStyle {
+                    background: Rectangle {
+                        anchors.fill: parent
+                        color: "transparent"
                     }
                 }
-			}
-		}
-        Image {
-			id: next
-            source: "../../img/buttons/browser/next.png"
-            sourceSize.height: 40
 
-            MouseArea {
-				anchors.fill: parent
-                onClicked: {
-                    if (nextList.count > 0)
-                    {
-                        listPrevious.append({"url": headerBar.folder})
-                        changeFolder(nextList.get(nextList.count - 1).url)
-                        nextList.remove(nextList.count - 1)
+            onClicked: {
+                if (listPrevious.count > 0)
+                {
+                    nextList.append({"url": headerBar.folder})
+                    changeFolder(listPrevious.get(listPrevious.count - 1).url)
+                    listPrevious.remove(listPrevious.count - 1)
+                }
+            }
+        }
+
+        Button {
+            id: next
+            width: 15
+            height: 15
+
+            iconSource:
+                if (hovered){
+                    "../../img/buttons/browser/next_hover.png"
+                }else{
+                    "../../img/buttons/browser/next.png"
+                }
+
+            style:
+                ButtonStyle {
+                    background: Rectangle {
+                        anchors.fill: parent
+                        color: "transparent"
                     }
                 }
-			}
-		}
-        Image {
-			id: folder
-            source: "../../img/buttons/browser/Folder-icon.png"
-            sourceSize.height: 40
 
-            MouseArea {
-				anchors.fill: parent
-                onDoubleClicked: {
-                    changeFolder(parentFolder)
+            onClicked: {
+                if (nextList.count > 0)
+                {
+                    listPrevious.append({"url": headerBar.folder})
+                    changeFolder(nextList.get(nextList.count - 1).url)
+                    nextList.remove(nextList.count - 1)
                 }
-			}
-		}
+            }
+        }
+
+        Button {
+            id: parent_folder
+            width: 15
+            height: 15
+
+            iconSource:
+                if (hovered){
+                    "../../img/buttons/browser/parent_hover.png"
+                }else{
+                    "../../img/buttons/browser/parent.png"
+                }
+
+            style:
+                ButtonStyle {
+                    background: Rectangle {
+                        anchors.fill: parent
+                        color: "transparent"
+                    }
+                }
+
+            onClicked: changeFolder(parentFolder)
+        }
 
         Rectangle {
             id: textEditContainer
-
-            Layout.fillHeight: true
+            height: 24
             Layout.fillWidth: true
 
             color: "black"
@@ -91,7 +128,7 @@ Rectangle {
 
             TextInput {
                 id : texteditPath
-                y: 10
+                y: 4
                 x: 5
                 height: parent.height
                 width: parent.width
@@ -164,6 +201,56 @@ Rectangle {
                 }
             }
         }
+
+        Button {
+            id: view
+            width: 12
+            height: 12
+
+            iconSource: if (hovered){
+                            "../../img/buttons/browser/listview_hover.png"
+                        }else{
+                            "../../img/buttons/browser/listview.png"
+                        }
+
+            states: [
+                State {
+                    name: "gridview"
+                    when: headerBar.isInListView == true
+                    PropertyChanges {
+                        target: view;
+                        iconSource: if (hovered){
+                                        "../../img/buttons/browser/gridview_hover.png"
+                                    }else{
+                                        "../../img/buttons/browser/gridview.png"
+                                    }
+                    }
+                },
+                State {
+                    name: "listview"
+                    when: headerBar.isInListView == false
+                    PropertyChanges {
+                        target: view;
+                        iconSource: if (hovered){
+                                        "../../img/buttons/browser/listview_hover.png"
+                                    }else{
+                                        "../../img/buttons/browser/listview.png"
+                                    }
+                    }
+                }
+            ]
+
+            style:
+                ButtonStyle {
+                    background: Rectangle {
+                        anchors.fill: parent
+                        color: "transparent"
+                    }
+                }
+
+            onClicked: if(isInListView) {isInListView = false} else {isInListView = true}
+        }
+
 
 	}
 

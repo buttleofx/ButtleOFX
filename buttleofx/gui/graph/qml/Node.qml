@@ -31,8 +31,8 @@ Rectangle {
     }
     objectName: "qmlNode_" + m.nodeWrapper.name
 
-    x: ((m.nodeWrapper.coord.x * graphContainer.width) / qml_graphRoot.width)
-    y: ((m.nodeWrapper.coord.y * graphContainer.height) / qml_graphRoot.height)
+    x: m.nodeWrapper.coord.x * graph.zoomCoeff
+    y: m.nodeWrapper.coord.y * graph.zoomCoeff
     z: _buttleData.graphWrapper.zMax
 
     //height: 40
@@ -93,7 +93,7 @@ Rectangle {
             //if (dropStatus !== Qt.IgnoreAction)
             // left button : we end moving
             if (mouse.button == Qt.LeftButton) {
-                _buttleManager.nodeManager.nodeMoved(m.nodeWrapper.name, (qml_nodeRoot.x * qml_graphRoot.width) / graphContainer.width, (qml_nodeRoot.y * qml_graphRoot.height) / graphContainer.height)
+                _buttleManager.nodeManager.nodeMoved(m.nodeWrapper.name, qml_nodeRoot.x / graph.zoomCoeff, qml_nodeRoot.y / graph.zoomCoeff)
             }
              //middle button : assign the node to the viewer
             else if (mouse.button == Qt.MidButton){
@@ -371,6 +371,6 @@ Rectangle {
     }
 
     function nodeIsMoving() {
-        _buttleManager.nodeManager.nodeIsMoving(m.nodeWrapper.name, m.nodeRoot.x, m.nodeRoot.y)
+        _buttleManager.nodeManager.nodeIsMoving(m.nodeWrapper.name, m.nodeRoot.x / graph.zoomCoeff, m.nodeRoot.y / graph.zoomCoeff)
     }
 }

@@ -2,8 +2,6 @@ import QtQuick 2.0
 import QtQuick.Layouts 1.0
 
 import QuickMamba 1.0
-import "../../paramEditor/qml"
-
 
 Rectangle {
     id: qml_nodeRoot
@@ -79,10 +77,7 @@ Rectangle {
             // right button : we change the current param node
            else if (mouse.button == Qt.RightButton) {
                 // Param buttle
-                if(editNode == true)
-                    editNode=false
-                else
-                    editNode = true
+                editNode = true
                 _buttleData.currentParamNodeWrapper = m.nodeWrapper
             }
 
@@ -130,18 +125,6 @@ Rectangle {
             _buttleEvent.emitViewerChangedSignal()
             player.lastNodeWrapper = _buttleData.currentViewerNodeWrapper
         }
-    }
-
-    property bool editNode:false
-
-    //Node properties window
-    ParamButtleEditor {
-        visible: editNode ? true:false
-        z:1
-        x:nodeMouseArea.mouseX
-        y:nodeMouseArea.mouseY
-        params:_buttleData.currentParamNodeWrapper ? _buttleData.currentParamNodeWrapper.params : null
-        currentParamNode: _buttleData.currentParamNodeWrapper
     }
 
     Rectangle {

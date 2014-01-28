@@ -1,7 +1,10 @@
 import QtQuick 2.0
 import QtQuick.Layouts 1.0
+import QtQuick.Window 2.1
+import QtQuick.Controls 1.0
 
 import "../../../gui"
+import "../../paramEditor/qml"
 
 Item {
     id: graphEditor
@@ -15,6 +18,16 @@ Item {
         onCloseClicked: graphEditor.buttonCloseClicked(true)
         onFullscreenClicked: graphEditor.buttonFullscreenClicked(true)
     }
+
+    property bool editNode:false
+
+    ParamButtleEditor {                
+        z:1
+        visible: editNode ? true:false
+        params:_buttleData.currentParamNodeWrapper ? _buttleData.currentParamNodeWrapper.params : null
+        currentParamNode: _buttleData.currentParamNodeWrapper
+    }
+
 
     ColumnLayout {
         anchors.fill: parent
@@ -91,6 +104,7 @@ Item {
                     acceptedButtons: Qt.LeftButton | Qt.MiddleButton
                     onPressed: {
                         pluginVisible=false
+                        editNode=false
                         xStart = mouse.x
                         yStart = mouse.y
                         graphContainer_xStart = parent.container.x

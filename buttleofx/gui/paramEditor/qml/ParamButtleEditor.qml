@@ -23,6 +23,9 @@ Item {
     implicitWidth: 280
     implicitHeight: 150
 
+    x:currentParamNode.coord.x + 80
+    y:currentParamNode.coord.y + 95
+
     /*BUTTLE PARAMS*/
     Rectangle{
         id: buttleParams

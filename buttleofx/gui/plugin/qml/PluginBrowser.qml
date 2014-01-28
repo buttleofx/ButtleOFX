@@ -55,12 +55,15 @@ Item {
                 selectionColor: "#00b2a1"
                 color: "white"
 
+                property variant plugin
+
                 Keys.onReturnPressed: {
-                    if(listOfPlugin.count==1)
+                    if(listOfPlugin.model.count==1){
+                        // using listOfPlugin.model[0] doesn't work
                         _buttleManager.nodeManager.creationNode("_buttleData.graph", _buttleData.getSinglePluginSuggestion(text), 0, 0)
                         pluginVisible=false
+                    }
                 }
-
             }
         }
 

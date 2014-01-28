@@ -246,48 +246,6 @@ class GraphWrapper(QtCore.QObject):
         conWrapper = ConnectionWrapper(connection, self._view)
         self._connectionWrappers.append(conWrapper)
 
-    ###################### COLORS ########################
-
-    #@QtCore.pyqtSlot(QtCore.QObject)
-    def highlightParentNodes(self, nodeName):
-        currentNodeWrapper = self.getNodeWrapper(nodeName)
-        if currentNodeWrapper != None:
-            # if the node has inputs
-            if currentNodeWrapper.getNbInput() > 0 :
-                currentNodeSrcClips = currentNodeWrapper.getSrcClips()
-                # for all inputs
-                for currentNodeSrcClip in currentNodeSrcClips:
-                    # if the input is connected to a parent
-                    if self.getConnectedClipWrapper(currentNodeSrcClip, False) != None:
-                        parentNodeName = self.getConnectedClipWrapper(currentNodeSrcClip, False).getNodeName()
-                        print(">>>>>>>>>>>>>>>>>>>>> parentNode : ", self.getNodeWrapper(parentNodeName).getNameUser())
-                        self.highlightParentNodes(parentNodeName)
-            currentNodeWrapper.getNode().setColorRGB(255, 255, 255)
-    """
-    def highlightParentNodes(self, nodeName):
-        print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> WAHWAH : ", self.getNodeWrapper(nodeName).getNameUser())
-        currentNodeWrapper = self.getNodeWrapper(nodeName)
-        while currentNodeWrapper != None:
-            currentNodeWrapper.getNode().setColorRGB(255, 255, 255)
-            # if the node has one input, we get immediately the parent node
-            if currentNodeWrapper.getNbInput() == 1 :
-                currentNodeWrapper = self.getNodeWrapper(self.getConnectedClipWrapper(currentNodeWrapper.getSrcClips()[0], False).getNodeName())
-            # if the node has several inputs, we get the parents recursively
-            elif currentNodeWrapper.getNbInput() > 1 :
-                currentNodeSrcClips = currentNodeWrapper.getSrcClips()
-                # for all inputs
-                for currentNodeSrcClip in currentNodeSrcClips:
-                    print(">>>>>>>>>>> currentSrcClip : ", currentNodeSrcClip)
-                    # if the input is connected to a parent
-                    if self.getConnectedClipWrapper(currentNodeSrcClip, False) != None:
-                        parentNodeName = self.getConnectedClipWrapper(currentNodeSrcClip, False).getNodeName()
-                        #print(">>>>>>>>>>>>>>>>>>>>> parentNode : ", self.getNodeWrapper(parentNodeName).getNameUser())
-                        self.highlightParentNodes(parentNodeName)
-                return
-            else :
-                break
-    """
-
     ################################################ UPDATE WRAPPER LAYER ################################################
 
     def updateWrappers(self):

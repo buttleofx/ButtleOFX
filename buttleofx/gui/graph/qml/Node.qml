@@ -28,6 +28,7 @@ Rectangle {
         property int inputTopMargin: 10
         property int outputTopMargin: 10
         property int sideMargin: 10
+        //property bool isHighlighted: m.nodeWrapper.isHighlighted
     }
     objectName: "qmlNode_" + m.nodeWrapper.name
 
@@ -88,6 +89,12 @@ Rectangle {
 
             // take the focus
             m.nodeRoot.forceActiveFocus()
+
+            // Highlight parents of selected node
+            var parentsToHighlight = _buttleData.getParentNodes()
+            for(var i=0; i<parentsToHighlight.count; ++i){
+                parentsToHighlight.get(i).isHighlighted = true
+            }
         }
         onReleased: {
             var dropStatus = parent.Drag.drop()
@@ -162,6 +169,16 @@ Rectangle {
                      when: m.nodeWrapper == _buttleData.currentParamNodeWrapper
                      PropertyChanges {
                          target: nodeBorder
+                         opacity: 1
+                     }
+                 },
+                 State {
+                     name: "highlightNode"
+                     when: m.nodeWrapper.isHighlighted == true && m.nodeWrapper != _buttleData.currentParamNodeWrapper
+                     //when: m.nodeWrapper == _buttleData.currentParamNodeWrapper
+                     PropertyChanges {
+                         target: nodeBorder
+                         color: m.nodeWrapper.color
                          opacity: 1
                      }
                  }

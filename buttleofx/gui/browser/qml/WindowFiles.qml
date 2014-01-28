@@ -61,25 +61,16 @@ Rectangle {
 
         onFolderChanged: {
             fileModel.selectItem(0)
-            fileModel.fileItems.get(0).fileType == "File" ? winFile.changeFileSize(fileModel.fileItems.get(0).fileSize) : winFile.changeFileSize(0)
-            winFile.changeFileType(fileModel.fileItems.get(0).fileType)
-            winFile.changeFile(fileModel.fileItems.get(0).filepath)
             winFile.changeFileFolder(fileModel.parentFolder)
             winFile.changeSelectedList(fileModel.getSelectedItems())
         }
         onNameFilterChanged: {
             fileModel.selectItem(0)
-            fileModel.fileItems.get(0).fileType == "File" ? winFile.changeFileSize(fileModel.fileItems.get(0).fileSize) : winFile.changeFileSize(0)
-            winFile.changeFileType(fileModel.fileItems.get(0).fileType)
-            winFile.changeFile(fileModel.fileItems.get(0).filepath)
             winFile.changeFileFolder(fileModel.parentFolder)
             winFile.changeSelectedList(fileModel.getSelectedItems())
         }
         onShowSeqChanged: {
             fileModel.selectItem(0)
-            fileModel.fileItems.get(0).fileType == "File" ? winFile.changeFileSize(fileModel.fileItems.get(0).fileSize) : winFile.changeFileSize(0)
-            winFile.changeFileType(fileModel.fileItems.get(0).fileType)
-            winFile.changeFile(fileModel.fileItems.get(0).filepath)
             winFile.changeFileFolder(fileModel.parentFolder)
             winFile.changeSelectedList(fileModel.getSelectedItems())
         }

@@ -254,7 +254,12 @@ Rectangle {
 
         CheckBox {
             id: check
-            text: "Seq"
+            style: CheckBoxStyle {
+                label: Text {
+                    text: "Seq"
+                    color: "white"
+                }
+            }
 
             onClicked: headerBar.changeSeq(check.checked)
         }

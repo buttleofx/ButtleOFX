@@ -319,7 +319,6 @@ Rectangle {
                             }
                             MenuItem {
                                 text: "Delete"
-                                shortcut: "Del"
                                 onTriggered: {
                                     fileModel.deleteItem(itemIndex)
                                     //deleteMessage.open()
@@ -543,7 +542,6 @@ Rectangle {
                         }
                         MenuItem {
                             text: "Delete"
-                            shortcut: "Del"
                             onTriggered: {
                                 fileModel.deleteItem(itemIndex)
                                 //deleteMessage.open()

@@ -51,7 +51,14 @@ class FileItem(QtCore.QObject):
         os.rename(self.filepath, os.path.dirname(self._filepath) + "/" + newName)
         
     def getFileSize(self):
-        return os.stat(self._filepath).st_size
+        if self._fileType == "File":
+            return os.stat(self._filepath).st_size
+        elif self._fileType == "Folder":
+            return "0"
+        elif self._fileType == "Sequence":
+            return "0"
+        
+        
     
     def getSelected(self):
         return self._isSelected
@@ -126,21 +133,18 @@ class FileModelBrowser(QtQuick.QQuickItem):
             if self._showSeq:
                 items = sequenceParser.browse(folder)
                 dirs = [item._filename for item in items if item._type == 0]
-                seqs = [item._sequence.getStandardPattern() for item in items if item._type == 1]
-                seqImg = [item._sequence.getAbsoluteFirstFilename() for item in items if item._type == 1]
+                seqs = [item._sequence for item in items if item._type == 1]
                 files = [item._filename for item in items if item._type == 2]
                 
-                i = 0
                 for s in seqs:
-                    (_, extension) = os.path.splitext(s)
+                    (_, extension) = os.path.splitext(s.getStandardPattern())
                     supported = True
                     try:
                         getBestPlugin.getBestReader(extension)
                     except Exception as e:
                         supported = False
-                    if supported and not s.startswith("."):
-                        self._fileItems.append(FileItem(folder, s, FileItem.Type.Sequence, seqImg[i]))
-                    i = i + 1
+                    if supported and not s.getStandardPattern().startswith("."):
+                        self._fileItems.append(FileItem(folder, s.getStandardPattern(), FileItem.Type.Sequence, s.getAbsoluteFirstFilename()))
             
             else:
                 _, dirs, files = next(os.walk(folder))
@@ -260,4 +264,4 @@ class FileModelBrowser(QtQuick.QQuickItem):
     
     showSeqChanged = QtCore.pyqtSignal()
     showSeq = QtCore.pyqtProperty(bool, getShowSeq, setShowSeq, notify=showSeqChanged)
-    
+

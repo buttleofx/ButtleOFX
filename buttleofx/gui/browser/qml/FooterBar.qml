@@ -24,10 +24,15 @@ Rectangle {
 			Layout.fillWidth: true
         }
 
+        Text {
+            id: nbOfFiles
+            text: selected.count > 1 ? selected.count + " files selected" : ""
+            color: "white"
+        }
 
         Text {
-
-            text: footer.fileType == "Folder" | fileSize < 0.0 ? "" : "Size: " + fileSize.toFixed(2) + " Ko"
+            id: size
+            text: fileSize <= 0.0 ? "" : "Size: " + fileSize.toFixed(2) + " Ko"
             color: "white"
         }
 

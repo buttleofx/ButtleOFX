@@ -195,7 +195,7 @@ Rectangle {
 
                             Image {
                                 x: 25
-                                source: model.object.fileType == "Folder" ? "../../img/buttons/browser/folder-icon.png" : "file:///" + model.object.filepath
+                                source: model.object.fileType == "Folder" ? model.object.fileImg : "file:///" + model.object.fileImg
                                 sourceSize.width: 40
                                 sourceSize.height: 40
 
@@ -421,7 +421,7 @@ Rectangle {
                         spacing: 10
                         Image {
                             x: 25
-                            source: model.object.fileType == "Folder" ? "../../img/buttons/browser/folder-icon.png" : "file:///" + model.object.filepath
+                            source: model.object.fileType == "Folder" ? model.object.fileImg : "file:///" + model.object.fileImg
                             sourceSize.width: 20
                             sourceSize.height: 20
                         }

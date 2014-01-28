@@ -20,13 +20,19 @@ class FileItem(QtCore.QObject):
         Folder = 'Folder'
         Sequence = 'Sequence'
     
-    def __init__(self, folder, fileName, fileType):
+    def __init__(self, folder, fileName, fileType, img):
         super(FileItem, self).__init__()
         if folder == "/":
             self._filepath = folder + fileName
         else:
             self._filepath = folder + "/" + fileName
         self._fileType = fileType
+        if fileType == "File":
+            self._fileImg = self._filepath
+        elif fileType == "Folder":
+            self._fileImg = "../../img/buttons/browser/folder-icon.png"
+        elif fileType == "Sequence":
+            self._fileImg = img
 
     def getFilepath(self):
         return self._filepath
@@ -53,6 +59,9 @@ class FileItem(QtCore.QObject):
     def setSelected(self, isSelected):
         self._isSelected = isSelected
         self.isSelectedChange.emit()
+        
+    def getFileImg(self):
+        return self._fileImg
 
     filepath = QtCore.pyqtProperty(str, getFilepath, setFilepath, constant=True)
     fileType = QtCore.pyqtProperty(str, getFileType, constant=True)
@@ -60,6 +69,7 @@ class FileItem(QtCore.QObject):
     fileSize = QtCore.pyqtProperty(float, getFileSize, constant=True)
     isSelectedChange = QtCore.pyqtSignal()
     isSelected = QtCore.pyqtProperty(bool, getSelected, setSelected, notify=isSelectedChange)
+    fileImg = QtCore.pyqtProperty(str, getFileImg, constant=True)
 
 
 class FileModelBrowser(QtQuick.QQuickItem):
@@ -117,8 +127,10 @@ class FileModelBrowser(QtQuick.QQuickItem):
                 items = sequenceParser.browse(folder)
                 dirs = [item._filename for item in items if item._type == 0]
                 seqs = [item._sequence.getStandardPattern() for item in items if item._type == 1]
+                seqImg = [item._sequence.getAbsoluteFirstFilename() for item in items if item._type == 1]
                 files = [item._filename for item in items if item._type == 2]
                 
+                i = 0
                 for s in seqs:
                     (_, extension) = os.path.splitext(s)
                     supported = True
@@ -127,14 +139,15 @@ class FileModelBrowser(QtQuick.QQuickItem):
                     except Exception as e:
                         supported = False
                     if supported and not s.startswith("."):
-                        self._fileItems.append(FileItem(folder, s, FileItem.Type.Sequence))
+                        self._fileItems.append(FileItem(folder, s, FileItem.Type.Sequence, seqImg[i]))
+                    i = i + 1
             
             else:
                 _, dirs, files = next(os.walk(folder))
                 
             for d in dirs:
                 if not d.startswith("."):
-                    self._fileItems.append(FileItem(folder, d, FileItem.Type.Folder))
+                    self._fileItems.append(FileItem(folder, d, FileItem.Type.Folder, ""))
                 
             if self._nameFilter == "*":
                 for f in files:
@@ -146,14 +159,14 @@ class FileModelBrowser(QtQuick.QQuickItem):
                         except Exception as e:
                             supported = False
                         if supported:
-                            self._fileItems.append(FileItem(folder, f, FileItem.Type.File))
+                            self._fileItems.append(FileItem(folder, f, FileItem.Type.File, ""))
                     
             else:
                 for f in files:
                     (shortname, extension) = os.path.splitext(f)
                     if extension == self._nameFilter:
                         print("Only ", extension, " files")
-                        self._fileItems.append(FileItem(folder, f, FileItem.Type.File))
+                        self._fileItems.append(FileItem(folder, f, FileItem.Type.File, ""))
                           
         except Exception:
             pass
@@ -169,7 +182,7 @@ class FileModelBrowser(QtQuick.QQuickItem):
             dirs = sorted(dirs, key=lambda v: v.upper())
             for d in dirs:
                 if not d.startswith(".") and d.startswith(os.path.basename(fileFilter)) and d != os.path.basename(fileFilter):
-                    suggestions.append(FileItem(os.path.dirname(fileFilter), d, FileItem.Type.Folder))
+                    suggestions.append(FileItem(os.path.dirname(fileFilter), d, FileItem.Type.Folder, ""))
             
         except Exception:
             pass
@@ -247,5 +260,4 @@ class FileModelBrowser(QtQuick.QQuickItem):
     
     showSeqChanged = QtCore.pyqtSignal()
     showSeq = QtCore.pyqtProperty(bool, getShowSeq, setShowSeq, notify=showSeqChanged)
-
-
+    

@@ -265,7 +265,7 @@ ApplicationWindow {
             MenuItem {
                 text: "Select all"
                 shortcut: "Ctrl+A"
-                onTriggered: _buttleManager..selectAllNodes()
+                onTriggered: _buttleManager.selectAllNodes()
             }
 
             MenuItem {

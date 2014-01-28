@@ -54,7 +54,7 @@ Item {
                 id: graph
                 implicitWidth: parent.width
                 Layout.minimumHeight: 100
-                implicitHeight: 300
+                height: parent.height
                 Layout.fillHeight: true
                 clip: true
                 color: "transparent"

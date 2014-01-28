@@ -9,7 +9,7 @@ Rectangle {
     id: winFile
     color: fileModel.exists ? "black" : "lightgrey"
 
-    property string folder
+    property string folder: fileModel.firstFolder()
     signal goToFolder(string newFolder)
     property string filterName
     signal changeFileFolder(string fileFolder)
@@ -21,6 +21,7 @@ Rectangle {
     signal changeSelectedList(variant selected)
     property int itemIndex: 0
     property string fileName
+    property bool showSeq: false
 
     function forceActiveFocusOnCreate() {
         fileModel.createFolder(fileModel.folder + "/New Directory")
@@ -39,6 +40,7 @@ Rectangle {
 
         MenuItem {
             text: "Create a Directory"
+            shortcut: "Ctrl+N"
             onTriggered: {
                 fileModel.createFolder(fileModel.folder + "/New Directory")
             }
@@ -55,10 +57,11 @@ Rectangle {
         id: fileModel
         folder: winFile.folder
         nameFilter: winFile.filterName
+        showSeq: winFile.showSeq
 
         onFolderChanged: {
             fileModel.selectItem(0)
-            winFile.changeFileSize(fileModel.fileItems.get(0).fileSize)
+            fileModel.fileItems.get(0).fileType == "File" ? winFile.changeFileSize(fileModel.fileItems.get(0).fileSize) : winFile.changeFileSize(0)
             winFile.changeFileType(fileModel.fileItems.get(0).fileType)
             winFile.changeFile(fileModel.fileItems.get(0).filepath)
             winFile.changeFileFolder(fileModel.parentFolder)
@@ -66,7 +69,15 @@ Rectangle {
         }
         onNameFilterChanged: {
             fileModel.selectItem(0)
-            winFile.changeFileSize(fileModel.fileItems.get(0).fileSize)
+            fileModel.fileItems.get(0).fileType == "File" ? winFile.changeFileSize(fileModel.fileItems.get(0).fileSize) : winFile.changeFileSize(0)
+            winFile.changeFileType(fileModel.fileItems.get(0).fileType)
+            winFile.changeFile(fileModel.fileItems.get(0).filepath)
+            winFile.changeFileFolder(fileModel.parentFolder)
+            winFile.changeSelectedList(fileModel.getSelectedItems())
+        }
+        onShowSeqChanged: {
+            fileModel.selectItem(0)
+            fileModel.fileItems.get(0).fileType == "File" ? winFile.changeFileSize(fileModel.fileItems.get(0).fileSize) : winFile.changeFileSize(0)
             winFile.changeFileType(fileModel.fileItems.get(0).fileType)
             winFile.changeFile(fileModel.fileItems.get(0).filepath)
             winFile.changeFileFolder(fileModel.parentFolder)
@@ -143,6 +154,25 @@ Rectangle {
                 Component {
                     id: componentInColumn
 
+                    Item {
+                        id: dropArea
+
+                        DropArea {
+                            id: moveItemInColumn
+                            anchors.fill: parent
+                            objectName: model.object.filepath
+                            keys: ["internFileDrag"]
+
+                            onDropped: {
+                                console.debug("file: " + Drag.source.objectName)
+                                console.debug("Index: " + drop.source.objectName)
+                                //fileModel.moveItem(drop.source.objectName, )
+                            }
+                            onEntered: {
+                               console.debug("Test on Entered")
+                            }
+                        }
+
                     Rectangle {
                         id: fileInColumn
                         color: model.object.isSelected ? "#00b2a1" : "transparent"
@@ -158,22 +188,6 @@ Rectangle {
                             textInColumn.forceActiveFocus()
                         }
 
-                        Item {
-                            id: dropArea
-
-                            DropArea {
-                                id: moveItemInColumn
-                                anchors.fill: parent
-                                objectName: model.object.filepath
-                                keys: ["internFileDrag"]
-
-                                onDropped: {
-                                    console.debug("file: " + Drag.source.objectName)
-                                    console.debug("Index: " + drop.source.objectName)
-                                    //fileModel.moveItem(drop.source.objectName, )
-                                }
-                            }
-                        }
 
                         Column {
                             id : file
@@ -255,7 +269,7 @@ Rectangle {
 
                                 else if(!(mouse.modifiers & Qt.ShiftModifier))
                                     fileModel.selectItem(index)
-                                    winFile.changeFileSize(model.object.fileSize)
+                                    model.object.fileType == "File" ? winFile.changeFileSize(model.object.fileSize) : winFile.changeFileSize(0)
 
                                 var sel = fileModel.getSelectedItems()
                                 var selection = new Array()
@@ -297,6 +311,7 @@ Rectangle {
 
                             MenuItem {
                                 text: "Rename"
+                                shortcut: "F2"
                                 onTriggered: {
                                     //Open a TextEdit
                                     textInColumn.forceActiveFocus()
@@ -304,6 +319,7 @@ Rectangle {
                             }
                             MenuItem {
                                 text: "Delete"
+                                shortcut: "Del"
                                 onTriggered: {
                                     fileModel.deleteItem(itemIndex)
                                     //deleteMessage.open()
@@ -312,6 +328,7 @@ Rectangle {
                         }
 
                     }
+                    }//end Item
                 }//endComponent
         }
     }
@@ -477,7 +494,7 @@ Rectangle {
 
                             else if(!(mouse.modifiers & Qt.ShiftModifier))
                                 fileModel.selectItem(index)
-                                winFile.changeFileSize(model.object.fileSize)
+                                model.object.fileType == "File" ? winFile.changeSelectedList(fileModel.getSelectedItems()) : winFile.changeSelectedList(0)
 
                             var sel = fileModel.getSelectedItems()
                             var selection = new Array()
@@ -518,6 +535,7 @@ Rectangle {
 
                         MenuItem {
                             text: "Rename"
+                            shortcut: "F2"
                             onTriggered: {
                                 //Open a TextEdit
                                 textInRow.forceActiveFocus()
@@ -525,6 +543,7 @@ Rectangle {
                         }
                         MenuItem {
                             text: "Delete"
+                            shortcut: "Del"
                             onTriggered: {
                                 fileModel.deleteItem(itemIndex)
                                 //deleteMessage.open()

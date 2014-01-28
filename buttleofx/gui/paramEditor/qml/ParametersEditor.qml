@@ -27,6 +27,29 @@ Item {
         onFullscreenClicked: parametersEditor.buttonFullscreenClicked(true)
     }
 
+    // Drag&Drop from Browser to ParametersEditor
+    DropArea {
+        anchors.fill: parent
+        keys: "internFileDrag"
+
+        onDropped: {
+            _buttleData.currentGraphWrapper = _buttleData.graphWrapper
+            _buttleData.currentGraphIsGraph()
+            // if before the viewer was showing an image from the brower, we change the currentView
+            if (_buttleData.currentViewerIndex > 9){
+                _buttleData.currentViewerIndex = player.lastView
+                if (player.lastNodeWrapper != undefined)
+                    _buttleData.currentViewerNodeWrapper = player.lastNodeWrapper
+                player.changeViewer(player.lastView)
+            }
+
+            for(var urlIndex in drag.source.selectedFiles)
+            {
+                _buttleManager.nodeManager.dropFile(drag.source.selectedFiles[urlIndex], 10*urlIndex, 10*urlIndex)
+            }
+        }
+    }
+
     // Container of the paramNodes
     Rectangle{
         id: contentparamNode
@@ -311,7 +334,7 @@ Item {
                     if (previousNode == undefined)
                         _buttleManager.nodeManager.creationNode("_buttleData.graph", object, 0, 0)
                     else
-                        _buttleManager.nodeManager.creationNode("_buttleData.graph", object, previousNode.xCoord+140, 0)
+                        _buttleManager.nodeManager.creationNode("_buttleData.graph", object, previousNode.xCoord+140, previousNode.yCoord)
 
                     // if there is only one node, we don't connect it
                     if (previousNode != undefined){

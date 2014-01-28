@@ -67,6 +67,16 @@ class GraphWrapper(QtCore.QObject):
         str_list.append((self.getGraphMapped()).__str__())
 
         return ''.join(str_list)
+        
+        
+    @QtCore.pyqtSlot(str)
+    def deleteNodeWrapper(self, nodeName):
+        """
+            Delete the corresponding node
+        """
+        for nodeWrapper in self._nodeWrappers:
+            if nodeWrapper.getName() == nodeName:
+                self._graph.deleteNodes([nodeWrapper.getNode()])
                
     @QtCore.pyqtSlot(int, result=float)
     def maxHeight(self, height):

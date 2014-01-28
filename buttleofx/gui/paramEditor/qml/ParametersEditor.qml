@@ -103,6 +103,7 @@ Item {
                     }
 
                     Text{
+                        id: name
                         color: "white"
                         text: currentParamNode.name
                         anchors.verticalCenter: parent.verticalCenter
@@ -187,6 +188,39 @@ Item {
                             // we assign the node to the viewer, at the frame 0
                             _buttleData.assignNodeToViewerIndex(paramNode.currentParamNode, 0)
                             _buttleEvent.emitViewerChangedSignal()
+                        }
+                    }
+
+                    Image {
+                        id: closeButton
+                        source: "file:///" + _buttleData.buttlePath +  "/gui/img/icons/close.png"
+                        width: 10
+                        height: 10
+                        x: name.x + name.width + 5
+                        y: name.y + 4
+
+                        MouseArea {
+                            id: closeMouseArea
+                            anchors.fill: parent
+                            hoverEnabled: true
+
+                            onClicked: {
+                                _buttleData.graphWrapper.deleteNodeWrapper(name.text)
+                            }
+                        }
+
+                        StateGroup {
+                            id: stateButtonEvents
+                             states: [
+                                 State {
+                                     name: "hover"
+                                     when: closeMouseArea.containsMouse
+                                     PropertyChanges {
+                                         target: closeButton
+                                         source:  "file:///" + _buttleData.buttlePath +  "/gui/img/icons/close_hover.png"
+                                     }
+                                 }
+                             ]
                         }
                     }
                 }

@@ -205,7 +205,9 @@ Item {
                             hoverEnabled: true
 
                             onClicked: {
-                                _buttleData.graphWrapper.deleteNodeWrapper(name.text)
+                                var clips = _buttleData.graphWrapper.deleteNodeWrapper(name.text)
+                                if(clips)
+                                    _buttleManager.connectionManager.connectWrappers(clips.get(0), clips.get(1))
                             }
                         }
 

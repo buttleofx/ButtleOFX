@@ -68,15 +68,24 @@ class GraphWrapper(QtCore.QObject):
 
         return ''.join(str_list)
         
-        
-    @QtCore.pyqtSlot(str)
+    @QtCore.pyqtSlot(str, result=QtCore.QObject)
     def deleteNodeWrapper(self, nodeName):
         """
             Delete the corresponding node
         """
+        clips = QObjectListModel(self)
         for nodeWrapper in self._nodeWrappers:
             if nodeWrapper.getName() == nodeName:
+                clipConnected_input = self.getConnectedClipWrapper(nodeWrapper.getSrcClips().get(0), False)
+                clipConnected_output = self.getConnectedClipWrapper_Output(nodeWrapper.getOutputClip())
+                if(clipConnected_input and clipConnected_output):
+                    clips.append(clipConnected_input)
+                    clips.append(clipConnected_output)
+                    print(clipConnected_input.getNodeName())
+                    print(clipConnected_output.getNodeName())
                 self._graph.deleteNodes([nodeWrapper.getNode()])
+        if(clipConnected_input and clipConnected_output):     
+            return clips
                
     @QtCore.pyqtSlot(int, result=float)
     def maxHeight(self, height):
@@ -171,6 +180,18 @@ class GraphWrapper(QtCore.QObject):
                     connection.setEnabled(False)
                 connection.currentConnectionStateChanged.emit()
                 return self.getNodeWrapper(connection.out_clipNodeName).getClip(connection.out_clipName)
+                
+        return None
+        
+    @QtCore.pyqtSlot(QtCore.QObject, result=QtCore.QObject)
+    def getConnectedClipWrapper_Output(self, clipWrapper):
+        """
+            Returns the clip connected to an output clip if it exists.
+        """
+        for connection in self._connectionWrappers:
+            if((clipWrapper.getNodeName() == connection.getOut_clipNodeName() and clipWrapper.getClipName() == connection.getOut_clipName())):
+                connection.currentConnectionStateChanged.emit()
+                return self.getNodeWrapper(connection.in_clipNodeName).getClip(connection.in_clipName)
                 
         return None
 

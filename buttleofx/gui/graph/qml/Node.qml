@@ -23,7 +23,7 @@ Rectangle {
         property variant nodeRoot: qml_nodeRoot
 
         property int inputSpacing: 10
-        property int clipSize: 9
+        property int clipSize: graph.zoomCoeff < 0.3 ? 6 : 9
         property int nbInput: m.nodeWrapper.nbInput
         property int inputTopMargin: 10
         property int outputTopMargin: 10

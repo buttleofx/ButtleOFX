@@ -263,6 +263,12 @@ ApplicationWindow {
             }
 
             MenuItem {
+                text: "Select all"
+                shortcut: "Ctrl+A"
+                onTriggered: _buttleManager.selectAllNodes()
+            }
+
+            MenuItem {
                 text: "Delete"
                 shortcut: "del"
                 onTriggered: _buttleManager.deleteSelection()

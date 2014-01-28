@@ -145,7 +145,7 @@ Item {
                     }
 
                     Image {
-                        source: tuttleParamContent.visible ? _buttleData.buttlePath +  "/gui/img/buttons/params/arrow_hover.png" : _buttleData.buttlePath +  "/gui/img/buttons/params/arrow_right.png"
+                        source: tuttleParamContent.visible ? "file:///" + _buttleData.buttlePath +  "/gui/img/buttons/params/arrow_hover.png" : "file:///" + _buttleData.buttlePath +  "/gui/img/buttons/params/arrow_right.png"
                         width: 12
                         height: 12
                         anchors.right: parent.right
@@ -317,9 +317,9 @@ Item {
 
         iconSource:
             if (hovered){
-                _buttleData.buttlePath +  "/gui/img/buttons/tools/bigplus_hover.png"
+                "file:///" + _buttleData.buttlePath +  "/gui/img/buttons/tools/bigplus_hover.png"
             }else{
-                _buttleData.buttlePath +  "/gui/img/buttons/tools/bigplus.png"
+                "file:///" + _buttleData.buttlePath +  "/gui/img/buttons/tools/bigplus.png"
             }
 
         style:

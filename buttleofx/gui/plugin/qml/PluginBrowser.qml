@@ -53,13 +53,14 @@ Item {
                 clip: true
                 selectByMouse: true
                 selectionColor: "#00b2a1"
-
                 color: "white"
 
-                Keys.onTabPressed: {
-                    pluginSearchedChanged(text)
-                    searchPlugin.forceActiveFocus()
+                Keys.onReturnPressed: {
+                    if(listOfPlugin.count==1)
+                        _buttleManager.nodeManager.creationNode("_buttleData.graph", _buttleData.getSinglePluginSuggestion(text), 0, 0)
+                        pluginVisible=false
                 }
+
             }
         }
 
@@ -155,3 +156,4 @@ Item {
         }
     }
 }
+

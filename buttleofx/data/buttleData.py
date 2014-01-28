@@ -409,6 +409,12 @@ class ButtleData(QtCore.QObject):
     def appendToCurrentSelectedNodeWrappers(self, nodeWrapper):
         self.appendToCurrentSelectedNodeNames(nodeWrapper.getName())
 
+    def appendNodeWrapper(self, nodeWrapper):
+        if nodeWrapper.getName() in self._currentSelectedNodeNames:
+                self._currentSelectedNodeNames.remove(nodeWrapper.getName())
+        self._currentSelectedNodeNames.append(nodeWrapper.getName())
+        self.currentSelectedNodesChanged.emit()
+
     def appendToCurrentSelectedNodeNames(self, nodeName):
         if nodeName in self._currentSelectedNodeNames:
             self._currentSelectedNodeNames.remove(nodeName)

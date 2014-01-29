@@ -49,15 +49,26 @@ Rectangle {
 
 		Button{
 			id: openButton
-			text: "Open"
+            text: "Import"
             height: parent.height - 5
-
+			
+			// import selected files in the graph
             onClicked: {
+                _buttleData.currentGraphWrapper = _buttleData.graphWrapper
+                _buttleData.currentGraphIsGraph()
+                // if before the viewer was showing an image from the brower, we change the currentView
+                if (_buttleData.currentViewerIndex > 9){
+                    _buttleData.currentViewerIndex = player.lastView
+                    if (player.lastNodeWrapper != undefined)
+                        _buttleData.currentViewerNodeWrapper = player.lastNodeWrapper
+                    player.changeViewer(player.lastView)
+                }
+                
                 for(var i=0; i< selected.count; ++i)
                 {
-                    console.debug("selected: " + i + " -> " + selected.get(i).fileName)
-                    selected.get(i).fileType == "Folder" ? footer.openFolder(selected.get(i).filepath) : Qt.openUrlExternally("file:///" + selected.get(i).filepath)
+                    _buttleManager.nodeManager.dropFile(selected.get(i).filepath, 10*i, 10*i)
                 }
+
             }
 		}
 	}

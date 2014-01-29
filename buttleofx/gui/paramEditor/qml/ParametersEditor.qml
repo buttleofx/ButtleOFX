@@ -4,8 +4,10 @@ import QtQml 2.1
 import QtQuick.Controls.Styles 1.0
 import QtQuick.Layouts 1.0
 import QuickMamba 1.0
+import "qmlComponents"
 
 import "../../../gui"
+import "../../plugin/qml"
 
 Item {
     id: parametersEditor
@@ -18,6 +20,13 @@ Item {
     property variant newNode
     property variant previousNode
 
+    MouseArea{
+        anchors.fill:parent
+        onClicked:{
+            pluginVisible =false
+        }
+    }
+
 //    property variant clipWrapper
 
     Tab {
@@ -25,6 +34,41 @@ Item {
         name: "Parameters - Advanced Mode"
         onCloseClicked: parametersEditor.buttonCloseClicked(true)
         onFullscreenClicked: parametersEditor.buttonFullscreenClicked(true)
+    }
+
+    property bool pluginVisible:false
+
+    //List of plugins
+    PluginBrowser {
+        id: pluginBrowser
+        z:1
+        height: 250
+        visible:pluginVisible
+        y:player.height+50
+        x:parametersEditor.width/2-100
+    }
+
+    // Drag&Drop from Browser to ParametersEditor
+    DropArea {
+        anchors.fill: parent
+        keys: "internFileDrag"
+
+        onDropped: {
+            _buttleData.currentGraphWrapper = _buttleData.graphWrapper
+            _buttleData.currentGraphIsGraph()
+            // if before the viewer was showing an image from the brower, we change the currentView
+            if (_buttleData.currentViewerIndex > 9){
+                _buttleData.currentViewerIndex = player.lastView
+                if (player.lastNodeWrapper != undefined)
+                    _buttleData.currentViewerNodeWrapper = player.lastNodeWrapper
+                player.changeViewer(player.lastView)
+            }
+
+            for(var urlIndex in drag.source.selectedFiles)
+            {
+                _buttleManager.nodeManager.dropFile(drag.source.selectedFiles[urlIndex], 10*urlIndex, 10*urlIndex)
+            }
+        }
     }
 
     // Container of the paramNodes
@@ -43,6 +87,46 @@ Item {
             height: parent.height
             anchors.topMargin: 5
             anchors.bottomMargin: 5
+
+            style: ScrollViewStyle {
+                        scrollBarBackground: Rectangle {
+                            id: scrollBar
+                            width:15
+                            color: "#212121"
+                            border.width: 1
+                            border.color: "#333"
+                        }
+                        decrementControl : Rectangle {
+                            id: scrollLower
+                            width:15
+                            height:15
+                            color: styleData.pressed? "#212121" : "#343434"
+                            border.width: 1
+                            border.color: "#333"
+                            radius: 3
+                            Image{
+                                id: arrow
+                                source: "file:///" + _buttleData.buttlePath + "/gui/img/buttons/params/arrow2.png"
+                                x:4
+                                y:4
+                            }
+                        }
+                        incrementControl : Rectangle {
+                            id: scrollHigher
+                            width:15
+                            height:15
+                            color: styleData.pressed? "#212121" : "#343434"
+                            border.width: 1
+                            border.color: "#333"
+                            radius: 3
+                            Image{
+                                id: arrow
+                                source: "file:///" + _buttleData.buttlePath + "/gui/img/buttons/params/arrow.png"
+                                x:4
+                                y:4
+                            }
+                        }
+                    }
 
             // for each node we create a paramNode
             ListView{
@@ -93,7 +177,7 @@ Item {
                     }
 
                     Image {
-                        source: tuttleParamContent.visible ? _buttleData.buttlePath +  "/gui/img/buttons/params/arrow_hover.png" : _buttleData.buttlePath +  "/gui/img/buttons/params/arrow_right.png"
+                        source: tuttleParamContent.visible ? "file:///" + _buttleData.buttlePath +  "/gui/img/buttons/params/arrow_hover.png" : "file:///" + _buttleData.buttlePath +  "/gui/img/buttons/params/arrow_right.png"
                         width: 12
                         height: 12
                         anchors.right: parent.right
@@ -103,6 +187,7 @@ Item {
                     }
 
                     Text{
+                        id: name
                         color: "white"
                         text: currentParamNode.name
                         anchors.verticalCenter: parent.verticalCenter
@@ -154,6 +239,7 @@ Item {
                         acceptedButtons: Qt.LeftButton | Qt.MidButton
 
                         onPressed: {
+                            pluginVisible =false
                             if (mouse.button == Qt.LeftButton) {
                                  if (tuttleParamContent.visible == true){
                                     tuttleParamContent.visible = false
@@ -189,6 +275,41 @@ Item {
                             _buttleEvent.emitViewerChangedSignal()
                         }
                     }
+
+                    Image {
+                        id: closeButton
+                        source: "file:///" + _buttleData.buttlePath +  "/gui/img/icons/close.png"
+                        width: 10
+                        height: 10
+                        x: name.x + name.width + 5
+                        y: name.y + 4
+
+                        MouseArea {
+                            id: closeMouseArea
+                            anchors.fill: parent
+                            hoverEnabled: true
+
+                            onClicked: {
+                                var clips = _buttleData.graphWrapper.deleteNodeWrapper(name.text)
+                                if(clips)
+                                    _buttleManager.connectionManager.connectWrappers(clips.get(0), clips.get(1))
+                            }
+                        }
+
+                        StateGroup {
+                            id: stateButtonEvents
+                             states: [
+                                 State {
+                                     name: "hover"
+                                     when: closeMouseArea.containsMouse
+                                     PropertyChanges {
+                                         target: closeButton
+                                         source:  "file:///" + _buttleData.buttlePath +  "/gui/img/icons/close_hover.png"
+                                     }
+                                 }
+                             ]
+                        }
+                    }
                 }
 
 
@@ -222,6 +343,30 @@ Item {
                                 source : model.object.paramType + ".qml"
                                 width: parent.width
                                 x: 15 // here is the distance to the left of the listview
+                                z:0
+
+                                ToolTip{
+                                    id:tooltip
+                                    visible: false
+                                    paramHelp: model.object.doc
+                                    z:param.z+1
+                                }
+                                MouseArea {
+                                    anchors.fill: parent
+                                    acceptedButtons: Qt.RightButton
+                                    hoverEnabled:true
+                                    onClicked: {
+                                        model.object.hasChanged = false
+                                        model.object.value = model.object.getDefaultValue()
+                                        model.object.pushValue(model.object.value)
+                                    }
+                                    onEntered: {
+                                        tooltip.visible=true
+                                    }
+                                    onExited: {
+                                        tooltip.visible=false
+                                    }
+                                }
                             }
                         }
                     }//Listview
@@ -241,9 +386,9 @@ Item {
 
         iconSource:
             if (hovered){
-                _buttleData.buttlePath +  "/gui/img/buttons/tools/bigplus_hover.png"
+                "file:///" + _buttleData.buttlePath +  "/gui/img/buttons/tools/bigplus_hover.png"
             }else{
-                _buttleData.buttlePath +  "/gui/img/buttons/tools/bigplus.png"
+                "file:///" + _buttleData.buttlePath +  "/gui/img/buttons/tools/bigplus.png"
             }
 
         style:
@@ -255,10 +400,11 @@ Item {
             }
 
         onClicked: {
-            nodesMenu.popup();
+            if(pluginVisible==false) {pluginVisible=true}
+            else {pluginVisible=false}
         }
     }
-
+    /*
     Menu {
         id: nodesMenu
         title: "Nodes"
@@ -275,7 +421,7 @@ Item {
                     if (previousNode == undefined)
                         _buttleManager.nodeManager.creationNode("_buttleData.graph", object, 0, 0)
                     else
-                        _buttleManager.nodeManager.creationNode("_buttleData.graph", object, previousNode.xCoord+140, 0)
+                        _buttleManager.nodeManager.creationNode("_buttleData.graph", object, previousNode.xCoord+140, previousNode.yCoord)
 
                     // if there is only one node, we don't connect it
                     if (previousNode != undefined){
@@ -288,4 +434,5 @@ Item {
             onObjectRemoved: nodesMenu.removeItem(object)
         } // Instantiator
     } //Menu
+    */
 }

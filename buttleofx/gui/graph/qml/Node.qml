@@ -2,8 +2,6 @@ import QtQuick 2.0
 import QtQuick.Layouts 1.0
 
 import QuickMamba 1.0
-import "../../paramEditor/qml"
-
 
 Rectangle {
     id: qml_nodeRoot
@@ -23,16 +21,17 @@ Rectangle {
         property variant nodeRoot: qml_nodeRoot
 
         property int inputSpacing: 10
-        property int clipSize: 9
+        property int clipSize: graph.zoomCoeff < 0.3 ? 6 : 9
         property int nbInput: m.nodeWrapper.nbInput
         property int inputTopMargin: 10
         property int outputTopMargin: 10
         property int sideMargin: 10
+        //property bool isHighlighted: m.nodeWrapper.isHighlighted
     }
     objectName: "qmlNode_" + m.nodeWrapper.name
 
-    x: ((m.nodeWrapper.coord.x * graphContainer.width) / qml_graphRoot.width)
-    y: ((m.nodeWrapper.coord.y * graphContainer.height) / qml_graphRoot.height)
+    x: m.nodeWrapper.coord.x * graph.zoomCoeff
+    y: m.nodeWrapper.coord.y * graph.zoomCoeff
     z: _buttleData.graphWrapper.zMax
 
     //height: 40
@@ -73,27 +72,31 @@ Rectangle {
                 parent.z = _buttleData.graphWrapper.zMax
                 xstart = mouse.x
                 //stateMoving.state = "moving"
+                _buttleData.graphWrapper.setTmpMoveNode(m.nodeWrapper.name)
             }
 
             // right button : we change the current param node
            else if (mouse.button == Qt.RightButton) {
                 // Param buttle
-                if(editNode == true)
-                    editNode=false
-                else
-                    editNode = true
+                editNode = true
                 _buttleData.currentParamNodeWrapper = m.nodeWrapper
             }
 
             // take the focus
             m.nodeRoot.forceActiveFocus()
+
+            // Highlight parents of selected node
+            var parentsToHighlight = _buttleData.getParentNodes()
+            for(var i=0; i<parentsToHighlight.count; ++i){
+                parentsToHighlight.get(i).isHighlighted = true
+            }
         }
         onReleased: {
             var dropStatus = parent.Drag.drop()
             //if (dropStatus !== Qt.IgnoreAction)
             // left button : we end moving
             if (mouse.button == Qt.LeftButton) {
-                _buttleManager.nodeManager.nodeMoved(m.nodeWrapper.name, (qml_nodeRoot.x * qml_graphRoot.width) / graphContainer.width, (qml_nodeRoot.y * qml_graphRoot.height) / graphContainer.height)
+                _buttleManager.nodeManager.nodeMoved(m.nodeWrapper.name, qml_nodeRoot.x / graph.zoomCoeff, qml_nodeRoot.y / graph.zoomCoeff)
             }
              //middle button : assign the node to the viewer
             else if (mouse.button == Qt.MidButton){
@@ -131,18 +134,6 @@ Rectangle {
         }
     }
 
-    property bool editNode:false
-
-    //Node properties window
-    ParamButtleEditor {
-        visible: editNode ? true:false
-        z:1
-        x:nodeMouseArea.mouseX
-        y:nodeMouseArea.mouseY
-        params:_buttleData.currentParamNodeWrapper ? _buttleData.currentParamNodeWrapper.params : null
-        currentParamNode: _buttleData.currentParamNodeWrapper
-    }
-
     Rectangle {
         id: nodeBorder
         anchors.centerIn: parent
@@ -161,6 +152,16 @@ Rectangle {
                      when: m.nodeWrapper == _buttleData.currentParamNodeWrapper
                      PropertyChanges {
                          target: nodeBorder
+                         opacity: 1
+                     }
+                 },
+                 State {
+                     name: "highlightNode"
+                     when: m.nodeWrapper.isHighlighted == true && m.nodeWrapper != _buttleData.currentParamNodeWrapper
+                     //when: m.nodeWrapper == _buttleData.currentParamNodeWrapper
+                     PropertyChanges {
+                         target: nodeBorder
+                         color: m.nodeWrapper.color
                          opacity: 1
                      }
                  }
@@ -371,6 +372,6 @@ Rectangle {
     }
 
     function nodeIsMoving() {
-        _buttleManager.nodeManager.nodeIsMoving(m.nodeWrapper.name, m.nodeRoot.x, m.nodeRoot.y)
+        _buttleManager.nodeManager.nodeIsMoving(m.nodeWrapper.name, m.nodeRoot.x / graph.zoomCoeff, m.nodeRoot.y / graph.zoomCoeff)
     }
 }

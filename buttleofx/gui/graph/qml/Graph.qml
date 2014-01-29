@@ -9,7 +9,7 @@ Rectangle {
 
         // Graph toolbar
         if (event.key == Qt.Key_Delete) {
-           _buttleManager.deleteSelection();
+           _buttleManager.deleteSelection()
         }
     }
 

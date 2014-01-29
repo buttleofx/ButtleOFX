@@ -409,6 +409,12 @@ class ButtleData(QtCore.QObject):
     def appendToCurrentSelectedNodeWrappers(self, nodeWrapper):
         self.appendToCurrentSelectedNodeNames(nodeWrapper.getName())
 
+    def appendNodeWrapper(self, nodeWrapper):
+        if nodeWrapper.getName() in self._currentSelectedNodeNames:
+                self._currentSelectedNodeNames.remove(nodeWrapper.getName())
+        self._currentSelectedNodeNames.append(nodeWrapper.getName())
+        self.currentSelectedNodesChanged.emit()
+
     def appendToCurrentSelectedNodeNames(self, nodeName):
         if nodeName in self._currentSelectedNodeNames:
             self._currentSelectedNodeNames.remove(nodeName)
@@ -503,6 +509,38 @@ class ButtleData(QtCore.QObject):
      
           self._graphWrapper.updateNodeWrappers()
           self._graphWrapper.updateConnectionWrappers()
+
+    @QtCore.pyqtSlot(result=QtCore.QObject)
+    def getParentNodes(self):
+        """
+            Return the list of parents of selected nodes as a QObjectListModel
+        """
+        currentSelectedNodeWrappers = self.getCurrentSelectedNodeWrappers()
+        toVisit = set()
+        visited = set()
+        for selectedNodeWrapper in currentSelectedNodeWrappers:
+            toVisit.add(selectedNodeWrapper)
+        while len(toVisit) != 0 :
+            currentNodeWrapper = toVisit.pop()
+            #if the node has not already been visited
+            if currentNodeWrapper not in visited:
+                # if the node has inputs
+                if currentNodeWrapper.getNbInput() > 0 :
+                    currentNodeSrcClips = currentNodeWrapper.getSrcClips()
+                    # for all inputs
+                    for currentNodeSrcClip in currentNodeSrcClips:
+                        # if the input is connected to a parent
+                        if self.getGraphWrapper().getConnectedClipWrapper(currentNodeSrcClip, False) != None:
+                            parentNodeWrapper = self.getGraphWrapper().getNodeWrapper(self.getGraphWrapper().getConnectedClipWrapper(currentNodeSrcClip, False).getNodeName())
+                            toVisit.add(parentNodeWrapper)
+                #currentNodeWrapper.getNode().setColorRGB(255, 255, 255)
+                #currentNodeWrapper.setIsHighlighted(True)
+                visited.add(currentNodeWrapper)
+        parentNodesWrappers = QObjectListModel(self)
+        while len(visited) != 0:
+            parentNodesWrappers.append(visited.pop())
+        return parentNodesWrappers
+
         
     ################################################## PLUGIN LIST #####################################################
 
@@ -529,8 +567,6 @@ class ButtleData(QtCore.QObject):
             pluginsWModel.append(p)
         return pluginsWModel
 
-    pluginSearchedChanged = QtCore.pyqtSignal()
-
     @QtCore.pyqtSlot(str, result=QtCore.QObject)
     def getPluginsWrappersSuggestions(self, pluginSearched):
         from pyTuttle import tuttle
@@ -544,6 +580,76 @@ class ButtleData(QtCore.QObject):
                 pluginsWModel.append(p)
         return pluginsWModel
 
+    @QtCore.pyqtSlot(str, result=str)
+    def getSinglePluginSuggestion(self, pluginSearched):
+        from pyTuttle import tuttle
+        pluginCache = tuttle.core().getImageEffectPluginCache()
+        plugins = pluginCache.getPlugins()         
+
+        pluginsW = [PluginWrapper(plugin) for plugin in plugins]
+        pluginList = QObjectListModel(self)
+        for p in pluginsW :
+            if pluginSearched in p.pluginType :
+                pluginList.append(p.pluginType)
+        if len(pluginList)==1 :
+            return pluginList[0]
+
+    @QtCore.pyqtSlot(str, result=QtCore.QObject)
+    def getPluginsByPath(self, menuPath):
+        from pyTuttle import tuttle
+        pluginCache = tuttle.core().getImageEffectPluginCache()
+        plugins = pluginCache.getPlugins()         
+
+        pluginsW = [PluginWrapper(plugin) for plugin in plugins]
+        pluginsWModel = QObjectListModel(self)
+        #for each plugin
+        for p in pluginsW:
+            path = p.pluginGroup
+
+            #while path is not the final submenu, path is cropped
+            while "/" in path :
+                listOfPath = path.split("/")
+                path = path.replace(listOfPath[0] + "/","")
+            #if the parentMenu name is in the parentPath of the plugin, we add the plugin to the list
+            if menuPath == path :
+                pluginsWModel.append(p)
+        return pluginsWModel
+
+    @QtCore.pyqtSlot(int, str, result=QtCore.QObject)
+    def getMenu(self, nb, parentMenuPath):
+        from pyTuttle import tuttle
+        pluginCache = tuttle.core().getImageEffectPluginCache()
+        plugins = pluginCache.getPlugins()         
+
+        pluginsW = [PluginWrapper(plugin) for plugin in plugins]
+        pluginsListMenu = QObjectListModel(self)
+
+        #for each plugin
+        for p in pluginsW:
+            path = p.pluginGroup + "/"
+            parentPath = path
+
+            #if the number of submenus of the plugin is higher than nb 
+            if path.count("/") >= nb :
+
+                #withdraw one submenu per loop from the path
+                for i in range(nb) :
+                    listOfPath = path.split("/")
+                    path = path.replace(listOfPath[0] + "/","")
+
+                #if the submenu is not already in the list of submenu
+                if not pluginsListMenu.contains(listOfPath[0]) and listOfPath[0] :
+
+                    #if the submenu is not the first
+                    if nb>2 :
+                        #if the parentMenu name is in the parentPath of the plugin, the plugin is add to the list
+                        if "/" + parentMenuPath + "/" in parentPath :
+                            pluginsListMenu.append(listOfPath[0])
+                    else:
+                        if parentMenuPath + "/" in parentPath :
+                            pluginsListMenu.append(listOfPath[0])
+        return pluginsListMenu
+        
     @QtCore.pyqtSlot(str, result=QtCore.QObject)
     def getQObjectPluginsIdentifiersByParentPath(self, pathname):
         """

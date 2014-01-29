@@ -37,7 +37,7 @@ Item {
 
             Image{
                 id: searchPicture
-                source: _buttleData.buttlePath + "/gui/img/icons/search.png"
+                source: "file:///" + _buttleData.buttlePath + "/gui/img/icons/search.png"
                 height:10
                 width:10
                 x:5
@@ -51,12 +51,18 @@ Item {
                 height: parent.height
                 width: parent.width
                 clip: true
-
+                selectByMouse: true
+                selectionColor: "#00b2a1"
                 color: "white"
 
-                Keys.onTabPressed: {
-                    pluginSearchedChanged(text)
-                    searchPlugin.forceActiveFocus()
+                property variant plugin
+
+                Keys.onReturnPressed: {
+                    if(listOfPlugin.model.count==1){
+                        // using listOfPlugin.model[0] doesn't work
+                        _buttleManager.nodeManager.creationNode("_buttleData.graph", _buttleData.getSinglePluginSuggestion(text), 0, 0)
+                        pluginVisible=false
+                    }
                 }
             }
         }
@@ -138,7 +144,27 @@ Item {
                             }
                             onClicked: {
                                 pluginVisible=false
-                                onTriggered: _buttleManager.nodeManager.creationNode("_buttleData.graph", object.pluginType, 0, 0)
+                                onTriggered: {
+                                    if(selectedView==3){
+                                         // we create a new node and connect it to the last but one node of the concerned graph
+                                        previousNode =_buttleData.lastNode()
+
+                                        _buttleData.currentGraphWrapper = _buttleData.graphWrapper
+                                        if (previousNode == undefined)
+                                            _buttleManager.nodeManager.creationNode("_buttleData.graph", object.pluginType, 0, 0)
+                                        else
+                                            _buttleManager.nodeManager.creationNode("_buttleData.graph", object.pluginType, previousNode.xCoord+140, previousNode.yCoord)
+
+                                        // if there is only one node, we don't connect it
+                                        if (previousNode != undefined){
+                                            newNode = _buttleData.lastNode()
+                                            _buttleManager.connectionManager.connectWrappers(previousNode.outputClip, newNode.srcClips.get(0))
+                                        }
+                                    }
+                                    else{
+                                        _buttleManager.nodeManager.creationNode("_buttleData.graph", object.pluginType, 0, 0)
+                                    }
+                                }
                             }
                         }
                         Text{
@@ -153,3 +179,4 @@ Item {
         }
     }
 }
+

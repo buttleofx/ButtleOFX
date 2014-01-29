@@ -8,6 +8,7 @@ ApplicationWindow {
 
     property string currentPluginType
     property string currentPluginDoc
+    property string currentPluginGroup
 	property color gradian1: "#010101"
     property color gradian2: "#141414"
 
@@ -108,6 +109,7 @@ ApplicationWindow {
                                 aNodeIsSelected=false
                                 currentPluginType=object.pluginType
                                 currentPluginDoc=object.pluginDescription
+                                currentPluginGroup=object.pluginGroup
                             }
                         }
                         Text{
@@ -158,7 +160,16 @@ ApplicationWindow {
             height: parent.height-15
             x:15
             y:15
+        }
 
+        Text{
+            text:aNodeIsSelected? currentParamNode.pluginGroup : currentPluginGroup
+            color: "#00b2a1"
+            width: parent.width-15
+            height: parent.height-15
+            wrapMode:Text.Wrap
+            x:15
+            y:60
         }
 
         Text{
@@ -168,7 +179,7 @@ ApplicationWindow {
             height: parent.height-15
             wrapMode:Text.Wrap
             x:15
-            y:60
+            y:100
         }
     }
 }

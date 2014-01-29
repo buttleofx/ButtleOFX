@@ -6,6 +6,8 @@ ApplicationWindow {
 
     property variant currentParamNode
 
+    property alias searchPluginText: searchPlugin.text
+
     property string currentPluginType
     property string currentPluginDoc
     property string currentPluginGroup
@@ -72,6 +74,7 @@ ApplicationWindow {
                         currentPluginType=plugin.pluginType
                         currentPluginDoc=plugin.pluginDescription
                         currentPluginGroup=plugin.pluginGroup
+                        searchPluginText = ""
                     }
                 }
             }

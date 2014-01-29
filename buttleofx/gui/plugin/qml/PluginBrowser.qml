@@ -13,6 +13,7 @@ Item {
     property color textColor : "white"
     property color activeFocusOn : "white"
     property color activeFocusOff : "grey"
+    property alias searchPluginText : searchPlugin.text
 
     Rectangle{
         id: pluginRect
@@ -62,6 +63,7 @@ Item {
                         // using listOfPlugin.model[0] doesn't work
                         _buttleManager.nodeManager.creationNode("_buttleData.graph", _buttleData.getSinglePluginSuggestion(text).pluginType, 0, 0)
                         pluginVisible=false
+                        searchPluginText = ""
                     }
                 }
             }
@@ -144,6 +146,7 @@ Item {
                             }
                             onClicked: {
                                 pluginVisible=false
+                                searchPluginText = ""
                                 onTriggered: {
                                     if(selectedView==3){
                                          // we create a new node and connect it to the last but one node of the concerned graph

@@ -30,7 +30,7 @@ Rectangle {
     width: m.clipSize
     color: clipMouseArea.containsMouse ? "#00b2a1" : "#55bbbb"
     radius: width * 0.5
-    visible: miniatureState ? false : zoomCoeff < 0.3 ? false : true
+    visible: miniatureState ? false : true
 
     // Synchronize QML graphic information (clip position) into the model,
     // to share it with connection objects
@@ -47,21 +47,21 @@ Rectangle {
 
     Rectangle {
         id: clipName
-        color: clipMouseArea.containsMouse ? "#fff" : "#333"
+        color: "#292929"
         radius: 3
         opacity: clipMouseArea.containsMouse ? 1 : 0
         height: 17
         width: clipNameText.width + 10
-        x: clipRoot.port == "output" ? parent.x + 15 : parent.x - clipNameText.width - 15
+        x: clipRoot.port == "output" ? parent.x + 7 : parent.x - clipNameText.width - 7
         y: -5
 
         Text{
             id: clipNameText
             text: m.clipWrapper.name
             font.pointSize: 8
-            color: "#999"
-            x: 7
-            y: 4
+            color: "#7b7b7b"
+            anchors.verticalCenter: parent.verticalCenter
+            anchors.horizontalCenter: parent.horizontalCenter
         }
     }
 

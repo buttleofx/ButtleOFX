@@ -29,14 +29,27 @@ Item {
         onFullscreenClicked: parametersEditor.buttonFullscreenClicked(true)
     }
 
-    //plugin list
-    PluginBrowser {
-        id: pluginBrowser
-        z:1
-        height: 250
-        visible:pluginVisible
-        y:player.height+50
-        x:paramEditor.width+13
+    // Drag&Drop from Browser to ParametersEditor
+    DropArea {
+        anchors.fill: parent
+        keys: "internFileDrag"
+
+        onDropped: {
+            _buttleData.currentGraphWrapper = _buttleData.graphWrapper
+            _buttleData.currentGraphIsGraph()
+            // if before the viewer was showing an image from the brower, we change the currentView
+            if (_buttleData.currentViewerIndex > 9){
+                _buttleData.currentViewerIndex = player.lastView
+                if (player.lastNodeWrapper != undefined)
+                    _buttleData.currentViewerNodeWrapper = player.lastNodeWrapper
+                player.changeViewer(player.lastView)
+            }
+
+            for(var urlIndex in drag.source.selectedFiles)
+            {
+                _buttleManager.nodeManager.dropFile(drag.source.selectedFiles[urlIndex], 10*urlIndex, 10*urlIndex)
+            }
+        }
     }
 
     // Container of the paramNodes
@@ -155,6 +168,7 @@ Item {
                     }
 
                     Text{
+                        id: name
                         color: "white"
                         text: currentParamNode.name
                         anchors.verticalCenter: parent.verticalCenter
@@ -239,6 +253,41 @@ Item {
                             // we assign the node to the viewer, at the frame 0
                             _buttleData.assignNodeToViewerIndex(paramNode.currentParamNode, 0)
                             _buttleEvent.emitViewerChangedSignal()
+                        }
+                    }
+
+                    Image {
+                        id: closeButton
+                        source: "file:///" + _buttleData.buttlePath +  "/gui/img/icons/close.png"
+                        width: 10
+                        height: 10
+                        x: name.x + name.width + 5
+                        y: name.y + 4
+
+                        MouseArea {
+                            id: closeMouseArea
+                            anchors.fill: parent
+                            hoverEnabled: true
+
+                            onClicked: {
+                                var clips = _buttleData.graphWrapper.deleteNodeWrapper(name.text)
+                                if(clips)
+                                    _buttleManager.connectionManager.connectWrappers(clips.get(0), clips.get(1))
+                            }
+                        }
+
+                        StateGroup {
+                            id: stateButtonEvents
+                             states: [
+                                 State {
+                                     name: "hover"
+                                     when: closeMouseArea.containsMouse
+                                     PropertyChanges {
+                                         target: closeButton
+                                         source:  "file:///" + _buttleData.buttlePath +  "/gui/img/icons/close_hover.png"
+                                     }
+                                 }
+                             ]
                         }
                     }
                 }
@@ -352,7 +401,7 @@ Item {
                     if (previousNode == undefined)
                         _buttleManager.nodeManager.creationNode("_buttleData.graph", object, 0, 0)
                     else
-                        _buttleManager.nodeManager.creationNode("_buttleData.graph", object, previousNode.xCoord+140, 0)
+                        _buttleManager.nodeManager.creationNode("_buttleData.graph", object, previousNode.xCoord+140, previousNode.yCoord)
 
                     // if there is only one node, we don't connect it
                     if (previousNode != undefined){

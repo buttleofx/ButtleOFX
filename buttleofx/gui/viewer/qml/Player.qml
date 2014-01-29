@@ -99,8 +99,9 @@ Item {
                 id: viewerRegion
                 implicitWidth: parent.width
                 color: "transparent"
-                Layout.minimumHeight: 50
-                Layout.fillHeight: true
+                Layout.minimumHeight: 5
+
+                Layout.preferredHeight: parent.height - toolBarRegion.implicitHeight
 
                 Layout.preferredWidth: parent.width - 10
 
@@ -184,20 +185,20 @@ Item {
             Rectangle {
                 id: toolBarRegion
 
-                property int impHeightValue: 25
+                property int impHeightValue: 50
 
                 y: parent.height + tabBar.height
                 implicitWidth: parent.width
                 color: "transparent"
-                Layout.minimumWidth : 700
-                Layout.preferredHeight: 25
+                //Layout.minimumWidth : 700
+                Layout.preferredHeight: 50
                 Layout.preferredWidth: parent.width
 
                 // Tools (zoom, timeline buttons, mosquitos)
                 Rectangle {
                     id: tools
                     implicitWidth: parent.width
-                    implicitHeight: parent.height
+                    //height: parent.height
                     color: "#141414"
                     gradient: Gradient {
                         GradientStop { position: 0.0; color: "#141414" }
@@ -232,6 +233,7 @@ Item {
                         onXChanged: {
                             if (selectViewer.x < 350) {
                                 toolBarRegion.implicitHeight = toolBarRegion.impHeightValue * 2
+                                //selectViewer.y = selectViewer.yValue + selectViewer.height - 3
                                 selectViewer.y = selectViewer.yValue + selectViewer.height - 3
                             }
                             else {

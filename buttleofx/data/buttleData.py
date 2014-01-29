@@ -409,6 +409,12 @@ class ButtleData(QtCore.QObject):
     def appendToCurrentSelectedNodeWrappers(self, nodeWrapper):
         self.appendToCurrentSelectedNodeNames(nodeWrapper.getName())
 
+    def appendNodeWrapper(self, nodeWrapper):
+        if nodeWrapper.getName() in self._currentSelectedNodeNames:
+                self._currentSelectedNodeNames.remove(nodeWrapper.getName())
+        self._currentSelectedNodeNames.append(nodeWrapper.getName())
+        self.currentSelectedNodesChanged.emit()
+
     def appendToCurrentSelectedNodeNames(self, nodeName):
         if nodeName in self._currentSelectedNodeNames:
             self._currentSelectedNodeNames.remove(nodeName)
@@ -503,6 +509,38 @@ class ButtleData(QtCore.QObject):
      
           self._graphWrapper.updateNodeWrappers()
           self._graphWrapper.updateConnectionWrappers()
+
+    @QtCore.pyqtSlot(result=QtCore.QObject)
+    def getParentNodes(self):
+        """
+            Return the list of parents of selected nodes as a QObjectListModel
+        """
+        currentSelectedNodeWrappers = self.getCurrentSelectedNodeWrappers()
+        toVisit = set()
+        visited = set()
+        for selectedNodeWrapper in currentSelectedNodeWrappers:
+            toVisit.add(selectedNodeWrapper)
+        while len(toVisit) != 0 :
+            currentNodeWrapper = toVisit.pop()
+            #if the node has not already been visited
+            if currentNodeWrapper not in visited:
+                # if the node has inputs
+                if currentNodeWrapper.getNbInput() > 0 :
+                    currentNodeSrcClips = currentNodeWrapper.getSrcClips()
+                    # for all inputs
+                    for currentNodeSrcClip in currentNodeSrcClips:
+                        # if the input is connected to a parent
+                        if self.getGraphWrapper().getConnectedClipWrapper(currentNodeSrcClip, False) != None:
+                            parentNodeWrapper = self.getGraphWrapper().getNodeWrapper(self.getGraphWrapper().getConnectedClipWrapper(currentNodeSrcClip, False).getNodeName())
+                            toVisit.add(parentNodeWrapper)
+                #currentNodeWrapper.getNode().setColorRGB(255, 255, 255)
+                #currentNodeWrapper.setIsHighlighted(True)
+                visited.add(currentNodeWrapper)
+        parentNodesWrappers = QObjectListModel(self)
+        while len(visited) != 0:
+            parentNodesWrappers.append(visited.pop())
+        return parentNodesWrappers
+
         
     ################################################## PLUGIN LIST #####################################################
 

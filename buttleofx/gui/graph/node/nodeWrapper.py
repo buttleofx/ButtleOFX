@@ -13,7 +13,7 @@ class NodeWrapper(QtCore.QObject):
             - _node : the buttle node (core)
             - _view : the view (necessary for all wrapper, to construct a QtCore.QObject)
             - _paramWrappers : the paramWrappers (it's a ParamEditorWrapper object)
-            - _width, _heightEmptyNode , _clipSpacing, _clipSize, _inputSideMargin : data given to QML to have nodes with good looking
+            - _width, _heightEmptyNode , _clipSpacing, _clipSize, _inputSideMargin, _isHighlighted : data given to QML to have nodes with good looking
             - _fpsError, _frameError : potential errors that we need to displayed.
     """
 
@@ -24,6 +24,7 @@ class NodeWrapper(QtCore.QObject):
 
         self._node = node
         self._view = view
+        self._isHighlighted = False
 
         # paramWrappers
         self._paramWrappers = ParamEditorWrapper(self._view, self._node.getParams())
@@ -168,6 +169,9 @@ class NodeWrapper(QtCore.QObject):
     def setFrameError(self, nodeName):
         self._frameError = nodeName
 
+    def isHighlighted(self):
+        return self._isHighlighted
+
     ######## setters ########
 
     def setNameUser(self, nameUser):
@@ -191,6 +195,11 @@ class NodeWrapper(QtCore.QObject):
 
     def setNbInput(self, nbInput):
         self._node.setNbInput(nbInput)
+
+    def setIsHighlighted(self, value):
+        self._isHighlighted = value
+        self.emitNodeLookChanged()
+
 
     ################################################## LINK WRAPPER LAYER TO QML ##################################################
 
@@ -230,6 +239,7 @@ class NodeWrapper(QtCore.QObject):
     xCoord = QtCore.pyqtProperty(int, getXCoord, setXCoord, notify=nodePositionChanged)
     yCoord = QtCore.pyqtProperty(int, getYCoord, setYCoord, notify=nodePositionChanged)
     nbInput = QtCore.pyqtProperty(int, getNbInput, constant=True)
+    isHighlighted = QtCore.pyqtProperty(bool, isHighlighted, setIsHighlighted, notify=nodeLookChanged)
     # params (wrappers)
     params = QtCore.pyqtProperty(QtCore.QObject, getParams, notify=nodeContentChanged)
 

@@ -29,7 +29,13 @@ class ButtleManager(QtCore.QObject):
         self._viewerManager.undoRedoChanged.connect(self.emitUndoRedoChanged)
 
         return self
-
+        
+    @QtCore.pyqtSlot()  
+    def selectAllNodes(self):
+        buttleData = ButtleDataSingleton().get()
+        for nodeWrapper in buttleData.graphWrapper.getNodeWrappers():
+            buttleData.appendNodeWrapper(nodeWrapper)
+        
     ############### getters ###############
 
     def getNodeManager(self):

@@ -20,6 +20,8 @@ ApplicationWindow {
     property variant view2: [player, paramEditor, browser, graphEditor]
     property variant view3: [player, browser, advancedParamEditor, empty]
 
+    property string urlOfFileToSave: ""
+
     width: 1200
     height: 800
     id: mainWindowQML
@@ -170,8 +172,8 @@ ApplicationWindow {
         currentParamNode: _buttleData.currentParamNodeWrapper
     }
 
-    FinderLoadGraph{ id: finderLoadGraph }
-    FinderSaveGraph{ id: finderSaveGraph }
+    FinderLoadGraph{ id: finderLoadGraph; onGetFileUrl: urlOfFileToSave = fileurl }
+    FinderSaveGraph{ id: finderSaveGraph; onGetFileUrl: urlOfFileToSave = fileurl }
 
     menuBar: MenuBar {
         Menu {
@@ -186,10 +188,15 @@ ApplicationWindow {
             MenuItem {
                 text: "Save"
                 shortcut: "Ctrl+S"
-                onTriggered:
-                    if(_buttleData.graphCanBeSaved) {
-                        finderSaveGraph.open()
-                    }
+                enabled: _buttleData.graphCanBeSaved && urlOfFileToSave!="" ? true : false
+                onTriggered: _buttleData.saveData(urlOfFileToSave)
+            }
+
+            MenuItem {
+                text: "Save As"
+                shortcut: "Ctrl+Shift+S"
+                enabled: _buttleData.graphCanBeSaved ? true : false
+                onTriggered: finderSaveGraph.open()
             }
 
             MenuSeparator { }
@@ -260,6 +267,12 @@ ApplicationWindow {
                     if (!_buttleData.currentSelectedNodeWrappers.isEmpty()) {
                         _buttleManager.nodeManager.duplicationNode()
                     }
+            }
+
+            MenuItem {
+                text: "Select all"
+                shortcut: "Ctrl+A"
+                onTriggered: _buttleManager.selectAllNodes()
             }
 
             MenuItem {

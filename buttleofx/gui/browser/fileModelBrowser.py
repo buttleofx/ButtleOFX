@@ -1,13 +1,15 @@
 import logging
 import os
-
+#quickmamba
 from quickmamba.models import QObjectListModel
-
+#Tuttle
 from pySequenceParser import sequenceParser
 import getBestPlugin
 
 from PyQt5 import QtGui, QtCore, QtQuick
 from PyQt5.QtWidgets import QWidget, QFileDialog
+#gui
+from .sequenceWrapper import SequenceWrapper
 
 
 class FileItem(QtCore.QObject):
@@ -269,12 +271,6 @@ class FileModelBrowser(QtQuick.QQuickItem):
         self._showSeq = checkSeq
         self.updateFileItems(self._folder)
         self.showSeqChanged.emit()
-        
-    @QtCore.pyqtSlot(int, result=int)
-    def getNbInSeq(self, index):
-        if index < len(self._fileItems):
-            return self._fileItems[index].seq.getNbFiles()
-        return 0
     
     showSeqChanged = QtCore.pyqtSignal()
     showSeq = QtCore.pyqtProperty(bool, getShowSeq, setShowSeq, notify=showSeqChanged)

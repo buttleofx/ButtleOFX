@@ -261,7 +261,8 @@ Rectangle {
 
                                 else if(!(mouse.modifiers & Qt.ShiftModifier))
                                     fileModel.selectItem(index)
-                                    winFile.changeNbInSeq(fileModel.getNbInSeq(index))
+                                    if (model.object.fileType == "Sequence")
+                                        winFile.changeNbInSeq(fileModel.getNbInSeq(index))
 
                                 var sel = fileModel.getSelectedItems()
                                 var selection = new Array()

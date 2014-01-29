@@ -17,6 +17,7 @@ Rectangle {
     signal changeFile(string file)
     signal changeFileType(string fileType)
     signal changeFileSize(real fileSize)
+    signal changeNbInSeq(int nb)
     property bool viewList: false
     signal changeSelectedList(variant selected)
     property int itemIndex: 0
@@ -260,14 +261,17 @@ Rectangle {
 
                                 else if(!(mouse.modifiers & Qt.ShiftModifier))
                                     fileModel.selectItem(index)
-                                    model.object.fileType == "File" ? winFile.changeFileSize(model.object.fileSize) : winFile.changeFileSize(0)
+                                    winFile.changeNbInSeq(fileModel.getNbInSeq(index))
 
                                 var sel = fileModel.getSelectedItems()
                                 var selection = new Array()
+                                var size = 0
                                 for(var selIndex = 0; selIndex < sel.count; ++selIndex)
                                 {
+                                    size = size + sel.get(selIndex).fileSize
                                     selection[selIndex] = sel.get(selIndex).filepath
                                 }
+                                winFile.changeFileSize(size)
                                 fileInColumn.selectedFiles = selection
                                 winFile.changeSelectedList(sel)
                             }
@@ -484,7 +488,7 @@ Rectangle {
 
                             else if(!(mouse.modifiers & Qt.ShiftModifier))
                                 fileModel.selectItem(index)
-                                model.object.fileType == "File" ? winFile.changeSelectedList(fileModel.getSelectedItems()) : winFile.changeSelectedList(0)
+                                winFile.changeFileSize(model.object.fileSize)
 
                             var sel = fileModel.getSelectedItems()
                             var selection = new Array()

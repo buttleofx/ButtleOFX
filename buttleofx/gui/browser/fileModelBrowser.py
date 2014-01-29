@@ -20,20 +20,31 @@ class FileItem(QtCore.QObject):
         Folder = 'Folder'
         Sequence = 'Sequence'
     
-    def __init__(self, folder, fileName, fileType, img):
+    def __init__(self, folder, fileName, fileType, seq):
         super(FileItem, self).__init__()
         if folder == "/":
             self._filepath = folder + fileName
         else:
             self._filepath = folder + "/" + fileName
         self._fileType = fileType
-        if fileType == "File":
+        if fileType == FileItem.Type.File:
             self._fileImg = self._filepath
-        elif fileType == "Folder":
+            self._seq = None
+            self._fileSize = os.stat(self._filepath).st_size
+        elif fileType == FileItem.Type.Folder:
             self._fileImg = "../../img/buttons/browser/folder-icon.png"
-        elif fileType == "Sequence":
-            self._fileImg = img
-
+            self._seq = None
+            self._fileSize = 0.0
+        elif fileType == FileItem.Type.Sequence:
+            self._seq = seq
+            self._fileImg = self._seq.getAbsoluteFirstFilename()
+            res = 0
+            for i in range(self._seq.getFirstTime(), self._seq.getLastTime() + self._seq.getStep(), self._seq.getStep()):
+                fullpath = self._seq.getAbsoluteFilenameAt(i)
+                if os.path.exists(fullpath):
+                    res = res + os.stat(fullpath).st_size
+            self._fileSize = (res) / self._seq.getNbFiles()
+            
     def getFilepath(self):
         return self._filepath
     
@@ -51,15 +62,8 @@ class FileItem(QtCore.QObject):
         os.rename(self.filepath, os.path.dirname(self._filepath) + "/" + newName)
         
     def getFileSize(self):
-        if self._fileType == "File":
-            return os.stat(self._filepath).st_size
-        elif self._fileType == "Folder":
-            return "0"
-        elif self._fileType == "Sequence":
-            return "0"
+        return self._fileSize
         
-        
-    
     def getSelected(self):
         return self._isSelected
     
@@ -69,6 +73,9 @@ class FileItem(QtCore.QObject):
         
     def getFileImg(self):
         return self._fileImg
+    
+    def getSequence(self):
+        return self._seq
 
     filepath = QtCore.pyqtProperty(str, getFilepath, setFilepath, constant=True)
     fileType = QtCore.pyqtProperty(str, getFileType, constant=True)
@@ -77,6 +84,7 @@ class FileItem(QtCore.QObject):
     isSelectedChange = QtCore.pyqtSignal()
     isSelected = QtCore.pyqtProperty(bool, getSelected, setSelected, notify=isSelectedChange)
     fileImg = QtCore.pyqtProperty(str, getFileImg, constant=True)
+    seq = QtCore.pyqtProperty(QtCore.QObject, getSequence, constant=True)
 
 
 class FileModelBrowser(QtQuick.QQuickItem):
@@ -144,7 +152,7 @@ class FileModelBrowser(QtQuick.QQuickItem):
                     except Exception as e:
                         supported = False
                     if supported and not s.getStandardPattern().startswith("."):
-                        self._fileItems.append(FileItem(folder, s.getStandardPattern(), FileItem.Type.Sequence, s.getAbsoluteFirstFilename()))
+                        self._fileItems.append(FileItem(folder, s.getStandardPattern(), FileItem.Type.Sequence, s))
             
             else:
                 _, dirs, files = next(os.walk(folder))
@@ -261,6 +269,12 @@ class FileModelBrowser(QtQuick.QQuickItem):
         self._showSeq = checkSeq
         self.updateFileItems(self._folder)
         self.showSeqChanged.emit()
+        
+    @QtCore.pyqtSlot(int, result=int)
+    def getNbInSeq(self, index):
+        if index < len(self._fileItems):
+            return self._fileItems[index].seq.getNbFiles()
+        return 0
     
     showSeqChanged = QtCore.pyqtSignal()
     showSeq = QtCore.pyqtProperty(bool, getShowSeq, setShowSeq, notify=showSeqChanged)

@@ -11,6 +11,7 @@ Rectangle {
     property string filter: "*"
     property variant selected
     property real fileSize
+    property int nbInSeq
 
     signal changeFilter(string newFilter)
     signal openFolder(string newFolder)
@@ -26,7 +27,7 @@ Rectangle {
 
         Text {
             id: nbOfFiles
-            text: selected.count > 1 ? selected.count + " files selected" : ""
+            text: selected.count > 1 ? selected.count + " files selected" : fileType == "Sequence" ? footer.nbInSeq + " files in sequence" : ""
             color: "white"
         }
 
@@ -56,7 +57,7 @@ Rectangle {
                 for(var i=0; i< selected.count; ++i)
                 {
                     console.debug("selected: " + i + " -> " + selected.get(i).fileName)
-                    footer.fileType == "Folder" ? footer.openFolder(fileName) : Qt.openUrlExternally("file:///" + selected.get(i).filepath)
+                    selected.get(i).fileType == "Folder" ? footer.openFolder(selected.get(i).filepath) : Qt.openUrlExternally("file:///" + selected.get(i).filepath)
                 }
             }
 		}

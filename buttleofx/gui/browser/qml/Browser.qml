@@ -19,6 +19,7 @@ Rectangle {
         property string fileFolder: "/"
         property string fileType: ""
         property real fileSize
+        property int nbInSeq
         property string filter:"*"
         property variant selected
         property bool showSeq: false
@@ -95,7 +96,9 @@ Rectangle {
                 onChangeFileSize: {
                     m.fileSize = fileSize
                 }
-
+                onChangeNbInSeq: {
+                    m.nbInSeq = nb
+                }
                 onChangeFileType: {
                     m.fileType = fileType
                 }
@@ -115,6 +118,7 @@ Rectangle {
             fileName: m.filepath
             fileType: m.fileType
             fileSize: m.fileSize / 1024
+            nbInSeq: m.nbInSeq
             onChangeFilter: {
                 m.filter = newFilter
             }

@@ -70,7 +70,7 @@ Rectangle {
             onWheel: {
                 var deltaF = (wheel.angleDelta.y / 120.0) / nbSteps
                 var newScale = viewport.imgScale * (1.0 + deltaF)
-                viewport.setScaleAtPos_viewportCoord( newScale, wheel.x, (height-wheel.y) )
+                viewport.setScaleAtPos_viewportCoord( newScale, wheel.x, wheel.y )
                 viewport.fittedMode = false
             }
         }

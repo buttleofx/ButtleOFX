@@ -239,6 +239,7 @@ Item {
                         acceptedButtons: Qt.LeftButton | Qt.MidButton
 
                         onPressed: {
+                            pluginVisible =false
                             if (mouse.button == Qt.LeftButton) {
                                  if (tuttleParamContent.visible == true){
                                     tuttleParamContent.visible = false

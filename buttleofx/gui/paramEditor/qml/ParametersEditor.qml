@@ -20,6 +20,13 @@ Item {
     property variant newNode
     property variant previousNode
 
+    MouseArea{
+        anchors.fill:parent
+        onClicked:{
+            pluginVisible =false
+        }
+    }
+
 //    property variant clipWrapper
 
     Tab {
@@ -27,6 +34,18 @@ Item {
         name: "Parameters - Advanced Mode"
         onCloseClicked: parametersEditor.buttonCloseClicked(true)
         onFullscreenClicked: parametersEditor.buttonFullscreenClicked(true)
+    }
+
+    property bool pluginVisible:false
+
+    //List of plugins
+    PluginBrowser {
+        id: pluginBrowser
+        z:1
+        height: 250
+        visible:pluginVisible
+        y:player.height+50
+        x:parametersEditor.width/2-100
     }
 
     // Drag&Drop from Browser to ParametersEditor
@@ -384,7 +403,7 @@ Item {
             else {pluginVisible=false}
         }
     }
-
+    /*
     Menu {
         id: nodesMenu
         title: "Nodes"
@@ -414,4 +433,5 @@ Item {
             onObjectRemoved: nodesMenu.removeItem(object)
         } // Instantiator
     } //Menu
+    */
 }

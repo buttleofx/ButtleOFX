@@ -5,6 +5,7 @@ import QtQuick.Controls 1.0
 
 import "../../../gui"
 import "../../paramEditor/qml"
+import "../../plugin/qml"
 
 Item {
     id: graphEditor
@@ -20,7 +21,17 @@ Item {
     }
 
     property bool editNode:false
+    property bool pluginVisible:false
 
+    //List of plugins
+    PluginBrowser {
+        id: pluginBrowser
+        z:1
+        height: 250
+        visible:pluginVisible
+        y:46
+        x:9
+    }
 
     ParamButtleEditor {                
         z:1

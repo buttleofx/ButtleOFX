@@ -144,7 +144,27 @@ Item {
                             }
                             onClicked: {
                                 pluginVisible=false
-                                onTriggered: _buttleManager.nodeManager.creationNode("_buttleData.graph", object.pluginType, 0, 0)
+                                onTriggered: {
+                                    if(selectedView==3){
+                                         // we create a new node and connect it to the last but one node of the concerned graph
+                                        previousNode =_buttleData.lastNode()
+
+                                        _buttleData.currentGraphWrapper = _buttleData.graphWrapper
+                                        if (previousNode == undefined)
+                                            _buttleManager.nodeManager.creationNode("_buttleData.graph", object.pluginType, 0, 0)
+                                        else
+                                            _buttleManager.nodeManager.creationNode("_buttleData.graph", object.pluginType, previousNode.xCoord+140, previousNode.yCoord)
+
+                                        // if there is only one node, we don't connect it
+                                        if (previousNode != undefined){
+                                            newNode = _buttleData.lastNode()
+                                            _buttleManager.connectionManager.connectWrappers(previousNode.outputClip, newNode.srcClips.get(0))
+                                        }
+                                    }
+                                    else{
+                                        _buttleManager.nodeManager.creationNode("_buttleData.graph", object.pluginType, 0, 0)
+                                    }
+                                }
                             }
                         }
                         Text{

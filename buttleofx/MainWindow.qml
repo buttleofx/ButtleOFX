@@ -153,17 +153,6 @@ ApplicationWindow {
     }
 
     property bool aNodeIsSelected:false
-    property bool pluginVisible:false
-
-    //List of plugins
-    PluginBrowser {
-        id: pluginBrowser
-        z:1
-        height: 250
-        visible:pluginVisible
-        y:player.height+50
-        x:paramEditor.width+13
-    }
 
     //Window of hint for plugins
     PluginWindow {

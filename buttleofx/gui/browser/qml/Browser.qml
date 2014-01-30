@@ -1,6 +1,7 @@
 import QtQuick 2.1
 import QtQuick.Controls 1.0
 import QtQuick.Layouts 1.0
+import ButtleFileModel 1.0
 
 import "../../../gui"
 
@@ -13,17 +14,23 @@ Rectangle {
 
     QtObject {
         id: m
-        property string directory: "/"
+        property string directory: firstFile.firstFolder()
         property string filepath: ""
         property string fileFolder: "/"
         property string fileType: ""
         property real fileSize
+        property int nbInSeq
         property string filter:"*"
         property variant selected
+        property bool showSeq: false
     }
 
     ListModel {
         id: listPrevious
+    }
+
+    FileModelBrowser{
+        id: firstFile
     }
 
     focus: true
@@ -54,12 +61,10 @@ Rectangle {
             onChangeFolder: {
                 m.directory = folder
             }
+            onChangeSeq: {
+                m.showSeq = seq
+            }
 	    }
-
-        /*CheckBox {
-	    	id: check
-            text: "List"
-        }*/
 
         WindowFiles {
             id: files
@@ -68,6 +73,7 @@ Rectangle {
             Layout.preferredHeight: 120
             z: 1
 
+            showSeq: m.showSeq
             viewList: headerBar.isInListView
             folder: m.directory
             onGoToFolder: {
@@ -83,6 +89,9 @@ Rectangle {
             }
             onChangeFileSize: {
                 m.fileSize = fileSize
+            }
+            onChangeNbFilesInSeq: {
+                m.nbInSeq = nb
             }
 
             onChangeFileType: {
@@ -100,8 +109,9 @@ Rectangle {
 
             selected: m.selected
             fileName: m.filepath
-            fileType : m.fileType
+            fileType: m.fileType
             fileSize: m.fileSize / 1024
+            nbInSeq: m.nbInSeq
             onChangeFilter: {
                 m.filter = newFilter
             }

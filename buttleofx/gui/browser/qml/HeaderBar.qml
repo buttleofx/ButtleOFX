@@ -15,6 +15,7 @@ Rectangle {
     property string parentFolder
     property variant listPrevious
     property bool isInListView : false
+    signal changeSeq(bool seq)
 
     function forceActiveFocusOnPath() {
         texteditPath.forceActiveFocus()
@@ -248,6 +249,18 @@ Rectangle {
                 }
 
             onClicked: if(isInListView) {isInListView = false} else {isInListView = true}
+        }
+
+        CheckBox {
+            id: check
+            style: CheckBoxStyle {
+                label: Text {
+                    text: "Seq"
+                    color: "white"
+                }
+            }
+
+            onClicked: headerBar.changeSeq(check.checked)
         }
 
 

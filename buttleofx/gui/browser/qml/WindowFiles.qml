@@ -9,7 +9,7 @@ Rectangle {
     id: winFile
     color: fileModel.exists ? "black" : "lightgrey"
 
-    property string folder
+    property string folder: fileModel.firstFolder()
     signal goToFolder(string newFolder)
     property string filterName
     signal changeFileFolder(string fileFolder)
@@ -17,10 +17,12 @@ Rectangle {
     signal changeFile(string file)
     signal changeFileType(string fileType)
     signal changeFileSize(real fileSize)
+    signal changeNbFilesInSeq(int nb)
     property bool viewList: false
     signal changeSelectedList(variant selected)
     property int itemIndex: 0
     property string fileName
+    property bool showSeq: false
 
     function forceActiveFocusOnCreate() {
         fileModel.createFolder(fileModel.folder + "/New Directory")
@@ -55,13 +57,22 @@ Rectangle {
         id: fileModel
         folder: winFile.folder
         nameFilter: winFile.filterName
+        showSeq: winFile.showSeq
 
         onFolderChanged: {
             fileModel.selectItem(0)
             winFile.changeFileFolder(fileModel.parentFolder)
+            winFile.changeSelectedList(fileModel.getSelectedItems())
         }
         onNameFilterChanged: {
             fileModel.selectItem(0)
+            winFile.changeFileFolder(fileModel.parentFolder)
+            winFile.changeSelectedList(fileModel.getSelectedItems())
+        }
+        onShowSeqChanged: {
+            fileModel.selectItem(0)
+            winFile.changeFileFolder(fileModel.parentFolder)
+            winFile.changeSelectedList(fileModel.getSelectedItems())
         }
     }
 
@@ -99,7 +110,7 @@ Rectangle {
                             border.color: "#333"
                             radius: 3
                             Image{
-                                id: arrow
+                                id: arrow2
                                 source: "file:///" + _buttleData.buttlePath + "/gui/img/buttons/params/arrow2.png"
                                 x:4
                                 y:4
@@ -134,6 +145,25 @@ Rectangle {
                 Component {
                     id: componentInColumn
 
+                    Item {
+                        id: dropArea
+
+                        DropArea {
+                            id: moveItemInColumn
+                            anchors.fill: parent
+                            objectName: model.object.filepath
+                            keys: ["internFileDrag"]
+
+                            onDropped: {
+                                console.debug("file: " + Drag.source.objectName)
+                                console.debug("Index: " + drop.source.objectName)
+                                //fileModel.moveItem(drop.source.objectName, )
+                            }
+                            onEntered: {
+                               console.debug("Test on Entered")
+                            }
+                        }
+
                     Rectangle {
                         id: fileInColumn
                         color: model.object.isSelected ? "#00b2a1" : "transparent"
@@ -149,19 +179,6 @@ Rectangle {
                             textInColumn.forceActiveFocus()
                         }
 
-                        /*DropArea {
-                            id: moveItemInColumn
-                            anchors.fill: parent
-                            objectName: model.object.filepath
-                            keys: ["internFileDrag"]
-
-                            onDropped: {
-                                console.debug("file: " + Drag.source.objectName)
-                                console.debug("Index: " + drop.source.objectName)
-                                //fileModel.moveItem(drop.source.objectName, )
-                            }
-                        }*/
-
 
                         Column {
                             id : file
@@ -169,7 +186,7 @@ Rectangle {
 
                             Image {
                                 x: 25
-                                source: model.object.fileType == "Folder" ? "../../img/buttons/browser/folder-icon.png" : "file:///" + model.object.filepath
+                                source: model.object.fileType == "Folder" ? model.object.fileImg : "file:///" + model.object.fileImg
                                 sourceSize.width: 40
                                 sourceSize.height: 40
 
@@ -224,11 +241,11 @@ Rectangle {
                             drag.target: fileInColumn
 
                             onClicked: {
-                                winFile.changeFileSize(0)
+                                winFile.itemIndex = index
                                 if (mouse.button == Qt.RightButton)
                                     options.popup()
                                     winFile.fileName = textInColumn.text
-                                    winFile.itemIndex = index
+
 
                                 //if shift:
                                 if(mouse.modifiers & Qt.ShiftModifier)
@@ -243,14 +260,17 @@ Rectangle {
 
                                 else if(!(mouse.modifiers & Qt.ShiftModifier))
                                     fileModel.selectItem(index)
-                                    winFile.changeFileSize(model.object.fileSize)
+                                    model.object.fileType == "Sequence" ? winFile.changeNbFilesInSeq(model.object.seq.getNbFiles()) : ""
 
                                 var sel = fileModel.getSelectedItems()
                                 var selection = new Array()
+                                var size = 0
                                 for(var selIndex = 0; selIndex < sel.count; ++selIndex)
                                 {
+                                    size = size + sel.get(selIndex).fileSize
                                     selection[selIndex] = sel.get(selIndex).filepath
                                 }
+                                winFile.changeFileSize(size)
                                 fileInColumn.selectedFiles = selection
                                 winFile.changeSelectedList(sel)
                             }
@@ -300,6 +320,7 @@ Rectangle {
                         }
 
                     }
+                    }//end Item
                 }//endComponent
         }
     }
@@ -314,14 +335,14 @@ Rectangle {
 
         style: ScrollViewStyle {
                         scrollBarBackground: Rectangle {
-                            id: scrollBar
+                            id: scrollBar2
                             width:15
                             color: "#212121"
                             border.width: 1
                             border.color: "#333"
                         }
                         decrementControl : Rectangle {
-                            id: scrollLower
+                            id: scrollLower2
                             width:15
                             height:15
                             color: styleData.pressed? "#212121" : "#343434"
@@ -329,14 +350,14 @@ Rectangle {
                             border.color: "#333"
                             radius: 3
                             Image{
-                                id: arrow
+                                id: arrowBis2
                                 source: "file:///" + _buttleData.buttlePath + "/gui/img/buttons/params/arrow2.png"
                                 x:4
                                 y:4
                             }
                         }
                         incrementControl : Rectangle {
-                            id: scrollHigher
+                            id: scrollHigher2
                             width:15
                             height:15
                             color: styleData.pressed? "#212121" : "#343434"
@@ -344,7 +365,7 @@ Rectangle {
                             border.color: "#333"
                             radius: 3
                             Image{
-                                id: arrow
+                                id: arrowBis
                                 source: "file:///" + _buttleData.buttlePath + "/gui/img/buttons/params/arrow.png"
                                 x:4
                                 y:4
@@ -392,7 +413,7 @@ Rectangle {
                         spacing: 10
                         Image {
                             x: 25
-                            source: model.object.fileType == "Folder" ? "../../img/buttons/browser/folder-icon.png" : "file:///" + model.object.filepath
+                            source: model.object.fileType == "Folder" ? model.object.fileImg : "file:///" + model.object.fileImg
                             sourceSize.width: 20
                             sourceSize.height: 20
                         }
@@ -447,11 +468,10 @@ Rectangle {
                         drag.target: fileInRow
 
                         onClicked: {
-                            winFile.changeFileSize(0)
+                            winFile.itemIndex = index
                             if (mouse.button == Qt.RightButton)
                                 options.popup()
                                 winFile.fileName = textInRow.text
-                                winFile.itemIndex = index
 
                             //if shift:
                             if(mouse.modifiers & Qt.ShiftModifier)

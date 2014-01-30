@@ -1,15 +1,21 @@
 import logging
 import os
-
+#quickmamba
 from quickmamba.models import QObjectListModel
+#Tuttle
+from pySequenceParser import sequenceParser
+import getBestPlugin
 
 from PyQt5 import QtGui, QtCore, QtQuick
 from PyQt5.QtWidgets import QWidget, QFileDialog
+#gui
+from .sequenceWrapper import SequenceWrapper
 
 
 class FileItem(QtCore.QObject):
     
     _isSelected = False
+    
     
     class Type():
         """ Enum """
@@ -17,14 +23,26 @@ class FileItem(QtCore.QObject):
         Folder = 'Folder'
         Sequence = 'Sequence'
     
-    def __init__(self, folder, fileName, fileType):
+    def __init__(self, folder, fileName, fileType, seq):
         super(FileItem, self).__init__()
         if folder == "/":
             self._filepath = folder + fileName
         else:
             self._filepath = folder + "/" + fileName
         self._fileType = fileType
-
+        if fileType == FileItem.Type.File:
+            self._fileImg = self._filepath
+            self._seq = None
+            self._fileSize = os.stat(self._filepath).st_size
+        elif fileType == FileItem.Type.Folder:
+            self._fileImg = "../../img/buttons/browser/folder-icon.png"
+            self._seq = None
+            self._fileSize = 0.0
+        elif fileType == FileItem.Type.Sequence:
+            self._seq = SequenceWrapper(seq)
+            self._fileImg = self._seq.getFirstFilePath()
+            self._fileSize = self._seq.getSize()
+            
     def getFilepath(self):
         return self._filepath
     
@@ -42,14 +60,20 @@ class FileItem(QtCore.QObject):
         os.rename(self.filepath, os.path.dirname(self._filepath) + "/" + newName)
         
     def getFileSize(self):
-        return os.stat(self._filepath).st_size
-    
+        return self._fileSize
+        
     def getSelected(self):
         return self._isSelected
     
     def setSelected(self, isSelected):
         self._isSelected = isSelected
         self.isSelectedChange.emit()
+        
+    def getFileImg(self):
+        return self._fileImg
+    
+    def getSequence(self):
+        return self._seq
 
     filepath = QtCore.pyqtProperty(str, getFilepath, setFilepath, constant=True)
     fileType = QtCore.pyqtProperty(str, getFileType, constant=True)
@@ -57,6 +81,8 @@ class FileItem(QtCore.QObject):
     fileSize = QtCore.pyqtProperty(float, getFileSize, constant=True)
     isSelectedChange = QtCore.pyqtSignal()
     isSelected = QtCore.pyqtProperty(bool, getSelected, setSelected, notify=isSelectedChange)
+    fileImg = QtCore.pyqtProperty(str, getFileImg, constant=True)
+    seq = QtCore.pyqtProperty(QtCore.QObject, getSequence, constant=True)
 
 
 class FileModelBrowser(QtQuick.QQuickItem):
@@ -70,6 +96,12 @@ class FileModelBrowser(QtQuick.QQuickItem):
     
     def getFolder(self):
         return self._folder
+    
+    @QtCore.pyqtSlot(result=str)
+    def firstFolder(self):
+        from os.path import expanduser
+        home = expanduser("~")
+        return home
     
     def setFolder(self, folder):
         self._folder = folder
@@ -104,70 +136,52 @@ class FileModelBrowser(QtQuick.QQuickItem):
         self._fileItemsModel.clear()
         import os
         try:
-            _, dirs, files = next(os.walk(folder))
+            if self._showSeq:
+                items = sequenceParser.browse(folder)
+                dirs = [item._filename for item in items if item._type == 0]
+                seqs = [item._sequence for item in items if item._type == 1]
+                files = [item._filename for item in items if item._type == 2]
+                
+                for s in seqs:
+                    (_, extension) = os.path.splitext(s.getStandardPattern())
+                    supported = True
+                    try:
+                        getBestPlugin.getBestReader(extension)
+                    except Exception as e:
+                        supported = False
+                    if supported and not s.getStandardPattern().startswith("."):
+                        self._fileItems.append(FileItem(folder, s.getStandardPattern(), FileItem.Type.Sequence, s))
+            
+            else:
+                _, dirs, files = next(os.walk(folder))
+                
             for d in dirs:
                 if not d.startswith("."):
-                    self._fileItems.append(FileItem(folder, d, FileItem.Type.Folder))
-            
+                    self._fileItems.append(FileItem(folder, d, FileItem.Type.Folder, ""))
+                
             if self._nameFilter == "*":
                 for f in files:
-                    (shortname, extension) = os.path.splitext(f)
-                    extension = extension.split(".")[-1].lower()
-                    if extension in ['jpeg', 'jpg', 'jpe', 'jfif', 'jfi', 
-                                     'png','mkv', 'mpeg', 'mp4', 'avi', 'mov',
-                                     'aac', 'ac3', 'adf', 'adx', 'aea', 'ape',
-                                     'apl', 'mac', 'bin', 'bit', 'bmv', 'cdg',
-                                     'cdxl', 'xl', '302', 'daud', 'dts', 'dv',
-                                     'dif', 'cdata', 'eac3', 'flm', 'flac', 'flv',
-                                     'g722', '722', 'tco', 'rco', 'g723_1', 'g729',
-                                     'gsm', 'h261', 'h26l', 'h264', '264', 'idf',
-                                     'cgi', 'latm', 'm4v', 'mjpg', 'mjpeg', 'mpo',
-                                     'mlp', 'mp2', 'mp3', 'm2a', 'mpc', 'mvi', 'mxg',
-                                     'v', 'nut', 'ogg', 'oma', 'omg', 'aa3', 'al', 'ul',
-                                     'sw', 'sb', 'uw', 'ub', 'yuv', 'cif', 'qcif', 'rgb',
-                                     'rt', 'rso', 'smi', 'sami', 'sbg', 'shn', 'vb', 'son',
-                                     'mjpg', 'sub', 'thd', 'tta', 'ans', 'art', 'asc',
-                                     'diz', 'ice', 'nfo', 'txt', 'vt', 'vc1', 'vqf', 'vql',
-                                     'vqe', 'vtt', 'yop', 'y4m','3fr', 'ari', 'arw', 'bay',
-                                     'crw', 'cr2', 'cap', 'dng', 'dcs', 'dcr', 'dng', 'drf',
-                                     'eip', 'erf', 'fff', 'iiq', 'k25', 'kdc', 'mef', 'mos',
-                                     'mrw', 'nef', 'nrw', 'obm', 'orf', 'pef', 'ptx', 'pxn',
-                                     'r3d', 'rad', 'raf', 'rw2', 'raw', 'rwl', 'rwz', 'srf',
-                                     'sr2', 'srw', 'x3f','aai', 'art', 'arw', 'avi', 'avs',
-                                     'bmp', 'bmp2', 'bmp3', 'cals', 'cgm', 'cin', 'cmyk',
-                                     'cmyka', 'cr2', 'crw', 'cur', 'cut', 'dcm', 'dcr', 'dcx',
-                                     'dib', 'djvu', 'dng', 'dot', 'dpx', 'emf', 'epdf', 'epi',
-                                     'eps', 'eps2', 'eps3', 'epsf', 'epsi', 'ept', 'exr', 'fax',
-                                     'fig', 'fits', 'fpx', 'gif', 'gplt', 'gray', 'hdr', 'hpgl',
-                                     'hrz', 'html', 'ico', 'info', 'inline', 'jbig', 'jng',
-                                     'jp2', 'jpc', 'jpg', 'jpeg', 'man', 'mat', 'miff', 'mono',
-                                     'mng', 'm2v', 'mpeg', 'mpc', 'mpr', 'mrw', 'msl', 'mtv',
-                                     'mvg', 'nef', 'orf', 'otb', 'p7', 'palm', 'pam', 'pbm', 
-                                     'pcd', 'pcds', 'pcl', 'pcx', 'pdb', 'pdf', 'pef', 'pfa', 'pfb',
-                                     'pfm', 'pgm', 'picon', 'pict', 'pix', 'png', 'png8', 'png16',
-                                     'png32', 'pnm', 'ppm', 'ps', 'ps2', 'ps3', 'psb', 'psd', 'ptif',
-                                     'pwp', 'rad', 'rgb', 'rgba', 'rla', 'rle', 'sct', 'sfw', 'sgi',
-                                     'shtml', 'sid', 'mrsid', 'sun', 'svg', 'tga', 'tiff', 'tim',
-                                     'tif', 'txt', 'uil', 'uyvy', 'vicar', 'viff', 'wbmp', 'webp',
-                                     'wmf', 'wpg', 'x', 'xbm', 'xcf', 'xpm', 'xwd', 'x3f', 'ycbcr',
-                                     'ycbcra', 'yuv','bmp', 'cin', 'dds', 'dpx', 'exr', 'fits', 'hdr',
-                                     'ico', 'j2k', 'j2c', 'jp2', 'jpeg', 'jpg', 'jpe', 'jfif', 'jfi',
-                                     'pbm', 'pgm', 'png', 'pnm', 'ppm', 'pic', 'psd', 'rgbe', 'sgi',
-                                     'tga', 'tif', 'tiff', 'tpic', 'tx', 'webp']:
-                        if not f.startswith("."):
-                            self._fileItems.append(FileItem(folder, f, FileItem.Type.File))
+                    if not f.startswith("."):
+                        (shortname, extension) = os.path.splitext(f)
+                        supported = True
+                        try:
+                            getBestPlugin.getBestReader(extension)
+                        except Exception as e:
+                            supported = False
+                        if supported:
+                            self._fileItems.append(FileItem(folder, f, FileItem.Type.File, ""))
                     
             else:
                 for f in files:
                     (shortname, extension) = os.path.splitext(f)
                     if extension == self._nameFilter:
                         print("Only ", extension, " files")
-                        self._fileItems.append(FileItem(folder, f, FileItem.Type.File))
+                        self._fileItems.append(FileItem(folder, f, FileItem.Type.File, ""))
                           
         except Exception:
             pass
+        self._fileItems = sorted(self._fileItems, key=lambda fileItem: fileItem.fileName.upper())
         self._fileItemsModel.setObjectList(self._fileItems)
-        #self._fileItemsModel.setObjectList(self._fileItems.sort(key=lambda fileItem: fileItem.fileName))
         
     @QtCore.pyqtSlot(str, result=QtCore.QObject)
     def getFilteredFileItems(self, fileFilter):
@@ -175,14 +189,15 @@ class FileModelBrowser(QtQuick.QQuickItem):
 
         try:
             _, dirs, files = next(os.walk(os.path.dirname(fileFilter)))
+            dirs = sorted(dirs, key=lambda v: v.upper())
             for d in dirs:
                 if not d.startswith(".") and d.startswith(os.path.basename(fileFilter)) and d != os.path.basename(fileFilter):
-                    suggestions.append(FileItem(os.path.dirname(fileFilter), d, FileItem.Type.Folder))
+                    suggestions.append(FileItem(os.path.dirname(fileFilter), d, FileItem.Type.Folder, ""))
             
         except Exception:
             pass
+        
         return suggestions
-        #return suggestions.sort(key=lambda fileItem: fileItem.fileName)
     
     _fileItems = []
     _fileItemsModel = None
@@ -244,5 +259,15 @@ class FileModelBrowser(QtQuick.QQuickItem):
     fileItems = QtCore.pyqtProperty(QtCore.QObject, getFileItems, notify=folderChanged)
     nameFilterChange = QtCore.pyqtSignal()
     nameFilter = QtCore.pyqtProperty(str, getFilter, setFilter, notify=nameFilterChange)
-
+    
+    def getShowSeq(self):
+        return self._showSeq
+    
+    def setShowSeq(self, checkSeq):
+        self._showSeq = checkSeq
+        self.updateFileItems(self._folder)
+        self.showSeqChanged.emit()
+    
+    showSeqChanged = QtCore.pyqtSignal()
+    showSeq = QtCore.pyqtProperty(bool, getShowSeq, setShowSeq, notify=showSeqChanged)
 

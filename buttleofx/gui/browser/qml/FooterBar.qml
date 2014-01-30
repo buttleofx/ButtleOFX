@@ -11,6 +11,7 @@ Rectangle {
     property string filter: "*"
     property variant selected
     property real fileSize
+    property int nbInSeq
 
     signal changeFilter(string newFilter)
     signal openFolder(string newFolder)
@@ -26,7 +27,7 @@ Rectangle {
 
         Text {
             id: nbOfFiles
-            text: selected.count > 1 ? selected.count + " files selected" : ""
+            text: selected.count > 1 ? selected.count + " files selected" : fileType == "Sequence" ? nbInSeq + " files in Sequence" : ""
             color: "white"
         }
 

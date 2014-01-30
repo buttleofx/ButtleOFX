@@ -23,6 +23,7 @@ class SequenceWrapper(QtCore.QObject):
     def getFirstFilePath(self):
         return self._sequence.getAbsoluteFirstFilename()
     
+    @QtCore.pyqtSlot(result=int)
     def getNbFiles(self):
         return self._sequence.getNbFiles()
         

@@ -17,6 +17,7 @@ Rectangle {
     signal changeFile(string file)
     signal changeFileType(string fileType)
     signal changeFileSize(real fileSize)
+    signal changeNbFilesInSeq(int nb)
     property bool viewList: false
     signal changeSelectedList(variant selected)
     property int itemIndex: 0
@@ -259,6 +260,7 @@ Rectangle {
 
                                 else if(!(mouse.modifiers & Qt.ShiftModifier))
                                     fileModel.selectItem(index)
+                                    model.object.fileType == "Sequence" ? winFile.changeNbFilesInSeq(model.object.seq.getNbFiles()) : ""
 
                                 var sel = fileModel.getSelectedItems()
                                 var selection = new Array()

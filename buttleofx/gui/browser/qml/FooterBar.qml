@@ -26,7 +26,7 @@ Rectangle {
 
         Text {
             id: nbOfFiles
-            text: selected.count > 1 ? selected.count + " files selected" : fileType == "Sequence" ? " files in sequence" : ""
+            text: selected.count > 1 ? selected.count + " files selected" : ""
             color: "white"
         }
 

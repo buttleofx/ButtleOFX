@@ -40,7 +40,6 @@ Rectangle {
 
         MenuItem {
             text: "Create a Directory"
-            shortcut: "Ctrl+N"
             onTriggered: {
                 fileModel.createFolder(fileModel.folder + "/New Directory")
             }
@@ -304,7 +303,6 @@ Rectangle {
 
                             MenuItem {
                                 text: "Rename"
-                                shortcut: "F2"
                                 onTriggered: {
                                     //Open a TextEdit
                                     textInColumn.forceActiveFocus()
@@ -527,7 +525,6 @@ Rectangle {
 
                         MenuItem {
                             text: "Rename"
-                            shortcut: "F2"
                             onTriggered: {
                                 //Open a TextEdit
                                 textInRow.forceActiveFocus()

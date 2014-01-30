@@ -20,6 +20,9 @@ class SequenceWrapper(QtCore.QObject):
         return 'Test'
     
     ########################################## Getters ##########################################
+    def getFirstFilePath(self):
+        return self._sequence.getAbsoluteFirstFilename()
+    
     def getNbFiles(self):
         return self._sequence.getNbFiles()
         
@@ -35,7 +38,7 @@ class SequenceWrapper(QtCore.QObject):
         return self._sequence.getDuration()
         
     ##################################### DATA EXPOSED TO QML ######################################
-    
+    firstFilePath = QtCore.pyqtProperty(str, getFirstFilePath, constant=True)
     nbFiles = QtCore.pyqtProperty(int, getNbFiles, constant=True)
     size = QtCore.pyqtProperty(float, getSize, constant=True)
     time = QtCore.pyqtProperty(float, getTime, constant=True)

@@ -16,6 +16,7 @@ class FileItem(QtCore.QObject):
     
     _isSelected = False
     
+    
     class Type():
         """ Enum """
         File = 'File'
@@ -38,14 +39,9 @@ class FileItem(QtCore.QObject):
             self._seq = None
             self._fileSize = 0.0
         elif fileType == FileItem.Type.Sequence:
-            self._seq = seq
-            self._fileImg = self._seq.getAbsoluteFirstFilename()
-            res = 0
-            for i in range(self._seq.getFirstTime(), self._seq.getLastTime() + self._seq.getStep(), self._seq.getStep()):
-                fullpath = self._seq.getAbsoluteFilenameAt(i)
-                if os.path.exists(fullpath):
-                    res = res + os.stat(fullpath).st_size
-            self._fileSize = (res) / self._seq.getNbFiles()
+            self._seq = SequenceWrapper(seq)
+            self._fileImg = self._seq.getFirstFilePath()
+            self._fileSize = self._seq.getSize()
             
     def getFilepath(self):
         return self._filepath

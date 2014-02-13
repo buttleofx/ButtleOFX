@@ -201,7 +201,7 @@ ApplicationWindow {
         color: "#141414"
         x:list.width
         Text{
-            text:aNodeIsSelected? currentParamNode.nodeType : currentPluginType
+            text:aNodeIsSelected? currentParamNode ? currentParamNode.nodeType : currentPluginType : currentPluginType
             color: "white"
             font.pointSize: 11
             horizontalAlignment: Text.Center
@@ -212,7 +212,7 @@ ApplicationWindow {
         }
 
         Text{
-            text:aNodeIsSelected? currentParamNode.pluginGroup : currentPluginGroup
+            text:aNodeIsSelected? currentParamNode ? currentParamNode.pluginGroup : currentPluginGroup : currentPluginGroup
             color: "#00b2a1"
             width: parent.width-15
             height: parent.height-15
@@ -222,7 +222,7 @@ ApplicationWindow {
         }
 
         Text{
-            text:aNodeIsSelected? currentParamNode.pluginDoc : currentPluginDoc
+            text:aNodeIsSelected? currentParamNode ? currentParamNode.pluginDoc : currentPluginDoc : currentPluginDoc
             color: "white"
             width: parent.width-15
             height: parent.height-15

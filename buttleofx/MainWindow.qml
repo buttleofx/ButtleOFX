@@ -34,9 +34,9 @@ ApplicationWindow {
     Keys.onPressed: {
 
         // Graph toolbar
-        if (event.key == Qt.Key_Delete) {
+        /*if (event.key == Qt.Key_Delete) {
            _buttleManager.deleteSelection();
-        }
+        }*/
        if ((event.key == Qt.Key_Z) && (event.modifiers & Qt.ControlModifier)) {
             if(_buttleManager.canUndo) {
                 _buttleManager.undo();
@@ -266,7 +266,7 @@ ApplicationWindow {
 
             MenuItem {
                 text: "Delete"
-                shortcut: "del"
+                //shortcut: "del"
                 onTriggered: _buttleManager.deleteSelection()
             }
         }

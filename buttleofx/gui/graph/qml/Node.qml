@@ -6,6 +6,8 @@ import QuickMamba 1.0
 Rectangle {
     id: qml_nodeRoot
 
+    focus: true
+
     property variant graphRoot
     property alias nodeWrapper: m.nodeWrapper
     property bool readOnly

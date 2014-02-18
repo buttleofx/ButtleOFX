@@ -17,6 +17,13 @@ Version 2.0 (2013-2014) is currently on progress.
 Tutor :   
 >- [Fabien CASTAN](https://github.com/fabiencastan)   
 
+Students :   
+>- [Lucie DELAIRE](https://github.com/Lucie2lr)
+>- [Jonathan DOUET](https://github.com/jon92)
+>- [Anthony GUIOT](https://github.com/aguiot)
+>- [Virginie LALANDE](https://github.com/vilal)
+>- [Baptiste MOIZARD](https://github.com/Bazard)
+
 ###Team 1.0
 
 Version 1.0 (2012-2013) is the first iteration of the project.   
@@ -33,6 +40,13 @@ Students :
 >- [Arthur Tourneret](https://github.com/artourn)
 
 See [project's blog.](http://buttleofx.wordpress.com/)
+
+Pre-requisites
+-----------
+
+- python 3
+- PyQt 5.2
+- QtQuick 2
 
 
 Compilation

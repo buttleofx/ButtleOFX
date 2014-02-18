@@ -17,7 +17,7 @@ Version 2.0 (2013-2014) is currently on progress.
 Tutor :   
 >- [Fabien CASTAN](https://github.com/fabiencastan)   
 
-Students :   Clément Champetier
+Students :   
 >- [Lucie DELAIRE](https://github.com/Lucie2lr)
 >- [Jonathan DOUET](https://github.com/jon92)
 >- [Anthony GUIOT](https://github.com/aguiot)

@@ -2,226 +2,227 @@ import QtQuick 2.0
 import QuickMamba 1.0
 
 Rectangle {
-    id:graphArea
-    y: 30
-    z: 0
-    width: 850
-    height: 350 - y
+    id: qml_graphRoot
 
-    property alias originX: connectnode.x
-    property alias originY: connectnode.y
+    focus: true
 
-    property alias mouseX: rightMouseArea.mouseX
-    property alias mouseY: rightMouseArea.mouseY
+    Keys.onPressed: {
+        // Graph toolbar
+        if (event.key == Qt.Key_Delete) {
+           _buttleManager.deleteSelection()
+        }
+    }
+
+    QtObject {
+        id: m
+        property variant graphRoot: qml_graphRoot
+    }
 
     signal clickCreationNode(string nodeType)
     signal drawSelection(int selectionX, int selectionY, int selectionWidth, int selectionHeight)
 
-    color: "#212121"
+    property real zoomCoeff: 1
+    property real zoomStep: 0.1
+    property real nodeX
+    property int offsetX: 0
+    property int offsetY: 0
+    property alias originX: graphContainer.x
+    property alias originY: graphContainer.y
 
-    // Selection area
+    property bool readOnly
+    property bool miniatureState
+    property real miniatureScale
 
-    MouseArea {
-        id: leftMouseArea
-        property int xStart
-        property int yStart
-        property bool drawingSelection : false
+    property var container: graphContainer
 
-        anchors.fill: parent
-        hoverEnabled: true
-        acceptedButtons: Qt.LeftButton
-        onClicked: {
-            if (tools.menuComponent) {
-                tools.menuComponent.destroy();
-            }
-        }
-        onPressed: {
-            xStart = mouse.x;
-            yStart = mouse.y;
-            rectangleSelection.x = mouse.x;
-            rectangleSelection.y = mouse.y;
-            rectangleSelection.width = 1;
-            rectangleSelection.height = 1;
-            rectangleSelection.visible = true;
-            drawingSelection: true;
-        }
-        onReleased: {
-            rectangleSelection.visible = false;
-            _buttleData.clearCurrentSelectedNodeNames();
-            graphArea.drawSelection(rectangleSelection.x - graphArea.originX, rectangleSelection.y - graphArea.originY, rectangleSelection.width, rectangleSelection.height)
-        }
-
-        onPositionChanged: {
-            if(mouse.x < xStart){
-                rectangleSelection.x = mouse.x
-                rectangleSelection.width = xStart - mouse.x;
-            }
-            else {
-                rectangleSelection.width = mouse.x - xStart;
-            }
-            if(mouse.y < yStart){
-                rectangleSelection.y = mouse.y
-                rectangleSelection.height = yStart - mouse.y;
-            }
-            else {
-                rectangleSelection.height = mouse.y - yStart;
-            }
-        }
-    }
-    onDrawSelection: {
-        _buttleData.addNodeWrappersInRectangleSelection(selectionX, selectionY, selectionWidth, selectionHeight);
-    }
-
-    MouseArea{
-        id: middleMouseArea
-        anchors.fill: parent
-        acceptedButtons: Qt.MiddleButton
-        hoverEnabled: true
-        drag.target: connectnode
-        drag.axis: Drag.XandYAxis
-    }
-
+    /*
     ExternDropArea {
         anchors.fill: parent
-        acceptDrop: false
+        acceptDrop: true
         onDragEnter: {
-            acceptDrop = hasUrls;
-
-            // tmpConnection update
-            if(hasText && text.substring(0, 5) == "clip/") {
-                if (connections.tmpClipName == "Output") {
-                    connections.tmpConnectionX2 =  pos.x - graphArea.originX
-                    connections.tmpConnectionY2 =  pos.y - graphArea.originY
-                }
-                else {
-                    connections.tmpConnectionX1 =  pos.x - graphArea.originX
-                    connections.tmpConnectionY1 =  pos.y - graphArea.originY
-                }
-            }
+            acceptDrop = hasUrls
         }
-
         onDrop: {
+            console.log("Drop external files:", acceptDrop)
             if(acceptDrop) {
-                _buttleManager.nodeManager.dropFile(firstUrl, pos.x - graphArea.originX, pos.y - graphArea.originY)
+                _buttleManager.nodeManager.dropFile(firstUrl, pos.x - m.graphRoot.originX, pos.y - m.graphRoot.originY)
             }
         }
+    }
+    */
 
+    // Drag&Drop from outside the app
+    DropArea {
+        id: graphDropArea
+        anchors.fill: parent
+        keys: ["text/uri-list"]
+
+        onDropped: {
+            if( ! drop.hasUrls )
+            {
+                drop.accepted = false
+                return
+            }
+
+            _buttleData.currentGraphWrapper = _buttleData.graphWrapper
+            _buttleData.currentGraphIsGraph()
+            // if before the viewer was showing an image from the brower, we change the currentView
+            if (_buttleData.currentViewerIndex > 9){
+                _buttleData.currentViewerIndex = player.lastView
+                if (player.lastNodeWrapper != undefined)
+                    _buttleData.currentViewerNodeWrapper = player.lastNodeWrapper
+                player.changeViewer(player.lastView)                
+            }
+
+            for(var urlIndex in drop.urls)
+            {
+                _buttleManager.nodeManager.dropFile(drop.urls[urlIndex], drag.x - m.graphRoot.originX + 10*urlIndex, drag.y - m.graphRoot.originY + 10*urlIndex)
+            }
+            drop.accepted = true
+        }
+    }
+
+    // Drag&Drop from Browser to Graph
+    DropArea {
+        anchors.fill: parent
+        keys: "internFileDrag"
+
+        onDropped: {
+            _buttleData.currentGraphWrapper = _buttleData.graphWrapper
+            _buttleData.currentGraphIsGraph()
+            // if before the viewer was showing an image from the brower, we change the currentView
+            if (_buttleData.currentViewerIndex > 9){
+                _buttleData.currentViewerIndex = player.lastView
+                if (player.lastNodeWrapper != undefined)
+                    _buttleData.currentViewerNodeWrapper = player.lastNodeWrapper
+                player.changeViewer(player.lastView)
+            }
+
+            for(var urlIndex in drag.source.selectedFiles)
+            {
+                _buttleManager.nodeManager.dropFile(drag.source.selectedFiles[urlIndex], drag.x - m.graphRoot.originX + 10*urlIndex, drag.y - m.graphRoot.originY + 10*urlIndex)
+            }
+        }
     }
 
     Rectangle {
-        id: connectnode
+        id: graphContainer
+        x: 0
+        y: 0
+        width: parent.width * zoomCoeff
+        height: parent.height * zoomCoeff
+        color: "transparent"
+
+        /*Item {
+            id: repere
+            property color repereColor: "red"
+            property double size: 50 * zoomCoeff
+            property double thickness: 2
+            visible: miniatureState ? false : true
+            Rectangle {
+                id: axeX
+                x: -repere.size - 0.5 * repere.thickness
+                y: 0
+                width: 2 * repere.size + repere.thickness
+                height: 2
+                color: repere.repereColor
+            }
+            Rectangle {
+                id: axeY
+                x: 0
+                y: -repere.size - 0.5 * repere.thickness
+                width: 2
+                height: 2 * repere.size + repere.thickness
+                color: repere.repereColor
+            }
+        }*/
+
         Item {
             id: nodes
-            width: graphArea.width
-            height: graphArea.height
+            anchors.fill: parent
             z: 1
+
             Repeater {
-                model : _buttleData.graphWrapper.nodeWrappers
+                id: nodesRepeater
+                //model: _buttleData.graphBrowserWrapper.nodeWrappers
+                model: _buttleData.graphWrapper.nodeWrappers
                 Node {
-                    Component.onDestruction: {
-                        nodes.forceActiveFocus()
+                    id: node
+                    nodeWrapper: model.object
+                    graphRoot: m.graphRoot
+                    width: nodeWidth * zoomCoeff
+                    height: nodeWidth /2 * zoomCoeff
+                    readOnly: qml_graphRoot.readOnly
+                    miniatureScale: qml_graphRoot.miniatureScale
+                    miniatureState: qml_graphRoot.miniatureState
+
+
+                    StateGroup {
+                        id: stateViewerNode
+                         states: [
+                             State {
+                                 name: "miniatureState"
+                                 when: miniatureState
+                                 PropertyChanges {
+                                     target: node
+                                     width: node.nodeWidth * qml_graphRoot.miniatureScale
+                                     height: node.nodeWidth /2 * qml_graphRoot.miniatureScale
+                                 }
+                             }
+                         ]
                     }
+
                 }
             }
         }
 
         Item {
             id: connections
-            width: graphArea.width
-            height: graphArea.height
+            anchors.fill: parent
             // We set the z to 0 so the canvas is not over the node's clips
             z: 0
             Repeater {
                 model : _buttleData.graphWrapper.connectionWrappers
                 Connection {
-                    connectionModel: model.object
-                    x1: model.object.clipOutPosX
-                    y1: model.object.clipOutPosY
-                    x2: model.object.clipInPosX
-                    y2: model.object.clipInPosY
+                    id: connection
+                    connectionWrapper: model.object
+                    property variant nodeOut: _buttleData.graphWrapper.getNodeWrapper(connectionWrapper.out_clipNodeName)
+                    property variant clipOut: nodeOut.getClip(connectionWrapper.out_clipName)
+
+                    property variant nodeIn: _buttleData.graphWrapper.getNodeWrapper(connectionWrapper.in_clipNodeName)
+                    property variant clipIn: nodeIn.getClip(connectionWrapper.in_clipName)
+
+                    readOnly: qml_graphRoot.readOnly
+                    miniatureState: qml_graphRoot.miniatureState
+                    miniatureScale: qml_graphRoot.miniatureScale
+
+                    x1: connection.miniatureState ? clipOut.xCoord * connection.miniatureScale : clipOut.xCoord
+                    y1: connection.miniatureState ? clipOut.yCoord * connection.miniatureScale : clipOut.yCoord
+                    x2: connection.miniatureState ? clipIn.xCoord * connection.miniatureScale : clipIn.xCoord
+                    y2: connection.miniatureState ? clipIn.yCoord * connection.miniatureScale : clipIn.yCoord
+
+                    visible: connectionWrapper.enabled ? true : false
                 }
             }
 
-            property bool tmpConnectionExists : false
+            property bool tmpConnectionExists: false
             property string tmpClipName
             property int tmpConnectionX1
             property int tmpConnectionY1
             property int tmpConnectionX2
             property int tmpConnectionY2
+            property real alpha: 1
 
             CanvasConnection {
                 id: tmpCanvasConnection
-                visible: connections.tmpConnectionExists ? 1 : 0
+                visible: connections.tmpConnectionExists ? true : false
+
                 x1: connections.tmpConnectionX1
                 y1: connections.tmpConnectionY1
                 x2: connections.tmpConnectionX2
                 y2: connections.tmpConnectionY2
+                opacity: connections.alpha
             }
         }
-
-        //transform: Scale { id: scale; origin.x: graphArea.width/2; origin.y: graphArea.height/2; xScale: 1; yScale: 1}
-    }
-
-    // Rectangle selection is placed here so it is drawn over the nodes
-    Rectangle {
-        id: rectangleSelection
-        color: "white"
-        border.color: "#00b2a1"
-        opacity: 0.25
-        visible: false
-    }
-
-    /*
-    WheelArea {
-        anchors.fill: parent
-        property real nbSteps: 5
-        onVerticalWheel: {
-            if(scale.xScale > 0.3 ) {
-                //scale.origin.x = middleMouseArea.mouseX
-                //scale.origin.y = middleMouseArea.mouseY
-                //console.log(connectnode.width)
-                if(delta < 0 && scale.xScale - 0.2 > 0.3 && scale.yScale - 0.2 > 0.3 ) {
-                    scale.xScale -= 0.1
-                    scale.yScale -= 0.1
-                }
-                if(delta > 0) {
-                    scale.xScale += 0.1
-                    scale.yScale += 0.1
-                }
-            }
-        }
-    }
-    */
-
-    // NODE CREATION WITH RIGHT CLICK
-    MouseArea {
-        id: rightMouseArea
-        anchors.fill: parent
-        acceptedButtons: Qt.RightButton
-        onClicked: {
-            //_addMenu.showMenu(rightMouseArea.mouseX, rightMouseArea.mouseY);
-            if (!tools.menuComponent) {
-                if(rightMouseArea.mouseX + 500 < graph.width) {
-                    var newComponent = Qt.createQmlObject('MenuList { parentName: "buttle/"; x: rightMouseArea.mouseX; y:  rightMouseArea.mouseY; clickFrom: graph; side: "right";}', parent);
-                    //newComponent.side = "right";
-                    tools.menuComponent = newComponent;
-                    
-                }
-                else {
-                    //var newComponent = Qt.createQmlObject('MenuList { parentName: "buttle/"; x: graph.width - 500; y:  rightMouseArea.mouseY; clickFrom: graph;}', parent);
-                    var newComponent = Qt.createQmlObject('MenuList { parentName: "buttle/"; x: rightMouseArea.mouseX; y:  rightMouseArea.mouseY; clickFrom: graph; side: "left";}', parent);                    
-                    //newComponent.side = "left";
-                    tools.menuComponent = newComponent;     
-                }
-            }
-
-                
-             /*if (mouse.button == Qt.RightButton)
-             listmodel.x = mouseX
-             listmodel.y = mouseY - 30
-             listmodel.clickFrom = graphArea
-             listmodel.menuState = (listmodel.menuState == "hidden") ? "shown" : "hidden"
-        }*/
-        }   
     }
 }

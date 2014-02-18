@@ -2,10 +2,13 @@ import QtQuick 2.0
 import QtQuick.Layouts 1.0
 import TimerPlayer 1.0
 
+import "../../../gui"
+
 Item {
     id: player
-    implicitWidth: 950
-    implicitHeight: 400
+
+    signal buttonCloseClicked(bool clicked)
+    signal buttonFullscreenClicked(bool clicked)
 
     // remark : in python if there are ten frames, they are numbered from 0 to 9 so we need some time to add 1 for display
     property variant node
@@ -13,6 +16,9 @@ Item {
     property int nodeNbFrames: node ? node.nbFrames : 1
     property real nodeDurationSeconds: node ? node.nbFrames/node.fps : 0
     property bool isPlaying: false
+
+    property int lastView: 1 // the last view where the user was
+    property variant lastNodeWrapper
 
     TimerPlayer {
         //class Timer defined in python
@@ -70,60 +76,20 @@ Item {
         //console.log("Node Changed : ", node)
     }
 
-    /*************************** TabBar*************************************/
-    Item {
+    Tab {
         id: tabBar
-        implicitWidth: 950
-        implicitHeight: 30
-        property color tabColor: "#141414"
-
-        Row{
-            spacing: 1
-            Rectangle {
-                id:tab1
-                implicitWidth: 100
-                implicitHeight: 200
-                radius: 10
-                color: tabBar.tabColor
-                Text {
-                    id: tabLabel
-                    anchors.horizontalCenter: parent.horizontalCenter
-                    y:10
-                    text: "Viewer"
-                    color: "white"
-                    font.pointSize: 10
-                }
-            }
-
-            /*Rectangle {
-                id: tab2
-                implicitWidth: 30
-                implicitHeight: 200
-                radius: 10
-                color: tabBar.tabColor
-                gradient: Gradient {
-                    GradientStop { position: 0.0; color: "#141414" }
-                    GradientStop { position: 0.11; color: "#141414" }
-                    GradientStop { position: 0.15; color: "#111111" }
-                    GradientStop { position: 0.16; color: "#111111" }
-                }
-                Image {
-                    id: addButton
-                    source: "../img/plus.png"
-                    anchors.centerIn: parent
-                }
-            }*/
-        }
+        name: "Viewer"
+        onCloseClicked: player.buttonCloseClicked(true)
+        onFullscreenClicked: player.buttonFullscreenClicked(true)
     }
 
     /********************************Viewer and Tools************************************/
     Rectangle {
         id: viewerAndTools
-        height: parent.height - tabBar.height
-        width: parent.width
+        implicitHeight: parent.height - tabBar.height
+        implicitWidth: parent.width
         y: tabBar.height
         color: "#141414"
-
 
         ColumnLayout {
 
@@ -131,10 +97,13 @@ Item {
             anchors.fill: parent
             Rectangle {
                 id: viewerRegion
-                width: parent.width
+                implicitWidth: parent.width
                 color: "transparent"
-                Layout.minimumHeight: 50
-                Layout.fillHeight: true
+                Layout.minimumHeight: 5
+
+                Layout.preferredHeight: parent.height - toolBarRegion.implicitHeight
+
+                Layout.preferredWidth: parent.width - 10
 
                 Component {
                     id: viewer_component
@@ -153,7 +122,7 @@ Item {
                 Rectangle {
                     id: titleErrorDisplay
                     color: "#00b2a1"
-                    width: titleError.width + 20
+                    implicitWidth: titleError.width + 20
                     height: titleError.lineCount * 20
                     border.width: 2
                     border.color: "black"
@@ -172,7 +141,7 @@ Item {
                         border.color: "black"
                         anchors.top: parent.bottom
                         anchors.left: parent.left
-                        width: errorMessage.width + 20
+                        implicitWidth: errorMessage.width + 20
                         height: errorMessage.lineCount * 20
                         opacity: 0
                         Text {
@@ -216,20 +185,20 @@ Item {
             Rectangle {
                 id: toolBarRegion
 
-                property int impHeightValue: 25
+                property int impHeightValue: 50
 
                 y: parent.height + tabBar.height
-                width: parent.width
+                implicitWidth: parent.width
                 color: "transparent"
-                Layout.minimumWidth : 700
-                Layout.preferredHeight: 25
+                //Layout.minimumWidth : 700
+                Layout.preferredHeight: 50
                 Layout.preferredWidth: parent.width
 
                 // Tools (zoom, timeline buttons, mosquitos)
                 Rectangle {
                     id: tools
-                    width: parent.width
-                    height: parent.height
+                    implicitWidth: parent.width
+                    //height: parent.height
                     color: "#141414"
                     gradient: Gradient {
                         GradientStop { position: 0.0; color: "#141414" }
@@ -264,6 +233,7 @@ Item {
                         onXChanged: {
                             if (selectViewer.x < 350) {
                                 toolBarRegion.implicitHeight = toolBarRegion.impHeightValue * 2
+                                //selectViewer.y = selectViewer.yValue + selectViewer.height - 3
                                 selectViewer.y = selectViewer.yValue + selectViewer.height - 3
                             }
                             else {
@@ -275,6 +245,14 @@ Item {
                         // Mosquito
                         Rectangle {
                             id: mosquitoTool
+                            StateGroup {
+                                id: mosquitoState
+                                states: State {
+                                    name: "dragging"
+                                    when: mosquitoMouseArea.pressed
+                                    PropertyChanges { target: mosquitoTool; x: mosquitoTool.x; y: mosquitoTool.y }
+                                }
+                            }
                             width: 28
                             height: 28
                             color : mosquitoMouseArea.containsMouse ? "#343434" : "transparent"
@@ -282,18 +260,24 @@ Item {
 
                             Image {
                                 id: mosquito
-                                source: _buttleData.buttlePath + "/gui/img/mosquito/mosquito.png"
+                                source: "file:///" + _buttleData.buttlePath + "/gui/img/mosquito/mosquito.png"
                                 anchors.centerIn: parent
                             }
 
+                            Drag.active: mosquitoMouseArea.drag.active
+                            Drag.hotSpot.x: 14
+                            Drag.hotSpot.y: 14
+                            //Drag.dragType: Drag.Automatic
+                            Drag.keys: "mosquitoMouseArea"
+
                             MouseArea {
-                                hoverEnabled: true
                                 id: mosquitoMouseArea
                                 anchors.fill: parent
 
-                                onPressed: {
-                                    _buttleManager.viewerManager.mosquitoDragEvent()
-                                }
+                                hoverEnabled: true
+
+                                onReleased: parent.Drag.drop()
+								drag.target: parent
                             }
                         }
 
@@ -321,7 +305,11 @@ Item {
                                  MouseArea {
                                     anchors.fill: parent
                                     onClicked: {
+                                        _buttleData.currentGraphWrapper = _buttleData.graphWrapper
+                                        _buttleData.currentGraphIsGraph()
+                 
                                         player.changeViewer(index+1)
+                                        player.lastView = index+1                                        
                                     }
                                 }
 
@@ -352,19 +340,19 @@ Item {
             /****************Timeline*******************/
             Item {
                 id: timeline
-                width: parent.width
+                implicitWidth: parent.width
                 implicitHeight: 10
                 anchors.bottom: toolBarRegion.top
 
                 // main container
                 Rectangle {
-                    width: parent.width
+                    implicitWidth: parent.width
                     color: "transparent"
                     y: 10
                     Rectangle {
                         id: barTimeline
                         anchors.verticalCenter: parent.verticalCenter
-                        width: parent.width
+                        implicitWidth: parent.width
                         height: 2
 
                         Rectangle{
@@ -434,7 +422,7 @@ Item {
                     }
                 }
             }
-        } //ColumnLayout
-    } // Viewer & tools
-} // Item player
+        }
+    }
+}
 

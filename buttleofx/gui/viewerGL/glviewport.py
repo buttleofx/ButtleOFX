@@ -71,7 +71,7 @@ def loadTextureFromImage(imgBounds, img_data):
     return texture
 
 
-class GLViewport(QtQuick.QQuickItem):
+class GLViewport(QtQuick.QQuickPaintedItem):
     _glGeometry = QtCore.QRect()
 
     def __init__(self, parent=None):
@@ -81,7 +81,8 @@ class GLViewport(QtQuick.QQuickItem):
         self.tex = None
 
         # Enable paint method calls
-        self.setFlag(QtQuick.QQuickItem.ItemHasNoContents, False)
+        self.setFlag(QtQuick.QQuickItem.ItemHasContents, True)
+        self.setRenderTarget(QtQuick.QQuickPaintedItem.FramebufferObject)
 
     def initializeGL(self):
         GL.glClearColor(0.0, 0.0, 0.0, 0.0)  # We assign a black background
@@ -89,12 +90,12 @@ class GLViewport(QtQuick.QQuickItem):
         GL.glEnable(GL.GL_LINE_SMOOTH)
 
     def updateTextureFromImage(self):
-        #print("updateTextureFromImage begin")
+        # print("updateTextureFromImage begin")
         if self.img_data is not None:
             self.tex = loadTextureFromImage(self._imageBoundsValue, self.img_data)
         else:
             self.tex = None
-        #print("updateTextureFromImage end")
+        # print("updateTextureFromImage end")
 
     @QtCore.pyqtSlot()
     def fitImage(self):
@@ -107,9 +108,9 @@ class GLViewport(QtQuick.QQuickItem):
             -(self.width() * .5 / self._scaleValue - imgCenter.x()),
             -(self.height() * .5 / self._scaleValue - imgCenter.y()))
 
-    def prepareGL(self, widget):
+    def prepareGL(self):
 
-        GL.glViewport(int(self._glGeometry.left()), int(widget.height() - self._glGeometry.bottom()), int(self._glGeometry.width()), int(self._glGeometry.height()))
+        GL.glViewport(int(self._glGeometry.left()), int(self.height() - self._glGeometry.bottom()), int(self._glGeometry.width()), int(self._glGeometry.height()))
 
         #GL.glClearDepth(1) # just for completeness
         #GL.glClearColor( self._bgColorValue.red(), self._bgColorValue.green(), self._bgColorValue.blue(), self._bgColorValue.alpha() )
@@ -131,9 +132,9 @@ class GLViewport(QtQuick.QQuickItem):
         GL.glColor3d(1.0, 1.0, 1.0)
 
     def drawImage(self):
-        #print("GLViewport.drawImage")
-        #print("widget size:", self.width(), "x", self.height())
-        #print("image size:", self.getImageBounds().width(), "x", self.getImageBounds().height())
+        # print("GLViewport.drawImage")
+        # print("widget size:", self.width(), "x", self.height())
+        # print("image size:", self.getImageBounds().width(), "x", self.getImageBounds().height())
 
         if self.img_data is not None and self.tex is None:
             self.updateTextureFromImage()
@@ -141,6 +142,7 @@ class GLViewport(QtQuick.QQuickItem):
         if self.tex is None:
             return
 
+        # print("GLViewport.drawImage -- OpenGL draw image")
         GL.glEnable(GL.GL_TEXTURE_2D)
         GL.glBindTexture(GL.GL_TEXTURE_2D, self.tex)
 
@@ -149,13 +151,13 @@ class GLViewport(QtQuick.QQuickItem):
         GL.glColor3d(1.0, 1.0, 1.0)
         GL.glBegin(GL.GL_QUADS)
         GL.glTexCoord2d(0.0, 1.0)
-        GL.glVertex2d(imgRect.left(), imgRect.top())
-        GL.glTexCoord2d(1.0, 1.0)
-        GL.glVertex2d(imgRect.right(), imgRect.top())
-        GL.glTexCoord2d(1.0, 0.0)
-        GL.glVertex2d(imgRect.right(), imgRect.bottom())
-        GL.glTexCoord2d(0.0, 0.0)
         GL.glVertex2d(imgRect.left(), imgRect.bottom())
+        GL.glTexCoord2d(1.0, 1.0)
+        GL.glVertex2d(imgRect.right(), imgRect.bottom())
+        GL.glTexCoord2d(1.0, 0.0)
+        GL.glVertex2d(imgRect.right(), imgRect.top())
+        GL.glTexCoord2d(0.0, 0.0)
+        GL.glVertex2d(imgRect.left(), imgRect.top())
         GL.glEnd()
 
     def drawRegions(self):
@@ -164,27 +166,28 @@ class GLViewport(QtQuick.QQuickItem):
         GL.glLineStipple(1, 0xAAAA)
 
         GL.glColor3d(1., 0., 0.)
-        self.drawRect(self._rodValue)  # RoD
+        #self.drawRect(self._rodValue)  # RoD
 
         GL.glColor3d(1., 1., 1.)
-        self.drawRect(self._rowValue)  # RoW
+        #self.drawRect(self._rowValue)  # RoW
 
         GL.glDisable(GL.GL_LINE_STIPPLE)
 
         #self.tuttleReaderNode
 
-    def internPaintGL(self, widget):
+    def internPaintGL(self):
+        # print("GLViewport.internPaintGL:", self.img_data)
         if self.img_data is not None:
-            self.prepareGL(widget)
+            self.prepareGL()
             self.drawImage()
-            #self.drawRegions()
+            self.drawRegions()
 
-    def paint(self, painter, option, widget):
-        #def paint(self, painter, widget):
-        #print("GLViewport.paint")
+    def paint(self, painter):
+        # print("GLViewport.paint")
 
         painter.beginNativePainting()
-        self.internPaintGL(widget)
+        self.internPaintGL()
+        # self.drawTest()
         painter.endNativePainting()
 
     def drawRect(self, rect):
@@ -194,14 +197,28 @@ class GLViewport(QtQuick.QQuickItem):
         GL.glVertex2d(rect.right(), rect.bottom())
         GL.glVertex2d(rect.left(), rect.bottom())
         GL.glEnd()
+    
+    def drawTest(self):
+        # print("GLViewport.drawTest")
+        
+        GL.glBegin(GL.GL_TRIANGLES)
+        GL.glColor3f(1, 0, 0)
+        GL.glVertex3f(0, 1, -2)
+        
+        GL.glColor3f(0, 1, 0)
+        GL.glVertex3f(-1,-1, -2)
+        
+        GL.glColor3f(0, 0, 1)
+        GL.glVertex3f(1,-1, -2)
+        GL.glEnd()
 
     def geometryChanged(self, new, old):
-        #print("GLViewport.geometryChanged")
-        #print("new:", new.x(), new.y(), new.width(), new.height())
-        #print("old:", old.x(), old.y(), old.width(), old.height())
+        # print("GLViewport.geometryChanged")
+        # print("new:", new.x(), new.y(), new.width(), new.height())
+        # print("old:", old.x(), old.y(), old.width(), old.height())
 
         self._localGeometry = new
-        self._glGeometry = self.sceneTransform().mapRect(new)
+        self._glGeometry = new  # self.sceneTransform().mapRect(new)
 
         if self._fittedModeValue:
             self.fitImage()
@@ -285,7 +302,7 @@ class GLViewport(QtQuick.QQuickItem):
         return self._scaleValue
 
     def setScale(self, scale):
-        #print("setScale:", self._scaleValue, " => ", scale)
+        # print("setScale:", self._scaleValue, " => ", scale)
         minValue = 0.001
         self._scaleValue = scale if scale > minValue else minValue
         self.update()

@@ -7,12 +7,13 @@ from quickmamba.patterns import Signal
 # data
 from buttleofx.data import ButtleDataSingleton
 
+from buttleofx.core.graph import Graph
 
 class NodeManager(QtCore.QObject):
     """
         This class manages actions about nodes.
     """
-
+    
     def __init__(self):
         super(NodeManager, self).__init__()
 
@@ -20,13 +21,22 @@ class NodeManager(QtCore.QObject):
 
     ############### EVENTS FROM QML ###############
 
-    @QtCore.pyqtSlot(str, int, int)
-    def creationNode(self, nodeType, x=20, y=20):
+    @QtCore.pyqtSlot(str, str, int, int)
+    def creationNode(self, graph, nodeType, x=20, y=20):
         """
             Creates a node.
         """
         buttleData = ButtleDataSingleton().get()
-        buttleData.getGraph().createNode(nodeType, x, y)
+        #buttleData.getGraph().createNode(nodeType, x, y)
+        #graph.createNode(nodeType, x, y)
+
+        if (graph == "_buttleData.graph"):
+            buttleData.getGraph().createNode(nodeType, x, y)
+        elif (graph == "_buttleData.graphBrowser"):
+            buttleData.getGraphBrowser().createNode(nodeType, x, y)
+        #by default creation is on the graph in grapheditor
+        else:
+            buttleData.getGraph().createNode(nodeType, x, y)
 
         # update undo/redo display
         self.undoRedoChanged()
@@ -48,7 +58,6 @@ class NodeManager(QtCore.QObject):
             buttleData.setCurrentViewerNodeName(None)
         # if the viewer display a node affected by the destruction
         # need something from Tuttle
-
         # if at least one node in the graph
         if len(buttleData.getGraphWrapper().getNodeWrappers()) > 0 and len(buttleData.getGraph().getNodes()) > 0:
             # if a node is selected
@@ -104,6 +113,8 @@ class NodeManager(QtCore.QObject):
                 copyNode.update({"color": node.getNode().getColor()})
                 copyNode.update({"params": node.getNode().getTuttleNode().getParamSet()})
                 copyNode.update({"mode": "_copy"})
+                copyNode.update({"x": node.getNode().getCoord()[0]})
+                copyNode.update({"y": node.getNode().getCoord()[1]})
                 buttleData.getCurrentCopiedNodesInfo()[node.getName()] = copyNode
                 # Emit the change for the toolbar
                 buttleData.pastePossibilityChanged.emit()
@@ -114,16 +125,21 @@ class NodeManager(QtCore.QObject):
             Pasts the current node(s).
         """
         buttleData = ButtleDataSingleton().get()
+        buttleData.clearCurrentSelectedNodeNames()
         # If nodes have been copied previously
         if buttleData.getCurrentCopiedNodesInfo():
             # Create a copy for each node copied
+            i=0
             for node in buttleData.getCurrentCopiedNodesInfo():
-                buttleData.getGraph().createNode(buttleData.getCurrentCopiedNodesInfo()[node]["nodeType"], 20, 20)
+                buttleData.getGraph().createNode(buttleData.getCurrentCopiedNodesInfo()[node]["nodeType"], buttleData.getCurrentCopiedNodesInfo()[node]["x"] + 20, buttleData.getCurrentCopiedNodesInfo()[node]["y"] + 20)
                 newNode = buttleData.getGraph().getNodes()[-1]
+                buttleData.appendToCurrentSelectedNodeNames(newNode._name)
                 newNode.setColor(buttleData.getCurrentCopiedNodesInfo()[node]["color"])
                 newNode.setNameUser(buttleData.getCurrentCopiedNodesInfo()[node]["nameUser"] + buttleData.getCurrentCopiedNodesInfo()[node]["mode"])
                 newNode.getTuttleNode().getParamSet().copyParamsValues(buttleData.getCurrentCopiedNodesInfo()[node]["params"])
-
+                buttleData.getGraph().nodesChanged()
+                buttleData.getCurrentCopiedNodesInfo()[node].update({node : newNode._name})
+                i = i + 1
         # update undo/redo display
         self.undoRedoChanged()
 
@@ -164,6 +180,8 @@ class NodeManager(QtCore.QObject):
         """
         buttleData = ButtleDataSingleton().get()
 
+        if QtCore.QUrl(url).isLocalFile():
+            url = QtCore.QUrl(url).toLocalFile()
         extension = url.split(".")[-1].lower()
         if extension == 'bofx':
             buttleData.loadData(url)  # also need to verify the json format
@@ -180,7 +198,8 @@ class NodeManager(QtCore.QObject):
         """
         buttleData = ButtleDataSingleton().get()
         buttleData.getGraph().nodeMoved(nodeName, x, y)
-
+        buttleData.getGraph().nodesChanged()
+        buttleData.getGraphWrapper().setResize(True)
         # update undo/redo display
         self.undoRedoChanged()
 
@@ -191,17 +210,21 @@ class NodeManager(QtCore.QObject):
         """
         buttleData = ButtleDataSingleton().get()
         node = buttleData.getGraph().getNode(nodeName)
-
+        graphWrapper = buttleData.getGraphWrapper()
+        
+        oldX = graphWrapper.getTmpMoveNodeX()
+        oldY = graphWrapper.getTmpMoveNodeY()
+        
         # What is the value of the movement (compared to the old position) ?
-        oldX, oldY = node.getCoord()
+        #oldX, oldY = node.getCoord()
         xMovement = newX - oldX
         yMovement = newY - oldY
+        graphWrapper.setTmpMoveNodeX(newX)
+        graphWrapper.setTmpMoveNodeY(newY)
 
         # for each selected node, we update the position considering the value of the movement
         for selectedNodeWrapper in buttleData.getCurrentSelectedNodeWrappers():
             selectedNode = selectedNodeWrapper.getNode()
             currentX, currentY = selectedNode.getCoord()
-            selectedNode.setCoord(currentX + xMovement, currentY + yMovement)
-
-            # we update also the position of all the connections
-            buttleData.getGraph().connectionsCoordChanged(selectedNode)
+            if(selectedNode._name != nodeName):
+                selectedNode.setCoord(currentX + xMovement, currentY + yMovement)

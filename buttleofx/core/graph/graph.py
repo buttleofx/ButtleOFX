@@ -189,7 +189,7 @@ class Graph(object):
 
         from buttleofx.data import ButtleDataSingleton
         buttleData = ButtleDataSingleton().get()
-        node = buttleData.getGraph().getNode(nodeName)
+        node = buttleData.getCurrentGraph().getNode(nodeName)
 
         # What is the value of the movement (compared to the old position) ?
         oldX, oldY = node.getOldCoord()
@@ -223,7 +223,7 @@ class Graph(object):
             Returns True if the clip is already connected, else False.
         """
         for connection in self._connections:
-            if (clip.getId() == connection.getClipOut().getId() or clip.getId() == connection.getClipIn().getId()):
+            if((clip.getNodeName() == connection.getClipOut().getNodeName() and clip.getClipName() == connection.getClipOut().getClipName()) or (clip.getNodeName() == connection.getClipIn().getNodeName() and clip.getClipName() == connection.getClipIn().getClipName())):
                 return True
         return False
 
@@ -273,14 +273,10 @@ class Graph(object):
         for connectionData in graphData["connections"]:
             clipIn_nodeName = connectionData["clipIn"]["nodeName"]
             clipIn_clipName = connectionData["clipIn"]["clipName"]
-            clipIn_clipIndex = connectionData["clipIn"]["clipIndex"]
-            clipIn_positionClip = connectionData["clipIn"]["coord"]
-            clipIn = IdClip(clipIn_nodeName, clipIn_clipName, clipIn_clipIndex, clipIn_positionClip)
+            clipIn = IdClip(clipIn_nodeName, clipIn_clipName)
 
             clipOut_nodeName = connectionData["clipOut"]["nodeName"]
             clipOut_clipName = connectionData["clipOut"]["clipName"]
-            clipOut_clipIndex = connectionData["clipOut"]["clipIndex"]
-            clipOut_positionClip = connectionData["clipOut"]["coord"]
-            clipOut = IdClip(clipOut_nodeName, clipOut_clipName, clipOut_clipIndex, clipOut_positionClip)
+            clipOut = IdClip(clipOut_nodeName, clipOut_clipName)
 
             connection = self.createConnection(clipOut, clipIn)

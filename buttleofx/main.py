@@ -43,6 +43,8 @@ from buttleofx.event import ButtleEventSingleton
 from buttleofx.data import Finder
 #TimerPlayer
 from buttleofx.gui.viewer import TimerPlayer
+#FileModelBrowser
+from buttleofx.gui.browser import FileModelBrowser
 # undo_redo
 from buttleofx.core.undo_redo.manageTools import CommandManager
 # Menu
@@ -52,10 +54,19 @@ from buttleofx.gui.graph.menu import MenuWrapper
 from PyQt5 import QtCore, QtGui, QtQml
 
 import os
+import sys
 
+osname = os.name.lower()
+sysplatform = sys.platform.lower()
+windows = osname == "nt" and sysplatform.startswith("win")
+macos = sysplatform.startswith("darwin")
+linux = not windows and not macos
+unix = not windows
 
 # Path of this file
 currentFilePath = os.path.dirname(os.path.abspath(__file__))
+if windows:
+    currentFilePath = currentFilePath.replace("\\", "/")
 
 
 class ButtleApp(QtGui.QGuiApplication):
@@ -80,8 +91,11 @@ def main(argv, app):
 
     # give to QML acces to TimerPlayer defined in buttleofx/gui/viewer
     QtQml.qmlRegisterType(TimerPlayer, "TimerPlayer", 1, 0, "TimerPlayer")
+    # give to QML access to FileModelBrowser defined in buttleofx/gui/browser
+    QtQml.qmlRegisterType(FileModelBrowser, "ButtleFileModel", 1, 0, "FileModelBrowser")
     # add new QML type
     QtQml.qmlRegisterType(Finder, "FolderListViewItem", 1, 0, "FolderListView")
+    
     if tuttleofx_installed:
         QtQml.qmlRegisterType(GLViewport_tuttleofx, "Viewport", 1, 0, "GLViewport")
     else:
@@ -94,6 +108,7 @@ def main(argv, app):
 
     # create the declarative view
     engine = QtQml.QQmlEngine(app)
+    engine.quit.connect(app.quit)
     #view = QtQuick.QQuickView()
     #view.setViewport(QtOpenGL.QGLWidget())
     #view.setViewportUpdateMode(QtQml.QQuickView.FullViewportUpdate)
@@ -120,8 +135,10 @@ def main(argv, app):
     #rc.setContextProperty("_addMenu", addMenu)
 
     mainFilepath = os.path.join(currentFilePath, "MainWindow.qml")
+    if windows:
+      mainFilepath = mainFilepath.replace('\\', '/')
     component = QtQml.QQmlComponent(engine)
-    component.loadUrl(QtCore.QUrl(mainFilepath))
+    component.loadUrl(QtCore.QUrl("file:///" + mainFilepath))
 
     topLevel = component.create()
 #    topLevel = component.beginCreate(rc)
@@ -138,7 +155,9 @@ def main(argv, app):
 
     #add._menu.popup(view.mapToGlobal(QtCore.QPoint(0, 0)))
 
+
     if topLevel is not None:
+        topLevel.setIcon(QtGui.QIcon(os.path.join(currentFilePath, "../blackMosquito.png")))
         topLevel.show()
     else:
         print("ERRORS")

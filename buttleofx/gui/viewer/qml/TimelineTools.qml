@@ -83,7 +83,7 @@ Item {
                     Rectangle {
                         id: buttonTimeline
 
-                        property string imgPath: _buttleData.buttlePath + "/gui/img/buttons/viewer/"
+                        property string imgPath: "file:///" + _buttleData.buttlePath + "/gui/img/buttons/viewer/"
 
                         width: 8
                         height: 8

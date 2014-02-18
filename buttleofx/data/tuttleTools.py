@@ -34,7 +34,7 @@ def getPluginsIdentifiersAsDictionary():
         When the items are plugins, we need to know their label to display, and their identifier to be able to create the node.
         So this dictionary returns a tuple :
             - if it's a plugin, the tuple is : (pluginLabel, pluginIdentifier)
-            - if i's a category of plugins, the tuple is : (categoryLabel, "")
+            - if it's a category of plugins, the tuple is : (categoryLabel, "")
         The keys of this dictionary are the "paths" of each element of the menu.
         Example :
         pluginsIdentifiersAsDictionary["buttle/tuttle/"] = ['image', 'param']

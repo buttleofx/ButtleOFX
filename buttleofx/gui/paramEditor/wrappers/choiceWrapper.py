@@ -29,6 +29,9 @@ class ChoiceWrapper(ParamWrapper):
     def getValue(self):
         return self._param.getValue()
 
+    def getCurrentIndex(self):
+        return self._param.getCurrentIndex()
+
     def getHasChanged(self):
         return self._param.getHasChanged()
 
@@ -50,5 +53,6 @@ class ChoiceWrapper(ParamWrapper):
 
     listValue = QtCore.pyqtProperty(QtCore.QObject, getListValue, constant=True)
     value = QtCore.pyqtProperty(str, getValue, setValue, notify=changed)
+    currentIndex = QtCore.pyqtProperty(int, getCurrentIndex, notify=changed)
 
     hasChanged = QtCore.pyqtProperty(bool, getHasChanged, setHasChanged, notify=changed)

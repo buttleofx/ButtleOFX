@@ -1,26 +1,43 @@
 import QtQuick 2.0
 import QtQuick.Controls 1.0
+import QtQuick.Layouts 1.0
+import QtQml 2.1
 import QuickMamba 1.0
+import QtQuick.Dialogs 1.0
+import QtQuick.Window 2.1
 
 import "gui/graph/qml"
 import "gui/viewer/qml"
 import "gui/paramEditor/qml"
+import "gui/browser/qml"
+import "gui/plugin/qml"
 
 ApplicationWindow {
+    property int selectedView : 1
+
+    property variant lastSelectedDefaultView: view1
+    property variant view1: [browser, paramEditor, player, graphEditor]
+    property variant view2: [player, paramEditor, browser, graphEditor]
+    property variant view3: [player, browser, advancedParamEditor, empty]
+
+    property string urlOfFileToSave: ""
+
     width: 1200
     height: 800
+    id: mainWindowQML
+    title:"ButtleOFX"
 
     //TopFocusHandler {
-    //    //anchors.fill: parent
+    // //anchors.fill: parent
     //}
 
     Keys.onPressed: {
 
         // Graph toolbar
-        if (event.key == Qt.Key_Delete) {
+        /*if (event.key == Qt.Key_Delete) {
            _buttleManager.deleteSelection();
-        }
-        if ((event.key == Qt.Key_Z) && (event.modifiers & Qt.ControlModifier)) {
+        }*/
+       if ((event.key == Qt.Key_Z) && (event.modifiers & Qt.ControlModifier)) {
             if(_buttleManager.canUndo) {
                 _buttleManager.undo();
             }
@@ -52,11 +69,11 @@ ApplicationWindow {
         }
         if ((event.key == Qt.Key_S) && (event.modifiers & Qt.ControlModifier)){
             if(_buttleData.graphCanBeSaved) {
-                graphEditor.doAction("save")
+                finderSaveGraph.open()
             }
         }
-        if ((event.key == Qt.Key_L) && (event.modifiers & Qt.ControlModifier)){
-            graphEditor.doAction("load")
+        if ((event.key == Qt.Key_O) && (event.modifiers & Qt.ControlModifier)){
+            finderLoadGraph.open()
         }
 
         // Viewer
@@ -122,88 +139,403 @@ ApplicationWindow {
                 _buttleData.currentParamNodeWrapper = node
             }
         }
+
+        //Plugin window
+        if (event.key == Qt.Key_H) {
+            var selectedNodes = _buttleData.currentSelectedNodeWrappers
+
+            // we send the node only if there is only one node selected
+            if(selectedNodes.count == 1) {
+                var node = selectedNodes.get(0)
+                doc.show()
+            }
+        }
     }
+
+    property bool aNodeIsSelected:false
+
+    //Window of hint for plugins
+    PluginWindow {
+        id: doc
+        title: "Plugin's Documentation"
+        currentParamNode: _buttleData.currentParamNodeWrapper
+    }
+
+    FinderLoadGraph{ id: finderLoadGraph; onGetFileUrl: urlOfFileToSave = fileurl }
+    FinderSaveGraph{ id: finderSaveGraph; onGetFileUrl: urlOfFileToSave = fileurl }
 
     menuBar: MenuBar {
         Menu {
-            title: "First"
+            title: "File"
+
+            MenuItem {
+                text: "Open"
+                shortcut: "Ctrl+O"
+                onTriggered: finderLoadGraph.open()
+            }
+
+            MenuItem {
+                text: "Save"
+                shortcut: "Ctrl+S"
+                enabled: _buttleData.graphCanBeSaved && urlOfFileToSave!="" ? true : false
+                onTriggered: _buttleData.saveData(urlOfFileToSave)
+            }
+
+            MenuItem {
+                text: "Save As"
+                shortcut: "Ctrl+Shift+S"
+                enabled: _buttleData.graphCanBeSaved ? true : false
+                onTriggered: finderSaveGraph.open()
+            }
+
+            MenuSeparator { }
+
+            MenuItem {
+                id: quitButton
+                text: "Exit"
+                onTriggered: Qt.quit()
+            }
+        }
+
+        Menu {
+            title: "Edit"
+
+            MenuItem {
+                text: "Undo"
+                shortcut: "Ctrl+Z"
+                onTriggered:
+                    if(_buttleManager.canUndo) {
+                        _buttleManager.undo();
+                    }
+            }
+
+            MenuItem {
+                text: "Redo"
+                shortcut: "Ctrl+Y"
+                onTriggered:
+                    if(_buttleManager.canRedo) {
+                        _buttleManager.redo();
+                    }
+            }
+
+            MenuSeparator { }
+
+            MenuItem {
+                text: "Copy"
+                shortcut: "Ctrl+C"
+                onTriggered:
+                    if(!_buttleData.currentSelectedNodeWrappers.isEmpty()) {
+                        _buttleManager.nodeManager.copyNode()
+                        _buttleManager.connectionManager.copyConnections()
+                    }
+            }
+
+            MenuItem {
+                text: "Paste"
+                shortcut: "Ctrl+V"
+                onTriggered:
+                    if(_buttleData.canPaste) {
+                        _buttleManager.nodeManager.pasteNode();
+                        _buttleManager.connectionManager.pasteConnection()
+                    }
+            }
+
+            MenuItem {
+                text: "Cut"
+                shortcut: "Ctrl+X"
+                onTriggered:
+                    if (!_buttleData.currentSelectedNodeWrappers.isEmpty()) {
+                        _buttleManager.nodeManager.cutNode()
+                    }
+            }
+
+            MenuItem {
+                text: "Duplicate"
+                shortcut: "Ctrl+D"
+                onTriggered:
+                    if (!_buttleData.currentSelectedNodeWrappers.isEmpty()) {
+                        _buttleManager.nodeManager.duplicationNode()
+                    }
+            }
+
+            MenuItem {
+                text: "Select all"
+                shortcut: "Ctrl+A"
+                onTriggered: _buttleManager.selectAllNodes()
+            }
+
+            MenuItem {
+                text: "Delete"
+                //shortcut: "del"
+                onTriggered: _buttleManager.deleteSelection()
+            }
         }
         Menu {
-            title: "Second"
-            
+            id: nodesMenu
+            title: "Nodes"
+            Instantiator {
+                model: _buttleData.getMenu(1,"")
+                Menu{
+                    id: firstMenu
+                    title:object
+
+                    Instantiator {
+                        model: _buttleData.getPluginsByPath(firstMenu.title)
+                        MenuItem {
+                            text: object.pluginType
+                            onTriggered: {
+                                _buttleData.currentGraphIsGraph()
+                                _buttleData.currentGraphWrapper = _buttleData.graphWrapper
+
+                                // if before the viewer was showing an image from the brower, we change the currentView
+                                if (_buttleData.currentViewerIndex > 9){
+                                    _buttleData.currentViewerIndex = player.lastView
+                                    if (player.lastNodeWrapper != undefined)
+                                        _buttleData.currentViewerNodeWrapper = player.lastNodeWrapper
+                                    player.changeViewer(player.lastView)
+                                }
+
+                                _buttleManager.nodeManager.creationNode("_buttleData.graph", object.pluginType, 0, 0)
+                            }
+                        }
+                        onObjectAdded: firstMenu.insertItem(index, object)
+                        onObjectRemoved: firstMenu.removeItem(object)
+                    }
+
+                    Instantiator {
+                        model: _buttleData.getMenu(2,firstMenu.title)
+                        Menu{
+                            id: secondMenu
+                            title:object
+
+                            Instantiator {
+                                model: _buttleData.getPluginsByPath(secondMenu.title)
+                                MenuItem {
+                                    text: object.pluginType
+                                    onTriggered: {
+                                        _buttleData.currentGraphIsGraph()
+                                        _buttleData.currentGraphWrapper = _buttleData.graphWrapper
+
+                                        // if before the viewer was showing an image from the brower, we change the currentView
+                                        if (_buttleData.currentViewerIndex > 9){
+                                            _buttleData.currentViewerIndex = player.lastView
+                                            if (player.lastNodeWrapper != undefined)
+                                                _buttleData.currentViewerNodeWrapper = player.lastNodeWrapper
+                                            player.changeViewer(player.lastView)
+                                        }
+
+                                        _buttleManager.nodeManager.creationNode("_buttleData.graph", object.pluginType, 0, 0)
+                                    }
+                                }
+                                onObjectAdded: secondMenu.insertItem(index, object)
+                                onObjectRemoved: secondMenu.removeItem(object)
+                            }
+
+                            Instantiator {
+                                model: _buttleData.getMenu(3,secondMenu.title)
+                                Menu{
+                                    id: thirdMenu
+                                    title:object
+
+                                    Instantiator {
+                                        model: _buttleData.getPluginsByPath(thirdMenu.title)
+                                        MenuItem {
+                                            text: object.pluginType
+                                            onTriggered: {
+                                                _buttleData.currentGraphIsGraph()
+                                                _buttleData.currentGraphWrapper = _buttleData.graphWrapper
+
+                                                // if before the viewer was showing an image from the brower, we change the currentView
+                                                if (_buttleData.currentViewerIndex > 9){
+                                                    _buttleData.currentViewerIndex = player.lastView
+                                                    if (player.lastNodeWrapper != undefined)
+                                                        _buttleData.currentViewerNodeWrapper = player.lastNodeWrapper
+                                                    player.changeViewer(player.lastView)
+                                                }
+
+                                                _buttleManager.nodeManager.creationNode("_buttleData.graph", object.pluginType, 0, 0)
+                                            }
+                                        }
+                                        onObjectAdded: thirdMenu.insertItem(index, object)
+                                        onObjectRemoved: thirdMenu.removeItem(object)
+                                    }
+
+                                    Instantiator {
+                                        model: _buttleData.getMenu(4,thirdMenu.title)
+                                        Menu{
+                                            id:fourthMenu
+                                            title: object
+
+                                            Instantiator {
+                                                model: _buttleData.getPluginsByPath(fourthMenu.title)
+                                                MenuItem {
+                                                    text: object.pluginType
+                                                    onTriggered: {
+                                                        _buttleData.currentGraphIsGraph()
+                                                        _buttleData.currentGraphWrapper = _buttleData.graphWrapper
+
+                                                        // if before the viewer was showing an image from the brower, we change the currentView
+                                                        if (_buttleData.currentViewerIndex > 9){
+                                                            _buttleData.currentViewerIndex = player.lastView
+                                                            if (player.lastNodeWrapper != undefined)
+                                                                _buttleData.currentViewerNodeWrapper = player.lastNodeWrapper
+                                                            player.changeViewer(player.lastView)
+                                                        }
+
+                                                        _buttleManager.nodeManager.creationNode("_buttleData.graph", object.pluginType, 0, 0)
+                                                    }
+                                                }
+                                                onObjectAdded: fourthMenu.insertItem(index, object)
+                                                onObjectRemoved: fourthMenu.removeItem(object)
+                                            }
+
+                                            Instantiator {
+                                                model: _buttleData.getMenu(5,fourthMenu.title)
+                                                Menu{
+                                                    id: fifthMenu
+                                                    title:object
+                                                    Instantiator {
+                                                        model: _buttleData.getPluginsByPath(fifthMenu.title)
+                                                        MenuItem {
+                                                            text: object.pluginType
+                                                            onTriggered: {
+                                                                _buttleData.currentGraphIsGraph()
+                                                                _buttleData.currentGraphWrapper = _buttleData.graphWrapper
+
+                                                                // if before the viewer was showing an image from the brower, we change the currentView
+                                                                if (_buttleData.currentViewerIndex > 9){
+                                                                    _buttleData.currentViewerIndex = player.lastView
+                                                                    if (player.lastNodeWrapper != undefined)
+                                                                        _buttleData.currentViewerNodeWrapper = player.lastNodeWrapper
+                                                                    player.changeViewer(player.lastView)
+                                                                }
+
+                                                                _buttleManager.nodeManager.creationNode("_buttleData.graph", object.pluginType, 0, 0)
+                                                            }
+                                                        }
+                                                        onObjectAdded: fifthMenu.insertItem(index, object)
+                                                        onObjectRemoved: fifthMenu.removeItem(object)
+                                                    }
+                                                }
+                                                onObjectAdded: fourthMenu.insertItem(index, object)
+                                                onObjectRemoved: fourthMenu.removeItem(object)
+                                            }
+                                        }
+                                        onObjectAdded: thirdMenu.insertItem(index, object)
+                                        onObjectRemoved: thirdMenu.removeItem(object)
+                                    }
+                                }
+                                onObjectAdded: secondMenu.insertItem(index, object)
+                                onObjectRemoved: secondMenu.removeItem(object)
+                            }
+                        }
+                        onObjectAdded: firstMenu.insertItem(index, object)
+                        onObjectRemoved: firstMenu.removeItem(object)
+                    }
+                }
+                onObjectAdded: nodesMenu.insertItem(index, object)
+                onObjectRemoved: nodesMenu.removeItem(object)
+            }
+        }
+        Menu {
+            id: help
+            title: "Help"
+
             MenuItem {
-                text: "todo"
+                text: "Shortcut"
+            }
+            MenuItem {
+                text: "Plugin's Documentation"
+                onTriggered: doc.show()
             }
         }
-    }
 
-    Rectangle {
-        id: mainMenu
-        width: parent.width
-        height: 32
-        color: "#141414"
 
-        Row {
-            spacing: 10
-            x: 3
+        Menu {
+            title: "View"
 
-            Image {
-                id: mosquito
-                source: _buttleData.buttlePath + "/gui/img/icons/logo_icon.png"
-                y: 5
-            }
-
-            Text {
-                color: "white"
-                text: "File"
-                y: 11
-                font.pointSize: 10
-
-                MouseArea {
-                    anchors.fill: parent
-                    hoverEnabled: true
-                    onClicked: {
-                        _fileMenu.showMenu(parent.x, mainMenu.height)
-                    }
+            MenuItem {
+                text: "Default"
+                checkable: true
+                checked: selectedView==1 ? true : false
+                onTriggered: {
+                    selectedView = 1
+                    lastSelectedDefaultView = view1
+                    topLeftView.visible=true; bottomLeftView.visible=true; topRightView.visible=true; bottomRightView.visible=true
+                    rightColumn.width = 0.7*mainWindowQML.width
                 }
             }
 
-            Text {
-                color: "white"
-                text: "Edit"
-                y: 11
-                font.pointSize: 10
-
-                MouseArea {
-                    anchors.fill: parent
-                    hoverEnabled: true
-                    onClicked: {
-                        _editMenu.showMenu(parent.x, mainMenu.height)
-                    }
+            MenuItem {
+                text: "Browser Mode"
+                checkable: true
+                checked: selectedView==2 ? true : false
+                onTriggered: {
+                    selectedView = 2
+                    lastSelectedDefaultView = view2
+                    topLeftView.visible=true; bottomLeftView.visible=true; topRightView.visible=true; bottomRightView.visible=true
+                    rightColumn.width = 0.7*mainWindowQML.width
                 }
             }
 
-            Text {
-                color: "white"
-                text: "Add"
-                y: 11
-                font.pointSize: 10
-
-                MouseArea {
-                    anchors.fill: parent
-                    hoverEnabled: true
-                    onClicked: {
-                        _addMenu.showMenu(parent.x, mainMenu.height)
-                    }
+            MenuItem {
+                text: "Advanced Mode"
+                checkable: true
+                checked: selectedView==3 ? true : false
+                onTriggered: {
+                    selectedView = 3
+                    lastSelectedDefaultView = view3
+                    topLeftView.visible=true; bottomLeftView.visible=true; topRightView.visible=true; bottomRightView.visible=false
+                    rightColumn.width = 0.3*mainWindowQML.width
                 }
+            }
+
+/*            MenuSeparator { }
+
+            MenuItem {
+                text: "Browser"
+                checkable: true
+                checked: browser.parent.visible==true ? true : false
+                onTriggered: browser.parent.visible == false ? browser.parent.visible=true : browser.parent.visible=false
+            }
+
+            MenuItem {
+                text: "Viewer"
+                checkable: true
+                checked: player.parent.visible==true ? true : false
+                onTriggered: player.parent.visible == false ? player.parent.visible=true : player.parent.visible=false
+            }
+
+            MenuItem {
+                text: "Graph"
+                checkable: true
+                checked: graphEditor.parent.visible==true ? true : false
+                onTriggered: graphEditor.parent.visible == false ? graphEditor.parent.visible=true : graphEditor.parent.visible=false
+            }
+
+            MenuItem {
+                text: "Parameters"
+                checkable: true
+                checked: paramEditor.parent.visible==true ? true : false
+                onTriggered: paramEditor.parent.visible == false ? paramEditor.parent.visible=true : paramEditor.parent.visible=false
+            }*/
+        }
+	}
+/* A revoir
+        Menu {
+            title: "Add"
+
+            MenuItem {
+                text: "New Node"
+                onTriggered: _addMenu.showMenu(parent.x, mainMenu.height)
             }
         }
-    }
+*/
 
-    //this rectangle represents the zone under the menu, it allows to define the anchors.fill and margins for the SplitterRow
+    
+   //this rectangle represents the zone under the menu, it allows to define the anchors.fill and margins for the SplitterRow
     Rectangle {
         id: modulsContainer
-        y: mainMenu.height
         width: parent.width
         height: parent.height - y
         color: "#353535"
@@ -211,38 +543,232 @@ ApplicationWindow {
         SplitView {
             anchors.fill: parent
             anchors.margins: 3
-            //handleWidth: 3
             orientation: Qt.Horizontal
 
             SplitView {
-                width: 0.7*parent.width
-                height: parent.height
-                //handleWidth: 3
+                id: leftColumn
+                implicitWidth: 0.3 * parent.width
+                implicitHeight: parent.height
                 orientation: Qt.Vertical
-                //Splitter.expanding: true // obligatory to allow to have the minimumWidth
+                Layout.fillWidth: true
+                Layout.minimumWidth: (topRightView.visible==true || bottomRightView.visible==true) ? 0 : parent.width
 
-                Player {
-                    //Splitter.minimumHeight: 0
-                    //Splitter.expanding: true
-                    id: player
-                    width: parent.width
-                    height: 0.5*parent.height
-                    node: _buttleData.currentViewerNodeWrapper
+                Rectangle {
+                    id: topLeftView
+                    color: "#353535"
+                    Layout.minimumHeight: visible ? 200 : 0
+                    Layout.fillHeight: true
+                    implicitWidth: parent.width
+
+                    children:
+                        switch(selectedView){
+                            case 1:
+                                view1[0]
+                                break
+                            case 2:
+                                view2[0]
+                                break
+                            case 3:
+                                view3[0]
+                                break
+                            default:
+                                lastSelectedDefaultView[0]
+                                break
+                        }
+                }//topLeftView
+
+                Rectangle {
+                    id: bottomLeftView
+                    color: "#353535"
+                    //Layout.minimumHeight: 200
+                    Layout.minimumHeight: topLeftView.visible ? 200 : parent.height
+                    Layout.fillHeight: true
+                    implicitWidth: parent.width
+                    implicitHeight: topLeftView.visible ? 0.5 * parent.height : parent.height
+                    z: -1
+
+                    children:
+                        switch(selectedView){
+                            case 1:
+                                view1[1]
+                                break
+                            case 2:
+                                view2[1]
+                                break
+                            case 3:
+                                view3[1]
+                                break
+                            default:
+                                lastSelectedDefaultView[1]
+                                break
+                        }
+                }//bottomLeftView
+            }//leftColumn
+
+            SplitView {
+                id: rightColumn
+                implicitWidth: 0.7 * parent.width
+                implicitHeight: parent.height
+                orientation: Qt.Vertical
+                Layout.fillWidth: true
+                Layout.minimumWidth: (topLeftView.visible==true || bottomLeftView.visible==true) ? 0 : parent.width
+
+                Rectangle {
+                    id: topRightView
+                    color: "#353535"
+                    Layout.minimumHeight: visible ? 200 : 0
+                    Layout.fillHeight: true
+                    implicitWidth: parent.width
+
+                    children:
+                        switch(selectedView){
+                            case 1:
+                                view1[2]
+                                break
+                            case 2:
+                                view2[2]
+                                break
+                            case 3:
+                                view3[2]
+                                break
+                            default:
+                                lastSelectedDefaultView[2]
+                                break
+                        }
+                }//topRightView
+
+                Rectangle {
+                    id: bottomRightView
+                    color: "#353535"
+                    //Layout.minimumHeight: 200
+                    Layout.minimumHeight: topRightView.visible ? 200 : parent.height
+                    Layout.fillHeight: true
+                    implicitWidth: parent.width
+                    implicitHeight: topRightView.visible ? 0.5 * parent.height : parent.height
+                    z: -1
+
+                    children:
+                        switch(selectedView){
+                            case 1:
+                                view1[3]
+                                break
+                            case 2:
+                                view2[3]
+                                break
+                            case 3:
+                                view3[3]
+                                break
+                            default:
+                                lastSelectedDefaultView[3]
+                                break
+                        }
+                }//bottomRightView
+            }//rightColumn
+        }//splitview
+    }//modulsContainer
+
+    Item {
+        id: subviews
+        visible: false
+
+        property variant parentBeforeFullscreen : null
+
+        Player {
+            id: player
+            anchors.fill: parent
+            node: _buttleData.currentViewerNodeWrapper
+            onButtonCloseClicked: {
+                if(parent!=fullscreenContent){
+                    selectedView=-1
+                    parent.visible = false
                 }
+                else{
+                    fullscreenWindow.visibility = Window.Hidden
+                    player.parent = subviews.parentBeforeFullscreen
+                }
+            }
+            onButtonFullscreenClicked: if(parent!=fullscreenContent){subviews.parentBeforeFullscreen = parent; fullscreenWindow.visibility = Window.FullScreen; fullscreenContent.children = player}
+        }
 
-                GraphEditor {
-                    id: graphEditor
-                    //Splitter.minimumHeight: 0
-                    width: parent.width
-                    height: 0.5*parent.height
+        GraphEditor {
+            id: graphEditor
+            anchors.fill: parent
+            onButtonCloseClicked: {
+                if(parent!=fullscreenContent){
+                    selectedView=-1
+                    parent.visible = false
+                }
+                else{
+                    fullscreenWindow.visibility = Window.Hidden
+                    graphEditor.parent = subviews.parentBeforeFullscreen
+                }
+            }
+            onButtonFullscreenClicked: if(parent!=fullscreenContent){subviews.parentBeforeFullscreen = parent; fullscreenWindow.visibility = Window.FullScreen; fullscreenContent.children = graphEditor}
+        }
+
+        ParamTuttleEditor {
+            id: paramEditor
+            anchors.fill: parent
+            params: _buttleData.currentParamNodeWrapper ? _buttleData.currentParamNodeWrapper.params : null
+            currentParamNode: _buttleData.currentParamNodeWrapper
+            onButtonCloseClicked: {
+                if(parent!=fullscreenContent){
+                    selectedView=-1
+                    parent.visible = false
+                }
+                else{
+                    fullscreenWindow.visibility = Window.Hidden
+                    paramEditor.parent = subviews.parentBeforeFullscreen
+                }
+            }
+            onButtonFullscreenClicked: if(parent!=fullscreenContent){ subviews.parentBeforeFullscreen = parent; fullscreenWindow.visibility = Window.FullScreen; fullscreenContent.children = paramEditor}
+        }
+
+        ParametersEditor {
+            id: advancedParamEditor
+            anchors.fill: parent
+            onButtonCloseClicked: {
+                if(parent!=fullscreenContent){
+                    selectedView=-1
+                    parent.visible = false
+                }
+                else{
+                    fullscreenWindow.visibility = Window.Hidden
+                    advancedParamEditor.parent = subviews.parentBeforeFullscreen
+                }
+            }
+            onButtonFullscreenClicked: if(parent!=fullscreenContent){subviews.parentBeforeFullscreen = parent; fullscreenWindow.visibility = Window.FullScreen; fullscreenContent.children = advancedParamEditor}
+        }
+
+        Browser {
+            id: browser
+            anchors.fill: parent
+            onButtonCloseClicked: {
+                if(parent!=fullscreenContent){
+                    selectedView=-1
+                    parent.visible = false
+                }
+                else{
+                    fullscreenWindow.visibility = Window.Hidden
+                    browser.parent = subviews.parentBeforeFullscreen
                 }
             }
 
-            ParamEditor {
-                //Splitter.minimumWidth: 0 
-                width: 0.3*parent.width
-                params: _buttleData.currentParamNodeWrapper ? _buttleData.currentParamNodeWrapper.params : null
-                currentParamNode: _buttleData.currentParamNodeWrapper
+            onButtonFullscreenClicked: if(parent!=fullscreenContent){subviews.parentBeforeFullscreen = parent; fullscreenWindow.visibility = Window.FullScreen; fullscreenContent.children = browser}
+        }
+
+        Item {
+            id: empty
+        }
+
+        Window {
+            id: fullscreenWindow
+            visibility: Window.Hidden
+            visible: false
+            Rectangle {
+                id: fullscreenContent
+                anchors.fill: parent
+                color: "#353535"
             }
         }
     }

@@ -6,6 +6,10 @@ Canvas {
     property int x2
     property int y2
 
+    property bool readOnly
+    property bool miniatureState
+    property real miniatureScale
+
     property int canvasMargin: 20
     property int inPath: 0
     property int r: 0
@@ -27,9 +31,9 @@ Canvas {
         var startY = 0
         var endX = 0
         var endY = 0
-        var controlPointXOffset = 40;
+        var controlPointXOffset = miniatureState ? 40 * zoomCoeff * miniatureScale : 40 * zoomCoeff;
         ctx.strokeStyle = "rgb("+r+", "+g+", "+b+")";
-        ctx.lineWidth = 2;
+        ctx.lineWidth = miniatureState ? 2 * miniatureScale : 2;
 
         ctx.beginPath()
 

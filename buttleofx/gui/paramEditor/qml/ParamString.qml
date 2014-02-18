@@ -1,5 +1,6 @@
 import QtQuick 2.0
 import FolderListViewItem 1.0
+import QtQuick.Dialogs 1.0
 
 /*ParamString is an input field*/
 
@@ -7,20 +8,22 @@ Item {
     id: containerParamString
     implicitWidth: 300
     implicitHeight: 30
+    y:10
 
     property variant paramObject: model.object
+    property bool isReader: _buttleData.currentParamNodeWrapper.nodeType.indexOf("reader") != -1
 
     // Is this param secret ?
     visible: !paramObject.isSecret
     height: paramObject.isSecret ? 0 : implicitHeight
 
-    FolderListView {
+  /*  FolderListView {
         id: finder
         property bool isReader: _buttleData.currentParamNodeWrapper.nodeType.indexOf("reader") != -1
         typeDialog: isReader ? "OpenFile" : "SaveFile"
         messageDialog: isReader ? "Open file" : "Save file as"
     }
-
+*/
     /*Container of the textInput*/
     function createInput(paramObject)
     {
@@ -90,6 +93,8 @@ Item {
             id: paramStringTitle
             text: paramObject.text + " : "
             color: "white"
+            elide: Text.ElideRight
+            clip: true
             // if param has been modified, title in bold font
             font.bold: paramObject.hasChanged ? true : false
             MouseArea {
@@ -109,6 +114,7 @@ Item {
             border.width: 1
             border.color: "#333"
             radius: 3
+            clip: true
 
             // create the right input, depend on the tuttle param
             onWidthChanged: {
@@ -168,7 +174,8 @@ Item {
                     }
                 }
             ]
-        }
+        }//Rectangle
+
         // hidden by default
         Image {
             id: folderforFileOrDirectory
@@ -176,19 +183,58 @@ Item {
             width: (paramObject.stringType == "OfxParamStringIsFilePath" || paramObject.stringType == "OfxParamStringIsDirectoryPath") ? 20 : 0
             y: 2
 
-            MouseArea {
-                id: buttonmousearea
-                anchors.fill: parent   
+            MouseArea{
+                anchors.fill: parent
+
                 onPressed: {
-//                    finder.browseFile(_buttleData.currentParamNodeWrapper)
-                    finder.browseFile()
-                    if( finder.propFile )
-                    {
-                        paramObject.value = finder.propFile
-                        paramObject.pushValue(paramObject.value)
+                    if(isReader){finderLoadFile.open()}else{finderSaveFile.open()}
+                }
+
+                // open a file dialog to select a file
+                /*FileDialog {
+
+                    id: folderfiledialog
+                    title: "Open"
+                    folder: _buttleData.buttlePath
+                    nameFilters: [ "All files (*)" ]
+                    selectedNameFilter: "All files (*)"
+                    onAccepted: {
+                        if (folderfiledialog.fileUrl){
+                            paramObject.value = folderfiledialog.fileUrl
+                            paramObject.pushValue(paramObject.value)
+                        }
+                    }
+                }*/
+
+                FileDialog {
+                    id: finderLoadFile
+                    title: "Open"
+                    folder: _buttleData.buttlePath
+                    nameFilters: [ "All files (*)" ]
+                    selectedNameFilter: "All files (*)"
+                    onAccepted: {
+                        if (finderLoadFile.fileUrl){
+                            paramObject.value = finderLoadFile.fileUrl
+                            paramObject.pushValue(paramObject.value)
+                        }
                     }
                 }
-            }
-        }
-    }
+
+                FileDialog {
+                    id: finderSaveFile
+                    title: "Save"
+                    folder: _buttleData.buttlePath
+                    nameFilters:  [ "All files (*)" ]
+                    selectedNameFilter: "All files (*)"
+                    onAccepted: {
+                        if (finderSaveFile.fileUrl){
+                            paramObject.value = finderSaveFile.fileUrl
+                            paramObject.pushValue(paramObject.value)
+                        }
+                    }
+                    selectExisting: false
+                }
+            }//MouseArea
+        }//Image
+    }//Row
 }

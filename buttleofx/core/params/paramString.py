@@ -4,6 +4,7 @@ from buttleofx.core.params import Param
 from buttleofx.core.undo_redo.manageTools import CommandManager
 from buttleofx.core.undo_redo.commands.params import CmdSetParamString
 
+from PyQt5 import QtCore
 
 class ParamString(Param):
     """
@@ -24,6 +25,9 @@ class ParamString(Param):
 
     def getParamType(self):
         return "ParamString"
+
+    def getParamDoc(self):
+        return self._tuttleParam.getProperties().getStringProperty("OfxParamPropHint")
 
     def getDefaultValue(self):
         return self._tuttleParam.getProperties().fetchProperty("OfxParamPropDefault").getStringValue(0)
@@ -56,6 +60,11 @@ class ParamString(Param):
         self._tuttleParam.setValue(str(value))
 
     def pushValue(self, newValue):
+        # if it's an url, conversion to local url
+        if self.getStringType() == "OfxParamStringIsFilePath":
+            print (newValue)
+            newValue = QtCore.QUrl(newValue).toLocalFile()
+            print (newValue)
         if newValue != self.getOldValue():
             # push the command
             cmdUpdate = CmdSetParamString(self, str(newValue))

@@ -43,7 +43,7 @@ class ViewerManager(QtCore.QObject):
             Computes the node (displayed in the viewer) at the frame indicated.
         """
         buttleData = ButtleDataSingleton().get()
-        graphTuttle = buttleData.getGraph().getGraphTuttle()
+        graphTuttle = buttleData.getCurrentGraph().getGraphTuttle()
 
         #Get the output where we save the result
         self._tuttleImageCache = tuttle.MemoryCache()
@@ -88,7 +88,7 @@ class ViewerManager(QtCore.QObject):
         #Get the gloabl hashCode of the node
         if node is not None:
             hashMap = tuttle.NodeHashContainer()
-            buttleData.getGraph().getGraphTuttle().computeGlobalHashAtTime(hashMap, frame)
+            buttleData.getCurrentGraph().getGraphTuttle().computeGlobalHashAtTime(hashMap, frame)
             node_hashCode = hashMap.getHash(node, frame)
         #Get the map
         mapNodeToImage = buttleData.getMapNodeNameToComputedImage()
@@ -108,28 +108,28 @@ class ViewerManager(QtCore.QObject):
             self.setNodeError(str(e))
             raise
 
-    @QtCore.pyqtSlot()
-    def mosquitoDragEvent(self):
-        """
-            Function called when the viewer's mosquito is dragged.
-            The function sends the mimeData and launches a drag event.
-        """
+#    @QtCore.pyqtSlot()
+#    def mosquitoDragEvent(self):
+#        """
+#            Function called when the viewer's mosquito is dragged.
+#            The function sends the mimeData and launches a drag event.
+#        """
 
-        widget = QtGui.QWidget()
-        drag = QtGui.QDrag(widget)
-        mimeData = QtCore.QMimeData()
+#        widget = QtGui.QWidget()
+#        drag = QtGui.QDrag(widget)
+#        mimeData = QtCore.QMimeData()
 
-        # set data (here it's just a text)
-        mimeData.setText("mosquito_of_the_dead")
-        drag.setMimeData(mimeData)
+#        # set data (here it's just a text)
+#        mimeData.setText("mosquito_of_the_dead")
+#        drag.setMimeData(mimeData)
 
-        # sets the image of the mosquito in the pixmap
-        filePath = ButtleDataSingleton().get().getButtlePath()
-        imgPath = filePath + "/gui/img/mosquito/mosquito.png"
-        drag.setPixmap(QtGui.QPixmap(imgPath))
+#        # sets the image of the mosquito in the pixmap
+#        filePath = ButtleDataSingleton().get().getButtlePath()
+#        imgPath = filePath + "/gui/img/mosquito/mosquito.png"
+#        drag.setPixmap(QtGui.QPixmap(imgPath))
 
-        # starts the drag
-        drag.exec_(QtCore.Qt.MoveAction)
+#        # starts the drag
+#        drag.exec_(QtCore.Qt.MoveAction)
 
     # error displayed on the Viewer
     nodeErrorChanged = QtCore.pyqtSignal()

@@ -1,102 +1,138 @@
 import QtQuick 2.0
+import QtQuick.Layouts 1.0
+
 import QuickMamba 1.0
 
 Rectangle {
-    id: node
+    id: qml_nodeRoot
+
+    focus: true
+
+    property variant graphRoot
+    property alias nodeWrapper: m.nodeWrapper
+    property bool readOnly
+    property real miniatureScale
+    property bool miniatureState
+    property int nodeWidth: 80
+
+    Drag.active: nodeMouseArea.drag.active
 
     QtObject {
         id: m
-        property variant nodeModel: model.object
-    }
+        property variant nodeWrapper
+        property variant nodeRoot: qml_nodeRoot
 
-    x: m.nodeModel.coord.x
-    y: m.nodeModel.coord.y
+        property int inputSpacing: 10
+        property int clipSize: graph.zoomCoeff < 0.3 ? 6 : 9
+        property int nbInput: m.nodeWrapper.nbInput
+        property int inputTopMargin: 10
+        property int outputTopMargin: 10
+        property int sideMargin: 10
+        //property bool isHighlighted: m.nodeWrapper.isHighlighted
+    }
+    objectName: "qmlNode_" + m.nodeWrapper.name
+
+    x: m.nodeWrapper.coord.x * graph.zoomCoeff
+    y: m.nodeWrapper.coord.y * graph.zoomCoeff
     z: _buttleData.graphWrapper.zMax
 
-    height: m.nodeModel.height
-    width: m.nodeModel.width
-
-    Component.onCompleted: {
-        m.nodeModel.fitWidth(nodeText.width);
-        _buttleData.graphWrapper.updateConnectionsCoord(m.nodeModel);
-    }
-
-    property int inputSpacing : m.nodeModel.clipSpacing
-    property int clipSize: m.nodeModel.clipSize
-    property int nbInput: m.nodeModel.nbInput
-    property int inputTopMargin: m.nodeModel.inputTopMargin
-    property int outputTopMargin: m.nodeModel.outputTopMargin
-    property int sideMargin: m.nodeModel.sideMargin
+    //height: 40
+    //width: 120
 
     signal drawSelection(int x, int y, int width, int height)
 
     color: "transparent"
-    focus: true
 
     MouseArea {
         id: nodeMouseArea
         anchors.fill: parent
         drag.target: parent
         drag.axis: Drag.XandYAxis
-        acceptedButtons: Qt.LeftButton | Qt.RightButton
+        Drag.keys: "node"
+        enabled: !readOnly
+        acceptedButtons: Qt.LeftButton | Qt.RightButton | Qt.MidButton
+        property int xstart
+
         onPressed: {
+            pluginVisible=false
             // left button : we change the current selected nodes & we start moving
             if (mouse.button == Qt.LeftButton) {
-
                 // we clear the list of selected connections
                 _buttleData.clearCurrentConnectionId()
 
-                // if the Control Key is not pressed, we clear the list of selected nodes
-                if (!(mouse.modifiers & Qt.ControlModifier)) {
-                    _buttleData.clearCurrentSelectedNodeNames()
-                }
-
                 // we add the node to the list of selected nodes (if it's not already selected)
-                if(!_buttleData.nodeIsSelected(m.nodeModel)) {
-                    _buttleData.appendToCurrentSelectedNodeWrappers(m.nodeModel)
+                if(!_buttleData.nodeIsSelected(m.nodeWrapper)) {
+                    // if the Control Key is not pressed, we clear the list of selected nodes
+                    if(!(mouse.modifiers & Qt.ControlModifier))
+                          _buttleData.clearCurrentSelectedNodeNames()
+
+                    aNodeIsSelected=true
+                    _buttleData.appendToCurrentSelectedNodeWrappers(m.nodeWrapper)
                 }
 
                 _buttleData.graphWrapper.zMax += 1
                 parent.z = _buttleData.graphWrapper.zMax
-                stateMoving.state = "moving"
+                xstart = mouse.x
+                //stateMoving.state = "moving"
+                _buttleData.graphWrapper.setTmpMoveNode(m.nodeWrapper.name)
             }
 
             // right button : we change the current param node
            else if (mouse.button == Qt.RightButton) {
-                // here display contextual menu
+                // Param buttle
+                editNode = true
+                _buttleData.currentParamNodeWrapper = m.nodeWrapper
             }
 
             // take the focus
-            node.forceActiveFocus()
+            m.nodeRoot.forceActiveFocus()
+
+            // Highlight parents of selected node
+            var parentsToHighlight = _buttleData.getParentNodes()
+            for(var i=0; i<parentsToHighlight.count; ++i){
+                parentsToHighlight.get(i).isHighlighted = true
+            }
         }
         onReleased: {
+            var dropStatus = parent.Drag.drop()
+            //if (dropStatus !== Qt.IgnoreAction)
             // left button : we end moving
             if (mouse.button == Qt.LeftButton) {
-                _buttleManager.nodeManager.nodeMoved(m.nodeModel.name, parent.x, parent.y)
-                stateMoving.state = "normal"
+                _buttleManager.nodeManager.nodeMoved(m.nodeWrapper.name, qml_nodeRoot.x / graph.zoomCoeff, qml_nodeRoot.y / graph.zoomCoeff)
+            }
+             //middle button : assign the node to the viewer
+            else if (mouse.button == Qt.MidButton){
+                _buttleData.currentGraphIsGraph()
+                _buttleData.currentGraphWrapper = _buttleData.graphWrapper
+                _buttleData.currentViewerNodeWrapper = m.nodeWrapper
+                _buttleData.currentViewerFrame = 0
+                // we assign the node to the viewer, at the frame 0
+                _buttleData.assignNodeToViewerIndex(m.nodeWrapper, 0)
+                _buttleEvent.emitViewerChangedSignal()
+                player.lastNodeWrapper = _buttleData.currentViewerNodeWrapper
             }
         }
 
         // double click : we change the current param node
         onDoubleClicked: {
-            _buttleData.currentParamNodeWrapper = m.nodeModel;
+            _buttleData.currentParamNodeWrapper = m.nodeWrapper
         }
 
     }
 
-    ExternDropArea {
+    DropArea {
         anchors.fill: parent
-        onDragEnter: {
-            acceptDrop = hasText && text=="mosquito_of_the_dead";
-        }
-        onDrop: {
-            if (acceptDrop) {
-                _buttleData.currentViewerNodeWrapper = m.nodeModel;
-                _buttleData.currentViewerFrame = 0;
-                // we assign the node to the viewer, at the frame 0
-                _buttleData.assignNodeToViewerIndex(m.nodeModel, 0);
-                _buttleEvent.emitViewerChangedSignal()
-            }
+        keys: "mosquitoMouseArea"
+
+        onDropped: {
+            _buttleData.currentGraphIsGraph()
+            _buttleData.currentGraphWrapper = _buttleData.graphWrapper
+            _buttleData.currentViewerNodeWrapper = m.nodeWrapper
+            _buttleData.currentViewerFrame = 0
+            // we assign the node to the viewer, at the frame 0
+            _buttleData.assignNodeToViewerIndex(m.nodeWrapper, 0)
+            _buttleEvent.emitViewerChangedSignal()
+            player.lastNodeWrapper = _buttleData.currentViewerNodeWrapper
         }
     }
 
@@ -104,34 +140,107 @@ Rectangle {
         id: nodeBorder
         anchors.centerIn: parent
         radius: 10
-        state: "normal"
+
+        height: parent.height
+        width: parent.width
+        color:  m.nodeWrapper.color
+        opacity: 0.5
 
         StateGroup {
             id: stateParamNode
              states: [
                  State {
-                     name: "normal"
-                     when: m.nodeModel != _buttleData.currentParamNodeWrapper
+                     name: "currentParamNode"
+                     when: m.nodeWrapper == _buttleData.currentParamNodeWrapper
                      PropertyChanges {
                          target: nodeBorder
-                         height: parent.height
-                         width: parent.width
-                         color:  m.nodeModel.color
-                         opacity: 0.5
+                         opacity: 1
                      }
                  },
                  State {
-                     name: "currentParamNode"
-                     when: m.nodeModel == _buttleData.currentParamNodeWrapper
+                     name: "highlightNode"
+                     when: m.nodeWrapper.isHighlighted == true && m.nodeWrapper != _buttleData.currentParamNodeWrapper
+                     //when: m.nodeWrapper == _buttleData.currentParamNodeWrapper
                      PropertyChanges {
-                         target: nodeBorder;
-                         height: parent.height
-                         width: parent.width
-                         color:  m.nodeModel.color
-                         opacity: 1;
+                         target: nodeBorder
+                         color: m.nodeWrapper.color
+                         opacity: 1
                      }
                  }
              ]
+        }
+    }
+
+
+    RowLayout {
+        id: inputClipsLayout
+        anchors.fill: parent
+
+        // inputClips
+        Item {
+            id: inputClipsItem
+            y: parent.height /2
+            Layout.alignment: Qt.AlignVCenter | Qt.AlignLeft
+
+
+            ListView {
+                id: inputClipsContainer
+                anchors.verticalCenter: parent.verticalCenter
+                width: childrenRect.width
+                height: childrenRect.height
+                spacing: 5 * qml_graphRoot.zoomCoeff
+                model: m.nodeWrapper.srcClips
+
+                delegate: Component {
+                    Clip {
+                        id: in_clip
+                        x_inGraph: qml_nodeRoot.x + inputClipsLayout.x + inputClipsItem.x + inputClipsContainer.x + x
+                        y_inGraph: qml_nodeRoot.y + inputClipsLayout.y + inputClipsItem.y + inputClipsContainer.y + y
+
+                        port: "input"
+                        clipWrapper: model.object
+                        graphRoot: m.nodeRoot.graphRoot
+                        nodeRoot: m.nodeRoot
+                        clipSize: m.clipSize
+                        x:-10
+                        readOnly: qml_nodeRoot.readOnly
+                        miniatureScale: qml_nodeRoot.miniatureScale
+                        miniatureState: qml_nodeRoot.miniatureState
+                    }
+                }
+            }
+
+        }
+        Item {
+            y: parent.height /2
+            Layout.fillWidth: true
+        }
+
+        // outputClip
+        Item {
+            id: outputClipContainer
+
+            y: parent.height /2
+            implicitWidth: childrenRect.width
+            Layout.preferredWidth: childrenRect.width
+            Layout.alignment: Qt.AlignVCenter | Qt.AlignRight
+            // always only one output clip
+            Clip {
+                id: out_clip
+                anchors.verticalCenter: parent.verticalCenter
+                x_inGraph: qml_nodeRoot.x + outputClipContainer.x + x
+                y_inGraph: qml_nodeRoot.y + outputClipContainer.y + y
+
+                port: "output"
+                clipWrapper: m.nodeWrapper.outputClip
+                graphRoot: m.nodeRoot.graphRoot
+                nodeRoot: m.nodeRoot
+                clipSize: m.clipSize
+                x:10
+                readOnly: qml_nodeRoot.readOnly
+                miniatureScale: qml_nodeRoot.miniatureScale
+                miniatureState: qml_nodeRoot.miniatureState
+            }
         }
     }
 
@@ -139,80 +248,68 @@ Rectangle {
         id: nodeRectangle
         anchors.centerIn: parent
         anchors.fill: parent
-        anchors.margins: 4
+        anchors.margins: miniatureState ? 4 * miniatureScale : 4 * graph.zoomCoeff
         color: "#bbbbbb"
         radius: 8
+        clip: nodeText.isSelected ? false : true
+        Rectangle{
+            id: background
+            anchors.fill: nodeText
+            anchors.leftMargin: -4
+            anchors.rightMargin: -4
+            color: "#212121"
+            opacity: 0.6
+            radius: 2
+            visible: nodeText.isSelected ? miniatureState ? false : true : false
+        }
+
         Text {
             id: nodeText
-            anchors.centerIn: parent
-            text: m.nodeModel.nameUser
-            font.pointSize: 10
-            property bool isSelected: _buttleData.nodeIsSelected(m.nodeModel)
-            
-            onTextChanged: {
-                m.nodeModel.fitWidth(nodeText.width);
-                _buttleData.graphWrapper.updateConnectionsCoord(m.nodeModel);
-            }
+            anchors.verticalCenter: isSelected ? undefined : parent.verticalCenter
+            anchors.horizontalCenter: isSelected ? parent.horizontalCenter : undefined
+            x: 5
+            y: isSelected ? nodeWidth * 0.5 * zoomCoeff : 0
+            text: m.nodeWrapper.nameUser
+            font.pointSize: zoomCoeff < 0.7 ? zoomCoeff < 0.4 ? 6 : 7 : 10
+            visible: miniatureState ? false : true
+            property bool isSelected: _buttleData.nodeIsSelected(m.nodeWrapper)
+
+            // onTextChanged: {
+            //     m.nodeWrapper.fitWidth(nodeText.width);
+            //     // _buttleData.graphWrapper.updateConnectionsCoord(m.nodeWrapper);
+            // }
 
             Connections {
                 target: _buttleData
                 onCurrentSelectedNodeWrappersChanged: {
-                    nodeText.isSelected = _buttleData.nodeIsSelected(m.nodeModel)
+                    nodeText.isSelected = _buttleData.nodeIsSelected(m.nodeWrapper)
                 }
             }
-            color: isSelected ? m.nodeModel.color : "black"
-        }
-    }
-    //inputClips
-    Column {
-        id: nodeInputs
-        anchors.left: parent.left
-        anchors.leftMargin: -node.sideMargin
-        anchors.top: parent.top
-        anchors.topMargin: node.inputTopMargin
-        spacing: node.inputSpacing
-        Repeater {
-            model: m.nodeModel.srcClips
-            Clip {
-                clipWrapper: model.object
-                port : "input"
-            }
-        }
-    }
-    //outputClip
-    Column {
-        id: nodeOutputs
-        anchors.right: parent.right
-        anchors.rightMargin: -node.sideMargin
-        anchors.top : parent.top
-        anchors.topMargin: node.outputTopMargin
-        // always only one outputClip
-        Clip {
-            clipWrapper: m.nodeModel.outputClip
-            port : "output"
+            color: isSelected ? m.nodeWrapper.color : "black"
         }
     }
 
     Rectangle {
         id: deadMosquito
-        width: 23
-        height: 21
-        x: node.width - 12
+        width: miniatureState ? 23 * miniatureScale : 23
+        height: miniatureState ? 21 * miniatureScale : 21
+        x: m.nodeRoot.width - 12
         y: -10
         state: "normal"
         color: "transparent"
+        visible: miniatureState ? false : true
 
         Image {
-                id: deadMosquitoImage
-                anchors.fill: parent
-             }
+            id: deadMosquitoImage
+            anchors.fill: parent
+         }
 
         StateGroup {
             id: stateViewerNode
              states: [
                  State {
                      name: "normal"
-                     when: m.nodeModel != _buttleData.currentViewerNodeWrapper
+                     when: m.nodeWrapper != _buttleData.currentViewerNodeWrapper
                      PropertyChanges {
                          target: deadMosquitoImage;
                          source: ""
@@ -220,54 +317,63 @@ Rectangle {
                  },
                  State {
                      name: "currentViewerNode"
-                     when: m.nodeModel == _buttleData.currentViewerNodeWrapper
+                     when: m.nodeWrapper == _buttleData.currentViewerNodeWrapper
                      PropertyChanges {
                          target: deadMosquitoImage;
-                         source: _buttleData.buttlePath + "/gui/img/mosquito/mosquito_dead.png"
+                         source: "file:///" + _buttleData.buttlePath + "/gui/img/mosquito/mosquito_dead.png"
                      }
                  }
              ]
         }
     }
 
-    StateGroup {
+    /*StateGroup {
         id: stateMoving
         state: "normal"
         states: [
             State {
                 name: "normal"
-                PropertyChanges { target: node; x: m.nodeModel.coord.x; y: m.nodeModel.coord.y }
+                PropertyChanges { target: m.nodeRoot; x: m.nodeWrapper.coord.x; y: m.nodeWrapper.coord.y }
             },
             State {
                 name: "moving"
-                PropertyChanges { target: node; x: m.nodeModel.coord.x ; y: m.nodeModel.coord.y }
+                PropertyChanges { target: m.nodeRoot; x: m.nodeWrapper.coord.x; y: m.nodeWrapper.coord.y }
             }
         ]
-    }
+    }*/
 
     StateGroup {
         id: statePressed
         states: [
             State {
-            name: "pressed"
-            when: nodeMouseArea.pressed
-            PropertyChanges { target: node; opacity: .5 }
+                name: "pressed"
+                when: nodeMouseArea.pressed
+                PropertyChanges { target: m.nodeRoot; opacity: .5 }
+            },
+            State {
+                name: "miniature"
+                when: miniatureState
+                PropertyChanges {
+                      target: m.nodeRoot
+                      x: ((m.nodeWrapper.coord.x * graphContainer.width) / qml_graphRoot.width) * miniatureScale
+                      y: ((m.nodeWrapper.coord.y * graphContainer.height) / qml_graphRoot.height) * miniatureScale
+                }
             }
         ]
     }
 
     onXChanged: {
         if (nodeMouseArea.drag.active) {
-            node.nodeIsMoving()
+            m.nodeRoot.nodeIsMoving()
         }
     }
     onYChanged: {
         if (nodeMouseArea.drag.active) {
-            node.nodeIsMoving()
+            m.nodeRoot.nodeIsMoving()
         }
     }
 
     function nodeIsMoving() {
-        _buttleManager.nodeManager.nodeIsMoving(m.nodeModel.name, node.x, node.y)
+        _buttleManager.nodeManager.nodeIsMoving(m.nodeWrapper.name, m.nodeRoot.x / graph.zoomCoeff, m.nodeRoot.y / graph.zoomCoeff)
     }
 }

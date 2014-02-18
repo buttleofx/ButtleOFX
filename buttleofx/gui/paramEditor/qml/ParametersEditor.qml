@@ -44,7 +44,7 @@ Item {
         z:1
         height: 250
         visible:pluginVisible
-        y:player.height+50
+        y:parametersEditor.height - addNode.height - height
         x:parametersEditor.width/2-100
     }
 

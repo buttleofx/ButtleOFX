@@ -580,7 +580,7 @@ class ButtleData(QtCore.QObject):
                 pluginsWModel.append(p)
         return pluginsWModel
 
-    @QtCore.pyqtSlot(str, result=str)
+    @QtCore.pyqtSlot(str, result=QtCore.QObject)
     def getSinglePluginSuggestion(self, pluginSearched):
         from pyTuttle import tuttle
         pluginCache = tuttle.core().getImageEffectPluginCache()
@@ -590,7 +590,7 @@ class ButtleData(QtCore.QObject):
         pluginList = QObjectListModel(self)
         for p in pluginsW :
             if pluginSearched in p.pluginType :
-                pluginList.append(p.pluginType)
+                pluginList.append(p)
         if len(pluginList)==1 :
             return pluginList[0]
 

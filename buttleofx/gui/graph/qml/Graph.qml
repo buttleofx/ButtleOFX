@@ -4,15 +4,14 @@ import QuickMamba 1.0
 Rectangle {
     id: qml_graphRoot
 
+    focus: true
 
     Keys.onPressed: {
-
         // Graph toolbar
         if (event.key == Qt.Key_Delete) {
            _buttleManager.deleteSelection()
         }
     }
-
 
     QtObject {
         id: m

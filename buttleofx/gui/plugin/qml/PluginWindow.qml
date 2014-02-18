@@ -6,6 +6,8 @@ ApplicationWindow {
 
     property variant currentParamNode
 
+    property alias searchPluginText: searchPlugin.text
+
     property string currentPluginType
     property string currentPluginDoc
     property string currentPluginGroup
@@ -25,16 +27,63 @@ ApplicationWindow {
         id: list
         height: parent.height
         width: 200
-        color: "#212121"
+        color: "#141414"
         border.width: 1
         border.color: "#333"
 
         property string lastGroupParam : "No Group."
 
+        Rectangle{
+            id: searchBar
+            height: 20
+            width: parent.width-20
+            color: "#212121"
+            border.width: 1
+            border.color: "#333"
+            radius: 3
+            x:10
+            y:60
+            clip: true
+
+            Image{
+                id: searchPicture
+                source: "file:///" + _buttleData.buttlePath + "/gui/img/icons/search.png"
+                height:10
+                width:10
+                x:5
+                y:5
+            }
+
+            TextInput {
+                id : searchPlugin
+                y: 2
+                x: 20
+                height: parent.height
+                width: parent.width
+                clip: true
+                selectByMouse: true
+                selectionColor: "#00b2a1"
+                color: "white"
+
+                property variant plugin:_buttleData.getSinglePluginSuggestion(text)
+
+                Keys.onReturnPressed: {
+                    if(pluginList.model.count==1){
+                        plugin:_buttleData.getSinglePluginSuggestion(text)
+                        // using pluginList.model[0] doesn't work
+                        currentPluginType=plugin.pluginType
+                        currentPluginDoc=plugin.pluginDescription
+                        currentPluginGroup=plugin.pluginGroup
+                        searchPluginText = ""
+                    }
+                }
+            }
+        }
+
         ScrollView {
-            height: parent.height-40
+            height: parent.height-100
             width: parent.width
-            y:40
+            y:100
 
             style: ScrollViewStyle {
                 scrollBarBackground: Rectangle {
@@ -81,7 +130,7 @@ ApplicationWindow {
                 height: count ? contentHeight : 0
                 interactive: false
 
-                model: _buttleData.pluginsDocs
+                model: _buttleData.getPluginsWrappersSuggestions(searchPlugin.text)
 
                 delegate: Component {
                     Rectangle {
@@ -90,7 +139,7 @@ ApplicationWindow {
                         border.color:"transparent"
                         border.width: 1
                         radius: 3
-                        width: 200
+                        width: 198
                         height: 30
                         x: 1
 
@@ -152,7 +201,7 @@ ApplicationWindow {
         color: "#141414"
         x:list.width
         Text{
-            text:aNodeIsSelected? currentParamNode.nodeType : currentPluginType
+            text:aNodeIsSelected? currentParamNode ? currentParamNode.nodeType : currentPluginType : currentPluginType
             color: "white"
             font.pointSize: 11
             horizontalAlignment: Text.Center
@@ -163,7 +212,7 @@ ApplicationWindow {
         }
 
         Text{
-            text:aNodeIsSelected? currentParamNode.pluginGroup : currentPluginGroup
+            text:aNodeIsSelected? currentParamNode ? currentParamNode.pluginGroup : currentPluginGroup : currentPluginGroup
             color: "#00b2a1"
             width: parent.width-15
             height: parent.height-15
@@ -173,7 +222,7 @@ ApplicationWindow {
         }
 
         Text{
-            text:aNodeIsSelected? currentParamNode.pluginDoc : currentPluginDoc
+            text:aNodeIsSelected? currentParamNode ? currentParamNode.pluginDoc : currentPluginDoc : currentPluginDoc
             color: "white"
             width: parent.width-15
             height: parent.height-15

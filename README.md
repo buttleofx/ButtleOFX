@@ -41,6 +41,13 @@ Students :
 
 See [project's blog.](http://buttleofx.wordpress.com/)
 
+Pre-requisites
+-----------
+
+- python 3
+- PyQt 5.2
+- QtQuick 2
+
 
 Compilation
 -----------

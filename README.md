@@ -10,6 +10,9 @@ Development teams
 
 ButtleOFX is developped within student projects at [IMAC Engineering school](http://imac.alwaysdata.net).
 
+See [project's blog.](http://buttleofx.wordpress.com/)
+
+
 ###Team 2.0
 
 Version 2.0 (2013-2014) is currently on progress.   
@@ -39,14 +42,12 @@ Students :
 >- [Elisa Prana](https://github.com/eprana)
 >- [Arthur Tourneret](https://github.com/artourn)
 
-See [project's blog.](http://buttleofx.wordpress.com/)
 
 Pre-requisites
 -----------
 
 - python 3
-- PyQt 5.2
-- QtQuick 2
+- PyQt 5.2 (QtQuick 2)
 
 
 Compilation
@@ -58,29 +59,14 @@ Compilation
 `git submodule update -i --recursive`  
 
 
-3rdParties
-----------
-
-`git clone git://gitorious.org/~freesmael/qt-labs/freesmaels-qmlcanvas.git qmlcanvas`  
-`cd qmlcanvas`  
-`qmake-qt4`  
-`make`  
-
-`git clone git://gitorious.org/qt/qtquickcontrols.git -b qt4`  
-`cd qtquickcontrols`  
-`qmake-qt4`  
-`make install`  
-
-
 Run
 ---
 
-``export BUTTLEOFX=`pwd` ``  
-``export TUTTLEOFX_BIN=$BUTTLEOFX/TuttleOFX/dist/`hostname`/gcc-`gcc -dumpversion`/production``  
+``export TUTTLEOFX_BIN=/path/to/TuttleOFX/dist/`hostname`/gcc-`gcc -dumpversion`/production``  
 `export PYTHONPATH=$TUTTLEOFX_BIN/python`  
 `export OFX_PLUGIN_PATH=$TUTTLEOFX_BIN/plugin`  
      
-`python buttleApp.py`  
+`python3 buttleApp.py`  
 
 
 Errors

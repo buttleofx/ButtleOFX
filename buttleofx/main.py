@@ -55,6 +55,7 @@ from PyQt5 import QtCore, QtGui, QtQml, QtQuick, QtWidgets
 
 import os
 import sys
+import numpy
 
 osname = os.name.lower()
 sysplatform = sys.platform.lower()
@@ -89,8 +90,19 @@ class ImageProvider(QtQuick.QQuickImageProvider):
         QtQuick.QQuickImageProvider.__init__(self, QtQuick.QQuickImageProvider.Image)
 
     def requestImage(self, id, size):
-        image = QtGui.QImage(40, 40, 4)
-        image.fill(QtGui.QColor("red"))
+        #image = QtGui.QImage(40, 40, 4)
+        # on crée une image numpy bidon (toi tu récupéreras via tuttle)
+
+        numpyImage = numpy.zeros((40,40,4),numpy.uint8)
+        print(numpyImage)
+        
+        # convert numpyImage to QImage
+        nimage = QtGui.QImage(numpyImage.data,40,40,QtGui.QImage.Format_RGB32)
+        nimage.ndarray = numpyImage
+        
+        #image.fill(QtGui.QColor("red"))
+        image = nimage
+        
         return image, QtCore.QSize(40, 40)
     
 

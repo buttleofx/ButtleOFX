@@ -90,9 +90,9 @@ class ImageProvider(QtQuick.QQuickImageProvider):
         QtQuick.QQuickImageProvider.__init__(self, QtQuick.QQuickImageProvider.Image)
 
     def requestImage(self, id, size):
-        #image = QtGui.QImage(40, 40, 4)
-        # on crée une image numpy bidon (toi tu récupéreras via tuttle)
-
+        # get image
+        #flatarray = numpy.fromstring(id, numpy.uint8)
+        #numpyImage = numpy.array(numpy.flipud(numpy.reshape(flatarray, (40, 40, 3))))
         numpyImage = numpy.zeros((40,40,4),numpy.uint8)
         print(numpyImage)
         
@@ -100,7 +100,6 @@ class ImageProvider(QtQuick.QQuickImageProvider):
         nimage = QtGui.QImage(numpyImage.data,40,40,QtGui.QImage.Format_RGB32)
         nimage.ndarray = numpyImage
         
-        #image.fill(QtGui.QColor("red"))
         image = nimage
         
         return image, QtCore.QSize(40, 40)

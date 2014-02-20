@@ -186,9 +186,10 @@ Rectangle {
 
                             Image {
                                 x: 25
-                                source: model.object.fileType == "Folder" ? model.object.fileImg : "file:///" + model.object.fileImg
-                                sourceSize.width: 40
-                                sourceSize.height: 40
+                                //source: model.object.fileType == "Folder" ? model.object.fileImg : "file:///" + model.object.fileImg
+                                source: 'image://buttleofx'+ model.object.filepath
+                                //sourceSize.width: 40
+                                //sourceSize.height: 40
 
                                 anchors.horizontalCenter: parent.horizontalCenter
                             }

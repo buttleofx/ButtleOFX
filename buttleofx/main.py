@@ -51,7 +51,7 @@ from buttleofx.core.undo_redo.manageTools import CommandManager
 from buttleofx.gui.graph.menu import MenuWrapper
 
 # PyQt5
-from PyQt5 import QtCore, QtGui, QtQml
+from PyQt5 import QtCore, QtGui, QtQml, QtQuick, QtWidgets
 
 import os
 import sys
@@ -84,6 +84,16 @@ class ButtleApp(QtGui.QGuiApplication):
 #            return False
 
 
+class ImageProvider(QtQuick.QQuickImageProvider):
+    def __init__(self):
+        QtQuick.QQuickImageProvider.__init__(self, QtQuick.QQuickImageProvider.Image)
+
+    def requestImage(self, id, size):
+        image = QtGui.QImage(40, 40, 4)
+        image.fill(QtGui.QColor("red"))
+        return image, QtCore.QSize(40, 40)
+    
+
 def main(argv, app):
 
     #preload Tuttle
@@ -112,6 +122,9 @@ def main(argv, app):
     #view = QtQuick.QQuickView()
     #view.setViewport(QtOpenGL.QGLWidget())
     #view.setViewportUpdateMode(QtQml.QQuickView.FullViewportUpdate)
+    
+    engine.addImageProvider("buttleofx", ImageProvider())
+    #ImageProviderGUI()
 
     # data
     buttleData = ButtleDataSingleton().get().init(engine, currentFilePath)

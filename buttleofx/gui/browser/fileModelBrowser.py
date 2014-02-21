@@ -102,12 +102,14 @@ class FileModelBrowser(QtQuick.QQuickItem):
     def updateFileItems(self, folder):
         self._fileItems = []
         self._fileItemsModel.clear()
+        allDirs = []
+        allFiles = []
         import os
         try:
             _, dirs, files = next(os.walk(folder))
             for d in dirs:
                 if not d.startswith("."):
-                    self._fileItems.append(FileItem(folder, d, FileItem.Type.Folder))
+                    allDirs.append(FileItem(folder, d, FileItem.Type.Folder))
             
             if self._nameFilter == "*":
                 for f in files:
@@ -155,19 +157,23 @@ class FileModelBrowser(QtQuick.QQuickItem):
                                      'pbm', 'pgm', 'png', 'pnm', 'ppm', 'pic', 'psd', 'rgbe', 'sgi',
                                      'tga', 'tif', 'tiff', 'tpic', 'tx', 'webp']:
                         if not f.startswith("."):
-                            self._fileItems.append(FileItem(folder, f, FileItem.Type.File))
+                            allFiles.append(FileItem(folder, f, FileItem.Type.File))
                     
             else:
                 for f in files:
                     (shortname, extension) = os.path.splitext(f)
                     if extension == self._nameFilter:
                         print("Only ", extension, " files")
-                        self._fileItems.append(FileItem(folder, f, FileItem.Type.File))
+                        allFiles.append(FileItem(folder, f, FileItem.Type.File))
                           
         except Exception:
             pass
+
+        allDirs.sort(key=lambda fileItem: fileItem.fileName.lower())
+        allFiles.sort(key=lambda fileItem: fileItem.fileName.lower())
+        self._fileItems = allDirs + allFiles
+
         self._fileItemsModel.setObjectList(self._fileItems)
-        #self._fileItemsModel.setObjectList(self._fileItems.sort(key=lambda fileItem: fileItem.fileName))
         
     @QtCore.pyqtSlot(str, result=QtCore.QObject)
     def getFilteredFileItems(self, fileFilter):

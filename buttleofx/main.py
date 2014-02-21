@@ -8,9 +8,9 @@ import logging
         # logging.error("error message")
         # logging.critical("critical message")
 # print in a file
-logging.basicConfig(format='Buttle - %(levelname)s - %(asctime)-15s - %(message)s', filename='console.log', filemode='w', level=logging.DEBUG)
+#logging.basicConfig(format='Buttle - %(levelname)s - %(asctime)-15s - %(message)s', filename='console.log', filemode='w', level=logging.DEBUG)
 # print in console
-#logging.basicConfig(format='Buttle - %(levelname)s - %(message)s', level=logging.DEBUG)
+logging.basicConfig(format='Buttle - %(levelname)s - %(message)s', level=logging.DEBUG)
 
 # Tuttle
 from pyTuttle import tuttle

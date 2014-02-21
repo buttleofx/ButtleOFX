@@ -128,6 +128,8 @@ Rectangle {
             width : parent.width
             cellWidth: 150
             visible: viewList ? false : true
+            boundsBehavior: Flickable.StopAtBounds
+            flickableDirection: Flickable.VerticalFlick
 
             model: fileModel.fileItems
             delegate:

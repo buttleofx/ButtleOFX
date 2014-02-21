@@ -55,13 +55,32 @@ Item {
                 selectByMouse: true
                 selectionColor: "#00b2a1"
                 color: "white"
-
-                //property variant plugin
+                
+                property variant plugin
 
                 Keys.onReturnPressed: {
-                    if(listOfPlugin.model.count==1){
-                        // using listOfPlugin.model[0] doesn't work
-                        _buttleManager.nodeManager.creationNode("_buttleData.graph", _buttleData.getSinglePluginSuggestion(text).pluginType, 0, 0)
+                    if (listOfPlugin.model.count==1){
+                        plugin= _buttleData.getSinglePluginSuggestion(text).pluginType
+                        if (selectedView==3){
+                            // we create a new node and connect it to the last but one node of the concerned graph
+                            previousNode =_buttleData.lastNode()
+
+                            _buttleData.currentGraphWrapper = _buttleData.graphWrapper
+                            if (previousNode == undefined)
+                                _buttleManager.nodeManager.creationNode("_buttleData.graph", plugin, 0, 0)
+                            else
+                                _buttleManager.nodeManager.creationNode("_buttleData.graph", plugin, previousNode.xCoord+140, previousNode.yCoord)
+
+                            // if there is only one node, we don't connect it
+                            if (previousNode != undefined){
+                                newNode = _buttleData.lastNode()
+                                _buttleManager.connectionManager.connectWrappers(previousNode.outputClip, newNode.srcClips.get(0))
+                            }
+                        }
+                        else{
+                            // using listOfPlugin.model[0] doesn't work
+                            _buttleManager.nodeManager.creationNode("_buttleData.graph", plugin, 0, 0)
+                        }
                         pluginVisible=false
                         searchPluginText = ""
                     }
@@ -145,29 +164,27 @@ Item {
                                 nodes.border.color= "transparent"
                             }
                             onClicked: {
-                                pluginVisible=false
-                                searchPluginText = ""
-                                onTriggered: {
-                                    if(selectedView==3){
-                                         // we create a new node and connect it to the last but one node of the concerned graph
-                                        previousNode =_buttleData.lastNode()
+                                if (selectedView==3){
+                                    // we create a new node and connect it to the last but one node of the concerned graph
+                                    previousNode =_buttleData.lastNode()
 
-                                        _buttleData.currentGraphWrapper = _buttleData.graphWrapper
-                                        if (previousNode == undefined)
-                                            _buttleManager.nodeManager.creationNode("_buttleData.graph", object.pluginType, 0, 0)
-                                        else
-                                            _buttleManager.nodeManager.creationNode("_buttleData.graph", object.pluginType, previousNode.xCoord+140, previousNode.yCoord)
-
-                                        // if there is only one node, we don't connect it
-                                        if (previousNode != undefined){
-                                            newNode = _buttleData.lastNode()
-                                            _buttleManager.connectionManager.connectWrappers(previousNode.outputClip, newNode.srcClips.get(0))
-                                        }
-                                    }
-                                    else{
+                                    _buttleData.currentGraphWrapper = _buttleData.graphWrapper
+                                    if (previousNode == undefined)
                                         _buttleManager.nodeManager.creationNode("_buttleData.graph", object.pluginType, 0, 0)
+                                    else
+                                        _buttleManager.nodeManager.creationNode("_buttleData.graph", object.pluginType, previousNode.xCoord+140, previousNode.yCoord)
+
+                                    // if there is only one node, we don't connect it
+                                    if (previousNode != undefined){
+                                        newNode = _buttleData.lastNode()
+                                        _buttleManager.connectionManager.connectWrappers(previousNode.outputClip, newNode.srcClips.get(0))
                                     }
                                 }
+                                else{
+                                    _buttleManager.nodeManager.creationNode("_buttleData.graph", object.pluginType, 0, 0)
+                                }
+                                pluginVisible=false
+                                searchPluginText = ""
                             }
                         }
                         Text{
@@ -175,6 +192,8 @@ Item {
                             color: "white"
                             y:6
                             x:15
+                            width: 170
+                            elide:Text.ElideRight
                         }
                     }
                 }

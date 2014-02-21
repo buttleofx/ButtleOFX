@@ -2,8 +2,10 @@ import QtQuick 2.1
 import QtQuick.Controls 1.0
 import QtQuick.Dialogs 1.1
 import QtQuick.Layouts 1.0
-import ButtleFileModel 1.0
 import QtQuick.Controls.Styles 1.0
+
+import ButtleFileModel 1.0
+
 
 Rectangle {
     id: winFile
@@ -32,6 +34,14 @@ Rectangle {
 
     function forceActiveFocusOnDelete() {
         fileModel.deleteItem(itemIndex)
+    }
+
+    MouseArea {
+        anchors.fill: parent
+        onClicked: {
+            forceActiveFocus()
+            // TODO: unselect
+        }
     }
 
     Menu {
@@ -98,7 +108,7 @@ Rectangle {
                             border.width: 1
                             border.color: "#333"
                             radius: 3
-                            Image{
+                            Image {
                                 id: arrow
                                 source: "file:///" + _buttleData.buttlePath + "/gui/img/buttons/params/arrow2.png"
                                 x:4
@@ -113,7 +123,7 @@ Rectangle {
                             border.width: 1
                             border.color: "#333"
                             radius: 3
-                            Image{
+                            Image {
                                 id: arrow
                                 source: "file:///" + _buttleData.buttlePath + "/gui/img/buttons/params/arrow.png"
                                 x:4
@@ -124,185 +134,263 @@ Rectangle {
 
         GridView {
             id: gridview
-            height : parent.height
-            width : parent.width
-            cellWidth: 150
+            width: parent.width
+            height: parent.height
+            cellWidth: 120
+            cellHeight: cellWidth
+            property int gridMargin: 4
             visible: viewList ? false : true
             boundsBehavior: Flickable.StopAtBounds
             flickableDirection: Flickable.VerticalFlick
 
             model: fileModel.fileItems
-            delegate:
-                Component {
-                    id: componentInColumn
+            delegate: Component {
+                id: componentInColumn
 
-                    Rectangle {
-                        id: fileInColumn
-                        color: model.object.isSelected ? "#00b2a1" : "transparent"
-                        radius: 5
-                        height: 80
-                        width: 125
-                        objectName: index
+                Rectangle {
+                    id: rootFileItem
+                    color: model.object.isSelected ? "#00b2a1" : "transparent"
 
-                        property variant selectedFiles
-                        property variant filePath: model.object.filepath
+                    width: gridview.cellWidth - gridview.gridMargin
+                    height: gridview.cellHeight - gridview.gridMargin
+                    radius: 5
 
-                        function forceActiveFocusInColumn() {
-                            textInColumn.forceActiveFocus()
+                    objectName: index
+
+                    property variant selectedFiles
+                    property variant filePath: model.object.filepath
+
+                    function forceActiveFocusInColumn() {
+                        filename_textEdit.forceActiveFocus()
+                    }
+
+                    /*DropArea {
+                        id: moveItemInColumn
+                        anchors.fill: parent
+                        objectName: model.object.filepath
+                        keys: ["internFileDrag"]
+
+                        onDropped: {
+                            console.debug("file: " + Drag.source.objectName)
+                            console.debug("Index: " + drop.source.objectName)
+                            //fileModel.moveItem(drop.source.objectName, )
+                        }
+                    }*/
+
+                    Drag.active: rootFileItem_mouseArea.drag.active
+                    Drag.hotSpot.x: 20
+                    Drag.hotSpot.y: 20
+                    //Drag.dragType: Drag.Automatic
+                    Drag.mimeData: {"urls": [rootFileItem.selectedFiles]}
+                    //Drag.mimeData: {"text/plain": file.filePath, "text/uri-list": ""}
+                    // Drag.keys: "text/uri-list"
+                    Drag.keys: "internFileDrag"
+
+                    StateGroup {
+                      id: fileStateColumn
+                      states: State {
+                          name: "dragging"
+                          when: rootFileItem_mouseArea.pressed
+                          PropertyChanges { target: rootFileItem; x: rootFileItem.x; y: rootFileItem.y }
+                      }
+                    }
+
+                    MouseArea {
+                        id: rootFileItem_mouseArea
+                        anchors.fill: parent
+                        acceptedButtons: Qt.LeftButton | Qt.RightButton
+                        onReleased: rootFileItem.Drag.drop()
+                        drag.target: rootFileItem
+
+                        onClicked: {
+                            rootFileItem.forceActiveFocus()
+
+                            winFile.changeFileSize(0)
+                            if (mouse.button == Qt.RightButton)
+                                options.popup()
+                                winFile.fileName = filename_textEdit.text
+                                winFile.itemIndex = index
+
+                            //if shift:
+                            if(mouse.modifiers & Qt.ShiftModifier)
+                                fileModel.selectItemsByShift(gridview.currentIndex, index)
+
+                            gridview.currentIndex = index
+                            winFile.changeFile(model.object.filepath)
+                            winFile.changeFileType(model.object.fileType)
+                            //if ctrl:
+                            if(mouse.modifiers & Qt.ControlModifier)
+                                fileModel.selectItems(index)
+
+                            else if(!(mouse.modifiers & Qt.ShiftModifier))
+                                fileModel.selectItem(index)
+                                winFile.changeFileSize(model.object.fileSize)
+
+                            var sel = fileModel.getSelectedItems()
+                            var selection = new Array()
+                            for(var selIndex = 0; selIndex < sel.count; ++selIndex)
+                            {
+                                selection[selIndex] = sel.get(selIndex).filepath
+                            }
+                            rootFileItem.selectedFiles = selection
+                            winFile.changeSelectedList(sel)
                         }
 
-                        /*DropArea {
-                            id: moveItemInColumn
-                            anchors.fill: parent
-                            objectName: model.object.filepath
-                            keys: ["internFileDrag"]
+                        onDoubleClicked: {
+                            // if it's an image, we assign it to the viewer
+                             if (model.object.fileType != "Folder") {
+                                 player.changeViewer(11) // we come to the temporary viewer
+                                 // we save the last node wrapper of the last view
+                                 player.lastNodeWrapper = _buttleData.getNodeWrapperByViewerIndex(player.lastView)
 
-                            onDropped: {
-                                console.debug("file: " + Drag.source.objectName)
-                                console.debug("Index: " + drop.source.objectName)
-                                //fileModel.moveItem(drop.source.objectName, )
+                                 readerNode.nodeWrapper = _buttleData.nodeReaderWrapperForBrowser(model.object.filepath)
+
+                                 _buttleData.currentGraphIsGraphBrowser()
+                                 _buttleData.currentGraphWrapper = _buttleData.graphBrowserWrapper
+
+                                 _buttleData.currentViewerNodeWrapper = readerNode.nodeWrapper
+                                 _buttleData.currentViewerFrame = 0
+                                 // we assign the node to the viewer, at the frame 0
+                                 _buttleData.assignNodeToViewerIndex(readerNode.nodeWrapper, 10)
+                                 _buttleData.currentViewerIndex = 10 // we assign to the viewer the 10th view
+                                 _buttleEvent.emitViewerChangedSignal()
+                             } else {
+                                 winFile.goToFolder(model.object.filepath)
+                             }
+                        }
+                    }
+
+                    Menu {
+                        id: options
+
+                        MenuItem {
+                            text: "Rename"
+                            onTriggered: {
+                                //Open a TextEdit
+                                filename_textEdit.forceActiveFocus()
                             }
-                        }*/
-
-
-                        Column {
-                            id : file
-                            anchors.horizontalCenter: parent.horizontalCenter
-
-                            Image {
-                                x: 25
-                                source: model.object.fileType == "Folder" ? "../../img/buttons/browser/folder-icon.png" : "file:///" + model.object.filepath
-                                sourceSize.width: 40
-                                sourceSize.height: 40
-
-                                anchors.horizontalCenter: parent.horizontalCenter
+                        }
+                        MenuItem {
+                            text: "Delete"
+                            onTriggered: {
+                                fileModel.deleteItem(itemIndex)
+                                //deleteMessage.open()
                             }
+                        }
+                    }
 
-                            TextInput {
-                                id: textInColumn
+                    ColumnLayout {
+                        id: file
+                        spacing: 0
+                        anchors.fill: parent
+                        Item {
+                            Layout.fillWidth: true
+                            Layout.fillHeight: true
+                            Item {
+                                anchors.fill: parent
+                                anchors.margins: 4
+                                property int minSize: width < height ? width : height
+
+                                Image {
+                                    property bool isFolder: model.object.fileType == "Folder"
+                                    source: isFolder ? "../../img/buttons/browser/folder-icon.png" : "file:///" + model.object.filepath
+                                    sourceSize.width: isFolder ? parent.minSize : -1
+                                    sourceSize.height: isFolder ? parent.minSize : -1
+
+                                    anchors.fill: parent
+                                    fillMode: Image.PreserveAspectFit
+                                    smooth: true
+
+                                    anchors.centerIn: parent
+                                }
+                            }
+                        }
+
+                        Item {
+                            Layout.fillWidth: true
+                            implicitHeight: hack_fontMetrics.height * 3 // 3 lines of text
+                            Text {
+                                id: hack_fontMetrics
+                                text: "A"
+                                visible: false
+                            }
+                            Rectangle {
+                                id: filename_background
+                                width: filename_textEdit.width
+                                height: filename_textEdit.paintedHeight
+
+                                color: "white"
+                                radius: 2
+
+                                visible: filename_textEdit.activeFocus
+                            }
+                            TextEdit {
+                                id: filename_textEdit
+
+                                horizontalAlignment: TextInput.AlignHCenter
+                                anchors.fill: parent
+
                                 text: model.object.fileName
+                                property string origText: ""
+
                                 color: model.object.isSelected ? "black" : "white"
                                 font.bold: model.object.isSelected
-                                width: 120
-                                horizontalAlignment: TextInput.AlignHCenter
-                                selectByMouse: true
+                                textFormat: TextEdit.PlainText
+                                wrapMode: TextEdit.Wrap
+
+                                selectByMouse: activeFocus
                                 selectionColor: "#5a5e6b"
+                                clip: ! activeFocus
+                                z: 9999  // TODO: need another solution to be truly on top.
 
-                                onFocusChanged:{
-                                    textInColumn.focus ? selectAll() : deselect()
+                                onTextChanged: {
+                                    var hasEndline = (text.lastIndexOf("\n") != -1)
+                                    if( hasEndline )
+                                    {
+                                        var newText = text.replace("\n", "")
+                                        textAccepted(newText)
+                                    }
                                 }
 
-                                onAccepted: {
-                                    textInColumn.selectAll()
-                                    fileModel.changeFileName(textInColumn.getText(0, textInColumn.cursorPosition + 1), itemIndex)
-                                    textInColumn.forceActiveFocus()
+                                onActiveFocusChanged: {
+                                    if( filename_textEdit.activeFocus )
+                                    {
+                                        selectAll()
+                                        origText = text
+                                    }
+                                    else
+                                    {
+                                        deselect()
+                                        textAccepted(text)
+                                    }
                                 }
-                            }
-                        }// endColumn
-
-                        Drag.active: dragMouseAreaColumn.drag.active
-                        Drag.hotSpot.x: 20
-                        Drag.hotSpot.y: 20
-                        //Drag.dragType: Drag.Automatic
-                        Drag.mimeData: {"urls": [fileInColumn.selectedFiles]}
-                        //Drag.mimeData: {"text/plain": file.filePath, "text/uri-list": ""}
-                        // Drag.keys: "text/uri-list"
-                        Drag.keys: "internFileDrag"
-
-                        StateGroup {
-                          id: fileStateColumn
-                          states: State {
-                              name: "dragging"
-                              when: dragMouseAreaColumn.pressed
-                              PropertyChanges { target: fileInColumn; x: fileInColumn.x; y: fileInColumn.y }
-                          }
-                        }
-
-                        MouseArea {
-                            id: dragMouseAreaColumn
-                            anchors.fill: parent
-                            acceptedButtons: Qt.LeftButton | Qt.RightButton
-                            onReleased: fileInColumn.Drag.drop()
-                            drag.target: fileInColumn
-
-                            onClicked: {
-                                winFile.changeFileSize(0)
-                                if (mouse.button == Qt.RightButton)
-                                    options.popup()
-                                    winFile.fileName = textInColumn.text
-                                    winFile.itemIndex = index
-
-                                //if shift:
-                                if(mouse.modifiers & Qt.ShiftModifier)
-                                    fileModel.selectItemsByShift(gridview.currentIndex, index)
-
-                                gridview.currentIndex = index
-                                winFile.changeFile(model.object.filepath)
-                                winFile.changeFileType(model.object.fileType)
-                                //if ctrl:
-                                if(mouse.modifiers & Qt.ControlModifier)
-                                    fileModel.selectItems(index)
-
-                                else if(!(mouse.modifiers & Qt.ShiftModifier))
-                                    fileModel.selectItem(index)
-                                    winFile.changeFileSize(model.object.fileSize)
-
-                                var sel = fileModel.getSelectedItems()
-                                var selection = new Array()
-                                for(var selIndex = 0; selIndex < sel.count; ++selIndex)
-                                {
-                                    selection[selIndex] = sel.get(selIndex).filepath
+                                function textAccepted(newText) {
+                                    if( origText != newText )
+                                    {
+                                        fileModel.changeFileName(newText, itemIndex)
+                                    }
+                                    origText = ""
                                 }
-                                fileInColumn.selectedFiles = selection
-                                winFile.changeSelectedList(sel)
-                            }
-
-                            onDoubleClicked: {
-                                // if it's an image, we assign it to the viewer
-                                 if (model.object.fileType != "Folder"){
-                                     player.changeViewer(11) // we come to the temporary viewer
-                                     // we save the last node wrapper of the last view
-                                     player.lastNodeWrapper = _buttleData.getNodeWrapperByViewerIndex(player.lastView)
-
-                                     readerNode.nodeWrapper = _buttleData.nodeReaderWrapperForBrowser(model.object.filepath)
-
-                                     _buttleData.currentGraphIsGraphBrowser()
-                                     _buttleData.currentGraphWrapper = _buttleData.graphBrowserWrapper
-
-                                     _buttleData.currentViewerNodeWrapper = readerNode.nodeWrapper
-                                     _buttleData.currentViewerFrame = 0
-                                     // we assign the node to the viewer, at the frame 0
-                                     _buttleData.assignNodeToViewerIndex(readerNode.nodeWrapper, 10)
-                                     _buttleData.currentViewerIndex = 10 // we assign to the viewer the 10th view
-                                     _buttleEvent.emitViewerChangedSignal()
-                                 }
-                                 else{
-                                     winFile.goToFolder(model.object.filepath)
-                                 }
-                            }
-                        }
-
-                        Menu {
-                            id: options
-
-                            MenuItem {
-                                text: "Rename"
-                                onTriggered: {
-                                    //Open a TextEdit
-                                    textInColumn.forceActiveFocus()
-                                }
-                            }
-                            MenuItem {
-                                text: "Delete"
-                                onTriggered: {
-                                    fileModel.deleteItem(itemIndex)
-                                    //deleteMessage.open()
+                                MouseArea {
+                                    id: filename_mouseArea
+                                    width: filename_textEdit.width
+                                    height: filename_textEdit.paintedHeight
+                                    acceptedButtons: Qt.LeftButton
+                                    enabled: ! filename_textEdit.activeFocus
+                                    onClicked: {
+                                        // forward to the rootFileItem
+                                        rootFileItem_mouseArea.onClicked(mouse)
+                                    }
+                                    onDoubleClicked: {
+                                        mouse.accepted = true
+                                        filename_textEdit.forceActiveFocus()
+                                    }
                                 }
                             }
                         }
-
                     }
-                }//endComponent
+                }
+            }
         }
     }
 

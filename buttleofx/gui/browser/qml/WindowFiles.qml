@@ -289,7 +289,7 @@ Rectangle {
                             Item {
                                 anchors.fill: parent
                                 anchors.margins: 4
-                                property int minSize: width < height ? width : height
+                                property int minSize: Math.min(width, height)
 
                                 Image {
                                     property bool isFolder: model.object.fileType == "Folder"
@@ -374,7 +374,7 @@ Rectangle {
                                 MouseArea {
                                     id: filename_mouseArea
                                     width: filename_textEdit.width
-                                    height: filename_textEdit.paintedHeight
+                                    height: Math.max(filename_textEdit.width, filename_textEdit.paintedHeight)
                                     acceptedButtons: Qt.LeftButton
                                     enabled: ! filename_textEdit.activeFocus
                                     onClicked: {

@@ -184,6 +184,7 @@ ApplicationWindow {
                                 nodes.border.color="transparent"
                             }
                             onClicked: {
+                                aNodeIsSelected=false
                                 pluginList.currentItem.color="#141414"
                                 pluginList.currentItem.border.color="transparent"
                                 pluginList.currentIndex=index
@@ -236,7 +237,7 @@ ApplicationWindow {
         color: "#141414"
         x:list.width
         Text{
-            text:_buttleData.currentParamNodeWrapper ? currentParamNode.nodeType : currentPluginType
+            text:aNodeIsSelected ? currentParamNode.nodeType : currentPluginType
             color: "white"
             font.pointSize: 11
             horizontalAlignment: Text.Center
@@ -247,7 +248,7 @@ ApplicationWindow {
         }
 
         Text{
-            text:_buttleData.currentParamNodeWrapper ? currentParamNode.pluginGroup : currentPluginGroup
+            text:aNodeIsSelected ? currentParamNode.pluginGroup : currentPluginGroup
             color: "#00b2a1"
             width: parent.width-15
             height: parent.height-15
@@ -257,7 +258,7 @@ ApplicationWindow {
         }
 
         Text{
-            text:_buttleData.currentParamNodeWrapper ? currentParamNode.pluginDoc : currentPluginDoc
+            text:aNodeIsSelected ? currentParamNode.pluginDoc : currentPluginDoc
             color: "white"
             width: parent.width-15
             height: parent.height-15

@@ -152,6 +152,8 @@ ApplicationWindow {
         }
     }
 
+    property bool aNodeIsSelected:true
+
     //Window of hint for plugins
     PluginWindow {
         id: doc

@@ -12,6 +12,7 @@ Rectangle {
     property real miniatureScale
     property bool miniatureState
     property int nodeWidth: 80
+    focus: true
 
     Drag.active: nodeMouseArea.drag.active
 
@@ -40,6 +41,13 @@ Rectangle {
     signal drawSelection(int x, int y, int width, int height)
 
     color: "transparent"
+
+    Keys.onPressed: {
+        if (event.key == Qt.Key_H) {
+            doc.show()
+            aNodeIsSelected=true
+        }
+    }
 
     MouseArea {
         id: nodeMouseArea
@@ -112,6 +120,7 @@ Rectangle {
 
         // double click : we change the current param node
         onDoubleClicked: {
+            aNodeIsSelected=true
             _buttleData.currentParamNodeWrapper = m.nodeWrapper
         }
 

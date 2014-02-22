@@ -166,7 +166,6 @@ ApplicationWindow {
                             if (event.key == Qt.Key_Return){
                                 pluginList.currentItem.color="#333"
                                 pluginList.currentItem.border.color="#343434"
-                                aNodeIsSelected=false
                                 currentPluginType=object.pluginType
                                 currentPluginDoc=object.pluginDescription
                                 currentPluginGroup=object.pluginGroup
@@ -190,7 +189,6 @@ ApplicationWindow {
                                 pluginList.currentIndex=index
                                 pluginList.currentItem.color="#333"
                                 pluginList.currentItem.border.color="#343434"
-                                aNodeIsSelected=false
                                 currentPluginType=object.pluginType
                                 currentPluginDoc=object.pluginDescription
                                 currentPluginGroup=object.pluginGroup
@@ -238,7 +236,7 @@ ApplicationWindow {
         color: "#141414"
         x:list.width
         Text{
-            text:aNodeIsSelected? currentParamNode.nodeType : currentPluginType
+            text:_buttleData.currentParamNodeWrapper ? currentParamNode.nodeType : currentPluginType
             color: "white"
             font.pointSize: 11
             horizontalAlignment: Text.Center
@@ -249,7 +247,7 @@ ApplicationWindow {
         }
 
         Text{
-            text:aNodeIsSelected? currentParamNode.pluginGroup : currentPluginGroup
+            text:_buttleData.currentParamNodeWrapper ? currentParamNode.pluginGroup : currentPluginGroup
             color: "#00b2a1"
             width: parent.width-15
             height: parent.height-15
@@ -259,7 +257,7 @@ ApplicationWindow {
         }
 
         Text{
-            text:aNodeIsSelected? currentParamNode.pluginDoc : currentPluginDoc
+            text:_buttleData.currentParamNodeWrapper ? currentParamNode.pluginDoc : currentPluginDoc
             color: "white"
             width: parent.width-15
             height: parent.height-15

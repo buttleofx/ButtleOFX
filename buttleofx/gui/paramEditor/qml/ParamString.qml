@@ -19,7 +19,7 @@ Item {
 
   /*  FolderListView {
         id: finder
-        property bool isReader: _buttleData.currentParamNodeWrapper.pluginContext=="OfxImageEffectContextReader"
+        property bool isReader: _buttleData.currentParamNodeWrapper.pluginContext=="OfxImageEffectContextReader":false
         typeDialog: isReader ? "OpenFile" : "SaveFile"
         messageDialog: isReader ? "Open file" : "Save file as"
     }

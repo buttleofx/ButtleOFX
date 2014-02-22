@@ -158,7 +158,9 @@ ApplicationWindow {
     PluginWindow {
         id: doc
         title: "Plugin's Documentation"
-        currentParamNode: _buttleData.currentParamNodeWrapper ? _buttleData.currentParamNodeWrapper : null
+        selectedNodeType:_buttleData.currentParamNodeWrapper? _buttleData.currentParamNodeWrapper.nodeType:""
+        selectedNodeDoc:_buttleData.currentParamNodeWrapper? _buttleData.currentParamNodeWrapper.pluginDoc:""
+        selectedNodeGroup:_buttleData.currentParamNodeWrapper? _buttleData.currentParamNodeWrapper.pluginGroup:""
     }
 
     FinderLoadGraph{ id: finderLoadGraph; onGetFileUrl: urlOfFileToSave = fileurl }

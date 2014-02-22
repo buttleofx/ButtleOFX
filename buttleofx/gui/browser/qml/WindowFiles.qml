@@ -139,9 +139,13 @@ Rectangle {
             cellWidth: 120
             cellHeight: cellWidth
             property int gridMargin: 4
-            visible: viewList ? false : true
+            visible: ! viewList
             boundsBehavior: Flickable.StopAtBounds
             flickableDirection: Flickable.VerticalFlick
+            interactive: false
+            currentIndex: -1
+
+            property int previousIndex: -1
 
             model: fileModel.fileItems
             delegate: Component {
@@ -213,9 +217,9 @@ Rectangle {
 
                             //if shift:
                             if(mouse.modifiers & Qt.ShiftModifier)
-                                fileModel.selectItemsByShift(gridview.currentIndex, index)
+                                fileModel.selectItemsByShift(gridview.previousIndex, index)
 
-                            gridview.currentIndex = index
+                            gridview.previousIndex = index
                             winFile.changeFile(model.object.filepath)
                             winFile.changeFileType(model.object.fileType)
                             //if ctrl:
@@ -433,7 +437,7 @@ Rectangle {
                             border.width: 1
                             border.color: "#333"
                             radius: 3
-                            Image{
+                            Image {
                                 id: arrow
                                 source: "file:///" + _buttleData.buttlePath + "/gui/img/buttons/params/arrow.png"
                                 x:4
@@ -447,6 +451,12 @@ Rectangle {
             height : parent.height
             width : parent.width
             visible: viewList
+            boundsBehavior: Flickable.StopAtBounds
+            flickableDirection: Flickable.VerticalFlick
+            interactive: false
+            currentIndex: -1
+
+            property int previousIndex: -1
 
             model: fileModel.fileItems
             delegate: Component {
@@ -545,9 +555,9 @@ Rectangle {
 
                             //if shift:
                             if(mouse.modifiers & Qt.ShiftModifier)
-                                fileModel.selectItemsByShift(listview.currentIndex, index)
+                                fileModel.selectItemsByShift(listview.previousIndex, index)
 
-                            listview.currentIndex = index
+                            listview.previousIndex = index
                             winFile.changeFile(model.object.filepath)
                             winFile.changeFileType(model.object.fileType)
                             //if ctrl:

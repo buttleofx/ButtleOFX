@@ -44,7 +44,8 @@ Rectangle {
 
     Keys.onPressed: {
         if (event.key == Qt.Key_H) {
-            doc.show()
+            if(_buttleData.currentParamNodeWrapper)
+                doc.show()
             aNodeIsSelected=true
         }
     }

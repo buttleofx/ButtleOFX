@@ -11,7 +11,7 @@ Item {
     y:10
 
     property variant paramObject: model.object
-    property bool isReader: _buttleData.currentParamNodeWrapper.nodeType.indexOf("reader") != -1
+    property bool isReader: _buttleData.currentParamNodeWrapper ? _buttleData.currentParamNodeWrapper.pluginContext=="OfxImageEffectContextReader": false
 
     // Is this param secret ?
     visible: !paramObject.isSecret
@@ -19,7 +19,7 @@ Item {
 
   /*  FolderListView {
         id: finder
-        property bool isReader: _buttleData.currentParamNodeWrapper.nodeType.indexOf("reader") != -1
+        property bool isReader: _buttleData.currentParamNodeWrapper.pluginContext=="OfxImageEffectContextReader"
         typeDialog: isReader ? "OpenFile" : "SaveFile"
         messageDialog: isReader ? "Open file" : "Save file as"
     }
@@ -179,7 +179,7 @@ Item {
         // hidden by default
         Image {
             id: folderforFileOrDirectory
-            source: _buttleData.buttlePath + "/gui/img/buttons/params/folder.png"
+            source: "file:///" + _buttleData.buttlePath + "/gui/img/buttons/params/folder.png"
             width: (paramObject.stringType == "OfxParamStringIsFilePath" || paramObject.stringType == "OfxParamStringIsDirectoryPath") ? 20 : 0
             y: 2
 

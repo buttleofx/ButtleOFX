@@ -191,12 +191,12 @@ Rectangle {
                     Drag.keys: "internFileDrag"
 
                     StateGroup {
-                      id: fileStateColumn
-                      states: State {
-                          name: "dragging"
-                          when: rootFileItem_mouseArea.pressed
-                          PropertyChanges { target: rootFileItem; x: rootFileItem.x; y: rootFileItem.y }
-                      }
+                        id: fileStateColumn
+                        states: State {
+                            name: "dragging"
+                            when: rootFileItem_mouseArea.pressed
+                            PropertyChanges { target: rootFileItem; x: rootFileItem.x; y: rootFileItem.y }
+                        }
                     }
 
                     MouseArea {
@@ -206,7 +206,7 @@ Rectangle {
                         onReleased: rootFileItem.Drag.drop()
                         drag.target: rootFileItem
 
-                        onClicked: {
+                        onPressed: {
                             rootFileItem.forceActiveFocus()
 
                             winFile.changeFileSize(0)
@@ -381,9 +381,9 @@ Rectangle {
                                     height: Math.max(filename_textEdit.width, filename_textEdit.paintedHeight)
                                     acceptedButtons: Qt.LeftButton
                                     enabled: ! filename_textEdit.activeFocus
-                                    onClicked: {
+                                    onPressed: {
                                         // forward to the rootFileItem
-                                        rootFileItem_mouseArea.onClicked(mouse)
+                                        rootFileItem_mouseArea.onPressed(mouse)
                                     }
                                     onDoubleClicked: {
                                         mouse.accepted = true
@@ -546,7 +546,7 @@ Rectangle {
                         onReleased: fileInRow.Drag.drop()
                         drag.target: fileInRow
 
-                        onClicked: {
+                        onPressed: {
                             winFile.changeFileSize(0)
                             if (mouse.button == Qt.RightButton)
                                 options.popup()

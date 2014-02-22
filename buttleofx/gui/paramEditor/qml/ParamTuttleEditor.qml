@@ -38,7 +38,7 @@ Item {
 
     SplitView {
         width: parent.width
-        height: parent.height
+        height: parent.height-5
         y: tabBar.height
         //handleWidth: 3
         orientation: Qt.Vertical

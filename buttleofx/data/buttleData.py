@@ -548,6 +548,7 @@ class ButtleData(QtCore.QObject):
         from pyTuttle import tuttle
         pluginCache = tuttle.core().getImageEffectPluginCache()
         plugins = pluginCache.getPlugins()
+        plugins = sorted(plugins, key=lambda plugin: plugin.getIdentifier().upper())
         print("getPluginsIdentifiers => nb plugins:", len(plugins))
 
         pluginsIds = [plugin.getIdentifier() for plugin in plugins]
@@ -560,7 +561,7 @@ class ButtleData(QtCore.QObject):
         from pyTuttle import tuttle
         pluginCache = tuttle.core().getImageEffectPluginCache()
         plugins = pluginCache.getPlugins()         
-
+        plugins = sorted(plugins, key=lambda plugin: plugin.getIdentifier().upper())
         pluginsW = [PluginWrapper(plugin) for plugin in plugins]
         pluginsWModel = QObjectListModel(self)
         for p in pluginsW:
@@ -571,8 +572,8 @@ class ButtleData(QtCore.QObject):
     def getPluginsWrappersSuggestions(self, pluginSearched):
         from pyTuttle import tuttle
         pluginCache = tuttle.core().getImageEffectPluginCache()
-        plugins = pluginCache.getPlugins()         
-
+        plugins = pluginCache.getPlugins()
+        plugins = sorted(plugins, key=lambda plugin: plugin.getIdentifier().upper())         
         pluginsW = [PluginWrapper(plugin) for plugin in plugins]
         pluginsWModel = QObjectListModel(self)
         for p in pluginsW:
@@ -585,7 +586,6 @@ class ButtleData(QtCore.QObject):
         from pyTuttle import tuttle
         pluginCache = tuttle.core().getImageEffectPluginCache()
         plugins = pluginCache.getPlugins()         
-
         pluginsW = [PluginWrapper(plugin) for plugin in plugins]
         pluginList = QObjectListModel(self)
         for p in pluginsW :
@@ -599,7 +599,7 @@ class ButtleData(QtCore.QObject):
         from pyTuttle import tuttle
         pluginCache = tuttle.core().getImageEffectPluginCache()
         plugins = pluginCache.getPlugins()         
-
+        plugins = sorted(plugins, key=lambda plugin: plugin.getIdentifier().upper())
         pluginsW = [PluginWrapper(plugin) for plugin in plugins]
         pluginsWModel = QObjectListModel(self)
         #for each plugin
@@ -620,7 +620,7 @@ class ButtleData(QtCore.QObject):
         from pyTuttle import tuttle
         pluginCache = tuttle.core().getImageEffectPluginCache()
         plugins = pluginCache.getPlugins()         
-
+        plugins = sorted(plugins, key=lambda plugin: plugin.getIdentifier().upper())
         pluginsW = [PluginWrapper(plugin) for plugin in plugins]
         pluginsListMenu = QObjectListModel(self)
 

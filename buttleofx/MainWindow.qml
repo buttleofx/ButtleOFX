@@ -152,13 +152,11 @@ ApplicationWindow {
         }
     }
 
-    property bool aNodeIsSelected:false
-
     //Window of hint for plugins
     PluginWindow {
         id: doc
         title: "Plugin's Documentation"
-        currentParamNode: _buttleData.currentParamNodeWrapper
+        currentParamNode: _buttleData.currentParamNodeWrapper ? _buttleData.currentParamNodeWrapper : null
     }
 
     FinderLoadGraph{ id: finderLoadGraph; onGetFileUrl: urlOfFileToSave = fileurl }
@@ -710,7 +708,7 @@ ApplicationWindow {
             id: paramEditor
             anchors.fill: parent
             params: _buttleData.currentParamNodeWrapper ? _buttleData.currentParamNodeWrapper.params : null
-            currentParamNode: _buttleData.currentParamNodeWrapper
+            currentParamNode: _buttleData.currentParamNodeWrapper ? _buttleData.currentParamNodeWrapper : null
             onButtonCloseClicked: {
                 if(parent!=fullscreenContent){
                     selectedView=-1

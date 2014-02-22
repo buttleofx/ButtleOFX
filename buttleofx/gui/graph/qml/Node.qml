@@ -64,7 +64,6 @@ Rectangle {
                     if(!(mouse.modifiers & Qt.ControlModifier))
                           _buttleData.clearCurrentSelectedNodeNames()
 
-                    aNodeIsSelected=true
                     _buttleData.appendToCurrentSelectedNodeWrappers(m.nodeWrapper)
                 }
 

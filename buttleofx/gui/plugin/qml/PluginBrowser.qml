@@ -11,8 +11,6 @@ Item {
     property color borderInput: "#444"
 
     property color textColor : "white"
-    property color activeFocusOn : "white"
-    property color activeFocusOff : "grey"
     property alias searchPluginText : searchPlugin.text
 
     Rectangle{
@@ -44,7 +42,6 @@ Item {
                 x:5
                 y:5
             }
-
             TextInput {
                 id : searchPlugin
                 y: 2
@@ -55,6 +52,7 @@ Item {
                 selectByMouse: true
                 selectionColor: "#00b2a1"
                 color: "white"
+                focus:true
                 
                 property variant plugin
 
@@ -138,7 +136,7 @@ Item {
                 id: listOfPlugin
                 height: count ? contentHeight : 0
                 interactive: false
-
+                focus: true
                 model: _buttleData.getPluginsWrappersSuggestions(searchPlugin.text)
 
                 delegate: Component {
@@ -152,18 +150,68 @@ Item {
                         height: 30
                         x: 3
 
+                        Keys.onPressed: {
+                            //previous plugin
+                            if (event.key == Qt.Key_Up){
+                                console.debug("up")
+                                listOfPlugin.currentItem.color="#141414"
+                                listOfPlugin.currentItem.border.color="transparent"
+                                listOfPlugin.currentIndex = listOfPlugin.currentIndex>0? listOfPlugin.currentIndex-1:listOfPlugin.currentIndex
+                                listOfPlugin.currentItem.color="#242424"
+                                listOfPlugin.currentItem.border.color="#343434"
+                            }
+
+                            //next plugin
+                            if (event.key == Qt.Key_Down){
+                                console.debug("down")
+                                listOfPlugin.currentItem.color="#141414"
+                                listOfPlugin.currentItem.border.color="transparent"
+                                listOfPlugin.currentIndex = listOfPlugin.currentIndex<listOfPlugin.count-1? listOfPlugin.currentIndex+1:listOfPlugin.currentIndex
+                                listOfPlugin.currentItem.color="#242424"
+                                listOfPlugin.currentItem.border.color="#343434"
+                            }
+
+                            if (event.key == Qt.Key_Return){
+                                console.debug("add")
+                                listOfPlugin.currentItem.color="#333"
+                                listOfPlugin.currentItem.border.color="#343434"
+                                if (selectedView==3){
+                                    // we create a new node and connect it to the last but one node of the concerned graph
+                                    previousNode =_buttleData.lastNode()
+
+                                    _buttleData.currentGraphWrapper = _buttleData.graphWrapper
+                                    if (previousNode == undefined)
+                                        _buttleManager.nodeManager.creationNode("_buttleData.graph", object.pluginType, 0, 0)
+                                    else
+                                        _buttleManager.nodeManager.creationNode("_buttleData.graph", object.pluginType, previousNode.xCoord+140, previousNode.yCoord)
+
+                                    // if there is only one node, we don't connect it
+                                    if (previousNode != undefined){
+                                        newNode = _buttleData.lastNode()
+                                        _buttleManager.connectionManager.connectWrappers(previousNode.outputClip, newNode.srcClips.get(0))
+                                    }
+                                }
+                                else{
+                                    _buttleManager.nodeManager.creationNode("_buttleData.graph", object.pluginType, 0, 0)
+                                }
+                                pluginVisible=false
+                                searchPluginText = ""
+                            }
+                        }
+
                         MouseArea {
                             anchors.fill: parent
                             hoverEnabled: true
                             onEntered: {
-                                nodes.border.color= "#333"
-                                nodes.color= "#343434"
+                                nodes.color= nodes.color=="#333"? "#333":"#242424"
+                                nodes.border.color="#343434"
                             }
                             onExited: {
-                                nodes.color= "#141414"
-                                nodes.border.color= "transparent"
+                                nodes.color= nodes.color=="#333"? "#333":"#141414"
+                                nodes.border.color="transparent"
                             }
                             onClicked: {
+                                listOfPlugin.currentIndex=index
                                 if (selectedView==3){
                                     // we create a new node and connect it to the last but one node of the concerned graph
                                     previousNode =_buttleData.lastNode()

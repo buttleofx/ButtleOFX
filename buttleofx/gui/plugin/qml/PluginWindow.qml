@@ -64,6 +64,7 @@ ApplicationWindow {
                 selectByMouse: true
                 selectionColor: "#00b2a1"
                 color: "white"
+                focus:true
 
                 property variant plugin:_buttleData.getSinglePluginSuggestion(text)
 
@@ -129,7 +130,7 @@ ApplicationWindow {
                 id: pluginList
                 height: count ? contentHeight : 0
                 interactive: false
-
+                focus: true
                 model: _buttleData.getPluginsWrappersSuggestions(searchPlugin.text)
 
                 delegate: Component {
@@ -140,21 +141,55 @@ ApplicationWindow {
                         border.width: 1
                         radius: 3
                         width: 198
-                        height: 30
+                        height: 30 
                         x: 1
+
+                        Keys.onPressed: {
+                            //previous plugin
+                            if (event.key == Qt.Key_Up){
+                                pluginList.currentItem.color="#141414"
+                                pluginList.currentItem.border.color="transparent"
+                                pluginList.currentIndex = pluginList.currentIndex>0? pluginList.currentIndex-1:pluginList.currentIndex
+                                pluginList.currentItem.color="#242424"
+                                pluginList.currentItem.border.color="#343434"
+                            }
+
+                            //next plugin
+                            if (event.key == Qt.Key_Down){
+                                pluginList.currentItem.color="#141414"
+                                pluginList.currentItem.border.color="transparent"
+                                pluginList.currentIndex = pluginList.currentIndex<pluginList.count-1? pluginList.currentIndex+1:pluginList.currentIndex
+                                pluginList.currentItem.color="#242424"
+                                pluginList.currentItem.border.color="#343434"
+                            }
+
+                            if (event.key == Qt.Key_Return){
+                                pluginList.currentItem.color="#333"
+                                pluginList.currentItem.border.color="#343434"
+                                aNodeIsSelected=false
+                                currentPluginType=object.pluginType
+                                currentPluginDoc=object.pluginDescription
+                                currentPluginGroup=object.pluginGroup
+                            }
+                        }
 
                         MouseArea {
                             anchors.fill: parent
                             hoverEnabled: true
                             onEntered: {
-                                nodes.border.color= "#333"
-                                nodes.color= "#343434"
+                                nodes.color= nodes.color=="#333"? "#333":"#242424"
+                                nodes.border.color="#343434"
                             }
                             onExited: {
-                                nodes.color= "#141414"
-                                nodes.border.color= "transparent"
+                                nodes.color= nodes.color=="#333"? "#333":"#141414"
+                                nodes.border.color="transparent"
                             }
                             onClicked: {
+                                pluginList.currentItem.color="#141414"
+                                pluginList.currentItem.border.color="transparent"
+                                pluginList.currentIndex=index
+                                pluginList.currentItem.color="#333"
+                                pluginList.currentItem.border.color="#343434"
                                 aNodeIsSelected=false
                                 currentPluginType=object.pluginType
                                 currentPluginDoc=object.pluginDescription
@@ -166,6 +201,8 @@ ApplicationWindow {
                             color: "white"
                             y:6
                             x:15
+                            width: 170
+                            elide:Text.ElideRight
                         }
                     }
                 }

@@ -23,6 +23,10 @@ Item {
     property bool editNode:false
     property bool pluginVisible:false
 
+    Keys.onTabPressed: {
+        pluginVisible = !pluginVisible
+    }
+
     //List of plugins
     PluginBrowser {
         id: pluginBrowser

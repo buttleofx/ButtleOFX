@@ -67,6 +67,9 @@ class NodeWrapper(QtCore.QObject):
     def getPluginDescription(self):
         return self._node.getPluginDescription()
 
+    def getPluginGroup(self):
+        return self._node.getPluginGroup()
+
     def getCoord(self):
         return QtCore.QPointF(self._node.getCoord()[0], self._node.getCoord()[1])
 
@@ -235,6 +238,7 @@ class NodeWrapper(QtCore.QObject):
     nameUser = QtCore.pyqtProperty(str, getNameUser, setNameUser, notify=nodeLookChanged)
     nodeType = QtCore.pyqtProperty(str, getType, constant=True)
     pluginDoc = QtCore.pyqtProperty(str, getPluginDescription, constant=True)
+    pluginGroup = QtCore.pyqtProperty(str, getPluginGroup, constant=True)   
     coord = QtCore.pyqtProperty(QtCore.QPointF, getCoord, setCoord, notify=nodePositionChanged)  # problem to access to x property with QPoint !
     xCoord = QtCore.pyqtProperty(int, getXCoord, setXCoord, notify=nodePositionChanged)
     yCoord = QtCore.pyqtProperty(int, getYCoord, setYCoord, notify=nodePositionChanged)

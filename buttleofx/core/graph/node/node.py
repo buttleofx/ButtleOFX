@@ -127,6 +127,10 @@ class Node(object):
     def getPluginDescription(self):
         return self._tuttleNode.getProperties().getStringProperty("OfxPropPluginDescription")
 
+    def getPluginGroup(self):
+        return self._tuttleNode.getProperties().getStringProperty("OfxImageEffectPluginPropGrouping")
+
+
     ######## setters ########
 
     def setName(self, name):

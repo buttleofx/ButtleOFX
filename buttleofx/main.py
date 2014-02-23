@@ -29,9 +29,9 @@ except:
     logging.debug('TuttleFX not installed, use Python Image Library instead.')
 
 if tuttleofx_installed:
-    from buttleofx.gui.viewerGL.glviewport_tuttleofx import GLViewport_tuttleofx
+    from buttleofx.gui.viewerGL.glviewport_tuttleofx import GLViewport_tuttleofx as GLViewportImpl
 else:
-    from buttleofx.gui.viewerGL.glviewport_pil import GLViewport_pil
+    from buttleofx.gui.viewerGL.glviewport_pil import GLViewport_pil as GLViewportImpl
 
 # data
 from buttleofx.data import ButtleDataSingleton
@@ -96,10 +96,7 @@ def main(argv, app):
     # add new QML type
     QtQml.qmlRegisterType(Finder, "FolderListViewItem", 1, 0, "FolderListView")
     
-    if tuttleofx_installed:
-        QtQml.qmlRegisterType(GLViewport_tuttleofx, "Viewport", 1, 0, "GLViewport")
-    else:
-        QtQml.qmlRegisterType(GLViewport_pil, "Viewport", 1, 0, "GLViewport")
+    QtQml.qmlRegisterType(GLViewportImpl, "Viewport", 1, 0, "GLViewport")
 
     # init undo_redo contexts
     cmdManager = CommandManager()

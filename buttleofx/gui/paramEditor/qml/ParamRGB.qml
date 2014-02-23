@@ -1,58 +1,45 @@
 import QtQuick 2.0
-import "colorPickerComponents"
-import "colorPickerComponents/ColorFunctions.js" as ColorFunctions
+import "qmlComponents/ColorPicker"
+import QuickMamba 1.0
 
-//set of tools to choose the color (square + slider color + color inputs)
-Item{
-    id: colorPicker
+ColorPicker {
+    id: paramRGBA
 
-    property color colorValue: ColorFunctions.hsba(colorSlider.value, colorSelector.saturation, colorSelector.brightness, 1)
-    property color colorSelectorValue: ColorFunctions.hsba(colorSlider.value, 1, 1, 1)
+    // colorObject ensures the link between qml and python
+    property variant colorObject: model.object
+    hasAlpha: false
 
+    Component.onCompleted: {
+        defaultValueRed = colorObject.r
+        defaultValueGreen = colorObject.g
+        defaultValueBlue = colorObject.b
+        defaultValueAlpha = 1.0
+    }
 
-    implicitWidth: 267
-    implicitHeight: 140
-    //color: "transparent"
-
-    property variant paramObject: model.object
+    title: colorObject.text
 
     // Is this param secret ?
-    visible: !paramObject.isSecret
-    height: paramObject.isSecret ? 0 : implicitHeight
+    visible: !colorObject.isSecret
+    height: colorObject.isSecret ? 0 : implicitHeight
 
-    Column {
-        Text {
-            id: titleColorPicker
-            color: "white"
-            //text: paramObject.text
-        }
+    /*we can't directly write selectedColor.alpha because selectedColor
+    is a color which is not the object colorExtended, so for the moment we do
+    this trick and declare a colorExtended in paramRGBA too*/
+    ColorExtended {
+        id: mainCurrentColor
+        // currentColor is a property of ColorPicker.qml
+        entireColor: currentColor //entireColor is a QColor exposed in colorExtended from Quickmamba
+    }
 
-        Row{
-            spacing: 5
 
-            ColorSelector{
-                id: colorSelector
-                height: colorPicker.height
-                width: height
-                currentColor: colorSelectorValue
-            }
-            ColorSlider{
-                id: colorSlider
-                height: colorPicker.height
-                //cursorColorPositionSlider: (colorInputs.cursorColorPositionInputs)/765 * colorPicker.height
-            }
-            ColorInputsRGB{
-                id: colorInputs
-                height: colorPicker.height
-                currentColor: colorPicker.colorValue
-                // if we try to implement that as a property of colorPicker, we have no more capital letters...
-                redValue: ColorFunctions.getChannelStr(colorPicker.colorValue, 0)
-                greenValue: ColorFunctions.getChannelStr(colorPicker.colorValue, 1)
-                blueValue: ColorFunctions.getChannelStr(colorPicker.colorValue, 2)
-                hValue: colorSlider.value.toFixed(2)
-                sValue: colorSelector.saturation.toFixed(2)
-                bValue: colorSelector.brightness.toFixed(2)
-            }
+    // everytime the color changed, we send the data to Tuttle
+    onMainColorChanged: {
+        if(colorObject){
+            colorObject.r = mainCurrentColor.red
+            colorObject.g = mainCurrentColor.green
+            colorObject.b = mainCurrentColor.blue
+            //setValue is given from python in rgbaWrapper.py
+            //colorObject.setValue(mainCurrentColor.red, mainCurrentColor.green, mainCurrentColor.blue, mainCurrentColor.alpha)
         }
     }
 }

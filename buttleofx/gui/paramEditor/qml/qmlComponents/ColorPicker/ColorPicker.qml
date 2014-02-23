@@ -4,7 +4,7 @@ import "colorPickerComponents/ColorFunctions.js" as ColorFunctions
 import QuickMamba 1.0
 
 //set of tools to choose the color (square + slider color + slider alpha + color inputs)
-Item{
+Item {
     id: colorPicker
 
     // creation of a signal used to prevent paramRGBA.qml when the color has changed
@@ -20,11 +20,13 @@ Item{
     property real defaultValueBlue
     property real defaultValueAlpha
 
+    property bool hasAlpha: true
+
     ColorExtended {
         id: extendedColor
         entireColor: colorValue //entireColor is a property (a QColor) exposed in colorExtended from Quickmamba
         // others properties are accessible as hue, saturation, value, alpha
-        Component.onCompleted : {
+        Component.onCompleted: {
                 red = defaultValueRed
                 green = defaultValueGreen
                 blue = defaultValueBlue
@@ -47,7 +49,7 @@ Item{
     property real currentAlpha 
 
     // Every time the color changed we update the value of the properties
-    onMainColorChanged :{
+    onMainColorChanged: {
         currentColor = extendedColor.entireColor // used to give the color to Tuttle from ParamRGBA
         currentAlpha = extendedColor.alpha
         currentHue = extendedColor.hue
@@ -71,7 +73,7 @@ Item{
             spacing: 5
 
             // Brightness (also named Value) / Saturation
-            BrightnessAndSaturationSelector{
+            BrightnessAndSaturationSelector {
                 id: colorSelector
                 height: colorPicker.height - titleColorPicker.height - 20
                 width: height
@@ -92,7 +94,7 @@ Item{
             }
 
             // Hue
-            HueSlider{
+            HueSlider {
                 id: hueSlider
                 height: colorPicker.height - titleColorPicker.height - 20
                 /* when the color is white hue value is -1.0 so to avoid that the cursor of hueSlider goes out the colorPicker, we put
@@ -104,7 +106,7 @@ Item{
             }
 
             // Alpha
-            AlphaSlider{
+            AlphaSlider {
                 id: alphaSlider
                 height: colorPicker.height - titleColorPicker.height - 20
                 // alphaValue takes the value of "currentColor.alpha" alias currentAlpha, it's useful if the value has been changed through the input text to update the position of the cursor
@@ -112,12 +114,14 @@ Item{
                 onNewAlphaValueChanged: {
                     extendedColor.alpha = newAlphaValue
                 }
+                visible: colorPicker.hasAlpha
             }
 
             // Text Inputs for colors (r, g, b and a)
-            ColorInputsRGBA{
+            ColorInputsRGBA {
                 id: colorInputs
                 height: colorPicker.height - titleColorPicker.height - 20
+                hasAlpha: colorPicker.hasAlpha
 
                 // values of inputs adapt them according to the value of the color
                 currentColor: extendedColor ? extendedColor.entireColor : "black"
@@ -127,19 +131,16 @@ Item{
                 blueInput: extendedColor ? Math.ceil(extendedColor.blue*255) : 255
                 alphaInput: extendedColor ? Math.ceil(extendedColor.alpha*255) : 255
 
-
                 // newAlphaInput, newRedInput, newGreenInput, newBlueInput are defined in ColorInputsRGBA.qml
                 // every time the value of an input changes, the color is updated
                 onNewRedInputChanged: {
                     if(extendedColor)
                         extendedColor.red = newRedInput
                 }
-
                 onNewGreenInputChanged: {
                     if(extendedColor)
                         extendedColor.green = newGreenInput
                 }
-
                 onNewBlueInputChanged: {
                     if(extendedColor)
                         extendedColor.blue = newBlueInput

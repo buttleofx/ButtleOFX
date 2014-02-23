@@ -144,6 +144,7 @@ Rectangle {
             flickableDirection: Flickable.VerticalFlick
             interactive: false
             currentIndex: -1
+            cacheBuffer: 10 * cellHeight  // caches 10 lines below and above
 
             property int previousIndex: -1
 

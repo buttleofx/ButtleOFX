@@ -85,13 +85,7 @@ class ParamDouble2D(Param):
         self._value2HasChanged = changed
 
     def setOldValues(self, values):
-        index = 0
-        for value in values:
-            if index == 0:
-                self._oldValue1 = value
-            elif index == 1:
-                self._oldValue2 = value
-            index += 1
+        self._oldValue1, self._oldValue2 = values
 
     def setValue(self, values):
         if(self.getDefaultValue1() != values[0]):

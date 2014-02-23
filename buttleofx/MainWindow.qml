@@ -5,6 +5,7 @@ import QtQml 2.1
 import QuickMamba 1.0
 import QtQuick.Dialogs 1.0
 import QtQuick.Window 2.1
+import QtQuick.LocalStorage 2.0
 
 import "gui/graph/qml"
 import "gui/viewer/qml"
@@ -13,7 +14,33 @@ import "gui/browser/qml"
 import "gui/plugin/qml"
 
 ApplicationWindow {
-    property int selectedView : 1
+
+    property var db: null
+
+    function openDB() {
+        if(db == null){
+            db = LocalStorage.openDatabaseSync("configFile", "2.0","configViewFile", 100000);
+        }
+    }
+
+
+    function saveSetting(key, value) {
+        openDB();
+        db.transaction( function(tx){
+            tx.executeSql('INSERT OR REPLACE INTO settings VALUES(?, ?)', [key, value]);
+        });
+    }
+
+    function getSetting(key) {
+        openDB();
+        var res = "";
+        db.transaction(function(tx) {
+            res = tx.executeSql('SELECT value FROM settings WHERE key=?;', [key]).rows.item(0).value;
+        });
+        return res;
+    }
+
+    property int selectedView:getSetting("view")
 
     property variant lastSelectedDefaultView: view1
     property variant view1: [browser, paramEditor, player, graphEditor]
@@ -465,12 +492,13 @@ ApplicationWindow {
                 id: defaultView
                 text: "Default"
                 checkable: true
-                checked:true
+                checked: selectedView==1? true : false
                 onTriggered: {
                     checked = true
                     browserView.checked = false
                     advancedView.checked = false
                     selectedView = 1
+                    saveSetting("view",selectedView)
                     lastSelectedDefaultView = view1
                     topLeftView.visible=true; bottomLeftView.visible=true; topRightView.visible=true; bottomRightView.visible=true
                     rightColumn.width = 0.7*mainWindowQML.width
@@ -481,11 +509,13 @@ ApplicationWindow {
                 id: browserView
                 text: "Browser Mode"
                 checkable: true
+                checked: selectedView==2? true : false
                 onTriggered: {
                     checked = true
                     defaultView.checked = false
                     advancedView.checked = false
                     selectedView = 2
+                    saveSetting("view",selectedView)
                     lastSelectedDefaultView = view2
                     topLeftView.visible=true; bottomLeftView.visible=true; topRightView.visible=true; bottomRightView.visible=true
                     rightColumn.width = 0.7*mainWindowQML.width
@@ -496,11 +526,13 @@ ApplicationWindow {
                 id: advancedView
                 text: "Advanced Mode"
                 checkable: true
+                checked: selectedView==3? true : false
                 onTriggered: {
                     checked = true
                     defaultView.checked = false
                     browserView.checked = false
                     selectedView = 3
+                    saveSetting("view",selectedView)
                     lastSelectedDefaultView = view3
                     topLeftView.visible=true; bottomLeftView.visible=true; topRightView.visible=true; bottomRightView.visible=false
                     rightColumn.width = 0.3*mainWindowQML.width

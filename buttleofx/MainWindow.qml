@@ -270,14 +270,17 @@ ApplicationWindow {
                 onTriggered: _buttleManager.deleteSelection()
             }
         }
+
         Menu {
             id: nodesMenu
             title: "Nodes"
+
             Instantiator {
                 model: _buttleData.getMenu(1,"")
-                Menu{
+                Menu {
                     id: firstMenu
                     title:object
+                    __parentContentItem: nodesMenu.__contentItem  // to remove warning
 
                     Instantiator {
                         model: _buttleData.getPluginsByPath(firstMenu.title)
@@ -304,9 +307,10 @@ ApplicationWindow {
 
                     Instantiator {
                         model: _buttleData.getMenu(2,firstMenu.title)
-                        Menu{
+                        Menu {
                             id: secondMenu
                             title:object
+                            __parentContentItem: nodesMenu.__contentItem  // to remove warning
 
                             Instantiator {
                                 model: _buttleData.getPluginsByPath(secondMenu.title)
@@ -333,9 +337,10 @@ ApplicationWindow {
 
                             Instantiator {
                                 model: _buttleData.getMenu(3,secondMenu.title)
-                                Menu{
+                                Menu {
                                     id: thirdMenu
                                     title:object
+                                    __parentContentItem: nodesMenu.__contentItem  // to remove warning
 
                                     Instantiator {
                                         model: _buttleData.getPluginsByPath(thirdMenu.title)
@@ -362,9 +367,10 @@ ApplicationWindow {
 
                                     Instantiator {
                                         model: _buttleData.getMenu(4,thirdMenu.title)
-                                        Menu{
+                                        Menu {
                                             id:fourthMenu
                                             title: object
+                                            __parentContentItem: nodesMenu.__contentItem  // to remove warning
 
                                             Instantiator {
                                                 model: _buttleData.getPluginsByPath(fourthMenu.title)
@@ -391,9 +397,11 @@ ApplicationWindow {
 
                                             Instantiator {
                                                 model: _buttleData.getMenu(5,fourthMenu.title)
-                                                Menu{
+                                                Menu {
                                                     id: fifthMenu
-                                                    title:object
+                                                    title: object
+                                                    __parentContentItem: nodesMenu.__contentItem  // to remove warning
+
                                                     Instantiator {
                                                         model: _buttleData.getPluginsByPath(fifthMenu.title)
                                                         MenuItem {
@@ -437,6 +445,7 @@ ApplicationWindow {
                 onObjectRemoved: nodesMenu.removeItem(object)
             }
         }
+
         Menu {
             id: help
             title: "Help"

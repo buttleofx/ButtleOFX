@@ -349,6 +349,7 @@ Rectangle {
                                 z: 9999  // TODO: need another solution to be truly on top.
 
                                 onTextChanged: {
+                                    // Hack to get the "Keys.onEnterPressed" event
                                     var hasEndline = (text.lastIndexOf("\n") != -1)
                                     if( hasEndline )
                                     {

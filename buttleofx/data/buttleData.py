@@ -620,7 +620,6 @@ class ButtleData(QtCore.QObject):
         from pyTuttle import tuttle
         pluginCache = tuttle.core().getImageEffectPluginCache()
         plugins = pluginCache.getPlugins()         
-        plugins = sorted(plugins, key=lambda plugin: plugin.getIdentifier().upper())
         pluginsW = [PluginWrapper(plugin) for plugin in plugins]
         pluginsListMenu = QObjectListModel(self)
 
@@ -787,11 +786,11 @@ class ButtleData(QtCore.QObject):
             self.setCurrentParamNodeName(decoded["paramEditor"])
             self.currentParamNodeChanged.emit()
             # viewer : other views
-            for index, view in decoded["viewer"]["other_views"].iteritems():
+            for index, view in decoded["viewer"]["other_views"].items():
                 nodeName, frame = view["nodeName"], view["frame"]
                 self._mapViewerIndextoNodeName.update({index: (nodeName, frame)})
             # viewer : currentViewerNodeName
-            for index, current_view in decoded["viewer"]["current_view"].iteritems():
+            for index, current_view in decoded["viewer"]["current_view"].items():
                 nodeName, frame = current_view["nodeName"], current_view["frame"]
                 self._mapViewerIndextoNodeName.update({index: (nodeName, frame)})
             # #The next commands doesn't work : we need to click on the viewer's number to see the image in the viewer. Need to be fixed.

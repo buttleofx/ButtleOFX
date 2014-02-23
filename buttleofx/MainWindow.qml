@@ -69,7 +69,12 @@ ApplicationWindow {
         }
         if ((event.key == Qt.Key_S) && (event.modifiers & Qt.ControlModifier)){
             if(_buttleData.graphCanBeSaved) {
-                finderSaveGraph.open()
+                if(urlOfFileToSave!=""){
+                    _buttleData.saveData(urlOfFileToSave)
+                }
+                else{
+                    finderSaveGraph.open()
+                }
             }
         }
         if ((event.key == Qt.Key_O) && (event.modifiers & Qt.ControlModifier)){

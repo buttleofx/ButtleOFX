@@ -48,6 +48,7 @@ Rectangle {
 
                 FinderLoadGraph{
                     id: finderLoadGraph
+                    onGetFileUrl: urlOfFileToSave = fileurl
                 }
 
                 imageSource: parent.imgPath + "open.png"
@@ -68,6 +69,7 @@ Rectangle {
 
                 FinderSaveGraph{
                     id: finderSaveGraph
+                    onGetFileUrl: urlOfFileToSave = fileurl
                 }
 
                 imageSource: parent.imgPath + "save.png"
@@ -80,7 +82,12 @@ Rectangle {
                 onClicked: {
                     pluginVisible=false
                     editNode=false
-                    finderSaveGraph.open()
+                    if(urlOfFileToSave!=""){
+                        _buttleData.saveData(urlOfFileToSave)
+                    }
+                    else{
+                        finderSaveGraph.open()
+                    }
                 }
             }
 

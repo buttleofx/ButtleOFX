@@ -457,10 +457,14 @@ ApplicationWindow {
             title: "View"
 
             MenuItem {
+                id: defaultView
                 text: "Default"
                 checkable: true
-                checked: selectedView==1 ? true : false
+                checked:true
                 onTriggered: {
+                    checked = true
+                    browserView.checked = false
+                    advancedView.checked = false
                     selectedView = 1
                     lastSelectedDefaultView = view1
                     topLeftView.visible=true; bottomLeftView.visible=true; topRightView.visible=true; bottomRightView.visible=true
@@ -469,10 +473,13 @@ ApplicationWindow {
             }
 
             MenuItem {
+                id: browserView
                 text: "Browser Mode"
                 checkable: true
-                checked: selectedView==2 ? true : false
                 onTriggered: {
+                    checked = true
+                    defaultView.checked = false
+                    advancedView.checked = false
                     selectedView = 2
                     lastSelectedDefaultView = view2
                     topLeftView.visible=true; bottomLeftView.visible=true; topRightView.visible=true; bottomRightView.visible=true
@@ -481,10 +488,13 @@ ApplicationWindow {
             }
 
             MenuItem {
+                id: advancedView
                 text: "Advanced Mode"
                 checkable: true
-                checked: selectedView==3 ? true : false
                 onTriggered: {
+                    checked = true
+                    defaultView.checked = false
+                    browserView.checked = false
                     selectedView = 3
                     lastSelectedDefaultView = view3
                     topLeftView.visible=true; bottomLeftView.visible=true; topRightView.visible=true; bottomRightView.visible=false

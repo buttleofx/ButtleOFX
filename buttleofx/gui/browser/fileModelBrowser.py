@@ -1,6 +1,9 @@
 import logging
 import os
 
+# tuttle
+import getBestPlugin
+
 from quickmamba.models import QObjectListModel
 
 from PyQt5 import QtGui, QtCore, QtQuick
@@ -113,51 +116,17 @@ class FileModelBrowser(QtQuick.QQuickItem):
             
             if self._nameFilter == "*":
                 for f in files:
+                    if f.startswith("."):
+                        # Ignore hidden files by default
+                        # TODO: need an option for that
+                        continue
                     (shortname, extension) = os.path.splitext(f)
-                    extension = extension.split(".")[-1].lower()
-                    if extension in ['jpeg', 'jpg', 'jpe', 'jfif', 'jfi', 
-                                     'png','mkv', 'mpeg', 'mp4', 'avi', 'mov',
-                                     'aac', 'ac3', 'adf', 'adx', 'aea', 'ape',
-                                     'apl', 'mac', 'bin', 'bit', 'bmv', 'cdg',
-                                     'cdxl', 'xl', '302', 'daud', 'dts', 'dv',
-                                     'dif', 'cdata', 'eac3', 'flm', 'flac', 'flv',
-                                     'g722', '722', 'tco', 'rco', 'g723_1', 'g729',
-                                     'gsm', 'h261', 'h26l', 'h264', '264', 'idf',
-                                     'cgi', 'latm', 'm4v', 'mjpg', 'mjpeg', 'mpo',
-                                     'mlp', 'mp2', 'mp3', 'm2a', 'mpc', 'mvi', 'mxg',
-                                     'v', 'nut', 'ogg', 'oma', 'omg', 'aa3', 'al', 'ul',
-                                     'sw', 'sb', 'uw', 'ub', 'yuv', 'cif', 'qcif', 'rgb',
-                                     'rt', 'rso', 'smi', 'sami', 'sbg', 'shn', 'vb', 'son',
-                                     'mjpg', 'sub', 'thd', 'tta', 'ans', 'art', 'asc',
-                                     'diz', 'ice', 'nfo', 'txt', 'vt', 'vc1', 'vqf', 'vql',
-                                     'vqe', 'vtt', 'yop', 'y4m','3fr', 'ari', 'arw', 'bay',
-                                     'crw', 'cr2', 'cap', 'dng', 'dcs', 'dcr', 'dng', 'drf',
-                                     'eip', 'erf', 'fff', 'iiq', 'k25', 'kdc', 'mef', 'mos',
-                                     'mrw', 'nef', 'nrw', 'obm', 'orf', 'pef', 'ptx', 'pxn',
-                                     'r3d', 'rad', 'raf', 'rw2', 'raw', 'rwl', 'rwz', 'srf',
-                                     'sr2', 'srw', 'x3f','aai', 'art', 'arw', 'avi', 'avs',
-                                     'bmp', 'bmp2', 'bmp3', 'cals', 'cgm', 'cin', 'cmyk',
-                                     'cmyka', 'cr2', 'crw', 'cur', 'cut', 'dcm', 'dcr', 'dcx',
-                                     'dib', 'djvu', 'dng', 'dot', 'dpx', 'emf', 'epdf', 'epi',
-                                     'eps', 'eps2', 'eps3', 'epsf', 'epsi', 'ept', 'exr', 'fax',
-                                     'fig', 'fits', 'fpx', 'gif', 'gplt', 'gray', 'hdr', 'hpgl',
-                                     'hrz', 'html', 'ico', 'info', 'inline', 'jbig', 'jng',
-                                     'jp2', 'jpc', 'jpg', 'jpeg', 'man', 'mat', 'miff', 'mono',
-                                     'mng', 'm2v', 'mpeg', 'mpc', 'mpr', 'mrw', 'msl', 'mtv',
-                                     'mvg', 'nef', 'orf', 'otb', 'p7', 'palm', 'pam', 'pbm', 
-                                     'pcd', 'pcds', 'pcl', 'pcx', 'pdb', 'pdf', 'pef', 'pfa', 'pfb',
-                                     'pfm', 'pgm', 'picon', 'pict', 'pix', 'png', 'png8', 'png16',
-                                     'png32', 'pnm', 'ppm', 'ps', 'ps2', 'ps3', 'psb', 'psd', 'ptif',
-                                     'pwp', 'rad', 'rgb', 'rgba', 'rla', 'rle', 'sct', 'sfw', 'sgi',
-                                     'shtml', 'sid', 'mrsid', 'sun', 'svg', 'tga', 'tiff', 'tim',
-                                     'tif', 'txt', 'uil', 'uyvy', 'vicar', 'viff', 'wbmp', 'webp',
-                                     'wmf', 'wpg', 'x', 'xbm', 'xcf', 'xpm', 'xwd', 'x3f', 'ycbcr',
-                                     'ycbcra', 'yuv','bmp', 'cin', 'dds', 'dpx', 'exr', 'fits', 'hdr',
-                                     'ico', 'j2k', 'j2c', 'jp2', 'jpeg', 'jpg', 'jpe', 'jfif', 'jfi',
-                                     'pbm', 'pgm', 'png', 'pnm', 'ppm', 'pic', 'psd', 'rgbe', 'sgi',
-                                     'tga', 'tif', 'tiff', 'tpic', 'tx', 'webp']:
-                        if not f.startswith("."):
-                            allFiles.append(FileItem(folder, f, FileItem.Type.File))
+                    try:
+                        # getBestReader will raise an exception if the file extension is not supported.
+                        pluginIdentifier = getBestPlugin.getBestReader(extension)
+                        allFiles.append(FileItem(folder, f, FileItem.Type.File))
+                    except Exception:
+                        pass
                     
             else:
                 for f in files:
@@ -177,18 +146,25 @@ class FileModelBrowser(QtQuick.QQuickItem):
         
     @QtCore.pyqtSlot(str, result=QtCore.QObject)
     def getFilteredFileItems(self, fileFilter):
-        suggestions = QObjectListModel(self)
+        suggestions = []
 
         try:
             _, dirs, files = next(os.walk(os.path.dirname(fileFilter)))
             for d in dirs:
-                if not d.startswith(".") and d.startswith(os.path.basename(fileFilter)) and d != os.path.basename(fileFilter):
+                if d.startswith("."):
+                    # Ignore hidden files by default
+                    # TODO: need an option for that
+                    continue
+                if d.startswith(os.path.basename(fileFilter)) and d != os.path.basename(fileFilter):
                     suggestions.append(FileItem(os.path.dirname(fileFilter), d, FileItem.Type.Folder))
             
         except Exception:
             pass
-        return suggestions
-        #return suggestions.sort(key=lambda fileItem: fileItem.fileName)
+        suggestions.sort(key=lambda fileItem: fileItem.fileName.lower())
+        
+        suggestionsQt = QObjectListModel(self)
+        suggestionsQt.setObjectList(suggestions)
+        return suggestionsQt 
     
     _fileItems = []
     _fileItemsModel = None

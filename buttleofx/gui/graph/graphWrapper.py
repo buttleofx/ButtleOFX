@@ -67,7 +67,12 @@ class GraphWrapper(QtCore.QObject):
         str_list.append((self.getGraphMapped()).__str__())
 
         return ''.join(str_list)
-        
+
+    @QtCore.pyqtSlot(result=QtCore.QObject)
+    def deleteGraphWrapper(self):
+        for nodeWrapper in self._nodeWrappers:
+            self.deleteNodeWrapper(nodeWrapper.getName())
+
     @QtCore.pyqtSlot(str, result=QtCore.QObject)
     def deleteNodeWrapper(self, nodeName):
         """

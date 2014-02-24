@@ -1,15 +1,60 @@
 import QtQuick 2.0
+import QtQuick.Dialogs 1.1
 import QuickMamba 1.0
 
 Rectangle {
     id: qml_graphRoot
 
+    MessageDialog {
+        id: newGraph
+        title: "New graph"
+        icon: StandardIcon.Warning
+        text: "You do not have save the current graph, do you want to save it?"
+        detailedText: "If you don't save the graph, last modifications not saved will be lost. "
+        standardButtons: StandardButton.Yes | StandardButton.No | StandardButton.Abort
+        Component.onCompleted: visible = false
+        onYes: {
+            if (_buttleData.graphCanBeSaved){
+                if(urlOfFileToSave!=""){
+                    _buttleData.saveData(urlOfFileToSave)
+                    _buttleData.graphWrapper.deleteGraphWrapper()
+                    urlOfFileToSave=""
+                }
+                else{
+                    finderSaveGraph.open()
+                    _buttleData.graphWrapper.deleteGraphWrapper()
+                    urlOfFileToSave=""
+                }
+            }
+        }
+        onNo: {
+            _buttleData.graphWrapper.deleteGraphWrapper()
+            urlOfFileToSave=""
+        }
+        onRejected: {}
+    }
 
     Keys.onPressed: {
 
         // Graph toolbar
         if (event.key == Qt.Key_Delete) {
            _buttleManager.deleteSelection()
+        }
+        if ((event.key == Qt.Key_N) && (event.modifiers & Qt.ControlModifier)){
+            //the fileDialog is opened and closed because the first which appear doesn't work
+            newGraph.open()
+            newGraph.close()
+            newGraph.open()
+        }
+        if ((event.key == Qt.Key_S) && (event.modifiers & Qt.ControlModifier)){
+            if(_buttleData.graphCanBeSaved) {
+                if(urlOfFileToSave!=""){
+                    _buttleData.saveData(urlOfFileToSave)
+                }
+                else{
+                    finderSaveGraph.open()
+                }
+            }
         }
     }
 

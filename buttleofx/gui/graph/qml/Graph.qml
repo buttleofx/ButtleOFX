@@ -56,6 +56,40 @@ Rectangle {
                 }
             }
         }
+        if (event.key == Qt.Key_Delete) {
+           _buttleManager.deleteSelection();
+        }
+       if ((event.key == Qt.Key_Z) && (event.modifiers & Qt.ControlModifier)) {
+            if(_buttleManager.canUndo) {
+                _buttleManager.undo();
+            }
+        }
+        if ((event.key == Qt.Key_Y) && (event.modifiers & Qt.ControlModifier)) {
+            if(_buttleManager.canRedo) {
+                _buttleManager.redo();
+            }
+        }
+        if ((event.key == Qt.Key_D) && (event.modifiers & Qt.ControlModifier)){
+            if (!_buttleData.currentSelectedNodeWrappers.isEmpty()) {
+                _buttleManager.nodeManager.duplicationNode()
+            }
+        }
+        if ((event.key == Qt.Key_C) && (event.modifiers & Qt.ControlModifier)){
+            if (!_buttleData.currentSelectedNodeWrappers.isEmpty()) {
+                _buttleManager.nodeManager.copyNode()
+            }
+        }
+        if ((event.key == Qt.Key_V) && (event.modifiers & Qt.ControlModifier)){
+           if (_buttleData.canPaste) {
+                _buttleManager.nodeManager.pasteNode();
+           }
+        }
+        if ((event.key == Qt.Key_X) && (event.modifiers & Qt.ControlModifier)){
+            if (!_buttleData.currentSelectedNodeWrappers.isEmpty()) {
+                _buttleManager.nodeManager.cutNode()
+            }
+        }
+
     }
 
 

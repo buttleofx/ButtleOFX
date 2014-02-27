@@ -31,7 +31,7 @@ Item {
 
     Tab {
         id: tabBar
-        name: "Parameters"
+        name:!_buttleData.currentParamNodeWrapper? "Parameters" : "Parameters of :    " + _buttleData.currentParamNodeWrapper.nameUser
         onCloseClicked: paramEditor.buttonCloseClicked(true)
         onFullscreenClicked: paramEditor.buttonFullscreenClicked(true)
     }

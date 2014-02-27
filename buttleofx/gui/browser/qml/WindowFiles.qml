@@ -313,8 +313,8 @@ Rectangle {
 
                                 Image {
                                     property bool isFolder: model.object.fileType == "Folder"
-                                    source: 'image://buttleofx/'+ model.object.filepath
-                                    //source: isFolder ? "../../img/buttons/browser/folder-icon.png" : "file:///" + model.object.filepath
+                                    //source: model.object.fileType == "Folder" ? model.object.fileImg : 'image://buttleofx'+ model.object.filepath
+                                    source: isFolder ? model.object.fileImg : "file:///" + model.object.fileImg
                                     sourceSize.width: isFolder ? parent.minSize : -1
                                     sourceSize.height: isFolder ? parent.minSize : -1
 
@@ -512,8 +512,8 @@ Rectangle {
                         spacing: 10
                         Image {
                             x: 25
-                            source: 'image://buttleofx'+ model.object.filepath
-                            //source: model.object.fileType == "Folder" ? model.object.fileImg : "file:///" + model.object.fileImg
+                            //source: model.object.fileType == "Folder" ? model.object.fileImg : 'image://buttleofx'+ model.object.filepath
+                            source: model.object.fileType == "Folder" ? model.object.fileImg : "file:///" + model.object.fileImg
                             sourceSize.width: 20
                             sourceSize.height: 20
                         }

@@ -94,6 +94,7 @@ class FileModelBrowser(QtQuick.QQuickItem):
     def __init__(self, parent=None):
         super(FileModelBrowser, self).__init__(parent)
         self._fileItemsModel = QObjectListModel(self)
+        self._showSeq = False
     
     def getFolder(self):
         return self._folder
@@ -121,7 +122,6 @@ class FileModelBrowser(QtQuick.QQuickItem):
         self.updateFileItems(self._folder)
     
     def getFolderExists(self):
-        import os
         return os.path.exists(self._folder)
     
     def getParentFolder(self):
@@ -137,30 +137,27 @@ class FileModelBrowser(QtQuick.QQuickItem):
         self._fileItemsModel.clear()
         allDirs = []
         allFiles = []
-        import os
-        try:
-            if self._showSeq:
-                items = sequenceParser.browse(folder)
-                dirs = [item._filename for item in items if item._type == 0]
-                seqs = [item._sequence for item in items if item._type == 1]
-                files = [item._filename for item in items if item._type == 2]
-                
-                for s in seqs:
-                    (_, extension) = os.path.splitext(s.getStandardPattern())
-                    supported = True
-                    try:
-                        getBestPlugin.getBestReader(extension)
-                    except Exception as e:
-                        supported = False
-                    if supported and not s.getStandardPattern().startswith("."):
-                        self._fileItems.append(FileItem(folder, s.getStandardPattern(), FileItem.Type.Sequence, s))
+        allSeqs = []
+        
+        if self._showSeq:
+            items = sequenceParser.browse(folder)
+            dirs = [item._filename for item in items if item._type == 0]
+            seqs = [item._sequence for item in items if item._type == 1]
+            files = [item._filename for item in items if item._type == 2]
             
-            else:
-                _, dirs, files = next(os.walk(folder))
-                
+            for s in seqs:
+                (_, extension) = os.path.splitext(s.getStandardPattern())
+                supported = True
+                try:
+                    getBestPlugin.getBestReader(extension)
+                except Exception as e:
+                    supported = False
+                if supported and not s.getStandardPattern().startswith("."):
+                    allSeqs.append(FileItem(folder, s.getStandardPattern(), FileItem.Type.Sequence, s))
+                    
             for d in dirs:
                 if not d.startswith("."):
-                    allDirs.append(FileItem(folder, d, FileItem.Type.Folder,""))
+                    allDirs.append(FileItem(folder, d, FileItem.Type.Folder, ""))
             
             if self._nameFilter == "*":
                 for f in files:
@@ -172,7 +169,7 @@ class FileModelBrowser(QtQuick.QQuickItem):
                     try:
                         # getBestReader will raise an exception if the file extension is not supported.
                         pluginIdentifier = getBestPlugin.getBestReader(extension)
-                        allFiles.append(FileItem(folder, f, FileItem.Type.File,""))
+                        allFiles.append(FileItem(folder, f, FileItem.Type.File, ""))
                     except Exception:
                         pass
                     
@@ -181,14 +178,48 @@ class FileModelBrowser(QtQuick.QQuickItem):
                     (shortname, extension) = os.path.splitext(f)
                     if extension == self._nameFilter:
                         print("Only ", extension, " files")
-                        allFiles.append(FileItem(folder, f, FileItem.Type.File,""))
-                          
-        except Exception:
-            pass
-
-        allDirs.sort(key=lambda fileItem: fileItem.fileName.lower())
-        allFiles.sort(key=lambda fileItem: fileItem.fileName.lower())
-        self._fileItems = allDirs + allFiles
+                        allFiles.append(FileItem(folder, f, FileItem.Type.File, ""))
+                                      
+            allDirs.sort(key=lambda fileItem: fileItem.fileName.lower())
+            allFiles.sort(key=lambda fileItem: fileItem.fileName.lower())
+            allSeqs.sort(key=lambda fileItem: fileItem.fileName.lower())
+            self._fileItems = allDirs + allFiles + allSeqs
+                    
+        else:
+            try:
+                _, dirs, files = next(os.walk(folder))
+                    
+                for d in dirs:
+                    if not d.startswith("."):
+                        allDirs.append(FileItem(folder, d, FileItem.Type.Folder, ""))
+                
+                if self._nameFilter == "*":
+                    for f in files:
+                        if f.startswith("."):
+                            # Ignore hidden files by default
+                            # TODO: need an option for that
+                            continue
+                        (shortname, extension) = os.path.splitext(f)
+                        try:
+                            # getBestReader will raise an exception if the file extension is not supported.
+                            pluginIdentifier = getBestPlugin.getBestReader(extension)
+                            allFiles.append(FileItem(folder, f, FileItem.Type.File,""))
+                        except Exception:
+                            pass
+                        
+                else:
+                    for f in files:
+                        (shortname, extension) = os.path.splitext(f)
+                        if extension == self._nameFilter:
+                            print("Only ", extension, " files")
+                            allFiles.append(FileItem(folder, f, FileItem.Type.File,""))
+                              
+            except Exception:
+                pass
+    
+            allDirs.sort(key=lambda fileItem: fileItem.fileName.lower())
+            allFiles.sort(key=lambda fileItem: fileItem.fileName.lower())
+            self._fileItems = allDirs + allFiles
 
         self._fileItemsModel.setObjectList(self._fileItems)
         
@@ -205,7 +236,7 @@ class FileModelBrowser(QtQuick.QQuickItem):
                     # TODO: need an option for that
                     continue
                 if d.startswith(os.path.basename(fileFilter)) and d != os.path.basename(fileFilter):
-                    suggestions.append(FileItem(os.path.dirname(fileFilter), d, FileItem.Type.Folder,""))
+                    suggestions.append(FileItem(os.path.dirname(fileFilter), d, FileItem.Type.Folder, ""))
             
         except Exception:
             pass

@@ -14,6 +14,7 @@ logging.basicConfig(format='Buttle - %(levelname)s - %(message)s', level=logging
 
 # Tuttle
 from pyTuttle import tuttle
+import getBestPlugin
 # quickmamba
 from quickmamba.utils import QmlInstantCoding
 # PyCheck
@@ -94,13 +95,23 @@ class ImageProvider(QtQuick.QQuickImageProvider):
         #flatarray = numpy.fromstring(id, numpy.uint8)
         #numpyImage = numpy.array(numpy.flipud(numpy.reshape(flatarray, (40, 40, 3))))
         numpyImage = numpy.zeros((40,40,4),numpy.uint8)
-        print ('requestImage:', 'id: ', id)
+        outputCache = tuttle.MemoryCache()
+        (_, extension) = os.path.splitext(id)
+        tuttle.compute(
+            outputCache,
+            [
+                tuttle.NodeInit(getBestPlugin.getBestReader(extension), filename=id),
+                #tuttle.NodeInit("tuttle.resize", keepRatio=True, size=(40, 40)),
+            ])
+
+        imgRes = outputCache.get(0);
+ 
         
         # convert numpyImage to QImage
         nimage = QtGui.QImage(numpyImage.data,40,40,QtGui.QImage.Format_RGB32)
         nimage.ndarray = numpyImage
         
-        image = nimage
+        image = imgRes.getNumpyImage()
         
         return image, QtCore.QSize(40, 40)
     

@@ -91,16 +91,10 @@ class ParamInt2D(Param):
         self.getTuttleParam().setValue(values)
 
     def setOldValues(self, values):
-        index = 0
-        for value in values:
-            if index == 0:
-                self._oldValue1 = value
-            elif index == 1:
-                self._oldValue2 = value
-            index += 1
+        self._oldValue1, self._oldValue2 = values
 
     def setValue1(self, value):
-        if(self.getDefaultValue1() != value):
+        if self.getDefaultValue1() != value:
             self.setValue1HasChanged(True)
         if value != self.getValue1():
             # Push the command
@@ -109,7 +103,7 @@ class ParamInt2D(Param):
             cmdManager.push(cmdUpdate)
 
     def setValue2(self, value):
-        if(self.getDefaultValue2() != value):
+        if self.getDefaultValue2() != value:
             self.setValue2HasChanged(True)
         if value != self.getValue2():
             # Push the command

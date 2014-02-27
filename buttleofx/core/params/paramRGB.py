@@ -13,7 +13,7 @@ class ParamRGB(Param):
     #################### getters ####################
 
     def getParamType(self):
-        return "ParamRGBA"
+        return "ParamRGB"
 
     def getParamDoc(self):
         return self._tuttleParam.getProperties().getStringProperty("OfxParamPropHint")

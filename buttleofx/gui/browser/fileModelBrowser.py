@@ -1,10 +1,11 @@
 import logging
 import os
-#quickmamba
-from quickmamba.models import QObjectListModel
+
 #Tuttle
-from pySequenceParser import sequenceParser
 import getBestPlugin
+
+from quickmamba.models import QObjectListModel
+from pySequenceParser import sequenceParser
 
 from PyQt5 import QtGui, QtCore, QtQuick
 from PyQt5.QtWidgets import QWidget, QFileDialog
@@ -134,6 +135,8 @@ class FileModelBrowser(QtQuick.QQuickItem):
     def updateFileItems(self, folder):
         self._fileItems = []
         self._fileItemsModel.clear()
+        allDirs = []
+        allFiles = []
         import os
         try:
             if self._showSeq:
@@ -157,47 +160,60 @@ class FileModelBrowser(QtQuick.QQuickItem):
                 
             for d in dirs:
                 if not d.startswith("."):
-                    self._fileItems.append(FileItem(folder, d, FileItem.Type.Folder, ""))
-                
+                    allDirs.append(FileItem(folder, d, FileItem.Type.Folder,""))
+            
             if self._nameFilter == "*":
                 for f in files:
-                    if not f.startswith("."):
-                        (shortname, extension) = os.path.splitext(f)
-                        supported = True
-                        try:
-                            getBestPlugin.getBestReader(extension)
-                        except Exception as e:
-                            supported = False
-                        if supported:
-                            self._fileItems.append(FileItem(folder, f, FileItem.Type.File, ""))
+                    if f.startswith("."):
+                        # Ignore hidden files by default
+                        # TODO: need an option for that
+                        continue
+                    (shortname, extension) = os.path.splitext(f)
+                    try:
+                        # getBestReader will raise an exception if the file extension is not supported.
+                        pluginIdentifier = getBestPlugin.getBestReader(extension)
+                        allFiles.append(FileItem(folder, f, FileItem.Type.File,""))
+                    except Exception:
+                        pass
                     
             else:
                 for f in files:
                     (shortname, extension) = os.path.splitext(f)
                     if extension == self._nameFilter:
                         print("Only ", extension, " files")
-                        self._fileItems.append(FileItem(folder, f, FileItem.Type.File, ""))
+                        allFiles.append(FileItem(folder, f, FileItem.Type.File,""))
                           
         except Exception:
             pass
-        self._fileItems = sorted(self._fileItems, key=lambda fileItem: fileItem.fileName.upper())
+
+        allDirs.sort(key=lambda fileItem: fileItem.fileName.lower())
+        allFiles.sort(key=lambda fileItem: fileItem.fileName.lower())
+        self._fileItems = allDirs + allFiles
+
         self._fileItemsModel.setObjectList(self._fileItems)
         
     @QtCore.pyqtSlot(str, result=QtCore.QObject)
     def getFilteredFileItems(self, fileFilter):
-        suggestions = QObjectListModel(self)
+        suggestions = []
 
         try:
             _, dirs, files = next(os.walk(os.path.dirname(fileFilter)))
             dirs = sorted(dirs, key=lambda v: v.upper())
             for d in dirs:
-                if not d.startswith(".") and d.startswith(os.path.basename(fileFilter)) and d != os.path.basename(fileFilter):
-                    suggestions.append(FileItem(os.path.dirname(fileFilter), d, FileItem.Type.Folder, ""))
+                if d.startswith("."):
+                    # Ignore hidden files by default
+                    # TODO: need an option for that
+                    continue
+                if d.startswith(os.path.basename(fileFilter)) and d != os.path.basename(fileFilter):
+                    suggestions.append(FileItem(os.path.dirname(fileFilter), d, FileItem.Type.Folder,""))
             
         except Exception:
             pass
+        suggestions.sort(key=lambda fileItem: fileItem.fileName.lower())
         
-        return suggestions
+        suggestionsQt = QObjectListModel(self)
+        suggestionsQt.setObjectList(suggestions)
+        return suggestionsQt 
     
     _fileItems = []
     _fileItemsModel = None

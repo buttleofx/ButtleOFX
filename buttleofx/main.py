@@ -8,9 +8,9 @@ import logging
         # logging.error("error message")
         # logging.critical("critical message")
 # print in a file
-logging.basicConfig(format='Buttle - %(levelname)s - %(asctime)-15s - %(message)s', filename='console.log', filemode='w', level=logging.DEBUG)
+#logging.basicConfig(format='Buttle - %(levelname)s - %(asctime)-15s - %(message)s', filename='console.log', filemode='w', level=logging.DEBUG)
 # print in console
-#logging.basicConfig(format='Buttle - %(levelname)s - %(message)s', level=logging.DEBUG)
+logging.basicConfig(format='Buttle - %(levelname)s - %(message)s', level=logging.DEBUG)
 
 # Tuttle
 from pyTuttle import tuttle
@@ -29,9 +29,9 @@ except:
     logging.debug('TuttleFX not installed, use Python Image Library instead.')
 
 if tuttleofx_installed:
-    from buttleofx.gui.viewerGL.glviewport_tuttleofx import GLViewport_tuttleofx
+    from buttleofx.gui.viewerGL.glviewport_tuttleofx import GLViewport_tuttleofx as GLViewportImpl
 else:
-    from buttleofx.gui.viewerGL.glviewport_pil import GLViewport_pil
+    from buttleofx.gui.viewerGL.glviewport_pil import GLViewport_pil as GLViewportImpl
 
 # data
 from buttleofx.data import ButtleDataSingleton
@@ -94,7 +94,7 @@ class ImageProvider(QtQuick.QQuickImageProvider):
         #flatarray = numpy.fromstring(id, numpy.uint8)
         #numpyImage = numpy.array(numpy.flipud(numpy.reshape(flatarray, (40, 40, 3))))
         numpyImage = numpy.zeros((40,40,4),numpy.uint8)
-        print(numpyImage)
+        print ('requestImage:', 'id: ', id)
         
         # convert numpyImage to QImage
         nimage = QtGui.QImage(numpyImage.data,40,40,QtGui.QImage.Format_RGB32)
@@ -117,10 +117,7 @@ def main(argv, app):
     # add new QML type
     QtQml.qmlRegisterType(Finder, "FolderListViewItem", 1, 0, "FolderListView")
     
-    if tuttleofx_installed:
-        QtQml.qmlRegisterType(GLViewport_tuttleofx, "Viewport", 1, 0, "GLViewport")
-    else:
-        QtQml.qmlRegisterType(GLViewport_pil, "Viewport", 1, 0, "GLViewport")
+    QtQml.qmlRegisterType(GLViewportImpl, "Viewport", 1, 0, "GLViewport")
 
     # init undo_redo contexts
     cmdManager = CommandManager()

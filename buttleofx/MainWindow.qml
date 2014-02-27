@@ -3,7 +3,7 @@ import QtQuick.Controls 1.0
 import QtQuick.Layouts 1.0
 import QtQml 2.1
 import QuickMamba 1.0
-import QtQuick.Dialogs 1.0
+import QtQuick.Dialogs 1.1
 import QtQuick.Window 2.1
 import QtQuick.LocalStorage 2.0
 
@@ -122,6 +122,62 @@ ApplicationWindow {
     FinderLoadGraph{ id: finderLoadGraph; onGetFileUrl: urlOfFileToSave = fileurl }
     FinderSaveGraph{ id: finderSaveGraph; onGetFileUrl: urlOfFileToSave = fileurl }
 
+    MessageDialog {
+        id: openGraph
+        title:urlOfFileToSave==""? "Save the new graph?":"Save " + _buttleData.getFileName(urlOfFileToSave) + "?"
+        icon: StandardIcon.Warning
+        text: "You do not have save the current graph, do you want to save it?"
+        detailedText: "If you don't save the graph, last modifications not saved will be lost. "
+        standardButtons: StandardButton.Yes | StandardButton.No | StandardButton.Abort
+        Component.onCompleted: visible = false
+        onYes: {
+            if (_buttleData.graphCanBeSaved){
+                if(urlOfFileToSave!=""){
+                    _buttleData.saveData(urlOfFileToSave)
+                }
+                else{
+                    finderSaveGraph.open()
+                }
+            }
+        }
+        onNo: {
+            finderLoadGraph.open()
+        }
+        onRejected: {}
+    }
+
+    MessageDialog {
+        id: newGraph
+        title: urlOfFileToSave==""? "Save the new graph?":"Save " + _buttleData.getFileName(urlOfFileToSave) + "?"
+        icon: StandardIcon.Warning
+        text: "You do not have save the current graph, do you want to save it?"
+        detailedText: "If you don't save the graph, last modifications not saved will be lost. "
+        standardButtons: StandardButton.Yes | StandardButton.No | StandardButton.Abort
+        Component.onCompleted: visible = false
+        onYes: {
+            if (_buttleData.graphCanBeSaved){
+                if(urlOfFileToSave!=""){
+                    _buttleData.saveData(urlOfFileToSave)
+                    _buttleData.graphWrapper.deleteGraphWrapper()
+                    urlOfFileToSave=""
+                    _buttleManager.clean()
+                }
+                else{
+                    finderSaveGraph.open()
+                    _buttleData.graphWrapper.deleteGraphWrapper()
+                    urlOfFileToSave=""
+                    _buttleManager.clean()
+                }
+            }
+        }
+        onNo: {
+            _buttleData.graphWrapper.deleteGraphWrapper()
+            urlOfFileToSave=""
+            _buttleManager.clean()
+        }
+        onRejected: {}
+    }
+
     menuBar: MenuBar {
         Menu {
             title: "File"
@@ -129,7 +185,11 @@ ApplicationWindow {
             MenuItem {
                 text: "Open"
                 shortcut: "Ctrl+O"
-                onTriggered: finderLoadGraph.open()
+                onTriggered: {
+                    openGraph.open()
+                    openGraph.close()
+                    openGraph.open()
+                }
             }
 
             MenuItem {

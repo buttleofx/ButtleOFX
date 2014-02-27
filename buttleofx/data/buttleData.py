@@ -689,6 +689,7 @@ class ButtleData(QtCore.QObject):
         self.addShortcut("Ctrl","Y", "Redo", "Restore the last action undid", "Graph")
         self.addShortcut("Ctrl","D", "Duplicate", "Duplicate selected nodes", "Graph")
         self.addShortcut("Ctrl","N", "New graph", "Close the current graph and create an other one", "Graph")
+        self.addShortcut("Ctrl","O", "Open graph", "Close the current graph and open a browser which permit to open another one", "Graph")
         self.addShortcut("Del","", "Delete", "Delete selected nodes or oprtion of graph", "Graph")
         self.addShortcut("P","", "Parameters", "Show parameters of the node in the parameter editor", "Graph")
         self.addShortcut("Return","", "Display", "Assign the mosquito to the selected node, and diplay it in the viewer", "Graph")

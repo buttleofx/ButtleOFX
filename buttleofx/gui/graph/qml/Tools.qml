@@ -61,7 +61,9 @@ Rectangle {
                 onClicked: {
                     pluginVisible=false
                     editNode=false
-                    finderLoadGraph.open()
+                    openGraph.open()
+                    openGraph.close()
+                    openGraph.open()
                 }
             }
 

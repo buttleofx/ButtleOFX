@@ -42,14 +42,6 @@ Rectangle {
 
     color: "transparent"
 
-    Keys.onPressed: {
-        if (event.key == Qt.Key_H) {
-            if(_buttleData.currentParamNodeWrapper)
-                doc.show()
-            aNodeIsSelected=true
-        }
-    }
-
     MouseArea {
         id: nodeMouseArea
         anchors.fill: parent

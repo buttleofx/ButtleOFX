@@ -12,6 +12,7 @@ import "gui/viewer/qml"
 import "gui/paramEditor/qml"
 import "gui/browser/qml"
 import "gui/plugin/qml"
+import "gui/shortcut/qml"
 
 ApplicationWindow {
 
@@ -89,19 +90,6 @@ ApplicationWindow {
         if ((event.key == Qt.Key_9) && (event.modifiers & Qt.KeypadModifier)){
             player.changeViewer(9)
         }
-        // Assign the mosquito to the selected node
-        if ((event.key == Qt.Key_Return)||(event.key == Qt.Key_Enter)) {
-            var selectedNodes = _buttleData.currentSelectedNodeWrappers
-
-            // we assign the mosquito only if there is only one node selected
-            if(selectedNodes.count == 1) {
-                var node = selectedNodes.get(0)
-                _buttleData.currentViewerNodeWrapper = node
-                _buttleData.currentViewerFrame = 0
-                _buttleData.assignNodeToViewerIndex(node, 0)
-                _buttleEvent.emitViewerChangedSignal()
-            }
-        }
 
         // Player
         if (event.key == Qt.Key_Space && player.node != null) {
@@ -110,28 +98,6 @@ ApplicationWindow {
             }
             else {
                 player.doAction("play");
-            }
-        }
-
-        // Send the selected node on the parameters editor
-        if ((event.key == Qt.Key_P)) {
-            var selectedNodes = _buttleData.currentSelectedNodeWrappers
-
-            // we send the node only if there is only one node selected
-            if(selectedNodes.count == 1) {
-                var node = selectedNodes.get(0)
-                _buttleData.currentParamNodeWrapper = node
-            }
-        }
-
-        //Plugin window
-        if (event.key == Qt.Key_H) {
-            var selectedNodes = _buttleData.currentSelectedNodeWrappers
-
-            // we send the node only if there is only one node selected
-            if(selectedNodes.count == 1) {
-                var node = selectedNodes.get(0)
-                doc.show()
             }
         }
     }
@@ -145,6 +111,12 @@ ApplicationWindow {
         selectedNodeType:_buttleData.currentParamNodeWrapper? _buttleData.currentParamNodeWrapper.nodeType:""
         selectedNodeDoc:_buttleData.currentParamNodeWrapper? _buttleData.currentParamNodeWrapper.pluginDoc:""
         selectedNodeGroup:_buttleData.currentParamNodeWrapper? _buttleData.currentParamNodeWrapper.pluginGroup:""
+    }
+
+    //Window of shortcuts
+    ShortcutWindow {
+        id: shortcuts
+        title: "Shortcuts"
     }
 
     FinderLoadGraph{ id: finderLoadGraph; onGetFileUrl: urlOfFileToSave = fileurl }
@@ -429,6 +401,7 @@ ApplicationWindow {
 
             MenuItem {
                 text: "Shortcut"
+                onTriggered: shortcuts.show()
             }
             MenuItem {
                 text: "Plugin's Documentation"

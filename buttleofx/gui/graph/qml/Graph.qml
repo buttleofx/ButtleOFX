@@ -37,15 +37,13 @@ Rectangle {
     Keys.onPressed: {
 
         // Graph toolbar
-        if (event.key == Qt.Key_Delete) {
-           _buttleManager.deleteSelection()
-        }
         if ((event.key == Qt.Key_N) && (event.modifiers & Qt.ControlModifier)){
             //the fileDialog is opened and closed because the first which appear doesn't work
             newGraph.open()
             newGraph.close()
             newGraph.open()
         }
+        // Save or save as
         if ((event.key == Qt.Key_S) && (event.modifiers & Qt.ControlModifier)){
             if(_buttleData.graphCanBeSaved) {
                 if(urlOfFileToSave!=""){
@@ -56,10 +54,48 @@ Rectangle {
                 }
             }
         }
+
+        // Send the selected node on the parameters editor
+        if ((event.key == Qt.Key_P)) {
+            var selectedNodes = _buttleData.currentSelectedNodeWrappers
+
+            // we send the node only if there is only one node selected
+            if(selectedNodes.count == 1) {
+                var node = selectedNodes.get(0)
+                _buttleData.currentParamNodeWrapper = node
+            }
+        }
+
+        //Plugin window
+        if (event.key == Qt.Key_H) {
+            var selectedNodes = _buttleData.currentSelectedNodeWrappers
+
+            // we send the node only if there is only one node selected
+            if(selectedNodes.count == 1) {
+                var node = selectedNodes.get(0)
+                _buttleData.currentParamNodeWrapper = node
+                doc.show()
+            }
+        }
+        
+        // Assign the mosquito to the selected node
+        if ((event.key == Qt.Key_Return)||(event.key == Qt.Key_Enter)) {
+            var selectedNodes = _buttleData.currentSelectedNodeWrappers
+
+            // we assign the mosquito only if there is only one node selected
+            if(selectedNodes.count == 1) {
+                var node = selectedNodes.get(0)
+                _buttleData.currentViewerNodeWrapper = node
+                _buttleData.currentViewerFrame = 0
+                _buttleData.assignNodeToViewerIndex(node, 0)
+                _buttleEvent.emitViewerChangedSignal()
+            }
+        }
+
         if (event.key == Qt.Key_Delete) {
            _buttleManager.deleteSelection();
         }
-       if ((event.key == Qt.Key_Z) && (event.modifiers & Qt.ControlModifier)) {
+        if ((event.key == Qt.Key_Z) && (event.modifiers & Qt.ControlModifier)) {
             if(_buttleManager.canUndo) {
                 _buttleManager.undo();
             }

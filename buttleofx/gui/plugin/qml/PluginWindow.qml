@@ -69,14 +69,15 @@ ApplicationWindow {
 
                 property variant plugin:_buttleData.getSinglePluginSuggestion(text)
 
-                Keys.onReturnPressed: {
-                    if(pluginList.model.count==1){
-                        plugin:_buttleData.getSinglePluginSuggestion(text)
-                        // using pluginList.model[0] doesn't work
-                        currentPluginType=plugin.pluginType
-                        currentPluginDoc=plugin.pluginDescription
-                        currentPluginGroup=plugin.pluginGroup
-                        searchPluginText = ""
+                Keys.onPressed: {
+                    if ((event.key == Qt.Key_Return)||(event.key == Qt.Key_Enter)) {
+                        if(pluginList.model.count==1){
+                            plugin:_buttleData.getSinglePluginSuggestion(text)
+                            // using pluginList.model[0] doesn't work
+                            currentPluginType=plugin.pluginType
+                            currentPluginDoc=plugin.pluginDescription
+                            currentPluginGroup=plugin.pluginGroup
+                        }
                     }
                 }
             }
@@ -164,7 +165,7 @@ ApplicationWindow {
                                 pluginList.currentItem.border.color="#343434"
                             }
 
-                            if (event.key == Qt.Key_Return){
+                            if ((event.key == Qt.Key_Return)||(event.key == Qt.Key_Enter)) {
                                 pluginList.currentItem.color="#333"
                                 pluginList.currentItem.border.color="#343434"
                                 currentPluginType=object.pluginType

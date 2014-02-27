@@ -16,6 +16,8 @@ from buttleofx.core.graph.connection import IdClip
 from buttleofx.gui.graph import GraphWrapper
 # gui : pluginWrapper
 from buttleofx.gui.plugin import PluginWrapper
+# gui : shortcut
+from buttleofx.gui.shortcut import Shortcut
 # commands
 from buttleofx.core.undo_redo.manageTools import CommandManager
 # events
@@ -40,6 +42,7 @@ class ButtleData(QtCore.QObject):
         - _graph : the graph (core)
         - _graphBrowser : the graph of the browser
         - _graphBrowserWrapper : the graphWrapper of the browser
+        - _listOfShortcut : list of all shortcuts used 
        	- _currentViewerNodeName : the name of the node currently in the viewer
         - _currentSelectedNodeNames : list of the names of the nodes currently selected
         - _currentParamNodeName : the name of the node currently displayed in the paramEditor
@@ -97,6 +100,7 @@ class ButtleData(QtCore.QObject):
         self._graphBrowser = Graph()
         self._graphBrowserWrapper = GraphWrapper(self._graphBrowser, view)
 
+        self._listOfShortcut =QObjectListModel(self)
 
         self._mapGraph = {
             "graph": self._graph,
@@ -665,6 +669,81 @@ class ButtleData(QtCore.QObject):
         """
         return pluginId in tuttleTools.getPluginsIdentifiers()
 
+    ################################################## SHORTCUTS #####################################################
+
+    @QtCore.pyqtSlot(str,str,str,str,str,result=QtCore.QObject)
+    def addShortcut(self,key1,key2,name,doc,context):
+        shortcut = Shortcut(key1,key2,name,doc,context)
+        if not self._listOfShortcut.contains(shortcut) :
+            self._listOfShortcut.append(shortcut)
+
+    @QtCore.pyqtSlot(result=QtCore.QObject)
+    def getlistOfShortcut(self):
+        self._listOfShortcut= QObjectListModel(self)
+
+        self.addShortcut("Ctrl","C", "Copy", "Permit to copy nodes or portions of graph", "Graph")
+        self.addShortcut("Ctrl","X", "Cut", "Permit to cut nodes or portions of graph", "Graph")
+        self.addShortcut("Ctrl","V", "Paste", "Permit to paste nodes or portions of graph previously cut or copied", "Graph")
+        self.addShortcut("Ctrl","S", "Save", "Permit to save the current graph", "Graph")
+        self.addShortcut("Ctrl","Z", "Undo", "Abort the last modification in the graph", "Graph")
+        self.addShortcut("Ctrl","Y", "Redo", "Restore the last action undid", "Graph")
+        self.addShortcut("Ctrl","D", "Duplicate", "Duplicate selected nodes", "Graph")
+        self.addShortcut("Ctrl","N", "New graph", "Close the current graph and create an other one", "Graph")
+        self.addShortcut("Del","", "Delete", "Delete selected nodes or oprtion of graph", "Graph")
+        self.addShortcut("P","", "Parameters", "Show parameters of the node in the parameter editor", "Graph")
+        self.addShortcut("Return","", "Display", "Assign the mosquito to the selected node, and diplay it in the viewer", "Graph")
+        self.addShortcut("Enter","", "Display", "Assign the mosquito to the selected node, and diplay it in the viewer", "Graph")
+        self.addShortcut("Tab","", "Plugin browser", "Permit to paste a node or a portion of graph previously cut or copied", "Graph")
+
+        self.addShortcut("Up","", "Previous", "Go to the next plugin in the list", "Plugin Documentation")
+        self.addShortcut("Down","", "Next", "Go to the previous plugin in the list", "Plugin Documentation")
+        self.addShortcut("Return","", "Plugin help", "Show the documentation for the selected plugin", "Plugin Documentation")
+        self.addShortcut("Enter","", "Plugin help", "Show the documentation for the selected plugin", "Plugin Documentation")
+
+
+        self.addShortcut("Up","", "Previous", "Go to the next plugin in the list", "Plugin Browser")
+        self.addShortcut("Down","", "Next", "Go to the previous plugin in the list", "Plugin Browser")
+        self.addShortcut("Return","", "Add", "Create the selected plugin", "Plugin Browser")
+        self.addShortcut("Enter","", "Add", "Create the selected plugin", "Plugin Browser")
+
+
+        self.addShortcut("1","", "Viewer 1", "Show the view 1 of the viewer previously assigned to a node", "Viewer")
+        self.addShortcut("2","", "Viewer 2", "Show the view 2 of the viewer previously assigned to a node", "Viewer")
+        self.addShortcut("3","", "Viewer 3", "Show the view 3 of the viewer previously assigned to a node", "Viewer")
+        self.addShortcut("4","", "Viewer 4", "Show the view 4 of the viewer previously assigned to a node", "Viewer")
+        self.addShortcut("5","", "Viewer 5", "Show the view 5 of the viewer previously assigned to a node", "Viewer")
+        self.addShortcut("6","", "Viewer 6", "Show the view 6 of the viewer previously assigned to a node", "Viewer")
+        self.addShortcut("7","", "Viewer 7", "Show the view 7 of the viewer previously assigned to a node", "Viewer")
+        self.addShortcut("8","", "Viewer 8", "Show the view 8 of the viewer previously assigned to a node", "Viewer")
+        self.addShortcut("9","", "Viewer 9", "Show the view 9 of the viewer previously assigned to a node", "Viewer")
+        self.addShortcut("Space","", "Pause/Play", "If you are visionning an image sequence, then you can press this key to pause or play/resume", "Viewer")
+
+        self.addShortcut("Ctrl","L", "", "", "Browser")
+        self.addShortcut("Ctrl","N", "New folder", "Create a new folder which default name is ''New directory''", "Browser")
+        self.addShortcut("F2","", "Rename", "Rename the selected file or folder", "Browser")
+        self.addShortcut("Tab","","Auto-completion", "Propose subfolders of the current, which name starts with what you already wrote in the search bar", "Browser")
+        self.addShortcut("Del","", "Delete", "Delete selected folders. Warning : it still irreversible!", "Browser")
+
+        return self._listOfShortcut
+        
+    @QtCore.pyqtSlot(result=QtCore.QObject)
+    def getlistOfContext(self):
+        listOfShortcutContext = QObjectListModel(self)
+        self.getlistOfShortcut()
+        for s in self._listOfShortcut :
+            if not listOfShortcutContext.contains(s._shortcutContext) :
+                listOfShortcutContext.append(s._shortcutContext)
+        return listOfShortcutContext
+
+    @QtCore.pyqtSlot(str,result=QtCore.QObject)
+    def getlistOfShortcutByContext(self, context):
+        listOfShortcutByContext = QObjectListModel(self)
+        self.getlistOfShortcut()
+        for s in self._listOfShortcut :
+            if s._shortcutContext == context :
+                if not listOfShortcutByContext.contains(s) :
+                    listOfShortcutByContext.append(s)
+        return listOfShortcutByContext
 
     ################################################## GRAPH BROWSER & GRAPH PARAMETERS EDITOR ##################################################
 

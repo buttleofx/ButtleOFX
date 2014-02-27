@@ -747,6 +747,11 @@ class ButtleData(QtCore.QObject):
 
     ################################################## GRAPH BROWSER & GRAPH PARAMETERS EDITOR ##################################################
 
+    @QtCore.pyqtSlot(str, result=str)
+    def getFileName(self, path):
+        listOfPath = path.split("/")
+        return listOfPath[len(listOfPath)-1]
+         
     @QtCore.pyqtSlot(str, result=QtCore.QObject)
     def nodeReaderWrapperForBrowser(self, url):
         self._graphBrowser._nodes = []  # clear the graph

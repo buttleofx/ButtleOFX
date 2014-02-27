@@ -81,6 +81,14 @@ class ButtleManager(QtCore.QObject):
         buttleData.currentParamNodeChanged.emit()
         buttleData.currentViewerNodeChanged.emit()
 
+    @QtCore.pyqtSlot()
+    def clean(self):
+        """
+            Calls the cmdManager to clean the undo redo pile.
+        """
+        cmdManager = CommandManager()
+        cmdManager.clean()
+
     def signalUndoRedo(self):
         self.undoRedoChanged.emit()
 

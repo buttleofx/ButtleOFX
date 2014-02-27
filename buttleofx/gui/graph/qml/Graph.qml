@@ -19,17 +19,20 @@ Rectangle {
                     _buttleData.saveData(urlOfFileToSave)
                     _buttleData.graphWrapper.deleteGraphWrapper()
                     urlOfFileToSave=""
+                    _buttleManager.clean()
                 }
                 else{
                     finderSaveGraph.open()
                     _buttleData.graphWrapper.deleteGraphWrapper()
                     urlOfFileToSave=""
+                    _buttleManager.clean()
                 }
             }
         }
         onNo: {
             _buttleData.graphWrapper.deleteGraphWrapper()
             urlOfFileToSave=""
+            _buttleManager.clean()
         }
         onRejected: {}
     }

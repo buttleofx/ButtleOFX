@@ -586,6 +586,7 @@ ApplicationWindow {
                 orientation: Qt.Vertical
                 Layout.fillWidth: true
                 Layout.minimumWidth: (topLeftView.visible==true || bottomLeftView.visible==true) ? 0 : parent.width
+                width : selectedView==3? 0.3*mainWindowQML.width:0.7*mainWindowQML.width
 
                 Rectangle {
                     id: topRightView
@@ -620,6 +621,7 @@ ApplicationWindow {
                     implicitWidth: parent.width
                     implicitHeight: topRightView.visible ? 0.5 * parent.height : parent.height
                     z: -1
+                    visible:selectedView==3? false:true
 
                     children:
                         switch(selectedView){

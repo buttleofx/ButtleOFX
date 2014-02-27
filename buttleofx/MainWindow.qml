@@ -46,7 +46,7 @@ ApplicationWindow {
     property variant lastSelectedDefaultView: view1
     property variant view1: [browser, paramEditor, player, graphEditor]
     property variant view2: [player, paramEditor, browser, graphEditor]
-    property variant view3: [player, browser, advancedParamEditor, empty]
+    property variant view3: [player, browser, advancedParamEditor, graphEditor]
 
     property string urlOfFileToSave: ""
 
@@ -570,7 +570,10 @@ ApplicationWindow {
                                 view2[1]
                                 break
                             case 3:
-                                view3[1]
+                                if(advancedParamEditor.displayGraph)
+                                    view3[3]
+                                else
+                                    view3[1]
                                 break
                             default:
                                 lastSelectedDefaultView[1]

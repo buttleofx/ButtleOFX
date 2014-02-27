@@ -20,6 +20,8 @@ Item {
     property variant newNode
     property variant previousNode
 
+    property  bool displayGraph
+
     MouseArea{
         anchors.fill:parent
         onClicked:{
@@ -408,6 +410,53 @@ Item {
             else {pluginVisible=false}
         }
     }
+    Button {
+            id: displayTheGraph
+
+            property string imageSource: hovered? "file:///" + _buttleData.buttlePath +  "/gui/img/buttons/tools/plus_hover.png": "file:///" + _buttleData.buttlePath +  "/gui/img/buttons/tools/plus.png"
+
+            anchors.top: parent.top
+            anchors.topMargin : 2
+            anchors.left: parent.left
+            anchors.leftMargin: 180
+            width : 10
+            height: 10
+
+            iconSource: imageSource
+
+            style:
+                ButtonStyle {
+                    background: Rectangle {
+                        anchors.fill: parent
+                        color: "transparent"
+                    }
+                }
+
+            onClicked: {
+                displayGraph = !displayGraph
+            }
+            StateGroup {
+                id: states
+                states: [
+                    State {
+                        name: "browser"
+                        when: !displayGraph
+                        PropertyChanges {
+                            target: displayTheGraph
+                            imageSource: hovered? "file:///" + _buttleData.buttlePath +  "/gui/img/buttons/tools/plus_hover.png" : "file:///" + _buttleData.buttlePath +  "/gui/img/buttons/tools/plus.png"
+                        }
+                    },
+                    State {
+                        name: "graph"
+                        when: displayGraph
+                        PropertyChanges {
+                            target: displayTheGraph
+                            imageSource: hovered? "file:///" + _buttleData.buttlePath +  "/gui/img/icons/close_hover.png" : "file:///" + _buttleData.buttlePath +  "/gui/img/icons/close.png"      
+                        }
+                    }
+                ]
+            }
+        }
     /*
     Menu {
         id: nodesMenu

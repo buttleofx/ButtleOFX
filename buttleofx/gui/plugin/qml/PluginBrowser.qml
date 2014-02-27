@@ -12,6 +12,7 @@ Item {
 
     property color textColor : "white"
     property alias searchPluginText : searchPlugin.text
+    property bool graphEditor
 
     Rectangle{
         id: pluginRect
@@ -60,7 +61,7 @@ Item {
                     if ((event.key == Qt.Key_Return)||(event.key == Qt.Key_Enter)) {
                         if (listOfPlugin.model.count==1){
                             plugin= _buttleData.getSinglePluginSuggestion(text).pluginType
-                            if (selectedView==3){
+                            if (!graphEditor){
                                 // we create a new node and connect it to the last but one node of the concerned graph
                                 previousNode =_buttleData.lastNode()
 
@@ -177,7 +178,7 @@ Item {
                                 console.debug("add")
                                 listOfPlugin.currentItem.color="#333"
                                 listOfPlugin.currentItem.border.color="#343434"
-                                if (selectedView==3){
+                                if (!graphEditor){
                                     // we create a new node and connect it to the last but one node of the concerned graph
                                     previousNode =_buttleData.lastNode()
 
@@ -214,7 +215,7 @@ Item {
                             }
                             onClicked: {
                                 listOfPlugin.currentIndex=index
-                                if (selectedView==3){
+                                if (!graphEditor){
                                     // we create a new node and connect it to the last but one node of the concerned graph
                                     previousNode =_buttleData.lastNode()
 

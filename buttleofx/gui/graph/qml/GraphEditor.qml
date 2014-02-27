@@ -35,6 +35,7 @@ Item {
         visible:pluginVisible
         y:46
         x:9
+        graphEditor:true
     }
 
     ParamButtleEditor {                

@@ -131,13 +131,11 @@ ApplicationWindow {
         standardButtons: StandardButton.Yes | StandardButton.No | StandardButton.Abort
         Component.onCompleted: visible = false
         onYes: {
-            if (_buttleData.graphCanBeSaved){
-                if(urlOfFileToSave!=""){
-                    _buttleData.saveData(urlOfFileToSave)
-                }
-                else{
-                    finderSaveGraph.open()
-                }
+            if(urlOfFileToSave!=""){
+                _buttleData.saveData(urlOfFileToSave)
+            }
+            else{
+                finderSaveGraph.open()
             }
         }
         onNo: {
@@ -155,19 +153,17 @@ ApplicationWindow {
         standardButtons: StandardButton.Yes | StandardButton.No | StandardButton.Abort
         Component.onCompleted: visible = false
         onYes: {
-            if (_buttleData.graphCanBeSaved){
-                if(urlOfFileToSave!=""){
-                    _buttleData.saveData(urlOfFileToSave)
-                    _buttleData.graphWrapper.deleteGraphWrapper()
-                    urlOfFileToSave=""
-                    _buttleManager.clean()
-                }
-                else{
-                    finderSaveGraph.open()
-                    _buttleData.graphWrapper.deleteGraphWrapper()
-                    urlOfFileToSave=""
-                    _buttleManager.clean()
-                }
+            if(urlOfFileToSave!=""){
+                _buttleData.saveData(urlOfFileToSave)
+                _buttleData.graphWrapper.deleteGraphWrapper()
+                urlOfFileToSave=""
+                _buttleManager.clean()
+            }
+            else{
+                finderSaveGraph.open()
+                _buttleData.graphWrapper.deleteGraphWrapper()
+                urlOfFileToSave=""
+                _buttleManager.clean()
             }
         }
         onNo: {
@@ -186,9 +182,14 @@ ApplicationWindow {
                 text: "Open"
                 shortcut: "Ctrl+O"
                 onTriggered: {
-                    openGraph.open()
-                    openGraph.close()
-                    openGraph.open()
+                    if(!_buttleData.graphCanBeSaved){
+                        finderLoadGraph.open()
+                    }
+                    else{
+                        openGraph.open()
+                        openGraph.close()
+                        openGraph.open()
+                    }
                 }
             }
 

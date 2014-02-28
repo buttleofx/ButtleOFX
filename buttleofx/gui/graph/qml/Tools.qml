@@ -61,9 +61,14 @@ Rectangle {
                 onClicked: {
                     pluginVisible=false
                     editNode=false
-                    openGraph.open()
-                    openGraph.close()
-                    openGraph.open()
+                    if(!_buttleData.graphCanBeSaved){
+                        finderLoadGraph.open()
+                    }
+                    else{
+                        openGraph.open()
+                        openGraph.close()
+                        openGraph.open()
+                    }
                 }
             }
 

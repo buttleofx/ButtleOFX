@@ -313,16 +313,16 @@ Rectangle {
 
                                 Image {
                                     property bool isFolder: model.object.fileType == "Folder"
-                                    //source: model.object.fileType == "Folder" ? model.object.fileImg : 'image://buttleofx'+ model.object.filepath
-                                    source: isFolder ? model.object.fileImg : "file:///" + model.object.fileImg
+                                    source: model.object.fileType == "Folder" ? model.object.fileImg : 'image://buttleofx/'+ model.object.filepath
+                                    // Without tuttle // source: isFolder ? model.object.fileImg : "file:///" + model.object.fileImg
+
+                                    asynchronous: true
+
                                     sourceSize.width: isFolder ? parent.minSize : -1
                                     sourceSize.height: isFolder ? parent.minSize : -1
-
                                     anchors.fill: parent
                                     fillMode: Image.PreserveAspectFit
                                     smooth: true
-
-                                    anchors.centerIn: parent
                                 }
 
                             }

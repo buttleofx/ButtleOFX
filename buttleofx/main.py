@@ -85,35 +85,75 @@ class ButtleApp(QtGui.QGuiApplication):
 #            traceback.print_exc()
 #            return False
 
+ 
+gray_color_table = [QtGui.qRgb(i, i, i) for i in range(256)]
+
+def toQImage(im):
+    if im is None:
+        return QtGui.QImage()
+
+    if im.dtype == numpy.uint8:
+        if len(im.shape) == 2:
+            qim = QtGui.QImage(im.data, im.shape[1], im.shape[0], im.strides[0], QtGui.QImage.Format_Indexed8)
+            qim.setColorTable(gray_color_table)
+            return qim
+
+        elif len(im.shape) == 3:
+            if im.shape[2] == 3:
+                qim = QtGui.QImage(im.data, im.shape[1], im.shape[0], im.strides[0], QtGui.QImage.Format_RGB888);
+                return qim
+            elif im.shape[2] == 4:
+                qim = QtGui.QImage(im.data, im.shape[1], im.shape[0], im.strides[0], QtGui.QImage.Format_ARGB32);
+                return qim
+
+    raise ValueError("toQImage: case not implemented.")
 
 class ImageProvider(QtQuick.QQuickImageProvider):
     def __init__(self):
         QtQuick.QQuickImageProvider.__init__(self, QtQuick.QQuickImageProvider.Image)
 
     def requestImage(self, id, size):
-        # get image
-        #flatarray = numpy.fromstring(id, numpy.uint8)
-        #numpyImage = numpy.array(numpy.flipud(numpy.reshape(flatarray, (40, 40, 3))))
-        numpyImage = numpy.zeros((40,40,4),numpy.uint8)
-        outputCache = tuttle.MemoryCache()
-        (_, extension) = os.path.splitext(id)
-        tuttle.compute(
-            outputCache,
-            [
-                tuttle.NodeInit(getBestPlugin.getBestReader(extension), filename=id),
-                #tuttle.NodeInit("tuttle.resize", keepRatio=True, size=(40, 40)),
-            ])
-
-        imgRes = outputCache.get(0);
- 
+        # print('requestImage:', 'id: ', id)
+        max_size = 200
+        try:
+            (_, extension) = os.path.splitext(id)
+            readerIdentifier = getBestPlugin.getBestReader(extension)
+        except Exception as e:
+            # print("Tuttle ImageProvider: Unsupported extension '%s'" % extension, str(e))
+            # import traceback
+            # traceback.print_exc()
+            qtImage = QtGui.QImage(max_size, max_size, QtGui.QImage.Format_RGB32)
+            qtImage.fill(QtGui.QColor("green"))
+            return qtImage, qtImage.size()
         
-        # convert numpyImage to QImage
-        nimage = QtGui.QImage(numpyImage.data,40,40,QtGui.QImage.Format_RGB32)
-        nimage.ndarray = numpyImage
+        try:
+            # compute image using TuttleOFX
+            outputCache = tuttle.MemoryCache()
+            tuttle.compute(
+                outputCache,
+                [
+                    tuttle.NodeInit(readerIdentifier, filename=id, bitDepth="8i"),
+                    tuttle.NodeInit("tuttle.resize", keepRatio=True, size=(max_size, max_size)),
+                    # tuttle.NodeInit("tuttle.jpegwriter", filename="/tmp/buttleofx_test_thumbnail.jpg"),
+                ])
+            
+            # retrieve graph output
+            imgRes = outputCache.get(0)
+            numpyImage = imgRes.getNumpyArray()
+            
+            # convert numpyImage to QImage
+            # qtImage = numpy2qimage(numpyImage)
+            qtImage = toQImage(numpyImage)
+            
+            return qtImage, qtImage.size()
         
-        image = imgRes.getNumpyImage()
-        
-        return image, QtCore.QSize(40, 40)
+        except Exception as e:
+            print("Error Tuttle ImageProvider: ", str(e))
+            # import traceback
+            # traceback.print_exc()
+            qtImage = QtGui.QImage(max_size, max_size,QtGui.QImage.Format_RGB32)
+            qtImage.fill(QtGui.QColor("red"))
+            return qtImage, qtImage.size()
     
 
 def main(argv, app):

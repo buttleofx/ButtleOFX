@@ -688,6 +688,7 @@ class ButtleData(QtCore.QObject):
         self.addShortcut("Ctrl","S", "Save", "Permit to save the current graph", "Graph")
         self.addShortcut("Ctrl","Z", "Undo", "Abort the last modification in the graph", "Graph")
         self.addShortcut("Ctrl","Y", "Redo", "Restore the last action undid", "Graph")
+        self.addShortcut("Ctrl","A", "Select all", "Select all nodes of the graph", "Graph")
         self.addShortcut("Ctrl","D", "Duplicate", "Duplicate selected nodes", "Graph")
         self.addShortcut("Ctrl","N", "New graph", "Close the current graph and create an other one", "Graph")
         self.addShortcut("Ctrl","O", "Open graph", "Close the current graph and open a browser which permit to open another one", "Graph")

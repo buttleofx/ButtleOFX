@@ -89,6 +89,9 @@ Rectangle {
                 _buttleManager.nodeManager.duplicationNode()
             }
         }
+        if ((event.key == Qt.Key_A) && (event.modifiers & Qt.ControlModifier)){
+            _buttleManager.selectAllNodes()
+        }
         if ((event.key == Qt.Key_C) && (event.modifiers & Qt.ControlModifier)){
             if (!_buttleData.currentSelectedNodeWrappers.isEmpty()) {
                 _buttleManager.nodeManager.copyNode()

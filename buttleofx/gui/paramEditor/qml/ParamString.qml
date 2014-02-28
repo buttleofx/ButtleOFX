@@ -11,7 +11,7 @@ Item {
     y:10
 
     property variant paramObject: model.object
-    property bool isReader: _buttleData.currentParamNodeWrapper ? _buttleData.currentParamNodeWrapper.pluginContext=="OfxImageEffectContextReader": false
+    property bool isReader: currentParamNode ? currentParamNode.pluginContext=="OfxImageEffectContextReader": false
 
     // Is this param secret ?
     visible: !paramObject.isSecret

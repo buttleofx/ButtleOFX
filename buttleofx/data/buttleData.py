@@ -2,6 +2,7 @@ from PyQt5 import QtCore
 # to parse data
 import json
 # to save and load data
+import os
 import io
 from datetime import datetime
 # tools
@@ -750,8 +751,7 @@ class ButtleData(QtCore.QObject):
 
     @QtCore.pyqtSlot(str, result=str)
     def getFileName(self, path):
-        listOfPath = path.split("/")
-        return listOfPath[len(listOfPath)-1]
+        return os.path.basename(path)
          
     @QtCore.pyqtSlot(str, result=QtCore.QObject)
     def nodeReaderWrapperForBrowser(self, url):

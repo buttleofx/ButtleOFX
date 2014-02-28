@@ -1,3 +1,4 @@
+from PyQt5 import QtCore
 # undo_redo
 from buttleofx.core.undo_redo.manageTools import UndoableCommand
 # core
@@ -9,7 +10,7 @@ class CmdDeleteNodes(UndoableCommand):
         Command that deletes a node.
         Attributes :
         - graphTarget : the graph in which the node will be deleted.
-        - node : we save the node's data because we will need it for the redo
+        - nodes : we save the node's data because we will need it for the redo
         - connections : list of the connections of the node, based on all the connections. We just keep the connections concerning our node.
     """
 

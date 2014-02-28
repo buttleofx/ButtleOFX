@@ -1,3 +1,4 @@
+from PyQt5 import QtCore
 # undo_redo
 from buttleofx.core.undo_redo.manageTools import UndoableCommand
 from buttleofx.core.undo_redo.commands.node import CmdCreateNode
@@ -23,6 +24,9 @@ class CmdCreateReaderNode(CmdCreateNode):
         CmdCreateNode.__init__(self, graphTarget, nodeType, x, y)
         self._filename = filename
 
+    def getNodeName(self):
+        return self._node
+
     def undoCmd(self):
         """
             Undoes the creation of the node.
@@ -47,3 +51,4 @@ class CmdCreateReaderNode(CmdCreateNode):
         self._graphTarget.nodesChanged()
         return node
 
+    nodeName = QtCore.pyqtProperty(str, getNodeName, constant=True)

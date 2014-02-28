@@ -1,6 +1,6 @@
 import logging
 from buttleofx.core.undo_redo.manageTools import UndoableCommand
-
+from PyQt5 import QtCore
 
 class CmdSetParamND(UndoableCommand):
     """
@@ -24,6 +24,9 @@ class CmdSetParamND(UndoableCommand):
 
         self._newValues = newValues
 
+    def getParam(self):
+        return self._param
+
     def undoCmd(self):
         """
         Undoes the update of the param.
@@ -45,3 +48,5 @@ class CmdSetParamND(UndoableCommand):
         self._param.getTuttleParam().setValue(self._newValues)
         self._param.setOldValues(self._newValues)
         self._param.paramChanged()
+
+    param = QtCore.pyqtProperty(str, getParam, constant=True)

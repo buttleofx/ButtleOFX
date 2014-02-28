@@ -789,6 +789,32 @@ class ButtleData(QtCore.QObject):
 
     ################################################## SAVE / LOAD ##################################################
 
+    def getUndoRedoStack(self):
+        listOfCommand = QObjectListModel(self)
+        for cmd in CommandManager().getCommands():
+            tmp = str(cmd)
+            if "cmdCreateNode" in tmp :
+                tmp = "Create " + cmd.nodeName
+            else :
+                if "cmdDeleteNode" in tmp :
+                    tmp = "Delete "
+                    for c in cmd._nodes :
+                        tmp += c.getName() + " "
+                else:
+                    if "cmdSetParam" in tmp :
+                        tmp = "Modify " +"'" +cmd.param.getName() + "'"
+                    else :
+                        if "cmdCreateConnection" in tmp :
+                            tmp = "Create connection between" + cmd.out_clipNodeName + " & " + cmd.in_clipNodeName
+                        else :
+                            if "cmdDeleteConnection" in tmp :
+                                tmp = "Delete connection between" + cmd.out_clipNodeName + " & " + cmd.in_clipNodeName
+                            else :
+                                if "manageTools" in tmp :
+                                   tmp = "Move Node"
+            listOfCommand.append(str(CommandManager().getCommands().index(cmd)) +" : " + tmp)
+        return listOfCommand
+
     @QtCore.pyqtSlot(str)
     @QtCore.pyqtSlot()
     def saveData(self, url='buttleofx/backup/data.bofx'):
@@ -939,7 +965,7 @@ class ButtleData(QtCore.QObject):
     graphCanBeSavedChanged = QtCore.pyqtSignal()
     graphCanBeSaved = QtCore.pyqtProperty(bool, graphCanBeSaved, notify=graphCanBeSavedChanged)
 
-
+    listOfUndoRedoStack = QtCore.pyqtProperty(QtCore.QObject,getUndoRedoStack, constant=True)
 
 # This class exists just because there are problems when a class extends 2 other classes (Singleton and QObject)
 class ButtleDataSingleton(Singleton):

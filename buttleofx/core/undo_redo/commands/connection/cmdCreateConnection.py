@@ -4,6 +4,7 @@ from buttleofx.core.undo_redo.manageTools import UndoableCommand
 from buttleofx.event import ButtleEventSingleton
 # core
 from buttleofx.core.graph.connection import Connection
+from PyQt5 import QtCore
 
 
 class CmdCreateConnection(UndoableCommand):
@@ -21,6 +22,12 @@ class CmdCreateConnection(UndoableCommand):
         self._connection = None
         self._clipOut = clipOut
         self._clipIn = clipIn
+
+    def getOut_clipNodeName(self):
+        return self._connection.getClipOut().getNodeName()
+    
+    def getIn_clipNodeName(self):
+        return self._connection.getClipIn().getNodeName()
 
     def undoCmd(self):
         """
@@ -70,3 +77,6 @@ class CmdCreateConnection(UndoableCommand):
 
         # return the buttle connection
         return self._connection
+
+    in_clipNodeName = QtCore.pyqtProperty(str, getIn_clipNodeName, constant=True)
+    out_clipNodeName = QtCore.pyqtProperty(str, getOut_clipNodeName, constant=True)

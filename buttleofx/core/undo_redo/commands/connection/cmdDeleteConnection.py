@@ -1,6 +1,6 @@
 # undo_redo
 from buttleofx.core.undo_redo.manageTools import UndoableCommand
-
+from PyQt5 import QtCore
 
 class CmdDeleteConnection(UndoableCommand):
     """
@@ -14,6 +14,12 @@ class CmdDeleteConnection(UndoableCommand):
         self._graphTarget = graphTarget
         self._connection = connection
 
+    def getOut_clipNodeName(self):
+        return self._connection.getClipOut().getNodeName()
+    
+    def getIn_clipNodeName(self):
+        return self._connection.getClipIn().getNodeName()
+        
     def undoCmd(self):
         """
             Undoes the delete of the connection <=> recreates the connection.
@@ -51,3 +57,6 @@ class CmdDeleteConnection(UndoableCommand):
 
         # emit signal
         self._graphTarget.connectionsChanged()
+
+    in_clipNodeName = QtCore.pyqtProperty(str, getIn_clipNodeName, constant=True)
+    out_clipNodeName = QtCore.pyqtProperty(str, getOut_clipNodeName, constant=True)

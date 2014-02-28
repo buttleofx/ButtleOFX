@@ -1,3 +1,4 @@
+from PyQt5 import QtCore
 # Tuttle
 from pyTuttle import tuttle
 # undo_redo
@@ -23,6 +24,9 @@ class CmdCreateNode(UndoableCommand):
         self._nodeName = None
         self._nodeType = nodeType
         self._nodeCoord = (x, y)
+
+    def getNodeName(self):
+        return self._nodeName
 
     def undoCmd(self):
         """
@@ -68,3 +72,5 @@ class CmdCreateNode(UndoableCommand):
 
         # return the buttle node
         return self._node
+
+    nodeName = QtCore.pyqtProperty(str, getNodeName, constant=True)

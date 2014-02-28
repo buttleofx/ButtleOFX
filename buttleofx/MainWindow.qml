@@ -219,6 +219,24 @@ ApplicationWindow {
         Menu {
             title: "Edit"
 
+            Menu {
+                id: undoRedoStack
+                title: "Undo/Redo stack"
+
+                property variant truc:_buttleData.graphCanBeSaved ? _buttleData.listOfUndoRedoStack:_buttleData.listOfUndoRedoStack
+
+                Instantiator {
+                    model: undoRedoStack.truc
+                    MenuItem {
+                        text: object
+                        onTriggered: {
+                        }
+                    }
+                    onObjectAdded: undoRedoStack.insertItem(index, object)
+                    onObjectRemoved: undoRedoStack.removeItem(object)
+                }
+            }
+
             MenuItem {
                 text: "Undo"
                 shortcut: "Ctrl+Z"

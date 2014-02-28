@@ -223,10 +223,10 @@ ApplicationWindow {
                 id: undoRedoStack
                 title: "Undo/Redo stack"
 
-                property variant truc:_buttleData.graphCanBeSaved ? _buttleData.listOfUndoRedoStack:_buttleData.listOfUndoRedoStack
+                property variant list:_buttleData.graphCanBeSaved ? _buttleManager.listOfUndoRedoStack:_buttleManager.listOfUndoRedoStack
 
                 Instantiator {
-                    model: undoRedoStack.truc
+                    model: undoRedoStack.list
                     MenuItem {
                         text: object
                         onTriggered: {

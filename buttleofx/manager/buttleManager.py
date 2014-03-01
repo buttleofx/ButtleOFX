@@ -79,8 +79,27 @@ class ButtleManager(QtCore.QObject):
     @QtCore.pyqtSlot(str, result=int)
     def getIndexOfUndoRedoStack(self,cmd):
         listOfCommand = self.getUndoRedoStack()
-        print(listOfCommand.indexOf(cmd))
-        return len(listOfCommand) - listOfCommand.indexOf(cmd)
+        return listOfCommand.indexOf(cmd)
+
+    @QtCore.pyqtSlot(result=int)
+    def getIndex(self):
+        listOfCommand = CommandManager()
+        return listOfCommand.index
+
+    @QtCore.pyqtSlot(result=int)
+    def countUndo(self):
+        listOfCommand = CommandManager()
+        return listOfCommand.index
+
+    @QtCore.pyqtSlot(result=int)
+    def countRedo(self):
+        listOfCommand = CommandManager()
+        return len(listOfCommand.commands) - listOfCommand.index
+
+    @QtCore.pyqtSlot(result=int)
+    def count(self):
+        listOfCommand = CommandManager()
+        return len(listOfCommand.commands)
 
     @QtCore.pyqtSlot()
     def undo(self):
@@ -98,6 +117,24 @@ class ButtleManager(QtCore.QObject):
         buttleData.currentParamNodeChanged.emit()
         buttleData.currentViewerNodeChanged.emit()
 
+    @QtCore.pyqtSlot(int)
+    def undoNTimes(self, n):
+        """
+            Calls the cmdManager to undo n commands.
+        """
+        cmdManager = CommandManager()
+        for i in range(n-1):
+            cmdManager.undo()
+
+        # emit undo/redo display
+        self.emitUndoRedoChanged()
+
+        # if we need to update params or viewer
+        buttleData = ButtleDataSingleton().get()
+        buttleData.currentParamNodeChanged.emit()
+        buttleData.currentViewerNodeChanged.emit()
+
+
     @QtCore.pyqtSlot()
     def redo(self):
         """
@@ -105,6 +142,23 @@ class ButtleManager(QtCore.QObject):
         """
         cmdManager = CommandManager()
         cmdManager.redo()
+
+        # emit undo/redo display
+        self.emitUndoRedoChanged()
+
+        # if we need to update params or viewer
+        buttleData = ButtleDataSingleton().get()
+        buttleData.currentParamNodeChanged.emit()
+        buttleData.currentViewerNodeChanged.emit()
+
+    @QtCore.pyqtSlot(int)
+    def redoNTimes(self, n):
+        """
+            Calls the cmdManager to redo n commands.
+        """
+        cmdManager = CommandManager()
+        for i in range(n+1):
+            cmdManager.redo()
 
         # emit undo/redo display
         self.emitUndoRedoChanged()

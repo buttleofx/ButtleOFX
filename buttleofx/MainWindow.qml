@@ -230,6 +230,18 @@ ApplicationWindow {
                     MenuItem {
                         text: object
                         onTriggered: {
+                            var indexOfElement=_buttleManager.getIndexOfUndoRedoStack(object)
+                            var indexInStack=_buttleManager.getIndex()
+                            if (indexOfElement < indexInStack) {
+                                if(_buttleManager.canUndo) {
+                                    _buttleManager.undoNTimes(indexInStack-indexOfElement)
+                                }
+                            }
+                            else{
+                                if(_buttleManager.canRedo) {
+                                    _buttleManager.redoNTimes(indexOfElement-indexInStack)
+                                }
+                            }
                         }
                     }
                     onObjectAdded: undoRedoStack.insertItem(index, object)

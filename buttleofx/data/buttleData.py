@@ -211,21 +211,43 @@ class ButtleData(QtCore.QObject):
         """
             Returns the total of sorted param nodeWrapper for the parametersEditor.
         """
-        if index<=0:
-            return self.getCurrentGraphWrapper().getNodeWrappers()
-        else :
+        if index>0:
+
+            firstNodeX = self.getCurrentGraphWrapper().getNodeWrapperByIndex(index-1).getXCoord()
+            firstNodeY = self.getCurrentGraphWrapper().getNodeWrapperByIndex(index-1).getYCoord()
+            secondNodeX = self.getCurrentGraphWrapper().getNodeWrapperByIndex(index).getXCoord()
+            secondNodeY = self.getCurrentGraphWrapper().getNodeWrapperByIndex(index).getYCoord()
+
+            self.getCurrentGraphWrapper().getNodeWrapperByIndex(index-1).setXCoord(secondNodeX)
+            self.getCurrentGraphWrapper().getNodeWrapperByIndex(index-1).setYCoord(secondNodeY)
+
+            self.getCurrentGraphWrapper().getNodeWrapperByIndex(index).setXCoord(firstNodeX)
+            self.getCurrentGraphWrapper().getNodeWrapperByIndex(index).setYCoord(firstNodeY)
+
             self.getCurrentGraphWrapper().getNodeWrappers().move(index,index-1)
-            return self.getCurrentGraphWrapper().getNodeWrappers()
+
+        return self.getCurrentGraphWrapper().getNodeWrappers()
 
     @QtCore.pyqtSlot(int, result=QtCore.QObject)
     def nodeGoesDown(self, index):
         """
             Returns the total of sorted param nodeWrapper for the parametersEditor.
         """
-        if index>=self.getCurrentGraphWrapper().getNodeWrappers().size()-1:
-            self.getCurrentGraphWrapper().getNodeWrappers()
-        else :
+        if index<self.getCurrentGraphWrapper().getNodeWrappers().size()-1:
+
+            firstNodeX = self.getCurrentGraphWrapper().getNodeWrapperByIndex(index).getXCoord()
+            firstNodeY = self.getCurrentGraphWrapper().getNodeWrapperByIndex(index).getYCoord()
+            secondNodeX = self.getCurrentGraphWrapper().getNodeWrapperByIndex(index+1).getXCoord()
+            secondNodeY = self.getCurrentGraphWrapper().getNodeWrapperByIndex(index+1).getYCoord()
+
+            self.getCurrentGraphWrapper().getNodeWrapperByIndex(index).setXCoord(secondNodeX)
+            self.getCurrentGraphWrapper().getNodeWrapperByIndex(index).setYCoord(secondNodeY)
+
+            self.getCurrentGraphWrapper().getNodeWrapperByIndex(index+1).setXCoord(firstNodeX)
+            self.getCurrentGraphWrapper().getNodeWrapperByIndex(index+1).setYCoord(firstNodeY)
+
             self.getCurrentGraphWrapper().getNodeWrappers().move(index,index+1)
+
         return self.getCurrentGraphWrapper().getNodeWrappers()
 
     @QtCore.pyqtSlot(int, result=QtCore.QObject)

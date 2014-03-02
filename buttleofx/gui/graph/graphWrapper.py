@@ -173,6 +173,13 @@ class GraphWrapper(QtCore.QObject):
             if nodeWrapper.getName() == nodeName:
                 return nodeWrapper
         return None  # QtCore.QObject(self)
+
+    @QtCore.pyqtSlot(int, result=QtCore.QObject)
+    def getNodeWrapperByIndex(self, nodeIndex):
+        """
+            Returns the right nodeWrapper, identified with its nodeName.
+        """
+        return self._nodeWrappers[nodeIndex]
         
     @QtCore.pyqtSlot(QtCore.QObject, bool, result=QtCore.QObject)
     def getConnectedClipWrapper(self, clipWrapper, disable):

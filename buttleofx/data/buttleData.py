@@ -207,6 +207,28 @@ class ButtleData(QtCore.QObject):
         return self.getCurrentGraphWrapper().getNodeWrappers()
 
     @QtCore.pyqtSlot(int, result=QtCore.QObject)
+    def nodeGoesUp(self, index):
+        """
+            Returns the total of sorted param nodeWrapper for the parametersEditor.
+        """
+        if index<=0:
+            return self.getCurrentGraphWrapper().getNodeWrappers()
+        else :
+            self.getCurrentGraphWrapper().getNodeWrappers().move(index,index-1)
+            return self.getCurrentGraphWrapper().getNodeWrappers()
+
+    @QtCore.pyqtSlot(int, result=QtCore.QObject)
+    def nodeGoesDown(self, index):
+        """
+            Returns the total of sorted param nodeWrapper for the parametersEditor.
+        """
+        if index>=self.getCurrentGraphWrapper().getNodeWrappers().size()-1:
+            self.getCurrentGraphWrapper().getNodeWrappers()
+        else :
+            self.getCurrentGraphWrapper().getNodeWrappers().move(index,index+1)
+        return self.getCurrentGraphWrapper().getNodeWrappers()
+
+    @QtCore.pyqtSlot(int, result=QtCore.QObject)
     def getNodeWrapperByViewerIndex(self, index):
         """
             Returns the nodeWrapper of the node contained in the viewer at the corresponding index.

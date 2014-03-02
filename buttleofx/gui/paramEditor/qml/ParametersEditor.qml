@@ -196,9 +196,10 @@ Item {
                         id: name
                         color: "white"
                         text: currentParamNode.name
-                        anchors.verticalCenter: parent.verticalCenter
+                        anchors.top: parent.top
+                        anchors.topMargin: 4
                         anchors.left: parent.left
-                        anchors.leftMargin: 30
+                        anchors.leftMargin: 50
                         font.pointSize: 11
                         clip: true
                     }
@@ -207,7 +208,7 @@ Item {
                         id: deadMosquito
                         width: 23
                         height: 21
-                        x: tuttleParamTitle.x + 3
+                        x: tuttleParamTitle.x + 23
                         y: tuttleParamTitle.y + 3
                         state: "normal"
                         color: "transparent"
@@ -279,6 +280,70 @@ Item {
                             // we assign the node to the viewer, at the frame 0
                             _buttleData.assignNodeToViewerIndex(paramNode.currentParamNode, 0)
                             _buttleEvent.emitViewerChangedSignal()
+                        }
+                    }
+
+                    Image{
+                        id: upNode
+                        source: "file:///" + _buttleData.buttlePath + "/gui/img/buttons/params/arrow2.png"
+                        x:8
+                        y:0
+
+                        MouseArea {
+                            id: upNodeMouseArea
+                            anchors.fill: parent
+                            hoverEnabled: true
+
+                            onClicked: {
+                                listViewParam.currentIndex = index
+                                _buttleData.nodeGoesUp(listViewParam.currentIndex)
+                            }
+                        }
+
+                        StateGroup {
+                            id: upNodeStateButtonEvents
+                             states: [
+                                 State {
+                                     name: "hover"
+                                     when: upNodeMouseArea.containsMouse
+                                     PropertyChanges {
+                                         target: upNode
+                                         source:  "file:///" + _buttleData.buttlePath +  "/gui/img/buttons/params/arrow2_hover.png"
+                                     }
+                                 }
+                             ]
+                        }
+                    }
+
+                    Image{
+                        id: downNode
+                        source: "file:///" + _buttleData.buttlePath + "/gui/img/buttons/params/arrow.png"
+                        x:8
+                        y: 20
+
+                        MouseArea {
+                            id: downNodeMouseArea
+                            anchors.fill: parent
+                            hoverEnabled: true
+
+                            onClicked: {
+                                listViewParam.currentIndex = index
+                                _buttleData.nodeGoesDown(listViewParam.currentIndex)
+                            }
+                        }
+
+                        StateGroup {
+                            id: downNodeStateButtonEvents
+                             states: [
+                                 State {
+                                     name: "hover"
+                                     when: downNodeMouseArea.containsMouse
+                                     PropertyChanges {
+                                         target: downNode
+                                         source:  "file:///" + _buttleData.buttlePath +  "/gui/img/buttons/params/arrow_hover.png"
+                                     }
+                                 }
+                             ]
                         }
                     }
 

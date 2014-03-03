@@ -40,3 +40,6 @@ class CmdSetCoord(UndoableCommand):
         node = self.graphTarget.getNode(self.nodeTargetName)
         node.setCoord(self.newCoord[0], self.newCoord[1])
         node.setOldCoord(self.newCoord[0], self.newCoord[1])
+
+    def getLabel(self):
+        return "Move node '%s'" % self._nodeTargetName

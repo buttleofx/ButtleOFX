@@ -25,7 +25,7 @@ class CmdCreateReaderNode(CmdCreateNode):
         self._filename = filename
 
     def getNodeName(self):
-        return self._node
+        return self._nodeName
 
     def undoCmd(self):
         """
@@ -50,5 +50,8 @@ class CmdCreateReaderNode(CmdCreateNode):
         self._node.getTuttleNode().getParam('filename').setValue(str(self._filename))
         self._graphTarget.nodesChanged()
         return node
+
+    def getLabel(self):
+        return "Create reader node '%s'" % self._nodeName
 
     nodeName = QtCore.pyqtProperty(str, getNodeName, constant=True)

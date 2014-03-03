@@ -58,5 +58,8 @@ class CmdDeleteConnection(UndoableCommand):
         # emit signal
         self._graphTarget.connectionsChanged()
 
+    def getLabel(self):
+        return "Delete connection between '%s' and '%s'" % (self.getOut_clipNodeName(), self.getIn_clipNodeName())
+
     in_clipNodeName = QtCore.pyqtProperty(str, getIn_clipNodeName, constant=True)
     out_clipNodeName = QtCore.pyqtProperty(str, getOut_clipNodeName, constant=True)

@@ -25,3 +25,8 @@ class UndoableCommand(object):
         """
         Executes the user request (the true function).
         """
+
+    def getLabel(self):
+        """
+        Return what does the command undo/redo
+        """

@@ -39,4 +39,7 @@ class CmdSetParamBoolean(UndoableCommand):
         self._param.getTuttleParam().setValue((bool)(self._newValue))
         self._param.paramChanged()
 
+    def getLabel(self):
+        return "Modify param '%s'" % self._param.getName()
+
     param = QtCore.pyqtProperty(str, getParam, constant=True)

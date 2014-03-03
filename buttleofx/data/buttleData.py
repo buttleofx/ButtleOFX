@@ -209,7 +209,7 @@ class ButtleData(QtCore.QObject):
     @QtCore.pyqtSlot(int, result=QtCore.QObject)
     def nodeGoesUp(self, index):
         """
-            Returns the total of sorted param nodeWrapper for the parametersEditor.
+            The node which position in list is index goes to the position index-1
         """
         if index>0:
 
@@ -231,7 +231,7 @@ class ButtleData(QtCore.QObject):
     @QtCore.pyqtSlot(int, result=QtCore.QObject)
     def nodeGoesDown(self, index):
         """
-            Returns the total of sorted param nodeWrapper for the parametersEditor.
+            The node which position in list is index goes to the position index+1
         """
         if index<self.getCurrentGraphWrapper().getNodeWrappers().size()-1:
 

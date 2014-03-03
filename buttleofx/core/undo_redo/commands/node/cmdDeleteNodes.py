@@ -75,3 +75,10 @@ class CmdDeleteNodes(UndoableCommand):
         # Emit signal
         self._graphTarget.nodesChanged()
         self._graphTarget.connectionsChanged()
+
+    def getLabel(self):
+        tmp = "Delete nodes"
+        for n in self._nodes :
+            tmp += " '" + n.getName() + "' "
+        return tmp
+

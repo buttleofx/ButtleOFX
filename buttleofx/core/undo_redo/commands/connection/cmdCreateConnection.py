@@ -78,5 +78,8 @@ class CmdCreateConnection(UndoableCommand):
         # return the buttle connection
         return self._connection
 
+    def getLabel(self):
+        return "Create connection between '%s' and '%s'" % (self.getOut_clipNodeName(), self.getIn_clipNodeName())
+
     in_clipNodeName = QtCore.pyqtProperty(str, getIn_clipNodeName, constant=True)
     out_clipNodeName = QtCore.pyqtProperty(str, getOut_clipNodeName, constant=True)

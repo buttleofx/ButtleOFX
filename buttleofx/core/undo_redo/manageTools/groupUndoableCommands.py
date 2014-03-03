@@ -33,3 +33,9 @@ class GroupUndoableCommands:
         for command in self.groupUndoableCommands:
             command.doCmd()
         return
+
+    def getLabel(self):
+        """
+        Return what does the command undo/redo
+        """
+        return "Undocumented Command"

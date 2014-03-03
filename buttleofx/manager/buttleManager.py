@@ -53,27 +53,7 @@ class ButtleManager(QtCore.QObject):
     def getUndoRedoStack(self):
         listOfCommand = QObjectListModel(self)
         for cmd in CommandManager().getCommands():
-            tmp = str(cmd)
-            if "cmdCreateNode" in tmp :
-                tmp = "Create " + cmd.nodeName
-            else :
-                if "cmdDeleteNode" in tmp :
-                    tmp = "Delete "
-                    for c in cmd._nodes :
-                        tmp += c.getName() + " "
-                else:
-                    if "cmdSetParam" in tmp :
-                        tmp = "Modify " +"'" +cmd.param.getName() + "'"
-                    else :
-                        if "cmdCreateConnection" in tmp :
-                            tmp = "Create connection between" + cmd.out_clipNodeName + " & " + cmd.in_clipNodeName
-                        else :
-                            if "cmdDeleteConnection" in tmp :
-                                tmp = "Delete connection between" + cmd.out_clipNodeName + " & " + cmd.in_clipNodeName
-                            else :
-                                if "manageTools" in tmp :
-                                   tmp = "Move Node"
-            listOfCommand.append(str(CommandManager().getCommands().index(cmd)) +" : " + tmp)
+            listOfCommand.append(str(CommandManager().getCommands().index(cmd)) +" : " + cmd.getLabel())
         return listOfCommand
 
     @QtCore.pyqtSlot(str, result=int)
@@ -213,7 +193,7 @@ class ButtleManager(QtCore.QObject):
     canUndo = QtCore.pyqtProperty(bool, canUndo, notify=changed)
     canRedo = QtCore.pyqtProperty(bool, canRedo, notify=changed)
 
-    listOfUndoRedoStack = QtCore.pyqtProperty(QtCore.QObject,getUndoRedoStack, constant=True)
+    undoRedoStack = QtCore.pyqtProperty(QtCore.QObject,getUndoRedoStack, constant=True)
 
     # managers
     nodeManager = QtCore.pyqtProperty(QtCore.QObject, getNodeManager, constant=True)

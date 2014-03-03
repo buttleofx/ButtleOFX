@@ -73,4 +73,7 @@ class CmdCreateNode(UndoableCommand):
         # return the buttle node
         return self._node
 
+    def getLabel(self):
+        return "Create node '%s'" % self._nodeName
+
     nodeName = QtCore.pyqtProperty(str, getNodeName, constant=True)

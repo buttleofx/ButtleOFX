@@ -241,12 +241,13 @@ class ButtleData(QtCore.QObject):
                 listOfParents.append(visited.pop())
 
             for i in range(len(listOfParents)) :
-                currentNode = listOfNodes[len(listOfNodes) - 1]
-                currentNodeOutputClip = currentNode.getOutputClip()
-                # if the input is connected to a parent
-                if self.getGraphWrapper().getConnectedClipWrapper_Output(currentNodeOutputClip) != None :
-                    parentNode = self.getGraphWrapper().getNodeWrapper(self.getGraphWrapper().getConnectedClipWrapper_Output(currentNodeOutputClip).getNodeName())
-                    listOfNodes.append(parentNode)
+                if len(listOfNodes)>0 :
+                    currentNode = listOfNodes[len(listOfNodes) - 1]
+                    currentNodeOutputClip = currentNode.getOutputClip()
+                    # if the input is connected to a parent
+                    if self.getGraphWrapper().getConnectedClipWrapper_Output(currentNodeOutputClip) != None :
+                        parentNode = self.getGraphWrapper().getNodeWrapper(self.getGraphWrapper().getConnectedClipWrapper_Output(currentNodeOutputClip).getNodeName())
+                        listOfNodes.append(parentNode)
             return listOfNodes
         else :
             return None

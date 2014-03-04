@@ -239,7 +239,6 @@ class ButtleData(QtCore.QObject):
             visited.remove(firstNode)
             while len(visited) != 0:
                 listOfParents.append(visited.pop())
-            for t in listOfParents :    
 
             for i in range(len(listOfParents)) :
                 currentNode = listOfNodes[len(listOfNodes) - 1]

@@ -206,6 +206,52 @@ class ButtleData(QtCore.QObject):
         """
         return self.getCurrentGraphWrapper().getNodeWrappers()
 
+    @QtCore.pyqtSlot(result=QtCore.QObject)
+    def getSortedNodesWrapper(self):
+        """
+            Returns the total of sorted param nodeWrapper for the parametersEditor.
+        """
+        listOfNodes = QObjectListModel(self)
+        if len(self.getCurrentGraphWrapper().getNodeWrappers())!=0 :
+            for nodes in self.getCurrentGraphWrapper().getNodeWrappers() :
+                if (nodes.pluginContext=="OfxImageEffectContextReader") :
+                    listOfNodes.append(nodes)
+                    firstNode = nodes
+                else :
+                    firstNode = self.getCurrentGraphWrapper().getNodeWrappers()[0]
+
+            toVisit = set()
+            visited = set()
+            toVisit.add(firstNode)
+            while len(toVisit) != 0 :
+                currentNodeWrapper = toVisit.pop()
+                #if the node has not already been visited
+                if currentNodeWrapper not in visited:
+                    # if the node has inputs
+                    currentNodeOutputClip = currentNodeWrapper.getOutputClip()
+                    # if the input is connected to a parent
+                    if self.getGraphWrapper().getConnectedClipWrapper_Output(currentNodeOutputClip) != None :
+                        parentNodeWrapper = self.getGraphWrapper().getNodeWrapper(self.getGraphWrapper().getConnectedClipWrapper_Output(currentNodeOutputClip).getNodeName())
+                        toVisit.add(parentNodeWrapper)
+                    visited.add(currentNodeWrapper)
+            listOfParents = QObjectListModel(self)
+            listOfParents.append(firstNode)
+            visited.remove(firstNode)
+            while len(visited) != 0:
+                listOfParents.append(visited.pop())
+            for t in listOfParents :    
+
+            for i in range(len(listOfParents)) :
+                currentNode = listOfNodes[len(listOfNodes) - 1]
+                currentNodeOutputClip = currentNode.getOutputClip()
+                # if the input is connected to a parent
+                if self.getGraphWrapper().getConnectedClipWrapper_Output(currentNodeOutputClip) != None :
+                    parentNode = self.getGraphWrapper().getNodeWrapper(self.getGraphWrapper().getConnectedClipWrapper_Output(currentNodeOutputClip).getNodeName())
+                    listOfNodes.append(parentNode)
+            return listOfNodes
+        else :
+            return None
+
     @QtCore.pyqtSlot(int, result=QtCore.QObject)
     def nodeGoesUp(self, index):
         """

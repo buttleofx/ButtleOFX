@@ -138,7 +138,7 @@ Item {
             ListView{
                 id: listViewParam
                 //anchors.fill: parent
-                model: _buttleData.editedNodesWrapper
+                model: _buttleData.graphCanBeSaved? _buttleData.getSortedNodesWrapper():_buttleData.getSortedNodesWrapper()
                 delegate: paramDelegate
             }
 

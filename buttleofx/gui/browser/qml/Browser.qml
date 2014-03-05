@@ -15,10 +15,7 @@ Rectangle {
     QtObject {
         id: m
         property string directory: firstFile.firstFolder()
-        property string filepath: ""
         property string fileFolder: "/"
-        property string fileType: ""
-        property real fileSize
         property int nbInSeq
         property string filter:"*"
         property variant selected
@@ -81,21 +78,12 @@ Rectangle {
                 m.directory= newFolder
             }
             filterName: m.filter
-            onChangeFile: {
-                m.filepath = file
-            }
+
             onChangeFileFolder: {
                 m.fileFolder = fileFolder
             }
-            onChangeFileSize: {
-                m.fileSize = fileSize
-            }
             onChangeNbFilesInSeq: {
                 m.nbInSeq = nb
-            }
-
-            onChangeFileType: {
-                m.fileType = fileType
             }
             onChangeSelectedList: {
                 m.selected = selected
@@ -108,9 +96,6 @@ Rectangle {
             Layout.preferredHeight: 40
 
             selected: m.selected
-            fileName: m.filepath
-            fileType: m.fileType
-            fileSize: m.fileSize / 1024
             nbInSeq: m.nbInSeq
             onChangeFilter: {
                 m.filter = newFilter

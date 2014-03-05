@@ -177,7 +177,7 @@ class FileModelBrowser(QtQuick.QQuickItem):
                 for f in files:
                     (shortname, extension) = os.path.splitext(f)
                     if extension == self._nameFilter:
-                        print("Only ", extension, " files")
+                        #print("Only ", extension, " files")
                         allFiles.append(FileItem(folder, f, FileItem.Type.File, ""))
                                       
             allDirs.sort(key=lambda fileItem: fileItem.fileName.lower())
@@ -211,7 +211,7 @@ class FileModelBrowser(QtQuick.QQuickItem):
                     for f in files:
                         (shortname, extension) = os.path.splitext(f)
                         if extension == self._nameFilter:
-                            print("Only ", extension, " files")
+                            #print("Only ", extension, " files")
                             allFiles.append(FileItem(folder, f, FileItem.Type.File,""))
                               
             except Exception:

@@ -15,10 +15,6 @@ Rectangle {
     signal goToFolder(string newFolder)
     property string filterName
     signal changeFileFolder(string fileFolder)
-    property string file
-    signal changeFile(string file)
-    signal changeFileType(string fileType)
-    signal changeFileSize(real fileSize)
     signal changeNbFilesInSeq(int nb)
     property bool viewList: false
     signal changeSelectedList(variant selected)
@@ -224,7 +220,6 @@ Rectangle {
                         onPressed: {
                             rootFileItem.forceActiveFocus()
 
-                            winFile.changeFileSize(0)
                             if (mouse.button == Qt.RightButton)
                                 options.popup()
                                 winFile.fileName = filename_textEdit.text
@@ -235,15 +230,12 @@ Rectangle {
                                 fileModel.selectItemsByShift(gridview.previousIndex, index)
 
                             gridview.previousIndex = index
-                            winFile.changeFile(model.object.filepath)
-                            winFile.changeFileType(model.object.fileType)
                             //if ctrl:
                             if(mouse.modifiers & Qt.ControlModifier)
                                 fileModel.selectItems(index)
 
                             else if(!(mouse.modifiers & Qt.ShiftModifier))
                                 fileModel.selectItem(index)
-                                winFile.changeFileSize(model.object.fileSize)
 
                             var sel = fileModel.getSelectedItems()
                             var selection = new Array()
@@ -568,7 +560,6 @@ Rectangle {
                         drag.target: fileInRow
 
                         onPressed: {
-                            winFile.changeFileSize(0)
                             if (mouse.button == Qt.RightButton)
                                 options.popup()
                                 winFile.fileName = textInRow.text
@@ -578,15 +569,12 @@ Rectangle {
                                 fileModel.selectItemsByShift(listview.previousIndex, index)
 
                             listview.previousIndex = index
-                            winFile.changeFile(model.object.filepath)
-                            winFile.changeFileType(model.object.fileType)
                             //if ctrl:
                             if(mouse.modifiers & Qt.ControlModifier)
                                 fileModel.selectItems(index)
 
                             else if(!(mouse.modifiers & Qt.ShiftModifier))
                                 fileModel.selectItem(index)
-                                winFile.changeFileSize(model.object.fileSize)
 
                             var sel = fileModel.getSelectedItems()
                             var selection = new Array()

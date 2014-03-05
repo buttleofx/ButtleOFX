@@ -239,7 +239,7 @@ ApplicationWindow {
         color: "#141414"
         x:list.width
         Text{
-            text:_buttleData.currentParamNodeWrapper ? _buttleData.currentParamNodeWrapper.nodeType : currentPluginType
+            text:_buttleData.currentSelectedNodeWrappers.count!=0 ? selectedNodeType : currentPluginType
             color: "white"
             font.pointSize: 11
             horizontalAlignment: Text.Center
@@ -250,7 +250,7 @@ ApplicationWindow {
         }
 
         Text{
-            text:_buttleData.currentParamNodeWrapper ? _buttleData.currentParamNodeWrapper.pluginGroup : currentPluginGroup
+            text:_buttleData.currentSelectedNodeWrappers.count!=0 ? selectedNodeGroup : currentPluginGroup
             color: "#00b2a1"
             width: parent.width-15
             height: parent.height-15
@@ -260,7 +260,7 @@ ApplicationWindow {
         }
 
         Text{
-            text:_buttleData.currentParamNodeWrapper ? _buttleData.currentParamNodeWrapper.pluginDoc : currentPluginDoc
+            text:_buttleData.currentSelectedNodeWrappers.count!=0 ? selectedNodeDoc : currentPluginDoc
             color: "white"
             width: parent.width-15
             height: parent.height-15

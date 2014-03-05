@@ -108,9 +108,9 @@ ApplicationWindow {
     PluginWindow {
         id: doc
         title: "Plugin's Documentation"
-        selectedNodeType:_buttleData.currentParamNodeWrapper? _buttleData.currentParamNodeWrapper.nodeType:""
-        selectedNodeDoc:_buttleData.currentParamNodeWrapper? _buttleData.currentParamNodeWrapper.pluginDoc:""
-        selectedNodeGroup:_buttleData.currentParamNodeWrapper? _buttleData.currentParamNodeWrapper.pluginGroup:""
+        selectedNodeType:_buttleData.currentSelectedNodeWrappers.count!=0? _buttleData.currentSelectedNodeWrappers.get(0).nodeType:""
+        selectedNodeDoc:_buttleData.currentSelectedNodeWrappers.count!=0? _buttleData.currentSelectedNodeWrappers.get(0).pluginDoc:""
+        selectedNodeGroup:_buttleData.currentSelectedNodeWrappers.count!=0? _buttleData.currentSelectedNodeWrappers.get(0).pluginGroup:""
     }
 
     //Window of shortcuts

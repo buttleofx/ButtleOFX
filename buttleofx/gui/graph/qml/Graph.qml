@@ -59,14 +59,7 @@ Rectangle {
 
         //Plugin window
         if (event.key == Qt.Key_H) {
-            var selectedNodes = _buttleData.currentSelectedNodeWrappers
-
-            // we send the node only if there is only one node selected
-            if(selectedNodes.count == 1) {
-                var node = selectedNodes.get(0)
-                _buttleData.currentParamNodeWrapper = node
-                doc.show()
-            }
+            doc.show()
         }
         
         // Assign the mosquito to the selected node

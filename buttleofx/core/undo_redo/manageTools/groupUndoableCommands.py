@@ -38,4 +38,7 @@ class GroupUndoableCommands:
         """
         Return what does the command undo/redo
         """
-        return "Undocumented Command"
+        tmp = "Move nodes"
+        for n in self.groupUndoableCommands:
+            tmp += " '" + n.getLabel() + "' "
+        return tmp

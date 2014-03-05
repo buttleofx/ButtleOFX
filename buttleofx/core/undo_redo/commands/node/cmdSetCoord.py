@@ -42,4 +42,4 @@ class CmdSetCoord(UndoableCommand):
         node.setOldCoord(self.newCoord[0], self.newCoord[1])
 
     def getLabel(self):
-        return "Move node '%s'" % self._nodeTargetName
+        return self.nodeTargetName

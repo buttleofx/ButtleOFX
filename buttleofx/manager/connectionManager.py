@@ -280,6 +280,38 @@ class ConnectionManager(QtCore.QObject):
         id_clipOut = IdClip(clipOut.getNodeName(), clipOut.getClipName())
         id_clipIn = IdClip(clipIn.getNodeName(), clipIn.getClipName())
         self.connect(id_clipOut, id_clipIn)
+
+    @QtCore.pyqtSlot(QtCore.QObject, QtCore.QObject)
+    def switchNodes(self, firstNode,secondNode):
+        buttleData = ButtleDataSingleton().get()
+        if (firstNode.getNbInput() > 0 ) :
+            firstInput = firstNode.getSrcClips().get(0)
+            firstConnectedInput = buttleData.graphWrapper.getConnectedClipWrapper(firstInput,False)
+
+        if (firstNode.getOutputClip()) :
+            firstOutput = firstNode.getOutputClip()
+            firstConnectedOutput = buttleData.graphWrapper.getConnectedClipWrapper_Output(firstOutput)
+
+        if (secondNode.getNbInput() > 0 ) :
+            secondInput = secondNode.getSrcClips().get(0)
+            secondConnectedInput = buttleData.graphWrapper.getConnectedClipWrapper(secondInput,False)
+
+        if (secondNode.getOutputClip()) :
+            secondOutput = secondNode.getOutputClip()
+            secondConnectedOutput = buttleData.graphWrapper.getConnectedClipWrapper_Output(secondOutput)
+
+        if(secondConnectedInput and secondConnectedOutput) :
+            self.replace(secondConnectedInput, secondConnectedInput, secondConnectedOutput)
+        if(not secondConnectedOutput) :
+            self.replace(secondConnectedInput, secondConnectedInput, secondOutput)
+
+        if(firstConnectedInput and firstConnectedOutput) :
+            self.replace(firstConnectedInput, firstConnectedInput, firstConnectedOutput)
+        if(not firstConnectedOutput) :
+            self.replace(firstConnectedInput, firstConnectedInput, firstOutput)
+
+
+        self.replace(firstOutput, firstOutput, secondInput)
         
     @QtCore.pyqtSlot(QtCore.QObject)
     def unHook(self, clip):

@@ -259,19 +259,21 @@ class ButtleData(QtCore.QObject):
         """
         if index>0:
 
-            firstNodeX = self.getCurrentGraphWrapper().getNodeWrapperByIndex(index-1).getXCoord()
-            firstNodeY = self.getCurrentGraphWrapper().getNodeWrapperByIndex(index-1).getYCoord()
-            secondNodeX = self.getCurrentGraphWrapper().getNodeWrapperByIndex(index).getXCoord()
-            secondNodeY = self.getCurrentGraphWrapper().getNodeWrapperByIndex(index).getYCoord()
+            if self.getCurrentGraphWrapper().getNodeWrapperByIndex(index-1).pluginContext != "OfxImageEffectContextReader" :
 
-            self.getCurrentGraphWrapper().getNodeWrapperByIndex(index-1).setXCoord(secondNodeX)
-            self.getCurrentGraphWrapper().getNodeWrapperByIndex(index-1).setYCoord(secondNodeY)
+                firstNodeX = self.getCurrentGraphWrapper().getNodeWrapperByIndex(index-1).getXCoord()
+                firstNodeY = self.getCurrentGraphWrapper().getNodeWrapperByIndex(index-1).getYCoord()
+                secondNodeX = self.getCurrentGraphWrapper().getNodeWrapperByIndex(index).getXCoord()
+                secondNodeY = self.getCurrentGraphWrapper().getNodeWrapperByIndex(index).getYCoord()
 
-            self.getCurrentGraphWrapper().getNodeWrapperByIndex(index).setXCoord(firstNodeX)
-            self.getCurrentGraphWrapper().getNodeWrapperByIndex(index).setYCoord(firstNodeY)
+                self.getCurrentGraphWrapper().getNodeWrapperByIndex(index-1).setXCoord(secondNodeX)
+                self.getCurrentGraphWrapper().getNodeWrapperByIndex(index-1).setYCoord(secondNodeY)
 
-            self.getCurrentGraphWrapper().getNodeWrappers().move(index,index-1)
+                self.getCurrentGraphWrapper().getNodeWrapperByIndex(index).setXCoord(firstNodeX)
+                self.getCurrentGraphWrapper().getNodeWrapperByIndex(index).setYCoord(firstNodeY)
 
+                self.getCurrentGraphWrapper().getNodeWrappers().move(index,index-1)
+                
         return self.getCurrentGraphWrapper().getNodeWrappers()
 
     @QtCore.pyqtSlot(int, result=QtCore.QObject)

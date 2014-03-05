@@ -297,6 +297,12 @@ Item {
                             onClicked: {
                                 listViewParam.currentIndex = index
                                 _buttleData.nodeGoesUp(listViewParam.currentIndex)
+                                if(listViewParam.currentIndex>0){
+                                    var firstUpNode = _buttleData.graphWrapper.getNodeWrapperByIndex(index-1)
+                                    var secondUpNode = _buttleData.graphWrapper.getNodeWrapperByIndex(index)
+                                    if (firstUpNode.pluginContext != "OfxImageEffectContextReader") 
+                                        _buttleManager.connectionManager.switchNodes(firstUpNode,secondUpNode)
+                                }
                             }
                         }
 
@@ -329,6 +335,12 @@ Item {
                             onClicked: {
                                 listViewParam.currentIndex = index
                                 _buttleData.nodeGoesDown(listViewParam.currentIndex)
+                                if(listViewParam.count-1>listViewParam.currentIndex){
+                                    var firstDownNode = _buttleData.graphWrapper.getNodeWrapperByIndex(index)
+                                    var secondDownNode = _buttleData.graphWrapper.getNodeWrapperByIndex(index+1)
+
+                                    _buttleManager.connectionManager.switchNodes(firstDownNode,secondDownNode)
+                                }
                             }
                         }
 

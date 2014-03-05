@@ -23,6 +23,8 @@ Rectangle {
     property real newGreenInput
     property real newBlueInput
 
+    property bool hasAlpha: true
+
     // column containing the inputs colors 
     Column {
         anchors.fill: parent
@@ -65,6 +67,7 @@ Rectangle {
             color: "#333"
             clip: true
             anchors.horizontalCenter: parent.horizontalCenter
+            visible: colorFields.hasAlpha
             TextInput {
                 id: alphaColorText
                 anchors.fill: parent
@@ -126,6 +129,7 @@ Rectangle {
                 onNewValueInputChanged: {
                     newAlphaInput = newValueInput/255
                 }
+                visible: colorFields.hasAlpha
             }
         }
     }

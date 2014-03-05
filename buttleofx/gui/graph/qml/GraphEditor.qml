@@ -41,7 +41,6 @@ Item {
     ParamButtleEditor {                
         z:1
         visible: editNode ? true:false
-        params:_buttleData.currentParamNodeWrapper ? _buttleData.currentParamNodeWrapper.params : null
         currentParamNode: _buttleData.currentParamNodeWrapper
         x:_buttleData.currentParamNodeWrapper? (currentParamNode.coord.x + 80)*graph.zoomCoeff  + graph.offsetX + (1-graph.zoomCoeff)*415 : 0
         y:_buttleData.currentParamNodeWrapper? (currentParamNode.coord.y + 95)*graph.zoomCoeff  + graph.offsetY + (1-graph.zoomCoeff)*200 : 0

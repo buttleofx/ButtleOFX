@@ -6,6 +6,8 @@ from pyTuttle import tuttle
 # data
 from buttleofx.data import ButtleDataSingleton
 
+import logging
+
 
 class ViewerManager(QtCore.QObject):
     """
@@ -54,6 +56,7 @@ class ViewerManager(QtCore.QObject):
             processGraph.processAtTime(self._tuttleImageCache, frame)
         else:  # if it's an image only
             processOptions = tuttle.ComputeOptions(int(frame))
+            logging.debug("computeNode: Start compute - frame: %s, node: %s" % (frame, node))
             processGraph = tuttle.ProcessGraph(processOptions, graphTuttle, [node])
             processGraph.setup()
             timeRange = tuttle.TimeRange(frame, frame, 1)  # buttleData.getTimeRange()
@@ -61,12 +64,13 @@ class ViewerManager(QtCore.QObject):
             processGraph.setupAtTime(frame)
             processGraph.processAtTime(self._tuttleImageCache, frame)
             processGraph.endSequence()
+            logging.debug("computeNode: End tuttle computation.")
 
         self._computedImage = self._tuttleImageCache.get(0)
 
         #Add the computedImage to the map
         hashMap = tuttle.NodeHashContainer()
-        graphTuttle.computeGlobalHashAtTime(hashMap, frame)
+        graphTuttle.computeGlobalHashAtTime(hashMap, frame, [node])
         hasCode = hashMap.getHash(node, frame)
         #Max 15 computedImages saved in memory
         if hasCode not in buttleData._mapNodeNameToComputedImage.keys() and len(buttleData._mapNodeNameToComputedImage) < 15:
@@ -85,15 +89,16 @@ class ViewerManager(QtCore.QObject):
         buttleData = ButtleDataSingleton().get()
         #Get the name of the currentNode of the viewer
         node = buttleData.getCurrentViewerNodeName()
-        #Get the gloabl hashCode of the node
-        if node is not None:
-            hashMap = tuttle.NodeHashContainer()
-            buttleData.getCurrentGraph().getGraphTuttle().computeGlobalHashAtTime(hashMap, frame)
-            node_hashCode = hashMap.getHash(node, frame)
-        #Get the map
-        mapNodeToImage = buttleData.getMapNodeNameToComputedImage()
-
+        
         try:
+            # Get the global node hash ID
+            if node is not None:
+                hashMap = tuttle.NodeHashContainer()
+                buttleData.getCurrentGraph().getGraphTuttle().computeGlobalHashAtTime(hashMap, frame, [node])
+                node_hashCode = hashMap.getHash(node, frame)
+            # Get the buttle latest images map
+            mapNodeToImage = buttleData.getMapNodeNameToComputedImage()
+
             self.setNodeError("")
             for key in mapNodeToImage.keys():
                 #If the image is already calculated

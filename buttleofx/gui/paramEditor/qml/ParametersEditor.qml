@@ -50,7 +50,7 @@ Item {
         z:1
         height: 250
         visible:pluginVisible
-        y:parametersEditor.height-addNode.height-height
+        y:parametersEditor.height - addNode.height - height
         x:parametersEditor.width/2-100
     }
 

@@ -4,9 +4,9 @@ import QuickMamba 1.0
 
 Rectangle {
     id: qml_graphRoot
-
+    focus: true
+    
     Keys.onPressed: {
-
         // Graph toolbar
         if ((event.key == Qt.Key_N) && (event.modifiers & Qt.ControlModifier)){
             //the fileDialog is opened and closed because the first which appear doesn't work
@@ -121,7 +121,6 @@ Rectangle {
         }
 
     }
-
 
     QtObject {
         id: m

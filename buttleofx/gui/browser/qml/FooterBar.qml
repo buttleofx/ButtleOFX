@@ -6,11 +6,8 @@ Rectangle {
 	id: footer
     color: "#141414"
 
-	property string fileName: "Default file"
-    property string fileType: "File"
     property string filter: "*"
     property variant selected
-    property real fileSize
     property int nbInSeq
 
     signal changeFilter(string newFilter)
@@ -27,13 +24,34 @@ Rectangle {
 
         Text {
             id: nbOfFiles
-            text: selected.count > 1 ? selected.count + " files selected" : fileType == "Sequence" ? nbInSeq + " files in Sequence" : ""
+            text: {
+                if(selected.count > 1){
+                    selected.count + " files selected"
+                }if(selected.count == 1){
+                    selected.get(0).fileType =="Sequence" ? nbInSeq + " files in Sequence" : ""
+                }
+            }
+
             color: "white"
         }
 
         Text {
             id: size
-            text: fileSize <= 0.0 ? "" : "Size: " + fileSize.toFixed(2) + " Ko"
+            text: {
+                var res=0
+                if(selected.count > 1){
+
+                    for(var i=0; i< selected.count; ++i)
+                    {
+                        res = res + selected.get(i).fileSize
+                    }
+                    res = res / 1024.
+                    "Size: " + res.toFixed(2) + " Ko"
+                }else{
+                    res = selected.get(i).fileSize / 1024.
+                    selected.get(i).fileSize <= 0.0 ? "" : "Size: " + res.toFixed(2) + " Ko"
+                }
+            }
             color: "white"
         }
 

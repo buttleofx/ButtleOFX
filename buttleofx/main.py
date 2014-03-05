@@ -8,12 +8,13 @@ import logging
         # logging.error("error message")
         # logging.critical("critical message")
 # print in a file
-logging.basicConfig(format='Buttle - %(levelname)s - %(asctime)-15s - %(message)s', filename='console.log', filemode='w', level=logging.DEBUG)
+#logging.basicConfig(format='Buttle - %(levelname)s - %(asctime)-15s - %(message)s', filename='console.log', filemode='w', level=logging.DEBUG)
 # print in console
-#logging.basicConfig(format='Buttle - %(levelname)s - %(message)s', level=logging.DEBUG)
+logging.basicConfig(format='Buttle - %(levelname)s - %(message)s', level=logging.DEBUG)
 
 # Tuttle
 from pyTuttle import tuttle
+import getBestPlugin
 # quickmamba
 from quickmamba.utils import QmlInstantCoding
 # PyCheck
@@ -29,9 +30,9 @@ except:
     logging.debug('TuttleFX not installed, use Python Image Library instead.')
 
 if tuttleofx_installed:
-    from buttleofx.gui.viewerGL.glviewport_tuttleofx import GLViewport_tuttleofx
+    from buttleofx.gui.viewerGL.glviewport_tuttleofx import GLViewport_tuttleofx as GLViewportImpl
 else:
-    from buttleofx.gui.viewerGL.glviewport_pil import GLViewport_pil
+    from buttleofx.gui.viewerGL.glviewport_pil import GLViewport_pil as GLViewportImpl
 
 # data
 from buttleofx.data import ButtleDataSingleton
@@ -51,10 +52,11 @@ from buttleofx.core.undo_redo.manageTools import CommandManager
 from buttleofx.gui.graph.menu import MenuWrapper
 
 # PyQt5
-from PyQt5 import QtCore, QtGui, QtQml
+from PyQt5 import QtCore, QtGui, QtQml, QtQuick, QtWidgets
 
 import os
 import sys
+import numpy
 
 osname = os.name.lower()
 sysplatform = sys.platform.lower()
@@ -83,6 +85,76 @@ class ButtleApp(QtGui.QGuiApplication):
 #            traceback.print_exc()
 #            return False
 
+ 
+gray_color_table = [QtGui.qRgb(i, i, i) for i in range(256)]
+
+def toQImage(im):
+    if im is None:
+        return QtGui.QImage()
+
+    if im.dtype == numpy.uint8:
+        if len(im.shape) == 2:
+            qim = QtGui.QImage(im.data, im.shape[1], im.shape[0], im.strides[0], QtGui.QImage.Format_Indexed8)
+            qim.setColorTable(gray_color_table)
+            return qim
+
+        elif len(im.shape) == 3:
+            if im.shape[2] == 3:
+                qim = QtGui.QImage(im.data, im.shape[1], im.shape[0], im.strides[0], QtGui.QImage.Format_RGB888);
+                return qim
+            elif im.shape[2] == 4:
+                qim = QtGui.QImage(im.data, im.shape[1], im.shape[0], im.strides[0], QtGui.QImage.Format_ARGB32);
+                return qim
+
+    raise ValueError("toQImage: case not implemented.")
+
+class ImageProvider(QtQuick.QQuickImageProvider):
+    def __init__(self):
+        QtQuick.QQuickImageProvider.__init__(self, QtQuick.QQuickImageProvider.Image)
+
+    def requestImage(self, id, size):
+        # print('requestImage:', 'id: ', id)
+        max_size = 200
+        try:
+            (_, extension) = os.path.splitext(id)
+            readerIdentifier = getBestPlugin.getBestReader(extension)
+        except Exception as e:
+            # print("Tuttle ImageProvider: Unsupported extension '%s'" % extension, str(e))
+            # import traceback
+            # traceback.print_exc()
+            qtImage = QtGui.QImage(max_size, max_size, QtGui.QImage.Format_RGB32)
+            qtImage.fill(QtGui.QColor("green"))
+            return qtImage, qtImage.size()
+        
+        try:
+            # compute image using TuttleOFX
+            outputCache = tuttle.MemoryCache()
+            tuttle.compute(
+                outputCache,
+                [
+                    tuttle.NodeInit(readerIdentifier, filename=id, bitDepth="8i"),
+                    tuttle.NodeInit("tuttle.resize", keepRatio=True, size=(max_size, max_size)),
+                    # tuttle.NodeInit("tuttle.jpegwriter", filename="/tmp/buttleofx_test_thumbnail.jpg"),
+                ])
+            
+            # retrieve graph output
+            imgRes = outputCache.get(0)
+            numpyImage = imgRes.getNumpyArray()
+            
+            # convert numpyImage to QImage
+            # qtImage = numpy2qimage(numpyImage)
+            qtImage = toQImage(numpyImage)
+            
+            return qtImage, qtImage.size()
+        
+        except Exception as e:
+            print("Error Tuttle ImageProvider: ", str(e))
+            # import traceback
+            # traceback.print_exc()
+            qtImage = QtGui.QImage(max_size, max_size,QtGui.QImage.Format_RGB32)
+            qtImage.fill(QtGui.QColor("red"))
+            return qtImage, qtImage.size()
+    
 
 def main(argv, app):
 
@@ -96,10 +168,7 @@ def main(argv, app):
     # add new QML type
     QtQml.qmlRegisterType(Finder, "FolderListViewItem", 1, 0, "FolderListView")
     
-    if tuttleofx_installed:
-        QtQml.qmlRegisterType(GLViewport_tuttleofx, "Viewport", 1, 0, "GLViewport")
-    else:
-        QtQml.qmlRegisterType(GLViewport_pil, "Viewport", 1, 0, "GLViewport")
+    QtQml.qmlRegisterType(GLViewportImpl, "Viewport", 1, 0, "GLViewport")
 
     # init undo_redo contexts
     cmdManager = CommandManager()
@@ -112,6 +181,9 @@ def main(argv, app):
     #view = QtQuick.QQuickView()
     #view.setViewport(QtOpenGL.QGLWidget())
     #view.setViewportUpdateMode(QtQml.QQuickView.FullViewportUpdate)
+    
+    engine.addImageProvider("buttleofx", ImageProvider())
+    #ImageProviderGUI()
 
     # data
     buttleData = ButtleDataSingleton().get().init(engine, currentFilePath)

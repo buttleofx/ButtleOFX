@@ -192,8 +192,6 @@ class Graph(object):
 
         commands = []
 
-        tmp = "Move nodes"
-
         # we create a GroupUndoableCommands of CmdSetCoord for each selected node
         for selectedNodeWrapper in buttleData.getCurrentSelectedNodeWrappers():
             # we get the needed informations for this node
@@ -204,12 +202,10 @@ class Graph(object):
             # we set the new coordinates of the node (each selected node is doing the same movement)
             cmdMoved = CmdSetCoord(self, selectedNodeName, (oldX + xMovement, oldY + yMovement))
 
-            tmp += " '" + cmdMoved.getLabel() + "' "
-
             commands.append(cmdMoved)
 
         # then we push the group of commands
-        CommandManager().push(GroupUndoableCommands(commands, tmp))
+        CommandManager().push(GroupUndoableCommands(commands, "Move nodes"))
 
     ################################################## FLAGS ##################################################
 

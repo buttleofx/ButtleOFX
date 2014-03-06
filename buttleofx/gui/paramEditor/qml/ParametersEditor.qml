@@ -534,7 +534,7 @@ Item {
                         when: !displayGraph
                         PropertyChanges {
                             target: displayTheGraph
-                            imageSource: hovered? "file:///" + _buttleData.buttlePath +  "/gui/img/buttons/tools/plus_hover.png" : "file:///" + _buttleData.buttlePath +  "/gui/img/buttons/tools/plus.png"
+                            imageSource: hovered? "file:///" + _buttleData.buttlePath +  "/gui/img/buttons/params/graph_hover.png" : "file:///" + _buttleData.buttlePath +  "/gui/img/buttons/params/graph.png"
                         }
                     },
                     State {
@@ -542,7 +542,7 @@ Item {
                         when: displayGraph
                         PropertyChanges {
                             target: displayTheGraph
-                            imageSource: hovered? "file:///" + _buttleData.buttlePath +  "/gui/img/icons/close_hover.png" : "file:///" + _buttleData.buttlePath +  "/gui/img/icons/close.png"      
+                            imageSource: hovered? "file:///" + _buttleData.buttlePath +  "/gui/img/buttons/params/browser_hover.png" : "file:///" + _buttleData.buttlePath +  "/gui/img/buttons/params/browser.png"
                         }
                     }
                 ]

@@ -283,18 +283,20 @@ class ButtleData(QtCore.QObject):
         """
         if index<self.getCurrentGraphWrapper().getNodeWrappers().size()-1:
 
-            firstNodeX = self.getCurrentGraphWrapper().getNodeWrapperByIndex(index).getXCoord()
-            firstNodeY = self.getCurrentGraphWrapper().getNodeWrapperByIndex(index).getYCoord()
-            secondNodeX = self.getCurrentGraphWrapper().getNodeWrapperByIndex(index+1).getXCoord()
-            secondNodeY = self.getCurrentGraphWrapper().getNodeWrapperByIndex(index+1).getYCoord()
+            if self.getCurrentGraphWrapper().getNodeWrapperByIndex(index).pluginContext != "OfxImageEffectContextReader" :
 
-            self.getCurrentGraphWrapper().getNodeWrapperByIndex(index).setXCoord(secondNodeX)
-            self.getCurrentGraphWrapper().getNodeWrapperByIndex(index).setYCoord(secondNodeY)
+                firstNodeX = self.getCurrentGraphWrapper().getNodeWrapperByIndex(index).getXCoord()
+                firstNodeY = self.getCurrentGraphWrapper().getNodeWrapperByIndex(index).getYCoord()
+                secondNodeX = self.getCurrentGraphWrapper().getNodeWrapperByIndex(index+1).getXCoord()
+                secondNodeY = self.getCurrentGraphWrapper().getNodeWrapperByIndex(index+1).getYCoord()
 
-            self.getCurrentGraphWrapper().getNodeWrapperByIndex(index+1).setXCoord(firstNodeX)
-            self.getCurrentGraphWrapper().getNodeWrapperByIndex(index+1).setYCoord(firstNodeY)
+                self.getCurrentGraphWrapper().getNodeWrapperByIndex(index).setXCoord(secondNodeX)
+                self.getCurrentGraphWrapper().getNodeWrapperByIndex(index).setYCoord(secondNodeY)
 
-            self.getCurrentGraphWrapper().getNodeWrappers().move(index,index+1)
+                self.getCurrentGraphWrapper().getNodeWrapperByIndex(index+1).setXCoord(firstNodeX)
+                self.getCurrentGraphWrapper().getNodeWrapperByIndex(index+1).setYCoord(firstNodeY)
+
+                self.getCurrentGraphWrapper().getNodeWrappers().move(index,index+1)
 
         return self.getCurrentGraphWrapper().getNodeWrappers()
 

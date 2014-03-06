@@ -310,6 +310,14 @@ Item {
                             id: upNodeStateButtonEvents
                              states: [
                                  State {
+                                     name: "reader"
+                                     when: currentParamNode.pluginContext == "OfxImageEffectContextReader"
+                                     PropertyChanges {
+                                         target: upNode
+                                         source:  ""
+                                     }
+                                 },
+                                 State {
                                      name: "hover"
                                      when: upNodeMouseArea.containsMouse
                                      PropertyChanges {
@@ -338,8 +346,8 @@ Item {
                                 if(listViewParam.count-1>listViewParam.currentIndex){
                                     var firstDownNode = _buttleData.graphWrapper.getNodeWrapperByIndex(index)
                                     var secondDownNode = _buttleData.graphWrapper.getNodeWrapperByIndex(index+1)
-
-                                    _buttleManager.connectionManager.switchNodes(firstDownNode,secondDownNode)
+                                    if (firstDownNode.pluginContext != "OfxImageEffectContextReader")
+                                        _buttleManager.connectionManager.switchNodes(firstDownNode,secondDownNode)
                                 }
                             }
                         }
@@ -347,6 +355,14 @@ Item {
                         StateGroup {
                             id: downNodeStateButtonEvents
                              states: [
+                                State {
+                                     name: "reader"
+                                     when: currentParamNode.pluginContext == "OfxImageEffectContextReader"
+                                     PropertyChanges {
+                                         target: downNode
+                                         source:  ""
+                                     }
+                                 },
                                  State {
                                      name: "hover"
                                      when: downNodeMouseArea.containsMouse

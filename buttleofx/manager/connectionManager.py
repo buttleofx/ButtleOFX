@@ -310,8 +310,14 @@ class ConnectionManager(QtCore.QObject):
         if(not firstConnectedOutput) :
             self.replace(firstConnectedInput, firstConnectedInput, firstOutput)
 
-
         self.replace(firstOutput, firstOutput, secondInput)
+
+    @QtCore.pyqtSlot(str)
+    def reconnect(self, nodeName):
+        buttleData = ButtleDataSingleton().get()
+        nodeClips = buttleData.graphWrapper.deleteNodeWrapper(nodeName)
+        if nodeClips :
+            self.connectWrappers(nodeClips.get(0), nodeClips.get(1))
         
     @QtCore.pyqtSlot(QtCore.QObject)
     def unHook(self, clip):

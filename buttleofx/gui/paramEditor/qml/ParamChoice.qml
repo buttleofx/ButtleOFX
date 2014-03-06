@@ -73,7 +73,7 @@ Item {
                 }
                 label: Text {
                         color: "white"
-                        text: control.currentText
+                        text: paramObject.value
                         width: comboBox.width
                         y: 2
                         x: -2

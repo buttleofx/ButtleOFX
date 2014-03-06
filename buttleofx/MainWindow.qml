@@ -41,7 +41,7 @@ ApplicationWindow {
         return res;
     }
 
-    property int selectedView:getSetting("view")
+    property int selectedView: getSetting("view") ? getSetting("view") : 3
 
     property variant lastSelectedDefaultView: view1
     property variant view1: [browser, paramEditor, player, graphEditor]
@@ -549,7 +549,7 @@ ApplicationWindow {
 
             MenuItem {
                 id: advancedView
-                text: "Advanced Mode"
+                text: "Quick Mode"
                 checkable: true
                 checked: selectedView==3? true : false
                 onTriggered: {

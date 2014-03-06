@@ -19,4 +19,4 @@ class ParamPushButton(Param):
         return self._tuttleParam.getProperties().getStringProperty("OfxParamPropHint")
 
     def getEnabled(self):
-        return self._tuttleParam.getProperties().fetchProperty("OfxParamPropEnabled").getStringValue(0)
+        return self._tuttleParam.getProperties().getIntProperty("OfxParamPropEnabled")

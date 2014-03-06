@@ -15,7 +15,7 @@ Item {
 
     Tab {
         id: tabBar
-        name: urlOfFileToSave==""? "Graph :    Unsaved graph": "Graph :    " + _buttleData.getFileName(urlOfFileToSave)
+        name: urlOfFileToSave==""? "Graph :    Untitled graph": "Graph :    " + _buttleData.getFileName(urlOfFileToSave)
         onCloseClicked: graphEditor.buttonCloseClicked(true)
         onFullscreenClicked: graphEditor.buttonFullscreenClicked(true)
     }

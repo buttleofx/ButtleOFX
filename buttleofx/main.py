@@ -45,7 +45,7 @@ from buttleofx.data import Finder
 #TimerPlayer
 from buttleofx.gui.viewer import TimerPlayer
 #FileModelBrowser
-from buttleofx.gui.browser import FileModelBrowser
+from buttleofx.gui.browser import FileModelBrowser,FileModelBrowserSingleton
 # undo_redo
 from buttleofx.core.undo_redo.manageTools import CommandManager
 # Menu
@@ -191,6 +191,14 @@ def main(argv, app):
     buttleManager = ButtleManagerSingleton().get().init()
     # event
     buttleEvent = ButtleEventSingleton().get()
+    #fileModelBrowser
+    browser = FileModelBrowserSingleton().get()
+    if len(sys.argv) == 2 :
+        browser.setFirstFolder(sys.argv[1])
+    else :
+        from os.path import expanduser
+        browser.setFirstFolder(expanduser("~"))
+
     # Menus
     #fileMenu = MenuWrapper("file", 0, component, app)
     #editMenu = MenuWrapper("edit", 0, view, app)
@@ -202,6 +210,7 @@ def main(argv, app):
     rc.setContextProperty("_buttleData", buttleData)
     rc.setContextProperty("_buttleManager", buttleManager)
     rc.setContextProperty("_buttleEvent", buttleEvent)
+    rc.setContextProperty("_browser", browser)
     #rc.setContextProperty("_fileMenu", fileMenu)
     #rc.setContextProperty("_editMenu", editMenu)
     #rc.setContextProperty("_addMenu", addMenu)

@@ -5,6 +5,7 @@ import os
 import getBestPlugin
 
 from quickmamba.models import QObjectListModel
+from quickmamba.patterns import Singleton
 from pySequenceParser import sequenceParser
 
 from PyQt5 import QtGui, QtCore, QtQuick
@@ -90,6 +91,7 @@ class FileModelBrowser(QtQuick.QQuickItem):
     """Class FileModelBrowser"""
     
     _folder = ""
+    _firstFolder = ""
     
     def __init__(self, parent=None):
         super(FileModelBrowser, self).__init__(parent)
@@ -98,12 +100,14 @@ class FileModelBrowser(QtQuick.QQuickItem):
     
     def getFolder(self):
         return self._folder
-    
+
     @QtCore.pyqtSlot(result=str)
-    def firstFolder(self):
-        from os.path import expanduser
-        home = expanduser("~")
-        return home
+    def getFirstFolder(self):
+        return self._firstFolder
+
+    @QtCore.pyqtSlot(str)
+    def setFirstFolder(self, firstFolder):
+        self._firstFolder = firstFolder
     
     def setFolder(self, folder):
         self._folder = folder
@@ -318,3 +322,10 @@ class FileModelBrowser(QtQuick.QQuickItem):
     showSeqChanged = QtCore.pyqtSignal()
     showSeq = QtCore.pyqtProperty(bool, getShowSeq, setShowSeq, notify=showSeqChanged)
 
+# This class exists just because there are problems when a class extends 2 other classes (Singleton and QObject)
+class FileModelBrowserSingleton(Singleton):
+
+    _fileModelBrowser = FileModelBrowser()
+
+    def get(self):
+        return self._fileModelBrowser

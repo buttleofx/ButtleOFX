@@ -53,6 +53,7 @@ from buttleofx.gui.graph.menu import MenuWrapper
 
 # PyQt5
 from PyQt5 import QtCore, QtGui, QtQml, QtQuick, QtWidgets
+from PyQt5.QtWidgets import QWidget, QFileDialog, QApplication, QMessageBox
 
 import os
 import sys
@@ -70,8 +71,42 @@ currentFilePath = os.path.dirname(os.path.abspath(__file__))
 if windows:
     currentFilePath = currentFilePath.replace("\\", "/")
 
+class EventFilter(QtCore.QObject):
+    def eventFilter(self, receiver, event):
+        buttleData = ButtleDataSingleton().get()
+        finder = Finder()
+        finder.setMessage("SaveFile")
+        if(event.type() == QtCore.QEvent.Close):
+            if isinstance(receiver,QtQuick.QQuickWindow) and receiver.title() =="ButtleOFX" :
+                if buttleData.graphCanBeSaved :
+                    msgBox = QMessageBox()
+                    msgBox.setText("The graph has been modified.");
+                    msgBox.setInformativeText("Do you want to save your changes?")
+                    msgBox.setStandardButtons(QMessageBox.Save | QMessageBox.Discard | QMessageBox.Abort)
+                    msgBox.setDefaultButton(QMessageBox.Save)
+                    ret = msgBox.exec_();
+                    if ret == QMessageBox.Save : 
+                        if buttleData.urlOfFileToSave != "" :
+                            buttleData.saveData(buttleData.urlOfFileToSave)
+                            return False
+                        else :
+                            dialog = QFileDialog()
+                            fileToSave = dialog.getSaveFileName(None, "Save Graph", currentFilePath)
+                            return True
+                    else:
+                        if ret == QMessageBox.Discard :
+                            return False
+                        else :
+                            return True
+                else :
+                    return False
+            else: 
+                return False
+        else:      
+            return super(EventFilter,self).eventFilter(receiver, event)
 
-class ButtleApp(QtGui.QGuiApplication):
+
+class ButtleApp(QtWidgets.QApplication):
     def __init__(self, argv):
         super(ButtleApp, self).__init__(argv)
 
@@ -236,13 +271,16 @@ def main(argv, app):
 
     #add._menu.popup(view.mapToGlobal(QtCore.QPoint(0, 0)))
 
-
     if topLevel is not None:
         topLevel.setIcon(QtGui.QIcon(os.path.join(currentFilePath, "../blackMosquito.png")))
         topLevel.show()
+
     else:
         print("ERRORS")
         # Print all errors that occurred.
         for error in component.errors():
             print(error.toString())
 
+    aFilter = EventFilter()
+    app.installEventFilter(aFilter)
+    sys.exit(app.exec_())

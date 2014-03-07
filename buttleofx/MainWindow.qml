@@ -48,7 +48,7 @@ ApplicationWindow {
     property variant view2: [player, paramEditor, browser, graphEditor]
     property variant view3: [player, browser, advancedParamEditor, graphEditor]
 
-    property string urlOfFileToSave: ""
+    property string urlOfFileToSave: _buttleData.urlFileToSave
 
     width: 1200
     height: 800

@@ -94,6 +94,8 @@ class ButtleData(QtCore.QObject):
     _processGraph = None
     _timeRange = None
 
+    _urlOfFileToSave = ""
+
     def init(self, view, filePath):
         self._graph = Graph()
         self._graphWrapper = GraphWrapper(self._graph, view)
@@ -122,6 +124,9 @@ class ButtleData(QtCore.QObject):
     ################################################## GETTERS ET SETTERS ##################################################
 
     #################### getters ####################
+
+    def getUrlOfFileToSave(self):
+        return self._urlOfFileToSave
 
     def getGraph(self):
         return self._graph
@@ -365,6 +370,9 @@ class ButtleData(QtCore.QObject):
     #################### setters ####################
 
     ### current data ###
+
+    def setUrlOfFileToSave(self,url):
+        self._urlOfFileToSave = url
 
     def setCurrentParamNodeName(self, nodeName):
         self._currentParamNodeName = nodeName
@@ -1032,6 +1040,10 @@ class ButtleData(QtCore.QObject):
     # possibility to save graph
     graphCanBeSavedChanged = QtCore.pyqtSignal()
     graphCanBeSaved = QtCore.pyqtProperty(bool, graphCanBeSaved, notify=graphCanBeSavedChanged)
+
+    # url of the file to save
+    urlOfFileToSaveChanged = QtCore.pyqtSignal()
+    urlOfFileToSave = QtCore.pyqtProperty(str, getUrlOfFileToSave, setUrlOfFileToSave, notify=urlOfFileToSaveChanged)
 
 # This class exists just because there are problems when a class extends 2 other classes (Singleton and QObject)
 class ButtleDataSingleton(Singleton):

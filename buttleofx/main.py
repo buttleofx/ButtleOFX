@@ -76,34 +76,31 @@ class EventFilter(QtCore.QObject):
         buttleData = ButtleDataSingleton().get()
         finder = Finder()
         finder.setMessage("SaveFile")
-        if(event.type() == QtCore.QEvent.Close):
-            if isinstance(receiver,QtQuick.QQuickWindow) and receiver.title() =="ButtleOFX" :
-                if buttleData.graphCanBeSaved :
-                    msgBox = QMessageBox()
-                    msgBox.setText("The graph has been modified.");
-                    msgBox.setInformativeText("Do you want to save your changes?")
-                    msgBox.setStandardButtons(QMessageBox.Save | QMessageBox.Discard | QMessageBox.Abort)
-                    msgBox.setDefaultButton(QMessageBox.Save)
-                    ret = msgBox.exec_();
-                    if ret == QMessageBox.Save : 
-                        if buttleData.urlOfFileToSave != "" :
-                            buttleData.saveData(buttleData.urlOfFileToSave)
-                            return False
-                        else :
-                            dialog = QFileDialog()
-                            fileToSave = dialog.getSaveFileName(None, "Save Graph", currentFilePath)
-                            return True
-                    else:
-                        if ret == QMessageBox.Discard :
-                            return False
-                        else :
-                            return True
-                else :
-                    return False
-            else: 
-                return False
-        else:      
+        if(event.type() != QtCore.QEvent.Close):
             return super(EventFilter,self).eventFilter(receiver, event)
+        if not isinstance(receiver,QtQuick.QQuickWindow) and receiver.title() =="ButtleOFX" :
+            return False
+        if not buttleData.graphCanBeSaved :
+            return False
+        msgBox = QMessageBox()
+        msgBox.setText("The graph has been modified.");
+        msgBox.setInformativeText("Do you want to save your changes?")
+        msgBox.setStandardButtons(QMessageBox.Save | QMessageBox.Discard | QMessageBox.Abort)
+        msgBox.setDefaultButton(QMessageBox.Save)
+        ret = msgBox.exec_();
+        if ret == QMessageBox.Save : 
+            if buttleData.urlOfFileToSave != "" :
+                buttleData.saveData(buttleData.urlOfFileToSave)
+                return False
+            dialog = QFileDialog()
+            fileToSave = dialog.getSaveFileName(None, "Save Graph", currentFilePath)
+            return True
+        if ret == QMessageBox.Discard :
+            return False
+        return True
+             
+                     
+            
 
 
 class ButtleApp(QtWidgets.QApplication):
@@ -228,8 +225,12 @@ def main(argv, app):
     buttleEvent = ButtleEventSingleton().get()
     #fileModelBrowser
     browser = FileModelBrowserSingleton().get()
+    import argparse
+    parser = argparse.ArgumentParser(description='TODO: Description de ButtleOFX.')
+    parser.add_argument('folder', nargs='?', help='folder to browse')
+    args = parser.parse_args()
     if len(sys.argv) == 2 :
-        browser.setFirstFolder(sys.argv[1])
+        browser.setFirstFolder(args.folder)
     else :
         from os.path import expanduser
         browser.setFirstFolder(expanduser("~"))

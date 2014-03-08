@@ -13,11 +13,12 @@ class GroupUndoableCommands:
         self.groupUndoableCommands = commands
         if label != "" :
             self.label = label
-            for command in commands :
-                self.label += " '" + command.getLabel() + "' "
-
         else :
             self.label = "Undocumented Command"
+
+        for command in commands :
+            self.label += " '" + command.getLabel() + "' "
+
 
     def undoCmd(self):
         """

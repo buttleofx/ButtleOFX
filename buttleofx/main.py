@@ -226,8 +226,8 @@ def main(argv, app):
     #fileModelBrowser
     browser = FileModelBrowserSingleton().get()
     import argparse
-    parser = argparse.ArgumentParser(description='TODO: Description de ButtleOFX.')
-    parser.add_argument('folder', nargs='?', help='folder to browse')
+    parser = argparse.ArgumentParser(description='A command line to execute ButtleOFX, an opensource compositing software. If you pass a folder as an argument, ButtleOFX will start at this path.')
+    parser.add_argument('folder', nargs='?', help='Folder to browse')
     args = parser.parse_args()
     if len(sys.argv) == 2 :
         browser.setFirstFolder(args.folder)

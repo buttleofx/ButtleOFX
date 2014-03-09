@@ -119,14 +119,36 @@ ApplicationWindow {
         title: "Shortcuts"
     }
 
-    FinderLoadGraph{ id: finderLoadGraph; onGetFileUrl: urlOfFileToSave = fileurl }
-    FinderSaveGraph{ id: finderSaveGraph; onGetFileUrl: urlOfFileToSave = fileurl }
+    FileDialog {
+        id: finderLoadGraph
+        title: "Open a graph"
+        nameFilters: [ "All files (*)" ]
+        selectedNameFilter: "All files (*)"
+        onAccepted: {
+            if (finderLoadGraph.fileUrl){
+                _buttleData.loadData(finderLoadGraph.fileUrl)
+            }
+        }
+    }
+
+    FileDialog {
+        id: finderSaveGraph
+        title: "Save the graph"
+        nameFilters:  [ "All files (*)" ]
+        selectedNameFilter: "All files (*)"
+        onAccepted: {
+            if (finderSaveGraph.fileUrl){
+                _buttleData.saveData(finderSaveGraph.fileUrl)
+            }
+        }
+        selectExisting: false
+    }
 
     MessageDialog {
         id: openGraph
-        title:urlOfFileToSave==""? "Save the new graph?":"Save " + _buttleData.getFileName(urlOfFileToSave) + "?"
+        title:"Save the graph?"
         icon: StandardIcon.Warning
-        text: "You do not have save the current graph, do you want to save it?"
+        text:urlOfFileToSave==""? "You do not have save the current graph, do you want to save it?" : "You do not have save" + _buttleData.getFileName(urlOfFileToSave) + ", do you want to save it?"
         detailedText: "If you don't save the graph, last modifications not saved will be lost. "
         standardButtons: StandardButton.Yes | StandardButton.No | StandardButton.Abort
         Component.onCompleted: visible = false
@@ -146,30 +168,24 @@ ApplicationWindow {
 
     MessageDialog {
         id: newGraph
-        title: urlOfFileToSave==""? "Save the new graph?":"Save " + _buttleData.getFileName(urlOfFileToSave) + "?"
+        title: "Save the graph?"
         icon: StandardIcon.Warning
-        text: "You do not have save the current graph, do you want to save it?"
+        text: urlOfFileToSave==""? "You do not have save the current graph, do you want to save it?": "You do not have save" + _buttleData.getFileName(urlOfFileToSave) + ", do you want to save it?"
         detailedText: "If you don't save the graph, last modifications not saved will be lost. "
         standardButtons: StandardButton.Yes | StandardButton.No | StandardButton.Abort
         Component.onCompleted: visible = false
         onYes: {
             if(urlOfFileToSave!=""){
                 _buttleData.saveData(urlOfFileToSave)
-                _buttleData.graphWrapper.deleteGraphWrapper()
-                urlOfFileToSave=""
-                _buttleManager.clean()
+                _buttleData.newData()
             }
             else{
                 finderSaveGraph.open()
-                _buttleData.graphWrapper.deleteGraphWrapper()
-                urlOfFileToSave=""
-                _buttleManager.clean()
+                _buttleData.newData()
             }
         }
         onNo: {
-            _buttleData.graphWrapper.deleteGraphWrapper()
-            urlOfFileToSave=""
-            _buttleManager.clean()
+            _buttleData.newData()
         }
         onRejected: {}
     }

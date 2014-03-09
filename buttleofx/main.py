@@ -77,11 +77,10 @@ if windows:
 class EventFilter(QtCore.QObject):
     def eventFilter(self, receiver, event):
         buttleData = ButtleDataSingleton().get()
-        finder = Finder()
-        finder.setMessage("SaveFile")
+        browser = FileModelBrowserSingleton().get()
         if(event.type() != QtCore.QEvent.Close):
             return super(EventFilter,self).eventFilter(receiver, event)
-        if not isinstance(receiver,QtQuick.QQuickWindow) and receiver.title() =="ButtleOFX" :
+        if not isinstance(receiver,QtQuick.QQuickWindow) or not receiver.title() =="ButtleOFX" :
             return False
         if not buttleData.graphCanBeSaved :
             return False
@@ -99,8 +98,11 @@ class EventFilter(QtCore.QObject):
                 return super(EventFilter,self).eventFilter(receiver, event)
             # This project has never been saved, so ask the user on which file to save.
             dialog = QFileDialog()
-            fileToSave = dialog.getSaveFileName(None, "Save Graph", currentFilePath)
-            buttleData.saveData(fileToSave[0])
+            fileToSave = dialog.getSaveFileName(None, "Save the graph", browser.getFirstFolder())[0]
+            if not (fileToSave.endswith(".bofx")):
+                fileToSave += ".bofx"
+            buttleData.urlOfFileToSave = fileToSave
+            buttleData.saveData(fileToSave)
             # Close the application
             return super(EventFilter,self).eventFilter(receiver, event)
         if ret == QMessageBox.Discard :

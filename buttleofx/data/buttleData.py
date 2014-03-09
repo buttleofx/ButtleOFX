@@ -373,9 +373,11 @@ class ButtleData(QtCore.QObject):
 
     def setUrlOfFileToSave(self,url):
         self._urlOfFileToSave = url
+        self.urlOfFileToSaveChanged.emit()
 
     def setCurrentParamNodeName(self, nodeName):
         self._currentParamNodeName = nodeName
+        self.currentSelectedNodesChanged.emit()
 
     def setCurrentSelectedNodeNames(self, nodeNames):
         self._currentSelectedNodeNames = nodeNames
@@ -952,6 +954,8 @@ class ButtleData(QtCore.QObject):
         # Finally we update the savedGraphIndex of the CommandManager : it must be equal to the current index
         CommandManager().setSavedGraphIndex(CommandManager().getIndex())
 
+        self.urlOfFileToSave = filepath
+
     @QtCore.pyqtSlot(str)
     @QtCore.pyqtSlot()
     def loadData(self, url='buttleofx/backup/data.bofx'):
@@ -960,6 +964,8 @@ class ButtleData(QtCore.QObject):
         """
 
         filepath = QtCore.QUrl(url).toLocalFile()
+
+        self.newData()
 
         with open(filepath, 'r') as f:
             read_data = f.read()
@@ -991,6 +997,17 @@ class ButtleData(QtCore.QObject):
             #     self.setCurrentViewerFrame(frame)
             # ButtleEvent().emitViewerChangedSignal()
         f.closed
+
+        self.urlOfFileToSave = filepath
+
+    @QtCore.pyqtSlot()
+    def newData(self):
+        """
+            Create a new graph
+        """
+        self.urlFileToSave=""
+        self.graphWrapper.deleteGraphWrapper()
+        CommandManager().clean()
 
     ################################################## DATA EXPOSED TO QML ##################################################
 

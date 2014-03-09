@@ -897,9 +897,8 @@ class ButtleData(QtCore.QObject):
         """
             Saves all data in a json file (default file : buttleofx/backup/data.bofx)
         """
-
-        filepath = QtCore.QUrl(url).toLocalFile()
-        if not (filepath.endswith(".bofx")):
+        filepath = QtCore.QUrl.fromLocalFile(url).toLocalFile()
+        if not filepath.lower().endswith(".bofx"):
             filepath = filepath + ".bofx"
 
         with io.open(filepath, 'w', encoding='utf-8') as f:

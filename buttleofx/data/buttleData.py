@@ -1005,7 +1005,7 @@ class ButtleData(QtCore.QObject):
         """
             Create a new graph
         """
-        self.urlFileToSave=""
+        self.urlOfFileToSave=""
         self.graphWrapper.deleteGraphWrapper()
         CommandManager().clean()
 

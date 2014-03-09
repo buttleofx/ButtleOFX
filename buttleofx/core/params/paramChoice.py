@@ -30,6 +30,9 @@ class ParamChoice(Param):
     def getParamType(self):
         return "ParamChoice"
 
+    def getParamDoc(self):
+        return self._tuttleParam.getProperties().getStringProperty("OfxParamPropHint")
+
     def getDefaultValue(self):
         defaultIndex = self._tuttleParam.getProperties().getIntProperty("OfxParamPropDefault")
         return self._tuttleParam.getProperties().getStringProperty("OfxParamPropChoiceOption",defaultIndex)

@@ -78,7 +78,11 @@ class EventFilter(QtCore.QObject):
     def eventFilter(self, receiver, event):
         buttleData = ButtleDataSingleton().get()
         browser = FileModelBrowserSingleton().get()
-        if(event.type() != QtCore.QEvent.Close):
+        if event.type() == QtCore.QEvent.KeyPress :
+            # if alt f4 event ignored
+            if event.modifiers() == QtCore.Qt.AltModifier and event.key() == QtCore.Qt.Key_F4 :
+                event.ignore()
+        if event.type() != QtCore.QEvent.Close :
             return super(EventFilter,self).eventFilter(receiver, event)
         if not isinstance(receiver,QtQuick.QQuickWindow) or not receiver.title() =="ButtleOFX" :
             return False

@@ -187,8 +187,30 @@ ApplicationWindow {
         onNo: {
             _buttleData.newData()
         }
-        onRejected: {}
     }
+
+    MessageDialog {
+        id: closeButtle
+        title: "Save the graph?"
+        icon: StandardIcon.Warning
+        text: urlOfFileToSave==""? "The graph has been modified. Do you want to save your changes?": _buttleData.getFileName(urlOfFileToSave) + " has been modified. Do you want to save your changes?"
+        standardButtons: StandardButton.Yes | StandardButton.No | StandardButton.Abort
+        Component.onCompleted: visible = false
+        onYes: {
+            if(urlOfFileToSave!=""){
+                _buttleData.saveData(urlOfFileToSave)
+            }
+            else{
+                finderSaveGraph.open()
+                finderSaveGraph.close()
+                finderSaveGraph.open()
+            }
+        }
+        onNo: {
+            Qt.quit()
+        }
+    }
+
 
     menuBar: MenuBar {
         Menu {
@@ -228,7 +250,13 @@ ApplicationWindow {
             MenuItem {
                 id: quitButton
                 text: "Exit"
-                onTriggered: Qt.quit()
+                onTriggered: {
+                    if(!_buttleData.graphCanBeSaved)
+                        Qt.quit()
+                    else{
+                        closeButtle.open()
+                    }
+                }
             }
         }
 

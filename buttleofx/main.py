@@ -87,20 +87,24 @@ class EventFilter(QtCore.QObject):
         msgBox.setInformativeText("Do you want to save your changes?")
         msgBox.setStandardButtons(QMessageBox.Save | QMessageBox.Discard | QMessageBox.Abort)
         msgBox.setDefaultButton(QMessageBox.Save)
-        ret = msgBox.exec_();
-        if ret == QMessageBox.Save : 
-            if buttleData.urlOfFileToSave != "" :
+        ret = msgBox.exec_()
+        if ret == QMessageBox.Save:
+            if buttleData.urlOfFileToSave:
+                # Save on the already existing file
                 buttleData.saveData(buttleData.urlOfFileToSave)
-                return False
+                # Close the application
+                return super(EventFilter,self).eventFilter(receiver, event)
+            # This project has never been saved, so ask the user on which file to save.
             dialog = QFileDialog()
             fileToSave = dialog.getSaveFileName(None, "Save Graph", currentFilePath)
-            return True
+            buttleData.saveData(fileToSave[0])
+            # Close the application
+            return super(EventFilter,self).eventFilter(receiver, event)
         if ret == QMessageBox.Discard :
-            return False
+            # Close the application
+            return super(EventFilter,self).eventFilter(receiver, event)
+        # Don't call the parent class, so we don't close the application
         return True
-             
-                     
-            
 
 
 class ButtleApp(QtWidgets.QApplication):

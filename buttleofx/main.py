@@ -55,9 +55,11 @@ from buttleofx.gui.graph.menu import MenuWrapper
 from PyQt5 import QtCore, QtGui, QtQml, QtQuick, QtWidgets
 from PyQt5.QtWidgets import QWidget, QFileDialog, QApplication, QMessageBox
 
+import numpy
+
+import argparse
 import os
 import sys
-import numpy
 
 osname = os.name.lower()
 sysplatform = sys.platform.lower()
@@ -70,6 +72,7 @@ unix = not windows
 currentFilePath = os.path.dirname(os.path.abspath(__file__))
 if windows:
     currentFilePath = currentFilePath.replace("\\", "/")
+
 
 class EventFilter(QtCore.QObject):
     def eventFilter(self, receiver, event):
@@ -121,7 +124,7 @@ class ButtleApp(QtWidgets.QApplication):
 #            traceback.print_exc()
 #            return False
 
- 
+
 gray_color_table = [QtGui.qRgb(i, i, i) for i in range(256)]
 
 def toQImage(im):
@@ -143,6 +146,7 @@ def toQImage(im):
                 return qim
 
     raise ValueError("toQImage: case not implemented.")
+
 
 class ImageProvider(QtQuick.QQuickImageProvider):
     def __init__(self):
@@ -229,15 +233,16 @@ def main(argv, app):
     buttleEvent = ButtleEventSingleton().get()
     #fileModelBrowser
     browser = FileModelBrowserSingleton().get()
-    import argparse
+    
     parser = argparse.ArgumentParser(description='A command line to execute ButtleOFX, an opensource compositing software. If you pass a folder as an argument, ButtleOFX will start at this path.')
     parser.add_argument('folder', nargs='?', help='Folder to browse')
     args = parser.parse_args()
-    if len(sys.argv) == 2 :
-        browser.setFirstFolder(args.folder)
-    else :
-        from os.path import expanduser
-        browser.setFirstFolder(expanduser("~"))
+    if args.folder:
+        inputFolder = os.path.abspath(args.folder)
+        browser.setFirstFolder(inputFolder)
+    else:
+        inputFolder = os.path.expanduser("~")
+        browser.setFirstFolder(inputFolder)
 
     # Menus
     #fileMenu = MenuWrapper("file", 0, component, app)

@@ -229,7 +229,7 @@ def main(argv, app):
     parser = argparse.ArgumentParser(description='A command line to execute ButtleOFX, an opensource compositing software. If you pass a folder as an argument, ButtleOFX will start at this path.')
     parser.add_argument('folder', nargs='?', help='Folder to browse')
     args = parser.parse_args()
-    if len(sys.argv) == 2 :
+    if args.folder:
         browser.setFirstFolder(args.folder)
     else :
         from os.path import expanduser

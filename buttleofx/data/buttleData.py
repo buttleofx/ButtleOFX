@@ -891,13 +891,18 @@ class ButtleData(QtCore.QObject):
 
     ################################################## SAVE / LOAD ##################################################
 
-    @QtCore.pyqtSlot(str)
-    @QtCore.pyqtSlot()
-    def saveData(self, url='buttleofx/backup/data.bofx'):
+    @QtCore.pyqtSlot(QtCore.QUrl)
+    def saveData(self, url):
         """
-            Saves all data in a json file (default file : buttleofx/backup/data.bofx)
+            Saves all data in a json file
         """
-        filepath = QtCore.QUrl.fromLocalFile(url).toLocalFile()
+        if isinstance(url, str):
+            print("saveData str:", url)
+            filepath = QtCore.QUrl.fromLocalFile(url).toLocalFile()
+        else:
+            print("saveData QUrl:", url)
+            filepath = QtCore.QUrl(url).toLocalFile()
+        
         if not filepath.lower().endswith(".bofx"):
             filepath = filepath + ".bofx"
 

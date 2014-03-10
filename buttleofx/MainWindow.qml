@@ -241,7 +241,6 @@ ApplicationWindow {
             MenuItem {
                 text: "Save As"
                 shortcut: "Ctrl+Shift+S"
-                enabled: _buttleData.graphCanBeSaved ? true : false
                 onTriggered: finderSaveGraph.open()
             }
 

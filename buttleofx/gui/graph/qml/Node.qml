@@ -266,7 +266,7 @@ Rectangle {
             id: nodeText
             anchors.verticalCenter: isSelected ? undefined : parent.verticalCenter
             anchors.horizontalCenter: isSelected ? parent.horizontalCenter : undefined
-            x: 5
+            x: isSelected ? nodeWidth * 0.5 * zoomCoeff : 5
             y: isSelected ? nodeWidth * 0.5 * zoomCoeff : 0
             text: m.nodeWrapper.nameUser
             font.pointSize: zoomCoeff < 0.7 ? zoomCoeff < 0.4 ? 6 : 7 : 10

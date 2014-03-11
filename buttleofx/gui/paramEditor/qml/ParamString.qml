@@ -75,6 +75,7 @@ Item {
                     'width: parent.width - 10;' +
                     'height: parent.height;' +
                     'color: activeFocus ? "white" : "grey";' +
+                    'selectByMouse: true;' +
                     'onAccepted: {' +
                     '   paramObject.value = paramStringInput.text;' +
                     '   paramObject.pushValue(paramObject.value);' +

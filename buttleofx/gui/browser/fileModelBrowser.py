@@ -222,7 +222,7 @@ class FileModelBrowser(QtQuick.QQuickItem):
             self._fileItems = allDirs + allFiles
 
         self._fileItemsModel.setObjectList(self._fileItems)
-        
+                
     @QtCore.pyqtSlot(str, result=QtCore.QObject)
     def getFilteredFileItems(self, fileFilter):
         suggestions = []
@@ -244,7 +244,7 @@ class FileModelBrowser(QtQuick.QQuickItem):
         
         suggestionsQt = QObjectListModel(self)
         suggestionsQt.setObjectList(suggestions)
-        return suggestionsQt 
+        return suggestionsQt
     
     _fileItems = []
     _fileItemsModel = None

@@ -28,7 +28,7 @@ Rectangle {
                 if(selected.count > 1){
                     selected.count + " files selected"
                 }if(selected.count == 1){
-                    selected.get(0).fileType =="Sequence" ? nbInSeq + " files in Sequence" : ""
+                    selected.get(0).fileType == "Sequence" ? nbInSeq + " files in Sequence" : ""
                 }
             }
 
@@ -62,7 +62,7 @@ Rectangle {
 
             onCurrentTextChanged: {
                 changeFilter(currentText)
-                console.log("currentText = " + currentText)
+                //console.log("currentText = " + currentText)
             }
         }
 

@@ -148,6 +148,7 @@ ApplicationWindow {
         id: openGraph
         title:"Save the graph?"
         icon: StandardIcon.Warning
+        modality: Qt.WindowStaysOnTopHint && Qt.WindowModal
         text:urlOfFileToSave==""? "You do not have save the current graph, do you want to save it?" : "You do not have save" + _buttleData.getFileName(urlOfFileToSave) + ", do you want to save it?"
         detailedText: "If you don't save the graph, last modifications not saved will be lost. "
         standardButtons: StandardButton.Yes | StandardButton.No | StandardButton.Abort
@@ -170,6 +171,7 @@ ApplicationWindow {
         id: newGraph
         title: "Save the graph?"
         icon: StandardIcon.Warning
+        modality: Qt.WindowStaysOnTopHint && Qt.WindowModal
         text: urlOfFileToSave==""? "You do not have save the current graph, do you want to save it?": "You do not have save" + _buttleData.getFileName(urlOfFileToSave) + ", do you want to save it?"
         detailedText: "If you don't save the graph, last modifications not saved will be lost. "
         standardButtons: StandardButton.Yes | StandardButton.No | StandardButton.Abort
@@ -193,6 +195,7 @@ ApplicationWindow {
         id: closeButtle
         title: "Save the graph?"
         icon: StandardIcon.Warning
+        modality: Qt.WindowStaysOnTopHint && Qt.WindowModal
         text: urlOfFileToSave==""? "The graph has been modified. Do you want to save your changes?": _buttleData.getFileName(urlOfFileToSave) + " has been modified. Do you want to save your changes?"
         standardButtons: StandardButton.Yes | StandardButton.No | StandardButton.Abort
         Component.onCompleted: visible = false

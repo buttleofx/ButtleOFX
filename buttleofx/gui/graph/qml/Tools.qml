@@ -46,11 +46,6 @@ Rectangle {
 
             ToolElement {
 
-                FinderLoadGraph{
-                    id: finderLoadGraph
-                    onGetFileUrl: urlOfFileToSave = fileurl
-                }
-
                 imageSource: parent.imgPath + "open.png"
                 imageSourceHover: parent.imgPath + "open_hover.png"
                 imageSourceLocked: parent.imgPath + "open_locked.png"
@@ -73,11 +68,6 @@ Rectangle {
             }
 
             ToolElement {
-
-                FinderSaveGraph{
-                    id: finderSaveGraph
-                    onGetFileUrl: urlOfFileToSave = fileurl
-                }
 
                 imageSource: parent.imgPath + "save.png"
                 imageSourceHover: parent.imgPath + "save_hover.png"

@@ -14,7 +14,7 @@ Rectangle {
 
     QtObject {
         id: m
-        property string directory: firstFile.firstFolder()
+        property string directory: _browser.getFirstFolder()
         property string fileFolder: "/"
         property int nbInSeq
         property string filter:"*"

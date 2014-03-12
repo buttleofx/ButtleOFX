@@ -1,1 +1,1 @@
-from .fileModelBrowser import FileModelBrowser
+from .fileModelBrowser import FileModelBrowser, FileModelBrowserSingleton

@@ -66,19 +66,19 @@ Rectangle {
         showSeq: winFile.showSeq
 
         onFolderChanged: {
-            fileModel.selectItem(0)
             winFile.changeFileFolder(fileModel.parentFolder)
             winFile.changeSelectedList(fileModel.getSelectedItems())
+            fileModel.selectItem(0)
         }
         onNameFilterChanged: {
-            fileModel.selectItem(0)
             winFile.changeFileFolder(fileModel.parentFolder)
             winFile.changeSelectedList(fileModel.getSelectedItems())
+            fileModel.selectItem(0)
         }
         onShowSeqChanged: {
-            fileModel.selectItem(0)
             winFile.changeFileFolder(fileModel.parentFolder)
             winFile.changeSelectedList(fileModel.getSelectedItems())
+            fileModel.selectItem(0)
         }
     }
 
@@ -171,8 +171,9 @@ Rectangle {
 
                     objectName: index
 
+
                     property variant selectedFiles
-                    property variant filePath: model.object.filepath
+                    //property variant filePath: model.object.filepath
 
                     function forceActiveFocusInColumn() {
                         filename_textEdit.forceActiveFocus()
@@ -305,7 +306,7 @@ Rectangle {
 
                                 Image {
                                     property bool isFolder: model.object.fileType == "Folder"
-                                    source: model.object.fileType == "Folder" ? model.object.fileImg : 'image://buttleofx/'+ model.object.filepath
+                                    source: isFolder ? model.object.fileImg : 'image://buttleofx/'+ model.object.filepath
                                     // Without tuttle // source: isFolder ? model.object.fileImg : "file:///" + model.object.fileImg
 
                                     asynchronous: true
@@ -486,7 +487,7 @@ Rectangle {
 
                     property variant selectedFiles
                     property variant currentFile: model.object
-                    property variant filePath: model.object.filepath
+                    //property variant filePath: model.object.filepath
 
                     /*DropArea {
                         id: moveItemInRow

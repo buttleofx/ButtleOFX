@@ -12,6 +12,7 @@ Rectangle {
 
     property string folder
     signal changeFolder(string folder)
+    signal refreshFolder()
     property string parentFolder
     property variant listPrevious
     property bool isInListView : false
@@ -200,6 +201,28 @@ Rectangle {
                     suggestionsMenu.__popup(x, y)
                 }
             }
+        }
+
+        Button {
+            id: refresh
+            width: 1
+            height: 1
+
+            iconSource: if (hovered){
+                            "../../img/buttons/browser/refresh_hover.png"
+                        }else{
+                            "../../img/buttons/browser/refresh.png"
+                        }
+
+            style:
+                ButtonStyle {
+                    background: Rectangle {
+                        anchors.fill: parent
+                        color: "transparent"
+                    }
+                }
+
+            onClicked: refreshFolder()
         }
 
         Button {

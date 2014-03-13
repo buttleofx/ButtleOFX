@@ -132,6 +132,7 @@ class FileModelBrowser(QtQuick.QQuickItem):
     exists = QtCore.pyqtProperty(bool, getFolderExists, notify=folderChanged)
     parentFolder = QtCore.pyqtProperty(str, getParentFolder, constant=True)
     
+    @QtCore.pyqtSlot(str)
     def updateFileItems(self, folder):
         self._fileItems = []
         self._fileItemsModel.clear()

@@ -58,6 +58,9 @@ Rectangle {
             onChangeFolder: {
                 m.directory = folder
             }
+            onRefreshFolder: {
+                files.forceActiveFocusOnRefresh()
+            }
             onChangeSeq: {
                 m.showSeq = seq
             }
@@ -120,6 +123,10 @@ Rectangle {
         }
         if (event.key == Qt.Key_F2) {
             files.forceActiveFocusOnRename()
+            event.accepted = true
+        }
+        if (event.key == Qt.Key_F5) {
+            files.forceActiveFocusOnRefresh()
             event.accepted = true
         }
         if (event.key == Qt.Key_Delete){

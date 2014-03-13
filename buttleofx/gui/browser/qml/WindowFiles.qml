@@ -34,6 +34,11 @@ Rectangle {
         fileModel.deleteItem(itemIndex)
     }
 
+    function forceActiveFocusOnRefresh() {
+        fileModel.updateFileItems(fileModel.folder)
+        fileModel.selectItem(0)
+    }
+
     MouseArea {
         anchors.fill: parent
         onClicked: {

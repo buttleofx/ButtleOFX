@@ -337,7 +337,7 @@ Rectangle {
                         when: m.nodeWrapper.pluginContext =="OfxImageEffectContextReader" && m.nodeWrapper.params.get(0).value!=""
                         PropertyChanges {
                             target: miniPicture;
-                            source: m.nodeWrapper.params.get(0).value 
+                            source: 'image://buttleofx/'+ m.nodeWrapper.params.get(0).value 
                         }
                     },
                     State {

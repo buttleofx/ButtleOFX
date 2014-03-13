@@ -24,66 +24,6 @@ Item {
         messageDialog: isReader ? "Open file" : "Save file as"
     }
 */
-    /*Container of the textInput*/
-    function createInput(paramObject)
-    {
-        // we need a multi line input
-        if (paramObject.stringType == "OfxParamStringIsMultiLine") {
-            var newObject = Qt.createQmlObject('import QtQuick 2.0;' +
-                'Flickable {' +
-                    'id: flick;' +
-                    'width: parent.width - 10;' +
-                    'height: parent.height;' +
-                    'contentWidth: paramStringMultilines.paintedWidth;' +
-                    'contentHeight: paramStringMultilines.paintedHeight;' +
-                    'clip: true;' +
-
-                    'function ensureVisible(r)' +
-                    '{' +
-                    '    if (contentX >= r.x)' +
-                    '        contentX = r.x;' +
-                    '    else if (contentX+width <= r.x+r.width)' +
-                    '        contentX = r.x+r.width-width;' +
-                    '    if (contentY >= r.y)' +
-                    '        contentY = r.y;' +
-                    '    else if (contentY+height <= r.y+r.height)' +
-                    '        contentY = r.y+r.height-height;' +
-                    '}' +
-
-                    'TextEdit {' +
-                    '    id: paramStringMultilines;' +
-                    '    text: paramObject.value;' +
-                    '    width: flick.width;' +
-                    '    height: flick.height;' +
-                    '    color: activeFocus ? "white" : "grey";' +
-                    '    font.pointSize: 10;' +
-                    '    onCursorRectangleChanged: flick.ensureVisible(cursorRectangle);' +
-                    '    onTextChanged: {' +
-                    '       paramObject.value = paramStringMultilines.text;' +
-                    '       paramObject.pushValue(paramObject.value);' +
-                    '    }' +
-                    '    focus: true' +
-                    '}' +
-                '}', stringInput, "inputLine");
-        }
-        else {
-            var newObject = Qt.createQmlObject('import QtQuick 2.0;'+
-                'TextInput{' +
-                    'id: paramStringInput;' +
-                    'text: paramObject.value;' + 
-                    'anchors.left: parent.left; anchors.leftMargin: 5; anchors.rightMargin: 5;' +
-                    'width: parent.width - 10;' +
-                    'height: parent.height;' +
-                    'color: activeFocus ? "white" : "grey";' +
-                    'selectByMouse: true;' +
-                    'onAccepted: {' +
-                    '   paramObject.value = paramStringInput.text;' +
-                    '   paramObject.pushValue(paramObject.value);' +
-                    '}' +
-                    'focus: true'+
-                '}', stringInput, "inputLine");
-        }
-    }
 
     Row{
         id: paramStringInputContainer
@@ -117,9 +57,68 @@ Item {
             radius: 3
             clip: true
 
-            // create the right input, depend on the tuttle param
-            onWidthChanged: {
-                createInput(paramObject)
+            /*Container of the textInput*/
+            Loader {
+                sourceComponent: containerParamString.paramObject.stringType == "OfxParamStringIsMultiLine" ? paramStringMultiline : paramStringNotMultiline
+                anchors.fill : parent
+                Component{
+                    id : paramStringMultiline
+                    // we need a multi line input
+                    Flickable { 
+                        id: flick
+                        width: parent.width - 10
+                        height: parent.height
+                        contentWidth: paramStringMultilines.paintedWidth
+                        contentHeight: paramStringMultilines.paintedHeight
+                        clip: true
+
+                        function ensureVisible(r) 
+                        { 
+                            if (contentX >= r.x) 
+                                contentX = r.x 
+                            else if (contentX+width <= r.x+r.width) 
+                                contentX = r.x+r.width-width 
+                            if (contentY >= r.y) 
+                                contentY = r.y
+                            else if (contentY+height <= r.y+r.height)
+                                contentY = r.y+r.height-height
+                        }
+
+                        TextEdit {
+                            id: paramStringMultilines
+                            text: containerParamString.paramObject.value
+                            width: flick.width
+                            height: flick.height
+                            color: activeFocus ? "white" : "grey"
+                            font.pointSize: 10
+                            onCursorRectangleChanged: flick.ensureVisible(cursorRectangle)
+                            onTextChanged: { 
+                               containerParamString.paramObject.value = paramStringMultilines.text
+                               containerParamString.paramObject.pushValue(containerParamString.paramObject.value)
+                            } 
+                            focus: true 
+                        } 
+                    }
+                }
+                Component{
+                    id : paramStringNotMultiline
+                    TextInput{ 
+                        id: paramStringInput 
+                        text: paramObject.value
+                        anchors.left: parent.left
+                        anchors.leftMargin: 5
+                        anchors.rightMargin: 5
+                        width: parent.width - 10 
+                        height: parent.height
+                        color: activeFocus ? "white" : "grey"
+                        selectByMouse: true
+                        onAccepted: { 
+                           containerParamString.paramObject.value = paramStringInput.text 
+                           containerParamString.paramObject.pushValue(containerParamString.paramObject.value)
+                        } 
+                        focus: true
+                    }
+                }
             }
 
             MouseArea {

@@ -16,7 +16,7 @@ import "gui/shortcut/qml"
 
 ApplicationWindow {
 
-    property var db: null
+    property var db: undefined
 
     function openDB() {
         if(db == null){
@@ -26,14 +26,14 @@ ApplicationWindow {
 
 
     function saveSetting(key, value) {
-        openDB();
+        openDB()
         db.transaction( function(tx){
             tx.executeSql('INSERT OR REPLACE INTO settings VALUES(?, ?)', [key, value]);
         });
     }
 
     function getSetting(key) {
-        openDB();
+        openDB()
         var res = "";
         db.transaction(function(tx) {
             res = tx.executeSql('SELECT value FROM settings WHERE key=?;', [key]).rows.item(0).value;
@@ -41,7 +41,11 @@ ApplicationWindow {
         return res;
     }
 
-    property int selectedView: getSetting("view") ? getSetting("view") : 3
+    property int selectedView_db: 0
+    Component.onCompleted: {
+        selectedView_db = getSetting("view")
+    }
+    property int selectedView: selectedView_db ? selectedView_db : 3
 
     property variant lastSelectedDefaultView: view1
     property variant view1: [browser, paramEditor, player, graphEditor]

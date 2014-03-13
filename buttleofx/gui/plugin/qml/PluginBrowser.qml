@@ -12,6 +12,7 @@ Item {
 
     property color textColor : "white"
     property alias searchPluginText : searchPlugin.text
+    property alias searchPlugin: searchPlugin
     property bool graphEditor
 
     Rectangle{
@@ -54,8 +55,19 @@ Item {
                 selectionColor: "#00b2a1"
                 color: "white"
                 focus:true
-                
+
                 property variant plugin
+
+                onFocusChanged:{
+                    if(searchPlugin.visible){
+                        searchPlugin.focus= true
+                    }
+                }
+                onVisibleChanged: {
+                    if(searchPlugin.visible){
+                        searchPlugin.focus= true
+                    }
+                }
 
                 Keys.onPressed: {
                     if ((event.key == Qt.Key_Return)||(event.key == Qt.Key_Enter)) {

@@ -109,7 +109,7 @@ class FileModelBrowser(QtQuick.QQuickItem):
         self._folder = folder
         self.updateFileItems(folder)
         self.folderChanged.emit()
-        
+  
     @QtCore.pyqtSlot(str)
     def createFolder(self, path):
         os.mkdir(path)

@@ -154,7 +154,7 @@ class FileModelBrowser(QtQuick.QQuickItem):
                 supported = True
                 try:
                     getBestPlugin.getBestReader(extension)
-                except Exception as e:
+                except Exception:
                     supported = False
                 if supported and not s.getStandardPattern().startswith("."):
                     allSeqs.append(FileItem(folder, s.getStandardPattern(), FileItem.Type.Sequence, s))
@@ -169,7 +169,7 @@ class FileModelBrowser(QtQuick.QQuickItem):
                         # Ignore hidden files by default
                         # TODO: need an option for that
                         continue
-                    (shortname, extension) = os.path.splitext(f)
+                    (_, extension) = os.path.splitext(f)
                     try:
                         # getBestReader will raise an exception if the file extension is not supported.
                         pluginIdentifier = getBestPlugin.getBestReader(extension)
@@ -179,7 +179,7 @@ class FileModelBrowser(QtQuick.QQuickItem):
                     
             else:
                 for f in files:
-                    (shortname, extension) = os.path.splitext(f)
+                    (_, extension) = os.path.splitext(f)
                     if extension == self._nameFilter:
                         #print("Only ", extension, " files")
                         allFiles.append(FileItem(folder, f, FileItem.Type.File, ""))
@@ -203,20 +203,20 @@ class FileModelBrowser(QtQuick.QQuickItem):
                             # Ignore hidden files by default
                             # TODO: need an option for that
                             continue
-                        (shortname, extension) = os.path.splitext(f)
+                        (_, extension) = os.path.splitext(f)
                         try:
                             # getBestReader will raise an exception if the file extension is not supported.
                             pluginIdentifier = getBestPlugin.getBestReader(extension)
-                            allFiles.append(FileItem(folder, f, FileItem.Type.File,""))
+                            allFiles.append(FileItem(folder, f, FileItem.Type.File, ""))
                         except Exception:
                             pass
                         
                 else:
                     for f in files:
-                        (shortname, extension) = os.path.splitext(f)
+                        (_, extension) = os.path.splitext(f)
                         if extension == self._nameFilter:
                             #print("Only ", extension, " files")
-                            allFiles.append(FileItem(folder, f, FileItem.Type.File,""))
+                            allFiles.append(FileItem(folder, f, FileItem.Type.File, ""))
                               
             except Exception:
                 pass
@@ -232,7 +232,7 @@ class FileModelBrowser(QtQuick.QQuickItem):
         suggestions = []
 
         try:
-            _, dirs, files = next(os.walk(os.path.dirname(fileFilter)))
+            _, dirs, _ = next(os.walk(os.path.dirname(fileFilter)))
             dirs = sorted(dirs, key=lambda v: v.upper())
             for d in dirs:
                 if d.startswith("."):
@@ -321,6 +321,7 @@ class FileModelBrowser(QtQuick.QQuickItem):
     
     showSeqChanged = QtCore.pyqtSignal()
     showSeq = QtCore.pyqtProperty(bool, getShowSeq, setShowSeq, notify=showSeqChanged)
+
 
 # This class exists just because there are problems when a class extends 2 other classes (Singleton and QObject)
 class FileModelBrowserSingleton(Singleton):

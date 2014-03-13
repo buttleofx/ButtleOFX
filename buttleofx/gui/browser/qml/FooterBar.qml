@@ -27,11 +27,12 @@ Rectangle {
             text: {
                 if(selected.count > 1){
                     selected.count + " files selected"
-                }if(selected.count == 1){
+                }else if(selected.count == 1){
                     selected.get(0).fileType == "Sequence" ? nbInSeq + " files in Sequence" : ""
+                }else{
+                    ""
                 }
             }
-
             color: "white"
         }
 
@@ -47,9 +48,11 @@ Rectangle {
                     }
                     res = res / 1024.
                     "Size: " + res.toFixed(2) + " Ko"
+                }else if(selected.count == 1){
+                    res = selected.get(0).fileSize / 1024.
+                    selected.get(0).fileSize <= 0.0 ? "" : "Size: " + res.toFixed(2) + " Ko"
                 }else{
-                    res = selected.get(i).fileSize / 1024.
-                    selected.get(i).fileSize <= 0.0 ? "" : "Size: " + res.toFixed(2) + " Ko"
+                    "0 Ko"
                 }
             }
             color: "white"

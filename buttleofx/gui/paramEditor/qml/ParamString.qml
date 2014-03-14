@@ -8,7 +8,7 @@ Item {
     id: containerParamString
     implicitWidth: 300
     implicitHeight: 30
-    y:10
+    y: paramObject.stringType == "OfxParamStringIsMultiLine" ? -10 : 10
 
     property variant paramObject: model.object
     property bool isReader: currentParamNode ? currentParamNode.pluginContext=="OfxImageEffectContextReader": false
@@ -92,12 +92,9 @@ Item {
                             color: activeFocus ? "white" : "grey"
                             font.pointSize: 10
                             onCursorRectangleChanged: flick.ensureVisible(cursorRectangle)
-                            onTextChanged: { 
-                                // call 2 times paramObject here in qml doesn't work, so add a fonction which do both of them in python
-                                //paramObject.value = paramStringMultilines.text
-                                //paramObject.pushValue(paramObject.value)
+                            Keys.onEnterPressed: {
                                 paramObject.changeValue(paramStringMultilines.text)
-                            } 
+                            }
                             focus: true 
                         } 
                     }

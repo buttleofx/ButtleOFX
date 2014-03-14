@@ -41,6 +41,20 @@ class StringWrapper(ParamWrapper):
         self._param.pushValue(value)
 
     changed = QtCore.pyqtSignal()
+
+    @QtCore.pyqtSlot(str)
+    def changeValue(self, value):
+        self.setValue(value)
+        self.pushValue(value)
+        self.setHasChanged(True)
+
+    @QtCore.pyqtSlot()
+    def resetValue(self):
+        # if we don't do it twice, the value is not refreshed in the qml file
+        self.value = self.getDefaultValue()
+        self.pushValue(self.value)
+        self.value = self.getDefaultValue()
+        self.pushValue(self.value)
     
     ################################################## DATA EXPOSED TO QML ##################################################
 

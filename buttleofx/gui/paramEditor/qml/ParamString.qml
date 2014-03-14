@@ -42,7 +42,7 @@ Item {
                 anchors.fill: parent
                 acceptedButtons: Qt.RightButton
                 onClicked: {
-                    paramObject.value = paramObject.getDefaultValue()
+                    paramObject.resetValue()
                 }
             }
         }
@@ -59,7 +59,7 @@ Item {
 
             /*Container of the textInput*/
             Loader {
-                sourceComponent: containerParamString.paramObject.stringType == "OfxParamStringIsMultiLine" ? paramStringMultiline : paramStringNotMultiline
+                sourceComponent: paramObject.stringType == "OfxParamStringIsMultiLine" ? paramStringMultiline : paramStringNotMultiline
                 anchors.fill : parent
                 Component{
                     id : paramStringMultiline
@@ -86,15 +86,17 @@ Item {
 
                         TextEdit {
                             id: paramStringMultilines
-                            text: containerParamString.paramObject.value
+                            text: paramObject.value
                             width: flick.width
                             height: flick.height
                             color: activeFocus ? "white" : "grey"
                             font.pointSize: 10
                             onCursorRectangleChanged: flick.ensureVisible(cursorRectangle)
                             onTextChanged: { 
-                               containerParamString.paramObject.value = paramStringMultilines.text
-                               containerParamString.paramObject.pushValue(containerParamString.paramObject.value)
+                                // call 2 times paramObject here in qml doesn't work, so add a fonction which do both of them in python
+                                //paramObject.value = paramStringMultilines.text
+                                //paramObject.pushValue(paramObject.value)
+                                paramObject.changeValue(paramStringMultilines.text)
                             } 
                             focus: true 
                         } 
@@ -113,8 +115,10 @@ Item {
                         color: activeFocus ? "white" : "grey"
                         selectByMouse: true
                         onAccepted: { 
-                           containerParamString.paramObject.value = paramStringInput.text 
-                           containerParamString.paramObject.pushValue(containerParamString.paramObject.value)
+                            // call 2 times paramObject here in qml doesn't work, so add a fonction which do both of them in python
+                            // paramObject.value = paramStringInput.text 
+                            // paramObject.pushValue(paramObject.value)
+                            paramObject.changeValue(paramStringInput.text)
                         } 
                         focus: true
                     }
@@ -125,8 +129,7 @@ Item {
                 anchors.fill: parent
                 acceptedButtons: Qt.RightButton
                 onClicked: {
-                    paramObject.value = paramObject.getDefaultValue()
-                    paramObject.pushValue(paramObject.value)
+                    paramObject.resetValue()
                 }
             }
 

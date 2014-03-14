@@ -11,7 +11,7 @@ Item {
     y: paramObject.stringType == "OfxParamStringIsMultiLine" ? -10 : 10
 
     property variant paramObject: model.object
-    property bool isReader: currentParamNode ? currentParamNode.pluginContext=="OfxImageEffectContextReader": false
+    property bool existPath: paramObject.filePathExist
 
     // Is this param secret ?
     visible: !paramObject.isSecret
@@ -19,9 +19,9 @@ Item {
 
   /*  FolderListView {
         id: finder
-        property bool isReader: _buttleData.currentParamNodeWrapper.pluginContext=="OfxImageEffectContextReader":false
-        typeDialog: isReader ? "OpenFile" : "SaveFile"
-        messageDialog: isReader ? "Open file" : "Save file as"
+        property bool existPath: _buttleData.currentParamNodeWrapper.pluginContext=="OfxImageEffectContextReader":false
+        typeDialog: existPath ? "OpenFile" : "SaveFile"
+        messageDialog: existPath ? "Open file" : "Save file as"
     }
 */
 
@@ -59,7 +59,7 @@ Item {
 
             /*Container of the textInput*/
             Loader {
-                sourceComponent: paramObject.stringType == "OfxParamStringIsMultiLine" ? paramStringMultiline : paramStringNotMultiline
+                sourceComponent: paramObject.stringType == "OfxParamStringIsMultiLine" ? paramObject.stringType == "OfxParamStringIsLabel"  ? paramStringLabel : paramStringMultiline :  paramStringNotMultiline 
                 anchors.fill : parent
                 Component{
                     id : paramStringMultiline
@@ -118,6 +118,18 @@ Item {
                             paramObject.changeValue(paramStringInput.text)
                         } 
                         focus: true
+                    }
+                }
+                Component{
+                    id : paramStringLabel
+                    Text{
+                        id: paramStringLabelText
+                        text: paramObject.value
+                        anchors.left: parent.left
+                        anchors.leftMargin: 5
+                        anchors.rightMargin: 5
+                        width: parent.width - 10 
+                        height: parent.height
                     }
                 }
             }
@@ -187,7 +199,7 @@ Item {
                 anchors.fill: parent
 
                 onPressed: {
-                    if(isReader){finderLoadFile.open()}else{finderSaveFile.open()}
+                    if(existPath){finderLoadFile.open()}else{finderSaveFile.open()}
                 }
 
                 // open a file dialog to select a file

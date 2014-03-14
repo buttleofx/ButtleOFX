@@ -32,6 +32,9 @@ class ParamString(Param):
     def getDefaultValue(self):
         return self._tuttleParam.getProperties().fetchProperty("OfxParamPropDefault").getStringValue(0)
 
+    def getStringFilePathExist(self):
+        return self._tuttleParam.getProperties().getIntProperty("OfxParamPropStringFilePathExists")
+
     def getValue(self):
         return self._tuttleParam.getStringValue()
 

@@ -136,6 +136,14 @@ Rectangle {
             files.forceActiveFocusOnDelete()
             event.accepted = true
         }
+        if (event.key == Qt.Key_Right) {
+            files.forceActiveFocusOnChangeIndexOnRight()
+            event.accepted = true
+        }
+        if (event.key == Qt.Key_Left) {
+            files.forceActiveFocusOnChangeIndexOnLeft()
+            event.accepted = true
+        }
     }
 
 }

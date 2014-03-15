@@ -16,36 +16,44 @@ import "gui/shortcut/qml"
 
 ApplicationWindow {
 
-    property var db: undefined
+    property var settingsDatabase: getInitializedDatabase()
 
-    function openDB() {
-        if(db == null){
-            db = LocalStorage.openDatabaseSync("configFile", "2.0","configViewFile", 100000);
-        }
+    // First, let's create a short helper function to get the database connection
+    function getDatabase() {
+         return LocalStorage.openDatabaseSync("ButtleOFX-settings", "2.0","ButtleOFX settings database.", 100000);
+    }
+    // At the start of the application, we can initialize the tables we need if they haven't been created yet
+    function getInitializedDatabase() {
+        var db = getDatabase();
+        db.transaction(
+            function(tx) {
+                // Create the settings table if it doesn't already exist
+                // If the table exists, this is skipped
+                tx.executeSql('CREATE TABLE IF NOT EXISTS settings(key TEXT UNIQUE, value TEXT)');
+          });
+        return db
     }
 
-
     function saveSetting(key, value) {
-        openDB()
-        db.transaction( function(tx){
+        settingsDatabase.transaction( function(tx) {
             tx.executeSql('INSERT OR REPLACE INTO settings VALUES(?, ?)', [key, value]);
         });
     }
 
-    function getSetting(key) {
-        openDB()
-        var res = "";
-        db.transaction(function(tx) {
-            res = tx.executeSql('SELECT value FROM settings WHERE key=?;', [key]).rows.item(0).value;
+    function getSetting(key, defaultValue) {
+        var res = undefined;
+        settingsDatabase.transaction(function(tx) {
+            var dbRes = tx.executeSql('SELECT value FROM settings WHERE key=?;', [key]);
+            if (dbRes.rows.length > 0) {
+                 res = rs.rows.item(0).value;
+            } else {
+                res = defaultValue
+            }
         });
         return res;
     }
 
-    property int selectedView_db: 0
-    Component.onCompleted: {
-        selectedView_db = getSetting("view")
-    }
-    property int selectedView: selectedView_db ? selectedView_db : 3
+    property int selectedView: getSetting("view", 3)
 
     property variant lastSelectedDefaultView: view1
     property variant view1: [browser, paramEditor, player, graphEditor]

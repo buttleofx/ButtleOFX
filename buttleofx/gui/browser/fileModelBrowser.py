@@ -236,7 +236,7 @@ class FileModelBrowser(QtQuick.QQuickItem):
                     # Ignore hidden files by default
                     # TODO: need an option for that
                     continue
-                if d.startswith(os.path.basename(fileFilter)) and d != os.path.basename(fileFilter):
+                if d.startswith(os.path.basename(fileFilter)):
                     suggestions.append(FileItem(os.path.dirname(fileFilter), d, FileItem.Type.Folder, ""))
             
         except Exception:
@@ -319,3 +319,9 @@ class FileModelBrowser(QtQuick.QQuickItem):
     showSeqChanged = QtCore.pyqtSignal()
     showSeq = QtCore.pyqtProperty(bool, getShowSeq, setShowSeq, notify=showSeqChanged)
 
+    @QtCore.pyqtSlot(result=bool)
+    def isEmpty(self):
+        if (len(self._fileItems) <= 0):
+            return True
+        else:
+            return False

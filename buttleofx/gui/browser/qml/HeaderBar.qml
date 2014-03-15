@@ -143,12 +143,26 @@ Rectangle {
                 selectionColor: "#00b2a1"
 
                 onAccepted: {
-                    listPrevious.append({"url": headerBar.folder})
-                    changeFolder(text)
-                    textEditContainer.forceActiveFocus()
+                    if(acceptableInput) {
+                        listPrevious.append({"url": headerBar.folder})
+                        changeFolder(text)
+                        textEditContainer.forceActiveFocus()
+                    }
                 }
                 onFocusChanged:{
-                    texteditPath.focus ? selectAll() : deselect()
+                    if(texteditPath.focus) {
+                        selectAll()
+                    }else {
+                        if(acceptableInput) {
+                            listPrevious.append({"url": headerBar.folder})
+                            changeFolder(text)
+                        }
+                    }
+                }
+                validator: RegExpValidator {
+                    regExp: if(!suggestion.isEmpty()) {
+                         /suggestion.getFilteredFileItems(suggestion.folder).get(0).filepath/
+                    }
                 }
                 onTextChanged: {
                     suggestion.folder = texteditPath.getText(0, texteditPath.cursorPosition + 1)

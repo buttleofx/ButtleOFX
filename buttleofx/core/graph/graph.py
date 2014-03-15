@@ -201,10 +201,11 @@ class Graph(object):
 
             # we set the new coordinates of the node (each selected node is doing the same movement)
             cmdMoved = CmdSetCoord(self, selectedNodeName, (oldX + xMovement, oldY + yMovement))
+
             commands.append(cmdMoved)
 
         # then we push the group of commands
-        CommandManager().push(GroupUndoableCommands(commands))
+        CommandManager().push(GroupUndoableCommands(commands, "Move nodes"))
 
     ################################################## FLAGS ##################################################
 

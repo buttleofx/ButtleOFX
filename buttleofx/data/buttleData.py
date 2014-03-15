@@ -94,6 +94,8 @@ class ButtleData(QtCore.QObject):
     _processGraph = None
     _timeRange = None
 
+    _urlOfFileToSave = ""
+
     def init(self, view, filePath):
         self._graph = Graph()
         self._graphWrapper = GraphWrapper(self._graph, view)
@@ -122,6 +124,9 @@ class ButtleData(QtCore.QObject):
     ################################################## GETTERS ET SETTERS ##################################################
 
     #################### getters ####################
+
+    def getUrlOfFileToSave(self):
+        return self._urlOfFileToSave
 
     def getGraph(self):
         return self._graph
@@ -366,8 +371,13 @@ class ButtleData(QtCore.QObject):
 
     ### current data ###
 
+    def setUrlOfFileToSave(self,url):
+        self._urlOfFileToSave = url
+        self.urlOfFileToSaveChanged.emit()
+
     def setCurrentParamNodeName(self, nodeName):
         self._currentParamNodeName = nodeName
+        self.currentSelectedNodesChanged.emit()
 
     def setCurrentSelectedNodeNames(self, nodeNames):
         self._currentSelectedNodeNames = nodeNames
@@ -883,15 +893,18 @@ class ButtleData(QtCore.QObject):
 
     ################################################## SAVE / LOAD ##################################################
 
-    @QtCore.pyqtSlot(str)
-    @QtCore.pyqtSlot()
-    def saveData(self, url='buttleofx/backup/data.bofx'):
+    @QtCore.pyqtSlot(QtCore.QUrl)
+    def saveData(self, url):
         """
-            Saves all data in a json file (default file : buttleofx/backup/data.bofx)
+            Saves all data in a json file
         """
-
-        filepath = QtCore.QUrl(url).toLocalFile()
-        if not (filepath.endswith(".bofx")):
+        if isinstance(url, str):
+            # if called from Python, it could be a str or a QUrl.
+            filepath = QtCore.QUrl.fromLocalFile(url).toLocalFile()
+        else:
+            filepath = QtCore.QUrl(url).toLocalFile()
+        
+        if not filepath.lower().endswith(".bofx"):
             filepath = filepath + ".bofx"
 
         with io.open(filepath, 'w', encoding='utf-8') as f:
@@ -941,6 +954,8 @@ class ButtleData(QtCore.QObject):
         # Finally we update the savedGraphIndex of the CommandManager : it must be equal to the current index
         CommandManager().setSavedGraphIndex(CommandManager().getIndex())
 
+        self.urlOfFileToSave = filepath
+
     @QtCore.pyqtSlot(str)
     @QtCore.pyqtSlot()
     def loadData(self, url='buttleofx/backup/data.bofx'):
@@ -949,6 +964,8 @@ class ButtleData(QtCore.QObject):
         """
 
         filepath = QtCore.QUrl(url).toLocalFile()
+
+        self.newData()
 
         with open(filepath, 'r') as f:
             read_data = f.read()
@@ -980,6 +997,17 @@ class ButtleData(QtCore.QObject):
             #     self.setCurrentViewerFrame(frame)
             # ButtleEvent().emitViewerChangedSignal()
         f.closed
+
+        self.urlOfFileToSave = filepath
+
+    @QtCore.pyqtSlot()
+    def newData(self):
+        """
+            Create a new graph
+        """
+        self.urlOfFileToSave=""
+        self.graphWrapper.deleteGraphWrapper()
+        CommandManager().clean()
 
     ################################################## DATA EXPOSED TO QML ##################################################
 
@@ -1032,6 +1060,10 @@ class ButtleData(QtCore.QObject):
     # possibility to save graph
     graphCanBeSavedChanged = QtCore.pyqtSignal()
     graphCanBeSaved = QtCore.pyqtProperty(bool, graphCanBeSaved, notify=graphCanBeSavedChanged)
+
+    # url of the file to save
+    urlOfFileToSaveChanged = QtCore.pyqtSignal()
+    urlOfFileToSave = QtCore.pyqtProperty(str, getUrlOfFileToSave, setUrlOfFileToSave, notify=urlOfFileToSaveChanged)
 
 # This class exists just because there are problems when a class extends 2 other classes (Singleton and QObject)
 class ButtleDataSingleton(Singleton):

@@ -9,8 +9,16 @@ class GroupUndoableCommands:
 
     groupUndoableCommands = []
 
-    def __init__(self, commands):
+    def __init__(self, commands, label):
         self.groupUndoableCommands = commands
+        if label != "" :
+            self.label = label
+        else :
+            self.label = "Undocumented Command"
+
+        for command in commands :
+            self.label += " '" + command.getLabel() + "' "
+
 
     def undoCmd(self):
         """
@@ -38,7 +46,5 @@ class GroupUndoableCommands:
         """
         Return what does the command undo/redo
         """
-        tmp = "Move nodes"
-        for n in self.groupUndoableCommands:
-            tmp += " '" + n.getLabel() + "' "
-        return tmp
+        return self.label
+

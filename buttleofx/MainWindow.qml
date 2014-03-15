@@ -16,7 +16,7 @@ import "gui/shortcut/qml"
 
 ApplicationWindow {
 
-    property var db: null
+    property var db: undefined
 
     function openDB() {
         if(db == null){
@@ -26,14 +26,14 @@ ApplicationWindow {
 
 
     function saveSetting(key, value) {
-        openDB();
+        openDB()
         db.transaction( function(tx){
             tx.executeSql('INSERT OR REPLACE INTO settings VALUES(?, ?)', [key, value]);
         });
     }
 
     function getSetting(key) {
-        openDB();
+        openDB()
         var res = "";
         db.transaction(function(tx) {
             res = tx.executeSql('SELECT value FROM settings WHERE key=?;', [key]).rows.item(0).value;
@@ -41,14 +41,18 @@ ApplicationWindow {
         return res;
     }
 
-    property int selectedView:getSetting("view")
+    property int selectedView_db: 0
+    Component.onCompleted: {
+        selectedView_db = getSetting("view")
+    }
+    property int selectedView: selectedView_db ? selectedView_db : 3
 
     property variant lastSelectedDefaultView: view1
     property variant view1: [browser, paramEditor, player, graphEditor]
     property variant view2: [player, paramEditor, browser, graphEditor]
     property variant view3: [player, browser, advancedParamEditor, graphEditor]
 
-    property string urlOfFileToSave: ""
+    property string urlOfFileToSave: _buttleData.urlOfFileToSave
 
     width: 1200
     height: 800
@@ -119,14 +123,36 @@ ApplicationWindow {
         title: "Shortcuts"
     }
 
-    FinderLoadGraph{ id: finderLoadGraph; onGetFileUrl: urlOfFileToSave = fileurl }
-    FinderSaveGraph{ id: finderSaveGraph; onGetFileUrl: urlOfFileToSave = fileurl }
+    FileDialog {
+        id: finderLoadGraph
+        title: "Open a graph"
+        nameFilters: [ "All files (*)" ]
+        selectedNameFilter: "All files (*)"
+        onAccepted: {
+            if (finderLoadGraph.fileUrl){
+                _buttleData.loadData(finderLoadGraph.fileUrl)
+            }
+        }
+    }
+
+    FileDialog {
+        id: finderSaveGraph
+        title: "Save the graph"
+        nameFilters:  [ "All files (*)" ]
+        selectedNameFilter: "All files (*)"
+        onAccepted: {
+            if (finderSaveGraph.fileUrl){
+                _buttleData.saveData(finderSaveGraph.fileUrl)
+            }
+        }
+        selectExisting: false
+    }
 
     MessageDialog {
         id: openGraph
-        title:urlOfFileToSave==""? "Save the new graph?":"Save " + _buttleData.getFileName(urlOfFileToSave) + "?"
+        title:"Save the graph?"
         icon: StandardIcon.Warning
-        text: "You do not have save the current graph, do you want to save it?"
+        text:urlOfFileToSave==""? "You do not have save the current graph, do you want to save it?" : "You do not have save" + _buttleData.getFileName(urlOfFileToSave) + ", do you want to save it?"
         detailedText: "If you don't save the graph, last modifications not saved will be lost. "
         standardButtons: StandardButton.Yes | StandardButton.No | StandardButton.Abort
         Component.onCompleted: visible = false
@@ -146,33 +172,49 @@ ApplicationWindow {
 
     MessageDialog {
         id: newGraph
-        title: urlOfFileToSave==""? "Save the new graph?":"Save " + _buttleData.getFileName(urlOfFileToSave) + "?"
+        title: "Save the graph?"
         icon: StandardIcon.Warning
-        text: "You do not have save the current graph, do you want to save it?"
+        text: urlOfFileToSave==""? "You do not have save the current graph, do you want to save it?": "You do not have save" + _buttleData.getFileName(urlOfFileToSave) + ", do you want to save it?"
         detailedText: "If you don't save the graph, last modifications not saved will be lost. "
         standardButtons: StandardButton.Yes | StandardButton.No | StandardButton.Abort
         Component.onCompleted: visible = false
         onYes: {
             if(urlOfFileToSave!=""){
                 _buttleData.saveData(urlOfFileToSave)
-                _buttleData.graphWrapper.deleteGraphWrapper()
-                urlOfFileToSave=""
-                _buttleManager.clean()
+                _buttleData.newData()
             }
             else{
                 finderSaveGraph.open()
-                _buttleData.graphWrapper.deleteGraphWrapper()
-                urlOfFileToSave=""
-                _buttleManager.clean()
+                _buttleData.newData()
             }
         }
         onNo: {
-            _buttleData.graphWrapper.deleteGraphWrapper()
-            urlOfFileToSave=""
-            _buttleManager.clean()
+            _buttleData.newData()
         }
-        onRejected: {}
     }
+
+    MessageDialog {
+        id: closeButtle
+        title: "Save the graph?"
+        icon: StandardIcon.Warning
+        text: urlOfFileToSave==""? "The graph has been modified. Do you want to save your changes?": _buttleData.getFileName(urlOfFileToSave) + " has been modified. Do you want to save your changes?"
+        standardButtons: StandardButton.Yes | StandardButton.No | StandardButton.Abort
+        Component.onCompleted: visible = false
+        onYes: {
+            if(urlOfFileToSave!=""){
+                _buttleData.saveData(urlOfFileToSave)
+            }
+            else{
+                finderSaveGraph.open()
+                finderSaveGraph.close()
+                finderSaveGraph.open()
+            }
+        }
+        onNo: {
+            Qt.quit()
+        }
+    }
+
 
     menuBar: MenuBar {
         Menu {
@@ -212,7 +254,13 @@ ApplicationWindow {
             MenuItem {
                 id: quitButton
                 text: "Exit"
-                onTriggered: Qt.quit()
+                onTriggered: {
+                    if(!_buttleData.graphCanBeSaved)
+                        Qt.quit()
+                    else{
+                        closeButtle.open()
+                    }
+                }
             }
         }
 
@@ -549,7 +597,7 @@ ApplicationWindow {
 
             MenuItem {
                 id: advancedView
-                text: "Advanced Mode"
+                text: "Quick Mode"
                 checkable: true
                 checked: selectedView==3? true : false
                 onTriggered: {

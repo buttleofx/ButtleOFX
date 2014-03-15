@@ -11,9 +11,7 @@ Rectangle {
         if ((event.key == Qt.Key_N) && (event.modifiers & Qt.ControlModifier)){
             //the fileDialog is opened and closed because the first which appear doesn't work
             if(!_buttleData.graphCanBeSaved){
-                _buttleData.graphWrapper.deleteGraphWrapper()
-                urlOfFileToSave=""
-                _buttleManager.clean()
+                _buttleData.newData()
             }
             else{
                 newGraph.open()

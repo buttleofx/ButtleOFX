@@ -45,7 +45,7 @@ from buttleofx.data import Finder
 #TimerPlayer
 from buttleofx.gui.viewer import TimerPlayer
 #FileModelBrowser
-from buttleofx.gui.browser import FileModelBrowser
+from buttleofx.gui.browser import FileModelBrowser,FileModelBrowserSingleton
 # undo_redo
 from buttleofx.core.undo_redo.manageTools import CommandManager
 # Menu
@@ -53,10 +53,13 @@ from buttleofx.gui.graph.menu import MenuWrapper
 
 # PyQt5
 from PyQt5 import QtCore, QtGui, QtQml, QtQuick, QtWidgets
+from PyQt5.QtWidgets import QWidget, QFileDialog, QApplication, QMessageBox
 
+import numpy
+
+import argparse
 import os
 import sys
-import numpy
 
 osname = os.name.lower()
 sysplatform = sys.platform.lower()
@@ -71,7 +74,49 @@ if windows:
     currentFilePath = currentFilePath.replace("\\", "/")
 
 
-class ButtleApp(QtGui.QGuiApplication):
+class EventFilter(QtCore.QObject):
+    def eventFilter(self, receiver, event):
+        buttleData = ButtleDataSingleton().get()
+        browser = FileModelBrowserSingleton().get()
+        if event.type() == QtCore.QEvent.KeyPress :
+            # if alt f4 event ignored
+            if event.modifiers() == QtCore.Qt.AltModifier and event.key() == QtCore.Qt.Key_F4 :
+                event.ignore()
+        if event.type() != QtCore.QEvent.Close :
+            return super(EventFilter,self).eventFilter(receiver, event)
+        if not isinstance(receiver,QtQuick.QQuickWindow) or not receiver.title() =="ButtleOFX" :
+            return False
+        if not buttleData.graphCanBeSaved :
+            return False
+        msgBox = QMessageBox()
+        msgBox.setText("The graph has been modified.");
+        msgBox.setInformativeText("Do you want to save your changes?")
+        msgBox.setStandardButtons(QMessageBox.Save | QMessageBox.Discard | QMessageBox.Abort)
+        msgBox.setDefaultButton(QMessageBox.Save)
+        ret = msgBox.exec_()
+        if ret == QMessageBox.Save:
+            if buttleData.urlOfFileToSave:
+                # Save on the already existing file
+                buttleData.saveData(buttleData.urlOfFileToSave)
+                # Close the application
+                return super(EventFilter,self).eventFilter(receiver, event)
+            # This project has never been saved, so ask the user on which file to save.
+            dialog = QFileDialog()
+            fileToSave = dialog.getSaveFileName(None, "Save the graph", browser.getFirstFolder())[0]
+            if not (fileToSave.endswith(".bofx")):
+                fileToSave += ".bofx"
+            buttleData.urlOfFileToSave = fileToSave
+            buttleData.saveData(fileToSave)
+            # Close the application
+            return super(EventFilter,self).eventFilter(receiver, event)
+        if ret == QMessageBox.Discard :
+            # Close the application
+            return super(EventFilter,self).eventFilter(receiver, event)
+        # Don't call the parent class, so we don't close the application
+        return True
+
+
+class ButtleApp(QtWidgets.QApplication):
     def __init__(self, argv):
         super(ButtleApp, self).__init__(argv)
 
@@ -85,7 +130,7 @@ class ButtleApp(QtGui.QGuiApplication):
 #            traceback.print_exc()
 #            return False
 
- 
+
 gray_color_table = [QtGui.qRgb(i, i, i) for i in range(256)]
 
 def toQImage(im):
@@ -107,6 +152,7 @@ def toQImage(im):
                 return qim
 
     raise ValueError("toQImage: case not implemented.")
+
 
 class ImageProvider(QtQuick.QQuickImageProvider):
     def __init__(self):
@@ -191,6 +237,19 @@ def main(argv, app):
     buttleManager = ButtleManagerSingleton().get().init()
     # event
     buttleEvent = ButtleEventSingleton().get()
+    #fileModelBrowser
+    browser = FileModelBrowserSingleton().get()
+    
+    parser = argparse.ArgumentParser(description='A command line to execute ButtleOFX, an opensource compositing software. If you pass a folder as an argument, ButtleOFX will start at this path.')
+    parser.add_argument('folder', nargs='?', help='Folder to browse')
+    args = parser.parse_args()
+    if args.folder:
+        inputFolder = os.path.abspath(args.folder)
+        browser.setFirstFolder(inputFolder)
+    else:
+        inputFolder = os.path.expanduser("~")
+        browser.setFirstFolder(inputFolder)
+
     # Menus
     #fileMenu = MenuWrapper("file", 0, component, app)
     #editMenu = MenuWrapper("edit", 0, view, app)
@@ -202,6 +261,7 @@ def main(argv, app):
     rc.setContextProperty("_buttleData", buttleData)
     rc.setContextProperty("_buttleManager", buttleManager)
     rc.setContextProperty("_buttleEvent", buttleEvent)
+    rc.setContextProperty("_browser", browser)
     #rc.setContextProperty("_fileMenu", fileMenu)
     #rc.setContextProperty("_editMenu", editMenu)
     #rc.setContextProperty("_addMenu", addMenu)
@@ -227,13 +287,16 @@ def main(argv, app):
 
     #add._menu.popup(view.mapToGlobal(QtCore.QPoint(0, 0)))
 
-
     if topLevel is not None:
         topLevel.setIcon(QtGui.QIcon(os.path.join(currentFilePath, "../blackMosquito.png")))
         topLevel.show()
+
     else:
         print("ERRORS")
         # Print all errors that occurred.
         for error in component.errors():
             print(error.toString())
 
+    aFilter = EventFilter()
+    app.installEventFilter(aFilter)
+    sys.exit(app.exec_())

@@ -17,8 +17,14 @@ Rectangle {
     property variant listPrevious
     property bool isInListView : false
     signal changeSeq(bool seq)
+    property bool withTab: false
 
     function forceActiveFocusOnPath() {
+        withTab = false
+        texteditPath.forceActiveFocus()
+    }
+    function forceActiveFocusOnPathWithTab() {
+        withTab = true
         texteditPath.forceActiveFocus()
     }
 
@@ -151,7 +157,9 @@ Rectangle {
                 }
                 onFocusChanged:{
                     if(texteditPath.focus) {
-                        selectAll()
+                        if(!withTab) {
+                            selectAll()
+                        }
                     }else {
                         if(acceptableInput) {
                             listPrevious.append({"url": headerBar.folder})

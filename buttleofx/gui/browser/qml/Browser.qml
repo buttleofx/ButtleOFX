@@ -116,6 +116,9 @@ Rectangle {
         if ((event.key == Qt.Key_L) && (event.modifiers & Qt.ControlModifier)) {
             headerBar.forceActiveFocusOnPath()
             event.accepted = true
+        }if ((event.key == Qt.Key_Tab)) {
+            headerBar.forceActiveFocusOnPathWithTab()
+            event.accepted = true
         }
         if ((event.key == Qt.Key_N) && (event.modifiers & Qt.ControlModifier)) {
             files.forceActiveFocusOnCreate()

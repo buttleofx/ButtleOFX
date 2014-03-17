@@ -80,9 +80,9 @@ Item {
     // Container of the paramNodes
     Rectangle{
         id: contentparamNode
-        height: parent.height - tabBar.height - addNode.height - 10
+        height: parent.height - tabBar.height - addNode.height - 50
         width: parent.width
-        y: tabBar.height + 10
+        y: tabBar.height + 50
         color: "#141414"
 
         // scroll all the paramNodes
@@ -93,6 +93,7 @@ Item {
             height: parent.height
             anchors.topMargin: 5
             anchors.bottomMargin: 5
+            y: 10
 
             style: ScrollViewStyle {
                         scrollBarBackground: Rectangle {
@@ -507,11 +508,10 @@ Item {
             property string imageSource: hovered? "file:///" + _buttleData.buttlePath +  "/gui/img/buttons/tools/plus_hover.png": "file:///" + _buttleData.buttlePath +  "/gui/img/buttons/tools/plus.png"
 
             anchors.top: parent.top
-            anchors.topMargin : 2
+            anchors.topMargin : 25
             anchors.left: parent.left
-            anchors.leftMargin: 180
-            width : 10
-            height: 10
+            width : parent.width
+            height: 43
 
             iconSource: imageSource
 

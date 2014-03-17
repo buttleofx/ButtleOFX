@@ -120,7 +120,7 @@ ApplicationWindow {
     PluginWindow {
         id: doc
         title: "Plugin's Documentation"
-        selectedNodeType:_buttleData.currentSelectedNodeWrappers.count!=0? _buttleData.currentSelectedNodeWrappers.get(0).nodeType:""
+        selectedNodeLabel:_buttleData.currentSelectedNodeWrappers.count!=0? _buttleData.currentSelectedNodeWrappers.get(0).name:""
         selectedNodeDoc:_buttleData.currentSelectedNodeWrappers.count!=0? _buttleData.currentSelectedNodeWrappers.get(0).pluginDoc:""
         selectedNodeGroup:_buttleData.currentSelectedNodeWrappers.count!=0? _buttleData.currentSelectedNodeWrappers.get(0).pluginGroup:""
     }
@@ -392,7 +392,7 @@ ApplicationWindow {
                     Instantiator {
                         model: _buttleData.getPluginsByPath(firstMenu.title)
                         MenuItem {
-                            text: object.pluginType
+                            text: object.pluginLabel
                             onTriggered: {
                                 _buttleData.currentGraphIsGraph()
                                 _buttleData.currentGraphWrapper = _buttleData.graphWrapper
@@ -422,7 +422,7 @@ ApplicationWindow {
                             Instantiator {
                                 model: _buttleData.getPluginsByPath(secondMenu.title)
                                 MenuItem {
-                                    text: object.pluginType
+                                    text: object.pluginLabel
                                     onTriggered: {
                                         _buttleData.currentGraphIsGraph()
                                         _buttleData.currentGraphWrapper = _buttleData.graphWrapper
@@ -452,7 +452,7 @@ ApplicationWindow {
                                     Instantiator {
                                         model: _buttleData.getPluginsByPath(thirdMenu.title)
                                         MenuItem {
-                                            text: object.pluginType
+                                            text: object.pluginLabel
                                             onTriggered: {
                                                 _buttleData.currentGraphIsGraph()
                                                 _buttleData.currentGraphWrapper = _buttleData.graphWrapper
@@ -482,7 +482,7 @@ ApplicationWindow {
                                             Instantiator {
                                                 model: _buttleData.getPluginsByPath(fourthMenu.title)
                                                 MenuItem {
-                                                    text: object.pluginType
+                                                    text: object.pluginLabel
                                                     onTriggered: {
                                                         _buttleData.currentGraphIsGraph()
                                                         _buttleData.currentGraphWrapper = _buttleData.graphWrapper
@@ -512,7 +512,7 @@ ApplicationWindow {
                                                     Instantiator {
                                                         model: _buttleData.getPluginsByPath(fifthMenu.title)
                                                         MenuItem {
-                                                            text: object.pluginType
+                                                            text: object.pluginLabel
                                                             onTriggered: {
                                                                 _buttleData.currentGraphIsGraph()
                                                                 _buttleData.currentGraphWrapper = _buttleData.graphWrapper

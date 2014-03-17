@@ -670,7 +670,7 @@ class ButtleData(QtCore.QObject):
         from pyTuttle import tuttle
         pluginCache = tuttle.core().getImageEffectPluginCache()
         plugins = pluginCache.getPlugins()         
-        plugins = sorted(plugins, key=lambda plugin: plugin.getIdentifier().upper())
+        plugins = sorted(plugins, key=lambda plugin: plugin.getDescriptor().getLabel())
         pluginsW = [PluginWrapper(plugin) for plugin in plugins]
         pluginsWModel = QObjectListModel(self)
         for p in pluginsW:
@@ -682,11 +682,11 @@ class ButtleData(QtCore.QObject):
         from pyTuttle import tuttle
         pluginCache = tuttle.core().getImageEffectPluginCache()
         plugins = pluginCache.getPlugins()
-        plugins = sorted(plugins, key=lambda plugin: plugin.getIdentifier().upper())         
+        plugins = sorted(plugins, key=lambda plugin: plugin.getDescriptor().getLabel())         
         pluginsW = [PluginWrapper(plugin) for plugin in plugins]
         pluginsWModel = QObjectListModel(self)
         for p in pluginsW:
-            if (pluginSearched in p.pluginType) :
+            if pluginSearched in p.pluginType or pluginSearched in p.pluginLabel :
                 pluginsWModel.append(p)
         return pluginsWModel
 
@@ -698,7 +698,7 @@ class ButtleData(QtCore.QObject):
         pluginsW = [PluginWrapper(plugin) for plugin in plugins]
         pluginList = QObjectListModel(self)
         for p in pluginsW :
-            if pluginSearched in p.pluginType :
+            if pluginSearched in p.pluginType or pluginSearched in p.pluginLabel :
                 pluginList.append(p)
         if len(pluginList)==1 :
             return pluginList[0]
@@ -708,7 +708,7 @@ class ButtleData(QtCore.QObject):
         from pyTuttle import tuttle
         pluginCache = tuttle.core().getImageEffectPluginCache()
         plugins = pluginCache.getPlugins()         
-        plugins = sorted(plugins, key=lambda plugin: plugin.getIdentifier().upper())
+        plugins = sorted(plugins, key=lambda plugin: plugin.getDescriptor().getLabel())
         pluginsW = [PluginWrapper(plugin) for plugin in plugins]
         pluginsWModel = QObjectListModel(self)
         #for each plugin

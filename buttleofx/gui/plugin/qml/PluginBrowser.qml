@@ -251,7 +251,7 @@ Item {
                             }
                         }
                         Text{
-                            text: object.pluginType
+                            text: object.pluginLabel
                             color: "white"
                             y:6
                             x:15

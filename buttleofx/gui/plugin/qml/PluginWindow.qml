@@ -6,10 +6,10 @@ ApplicationWindow {
 
     property alias searchPluginText: searchPlugin.text
 
-    property string currentPluginType
+    property string currentPluginLabel
     property string currentPluginDoc
     property string currentPluginGroup
-    property string selectedNodeType
+    property string selectedNodeLabel
     property string selectedNodeDoc
     property string selectedNodeGroup
 	property color gradian1: "#010101"
@@ -74,7 +74,7 @@ ApplicationWindow {
                         if(pluginList.model.count==1){
                             plugin:_buttleData.getSinglePluginSuggestion(text)
                             // using pluginList.model[0] doesn't work
-                            currentPluginType=plugin.pluginType
+                            currentPluginLabel=plugin.pluginLabel
                             currentPluginDoc=plugin.pluginDescription
                             currentPluginGroup=plugin.pluginGroup
                         }
@@ -168,7 +168,7 @@ ApplicationWindow {
                             if ((event.key == Qt.Key_Return)||(event.key == Qt.Key_Enter)) {
                                 pluginList.currentItem.color="#333"
                                 pluginList.currentItem.border.color="#343434"
-                                currentPluginType=object.pluginType
+                                currentPluginLabel=object.pluginLabel
                                 currentPluginDoc=object.pluginDescription
                                 currentPluginGroup=object.pluginGroup
                             }
@@ -192,13 +192,13 @@ ApplicationWindow {
                                 pluginList.currentIndex=index
                                 pluginList.currentItem.color="#333"
                                 pluginList.currentItem.border.color="#343434"
-                                currentPluginType=object.pluginType
+                                currentPluginLabel=object.pluginLabel
                                 currentPluginDoc=object.pluginDescription
                                 currentPluginGroup=object.pluginGroup
                             }
                         }
                         Text{
-                            text: object.pluginType
+                            text: object.pluginLabel
                             color: "white"
                             y:6
                             x:15
@@ -239,7 +239,7 @@ ApplicationWindow {
         color: "#141414"
         x:list.width
         Text{
-            text:_buttleData.currentSelectedNodeWrappers.count!=0 ? selectedNodeType : currentPluginType
+            text:_buttleData.currentSelectedNodeWrappers.count!=0 ? selectedNodeLabel : currentPluginLabel
             color: "white"
             font.pointSize: 11
             horizontalAlignment: Text.Center

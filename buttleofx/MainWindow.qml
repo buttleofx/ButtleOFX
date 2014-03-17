@@ -45,7 +45,7 @@ ApplicationWindow {
         settingsDatabase.transaction(function(tx) {
             var dbRes = tx.executeSql('SELECT value FROM settings WHERE key=?;', [key]);
             if (dbRes.rows.length > 0) {
-                 res = rs.rows.item(0).value;
+                 res = dbRes.rows.item(0).value;
             } else {
                 res = defaultValue
             }

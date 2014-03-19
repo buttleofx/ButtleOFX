@@ -38,11 +38,33 @@ Item {
         graphEditor:true
     }
 
-    ParamButtleEditor {                
+    ParamButtleEditor {         
+        id : paramButtleEditor       
         visible: editNode ? true:false
         currentParamNode: _buttleData.currentParamNodeWrapper
-        x:_buttleData.currentParamNodeWrapper? (currentParamNode.coord.x + 80)*graph.zoomCoeff  + graph.offsetX + (1-graph.zoomCoeff)*420 + leftColumn.width  + 170 : 0
-        y:_buttleData.currentParamNodeWrapper? (currentParamNode.coord.y + 95)*graph.zoomCoeff  + graph.offsetY + (1-graph.zoomCoeff)*200 + topLeftView.height + 80: 0
+        x:_buttleData.currentParamNodeWrapper? (currentParamNode.coord.x + 80)*graph.zoomCoeff  + graph.offsetX + (1-graph.zoomCoeff)*420 + leftColumn.width: 0
+        y:_buttleData.currentParamNodeWrapper? (currentParamNode.coord.y + 95)*graph.zoomCoeff  + graph.offsetY + (1-graph.zoomCoeff)*200 + topLeftView.height + 35 + mainWindowQML.y: 0
+        StateGroup {
+            id: states
+            states: [
+                State {
+                    name: "view1&2"
+                    when: selectedView == 3
+                    PropertyChanges {
+                        target: paramButtleEditor 
+                        x: _buttleData.currentParamNodeWrapper? (currentParamNode.coord.x + 80)*graph.zoomCoeff  + graph.offsetX + (1-graph.zoomCoeff)*420 + mainWindowQML.x : 0
+                    }
+                },
+                State {
+                    name: "view3"
+                    when: selectedView != 3
+                    PropertyChanges {
+                        target: paramButtleEditor 
+                        x: _buttleData.currentParamNodeWrapper? (currentParamNode.coord.x + 80)*graph.zoomCoeff  + graph.offsetX + (1-graph.zoomCoeff)*420 + leftColumn.width + mainWindowQML.x  : 0
+                    }
+                }
+            ]
+        }
     }
 
     ColumnLayout {

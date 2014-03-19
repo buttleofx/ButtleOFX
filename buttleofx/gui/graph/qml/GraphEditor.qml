@@ -39,13 +39,11 @@ Item {
     }
 
     ParamButtleEditor {                
-        z:1
         visible: editNode ? true:false
         currentParamNode: _buttleData.currentParamNodeWrapper
-        x:_buttleData.currentParamNodeWrapper? (currentParamNode.coord.x + 80)*graph.zoomCoeff  + graph.offsetX + (1-graph.zoomCoeff)*415 : 0
-        y:_buttleData.currentParamNodeWrapper? (currentParamNode.coord.y + 95)*graph.zoomCoeff  + graph.offsetY + (1-graph.zoomCoeff)*200 : 0
+        x:_buttleData.currentParamNodeWrapper? (currentParamNode.coord.x + 80)*graph.zoomCoeff  + graph.offsetX + (1-graph.zoomCoeff)*420 + leftColumn.width  + 170 : 0
+        y:_buttleData.currentParamNodeWrapper? (currentParamNode.coord.y + 95)*graph.zoomCoeff  + graph.offsetY + (1-graph.zoomCoeff)*200 + topLeftView.height + 80: 0
     }
-
 
     ColumnLayout {
         anchors.fill: parent

@@ -4,7 +4,7 @@ import QtQuick.Layouts 1.0
 import QtQuick.Controls.Styles 1.0
 
 //parent of the ParamEditor is the Row of the ButtleAp
-Item {
+ApplicationWindow {
     id: paramEditor
 
     property variant params 
@@ -20,8 +20,11 @@ Item {
     property color activeFocusOn : "white"
     property color activeFocusOff : "grey"
 
-    implicitWidth: 280
-    implicitHeight: 150
+    minimumWidth: 280
+    minimumHeight: 170
+    maximumWidth: minimumWidth
+    maximumHeight: minimumHeight
+    flags: Qt.FramelessWindowHint | Qt.SplashScreen
 
     /*BUTTLE PARAMS*/
     Rectangle{

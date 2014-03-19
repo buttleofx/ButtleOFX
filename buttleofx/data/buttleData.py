@@ -217,13 +217,13 @@ class ButtleData(QtCore.QObject):
             Returns the total of sorted param nodeWrapper for the parametersEditor.
         """
         listOfNodes = QObjectListModel(self)
-        if len(self.getCurrentGraphWrapper().getNodeWrappers())!=0 :
-            for nodes in self.getCurrentGraphWrapper().getNodeWrappers() :
+        if len(self._graphWrapper.getNodeWrappers())!=0 :
+            for nodes in self._graphWrapper.getNodeWrappers() :
                 if (nodes.pluginContext=="OfxImageEffectContextReader") :
                     listOfNodes.append(nodes)
                     firstNode = nodes
                 else :
-                    firstNode = self.getCurrentGraphWrapper().getNodeWrappers()[0]
+                    firstNode = self._graphWrapper.getNodeWrappers()[0]
 
             toVisit = set()
             visited = set()
@@ -264,46 +264,46 @@ class ButtleData(QtCore.QObject):
         """
         if index>0:
 
-            if self.getCurrentGraphWrapper().getNodeWrapperByIndex(index-1).pluginContext != "OfxImageEffectContextReader" :
+            if self._graphWrapper.getNodeWrapperByIndex(index-1).pluginContext != "OfxImageEffectContextReader" :
 
-                firstNodeX = self.getCurrentGraphWrapper().getNodeWrapperByIndex(index-1).getXCoord()
-                firstNodeY = self.getCurrentGraphWrapper().getNodeWrapperByIndex(index-1).getYCoord()
-                secondNodeX = self.getCurrentGraphWrapper().getNodeWrapperByIndex(index).getXCoord()
-                secondNodeY = self.getCurrentGraphWrapper().getNodeWrapperByIndex(index).getYCoord()
+                firstNodeX = self._graphWrapper.getNodeWrapperByIndex(index-1).getXCoord()
+                firstNodeY = self._graphWrapper.getNodeWrapperByIndex(index-1).getYCoord()
+                secondNodeX = self._graphWrapper.getNodeWrapperByIndex(index).getXCoord()
+                secondNodeY = self._graphWrapper.getNodeWrapperByIndex(index).getYCoord()
 
-                self.getCurrentGraphWrapper().getNodeWrapperByIndex(index-1).setXCoord(secondNodeX)
-                self.getCurrentGraphWrapper().getNodeWrapperByIndex(index-1).setYCoord(secondNodeY)
+                self._graphWrapper.getNodeWrapperByIndex(index-1).setXCoord(secondNodeX)
+                self._graphWrapper.getNodeWrapperByIndex(index-1).setYCoord(secondNodeY)
 
-                self.getCurrentGraphWrapper().getNodeWrapperByIndex(index).setXCoord(firstNodeX)
-                self.getCurrentGraphWrapper().getNodeWrapperByIndex(index).setYCoord(firstNodeY)
+                self._graphWrapper.getNodeWrapperByIndex(index).setXCoord(firstNodeX)
+                self._graphWrapper.getNodeWrapperByIndex(index).setYCoord(firstNodeY)
 
-                self.getCurrentGraphWrapper().getNodeWrappers().move(index,index-1)
+                self._graphWrapper.getNodeWrappers().move(index,index-1)
                 
-        return self.getCurrentGraphWrapper().getNodeWrappers()
+        return self._graphWrapper.getNodeWrappers()
 
     @QtCore.pyqtSlot(int, result=QtCore.QObject)
     def nodeGoesDown(self, index):
         """
             The node which position in list is index goes to the position index+1
         """
-        if index<self.getCurrentGraphWrapper().getNodeWrappers().size()-1:
+        if index<self._graphWrapper.getNodeWrappers().size()-1:
 
-            if self.getCurrentGraphWrapper().getNodeWrapperByIndex(index).pluginContext != "OfxImageEffectContextReader" :
+            if self._graphWrapper.getNodeWrapperByIndex(index).pluginContext != "OfxImageEffectContextReader" :
 
-                firstNodeX = self.getCurrentGraphWrapper().getNodeWrapperByIndex(index).getXCoord()
-                firstNodeY = self.getCurrentGraphWrapper().getNodeWrapperByIndex(index).getYCoord()
-                secondNodeX = self.getCurrentGraphWrapper().getNodeWrapperByIndex(index+1).getXCoord()
-                secondNodeY = self.getCurrentGraphWrapper().getNodeWrapperByIndex(index+1).getYCoord()
+                firstNodeX = self._graphWrapper.getNodeWrapperByIndex(index).getXCoord()
+                firstNodeY = self._graphWrapper.getNodeWrapperByIndex(index).getYCoord()
+                secondNodeX = self._graphWrapper.getNodeWrapperByIndex(index+1).getXCoord()
+                secondNodeY = self._graphWrapper.getNodeWrapperByIndex(index+1).getYCoord()
 
-                self.getCurrentGraphWrapper().getNodeWrapperByIndex(index).setXCoord(secondNodeX)
-                self.getCurrentGraphWrapper().getNodeWrapperByIndex(index).setYCoord(secondNodeY)
+                self._graphWrapper.getNodeWrapperByIndex(index).setXCoord(secondNodeX)
+                self._graphWrapper.getNodeWrapperByIndex(index).setYCoord(secondNodeY)
 
-                self.getCurrentGraphWrapper().getNodeWrapperByIndex(index+1).setXCoord(firstNodeX)
-                self.getCurrentGraphWrapper().getNodeWrapperByIndex(index+1).setYCoord(firstNodeY)
+                self._graphWrapper.getNodeWrapperByIndex(index+1).setXCoord(firstNodeX)
+                self._graphWrapper.getNodeWrapperByIndex(index+1).setYCoord(firstNodeY)
 
-                self.getCurrentGraphWrapper().getNodeWrappers().move(index,index+1)
+                self._graphWrapper.getNodeWrappers().move(index,index+1)
 
-        return self.getCurrentGraphWrapper().getNodeWrappers()
+        return self._graphWrapper.getNodeWrappers()
 
     @QtCore.pyqtSlot(int, result=QtCore.QObject)
     def getNodeWrapperByViewerIndex(self, index):

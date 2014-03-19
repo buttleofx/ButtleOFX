@@ -256,15 +256,9 @@ def main(argv, app):
     #fileMenu = MenuWrapper("file", 0, component, app)
     #editMenu = MenuWrapper("edit", 0, view, app)
     #addMenu = MenuWrapper("buttle/", 1, view, app)
-
-    # size of screen
-    screenWidth = QApplication.desktop().width()
-    screenHeight = QApplication.desktop().height();
-
+    
     # expose data to QML
     rc = engine.rootContext()
-    rc.setContextProperty("screenWidth", screenWidth)
-    rc.setContextProperty("screenHeight", screenHeight)
     rc.setContextProperty("_buttleApp", app)
     rc.setContextProperty("_buttleData", buttleData)
     rc.setContextProperty("_buttleManager", buttleManager)

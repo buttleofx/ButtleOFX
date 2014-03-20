@@ -58,6 +58,9 @@ Rectangle {
             onChangeFolder: {
                 m.directory = folder
             }
+            onRefreshFolder: {
+                files.forceActiveFocusOnRefresh()
+            }
             onChangeSeq: {
                 m.showSeq = seq
             }
@@ -113,6 +116,9 @@ Rectangle {
         if ((event.key == Qt.Key_L) && (event.modifiers & Qt.ControlModifier)) {
             headerBar.forceActiveFocusOnPath()
             event.accepted = true
+        }if ((event.key == Qt.Key_Tab)) {
+            headerBar.forceActiveFocusOnPathWithTab()
+            event.accepted = true
         }
         if ((event.key == Qt.Key_N) && (event.modifiers & Qt.ControlModifier)) {
             files.forceActiveFocusOnCreate()
@@ -122,8 +128,20 @@ Rectangle {
             files.forceActiveFocusOnRename()
             event.accepted = true
         }
+        if (event.key == Qt.Key_F5) {
+            files.forceActiveFocusOnRefresh()
+            event.accepted = true
+        }
         if (event.key == Qt.Key_Delete){
             files.forceActiveFocusOnDelete()
+            event.accepted = true
+        }
+        if (event.key == Qt.Key_Right) {
+            files.forceActiveFocusOnChangeIndexOnRight()
+            event.accepted = true
+        }
+        if (event.key == Qt.Key_Left) {
+            files.forceActiveFocusOnChangeIndexOnLeft()
             event.accepted = true
         }
     }

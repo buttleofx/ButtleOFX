@@ -34,6 +34,23 @@ Rectangle {
         fileModel.deleteItem(itemIndex)
     }
 
+    function forceActiveFocusOnRefresh() {
+        fileModel.updateFileItems(fileModel.folder)
+        fileModel.selectItem(0)
+    }
+    function forceActiveFocusOnChangeIndexOnRight() {
+        if(itemIndex < fileModel.size) {
+            fileModel.selectItem(itemIndex + 1)
+            itemIndex ++
+        }
+    }
+    function forceActiveFocusOnChangeIndexOnLeft() {
+        if(itemIndex > 0) {
+            fileModel.selectItem(itemIndex - 1)
+            itemIndex --
+        }
+    }
+
     MouseArea {
         anchors.fill: parent
         onClicked: {
@@ -220,11 +237,11 @@ Rectangle {
 
                         onPressed: {
                             rootFileItem.forceActiveFocus()
+                            winFile.itemIndex = index
 
                             if (mouse.button == Qt.RightButton)
                                 options.popup()
                                 winFile.fileName = filename_textEdit.text
-                                winFile.itemIndex = index
 
                             //if shift:
                             if(mouse.modifiers & Qt.ShiftModifier)
@@ -561,6 +578,8 @@ Rectangle {
                         drag.target: fileInRow
 
                         onPressed: {
+                            winFile.itemIndex = index
+
                             if (mouse.button == Qt.RightButton)
                                 options.popup()
                                 winFile.fileName = textInRow.text

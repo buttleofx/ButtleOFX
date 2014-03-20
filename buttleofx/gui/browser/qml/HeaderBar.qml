@@ -12,12 +12,19 @@ Rectangle {
 
     property string folder
     signal changeFolder(string folder)
+    signal refreshFolder()
     property string parentFolder
     property variant listPrevious
     property bool isInListView : false
     signal changeSeq(bool seq)
+    property bool withTab: false
 
     function forceActiveFocusOnPath() {
+        withTab = false
+        texteditPath.forceActiveFocus()
+    }
+    function forceActiveFocusOnPathWithTab() {
+        withTab = true
         texteditPath.forceActiveFocus()
     }
 
@@ -142,12 +149,28 @@ Rectangle {
                 selectionColor: "#00b2a1"
 
                 onAccepted: {
-                    listPrevious.append({"url": headerBar.folder})
-                    changeFolder(text)
-                    textEditContainer.forceActiveFocus()
+                    if(acceptableInput) {
+                        listPrevious.append({"url": headerBar.folder})
+                        changeFolder(text)
+                        textEditContainer.forceActiveFocus()
+                    }
                 }
                 onFocusChanged:{
-                    texteditPath.focus ? selectAll() : deselect()
+                    if(texteditPath.focus) {
+                        if(!withTab) {
+                            selectAll()
+                        }
+                    }else {
+                        if(acceptableInput) {
+                            listPrevious.append({"url": headerBar.folder})
+                            changeFolder(text)
+                        }
+                    }
+                }
+                validator: RegExpValidator {
+                    regExp: if(!suggestion.isEmpty()) {
+                         /suggestion.getFilteredFileItems(suggestion.folder).get(0).filepath/
+                    }
                 }
                 onTextChanged: {
                     suggestion.folder = texteditPath.getText(0, texteditPath.cursorPosition + 1)
@@ -200,6 +223,28 @@ Rectangle {
                     suggestionsMenu.__popup(x, y)
                 }
             }
+        }
+
+        Button {
+            id: refresh
+            width: 1
+            height: 1
+
+            iconSource: if (hovered){
+                            "../../img/buttons/browser/refresh_hover.png"
+                        }else{
+                            "../../img/buttons/browser/refresh.png"
+                        }
+
+            style:
+                ButtonStyle {
+                    background: Rectangle {
+                        anchors.fill: parent
+                        color: "transparent"
+                    }
+                }
+
+            onClicked: refreshFolder()
         }
 
         Button {

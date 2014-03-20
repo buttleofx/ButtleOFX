@@ -113,7 +113,7 @@ class FileModelBrowser(QtQuick.QQuickItem):
         self._folder = folder
         self.updateFileItems(folder)
         self.folderChanged.emit()
-        
+  
     @QtCore.pyqtSlot(str)
     def createFolder(self, path):
         os.mkdir(path)
@@ -136,6 +136,7 @@ class FileModelBrowser(QtQuick.QQuickItem):
     exists = QtCore.pyqtProperty(bool, getFolderExists, notify=folderChanged)
     parentFolder = QtCore.pyqtProperty(str, getParentFolder, constant=True)
     
+    @QtCore.pyqtSlot(str)
     def updateFileItems(self, folder):
         self._fileItems = []
         self._fileItemsModel.clear()
@@ -239,7 +240,7 @@ class FileModelBrowser(QtQuick.QQuickItem):
                     # Ignore hidden files by default
                     # TODO: need an option for that
                     continue
-                if d.startswith(os.path.basename(fileFilter)) and d != os.path.basename(fileFilter):
+                if d.startswith(os.path.basename(fileFilter)):
                     suggestions.append(FileItem(os.path.dirname(fileFilter), d, FileItem.Type.Folder, ""))
             
         except Exception:
@@ -306,10 +307,14 @@ class FileModelBrowser(QtQuick.QQuickItem):
         self._nameFilter = nameFilter
         self.updateFileItems(self._folder)
         self.nameFilterChange.emit()
+        
+    def getSize(self):
+        return len(self._fileItems) - 1
 
     fileItems = QtCore.pyqtProperty(QtCore.QObject, getFileItems, notify=folderChanged)
     nameFilterChange = QtCore.pyqtSignal()
     nameFilter = QtCore.pyqtProperty(str, getFilter, setFilter, notify=nameFilterChange)
+    size = QtCore.pyqtProperty(int, getSize, constant=True)
     
     def getShowSeq(self):
         return self._showSeq
@@ -321,6 +326,13 @@ class FileModelBrowser(QtQuick.QQuickItem):
     
     showSeqChanged = QtCore.pyqtSignal()
     showSeq = QtCore.pyqtProperty(bool, getShowSeq, setShowSeq, notify=showSeqChanged)
+
+    @QtCore.pyqtSlot(result=bool)
+    def isEmpty(self):
+        if (len(self._fileItems) <= 0):
+            return True
+        else:
+            return False
 
 
 # This class exists just because there are problems when a class extends 2 other classes (Singleton and QObject)

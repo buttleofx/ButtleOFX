@@ -261,12 +261,39 @@ Rectangle {
                         id: stateViewerNode
                          states: [
                              State {
-                                 name: "miniatureState"
-                                 when: miniatureState
+                                 name: "miniatureStateAndReader"
+                                 when: miniatureState && model.object.pluginContext =="OfxImageEffectContextReader"
+                                 PropertyChanges {
+                                     target: node
+                                     width: node.nodeWidth * qml_graphRoot.miniatureScale
+                                     height: node.nodeWidth * qml_graphRoot.miniatureScale
+                                 }
+                             },
+                             State {
+                                 name: "miniatureStateAndNotReader"
+                                 when: miniatureState && model.object.pluginContext !="OfxImageEffectContextReader"
                                  PropertyChanges {
                                      target: node
                                      width: node.nodeWidth * qml_graphRoot.miniatureScale
                                      height: node.nodeWidth /2 * qml_graphRoot.miniatureScale
+                                 }
+                             },
+                             State {
+                                 name: "readerAndSrc"
+                                 when: model.object.pluginContext =="OfxImageEffectContextReader" && model.object.params.get(0).value!=""
+                                 PropertyChanges {
+                                     target: node
+                                     width: nodeWidth * zoomCoeff
+                                     height: nodeWidth * zoomCoeff
+                                 }
+                             },
+                             State {
+                                 name: "notReaderOrReaderAndNoSrc"
+                                 when: model.object.pluginContext !="OfxImageEffectContextReader" || (model.object.pluginContext =="OfxImageEffectContextReader" && model.object.params.get(0).value=="")
+                                 PropertyChanges {
+                                     target: node
+                                     width: nodeWidth * zoomCoeff
+                                     height: nodeWidth/2 * zoomCoeff
                                  }
                              }
                          ]

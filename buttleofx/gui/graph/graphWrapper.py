@@ -81,7 +81,10 @@ class GraphWrapper(QtCore.QObject):
         clips = QObjectListModel(self)
         for nodeWrapper in self._nodeWrappers:
             if nodeWrapper.getName() == nodeName:
-                clipConnected_input = self.getConnectedClipWrapper(nodeWrapper.getSrcClips().get(0), False)
+                if nodeWrapper.getNbInput()>0 :
+                    clipConnected_input = self.getConnectedClipWrapper(nodeWrapper.getSrcClips().get(0), False)
+                else :
+                    clipConnected_input = None
                 clipConnected_output = self.getConnectedClipWrapper_Output(nodeWrapper.getOutputClip())
                 if(clipConnected_input and clipConnected_output):
                     clips.append(clipConnected_input)

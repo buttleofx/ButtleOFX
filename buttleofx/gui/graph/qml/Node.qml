@@ -266,12 +266,36 @@ Rectangle {
             id: nodeText
             anchors.verticalCenter: isSelected ? undefined : parent.verticalCenter
             anchors.horizontalCenter: isSelected ? parent.horizontalCenter : undefined
-            x: 5
+            x: isSelected ? nodeWidth * 0.5 * zoomCoeff : 5
             y: isSelected ? nodeWidth * 0.5 * zoomCoeff : 0
             text: m.nodeWrapper.nameUser
             font.pointSize: zoomCoeff < 0.7 ? zoomCoeff < 0.4 ? 6 : 7 : 10
             visible: miniatureState ? false : true
             property bool isSelected: _buttleData.nodeIsSelected(m.nodeWrapper)
+
+            StateGroup {
+                id: stateNodeContext
+                states: [
+                    State {
+                        name: "readerAndSrc"
+                        when: m.nodeWrapper.pluginContext =="OfxImageEffectContextReader" && m.nodeWrapper.params.get(0).value!=""
+                        PropertyChanges {
+                            target: nodeText
+                            y : isSelected ? nodeWidth * zoomCoeff : nodeWidth * 0.65 * zoomCoeff
+                            anchors.verticalCenter: undefined
+                        }
+                    },
+                    State {
+                        name: "notReaderOrReaderAndNoSrc"
+                        when: m.nodeWrapper.pluginContext !="OfxImageEffectContextReader" || (m.nodeWrapper.pluginContext =="OfxImageEffectContextReader" && m.nodeWrapper.params.get(0).value=="")
+                        PropertyChanges {
+                            target: nodeText
+                            y : isSelected ? nodeWidth * 0.5 * zoomCoeff : 0
+                            anchors.verticalCenter: isSelected ? undefined : parent.verticalCenter
+                        }
+                    }
+                ]
+            }
 
             // onTextChanged: {
             //     m.nodeWrapper.fitWidth(nodeText.width);
@@ -286,7 +310,50 @@ Rectangle {
             }
             color: isSelected ? m.nodeWrapper.color : "black"
         }
+
+        Rectangle {
+            id: miniPictureRect
+            width: miniatureState ? nodeWidth * 0.8 * zoomCoeff * miniatureScale : nodeWidth * 0.8 * zoomCoeff
+            height: miniatureState ? nodeWidth * 0.5 * zoomCoeff * miniatureScale : nodeWidth * 0.5 * zoomCoeff
+            x: miniatureState ? nodeWidth * 0.05 * zoomCoeff * miniatureScale : nodeWidth * 0.05 * zoomCoeff
+            y: miniatureState ? nodeWidth * 0.05 * zoomCoeff * miniatureScale : nodeWidth * 0.05 * zoomCoeff
+            radius : 2
+            state: "normal"
+            color: "transparent"
+            visible: miniatureState ? false : true
+
+            Image {
+                id: miniPicture
+                anchors.fill: parent
+                fillMode: Image.PreserveAspectFit
+                smooth: true
+            }
+
+            StateGroup {
+                id: statePicture
+                states: [
+                    State {
+                        name: "reader"
+                        when: m.nodeWrapper.pluginContext =="OfxImageEffectContextReader" && m.nodeWrapper.params.get(0).value!=""
+                        PropertyChanges {
+                            target: miniPicture;
+                            source: 'image://buttleofx/'+ m.nodeWrapper.params.get(0).value 
+                        }
+                    },
+                    State {
+                        name: "notReader"
+                        when: m.nodeWrapper.pluginContext !="OfxImageEffectContextReader"
+                        PropertyChanges {
+                            target: miniPicture;
+                            source: ""
+                        }
+                    }
+                ]
+            }
+        }
     }
+
+
 
     Rectangle {
         id: deadMosquito

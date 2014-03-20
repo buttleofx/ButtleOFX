@@ -16,7 +16,7 @@ import "gui/shortcut/qml"
 
 ApplicationWindow {
 
-    property var db: null
+    property var db: undefined
 
     function openDB() {
         if(db == null){
@@ -26,14 +26,14 @@ ApplicationWindow {
 
 
     function saveSetting(key, value) {
-        openDB();
+        openDB()
         db.transaction( function(tx){
             tx.executeSql('INSERT OR REPLACE INTO settings VALUES(?, ?)', [key, value]);
         });
     }
 
     function getSetting(key) {
-        openDB();
+        openDB()
         var res = "";
         db.transaction(function(tx) {
             res = tx.executeSql('SELECT value FROM settings WHERE key=?;', [key]).rows.item(0).value;
@@ -41,7 +41,11 @@ ApplicationWindow {
         return res;
     }
 
-    property int selectedView: getSetting("view") ? getSetting("view") : 3
+    property int selectedView_db: 0
+    Component.onCompleted: {
+        selectedView_db = getSetting("view")
+    }
+    property int selectedView: selectedView_db ? selectedView_db : 3
 
     property variant lastSelectedDefaultView: view1
     property variant view1: [browser, paramEditor, player, graphEditor]
@@ -148,6 +152,7 @@ ApplicationWindow {
         id: openGraph
         title:"Save the graph?"
         icon: StandardIcon.Warning
+        modality: Qt.WindowStaysOnTopHint && Qt.WindowModal
         text:urlOfFileToSave==""? "You do not have save the current graph, do you want to save it?" : "You do not have save" + _buttleData.getFileName(urlOfFileToSave) + ", do you want to save it?"
         detailedText: "If you don't save the graph, last modifications not saved will be lost. "
         standardButtons: StandardButton.Yes | StandardButton.No | StandardButton.Abort
@@ -170,6 +175,7 @@ ApplicationWindow {
         id: newGraph
         title: "Save the graph?"
         icon: StandardIcon.Warning
+        modality: Qt.WindowStaysOnTopHint && Qt.WindowModal
         text: urlOfFileToSave==""? "You do not have save the current graph, do you want to save it?": "You do not have save" + _buttleData.getFileName(urlOfFileToSave) + ", do you want to save it?"
         detailedText: "If you don't save the graph, last modifications not saved will be lost. "
         standardButtons: StandardButton.Yes | StandardButton.No | StandardButton.Abort
@@ -193,6 +199,7 @@ ApplicationWindow {
         id: closeButtle
         title: "Save the graph?"
         icon: StandardIcon.Warning
+        modality: Qt.WindowStaysOnTopHint && Qt.WindowModal
         text: urlOfFileToSave==""? "The graph has been modified. Do you want to save your changes?": _buttleData.getFileName(urlOfFileToSave) + " has been modified. Do you want to save your changes?"
         standardButtons: StandardButton.Yes | StandardButton.No | StandardButton.Abort
         Component.onCompleted: visible = false
@@ -241,7 +248,6 @@ ApplicationWindow {
             MenuItem {
                 text: "Save As"
                 shortcut: "Ctrl+Shift+S"
-                enabled: _buttleData.graphCanBeSaved ? true : false
                 onTriggered: finderSaveGraph.open()
             }
 

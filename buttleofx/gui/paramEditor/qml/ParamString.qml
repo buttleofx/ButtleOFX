@@ -8,10 +8,10 @@ Item {
     id: containerParamString
     implicitWidth: 300
     implicitHeight: 30
-    y:10
+    y: paramObject.stringType == "OfxParamStringIsMultiLine" ? -10 : 10
 
     property variant paramObject: model.object
-    property bool isReader: currentParamNode ? currentParamNode.pluginContext=="OfxImageEffectContextReader": false
+    property bool existPath: paramObject.filePathExist
 
     // Is this param secret ?
     visible: !paramObject.isSecret
@@ -19,70 +19,11 @@ Item {
 
   /*  FolderListView {
         id: finder
-        property bool isReader: _buttleData.currentParamNodeWrapper.pluginContext=="OfxImageEffectContextReader":false
-        typeDialog: isReader ? "OpenFile" : "SaveFile"
-        messageDialog: isReader ? "Open file" : "Save file as"
+        property bool existPath: _buttleData.currentParamNodeWrapper.pluginContext=="OfxImageEffectContextReader":false
+        typeDialog: existPath ? "OpenFile" : "SaveFile"
+        messageDialog: existPath ? "Open file" : "Save file as"
     }
 */
-    /*Container of the textInput*/
-    function createInput(paramObject)
-    {
-        // we need a multi line input
-        if (paramObject.stringType == "OfxParamStringIsMultiLine") {
-            var newObject = Qt.createQmlObject('import QtQuick 2.0;' +
-                'Flickable {' +
-                    'id: flick;' +
-                    'width: parent.width - 10;' +
-                    'height: parent.height;' +
-                    'contentWidth: paramStringMultilines.paintedWidth;' +
-                    'contentHeight: paramStringMultilines.paintedHeight;' +
-                    'clip: true;' +
-
-                    'function ensureVisible(r)' +
-                    '{' +
-                    '    if (contentX >= r.x)' +
-                    '        contentX = r.x;' +
-                    '    else if (contentX+width <= r.x+r.width)' +
-                    '        contentX = r.x+r.width-width;' +
-                    '    if (contentY >= r.y)' +
-                    '        contentY = r.y;' +
-                    '    else if (contentY+height <= r.y+r.height)' +
-                    '        contentY = r.y+r.height-height;' +
-                    '}' +
-
-                    'TextEdit {' +
-                    '    id: paramStringMultilines;' +
-                    '    text: paramObject.value;' +
-                    '    width: flick.width;' +
-                    '    height: flick.height;' +
-                    '    color: activeFocus ? "white" : "grey";' +
-                    '    font.pointSize: 10;' +
-                    '    onCursorRectangleChanged: flick.ensureVisible(cursorRectangle);' +
-                    '    onTextChanged: {' +
-                    '       paramObject.value = paramStringMultilines.text;' +
-                    '       paramObject.pushValue(paramObject.value);' +
-                    '    }' +
-                    '    focus: true' +
-                    '}' +
-                '}', stringInput, "inputLine");
-        }
-        else {
-            var newObject = Qt.createQmlObject('import QtQuick 2.0;'+
-                'TextInput{' +
-                    'id: paramStringInput;' +
-                    'text: paramObject.value;' + 
-                    'anchors.left: parent.left; anchors.leftMargin: 5; anchors.rightMargin: 5;' +
-                    'width: parent.width - 10;' +
-                    'height: parent.height;' +
-                    'color: activeFocus ? "white" : "grey";' +
-                    'onAccepted: {' +
-                    '   paramObject.value = paramStringInput.text;' +
-                    '   paramObject.pushValue(paramObject.value);' +
-                    '}' +
-                    'focus: true'+
-                '}', stringInput, "inputLine");
-        }
-    }
 
     Row{
         id: paramStringInputContainer
@@ -101,7 +42,7 @@ Item {
                 anchors.fill: parent
                 acceptedButtons: Qt.RightButton
                 onClicked: {
-                    paramObject.value = paramObject.getDefaultValue()
+                    paramObject.resetValue()
                 }
             }
         }
@@ -116,17 +57,88 @@ Item {
             radius: 3
             clip: true
 
-            // create the right input, depend on the tuttle param
-            onWidthChanged: {
-                createInput(paramObject)
+            /*Container of the textInput*/
+            Loader {
+                sourceComponent: paramObject.stringType == "OfxParamStringIsMultiLine" ? paramObject.stringType == "OfxParamStringIsLabel"  ? paramStringLabel : paramStringMultiline :  paramStringNotMultiline 
+                anchors.fill : parent
+                Component{
+                    id : paramStringMultiline
+                    // we need a multi line input
+                    Flickable { 
+                        id: flick
+                        width: parent.width - 10
+                        height: parent.height
+                        contentWidth: paramStringMultilines.paintedWidth
+                        contentHeight: paramStringMultilines.paintedHeight
+                        clip: true
+
+                        function ensureVisible(r) 
+                        { 
+                            if (contentX >= r.x) 
+                                contentX = r.x 
+                            else if (contentX+width <= r.x+r.width) 
+                                contentX = r.x+r.width-width 
+                            if (contentY >= r.y) 
+                                contentY = r.y
+                            else if (contentY+height <= r.y+r.height)
+                                contentY = r.y+r.height-height
+                        }
+
+                        TextEdit {
+                            id: paramStringMultilines
+                            text: paramObject.value
+                            width: flick.width
+                            height: flick.height
+                            color: activeFocus ? "white" : "grey"
+                            font.pointSize: 10
+                            onCursorRectangleChanged: flick.ensureVisible(cursorRectangle)
+                            Keys.onEnterPressed: {
+                                paramObject.changeValue(paramStringMultilines.text)
+                            }
+                            focus: true 
+                        } 
+                    }
+                }
+                Component{
+                    id : paramStringNotMultiline
+                    TextInput{ 
+                        id: paramStringInput 
+                        text: paramObject.value
+                        anchors.left: parent.left
+                        anchors.leftMargin: 5
+                        anchors.rightMargin: 5
+                        width: parent.width - 10 
+                        height: parent.height
+                        color: activeFocus ? "white" : "grey"
+                        selectByMouse: true
+                        onAccepted: { 
+                            // call 2 times paramObject here in qml doesn't work, so add a fonction which do both of them in python
+                            // paramObject.value = paramStringInput.text 
+                            // paramObject.pushValue(paramObject.value)
+                            paramObject.changeValue(paramStringInput.text)
+                        } 
+                        focus: true
+                    }
+                }
+                Component{
+                    id : paramStringLabel
+                    Text{
+                        id: paramStringLabelText
+                        text: paramObject.value
+                        anchors.left: parent.left
+                        anchors.leftMargin: 5
+                        anchors.rightMargin: 5
+                        width: parent.width - 10 
+                        height: parent.height
+                    }
+                }
             }
 
             MouseArea {
                 anchors.fill: parent
                 acceptedButtons: Qt.RightButton
                 onClicked: {
-                    paramObject.value = paramObject.getDefaultValue()
-                    paramObject.pushValue(paramObject.value)
+                    paramObject.resetValue()
                 }
             }
 
@@ -187,7 +199,7 @@ Item {
                 anchors.fill: parent
 
                 onPressed: {
-                    if(isReader){finderLoadFile.open()}else{finderSaveFile.open()}
+                    if(existPath){finderLoadFile.open()}else{finderSaveFile.open()}
                 }
 
                 // open a file dialog to select a file

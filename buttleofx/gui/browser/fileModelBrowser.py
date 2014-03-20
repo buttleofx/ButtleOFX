@@ -145,9 +145,9 @@ class FileModelBrowser(QtQuick.QQuickItem):
         
         if self._showSeq:
             items = sequenceParser.browse(folder)
-            dirs = [item._filename for item in items if item._type == 0]
-            seqs = [item._sequence for item in items if item._type == 1]
-            files = [item._filename for item in items if item._type == 2]
+            dirs = [item._filename for item in items if item._type == sequenceParser.eTypeFolder]
+            seqs = [item._sequence for item in items if item._type == sequenceParser.eTypeSequence]
+            files = [item._filename for item in items if item._type == sequenceParser.eTypeFile]
             
             for s in seqs:
                 (_, extension) = os.path.splitext(s.getStandardPattern())

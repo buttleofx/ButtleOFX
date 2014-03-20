@@ -18,7 +18,6 @@ class FileItem(QtCore.QObject):
     
     _isSelected = False
     
-    
     class Type():
         """ Enum """
         File = 'File'

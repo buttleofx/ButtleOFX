@@ -256,7 +256,7 @@ def main(argv, app):
     #fileMenu = MenuWrapper("file", 0, component, app)
     #editMenu = MenuWrapper("edit", 0, view, app)
     #addMenu = MenuWrapper("buttle/", 1, view, app)
-
+    
     # expose data to QML
     rc = engine.rootContext()
     rc.setContextProperty("_buttleApp", app)

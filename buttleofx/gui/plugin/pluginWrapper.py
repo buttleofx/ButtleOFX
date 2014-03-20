@@ -21,6 +21,9 @@ class PluginWrapper(QtCore.QObject):
     def getType(self):
         return self._plugin.getIdentifier()
 
+    def getLabel(self):
+        return self._plugin.getDescriptor().getLabel()
+
     def getPluginDescription(self):
         return self._plugin.getDescriptor().getProperties().getStringProperty("OfxPropPluginDescription")
 
@@ -31,4 +34,5 @@ class PluginWrapper(QtCore.QObject):
            
     pluginGroup = QtCore.pyqtProperty(str, getPluginGroup, constant=True)   
     pluginType = QtCore.pyqtProperty(str, getType, constant=True)
+    pluginLabel = QtCore.pyqtProperty(str, getLabel, constant=True)
     pluginDescription = QtCore.pyqtProperty(str, getPluginDescription, constant=True)

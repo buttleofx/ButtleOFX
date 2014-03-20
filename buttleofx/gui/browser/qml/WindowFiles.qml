@@ -263,9 +263,7 @@ Rectangle {
                             }
                             rootFileItem.selectedFiles = selection
                             winFile.changeSelectedList(sel)
-                        }
 
-                        onDoubleClicked: {
                             // if it's an image, we assign it to the viewer
                              if (model.object.fileType != "Folder") {
                                  player.changeViewer(11) // we come to the temporary viewer
@@ -283,6 +281,23 @@ Rectangle {
                                  _buttleData.assignNodeToViewerIndex(readerNode.nodeWrapper, 10)
                                  _buttleData.currentViewerIndex = 10 // we assign to the viewer the 10th view
                                  _buttleEvent.emitViewerChangedSignal()
+                             }
+                        }
+
+                        onDoubleClicked: {
+                            // if it's an image, we create a node
+                             if (model.object.fileType != "Folder") {
+                                 _buttleData.currentGraphWrapper = _buttleData.graphWrapper
+                                 _buttleData.currentGraphIsGraph()
+                                 // if before the viewer was showing an image from the browser, we change the currentView
+                                 if (_buttleData.currentViewerIndex > 9){
+                                     _buttleData.currentViewerIndex = player.lastView
+                                     if (player.lastNodeWrapper != undefined)
+                                         _buttleData.currentViewerNodeWrapper = player.lastNodeWrapper
+                                     player.changeViewer(player.lastView)
+                                 }
+
+                                 _buttleManager.nodeManager.dropFile(model.object.filepath, 10, 10)
                              } else {
                                  winFile.goToFolder(model.object.filepath)
                              }

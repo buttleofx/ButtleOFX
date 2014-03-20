@@ -21,6 +21,7 @@ Rectangle {
     property int itemIndex: 0
     property string fileName
     property bool showSeq: false
+    property int nbCell: viewList ? 1 : gridview.width/gridview.cellWidth
 
     function forceActiveFocusOnCreate() {
         fileModel.createFolder(fileModel.folder + "/New Directory")
@@ -48,6 +49,19 @@ Rectangle {
         if(itemIndex > 0) {
             fileModel.selectItem(itemIndex - 1)
             itemIndex --
+        }
+    }
+
+    function forceActiveFocusOnChangeIndexOnDown() {
+        if(winFile.nbCell  < fileModel.size) {
+            itemIndex += winFile.nbCell
+            fileModel.selectItem(itemIndex)
+        }
+    }
+    function forceActiveFocusOnChangeIndexOnUp() {
+        if(winFile.nbCell  < fileModel.size) {
+            itemIndex -= winFile.nbCell
+            fileModel.selectItem(itemIndex)
         }
     }
 

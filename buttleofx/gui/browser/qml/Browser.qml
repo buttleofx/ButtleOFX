@@ -144,6 +144,14 @@ Rectangle {
             files.forceActiveFocusOnChangeIndexOnLeft()
             event.accepted = true
         }
+        if (event.key == Qt.Key_Down) {
+            files.forceActiveFocusOnChangeIndexOnDown()
+            event.accepted = true
+        }
+        if (event.key == Qt.Key_Up) {
+            files.forceActiveFocusOnChangeIndexOnUp()
+            event.accepted = true
+        }
     }
 
 }

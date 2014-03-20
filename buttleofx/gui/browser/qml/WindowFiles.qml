@@ -53,14 +53,20 @@ Rectangle {
     }
 
     function forceActiveFocusOnChangeIndexOnDown() {
-        if(winFile.nbCell  < fileModel.size) {
+        if(itemIndex + winFile.nbCell  < fileModel.size) {
             itemIndex += winFile.nbCell
+            fileModel.selectItem(itemIndex)
+        }else {
+            itemIndex = fileModel.size
             fileModel.selectItem(itemIndex)
         }
     }
     function forceActiveFocusOnChangeIndexOnUp() {
-        if(winFile.nbCell  < fileModel.size) {
+        if(itemIndex - winFile.nbCell  >= 0) {
             itemIndex -= winFile.nbCell
+            fileModel.selectItem(itemIndex)
+        }else {
+            itemIndex = 0
             fileModel.selectItem(itemIndex)
         }
     }

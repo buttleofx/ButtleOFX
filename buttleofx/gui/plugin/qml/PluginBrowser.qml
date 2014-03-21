@@ -86,7 +86,8 @@ Item {
                                 // if there is only one node, we don't connect it
                                 if (previousNode != undefined){
                                     newNode = _buttleData.lastNode()
-                                    _buttleManager.connectionManager.connectWrappers(previousNode.outputClip, newNode.srcClips.get(0))
+                                    if (newNode.nbInput != 0)
+                                        _buttleManager.connectionManager.connectWrappers(previousNode.outputClip, newNode.srcClips.get(0))
                                 }
                             }
                             else{
@@ -94,7 +95,8 @@ Item {
                                     var selectedNode = _buttleData.currentSelectedNodeWrappers.get(0)
                                     _buttleManager.nodeManager.creationNode("_buttleData.graph", plugin, selectedNode.xCoord+140, selectedNode.yCoord)
                                     var createdNode = _buttleData.lastNode()
-                                    _buttleManager.connectionManager.connectWrappers(selectedNode.outputClip, createdNode.srcClips.get(0))
+                                    if (createdNode.nbInput != 0)
+                                        _buttleManager.connectionManager.connectWrappers(selectedNode.outputClip, createdNode.srcClips.get(0))
                                 }
                                 else 
                                     _buttleManager.nodeManager.creationNode("_buttleData.graph", plugin, 0, 0)
@@ -209,7 +211,8 @@ Item {
                                     // if there is only one node, we don't connect it
                                     if (previousNode != undefined){
                                         newNode = _buttleData.lastNode()
-                                        _buttleManager.connectionManager.connectWrappers(previousNode.outputClip, newNode.srcClips.get(0))
+                                        if (newNode.nbInput != 0)
+                                            _buttleManager.connectionManager.connectWrappers(previousNode.outputClip, newNode.srcClips.get(0))
                                     }
                                 }
                                 else{
@@ -217,7 +220,8 @@ Item {
                                         var selectedNode = _buttleData.currentSelectedNodeWrappers.get(0)
                                         _buttleManager.nodeManager.creationNode("_buttleData.graph", object.pluginType, selectedNode.xCoord+140, selectedNode.yCoord)
                                         var createdNode = _buttleData.lastNode()
-                                        _buttleManager.connectionManager.connectWrappers(selectedNode.outputClip, createdNode.srcClips.get(0))
+                                        if (createdNode.nbInput != 0)
+                                            _buttleManager.connectionManager.connectWrappers(selectedNode.outputClip, createdNode.srcClips.get(0))
                                     }
                                     else 
                                         _buttleManager.nodeManager.creationNode("_buttleData.graph", object.pluginType, 0, 0)
@@ -253,7 +257,8 @@ Item {
                                     // if there is only one node, we don't connect it
                                     if (previousNode != undefined){
                                         newNode = _buttleData.lastNode()
-                                        _buttleManager.connectionManager.connectWrappers(previousNode.outputClip, newNode.srcClips.get(0))
+                                        if (newNode.nbInput != 0)
+                                            _buttleManager.connectionManager.connectWrappers(previousNode.outputClip, newNode.srcClips.get(0))
                                     }
                                 }
                                 else{
@@ -261,7 +266,8 @@ Item {
                                         var selectedNode = _buttleData.currentSelectedNodeWrappers.get(0)
                                         _buttleManager.nodeManager.creationNode("_buttleData.graph", object.pluginType, selectedNode.xCoord+140, selectedNode.yCoord)
                                         var createdNode = _buttleData.lastNode()
-                                        _buttleManager.connectionManager.connectWrappers(selectedNode.outputClip, createdNode.srcClips.get(0))
+                                        if (createdNode.nbInput != 0)
+                                            _buttleManager.connectionManager.connectWrappers(selectedNode.outputClip, createdNode.srcClips.get(0))
                                     }
                                     else 
                                         _buttleManager.nodeManager.creationNode("_buttleData.graph", object.pluginType, 0, 0)

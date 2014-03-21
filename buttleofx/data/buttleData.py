@@ -686,7 +686,7 @@ class ButtleData(QtCore.QObject):
         pluginsW = [PluginWrapper(plugin) for plugin in plugins]
         pluginsWModel = QObjectListModel(self)
         for p in pluginsW:
-            if pluginSearched in p.pluginType or pluginSearched in p.pluginLabel :
+            if pluginSearched in p.pluginLabel.lower() or pluginSearched in p.pluginLabel :
                 pluginsWModel.append(p)
         return pluginsWModel
 
@@ -698,7 +698,7 @@ class ButtleData(QtCore.QObject):
         pluginsW = [PluginWrapper(plugin) for plugin in plugins]
         pluginList = QObjectListModel(self)
         for p in pluginsW :
-            if pluginSearched in p.pluginType or pluginSearched in p.pluginLabel :
+            if pluginSearched in p.pluginLabel.lower() or pluginSearched in p.pluginLabel :
                 pluginList.append(p)
         if len(pluginList)==1 :
             return pluginList[0]

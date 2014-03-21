@@ -34,40 +34,60 @@ Rectangle {
     function forceActiveFocusOnDelete() {
         fileModel.deleteItem(itemIndex)
     }
+    function selectItem(index){
+        fileModel.selectItem(index)
+        var sel = fileModel.getSelectedItems()
+        // if it's an image, we assign it to the viewer
+         if (sel.get(0).fileType != "Folder") {
+             player.changeViewer(11) // we come to the temporary viewer
+             // we save the last node wrapper of the last view
+             player.lastNodeWrapper = _buttleData.getNodeWrapperByViewerIndex(player.lastView)
+
+             readerNode.nodeWrapper = _buttleData.nodeReaderWrapperForBrowser(sel.get(0).filepath)
+
+             _buttleData.currentGraphIsGraphBrowser()
+             _buttleData.currentGraphWrapper = _buttleData.graphBrowserWrapper
+
+             _buttleData.currentViewerNodeWrapper = readerNode.nodeWrapper
+             _buttleData.currentViewerFrame = 0
+             // we assign the node to the viewer, at the frame 0
+             _buttleData.assignNodeToViewerIndex(readerNode.nodeWrapper, 10)
+             _buttleData.currentViewerIndex = 10 // we assign to the viewer the 10th view
+             _buttleEvent.emitViewerChangedSignal()
+         }
+    }
 
     function forceActiveFocusOnRefresh() {
         fileModel.updateFileItems(fileModel.folder)
-        fileModel.selectItem(0)
+        winFile.selectItem(0)
     }
     function forceActiveFocusOnChangeIndexOnRight() {
         if(itemIndex < fileModel.size) {
-            fileModel.selectItem(itemIndex + 1)
-            itemIndex ++
+            winFile.selectItem(++itemIndex)
         }
     }
     function forceActiveFocusOnChangeIndexOnLeft() {
         if(itemIndex > 0) {
-            fileModel.selectItem(itemIndex - 1)
-            itemIndex --
+            winFile.selectItem(--itemIndex)
         }
     }
 
     function forceActiveFocusOnChangeIndexOnDown() {
         if(itemIndex + winFile.nbCell  < fileModel.size) {
             itemIndex += winFile.nbCell
-            fileModel.selectItem(itemIndex)
+            winFile.selectItem(itemIndex)
         }else {
             itemIndex = fileModel.size
-            fileModel.selectItem(itemIndex)
+            winFile.selectItem(itemIndex)
         }
     }
     function forceActiveFocusOnChangeIndexOnUp() {
         if(itemIndex - winFile.nbCell  >= 0) {
             itemIndex -= winFile.nbCell
-            fileModel.selectItem(itemIndex)
+            winFile.selectItem(itemIndex)
         }else {
             itemIndex = 0
-            fileModel.selectItem(itemIndex)
+            winFile.selectItem(itemIndex)
         }
     }
 
@@ -105,17 +125,20 @@ Rectangle {
         onFolderChanged: {
             winFile.changeFileFolder(fileModel.parentFolder)
             winFile.changeSelectedList(fileModel.getSelectedItems())
-            fileModel.selectItem(0)
+            winFile.selectItem(0)
+            itemIndex = 0
         }
         onNameFilterChanged: {
             winFile.changeFileFolder(fileModel.parentFolder)
             winFile.changeSelectedList(fileModel.getSelectedItems())
-            fileModel.selectItem(0)
+            winFile.selectItem(0)
+            itemIndex = 0
         }
         onShowSeqChanged: {
             winFile.changeFileFolder(fileModel.parentFolder)
             winFile.changeSelectedList(fileModel.getSelectedItems())
-            fileModel.selectItem(0)
+            winFile.selectItem(0)
+            itemIndex = 0
         }
     }
 

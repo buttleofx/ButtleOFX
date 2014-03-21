@@ -86,12 +86,20 @@ Item {
                                 // if there is only one node, we don't connect it
                                 if (previousNode != undefined){
                                     newNode = _buttleData.lastNode()
-                                    _buttleManager.connectionManager.connectWrappers(previousNode.outputClip, newNode.srcClips.get(0))
+                                    if (newNode.nbInput != 0)
+                                        _buttleManager.connectionManager.connectWrappers(previousNode.outputClip, newNode.srcClips.get(0))
                                 }
                             }
                             else{
-                                // using listOfPlugin.model[0] doesn't work
-                                _buttleManager.nodeManager.creationNode("_buttleData.graph", plugin, 0, 0)
+                                if (_buttleData.currentSelectedNodeWrappers.count == 1) {
+                                    var selectedNode = _buttleData.currentSelectedNodeWrappers.get(0)
+                                    _buttleManager.nodeManager.creationNode("_buttleData.graph", plugin, selectedNode.xCoord+140, selectedNode.yCoord)
+                                    var createdNode = _buttleData.lastNode()
+                                    if (createdNode.nbInput != 0)
+                                        _buttleManager.connectionManager.connectWrappers(selectedNode.outputClip, createdNode.srcClips.get(0))
+                                }
+                                else 
+                                    _buttleManager.nodeManager.creationNode("_buttleData.graph", plugin, 0, 0)
                             }
                             pluginVisible=false
                             searchPluginText = ""
@@ -203,11 +211,20 @@ Item {
                                     // if there is only one node, we don't connect it
                                     if (previousNode != undefined){
                                         newNode = _buttleData.lastNode()
-                                        _buttleManager.connectionManager.connectWrappers(previousNode.outputClip, newNode.srcClips.get(0))
+                                        if (newNode.nbInput != 0)
+                                            _buttleManager.connectionManager.connectWrappers(previousNode.outputClip, newNode.srcClips.get(0))
                                     }
                                 }
                                 else{
-                                    _buttleManager.nodeManager.creationNode("_buttleData.graph", object.pluginType, 0, 0)
+                                    if (_buttleData.currentSelectedNodeWrappers.count == 1) {
+                                        var selectedNode = _buttleData.currentSelectedNodeWrappers.get(0)
+                                        _buttleManager.nodeManager.creationNode("_buttleData.graph", object.pluginType, selectedNode.xCoord+140, selectedNode.yCoord)
+                                        var createdNode = _buttleData.lastNode()
+                                        if (createdNode.nbInput != 0)
+                                            _buttleManager.connectionManager.connectWrappers(selectedNode.outputClip, createdNode.srcClips.get(0))
+                                    }
+                                    else 
+                                        _buttleManager.nodeManager.creationNode("_buttleData.graph", object.pluginType, 0, 0)
                                 }
                                 pluginVisible=false
                                 searchPluginText = ""
@@ -240,11 +257,20 @@ Item {
                                     // if there is only one node, we don't connect it
                                     if (previousNode != undefined){
                                         newNode = _buttleData.lastNode()
-                                        _buttleManager.connectionManager.connectWrappers(previousNode.outputClip, newNode.srcClips.get(0))
+                                        if (newNode.nbInput != 0)
+                                            _buttleManager.connectionManager.connectWrappers(previousNode.outputClip, newNode.srcClips.get(0))
                                     }
                                 }
                                 else{
-                                    _buttleManager.nodeManager.creationNode("_buttleData.graph", object.pluginType, 0, 0)
+                                    if (_buttleData.currentSelectedNodeWrappers.count == 1) {
+                                        var selectedNode = _buttleData.currentSelectedNodeWrappers.get(0)
+                                        _buttleManager.nodeManager.creationNode("_buttleData.graph", object.pluginType, selectedNode.xCoord+140, selectedNode.yCoord)
+                                        var createdNode = _buttleData.lastNode()
+                                        if (createdNode.nbInput != 0)
+                                            _buttleManager.connectionManager.connectWrappers(selectedNode.outputClip, createdNode.srcClips.get(0))
+                                    }
+                                    else 
+                                        _buttleManager.nodeManager.creationNode("_buttleData.graph", object.pluginType, 0, 0)
                                 }
                                 pluginVisible=false
                                 searchPluginText = ""

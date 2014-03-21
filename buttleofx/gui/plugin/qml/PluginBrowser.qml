@@ -90,8 +90,14 @@ Item {
                                 }
                             }
                             else{
-                                // using listOfPlugin.model[0] doesn't work
-                                _buttleManager.nodeManager.creationNode("_buttleData.graph", plugin, 0, 0)
+                                if (_buttleData.currentSelectedNodeWrappers.count == 1) {
+                                    var selectedNode = _buttleData.currentSelectedNodeWrappers.get(0)
+                                    _buttleManager.nodeManager.creationNode("_buttleData.graph", plugin, selectedNode.xCoord+140, selectedNode.yCoord)
+                                    var createdNode = _buttleData.lastNode()
+                                    _buttleManager.connectionManager.connectWrappers(selectedNode.outputClip, createdNode.srcClips.get(0))
+                                }
+                                else 
+                                    _buttleManager.nodeManager.creationNode("_buttleData.graph", plugin, 0, 0)
                             }
                             pluginVisible=false
                             searchPluginText = ""
@@ -207,7 +213,14 @@ Item {
                                     }
                                 }
                                 else{
-                                    _buttleManager.nodeManager.creationNode("_buttleData.graph", object.pluginType, 0, 0)
+                                    if (_buttleData.currentSelectedNodeWrappers.count == 1) {
+                                        var selectedNode = _buttleData.currentSelectedNodeWrappers.get(0)
+                                        _buttleManager.nodeManager.creationNode("_buttleData.graph", object.pluginType, selectedNode.xCoord+140, selectedNode.yCoord)
+                                        var createdNode = _buttleData.lastNode()
+                                        _buttleManager.connectionManager.connectWrappers(selectedNode.outputClip, createdNode.srcClips.get(0))
+                                    }
+                                    else 
+                                        _buttleManager.nodeManager.creationNode("_buttleData.graph", object.pluginType, 0, 0)
                                 }
                                 pluginVisible=false
                                 searchPluginText = ""
@@ -244,7 +257,14 @@ Item {
                                     }
                                 }
                                 else{
-                                    _buttleManager.nodeManager.creationNode("_buttleData.graph", object.pluginType, 0, 0)
+                                    if (_buttleData.currentSelectedNodeWrappers.count == 1) {
+                                        var selectedNode = _buttleData.currentSelectedNodeWrappers.get(0)
+                                        _buttleManager.nodeManager.creationNode("_buttleData.graph", object.pluginType, selectedNode.xCoord+140, selectedNode.yCoord)
+                                        var createdNode = _buttleData.lastNode()
+                                        _buttleManager.connectionManager.connectWrappers(selectedNode.outputClip, createdNode.srcClips.get(0))
+                                    }
+                                    else 
+                                        _buttleManager.nodeManager.creationNode("_buttleData.graph", object.pluginType, 0, 0)
                                 }
                                 pluginVisible=false
                                 searchPluginText = ""

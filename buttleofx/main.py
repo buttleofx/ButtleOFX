@@ -73,6 +73,11 @@ currentFilePath = os.path.dirname(os.path.abspath(__file__))
 if windows:
     currentFilePath = currentFilePath.replace("\\", "/")
 
+# Make sure that SIGINTs actually stop the application event loop (Qt sometimes
+# swallows KeyboardInterrupt exceptions):
+import signal
+signal.signal(signal.SIGINT, signal.SIG_DFL)
+
 
 class EventFilter(QtCore.QObject):
     def eventFilter(self, receiver, event):

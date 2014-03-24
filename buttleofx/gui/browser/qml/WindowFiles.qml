@@ -1,6 +1,6 @@
 import QtQuick 2.1
 import QtQuick.Controls 1.0
-import QtQuick.Dialogs 1.1
+import QtQuick.Dialogs 1.0
 import QtQuick.Layouts 1.0
 import QtQuick.Controls.Styles 1.0
 
@@ -38,23 +38,25 @@ Rectangle {
         fileModel.selectItem(index)
         var sel = fileModel.getSelectedItems()
         // if it's an image, we assign it to the viewer
-         if (sel.get(0).fileType != "Folder") {
-             player.changeViewer(11) // we come to the temporary viewer
-             // we save the last node wrapper of the last view
-             player.lastNodeWrapper = _buttleData.getNodeWrapperByViewerIndex(player.lastView)
+        if(sel.get(0)){
+            if (sel.get(0).fileType != "Folder") {
+                player.changeViewer(11) // we come to the temporary viewer
+                // we save the last node wrapper of the last view
+                player.lastNodeWrapper = _buttleData.getNodeWrapperByViewerIndex(player.lastView)
 
-             readerNode.nodeWrapper = _buttleData.nodeReaderWrapperForBrowser(sel.get(0).filepath)
+                readerNode.nodeWrapper = _buttleData.nodeReaderWrapperForBrowser(sel.get(0).filepath)
 
-             _buttleData.currentGraphIsGraphBrowser()
-             _buttleData.currentGraphWrapper = _buttleData.graphBrowserWrapper
+                _buttleData.currentGraphIsGraphBrowser()
+                _buttleData.currentGraphWrapper = _buttleData.graphBrowserWrapper
 
-             _buttleData.currentViewerNodeWrapper = readerNode.nodeWrapper
-             _buttleData.currentViewerFrame = 0
-             // we assign the node to the viewer, at the frame 0
-             _buttleData.assignNodeToViewerIndex(readerNode.nodeWrapper, 10)
-             _buttleData.currentViewerIndex = 10 // we assign to the viewer the 10th view
-             _buttleEvent.emitViewerChangedSignal()
-         }
+                _buttleData.currentViewerNodeWrapper = readerNode.nodeWrapper
+                _buttleData.currentViewerFrame = 0
+                // we assign the node to the viewer, at the frame 0
+                _buttleData.assignNodeToViewerIndex(readerNode.nodeWrapper, 10)
+                _buttleData.currentViewerIndex = 10 // we assign to the viewer the 10th view
+                _buttleEvent.emitViewerChangedSignal()
+            }
+       }
     }
 
     function forceActiveFocusOnRefresh() {
@@ -257,7 +259,7 @@ Rectangle {
                     Drag.hotSpot.x: 20
                     Drag.hotSpot.y: 20
                     //Drag.dragType: Drag.Automatic
-                    Drag.mimeData: {"urls": [rootFileItem.selectedFiles]}
+                    //Drag.mimeData: {"urls": [rootFileItem.selectedFiles]}
                     //Drag.mimeData: {"text/plain": file.filePath, "text/uri-list": ""}
                     // Drag.keys: "text/uri-list"
                     Drag.keys: "internFileDrag"
@@ -645,7 +647,7 @@ Rectangle {
                     Drag.hotSpot.x: 20
                     Drag.hotSpot.y: 20
                     //Drag.dragType: Drag.Automatic
-                    Drag.mimeData: {"urls": [fileInRow.selectedFiles]}
+                   // Drag.mimeData: {"urls": [fileInRow.selectedFiles]}
                     //Drag.mimeData: {"text/plain": file.filePath, "text/uri-list": ""}
                     // Drag.keys: "text/uri-list"
                     Drag.keys: "internFileDrag"

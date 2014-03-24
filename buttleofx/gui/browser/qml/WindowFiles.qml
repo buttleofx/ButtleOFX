@@ -374,25 +374,56 @@ Rectangle {
                         Item {
                             Layout.fillWidth: true
                             Layout.fillHeight: true
-                            Item {
+                            Rectangle {
                                 anchors.fill: parent
                                 anchors.margins: 4
                                 property int minSize: Math.min(width, height)
 
+                                color: if( thumbnail.status == Image.Error )
+                                           "red"
+                                       else if( thumbnail.status == Image.Null )
+                                           "lightred"
+                                       else if( thumbnail.status == Image.Loading )
+                                           "#33FFFFFF"
+                                       else
+                                           "transparent"
+
+                                Rectangle {
+                                    // TODO replace with an image
+                                    id: loading
+                                    anchors.centerIn: parent
+                                    width: 12
+                                    height: width
+                                    visible: !thumbnail.isFolder && thumbnail.status == Image.Loading
+                                    // source: "images/loading.png"
+                                    NumberAnimation on rotation {
+                                        from: 0
+                                        to: 360
+                                        running: loading.visible == true
+                                        loops: Animation.Infinite
+                                        duration: 1000
+                                    }
+                                    color: "lightblue"
+                                }
+
                                 Image {
+                                    id: thumbnail
                                     property bool isFolder: model.object.fileType == "Folder"
                                     source: isFolder ? model.object.fileImg : 'image://buttleofx/'+ model.object.filepath
                                     // Without tuttle // source: isFolder ? model.object.fileImg : "file:///" + model.object.fileImg
 
                                     asynchronous: true
+                                    // cache: false
 
                                     sourceSize.width: isFolder ? parent.minSize : -1
                                     sourceSize.height: isFolder ? parent.minSize : -1
                                     anchors.fill: parent
                                     fillMode: Image.PreserveAspectFit
                                     smooth: true
-                                }
+                                    opacity: isFolder || status == Image.Ready ? 1 : 0
 
+                                    Behavior on opacity { PropertyAnimation { duration: 300 } }
+                                }
                             }
                         }
 

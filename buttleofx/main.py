@@ -29,6 +29,8 @@ try:
 except:
     logging.debug('TuttleFX not installed, use Python Image Library instead.')
 
+from pySequenceParser import sequenceParser
+
 if tuttleofx_installed:
     from buttleofx.gui.viewerGL.glviewport_tuttleofx import GLViewport_tuttleofx as GLViewportImpl
 else:
@@ -57,6 +59,7 @@ from PyQt5.QtWidgets import QWidget, QFileDialog, QApplication, QMessageBox
 
 import numpy
 
+import logging
 import argparse
 import os
 import sys
@@ -160,53 +163,93 @@ def toQImage(im):
 
     raise ValueError("toQImage: case not implemented.")
 
+# for debug purposes
+count_thumbnail = 0
 
 class ImageProvider(QtQuick.QQuickImageProvider):
     def __init__(self):
         QtQuick.QQuickImageProvider.__init__(self, QtQuick.QQuickImageProvider.Image)
 
     def requestImage(self, id, size):
+        """
+        Compute the image using TuttleOFX
+        """
+        
         # print('requestImage:', 'id: ', id)
-        max_size = 200
-        try:
-            (_, extension) = os.path.splitext(id)
-            readerIdentifier = getBestPlugin.getBestReader(extension)
-        except Exception as e:
-            # print("Tuttle ImageProvider: Unsupported extension '%s'" % extension, str(e))
+        max_size = 256
+        (_, extension) = os.path.splitext(id)
+        readerIdentifiers = getBestPlugin.getBestReaders(extension)
+        if not readerIdentifiers:
+            logging.debug("Tuttle ImageProvider: Unsupported extension '%s'" % extension)
             # import traceback
             # traceback.print_exc()
             qtImage = QtGui.QImage(max_size, max_size, QtGui.QImage.Format_RGB32)
             qtImage.fill(QtGui.QColor("green"))
             return qtImage, qtImage.size()
         
-        try:
-            # compute image using TuttleOFX
-            outputCache = tuttle.MemoryCache()
-            tuttle.compute(
-                outputCache,
-                [
-                    tuttle.NodeInit(readerIdentifier, filename=id, bitDepth="8i"),
-                    tuttle.NodeInit("tuttle.resize", keepRatio=True, size=(max_size, max_size)),
-                    # tuttle.NodeInit("tuttle.jpegwriter", filename="/tmp/buttleofx_test_thumbnail.jpg"),
-                ])
+        logging.debug("Tuttle ImageProvider: file='%s', readers='%s'" % (id, str(readerIdentifiers)))
+        for readerIdentifier in readerIdentifiers:
+            try:
+                outputCache = tuttle.MemoryCache()
+                # As it's used in a multi-threaded environment,
+                # we can't share the intern cache.
+                internCache = tuttle.MemoryCache()
+                cOptions = tuttle.ComputeOptions()
+                # TODO: no logging from another thread
+                cOptions.setVerboseLevel(tuttle.eVerboseLevelTrace)
+                
+                graph = tuttle.Graph()
+                nodes = graph.addConnectedNodes([
+                        tuttle.NodeInit(readerIdentifier, filename=id, bitDepth="8i", channel="rgb"),
+                        tuttle.NodeInit("tuttle.resize", keepRatio=True, size=(max_size, max_size)),
+                        # tuttle.NodeInit("tuttle.component", to="rgba"),
+                        # tuttle.NodeInit("tuttle.channelshuffle", red="alpha", green="red", blue="green", alpha="blue"),  # ARGB for Qt
+                        # tuttle.NodeInit("tuttle.jpegwriter", filename="/tmp/buttleofx_test_thumbnail.jpg"),
+                        ])
+                graph.setup()
+                
+                td = nodes[0].asImageEffectNode().getTimeDomain()
+                # print("TimeDomain: ", td.min, td.max)
+                # By default take the frame in the middle
+                time = td.min + (td.max - td.min) * 0.5
+                
+                # If it's a sequence and the middle frame doesn't exist,
+                # we take the first frame.
+                item = sequenceParser.browse(id)[0]
+                if item._type is sequenceParser.eTypeSequence:
+                    fileAtTime = item._sequence.getAbsoluteFilenameAt(int(time))
+                    if not os.path.exists(fileAtTime):
+                        time = td.min
+                
+                time_int = int(time)
+                logging.debug("Tuttle ImageProvider: compute start file='%s', time='%s', plugin='%s'" % (id, time_int, readerIdentifier))
+                cOptions.setTimeRange(time_int, time_int)
+                graph.compute(outputCache, [], cOptions, internCache)
+                logging.debug("Tuttle ImageProvider: compute end")
+                
+                # retrieve graph output
+                imgRes = outputCache.get(0)
+                numpyImage = imgRes.getNumpyArray()
+                
+                # convert numpyImage to QImage
+                qtImage = toQImage(numpyImage)
+                
+                # for debug purposes:
+                # global count_thumbnail
+                # qtImage.save("/tmp/buttle/thumbnail_%s.png" % str(count_thumbnail))
+                # count_thumbnail += 1
+                
+                return qtImage, qtImage.size()
             
-            # retrieve graph output
-            imgRes = outputCache.get(0)
-            numpyImage = imgRes.getNumpyArray()
-            
-            # convert numpyImage to QImage
-            # qtImage = numpy2qimage(numpyImage)
-            qtImage = toQImage(numpyImage)
-            
-            return qtImage, qtImage.size()
+            except Exception as e:
+                pass
+                # logging.debug("Error Tuttle ImageProvider: ", str(e))
+                # logging.debug("Error outputCache: ", outputCache)
+                # import traceback
+                # traceback.print_exc()
         
-        except Exception as e:
-            print("Error Tuttle ImageProvider: ", str(e))
-            # import traceback
-            # traceback.print_exc()
-            qtImage = QtGui.QImage(max_size, max_size,QtGui.QImage.Format_RGB32)
-            qtImage.fill(QtGui.QColor("red"))
-            return qtImage, qtImage.size()
+        qtImage = QtGui.QImage()
+        return qtImage, qtImage.size()
     
 
 def main(argv, app):

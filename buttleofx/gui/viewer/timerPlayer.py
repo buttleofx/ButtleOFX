@@ -34,7 +34,7 @@ class TimerPlayer(QtQuick.QQuickItem):
         # timeRange between the frames of beginning and end (first frame, last frame, step)
         timeRange = tuttle.TimeRange(self._frame, self._nbFrames, 1)
         self._processOptions = tuttle.ComputeOptions(self._frame, self._nbFrames, 1)
-        processGraph = tuttle.ProcessGraph(self._processOptions, graph, [node])
+        processGraph = tuttle.ProcessGraph(self._processOptions, graph, [node], tuttle.core().getMemoryCache())
         processGraph.setup()
         processGraph.beginSequence(timeRange)
         # communicate processGraph to buttleData
@@ -55,7 +55,7 @@ class TimerPlayer(QtQuick.QQuickItem):
         # timeRange between the frames of beginning and end (first frame, last frame, step)
         timeRange = tuttle.TimeRange(self._frame, self._nbFrames, 1)
         self._processOptions = tuttle.ComputeOptions(self._frame, self._nbFrames, 1)
-        processGraph = tuttle.ProcessGraph(self._processOptions, graph, [node])
+        processGraph = tuttle.ProcessGraph(self._processOptions, graph, [node], tuttle.core().getMemoryCache())
         processGraph.setup()
         processGraph.beginSequence(timeRange)
         # communicate processGraph to buttleData

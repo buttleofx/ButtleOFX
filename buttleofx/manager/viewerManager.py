@@ -57,7 +57,7 @@ class ViewerManager(QtCore.QObject):
         else:  # if it's an image only
             processOptions = tuttle.ComputeOptions(int(frame))
             logging.debug("computeNode: Start compute - frame: %s, node: %s" % (frame, node))
-            processGraph = tuttle.ProcessGraph(processOptions, graphTuttle, [node])
+            processGraph = tuttle.ProcessGraph(processOptions, graphTuttle, [node], tuttle.core().getMemoryCache())
             processGraph.setup()
             timeRange = tuttle.TimeRange(frame, frame, 1)  # buttleData.getTimeRange()
             processGraph.beginSequence(timeRange)

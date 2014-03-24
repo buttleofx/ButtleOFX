@@ -83,7 +83,7 @@ class EventFilter(QtCore.QObject):
     def eventFilter(self, receiver, event):
         buttleData = ButtleDataSingleton().get()
         browser = FileModelBrowserSingleton().get()
-        if event.type() == QtCore.QEvent.KeyPress :
+        if event.type() == QtCore.QEvent.KeyPress:
             # if alt f4 event ignored
             if event.modifiers() == QtCore.Qt.AltModifier and event.key() == QtCore.Qt.Key_F4 :
                 event.ignore()
@@ -275,7 +275,7 @@ def main(argv, app):
 
     mainFilepath = os.path.join(currentFilePath, "MainWindow.qml")
     if windows:
-      mainFilepath = mainFilepath.replace('\\', '/')
+        mainFilepath = mainFilepath.replace('\\', '/')
     component = QtQml.QQmlComponent(engine)
     component.loadUrl(QtCore.QUrl("file:///" + mainFilepath))
 

@@ -30,7 +30,10 @@ Rectangle {
     }
 
     function forceActiveFocusOnRename() {
-        viewList ? listview.currentItem.forceActiveFocusInRow() : gridview.currentItem.forceActiveFocusInColumn()
+        if( viewList )
+            listview.currentItem.forceActiveFocusInRow()
+        else
+            gridview.currentItem.forceActiveFocusInColumn()
     }
 
     function forceActiveFocusOnDelete() {

@@ -23,6 +23,8 @@ Rectangle {
     property bool showSeq: false
     property int nbCell: viewList ? 1 : gridview.width/gridview.cellWidth
 
+    property bool editFile: false
+
     function forceActiveFocusOnCreate() {
         fileModel.createFolder(fileModel.folder + "/New Directory")
     }
@@ -142,6 +144,12 @@ Rectangle {
             winFile.selectItem(0)
             itemIndex = 0
         }
+    }
+    FileInfo {
+        id: fileInfo
+
+        visible: editFile
+        currentFile: fileModel.getSelected.get[0]
     }
 
     MouseArea {
@@ -285,7 +293,8 @@ Rectangle {
                             winFile.itemIndex = index
 
                             if (mouse.button == Qt.RightButton)
-                                options.popup()
+                                editFile = true
+                                //options.popup()
                                 winFile.fileName = filename_textEdit.text
 
                             //if shift:

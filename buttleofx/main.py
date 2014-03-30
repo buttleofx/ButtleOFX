@@ -239,7 +239,7 @@ class ImageProvider(QtQuick.QQuickImageProvider):
                 # qtImage.save("/tmp/buttle/thumbnail_%s.png" % str(count_thumbnail))
                 # count_thumbnail += 1
                 
-                return qtImage, qtImage.size()
+                return qtImage.copy(), qtImage.size()
             
             except Exception as e:
                 pass

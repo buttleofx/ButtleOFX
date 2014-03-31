@@ -40,18 +40,12 @@ Item {
 
     property bool pluginVisible:false
 
-    Keys.onTabPressed: {
-        pluginVisible = !pluginVisible
-    }
-
     //List of plugins
     PluginBrowser {
         id: pluginBrowser
-        z:1
-        height: 250
         visible:pluginVisible
-        y:parametersEditor.height - addNode.height - height
-        x:parametersEditor.width/2-100
+        x: leftColumn.width + mainWindowQML.x + addNode.width/2 - width/2
+        y: mainWindowQML.y + mainWindowQML.height - 302
     }
 
     // Drag&Drop from Browser to ParametersEditor

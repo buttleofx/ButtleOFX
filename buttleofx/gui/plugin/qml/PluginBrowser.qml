@@ -17,7 +17,7 @@ ApplicationWindow {
 
     width: 200
     height: 250
-    flags: Qt.FramelessWindowHint // | Qt.SplashScreen
+    flags: Qt.FramelessWindowHint | Qt.Tool
 
     Rectangle{
         id: pluginRect

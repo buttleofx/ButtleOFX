@@ -97,10 +97,10 @@ class EventFilter(QtCore.QObject):
         if not buttleData.graphCanBeSaved :
             return False
         msgBox = QMessageBox()
-        msgBox.setText("The graph has been modified.")
+        msgBox.setText("Save graph changes before closing ?")
         msgBox.setModal(True)
         msgBox.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint)
-        msgBox.setInformativeText("Do you want to save your changes?")
+        msgBox.setInformativeText("If you don't save the graph, unsaved modifications will be lost.")
         msgBox.setStandardButtons(QMessageBox.Save | QMessageBox.Discard | QMessageBox.Abort)
         msgBox.setDefaultButton(QMessageBox.Save)
         ret = msgBox.exec_()

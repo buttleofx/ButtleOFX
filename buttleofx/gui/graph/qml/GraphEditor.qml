@@ -24,18 +24,37 @@ Item {
     property bool pluginVisible:false
 
     Keys.onTabPressed: {
-        pluginVisible = !pluginVisible
+        pluginVisible = true
     }
 
     //List of plugins
     PluginBrowser {
         id: pluginBrowser
-        z:1
-        height: 250
         visible:pluginVisible
-        y:46
-        x:9
         graphEditor:true
+        x:leftColumn.width
+        y:topLeftView.height + mainWindowQML.y + 74
+        StateGroup {
+            id: statesBrowser
+            states: [
+                State {
+                    name: "view1&2"
+                    when: selectedView == 3
+                    PropertyChanges {
+                        target: pluginBrowser
+                        x: mainWindowQML.x + 13
+                    }
+                },
+                State {
+                    name: "view3"
+                    when: selectedView != 3
+                    PropertyChanges {
+                        target: pluginBrowser
+                        x: leftColumn.width + mainWindowQML.x + 13
+                    }
+                }
+            ]
+        }
     }
 
     ParamButtleEditor {         

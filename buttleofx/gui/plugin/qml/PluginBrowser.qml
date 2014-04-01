@@ -3,7 +3,7 @@ import QtQuick.Controls 1.0
 import QtQuick.Layouts 1.0
 import QtQuick.Controls.Styles 1.0
 
-Item {
+ApplicationWindow {
     id: pluginList
 
     property color background: "#141414"
@@ -15,10 +15,14 @@ Item {
     property alias searchPlugin: searchPlugin
     property bool graphEditor
 
+    width: 200
+    height: 250
+    flags: Qt.FramelessWindowHint | Qt.Tool
+
     Rectangle{
         id: pluginRect
         height: parent.height
-        width: 200
+        width: parent.width
         color: pluginList.background
         border.width: 1
         border.color: "#333"
@@ -58,16 +62,16 @@ Item {
 
                 property variant plugin
 
-                onFocusChanged:{
-                    if(searchPlugin.visible){
-                        searchPlugin.focus= true
-                    }
-                }
-                onVisibleChanged: {
-                    if(searchPlugin.visible){
-                        searchPlugin.focus= true
-                    }
-                }
+                // onFocusChanged:{
+                //     if(searchPlugin.visible){
+                //         searchPlugin.focus= true
+                //     }
+                // }
+                // onVisibleChanged: {
+                //     if(searchPlugin.visible){
+                //         searchPlugin.focus= true
+                //     }
+                // }
 
                 Keys.onPressed: {
                     if ((event.key == Qt.Key_Return)||(event.key == Qt.Key_Enter)) {
@@ -105,6 +109,9 @@ Item {
                             searchPluginText = ""
                         }
                     }
+                }
+                Keys.onEscapePressed: {
+                    pluginVisible = false
                 }
             }
         }

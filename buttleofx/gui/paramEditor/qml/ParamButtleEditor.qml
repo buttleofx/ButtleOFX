@@ -166,6 +166,39 @@ ApplicationWindow {
                                     anchors.leftMargin: 5
                                     color: "grey"
                                 }
+
+                                Rectangle {
+                                    id:helpButton
+                                    width: 15
+                                    height: 15
+                                    x: nodeTypeInput.x + nodeTypeInput.width + 4
+                                    color: "#010101"
+                                    radius : 10
+                                    border.width: 1
+                                    border.color: "#444"
+                                    Text{
+                                        id: helpText
+                                        text: "?"
+                                        color: "white"
+                                        x: 4
+                                    }
+
+                                    MouseArea {
+                                        id: downNodeMouseArea
+                                        anchors.fill: parent
+                                        hoverEnabled: true
+                                        
+                                        onClicked: {
+                                            doc.show()
+                                        }
+                                        onEntered: {
+                                            helpButton.color = "#343434"
+                                        }
+                                        onExited: {
+                                            helpButton.color = "#010101"
+                                        }
+                                    }
+                                }
                             }
                         }
                     }

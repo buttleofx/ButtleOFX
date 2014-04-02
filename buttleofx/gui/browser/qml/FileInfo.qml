@@ -105,7 +105,7 @@ ApplicationWindow {
                                 clip: true
                                 TextInput {
                                     id: fileNameInput
-                                    text: currentFile ? currentFile.getFileName() : ""
+                                    text: currentFile ? currentFile.fileName : ""
                                     anchors.left: parent.left
                                     width: parent.width - 10
                                     height: parent.height
@@ -115,10 +115,10 @@ ApplicationWindow {
                                     color: activeFocus ? activeFocusOn : activeFocusOff
 
                                     onAccepted: {
-                                        currentFile.setFileName(fileNameInput.text)
+                                        currentFile.fileName = fileNameInput.text
                                     }
                                     onActiveFocusChanged: {
-                                        currentFile.setFileName(fileNameInput.text)
+                                        currentFile.fileName = fileNameInput.text
                                     }
 
                                 }

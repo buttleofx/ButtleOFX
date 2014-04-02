@@ -150,9 +150,7 @@ Rectangle {
     }
     FileInfo {
         id: fileInfo
-
         visible: editFile
-        currentFile: fileModel.getSelected.get[0]
     }
 
     MouseArea {
@@ -297,6 +295,7 @@ Rectangle {
 
                             if (mouse.button == Qt.RightButton)
                                 editFile = true
+                                fileInfo.currentFile = fileModel.getSelectedItems().get(0)
                                 //options.popup()
                                 winFile.fileName = filename_textEdit.text
 

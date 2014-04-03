@@ -36,28 +36,6 @@ Rectangle {
             color: "white"
         }
 
-        Text {
-            id: size
-            text: {
-                var res=0
-                if(selected.count > 1){
-
-                    for(var i=0; i< selected.count; ++i)
-                    {
-                        res = res + selected.get(i).fileSize
-                    }
-                    res = res / 1024.
-                    "Size: " + res.toFixed(2) + " Ko"
-                }else if(selected.count == 1){
-                    res = selected.get(0).fileSize / 1024.
-                    selected.get(0).fileSize <= 0.0 ? "" : "Size: " + res.toFixed(2) + " Ko"
-                }else{
-                    "0 Ko"
-                }
-            }
-            color: "white"
-        }
-
         ComboBox {
             width: 200
             model: [ "*", ".jpg", ".png", ".raw" ]

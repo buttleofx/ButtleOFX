@@ -23,11 +23,14 @@ class SequenceWrapper(QtCore.QObject):
     def getFirstFilePath(self):
         return self._sequence.getAbsoluteFirstFilename()
     
+    def getFirstFileName(self):
+        return self._sequence.getFirstFilename()
+    
     @QtCore.pyqtSlot(result=int)
     def getNbFiles(self):
         return self._sequence.getNbFiles()
         
-    def getSize(self):
+    def getWeight(self):
         res = 0
         for i in range(self._sequence.getFirstTime(), self._sequence.getLastTime() + self._sequence.getStep(), self._sequence.getStep()):
             fullpath = self._sequence.getAbsoluteFilenameAt(i)
@@ -40,7 +43,8 @@ class SequenceWrapper(QtCore.QObject):
         
     ##################################### DATA EXPOSED TO QML ######################################
     firstFilePath = QtCore.pyqtProperty(str, getFirstFilePath, constant=True)
+    firstFileName = QtCore.pyqtProperty(str, getFirstFileName, constant=True)
     nbFiles = QtCore.pyqtProperty(int, getNbFiles, constant=True)
-    size = QtCore.pyqtProperty(float, getSize, constant=True)
+    weight = QtCore.pyqtProperty(float, getWeight, constant=True)
     time = QtCore.pyqtProperty(float, getTime, constant=True)
     

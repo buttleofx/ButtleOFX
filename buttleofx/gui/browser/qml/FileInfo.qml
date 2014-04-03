@@ -49,7 +49,6 @@ ApplicationWindow {
                     anchors.fill: parent
                     hoverEnabled: true
                     onEntered: {
-                        console.debug(currentFile)
                         close.source = "file:///" + _buttleData.buttlePath + "/gui/img/icons/close_hover.png"
                     }
                     onExited: {
@@ -91,7 +90,7 @@ ApplicationWindow {
                                 anchors.top: parent.top
                                 anchors.verticalCenter: parent.verticalCenter
                                 color: textColor
-                                text: "Name : "
+                                text: "Name: "
                             }
 
                             /* Input field limited to 50 characters */
@@ -128,6 +127,116 @@ ApplicationWindow {
                                     onClicked: currentFile.nameUser = currentFile.getDefaultNameUser()
                                 }
                             }
+                        }
+                    }
+
+                    /* Extension of file */
+                    Item {
+                        id: fileExtension
+                        implicitWidth: 300
+                        implicitHeight: 30
+                        anchors.left: parent.left
+                        anchors.leftMargin: 10
+
+                        Row {
+                            id: fieExtensionContainer
+                            spacing: 5
+
+                            Text {
+                                id: fileExtensionText
+                                anchors.top: parent.top
+                                anchors.verticalCenter: parent.verticalCenter
+                                color: textColor
+                                text: "Extension: "
+                            }
+
+                            Rectangle {
+                                height: 20
+                                implicitWidth: 200
+                                clip: true
+                                color: "transparent"
+                                Text{
+                                    id: fileExtensionInput
+                                    text:  currentFile ? currentFile.fileExtension : ""
+                                    anchors.left: parent.left
+                                    anchors.leftMargin: 5
+                                    color: "grey"
+                                }
+                            }
+                        }
+                    }
+
+                    /* Weight of file */
+                    Item {
+                        id: fileWeight
+                        implicitWidth: 300
+                        implicitHeight: 30
+                        anchors.left: parent.left
+                        anchors.leftMargin: 10
+
+                        Row {
+                            id: fieWeightContainer
+                            spacing: 5
+
+                            Text {
+                                id: fileWeightText
+                                anchors.top: parent.top
+                                anchors.verticalCenter: parent.verticalCenter
+                                color: textColor
+                                text: "Weight: "
+                            }
+
+                            Rectangle {
+                                height: 20
+                                implicitWidth: 200
+                                clip: true
+                                color: "transparent"
+                                Text{
+                                    id: fileWeightInput
+                                    text:  currentFile ? (currentFile.fileWeight > 1000000 ? (currentFile.fileWeight/1000000).toFixed(2) +" Mo" : (currentFile.fileWeight/1000).toFixed(2) + " Ko"): ""
+                                    anchors.left: parent.left
+                                    anchors.leftMargin: 5
+                                    color: "grey"
+                                }
+                            }
+                        }
+                    }
+
+                    /* Size of File */
+                    Item {
+                        id: fileSize
+                        implicitWidth: 300
+                        implicitHeight: 30
+                        anchors.left: parent.left
+                        anchors.leftMargin: 10
+
+                        Row {
+                            id: fieSizeContainer
+                            spacing: 5
+
+                            Text {
+                                id: fileSizeText
+                                anchors.top: parent.top
+                                anchors.verticalCenter: parent.verticalCenter
+                                color: textColor
+                                text: "Size: "
+                            }
+
+                            Rectangle {
+                                height: 20
+                                implicitWidth: 200
+                                clip: true
+                                color: "transparent"
+
+                                Text{
+                                    id: fileSizeXInput
+                                    text:  currentFile ? "x: " + currentFile.fileSize[0] + ", y: " +currentFile.fileSize[1] : ""
+                                    anchors.left: parent.left
+                                    anchors.leftMargin: 5
+                                    color: "grey"
+                                }
+                            }
+
                         }
                     }
                 }//column

@@ -295,6 +295,7 @@ Rectangle {
 
                             if (mouse.button == Qt.RightButton)
                                 editFile = true
+                                fileModel.selectItem(index)
                                 fileInfo.currentFile = fileModel.getSelectedItems().get(0)
                                 //options.popup()
                                 winFile.fileName = filename_textEdit.text

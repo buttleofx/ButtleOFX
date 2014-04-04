@@ -230,7 +230,7 @@ ApplicationWindow {
 
                                 Text{
                                     id: fileSizeXInput
-                                    text:  currentFile ? "x: " + currentFile.fileSize[0] + ", y: " +currentFile.fileSize[1] : ""
+                                    text:  currentFile ? "x: " + currentFile.fileSize.get(0) + ", y: " +currentFile.fileSize.get(1) : ""
                                     anchors.left: parent.left
                                     anchors.leftMargin: 5
                                     color: "grey"

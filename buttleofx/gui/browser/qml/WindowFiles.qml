@@ -43,7 +43,7 @@ Rectangle {
         fileModel.selectItem(index)
         var sel = fileModel.getSelectedItems()
         // if it's an image, we assign it to the viewer
-        if(sel != undefined){
+        if(!sel){
             if (sel.get(0).fileType != "Folder") {
                 player.changeViewer(11) // we come to the temporary viewer
                 // we save the last node wrapper of the last view
@@ -296,7 +296,7 @@ Rectangle {
                             if (mouse.button == Qt.RightButton)
                                 editFile = true
                                 fileModel.selectItem(index)
-                                fileInfo.currentFile = fileModel.getSelectedItems()!=undefined ? fileModel.getSelectedItems().get(0) : undefined
+                                fileInfo.currentFile = fileModel.getSelectedItems() ? fileModel.getSelectedItems().get(0) : undefined
                                 //options.popup()
                                 winFile.fileName = filename_textEdit.text
 

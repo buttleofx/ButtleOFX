@@ -77,6 +77,16 @@ Rectangle {
 
             // right button : we change the current param node
            else if (mouse.button == Qt.RightButton) {
+
+                // we add the node to the list of selected nodes (if it's not already selected)
+                if(!_buttleData.nodeIsSelected(m.nodeWrapper)) {
+                    // if the Control Key is not pressed, we clear the list of selected nodes
+                    if(!(mouse.modifiers & Qt.ControlModifier))
+                          _buttleData.clearCurrentSelectedNodeNames()
+
+                    _buttleData.appendToCurrentSelectedNodeWrappers(m.nodeWrapper)
+                }
+
                 // Param buttle
                 editNode = true
                 _buttleData.currentParamNodeWrapper = m.nodeWrapper

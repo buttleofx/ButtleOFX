@@ -34,15 +34,29 @@ class FileItem(QtCore.QObject):
         if fileType == FileItem.Type.File:
             self._fileImg = self._filepath
             self._seq = None
-            self._fileSize = os.stat(self._filepath).st_size
+            self._fileWeight = os.stat(self._filepath).st_size
+            self._fileSize = QObjectListModel(self)
+            self._fileSize.append(0);
+            self._fileSize.append(0);
+            (_, extension) = os.path.splitext(fileName)
+            self._fileExtension = extension
         elif fileType == FileItem.Type.Folder:
             self._fileImg = "../../img/buttons/browser/folder-icon.png"
             self._seq = None
-            self._fileSize = 0.0
+            self._fileWeight = 0.0
+            self._fileSize = QObjectListModel(self)
+            self._fileSize.append("");
+            self._fileSize.append("");
+            self._fileExtension = ""
         elif fileType == FileItem.Type.Sequence:
             self._seq = SequenceWrapper(seq)
             self._fileImg = self._seq.getFirstFilePath()
-            self._fileSize = self._seq.getSize()
+            self._fileWeight = self._seq.getWeight()
+            self._fileSize = QObjectListModel(self)
+            self._fileSize.append(0);
+            self._fileSize.append(0);
+            (_, extension) = os.path.splitext(self._seq.getFirstFileName())
+            self._fileExtension = extension
             
     def getFilepath(self):
         return self._filepath
@@ -60,8 +74,14 @@ class FileItem(QtCore.QObject):
     def setFileName(self, newName):
         os.rename(self.filepath, os.path.dirname(self._filepath) + "/" + newName)
         
+    def getFileWeight(self):
+        return self._fileWeight
+    
     def getFileSize(self):
         return self._fileSize
+    
+    def getFileExtension(self):
+        return self._fileExtension
         
     def getSelected(self):
         return self._isSelected
@@ -79,7 +99,11 @@ class FileItem(QtCore.QObject):
     filepath = QtCore.pyqtProperty(str, getFilepath, setFilepath, constant=True)
     fileType = QtCore.pyqtProperty(str, getFileType, constant=True)
     fileName = QtCore.pyqtProperty(str, getFileName, setFileName, constant=True)
-    fileSize = QtCore.pyqtProperty(float, getFileSize, constant=True)
+    #Infos about the file
+    fileWeight = QtCore.pyqtProperty(float, getFileWeight, constant=True)
+    fileSize = QtCore.pyqtProperty(QtCore.QObject, getFileSize, constant=True)
+    fileExtension = QtCore.pyqtProperty(str, getFileExtension, constant=True)
+    
     isSelectedChange = QtCore.pyqtSignal()
     isSelected = QtCore.pyqtProperty(bool, getSelected, setSelected, notify=isSelectedChange)
     fileImg = QtCore.pyqtProperty(str, getFileImg, constant=True)
@@ -307,13 +331,13 @@ class FileModelBrowser(QtQuick.QQuickItem):
         self.updateFileItems(self._folder)
         self.nameFilterChange.emit()
         
-    def getSize(self):
+    def getWeight(self):
         return len(self._fileItems) - 1
 
     fileItems = QtCore.pyqtProperty(QtCore.QObject, getFileItems, notify=folderChanged)
     nameFilterChange = QtCore.pyqtSignal()
     nameFilter = QtCore.pyqtProperty(str, getFilter, setFilter, notify=nameFilterChange)
-    size = QtCore.pyqtProperty(int, getSize, constant=True)
+    weight = QtCore.pyqtProperty(int, getWeight, constant=True)
     
     def getShowSeq(self):
         return self._showSeq

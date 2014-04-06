@@ -147,7 +147,7 @@ ApplicationWindow {
                                 anchors.top: parent.top
                                 anchors.verticalCenter: parent.verticalCenter
                                 color: textColor
-                                text: "Extension: "
+                                text: currentFile.fileType != 'Folder' ? "Extension: " : ""
                             }
 
                             Rectangle {
@@ -157,7 +157,7 @@ ApplicationWindow {
                                 color: "transparent"
                                 Text{
                                     id: fileExtensionInput
-                                    text:  currentFile ? currentFile.fileExtension : ""
+                                    text:  currentFile.fileType != 'Folder' ? currentFile.fileExtension : ""
                                     anchors.left: parent.left
                                     anchors.leftMargin: 5
                                     color: "grey"
@@ -183,7 +183,7 @@ ApplicationWindow {
                                 anchors.top: parent.top
                                 anchors.verticalCenter: parent.verticalCenter
                                 color: textColor
-                                text: "Weight: "
+                                text: currentFile.fileType != 'Folder' ? "Weight: " : ""
                             }
 
                             Rectangle {
@@ -193,7 +193,7 @@ ApplicationWindow {
                                 color: "transparent"
                                 Text{
                                     id: fileWeightInput
-                                    text:  currentFile ? (currentFile.fileWeight > 1000000 ? (currentFile.fileWeight/1000000).toFixed(2) +" Mo" : (currentFile.fileWeight/1000).toFixed(2) + " Ko"): ""
+                                    text:  currentFile.fileType != 'Folder' ? (currentFile.fileWeight > 1000000 ? (currentFile.fileWeight/1000000).toFixed(2) +" Mo" : (currentFile.fileWeight/1000).toFixed(2) + " Ko"): ""
                                     anchors.left: parent.left
                                     anchors.leftMargin: 5
                                     color: "grey"
@@ -219,7 +219,7 @@ ApplicationWindow {
                                 anchors.top: parent.top
                                 anchors.verticalCenter: parent.verticalCenter
                                 color: textColor
-                                text: "Size: "
+                                text: currentFile.fileType != 'Folder' ? "Size: " : ""
                             }
 
                             Rectangle {
@@ -229,8 +229,8 @@ ApplicationWindow {
                                 color: "transparent"
 
                                 Text{
-                                    id: fileSizeXInput
-                                    text:  currentFile ? "x: " + currentFile.fileSize.get(0) + ", y: " +currentFile.fileSize.get(1) : ""
+                                    id: fileSizeInput
+                                    text:  currentFile.fileType != 'Folder' ? "x: " + currentFile.getFileSize().get(0) + ", y: " +currentFile.getFileSize().get(1) : ""
                                     anchors.left: parent.left
                                     anchors.leftMargin: 5
                                     color: "grey"

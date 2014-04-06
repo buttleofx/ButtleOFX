@@ -31,33 +31,27 @@ class FileItem(QtCore.QObject):
         else:
             self._filepath = folder + "/" + fileName
         self._fileType = fileType
+        
         if fileType == FileItem.Type.File:
             self._fileImg = self._filepath
             self._seq = None
             self._fileWeight = os.stat(self._filepath).st_size
-            self._fileSize = QObjectListModel(self)
-            self._fileSize.append(0);
-            self._fileSize.append(0);
             (_, extension) = os.path.splitext(fileName)
             self._fileExtension = extension
+            
         elif fileType == FileItem.Type.Folder:
             self._fileImg = "../../img/buttons/browser/folder-icon.png"
             self._seq = None
             self._fileWeight = 0.0
-            self._fileSize = QObjectListModel(self)
-            self._fileSize.append("");
-            self._fileSize.append("");
             self._fileExtension = ""
+                        
         elif fileType == FileItem.Type.Sequence:
             self._seq = SequenceWrapper(seq)
             self._fileImg = self._seq.getFirstFilePath()
             self._fileWeight = self._seq.getWeight()
-            self._fileSize = QObjectListModel(self)
-            self._fileSize.append(0);
-            self._fileSize.append(0);
             (_, extension) = os.path.splitext(self._seq.getFirstFileName())
             self._fileExtension = extension
-            
+           
     def getFilepath(self):
         return self._filepath
     
@@ -77,8 +71,28 @@ class FileItem(QtCore.QObject):
     def getFileWeight(self):
         return self._fileWeight
     
+    @QtCore.pyqtSlot(result=QtCore.QObject)
     def getFileSize(self):
-        return self._fileSize
+        #Get information from Tuttle
+        from pyTuttle import tuttle
+        g = tuttle.Graph()
+        node = g.createNode(getBestPlugin.getBestReader(self._fileExtension), self._fileImg).asImageEffectNode()
+        g.setup()
+        timeMin = self.getFileTime().min
+        g.setupAtTime(timeMin)
+        size = node.getRegionOfDefinition(timeMin)
+        fileSize = QObjectListModel(self)
+        fileSize.append(size.x1)
+        fileSize.append(size.y1)
+        return fileSize
+    
+    def getFileTime(self):
+        from pyTuttle import tuttle
+        g = tuttle.Graph()
+        node = g.createNode(getBestPlugin.getBestReader(self._fileExtension), self._filepath).asImageEffectNode()
+        g.setup()
+        time = node.getTimeDomain()
+        return time
     
     def getFileExtension(self):
         return self._fileExtension
@@ -101,7 +115,6 @@ class FileItem(QtCore.QObject):
     fileName = QtCore.pyqtProperty(str, getFileName, setFileName, constant=True)
     #Infos about the file
     fileWeight = QtCore.pyqtProperty(float, getFileWeight, constant=True)
-    fileSize = QtCore.pyqtProperty(QtCore.QObject, getFileSize, constant=True)
     fileExtension = QtCore.pyqtProperty(str, getFileExtension, constant=True)
     
     isSelectedChange = QtCore.pyqtSignal()

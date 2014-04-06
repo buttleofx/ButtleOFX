@@ -58,7 +58,7 @@ ApplicationWindow {
                 selectByMouse: true
                 selectionColor: "#00b2a1"
                 color: "white"
-                focus:true
+                focus: true
 
                 property variant plugin
 
@@ -74,40 +74,16 @@ ApplicationWindow {
                 // }
 
                 Keys.onPressed: {
-                    if ((event.key == Qt.Key_Return)||(event.key == Qt.Key_Enter)) {
-                        if (listOfPlugin.model.count==1){
-                            plugin= _buttleData.getSinglePluginSuggestion(text).pluginType
-                            if (!graphEditor){
-                                // we create a new node and connect it to the last but one node of the concerned graph
-                                previousNode =_buttleData.lastNode()
-
-                                _buttleData.currentGraphWrapper = _buttleData.graphWrapper
-                                if (previousNode == undefined)
-                                    _buttleManager.nodeManager.creationNode("_buttleData.graph", plugin, 0, 0)
-                                else
-                                    _buttleManager.nodeManager.creationNode("_buttleData.graph", plugin, previousNode.xCoord+140, previousNode.yCoord)
-
-                                // if there is only one node, we don't connect it
-                                if (previousNode != undefined){
-                                    newNode = _buttleData.lastNode()
-                                    if (newNode.nbInput != 0)
-                                        _buttleManager.connectionManager.connectWrappers(previousNode.outputClip, newNode.srcClips.get(0))
-                                }
-                            }
-                            else{
-                                if (_buttleData.currentSelectedNodeWrappers.count == 1) {
-                                    var selectedNode = _buttleData.currentSelectedNodeWrappers.get(0)
-                                    _buttleManager.nodeManager.creationNode("_buttleData.graph", plugin, selectedNode.xCoord+140, selectedNode.yCoord)
-                                    var createdNode = _buttleData.lastNode()
-                                    if (createdNode.nbInput != 0)
-                                        _buttleManager.connectionManager.connectWrappers(selectedNode.outputClip, createdNode.srcClips.get(0))
-                                }
-                                else 
-                                    _buttleManager.nodeManager.creationNode("_buttleData.graph", plugin, 0, 0)
-                            }
-                            pluginVisible=false
-                            searchPluginText = ""
-                        }
+                    //previous plugin
+                    if (event.key == Qt.Key_Up){
+                        listOfPlugin.moveSelectionUp()
+                    }
+                    //next plugin
+                    else if (event.key == Qt.Key_Down){
+                        listOfPlugin.moveSelectionDown()
+                    }
+                    else if (event.key == Qt.Key_Enter || event.key == Qt.Key_Return){
+                        listOfPlugin.instanciateSelectedPlugin()
                     }
                 }
                 Keys.onEscapePressed: {
@@ -167,12 +143,90 @@ ApplicationWindow {
                 height: count ? contentHeight : 0
                 interactive: false
                 focus: true
+                currentIndex: 0
                 model: _buttleData.getPluginsWrappersSuggestions(searchPlugin.text)
+                highlightFollowsCurrentItem: true
+                keyNavigationWraps: true
+
+                Component {
+                    id: highlightComponent
+                    Rectangle {
+                        width: listOfPlugin.currentItem.width
+                        height: listOfPlugin.currentItem.height
+                        color: "#333"
+                        radius: 5
+                        y: listOfPlugin.currentItem.y
+                        Behavior on y {
+                            SpringAnimation {
+                                spring: 3
+                                damping: 0.2
+                            }
+                        }
+                    }
+                }
+
+                highlight: highlightComponent
+
+                function moveSelectionUp()
+                {
+                    if( listOfPlugin.currentIndex == -1 )
+                        listOfPlugin.currentIndex = 0
+                    else
+                        listOfPlugin.decrementCurrentIndex()
+                }
+                function moveSelectionDown()
+                {
+                    if( listOfPlugin.currentIndex == -1 )
+                        listOfPlugin.currentIndex = 0
+                    else
+                        listOfPlugin.incrementCurrentIndex()
+                }
+                function instanciateSelectedPlugin()
+                {
+                    var currentObject = listOfPlugin.model.get(listOfPlugin.currentIndex)
+                    if (!graphEditor)
+                    {
+                        // we create a new node and connect it to the last but one node of the concerned graph
+                        previousNode =_buttleData.lastNode()
+
+                        _buttleData.currentGraphWrapper = _buttleData.graphWrapper
+                        if (previousNode == undefined)
+                        {
+                            _buttleManager.nodeManager.creationNode("_buttleData.graph", currentObject.pluginType, 0, 0)
+                        }
+                        else
+                        {
+                            _buttleManager.nodeManager.creationNode("_buttleData.graph", currentObject.pluginType, previousNode.xCoord+140, previousNode.yCoord)
+
+                            // If there is no input clip, no auto-connection
+                            newNode = _buttleData.lastNode()
+                            if (newNode.nbInput > 0)
+                                _buttleManager.connectionManager.connectWrappers(previousNode.outputClip, newNode.srcClips.get(0))
+                        }
+                    }
+                    else
+                    {
+                        if (_buttleData.currentSelectedNodeWrappers.count == 1)
+                        {
+                            var selectedNode = _buttleData.currentSelectedNodeWrappers.get(0)
+                            _buttleManager.nodeManager.creationNode("_buttleData.graph", currentObject.pluginType, selectedNode.xCoord+140, selectedNode.yCoord)
+                            var createdNode = _buttleData.lastNode()
+                            if (createdNode.nbInput != 0)
+                                _buttleManager.connectionManager.connectWrappers(selectedNode.outputClip, createdNode.srcClips.get(0))
+                        }
+                        else
+                        {
+                            _buttleManager.nodeManager.creationNode("_buttleData.graph", currentObject.pluginType, 0, 0)
+                        }
+                    }
+                    pluginVisible=false
+                    searchPluginText = ""
+                }
 
                 delegate: Component {
                     Rectangle {
-                        id: nodes
-                        color: "#141414"
+                        id: node
+                        color: "transparent"
                         border.color:"transparent"
                         border.width: 1
                         radius: 3
@@ -182,59 +236,18 @@ ApplicationWindow {
 
                         Keys.onPressed: {
                             //previous plugin
-                            if (event.key == Qt.Key_Up){
-                                console.debug("up")
-                                listOfPlugin.currentItem.color="#141414"
-                                listOfPlugin.currentItem.border.color="transparent"
-                                listOfPlugin.currentIndex = listOfPlugin.currentIndex>0? listOfPlugin.currentIndex-1:listOfPlugin.currentIndex
-                                listOfPlugin.currentItem.color="#242424"
-                                listOfPlugin.currentItem.border.color="#343434"
+                            if (event.key == Qt.Key_Up)
+                            {
+                                listOfPlugin.moveSelectionUp()
                             }
-
                             //next plugin
-                            if (event.key == Qt.Key_Down){
-                                console.debug("down")
-                                listOfPlugin.currentItem.color="#141414"
-                                listOfPlugin.currentItem.border.color="transparent"
-                                listOfPlugin.currentIndex = listOfPlugin.currentIndex<listOfPlugin.count-1? listOfPlugin.currentIndex+1:listOfPlugin.currentIndex
-                                listOfPlugin.currentItem.color="#242424"
-                                listOfPlugin.currentItem.border.color="#343434"
+                            else if (event.key == Qt.Key_Down)
+                            {
+                                listOfPlugin.moveSelectionDown()
                             }
-
-                            if (event.key == Qt.Key_Return){
-                                console.debug("add")
-                                listOfPlugin.currentItem.color="#333"
-                                listOfPlugin.currentItem.border.color="#343434"
-                                if (!graphEditor){
-                                    // we create a new node and connect it to the last but one node of the concerned graph
-                                    previousNode =_buttleData.lastNode()
-
-                                    _buttleData.currentGraphWrapper = _buttleData.graphWrapper
-                                    if (previousNode == undefined)
-                                        _buttleManager.nodeManager.creationNode("_buttleData.graph", object.pluginType, 0, 0)
-                                    else
-                                        _buttleManager.nodeManager.creationNode("_buttleData.graph", object.pluginType, previousNode.xCoord+140, previousNode.yCoord)
-
-                                    // if there is only one node, we don't connect it
-                                    if (previousNode != undefined){
-                                        newNode = _buttleData.lastNode()
-                                        if (newNode.nbInput != 0)
-                                            _buttleManager.connectionManager.connectWrappers(previousNode.outputClip, newNode.srcClips.get(0))
-                                    }
-                                }
-                                else{
-                                    if (_buttleData.currentSelectedNodeWrappers.count == 1) {
-                                        var selectedNode = _buttleData.currentSelectedNodeWrappers.get(0)
-                                        _buttleManager.nodeManager.creationNode("_buttleData.graph", object.pluginType, selectedNode.xCoord+140, selectedNode.yCoord)
-                                        var createdNode = _buttleData.lastNode()
-                                        if (createdNode.nbInput != 0)
-                                            _buttleManager.connectionManager.connectWrappers(selectedNode.outputClip, createdNode.srcClips.get(0))
-                                    }
-                                    else 
-                                        _buttleManager.nodeManager.creationNode("_buttleData.graph", object.pluginType, 0, 0)
-                                }
-                                pluginVisible=false
-                                searchPluginText = ""
+                            else if (event.key == Qt.Key_Enter || event.key == Qt.Key_Return)
+                            {
+                                listOfPlugin.instanciateSelectedPlugin()
                             }
                         }
 
@@ -242,45 +255,11 @@ ApplicationWindow {
                             anchors.fill: parent
                             hoverEnabled: true
                             onEntered: {
-                                nodes.color= nodes.color=="#333"? "#333":"#242424"
-                                nodes.border.color="#343434"
-                            }
-                            onExited: {
-                                nodes.color= nodes.color=="#333"? "#333":"#141414"
-                                nodes.border.color="transparent"
+                                listOfPlugin.currentIndex = index
                             }
                             onClicked: {
-                                listOfPlugin.currentIndex=index
-                                if (!graphEditor){
-                                    // we create a new node and connect it to the last but one node of the concerned graph
-                                    previousNode =_buttleData.lastNode()
-
-                                    _buttleData.currentGraphWrapper = _buttleData.graphWrapper
-                                    if (previousNode == undefined)
-                                        _buttleManager.nodeManager.creationNode("_buttleData.graph", object.pluginType, 0, 0)
-                                    else
-                                        _buttleManager.nodeManager.creationNode("_buttleData.graph", object.pluginType, previousNode.xCoord+140, previousNode.yCoord)
-
-                                    // if there is only one node, we don't connect it
-                                    if (previousNode != undefined){
-                                        newNode = _buttleData.lastNode()
-                                        if (newNode.nbInput != 0)
-                                            _buttleManager.connectionManager.connectWrappers(previousNode.outputClip, newNode.srcClips.get(0))
-                                    }
-                                }
-                                else{
-                                    if (_buttleData.currentSelectedNodeWrappers.count == 1) {
-                                        var selectedNode = _buttleData.currentSelectedNodeWrappers.get(0)
-                                        _buttleManager.nodeManager.creationNode("_buttleData.graph", object.pluginType, selectedNode.xCoord+140, selectedNode.yCoord)
-                                        var createdNode = _buttleData.lastNode()
-                                        if (createdNode.nbInput != 0)
-                                            _buttleManager.connectionManager.connectWrappers(selectedNode.outputClip, createdNode.srcClips.get(0))
-                                    }
-                                    else 
-                                        _buttleManager.nodeManager.creationNode("_buttleData.graph", object.pluginType, 0, 0)
-                                }
-                                pluginVisible=false
-                                searchPluginText = ""
+                                listOfPlugin.currentIndex = index
+                                listOfPlugin.instanciateSelectedPlugin()
                             }
                         }
                         Text{

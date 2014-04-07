@@ -70,17 +70,17 @@ ApplicationWindow {
                     color: "white"
                     focus:true
 
-                    property variant plugin:_buttleData.getSinglePluginSuggestion(text)
-
                     Keys.onPressed: {
-                        if ((event.key == Qt.Key_Return)||(event.key == Qt.Key_Enter)) {
-                            if(pluginList.model.count==1){
-                                plugin:_buttleData.getSinglePluginSuggestion(text)
-                                // using pluginList.model[0] doesn't work
-                                currentPluginLabel=plugin.pluginLabel
-                                currentPluginDoc=plugin.pluginDescription
-                                currentPluginGroup=plugin.pluginGroup
-                            }
+                        //previous plugin
+                        if (event.key == Qt.Key_Up){
+                            pluginList.moveSelectionUp()
+                        }
+                        //next plugin
+                        else if (event.key == Qt.Key_Down){
+                            pluginList.moveSelectionDown()
+                        }
+                        else if (event.key == Qt.Key_Enter || event.key == Qt.Key_Return){
+                            pluginList.instanciateSelectedPlugin()
                         }
                     }
                 }
@@ -136,12 +136,57 @@ ApplicationWindow {
                     height: count ? contentHeight : 0
                     interactive: false
                     focus: true
+                    currentIndex: 0
                     model: _buttleData.getPluginsWrappersSuggestions(searchPlugin.text)
+                    highlightFollowsCurrentItem: true
+                    keyNavigationWraps: true
+
+                    Component {
+                        id: highlightComponent
+                        Rectangle {
+                            width: pluginList.currentItem.width
+                            height: pluginList.currentItem.height
+                            color: "#333"
+                            radius: 5
+                            y: pluginList.currentItem.y
+                            Behavior on y {
+                                SpringAnimation {
+                                    spring: 3
+                                    damping: 0.2
+                                }
+                            }
+                        }
+                    }
+
+                    highlight: highlightComponent
+
+                    function moveSelectionUp()
+                    {
+                        if( pluginList.currentIndex == -1 )
+                            pluginList.currentIndex = 0
+                        else
+                            pluginList.decrementCurrentIndex()
+                    }
+                    function moveSelectionDown()
+                    {
+                        if( pluginList.currentIndex == -1 )
+                            pluginList.currentIndex = 0
+                        else
+                            pluginList.incrementCurrentIndex()
+                    }
+                    function instanciateSelectedPlugin()
+                    {
+                        var currentObject = pluginList.model.get(pluginList.currentIndex)
+                        currentPluginLabel=currentObject.pluginLabel
+                        currentPluginDoc=currentObject.pluginDescription
+                        currentPluginGroup=currentObject.pluginGroup
+                        searchPluginText = ""
+                    }
 
                     delegate: Component {
                         Rectangle {
                             id: nodes
-                            color: "#141414"
+                            color: "transparent"
                             border.color:"transparent"
                             border.width: 1
                             radius: 3
@@ -151,53 +196,29 @@ ApplicationWindow {
 
                             Keys.onPressed: {
                                 //previous plugin
-                                if (event.key == Qt.Key_Up){
-                                    pluginList.currentItem.color="#141414"
-                                    pluginList.currentItem.border.color="transparent"
-                                    pluginList.currentIndex = pluginList.currentIndex>0? pluginList.currentIndex-1:pluginList.currentIndex
-                                    pluginList.currentItem.color="#242424"
-                                    pluginList.currentItem.border.color="#343434"
+                                if (event.key == Qt.Key_Up)
+                                {
+                                    pluginList.moveSelectionUp()
                                 }
-
                                 //next plugin
-                                if (event.key == Qt.Key_Down){
-                                    pluginList.currentItem.color="#141414"
-                                    pluginList.currentItem.border.color="transparent"
-                                    pluginList.currentIndex = pluginList.currentIndex<pluginList.count-1? pluginList.currentIndex+1:pluginList.currentIndex
-                                    pluginList.currentItem.color="#242424"
-                                    pluginList.currentItem.border.color="#343434"
+                                else if (event.key == Qt.Key_Down)
+                                {
+                                    pluginList.moveSelectionDown()
                                 }
-
-                                if ((event.key == Qt.Key_Return)||(event.key == Qt.Key_Enter)) {
-                                    pluginList.currentItem.color="#333"
-                                    pluginList.currentItem.border.color="#343434"
-                                    currentPluginLabel=object.pluginLabel
-                                    currentPluginDoc=object.pluginDescription
-                                    currentPluginGroup=object.pluginGroup
+                                else if (event.key == Qt.Key_Enter || event.key == Qt.Key_Return)
+                                {
+                                    pluginList.instanciateSelectedPlugin()
                                 }
                             }
-
                             MouseArea {
                                 anchors.fill: parent
                                 hoverEnabled: true
                                 onEntered: {
-                                    nodes.color= nodes.color=="#333"? "#333":"#242424"
-                                    nodes.border.color="#343434"
-                                }
-                                onExited: {
-                                    nodes.color= nodes.color=="#333"? "#333":"#141414"
-                                    nodes.border.color="transparent"
+                                    pluginList.currentIndex = index
                                 }
                                 onClicked: {
-                                    aNodeIsSelected=false
-                                    pluginList.currentItem.color="#141414"
-                                    pluginList.currentItem.border.color="transparent"
-                                    pluginList.currentIndex=index
-                                    pluginList.currentItem.color="#333"
-                                    pluginList.currentItem.border.color="#343434"
-                                    currentPluginLabel=object.pluginLabel
-                                    currentPluginDoc=object.pluginDescription
-                                    currentPluginGroup=object.pluginGroup
+                                    pluginList.currentIndex = index
+                                    pluginList.instanciateSelectedPlugin()
                                 }
                             }
                             Text{

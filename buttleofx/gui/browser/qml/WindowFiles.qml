@@ -19,7 +19,6 @@ Rectangle {
     property bool viewList: false
     signal changeSelectedList(variant selected)
     property int itemIndex: 0
-    property string fileName
     property bool showSeq: false
     property int nbCell: viewList ? 1 : gridview.width/gridview.cellWidth
 
@@ -252,11 +251,6 @@ Rectangle {
 
 
                     property variant selectedFiles
-                    //property variant filePath: model.object.filepath
-
-                    function forceActiveFocusInColumn() {
-                        filename_textEdit.forceActiveFocus()
-                    }
 
                     /*DropArea {
                         id: moveItemInColumn
@@ -306,7 +300,7 @@ Rectangle {
                                 fileModel.selectItem(index)
                                 fileInfo.currentFile = fileModel.getSelectedItems() ? fileModel.getSelectedItems().get(0) : undefined
                                 //options.popup()
-                                winFile.fileName = filename_textEdit.text
+
 
                             //if shift:
                             if(mouse.modifiers & Qt.ShiftModifier)
@@ -368,26 +362,6 @@ Rectangle {
                              }
                         }
                     }
-
-                    Menu {
-                        id: options
-
-                        MenuItem {
-                            text: "Rename"
-                            onTriggered: {
-                                //Open a TextEdit
-                                filename_textEdit.forceActiveFocus()
-                            }
-                        }
-                        MenuItem {
-                            text: "Delete"
-                            onTriggered: {
-                                fileModel.deleteItem(itemIndex)
-                                //deleteMessage.open()
-                            }
-                        }
-                    }
-
 
                     ColumnLayout {
                         id: file
@@ -459,77 +433,30 @@ Rectangle {
                             }
                             Rectangle {
                                 id: filename_background
-                                width: filename_textEdit.width
-                                height: filename_textEdit.paintedHeight
+                                width: filename_text.width
+                                height: filename_text.paintedHeight
 
                                 color: "white"
                                 radius: 2
 
-                                visible: filename_textEdit.activeFocus
+                                visible: filename_text.activeFocus
                             }
-                            TextEdit {
-                                id: filename_textEdit
+                            Text {
+                                id: filename_text
 
-                                horizontalAlignment: TextInput.AlignHCenter
+                                horizontalAlignment: Text.AlignHCenter
                                 anchors.fill: parent
 
                                 text: model.object.fileName
-                                property string origText: ""
 
                                 color: model.object.isSelected ? "black" : "white"
                                 font.bold: model.object.isSelected
-                                textFormat: TextEdit.PlainText
-                                wrapMode: TextEdit.Wrap
+                                textFormat: Text.PlainText
+                                wrapMode: Text.Wrap
 
-                                selectByMouse: activeFocus
-                                selectionColor: "#5a5e6b"
+
                                 clip: ! activeFocus
                                 z: 9999  // TODO: need another solution to be truly on top.
-
-                                onTextChanged: {
-                                    // Hack to get the "Keys.onEnterPressed" event
-                                    var hasEndline = (text.lastIndexOf("\n") != -1)
-                                    if( hasEndline )
-                                    {
-                                        var newText = text.replace("\n", "")
-                                        textAccepted(newText)
-                                    }
-                                }
-
-                                onActiveFocusChanged: {
-                                    if( filename_textEdit.activeFocus )
-                                    {
-                                        selectAll()
-                                        origText = text
-                                    }
-                                    else
-                                    {
-                                        deselect()
-                                        textAccepted(text)
-                                    }
-                                }
-                                function textAccepted(newText) {
-                                    if( origText != newText )
-                                    {
-                                        fileModel.changeFileName(newText, itemIndex)
-                                    }
-                                    origText = ""
-                                }
-                                MouseArea {
-                                    id: filename_mouseArea
-                                    width: filename_textEdit.width
-                                    height: Math.max(filename_textEdit.width, filename_textEdit.paintedHeight)
-                                    acceptedButtons: Qt.LeftButton
-                                    enabled: ! filename_textEdit.activeFocus
-                                    onPressed: {
-                                        // forward to the rootFileItem
-                                        rootFileItem_mouseArea.onPressed(mouse)
-                                    }
-                                    onDoubleClicked: {
-                                        mouse.accepted = true
-                                        filename_textEdit.forceActiveFocus()
-                                    }
-                                }
                             }
                         }
                     }
@@ -609,10 +536,6 @@ Rectangle {
                     height: 25
                     width: listview.width
 
-                    function forceActiveFocusInRow() {
-                        textInRow.forceActiveFocus()
-                    }
-
                     property variant selectedFiles
                     property variant currentFile: model.object
                     //property variant filePath: model.object.filepath
@@ -639,7 +562,7 @@ Rectangle {
                             sourceSize.height: 20
                         }
 
-                        TextInput {
+                        Text {
                             id: textInRow
                             x: 10
 
@@ -647,19 +570,6 @@ Rectangle {
                             color: model.object.isSelected ? "black" : "white"
                             font.bold: model.object.isSelected
                             width: parent.width
-
-                            selectByMouse: true
-                            selectionColor: "#5a5e6b"
-
-                            onFocusChanged:{
-                                textInRow.focus ? selectAll() : deselect()
-                            }
-
-                            onAccepted: {
-                                textInRow.selectAll()
-                                fileModel.changeFileName(textInRow.getText(0, textInRow.cursorPosition + 1), itemIndex)
-                                textInRow.forceActiveFocus()
-                            }
                         }
                     }// endRow
 
@@ -692,8 +602,9 @@ Rectangle {
                             winFile.itemIndex = index
 
                             if (mouse.button == Qt.RightButton)
-                                options.popup()
-                                winFile.fileName = textInRow.text
+                                editFile = true
+                                fileModel.selectItem(index)
+                                fileInfo.currentFile = fileModel.getSelectedItems() ? fileModel.getSelectedItems().get(0) : undefined
 
                             //if shift:
                             if(mouse.modifiers & Qt.ShiftModifier)
@@ -755,41 +666,8 @@ Rectangle {
                              }
                         }
                     }
-                    Menu {
-                        id: options
-
-                        MenuItem {
-                            text: "Rename"
-                            onTriggered: {
-                                //Open a TextEdit
-                                textInRow.forceActiveFocus()
-                            }
-                        }
-                        MenuItem {
-                            text: "Delete"
-                            onTriggered: {
-                                fileModel.deleteItem(itemIndex)
-                                //deleteMessage.open()
-                            }
-                        }
-                    }
                 }// end Rectangle
             }//endComponent
         }
     }
-
-    /*MessageDialog {
-        id: deleteMessage
-        title: "Delete?"
-        icon: StandardIcon.Warning
-        text: "Do you really want to delete " + winFile.fileName + "?"
-        standardButtons: StandardButton.No | StandardButton.Yes
-        onYes: {
-            //fileModel.deleteItem(itemIndex)
-            console.log("deleted")
-        }
-        onNo: {
-            console.log("didn't delete")
-        }
-    }*/
 }

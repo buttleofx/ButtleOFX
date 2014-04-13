@@ -1,4 +1,5 @@
 import QtQuick 2.0
+import QtQuick.Dialogs 1.1
 import QtQuick.Controls 1.0
 import QtQuick.Layouts 1.0
 import QtQuick.Controls.Styles 1.0
@@ -260,6 +261,7 @@ ApplicationWindow {
                             onClicked: {
                                 editFile=false
                                 deleteItem()
+                                //deleteMessage.open()
                             }
                         }
                     }
@@ -267,5 +269,23 @@ ApplicationWindow {
             }//component
         }//loader
     }
+
+/*
+    MessageDialog {
+        id: deleteMessage
+        title: "Delete?"
+        icon: StandardIcon.Warning
+        text: "Do you really want to delete " + currentFile.fileName + "?"
+        standardButtons: StandardButton.No | StandardButton.Yes
+        onYes: {
+            deleteItem()
+            console.log("deleted")
+            editFile=false
+        }
+        onNo: {
+            console.log("didn't delete")
+        }
+    }
+*/
 }
 

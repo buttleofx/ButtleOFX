@@ -27,14 +27,6 @@ Rectangle {
     function forceActiveFocusOnCreate() {
         fileModel.createFolder(fileModel.folder + "/New Directory")
     }
-
-    function forceActiveFocusOnRename() {
-        if( viewList )
-            listview.currentItem.forceActiveFocusInRow()
-        else
-            gridview.currentItem.forceActiveFocusInColumn()
-    }
-
     function forceActiveFocusOnDelete() {
         fileModel.deleteItem(itemIndex)
         winFile.forceActiveFocusOnRefresh()

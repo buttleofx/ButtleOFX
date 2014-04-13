@@ -344,13 +344,13 @@ class FileModelBrowser(QtQuick.QQuickItem):
         self.updateFileItems(self._folder)
         self.nameFilterChange.emit()
         
-    def getWeight(self):
+    def getSize(self):
         return len(self._fileItems) - 1
 
     fileItems = QtCore.pyqtProperty(QtCore.QObject, getFileItems, notify=folderChanged)
     nameFilterChange = QtCore.pyqtSignal()
     nameFilter = QtCore.pyqtProperty(str, getFilter, setFilter, notify=nameFilterChange)
-    weight = QtCore.pyqtProperty(int, getWeight, constant=True)
+    size = QtCore.pyqtProperty(int, getSize, constant=True)
     
     def getShowSeq(self):
         return self._showSeq

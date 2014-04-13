@@ -38,6 +38,7 @@ Rectangle {
 
     function forceActiveFocusOnDelete() {
         fileModel.deleteItem(itemIndex)
+        winFile.forceActiveFocusOnRefresh()
     }
     function selectItem(index){
         fileModel.selectItem(index)
@@ -151,6 +152,13 @@ Rectangle {
     FileInfo {
         id: fileInfo
         visible: editFile
+
+        onRefreshFolder: {
+            winFile.forceActiveFocusOnRefresh()
+        }
+        onDeleteItem: {
+            winFile.forceActiveFocusOnDelete()
+        }
     }
 
     MouseArea {

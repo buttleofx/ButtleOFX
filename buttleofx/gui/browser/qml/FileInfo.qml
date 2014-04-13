@@ -8,6 +8,8 @@ ApplicationWindow {
     id: fileInfo
 
     property variant currentFile
+    signal refreshFolder()
+    signal deleteItem()
 
     property color background: "#141414"
     property color backgroundInput: "#343434"
@@ -56,6 +58,7 @@ ApplicationWindow {
                     }
                     onClicked: {
                         editFile=false
+                        refreshFolder()
                     }
                 }
             }
@@ -237,6 +240,27 @@ ApplicationWindow {
                                 }
                             }
 
+                        }
+                    }
+
+                    Item{
+                        id:remove
+                        implicitWidth: 300
+                        implicitHeight: 30
+                        anchors.left: parent.left
+                        anchors.leftMargin: 10
+
+                        Button {
+                            id: removeButton
+                            height: 20
+                            width: 200
+
+                            text: "Remove"
+
+                            onClicked: {
+                                editFile=false
+                                deleteItem()
+                            }
                         }
                     }
                 }//column

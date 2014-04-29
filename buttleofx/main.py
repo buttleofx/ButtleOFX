@@ -178,7 +178,7 @@ class ImageProvider(QtQuick.QQuickImageProvider):
         # print('requestImage:', 'id: ', id)
         max_size = 256
         (_, extension) = os.path.splitext(id)
-        readerIdentifiers = getBestPlugin.getBestReaders(extension)
+        readerIdentifiers = getBestPlugin.getReaders(extension)
         if not readerIdentifiers:
             logging.debug("Tuttle ImageProvider: Unsupported extension '%s'" % extension)
             # import traceback

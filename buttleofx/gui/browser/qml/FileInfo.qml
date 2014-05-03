@@ -23,7 +23,7 @@ ApplicationWindow {
     property color activeFocusOff: "grey"
 
     minimumWidth: 280
-    minimumHeight: 170
+    minimumHeight: 200
     maximumWidth: minimumWidth
     maximumHeight: minimumHeight
     flags: Qt.FramelessWindowHint | Qt.SplashScreen
@@ -31,7 +31,7 @@ ApplicationWindow {
     /*FILE INFOS*/
     Rectangle{
         id: info
-        height: 170
+        height: maximumHeight
         width: fileInfo.width
         color: fileInfo.background
         border.width: 1

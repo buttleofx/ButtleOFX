@@ -185,22 +185,35 @@ class FileModelBrowser(QtQuick.QQuickItem):
             dirs = [item._filename for item in items if item._type == sequenceParser.eTypeFolder]
             seqs = [item._sequence for item in items if item._type == sequenceParser.eTypeSequence]
             files = [item._filename for item in items if item._type == sequenceParser.eTypeFile]
-            
-            for s in seqs:
-                (_, extension) = os.path.splitext(s.getStandardPattern())
-                supported = True
-                try:
-                    getBestPlugin.getBestReader(extension)
-                except Exception:
-                    supported = False
-                if supported and not s.getStandardPattern().startswith("."):
-                    allSeqs.append(FileItem(folder, s.getStandardPattern(), FileItem.Type.Sequence, s))
                     
             for d in dirs:
                 if not d.startswith("."):
                     allDirs.append(FileItem(folder, d, FileItem.Type.Folder, ""))
             
             if self._nameFilter == "*":
+                for s in seqs:
+                    (_, extension) = os.path.splitext(s.getStandardPattern())
+                    supported = True
+                    allSeqs.append(FileItem(folder, s.getStandardPattern(), FileItem.Type.Sequence, s))
+                        
+                    for f in files:
+                        if f.startswith("."):
+                            # Ignore hidden files by default
+                            # TODO: need an option for that
+                            continue
+                        allFiles.append(FileItem(folder, f, FileItem.Type.File, ""))
+                    
+            else:
+                for s in seqs:
+                    (_, extension) = os.path.splitext(s.getStandardPattern())
+                    supported = True
+                    try:
+                        getBestPlugin.getBestReader(extension)
+                    except Exception:
+                        supported = False
+                    if supported and not s.getStandardPattern().startswith("."):
+                        allSeqs.append(FileItem(folder, s.getStandardPattern(), FileItem.Type.Sequence, s))
+                    
                 for f in files:
                     if f.startswith("."):
                         # Ignore hidden files by default
@@ -209,17 +222,10 @@ class FileModelBrowser(QtQuick.QQuickItem):
                     (_, extension) = os.path.splitext(f)
                     try:
                         # getBestReader will raise an exception if the file extension is not supported.
-                        pluginIdentifier = getBestPlugin.getBestReader(extension)
+                        getBestPlugin.getBestReader(extension)
                         allFiles.append(FileItem(folder, f, FileItem.Type.File, ""))
                     except Exception:
                         pass
-                    
-            else:
-                for f in files:
-                    (_, extension) = os.path.splitext(f)
-                    if extension == self._nameFilter:
-                        #print("Only ", extension, " files")
-                        allFiles.append(FileItem(folder, f, FileItem.Type.File, ""))
                                       
             allDirs.sort(key=lambda fileItem: fileItem.fileName.lower())
             allFiles.sort(key=lambda fileItem: fileItem.fileName.lower())
@@ -240,20 +246,21 @@ class FileModelBrowser(QtQuick.QQuickItem):
                             # Ignore hidden files by default
                             # TODO: need an option for that
                             continue
-                        (_, extension) = os.path.splitext(f)
-                        try:
-                            # getBestReader will raise an exception if the file extension is not supported.
-                            pluginIdentifier = getBestPlugin.getBestReader(extension)
-                            allFiles.append(FileItem(folder, f, FileItem.Type.File, ""))
-                        except Exception:
-                            pass
+                        allFiles.append(FileItem(folder, f, FileItem.Type.File, ""))
                         
                 else:
                     for f in files:
+                        if f.startswith("."):
+                            # Ignore hidden files by default
+                            # TODO: need an option for that
+                            continue
                         (_, extension) = os.path.splitext(f)
-                        if extension == self._nameFilter:
-                            #print("Only ", extension, " files")
+                        try:
+                            # getBestReader will raise an exception if the file extension is not supported.
+                            getBestPlugin.getBestReader(extension)
                             allFiles.append(FileItem(folder, f, FileItem.Type.File, ""))
+                        except Exception:
+                            pass
                               
             except Exception:
                 pass

@@ -38,7 +38,7 @@ Rectangle {
 
         ComboBox {
             width: 200
-            model: [ "*", ".jpg", ".png", ".raw" ]
+            model: [ "*", "Tuttle Readable" ]
 
 
             onCurrentTextChanged: {

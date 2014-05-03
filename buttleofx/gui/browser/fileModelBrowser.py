@@ -82,8 +82,8 @@ class FileItem(QtCore.QObject):
         g.setupAtTime(timeMin)
         size = node.getRegionOfDefinition(timeMin)
         fileSize = QObjectListModel(self)
-        fileSize.append(size.x1)
-        fileSize.append(size.y1)
+        fileSize.append(size.x2 - size.x1)
+        fileSize.append(size.x2 - size.y1)
         return fileSize
     
     def getFileTime(self):

@@ -7,10 +7,14 @@ import logging
         # logging.warning("warning message")
         # logging.error("error message")
         # logging.critical("critical message")
-# print in a file
-#logging.basicConfig(format='Buttle - %(levelname)s - %(asctime)-15s - %(message)s', filename='console.log', filemode='w', level=logging.DEBUG)
-# print in console
-logging.basicConfig(format='Buttle - %(levelname)s - %(message)s', level=logging.DEBUG)
+DEV_MODE = False
+
+if DEV_MODE:
+    # print in console
+    logging.basicConfig(format='Buttle - %(levelname)s - %(message)s', level=logging.DEBUG)
+else:
+    # print in a file
+    logging.basicConfig(format='Buttle - %(levelname)s - %(asctime)-15s - %(message)s', filename='console.log', filemode='w', level=logging.DEBUG)
 
 # Tuttle
 from pyTuttle import tuttle
@@ -271,15 +275,10 @@ def main(argv, app):
     cmdManager.setActive()
     cmdManager.clean()
 
-    # create the declarative view
-    engine = QtQml.QQmlEngine(app)
+    # create the QML engine
+    engine = QtQml.QQmlApplicationEngine(app)
     engine.quit.connect(app.quit)
-    #view = QtQuick.QQuickView()
-    #view.setViewport(QtOpenGL.QGLWidget())
-    #view.setViewportUpdateMode(QtQml.QQuickView.FullViewportUpdate)
-    
     engine.addImageProvider("buttleofx", ImageProvider())
-    #ImageProviderGUI()
 
     # data
     buttleData = ButtleDataSingleton().get().init(engine, currentFilePath)
@@ -300,11 +299,6 @@ def main(argv, app):
         inputFolder = os.path.expanduser("~")
         browser.setFirstFolder(inputFolder)
 
-    # Menus
-    #fileMenu = MenuWrapper("file", 0, component, app)
-    #editMenu = MenuWrapper("edit", 0, view, app)
-    #addMenu = MenuWrapper("buttle/", 1, view, app)
-    
     # expose data to QML
     rc = engine.rootContext()
     rc.setContextProperty("_buttleApp", app)
@@ -312,41 +306,29 @@ def main(argv, app):
     rc.setContextProperty("_buttleManager", buttleManager)
     rc.setContextProperty("_buttleEvent", buttleEvent)
     rc.setContextProperty("_browser", browser)
-    #rc.setContextProperty("_fileMenu", fileMenu)
-    #rc.setContextProperty("_editMenu", editMenu)
-    #rc.setContextProperty("_addMenu", addMenu)
+
+    iconPath = os.path.join(currentFilePath, "../blackMosquito.png")
+    # iconPath = QtCore.QUrl("file:///" + iconPath)
+    app.setWindowIcon(QtGui.QIcon(iconPath))
 
     mainFilepath = os.path.join(currentFilePath, "MainWindow.qml")
     if windows:
         mainFilepath = mainFilepath.replace('\\', '/')
-    component = QtQml.QQmlComponent(engine)
-    component.loadUrl(QtCore.QUrl("file:///" + mainFilepath))
+    engine.load(QtCore.QUrl("file:///" + mainFilepath))
+    topLevel = engine.rootObjects()[0]
+    topLevel.setIcon(QtGui.QIcon(iconPath))
 
-    topLevel = component.create()
-#    topLevel = component.beginCreate(rc)
-#    component.completeCreate()
-#    print("Component errors:", component.errors())
-
-    # Declare we are using instant coding tool on this view
-    qic = QmlInstantCoding(component, verbose=True)
-
-    # Add any source file (.qml and .js by default) in current working directory
-    parentDir = os.path.dirname(currentFilePath)
-    print("Watch directory:", parentDir)
-    qic.addFilesFromDirectory(parentDir, recursive=True)
-
-    #add._menu.popup(view.mapToGlobal(QtCore.QPoint(0, 0)))
-
-    if topLevel is not None:
-        topLevel.setIcon(QtGui.QIcon(os.path.join(currentFilePath, "../blackMosquito.png")))
-        topLevel.show()
-
-    else:
-        print("ERRORS")
-        # Print all errors that occurred.
-        for error in component.errors():
-            print(error.toString())
+    if DEV_MODE:
+        # Declare we are using instant coding tool on this view
+        qic = QmlInstantCoding(topLevel, verbose=True)
+    
+        # Add any source file (.qml and .js by default) in current working directory
+        parentDir = os.path.dirname(currentFilePath)
+        print("Watch directory:", parentDir)
+        qic.addFilesFromDirectory(parentDir, recursive=True)
 
     aFilter = EventFilter()
     app.installEventFilter(aFilter)
+    
+    topLevel.show()
     sys.exit(app.exec_())

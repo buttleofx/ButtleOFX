@@ -362,6 +362,10 @@ class FileModelBrowser(QtQuick.QQuickItem):
             
     @QtCore.pyqtSlot(int, int)
     def selectItemsByShift(self, begin, end):
+        if(begin > end):
+            tmp = begin
+            begin = end
+            end = tmp
         for i in range(begin, end + 1):
             if i < len(self._fileItems):
                 self._fileItems[i].isSelected = True

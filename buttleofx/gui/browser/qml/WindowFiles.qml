@@ -35,7 +35,7 @@ Rectangle {
         fileModel.selectItem(index)
         var sel = fileModel.getSelectedItems()
         // if it's an image, we assign it to the viewer
-        if(!sel){
+        if(sel){
             if (sel.get(0).fileType != "Folder") {
                 player.changeViewer(11) // we come to the temporary viewer
                 // we save the last node wrapper of the last view

@@ -397,9 +397,7 @@ Rectangle {
                                 Image {
                                     id: thumbnail
                                     property bool isFolder: model.object.fileType == "Folder"
-                                    source: isFolder ? model.object.fileImg : 'image://buttleofx/'+ model.object.filepath
-                                    // Without tuttle // source: isFolder ? model.object.fileImg : "file:///" + model.object.fileImg
-
+                                    source: model.object.fileImg
                                     asynchronous: true
                                     // cache: false
 
@@ -548,8 +546,7 @@ Rectangle {
                         spacing: 10
                         Image {
                             x: 25
-                            //source: model.object.fileType == "Folder" ? model.object.fileImg : 'image://buttleofx'+ model.object.filepath
-                            source: model.object.fileType == "Folder" ? model.object.fileImg : "file:///" + model.object.fileImg
+                            source: model.object.fileImg
                             sourceSize.width: 20
                             sourceSize.height: 20
                         }

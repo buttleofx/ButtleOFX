@@ -32,7 +32,7 @@ class FileItem(QtCore.QObject):
         self._fileType = fileType
         
         if fileType == FileItem.Type.File:
-            if supported == True:
+            if supported:
                 self._fileImg = 'image://buttleofx/' + self._filepath
             else:
                 self._fileImg = "../../img/buttons/browser/file-icon.png"
@@ -40,21 +40,29 @@ class FileItem(QtCore.QObject):
             self._fileWeight = os.stat(self._filepath).st_size
             (_, extension) = os.path.splitext(fileName)
             self._fileExtension = extension
-            
+        
         elif fileType == FileItem.Type.Folder:
             self._fileImg = "../../img/buttons/browser/folder-icon.png"
             self._seq = None
             self._fileWeight = 0.0
             self._fileExtension = ""
-                        
+        
         elif fileType == FileItem.Type.Sequence:
-            if supported == True:
-                self._fileImg = self._seq.getFirstFilePath()
+            
+            time = int(seq.getFirstTime() + (seq.getLastTime() - seq.getFirstTime()) * 0.5)
+            seqPath = seq.getAbsoluteFilenameAt(time)
+            if not os.path.exists(seqPath):
+                time = seq.getFirstTime()
+                seqPath = seq.getAbsoluteFilenameAt(time)
+
+            seqPath = seq.getAbsoluteStandardPattern()
+            if supported:
+                self._fileImg = 'image://buttleofx/' + seqPath
             else:
                 self._fileImg = "../../img/buttons/browser/file-icon.png"
             self._seq = SequenceWrapper(seq)
             self._fileWeight = self._seq.getWeight()
-            (_, extension) = os.path.splitext(self._seq.getFirstFileName())
+            (_, extension) = os.path.splitext(seqPath)
             self._fileExtension = extension
            
     def getFilepath(self):

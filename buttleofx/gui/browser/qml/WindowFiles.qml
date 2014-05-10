@@ -22,7 +22,12 @@ Rectangle {
     property bool showSeq: false
     property int nbCell: viewList ? 1 : gridview.width/gridview.cellWidth
 
-    property bool editFile: false
+    function showEditFile(pos)
+    {
+        fileInfo.visible = true
+        fileInfo.x = mainWindowQML.x + pos.x - 5
+        fileInfo.y = mainWindowQML.y + pos.y - 5
+    }
 
     function forceActiveFocusOnCreate() {
         fileModel.createFolder(fileModel.folder + "/New Directory")
@@ -142,7 +147,7 @@ Rectangle {
     }
     FileInfo {
         id: fileInfo
-        visible: editFile
+        visible: false
 
         onRefreshFolder: {
             winFile.forceActiveFocusOnRefresh()
@@ -288,7 +293,7 @@ Rectangle {
                             winFile.itemIndex = index
 
                             if (mouse.button == Qt.RightButton)
-                                editFile = true
+                                winFile.showEditFile(rootFileItem_mouseArea.mapToItem(null, mouse.x, mouse.y))
                                 fileModel.selectItem(index)
                                 fileInfo.currentFile = fileModel.getSelectedItems() ? fileModel.getSelectedItems().get(0) : undefined
                                 //options.popup()
@@ -591,9 +596,9 @@ Rectangle {
                             winFile.itemIndex = index
 
                             if (mouse.button == Qt.RightButton)
-                                editFile = true
-                                fileModel.selectItem(index)
-                                fileInfo.currentFile = fileModel.getSelectedItems() ? fileModel.getSelectedItems().get(0) : undefined
+                                winFile.showEditFile(dragMouseAreaRow.mapToItem(null, mouse.x, mouse.y))
+                            fileModel.selectItem(index)
+                            fileInfo.currentFile = fileModel.getSelectedItems() ? fileModel.getSelectedItems().get(0) : undefined
 
                             //if shift:
                             if(mouse.modifiers & Qt.ShiftModifier)

@@ -1,8 +1,7 @@
 import logging
 import os
 
-#Tuttle
-import getBestPlugin
+from pyTuttle import tuttle
 
 from quickmamba.models import QObjectListModel
 from quickmamba.patterns import Singleton
@@ -77,25 +76,23 @@ class FileItem(QtCore.QObject):
     def getFileWeight(self):
         return self._fileWeight
     
-    @QtCore.pyqtSlot(result=QtCore.QObject)
-    def getFileSize(self):
-        #Get information from Tuttle
+    @QtCore.pyqtSlot(result=QtCore.QSizeF)
+    def getImageSize(self):
         from pyTuttle import tuttle
         g = tuttle.Graph()
-        node = g.createNode(getBestPlugin.getBestReader(self._fileExtension), self._fileImg).asImageEffectNode()
+        node = g.createNode(tuttle.getBestReader(self._fileExtension), self._fileImg).asImageEffectNode()
         g.setup()
         timeMin = self.getFileTime().min
         g.setupAtTime(timeMin)
-        size = node.getRegionOfDefinition(timeMin)
-        fileSize = QObjectListModel(self)
-        fileSize.append(size.x2 - size.x1)
-        fileSize.append(size.x2 - size.y1)
-        return fileSize
+        rod = node.getRegionOfDefinition(timeMin)
+        width = rod.x2 - rod.x1
+        height = rod.y2 - rod.y1
+        return QtCore.QSizeF(width, height)
     
     def getFileTime(self):
         from pyTuttle import tuttle
         g = tuttle.Graph()
-        node = g.createNode(getBestPlugin.getBestReader(self._fileExtension), self._filepath).asImageEffectNode()
+        node = g.createNode(tuttle.getBestReader(self._fileExtension), self._filepath).asImageEffectNode()
         g.setup()
         time = node.getTimeDomain()
         return time
@@ -119,6 +116,8 @@ class FileItem(QtCore.QObject):
     filepath = QtCore.pyqtProperty(str, getFilepath, setFilepath, constant=True)
     fileType = QtCore.pyqtProperty(str, getFileType, constant=True)
     fileName = QtCore.pyqtProperty(str, getFileName, setFileName, constant=True)
+    imageSize = QtCore.pyqtProperty(QtCore.QSize, getImageSize, constant=True)
+
     #Infos about the file
     fileWeight = QtCore.pyqtProperty(float, getFileWeight, constant=True)
     fileExtension = QtCore.pyqtProperty(str, getFileExtension, constant=True)
@@ -185,115 +184,50 @@ class FileModelBrowser(QtQuick.QQuickItem):
         allDirs = []
         allFiles = []
         allSeqs = []
-        
+
+        items = sequenceParser.browse(folder)
+        dirs = [item._filename for item in items if item._type == sequenceParser.eTypeFolder]
+        seqs = [item._sequence for item in items if item._type == sequenceParser.eTypeSequence]
+        files = [item._filename for item in items if item._type == sequenceParser.eTypeFile]
+
+        for d in dirs:
+            if d.startswith("."):
+                # Ignore hidden files by default
+                # TODO: need an option for that
+                continue
+            allDirs.append(FileItem(folder, d, FileItem.Type.Folder, "", True))
+
         if self._showSeq:
-            items = sequenceParser.browse(folder)
-            dirs = [item._filename for item in items if item._type == sequenceParser.eTypeFolder]
-            seqs = [item._sequence for item in items if item._type == sequenceParser.eTypeSequence]
-            files = [item._filename for item in items if item._type == sequenceParser.eTypeFile]
-                    
-            for d in dirs:
-                if not d.startswith("."):
-                    allDirs.append(FileItem(folder, d, FileItem.Type.Folder, "", True))
-            
-            if self._nameFilter == "*":
-                for s in seqs:
-                    (_, extension) = os.path.splitext(s.getStandardPattern())
-                    try:
-                        supported = True
-                    except Exception:
-                        supported = False
-                    allSeqs.append(FileItem(folder, s.getStandardPattern(), FileItem.Type.Sequence, s, supported))
-                        
-                    for f in files:
-                        if f.startswith("."):
-                            # Ignore hidden files by default
-                            # TODO: need an option for that
-                            continue
-                        (_, extension) = os.path.splitext(f)
-                        try:
-                            # getBestReader will raise an exception if the file extension is not supported.
-                            getBestPlugin.getBestReader(extension)
-                            supported = True
-                        except Exception:
-                            supported = False
-                        allFiles.append(FileItem(folder, f, FileItem.Type.File, "", supported))
-                    
-            else:
-                for s in seqs:
-                    (_, extension) = os.path.splitext(s.getStandardPattern())
-                    supported = True
-                    try:
-                        getBestPlugin.getBestReader(extension)
-                    except Exception:
-                        supported = False
-                    if supported and not s.getStandardPattern().startswith("."):
-                        allSeqs.append(FileItem(folder, s.getStandardPattern(), FileItem.Type.Sequence, s, supported))
-                    
-                for f in files:
-                    if f.startswith("."):
-                        # Ignore hidden files by default
-                        # TODO: need an option for that
-                        continue
-                    (_, extension) = os.path.splitext(f)
-                    try:
-                        # getBestReader will raise an exception if the file extension is not supported.
-                        getBestPlugin.getBestReader(extension)
-                        allFiles.append(FileItem(folder, f, FileItem.Type.File, "", True))
-                    except Exception:
-                        pass
-                                      
-            allDirs.sort(key=lambda fileItem: fileItem.fileName.lower())
-            allFiles.sort(key=lambda fileItem: fileItem.fileName.lower())
-            allSeqs.sort(key=lambda fileItem: fileItem.fileName.lower())
-            self._fileItems = allDirs + allFiles + allSeqs
-                    
-        else:
-            try:
-                _, dirs, files = next(os.walk(folder))
-                    
-                for d in dirs:
-                    if not d.startswith("."):
-                        allDirs.append(FileItem(folder, d, FileItem.Type.Folder, "", True))
-                
-                if self._nameFilter == "*":
-                    for f in files:
-                        if f.startswith("."):
-                            # Ignore hidden files by default
-                            # TODO: need an option for that
-                            continue
-                        (_, extension) = os.path.splitext(f)
-                        try:
-                            # getBestReader will raise an exception if the file extension is not supported.
-                            getBestPlugin.getBestReader(extension)
-                            supported = True
-                        except Exception:
-                            supported = False
-                        allFiles.append(FileItem(folder, f, FileItem.Type.File, "", supported))
-                        
-                else:
-                    for f in files:
-                        if f.startswith("."):
-                            # Ignore hidden files by default
-                            # TODO: need an option for that
-                            continue
-                        (_, extension) = os.path.splitext(f)
-                        try:
-                            # getBestReader will raise an exception if the file extension is not supported.
-                            getBestPlugin.getBestReader(extension)
-                            allFiles.append(FileItem(folder, f, FileItem.Type.File, "", True))
-                        except Exception:
-                            pass
-                              
-            except Exception:
-                pass
-    
-            allDirs.sort(key=lambda fileItem: fileItem.fileName.lower())
-            allFiles.sort(key=lambda fileItem: fileItem.fileName.lower())
-            self._fileItems = allDirs + allFiles
+            for s in seqs:
+                sPath = s.getStandardPattern()
+                if sPath.startswith("."):
+                    # Ignore hidden files by default
+                    # TODO: need an option for that
+                    continue
+                readers = tuttle.getReaders(sPath)
+                supported = bool(readers)
+                if not supported and self._nameFilter != "*":
+                    continue
+                allSeqs.append(FileItem(folder, sPath, FileItem.Type.Sequence, s, supported))
+
+        for f in files:
+            if f.startswith("."):
+                # Ignore hidden files by default
+                # TODO: need an option for that
+                continue
+            readers = tuttle.getReaders(f)
+            supported = bool(readers)
+            if not supported and self._nameFilter != "*":
+                continue
+            allFiles.append(FileItem(folder, f, FileItem.Type.File, "", supported))
+
+        allDirs.sort(key=lambda fileItem: fileItem.fileName.lower())
+        allFiles.sort(key=lambda fileItem: fileItem.fileName.lower())
+        allSeqs.sort(key=lambda fileItem: fileItem.fileName.lower())
+        self._fileItems = allDirs + allFiles + allSeqs
 
         self._fileItemsModel.setObjectList(self._fileItems)
-                
+    
     @QtCore.pyqtSlot(str, result=QtCore.QObject)
     def getFilteredFileItems(self, fileFilter):
         suggestions = []
@@ -325,7 +259,7 @@ class FileModelBrowser(QtQuick.QQuickItem):
         if index < len(self._fileItems):
             self._fileItems[index].fileName = newName
         self.updateFileItems(self._folder)
-            
+    
     @QtCore.pyqtSlot(int)
     def deleteItem(self, index):
         if index < len(self._fileItems):
@@ -335,7 +269,7 @@ class FileModelBrowser(QtQuick.QQuickItem):
             if self._fileItems[index].fileType == FileItem.Type.File:
                 os.remove(self._fileItems[index].filepath)
         self.updateFileItems(self._folder)
-                
+    
     @QtCore.pyqtSlot(result=QtCore.QObject)
     def getSelectedItems(self):
         selectedList = QObjectListModel(self)
@@ -359,7 +293,7 @@ class FileModelBrowser(QtQuick.QQuickItem):
     def selectItems(self, index):
         if index < len(self._fileItems):
             self._fileItems[index].isSelected = True
-            
+    
     @QtCore.pyqtSlot(int, int)
     def selectItemsByShift(self, begin, end):
         if(begin > end):
@@ -372,16 +306,17 @@ class FileModelBrowser(QtQuick.QQuickItem):
     
     def getFilter(self):
         return self._nameFilter
-     
+
     def setFilter(self, nameFilter):
         self._nameFilter = nameFilter
         self.updateFileItems(self._folder)
         self.nameFilterChange.emit()
-        
+
     def getSize(self):
         return len(self._fileItems) - 1
 
     fileItems = QtCore.pyqtProperty(QtCore.QObject, getFileItems, notify=folderChanged)
+    _nameFilter = "*"
     nameFilterChange = QtCore.pyqtSignal()
     nameFilter = QtCore.pyqtProperty(str, getFilter, setFilter, notify=nameFilterChange)
     size = QtCore.pyqtProperty(int, getSize, constant=True)
@@ -399,10 +334,7 @@ class FileModelBrowser(QtQuick.QQuickItem):
 
     @QtCore.pyqtSlot(result=bool)
     def isEmpty(self):
-        if (len(self._fileItems) <= 0):
-            return True
-        else:
-            return False
+        return not self._fileItems
 
 
 # This class exists just because there are problems when a class extends 2 other classes (Singleton and QObject)

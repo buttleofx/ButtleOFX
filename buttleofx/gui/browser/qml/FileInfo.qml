@@ -4,7 +4,6 @@ import QtQuick.Controls 1.0
 import QtQuick.Layouts 1.0
 import QtQuick.Controls.Styles 1.0
 
-//Window of file Infos
 ApplicationWindow {
     id: fileInfo
 
@@ -23,81 +22,67 @@ ApplicationWindow {
     property color activeFocusOff: "grey"
 
     minimumWidth: 280
-    minimumHeight: 200
+    minimumHeight: 50
     maximumWidth: minimumWidth
-    maximumHeight: minimumHeight
+    maximumHeight: 500
     flags: Qt.FramelessWindowHint | Qt.SplashScreen
 
-    /*FILE INFOS*/
-    Rectangle{
-        id: info
-        height: maximumHeight
-        width: fileInfo.width
-        color: fileInfo.background
-        border.width: 1
-        border.color: "#333"
+    height: fileLoader.childrenRect.height
+    color: fileInfo.background
 
-        Rectangle{
-            id:headerBar
-            height: 15
-            width:parent.width
-            color: "transparent"
-            Image{
-                id: close
-                source: "file:///" + _buttleData.buttlePath + "/gui/img/icons/close.png"
-                x:headerBar.width-15
-                y:5
-
-                MouseArea {
-                    anchors.fill: parent
-                    hoverEnabled: true
-                    onEntered: {
-                        close.source = "file:///" + _buttleData.buttlePath + "/gui/img/icons/close_hover.png"
-                    }
-                    onExited: {
-                        close.source = "file:///" + _buttleData.buttlePath + "/gui/img/icons/close.png"
-                    }
-                    onClicked: {
-                        editFile=false
-                        refreshFolder()
-                    }
-                }
+    onVisibleChanged: {
+        if( visible )
+            rootMouseArea.forceActiveFocus()
+    }
+    MouseArea {
+        id: rootMouseArea
+        anchors.fill: parent
+        hoverEnabled: true
+        onContainsMouseChanged: {
+            // Hack TODO: need another solution to hide the window
+            if( ! containsMouse )
+            {
+                fileInfo.visible = ! ( mouseX <= 3 || mouseY <= 3 ||
+                                       mouseX >= rootMouseArea.width - 3 || mouseY >= rootMouseArea.height - 3 )
             }
         }
+    }
 
+    Item {
+        id: marginItem
+        anchors.fill: parent
+        anchors.margins: 5
 
         Loader {
+            id: fileLoader
             sourceComponent: currentFile ? fileComponent : undefined
-            anchors.top: parent.top
-            anchors.topMargin: 20
 
             Component {
                 id: fileComponent
-                Column {
-                    spacing: 5
 
-                    /*Name of the file*/
+                ColumnLayout {
+                    spacing: 5
+                    width: parent.width
+                    height: childrenRect.height
+
+                    // Name of the file
                     Item {
                         id: fileName
-                        implicitWidth: 300
-                        implicitHeight: 30
-                        anchors.left: parent.left
-                        anchors.leftMargin: 10
+                        width: parent.width
+                        implicitHeight: childrenRect.height
 
-                        Row {
+                        RowLayout {
                             id: fileNameContainer
                             spacing: 5
 
                             /* Title */
                             Text {
                                 id: fileNameText
-                                anchors.top: parent.top
-                                anchors.verticalCenter: parent.verticalCenter
                                 color: textColor
                                 text: "Name: "
                             }
 
-                            /* Input field limited to 50 characters */
+                            // Input field limited to 50 characters
                             Rectangle {
                                 height: 20
                                 implicitWidth: 200
@@ -106,13 +91,12 @@ ApplicationWindow {
                                 border.color: fileInfo.borderInput
                                 radius: 3
                                 clip: true
+
                                 TextInput {
                                     id: fileNameInput
-                                    text: currentFile ? currentFile.fileName : ""
-                                    anchors.left: parent.left
+                                    text: currentFile.fileName
                                     width: parent.width - 10
                                     height: parent.height
-                                    anchors.leftMargin: 5
                                     maximumLength: 100
                                     selectByMouse : true
                                     color: activeFocus ? activeFocusOn : activeFocusOff
@@ -134,126 +118,115 @@ ApplicationWindow {
                         }
                     }
 
-                    /* Extension of file */
-                    Item {
-                        id: fileExtension
-                        implicitWidth: 300
-                        implicitHeight: 30
-                        anchors.left: parent.left
-                        anchors.leftMargin: 10
+                    Rectangle {
+                        id: fileDetailedInfoContainer
+                        width: parent.width
+                        implicitHeight: fileDetailedInfoLoader.childrenRect.height
+                        color: "red"
 
-                        Row {
-                            id: fieExtensionContainer
-                            spacing: 5
+                        Loader {
+                            id: fileDetailedInfoLoader
+                            sourceComponent: currentFile.fileType != 'Folder' ? fileDetailedInfo : undefined
+                        }
 
-                            Text {
-                                id: fileExtensionText
-                                anchors.top: parent.top
-                                anchors.verticalCenter: parent.verticalCenter
-                                color: textColor
-                                text: currentFile.fileType != 'Folder' ? "Extension: " : ""
-                            }
+                        Component {
+                            id: fileDetailedInfo
+                            ColumnLayout {
+                                width: parent.width
+                                implicitHeight: childrenRect.height
 
-                            Rectangle {
-                                height: 20
-                                implicitWidth: 200
-                                clip: true
-                                color: "transparent"
-                                Text{
-                                    id: fileExtensionInput
-                                    text:  currentFile.fileType != 'Folder' ? currentFile.fileExtension : ""
-                                    anchors.left: parent.left
-                                    anchors.leftMargin: 5
-                                    color: "grey"
+                                /* Extension of file */
+                                RowLayout {
+                                    id: fieExtensionContainer
+                                    spacing: 5
+                                    width: parent.width
+                                    implicitHeight: childrenRect.height
+
+                                    Text {
+                                        id: fileExtensionText
+                                        color: textColor
+                                        text: "Extension: "
+                                    }
+
+                                    Rectangle {
+                                        height: 20
+                                        implicitWidth: 200
+                                        clip: true
+                                        color: "transparent"
+                                        Text{
+                                            id: fileExtensionInput
+                                            text: currentFile.fileExtension
+                                            color: "grey"
+                                        }
+                                    }
+                                }
+
+                                // Weight of file
+                                RowLayout {
+                                    id: fileWeight
+                                    width: parent.width
+                                    implicitHeight: childrenRect.height
+
+                                    Text {
+                                        id: fileWeightText
+                                        color: textColor
+                                        text: "Weight: "
+                                    }
+
+                                    Rectangle {
+                                        height: 20
+                                        implicitWidth: 200
+                                        clip: true
+                                        color: "transparent"
+                                        Text{
+                                            id: fileWeightInput
+                                            text: (currentFile.fileWeight > 1000000 ? (currentFile.fileWeight/1000000).toFixed(2) +" Mo" : (currentFile.fileWeight/1000).toFixed(2) + " Ko")
+                                            color: "grey"
+                                        }
+                                    }
+                                }
+
+                                // Size of File
+                                RowLayout {
+                                    id: fileSize
+                                    width: parent.width
+                                    implicitHeight: childrenRect.height
+
+                                    Text {
+                                        id: fileSizeText
+                                        color: textColor
+                                        text: "Size: "
+                                    }
+
+                                    Rectangle {
+                                        height: 20
+                                        implicitWidth: 200
+                                        clip: true
+                                        color: "transparent"
+
+                                        Text {
+                                            id: fileSizeInput
+                                            property size imageSize: currentFile.imageSize
+                                            text: "width: " + imageSize.width + ", height: " + imageSize.height
+                                            color: "grey"
+                                        }
+                                    }
                                 }
                             }
                         }
                     }
 
-                    /* Weight of file */
-                    Item {
-                        id: fileWeight
-                        implicitWidth: 300
-                        implicitHeight: 30
-                        anchors.left: parent.left
-                        anchors.leftMargin: 10
-
-                        Row {
-                            id: fieWeightContainer
-                            spacing: 5
-
-                            Text {
-                                id: fileWeightText
-                                anchors.top: parent.top
-                                anchors.verticalCenter: parent.verticalCenter
-                                color: textColor
-                                text: currentFile.fileType != 'Folder' ? "Weight: " : ""
-                            }
-
-                            Rectangle {
-                                height: 20
-                                implicitWidth: 200
-                                clip: true
-                                color: "transparent"
-                                Text{
-                                    id: fileWeightInput
-                                    text:  currentFile.fileType != 'Folder' ? (currentFile.fileWeight > 1000000 ? (currentFile.fileWeight/1000000).toFixed(2) +" Mo" : (currentFile.fileWeight/1000).toFixed(2) + " Ko"): ""
-                                    anchors.left: parent.left
-                                    anchors.leftMargin: 5
-                                    color: "grey"
-                                }
-                            }
-                        }
-                    }
-
-                    /* Size of File */
-                    Item {
-                        id: fileSize
-                        implicitWidth: 300
-                        implicitHeight: 30
-                        anchors.left: parent.left
-                        anchors.leftMargin: 10
-
-                        Row {
-                            id: fieSizeContainer
-                            spacing: 5
-
-                            Text {
-                                id: fileSizeText
-                                anchors.top: parent.top
-                                anchors.verticalCenter: parent.verticalCenter
-                                color: textColor
-                                text: currentFile.fileType != 'Folder' ? "Size: " : ""
-                            }
-
-                            Rectangle {
-                                height: 20
-                                implicitWidth: 200
-                                clip: true
-                                color: "transparent"
-
-                                Text{
-                                    id: fileSizeInput
-                                    text:  currentFile.fileType != 'Folder' ? "x: " + currentFile.getFileSize().get(0) + ", y: " +currentFile.getFileSize().get(1) : ""
-                                    anchors.left: parent.left
-                                    anchors.leftMargin: 5
-                                    color: "grey"
-                                }
-                            }
-
-                        }
-                    }
-
-                    Item{
+                    Rectangle {
                         id:remove
-                        implicitWidth: 300
+                        width: parent.width
                         implicitHeight: 30
-                        anchors.left: parent.left
-                        anchors.leftMargin: 10
+                        Layout.minimumHeight: 20
+                        color: "blue"
 
                         Button {
                             id: removeButton
-                            height: 20
+
+                            height: parent.height - 10
                             width: 200
 
                             text: "Remove"
@@ -261,13 +234,12 @@ ApplicationWindow {
                             onClicked: {
                                 editFile=false
                                 deleteItem()
-                                //deleteMessage.open()
                             }
                         }
                     }
-                }//column
-            }//component
-        }//loader
+                }
+            }
+        }
     }
 
 /*

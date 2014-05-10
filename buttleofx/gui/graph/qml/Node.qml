@@ -344,15 +344,15 @@ Rectangle {
                 states: [
                     State {
                         name: "reader"
-                        when: m.nodeWrapper.pluginContext =="OfxImageEffectContextReader" && m.nodeWrapper.params.get(0).value!=""
+                        when: m.nodeWrapper.pluginContext == "OfxImageEffectContextReader" && m.nodeWrapper.params.get(0).value!=""
                         PropertyChanges {
                             target: miniPicture;
-                            source: 'image://buttleofx/'+ m.nodeWrapper.params.get(0).value 
+                            source: 'image://buttleofx/'+ m.nodeWrapper.params.get(0).value
                         }
                     },
                     State {
                         name: "notReader"
-                        when: m.nodeWrapper.pluginContext !="OfxImageEffectContextReader"
+                        when: m.nodeWrapper.pluginContext != "OfxImageEffectContextReader"
                         PropertyChanges {
                             target: miniPicture;
                             source: ""

@@ -40,7 +40,6 @@ Rectangle {
             width: 200
             model: [ "*", "Tuttle Readable" ]
 
-
             onCurrentTextChanged: {
                 changeFilter(currentText)
                 //console.log("currentText = " + currentText)

@@ -223,7 +223,7 @@ def main(argv, app):
     cmdManager.clean()
 
     # create the QML engine
-    engine = QtQml.QQmlApplicationEngine(app)
+    engine = QtQml.QQmlEngine(app)
     engine.quit.connect(app.quit)
     engine.addImageProvider("buttleofx", ImageProvider())
 
@@ -261,8 +261,12 @@ def main(argv, app):
     mainFilepath = os.path.join(currentFilePath, "MainWindow.qml")
     if windows:
         mainFilepath = mainFilepath.replace('\\', '/')
-    engine.load(QtCore.QUrl("file:///" + mainFilepath))
-    topLevel = engine.rootObjects()[0]
+    
+    component = QtQml.QQmlComponent(engine)
+    component.loadUrl(QtCore.QUrl("file:///" + mainFilepath))
+    topLevel = component.create()
+    #engine.load(QtCore.QUrl("file:///" + mainFilepath))
+    #topLevel = engine.rootObjects()[0]
     topLevel.setIcon(QtGui.QIcon(iconPath))
 
     if DEV_MODE:

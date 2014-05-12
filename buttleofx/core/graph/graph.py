@@ -1,7 +1,6 @@
 import logging
 # Tuttle
 from pyTuttle import tuttle
-import getBestPlugin
 # quickmamba
 from quickmamba.patterns import Signal
 # undo_redo
@@ -123,7 +122,7 @@ class Graph(object):
         """
         (shortname, extension) = os.path.splitext(url)
         try:
-            nodeType = getBestPlugin.getBestReader(extension)
+            nodeType = tuttle.getBestReader(extension)
         except Exception:
             logging.debug("Unknown format. Can't create the reader node for extension '%s'." % extension)
             return

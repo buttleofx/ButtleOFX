@@ -18,7 +18,6 @@ else:
 
 # Tuttle
 from pyTuttle import tuttle
-import getBestPlugin
 # quickmamba
 from quickmamba.utils import QmlInstantCoding
 # PyCheck

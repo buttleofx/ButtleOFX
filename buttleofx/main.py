@@ -267,6 +267,11 @@ def main(argv, app):
     topLevel = component.create()
     #engine.load(QtCore.QUrl("file:///" + mainFilepath))
     #topLevel = engine.rootObjects()[0]
+    if not topLevel:
+        print("Errors:")
+        for error in component.errors():
+            print(error.toString())
+            return -1
     topLevel.setIcon(QtGui.QIcon(iconPath))
 
     if DEV_MODE:

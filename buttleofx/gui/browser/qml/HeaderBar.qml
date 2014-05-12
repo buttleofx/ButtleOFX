@@ -170,7 +170,7 @@ Rectangle {
                 validator: RegExpValidator {
                     regExp: if(!suggestion.isEmpty()) {
                          /suggestion.getFilteredFileItems(suggestion.folder).get(0).filepath/
-                    }
+                    } else { /.*/ }
                 }
                 onTextChanged: {
                     suggestion.folder = texteditPath.getText(0, texteditPath.cursorPosition + 1)

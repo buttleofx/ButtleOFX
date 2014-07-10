@@ -97,6 +97,9 @@ ApplicationWindow {
                                     text: currentFile.fileName
                                     width: parent.width - 10
                                     height: parent.height
+                                    anchors.horizontalCenter: parent.horizontalCenter
+                                    anchors.top: parent.top
+                                    anchors.topMargin: 2.5
                                     maximumLength: 100
                                     selectByMouse : true
                                     color: activeFocus ? activeFocusOn : activeFocusOff

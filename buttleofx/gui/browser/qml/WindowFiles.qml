@@ -63,7 +63,7 @@ Rectangle {
 
     function forceActiveFocusOnRefresh() {
         fileModel.updateFileItems(fileModel.folder)
-        winFile.selectItem(0)
+        winFile.selectItem(itemIndex)
     }
     function forceActiveFocusOnChangeIndexOnRight() {
         if(itemIndex < fileModel.size) {

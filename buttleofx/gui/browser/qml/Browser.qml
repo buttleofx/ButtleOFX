@@ -26,7 +26,7 @@ Rectangle {
         id: listPrevious
     }
 
-    FileModelBrowser{
+    FileModelBrowser {
         id: firstFile
     }
 
@@ -113,11 +113,16 @@ Rectangle {
 
 
     Keys.onPressed: {
+        if ((event.key == Qt.Key_Tab)) {
+            headerBar.forceActiveFocusOnPathWithTab()
+            event.accepted = true
+        }
+        if ((event.key == Qt.Key_Return)) {
+            files.enterFolder()
+            event.accepted = true
+        }
         if ((event.key == Qt.Key_L) && (event.modifiers & Qt.ControlModifier)) {
             headerBar.forceActiveFocusOnPath()
-            event.accepted = true
-        }if ((event.key == Qt.Key_Tab)) {
-            headerBar.forceActiveFocusOnPathWithTab()
             event.accepted = true
         }
         if ((event.key == Qt.Key_N) && (event.modifiers & Qt.ControlModifier)) {

@@ -30,6 +30,7 @@ class FileItem(QtCore.QObject):
         else:
             self._filepath = folder + "/" + fileName
         self._fileType = fileType
+        self._isSupported = supported
         
         if fileType == FileItem.Type.File:
             if supported:
@@ -38,8 +39,7 @@ class FileItem(QtCore.QObject):
                 self._fileImg = "../../img/buttons/browser/file-icon.png"
             self._seq = None
             self._fileWeight = os.stat(self._filepath).st_size
-            (_, extension) = os.path.splitext(fileName)
-            self._fileExtension = extension
+            self._fileExtension = os.path.splitext(fileName)[1]
         
         elif fileType == FileItem.Type.Folder:
             self._fileImg = "../../img/buttons/browser/folder-icon.png"
@@ -122,6 +122,10 @@ class FileItem(QtCore.QObject):
     
     def getSequence(self):
         return self._seq
+
+    @QtCore.pyqtSlot(result=bool)
+    def getSupported(self):
+        return self._isSupported
 
     filepath = QtCore.pyqtProperty(str, getFilepath, setFilepath, constant=True)
     fileType = QtCore.pyqtProperty(str, getFileType, constant=True)

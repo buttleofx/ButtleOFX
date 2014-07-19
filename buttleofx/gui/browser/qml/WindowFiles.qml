@@ -49,7 +49,7 @@ Rectangle {
         var sel = fileModel.getSelectedItems()
         // if it's an image, we assign it to the viewer
         if(sel && !sel.isEmpty()){
-            if (sel.get(0).fileType != "Folder") {
+            if (sel.get(0).fileType != "Folder" && sel.get(0).getSupported()) {
                 player.changeViewer(11) // we come to the temporary viewer
                 // we save the last node wrapper of the last view
                 player.lastNodeWrapper = _buttleData.getNodeWrapperByViewerIndex(player.lastView)

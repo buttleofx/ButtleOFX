@@ -23,6 +23,7 @@ Rectangle {
         withTab = false
         texteditPath.forceActiveFocus()
     }
+
     function forceActiveFocusOnPathWithTab() {
         withTab = true
         texteditPath.forceActiveFocus()

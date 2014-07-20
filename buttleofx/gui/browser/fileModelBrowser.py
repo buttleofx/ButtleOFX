@@ -27,6 +27,7 @@ class FileItem(QtCore.QObject):
         super(FileItem, self).__init__()
         self._filepath = os.path.join(folder, fileName)
         self._fileType = fileType
+        self._isSupported = supported
         
         if fileType == FileItem.Type.File:
             if supported:
@@ -39,8 +40,7 @@ class FileItem(QtCore.QObject):
                 self._fileWeight = os.stat(self._filepath).st_size
             except FileNotFoundError:
                 self._fileWeight = 0
-            (_, extension) = os.path.splitext(fileName)
-            self._fileExtension = extension
+            self._fileExtension = os.path.splitext(fileName)[1]
         
         elif fileType == FileItem.Type.Folder:
             self._fileImg = "../../img/buttons/browser/folder-icon.png"
@@ -65,14 +65,16 @@ class FileItem(QtCore.QObject):
             self._fileWeight = self._seq.getWeight()
             (_, extension) = os.path.splitext(seqPath)
             self._fileExtension = extension
-           
+
+    @QtCore.pyqtSlot(result=str)
     def getFilepath(self):
         return self._filepath
     
     def setFilepath(self, newpath):
         import shutil
         shutil.move(self.filepath, os.path.join(newpath, self.fileName))
-    
+
+    @QtCore.pyqtSlot(result=str)
     def getFileType(self):
         return self._fileType
     
@@ -122,6 +124,10 @@ class FileItem(QtCore.QObject):
     def getSequence(self):
         return self._seq
 
+    @QtCore.pyqtSlot(result=bool)
+    def getSupported(self):
+        return self._isSupported
+
     filepath = QtCore.pyqtProperty(str, getFilepath, setFilepath, constant=True)
     fileType = QtCore.pyqtProperty(str, getFileType, constant=True)
     fileName = QtCore.pyqtProperty(str, getFileName, setFileName, constant=True)
@@ -142,6 +148,7 @@ class FileModelBrowser(QtQuick.QQuickItem):
     
     _folder = ""
     _firstFolder = ""
+    _lastSelected = _firstFolder
     
     def __init__(self, parent=None):
         super(FileModelBrowser, self).__init__(parent)
@@ -287,7 +294,12 @@ class FileModelBrowser(QtQuick.QQuickItem):
                 selectedList.append(item)
 
         return selectedList
-    
+
+    @QtCore.pyqtSlot(result=QtCore.QObject)
+    def getLastSelected(self):
+        return self._lastSelected
+
+    @QtCore.pyqtSlot(result=QtCore.QObject)    
     def getFileItems(self):
         return self._fileItemsModel
     
@@ -297,6 +309,7 @@ class FileModelBrowser(QtQuick.QQuickItem):
             item.isSelected = False
         if index < len(self._fileItems):
             self._fileItems[index].isSelected = True
+            self._lastSelected = self._fileItems[index]
 
     @QtCore.pyqtSlot(int)
     def selectItems(self, index):

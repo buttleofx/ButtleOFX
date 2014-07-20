@@ -166,6 +166,12 @@ Rectangle {
         }
     }
 
+    Text {
+        id: hack_fontMetrics
+        text: "A"
+        visible: false
+    }
+
     ScrollView {
         anchors.fill: parent
         anchors.topMargin: 5
@@ -421,11 +427,6 @@ Rectangle {
                         Item {
                             Layout.fillWidth: true
                             implicitHeight: hack_fontMetrics.height * 3 // 3 lines of text
-                            Text {
-                                id: hack_fontMetrics
-                                text: "A"
-                                visible: false
-                            }
                             Rectangle {
                                 id: filename_background
                                 width: filename_text.width
@@ -528,7 +529,7 @@ Rectangle {
                     id: fileInRow
                     color: model.object.isSelected ? "#00b2a1" : "transparent"
                     radius: 5
-                    height: 25
+                    height: hack_fontMetrics.height * 1.5 // 1.5 lines of text
                     width: listview.width
 
                     property variant selectedFiles
@@ -546,24 +547,28 @@ Rectangle {
                         }
                     }*/
 
-                    Row {
-                        width: parent.width
+                    RowLayout {
+                        anchors.fill: parent
                         spacing: 10
+
                         Image {
-                            x: 25
                             source: model.object.fileImg
-                            sourceSize.width: 20
-                            sourceSize.height: 20
+                            sourceSize.width: parent.height
+                            sourceSize.height: parent.height
+                            Layout.fillHeight: true
+                            Layout.preferredWidth: parent.height
+                            fillMode: Image.PreserveAspectFit
                         }
 
                         Text {
                             id: textInRow
-                            x: 10
+                            Layout.fillWidth: true
+                            Layout.fillHeight: true
+                            Layout.minimumWidth: 40
 
                             text: model.object.fileName
                             color: model.object.isSelected ? "black" : "white"
                             font.bold: model.object.isSelected
-                            width: parent.width
                         }
                     }// endRow
 

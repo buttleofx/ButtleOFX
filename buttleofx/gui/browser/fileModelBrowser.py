@@ -148,7 +148,6 @@ class FileModelBrowser(QtQuick.QQuickItem):
     
     _folder = ""
     _firstFolder = ""
-    _lastSelected = _firstFolder
     
     def __init__(self, parent=None):
         super(FileModelBrowser, self).__init__(parent)
@@ -292,12 +291,14 @@ class FileModelBrowser(QtQuick.QQuickItem):
         for item in self._fileItems:
             if item.isSelected == True:
                 selectedList.append(item)
-
         return selectedList
 
     @QtCore.pyqtSlot(result=QtCore.QObject)
     def getLastSelected(self):
-        return self._lastSelected
+        for item in reversed(self._fileItems):
+            if item.isSelected == True:
+                return item
+        return None
 
     @QtCore.pyqtSlot(result=QtCore.QObject)    
     def getFileItems(self):
@@ -309,7 +310,6 @@ class FileModelBrowser(QtQuick.QQuickItem):
             item.isSelected = False
         if index < len(self._fileItems):
             self._fileItems[index].isSelected = True
-            self._lastSelected = self._fileItems[index]
 
     @QtCore.pyqtSlot(int)
     def selectItems(self, index):

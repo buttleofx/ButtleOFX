@@ -298,6 +298,9 @@ Rectangle {
 
         CheckBox {
             id: check
+            anchors.right: parent.right
+            anchors.rightMargin: 5
+
             style: CheckBoxStyle {
                 label: Text {
                     text: "Seq"

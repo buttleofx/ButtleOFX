@@ -2,8 +2,10 @@
 *~
 # vim
 .*.swp
-# xemacs
+# emacs
 *.flc
+\#*\#
+.\#*
 # MacOS
 .DS_Store
 # Windows

@@ -50,6 +50,8 @@ Rectangle {
 			id: openButton
             text: "Import"
             height: parent.height - 5
+            anchors.right: parent.right
+            anchors.rightMargin: 5
 			
 			// import selected files in the graph
             onClicked: {

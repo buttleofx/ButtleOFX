@@ -25,10 +25,7 @@ class FileItem(QtCore.QObject):
     
     def __init__(self, folder, fileName, fileType, seq, supported):
         super(FileItem, self).__init__()
-        if folder == "/":
-            self._filepath = folder + fileName
-        else:
-            self._filepath = folder + "/" + fileName
+        self._filepath = os.path.join(folder, fileName)
         self._fileType = fileType
         
         if fileType == FileItem.Type.File:
@@ -70,7 +67,7 @@ class FileItem(QtCore.QObject):
     
     def setFilepath(self, newpath):
         import shutil
-        shutil.move(self.filepath, newpath + "/" + self.fileName)
+        shutil.move(self.filepath, os.path.join(newpath, self.fileName))
     
     def getFileType(self):
         return self._fileType
@@ -79,7 +76,7 @@ class FileItem(QtCore.QObject):
         return os.path.basename(self._filepath)
     
     def setFileName(self, newName):
-        os.rename(self.filepath, os.path.dirname(self._filepath) + "/" + newName)
+        os.rename(self.filepath, os.path.join(os.path.dirname(self._filepath), newName))
         
     def getFileWeight(self):
         return self._fileWeight

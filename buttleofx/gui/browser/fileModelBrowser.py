@@ -34,7 +34,11 @@ class FileItem(QtCore.QObject):
             else:
                 self._fileImg = "../../img/buttons/browser/file-icon.png"
             self._seq = None
-            self._fileWeight = os.stat(self._filepath).st_size
+            try:
+                # may throw on bad symlink
+                self._fileWeight = os.stat(self._filepath).st_size
+            except FileNotFoundError:
+                self._fileWeight = 0
             (_, extension) = os.path.splitext(fileName)
             self._fileExtension = extension
         

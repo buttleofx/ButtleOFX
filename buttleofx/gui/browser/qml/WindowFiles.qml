@@ -558,6 +558,8 @@ Rectangle {
 
                         Text {
                             id: textInRow
+                            anchors.top: parent.top
+                            anchors.topMargin: 5
                             x: 10
 
                             text: model.object.fileName

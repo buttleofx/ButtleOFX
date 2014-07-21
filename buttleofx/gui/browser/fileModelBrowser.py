@@ -1,55 +1,57 @@
-import logging
 import os
+import logging
 
 from pyTuttle import tuttle
 
-from quickmamba.models import QObjectListModel
 from quickmamba.patterns import Singleton
 from pySequenceParser import sequenceParser
+from quickmamba.models import QObjectListModel
 
 from PyQt5 import QtGui, QtCore, QtQuick
 from PyQt5.QtWidgets import QWidget, QFileDialog
-#gui
+
 from .sequenceWrapper import SequenceWrapper
 
 
 class FileItem(QtCore.QObject):
-    
+
     _isSelected = False
-    
+
     class Type():
         """ Enum """
         File = 'File'
         Folder = 'Folder'
         Sequence = 'Sequence'
-    
+
     def __init__(self, folder, fileName, fileType, seq, supported):
         super(FileItem, self).__init__()
+
         self._filepath = os.path.join(folder, fileName)
         self._fileType = fileType
         self._isSupported = supported
-        
+
         if fileType == FileItem.Type.File:
             if supported:
                 self._fileImg = 'image://buttleofx/' + self._filepath
             else:
                 self._fileImg = "../../img/buttons/browser/file-icon.png"
-            self._seq = None
+
             try:
-                # may throw on bad symlink
+                # May throw exception on bad symlink
                 self._fileWeight = os.stat(self._filepath).st_size
             except FileNotFoundError:
                 self._fileWeight = 0
+
             self._fileExtension = os.path.splitext(fileName)[1]
-        
+            self._seq = None
+
         elif fileType == FileItem.Type.Folder:
             self._fileImg = "../../img/buttons/browser/folder-icon.png"
             self._seq = None
             self._fileWeight = 0.0
             self._fileExtension = ""
-        
+
         elif fileType == FileItem.Type.Sequence:
-            
             time = int(seq.getFirstTime() + (seq.getLastTime() - seq.getFirstTime()) * 0.5)
             seqPath = seq.getAbsoluteFilenameAt(time)
             if not os.path.exists(seqPath):
@@ -57,10 +59,12 @@ class FileItem(QtCore.QObject):
                 seqPath = seq.getAbsoluteFilenameAt(time)
 
             seqPath = seq.getAbsoluteStandardPattern()
+
             if supported:
                 self._fileImg = 'image://buttleofx/' + seqPath
             else:
                 self._fileImg = "../../img/buttons/browser/file-icon.png"
+
             self._seq = SequenceWrapper(seq)
             self._fileWeight = self._seq.getWeight()
             (_, extension) = os.path.splitext(seqPath)
@@ -69,24 +73,11 @@ class FileItem(QtCore.QObject):
     @QtCore.pyqtSlot(result=str)
     def getFilepath(self):
         return self._filepath
-    
-    def setFilepath(self, newpath):
-        import shutil
-        shutil.move(self.filepath, os.path.join(newpath, self.fileName))
 
     @QtCore.pyqtSlot(result=str)
     def getFileType(self):
         return self._fileType
-    
-    def getFileName(self):
-        return os.path.basename(self._filepath)
-    
-    def setFileName(self, newName):
-        os.rename(self.filepath, os.path.join(os.path.dirname(self._filepath), newName))
-        
-    def getFileWeight(self):
-        return self._fileWeight
-    
+
     @QtCore.pyqtSlot(result=QtCore.QSizeF)
     def getImageSize(self):
         from pyTuttle import tuttle
@@ -99,7 +90,24 @@ class FileItem(QtCore.QObject):
         width = rod.x2 - rod.x1
         height = rod.y2 - rod.y1
         return QtCore.QSizeF(width, height)
-    
+
+    @QtCore.pyqtSlot(result=bool)
+    def getSupported(self):
+        return self._isSupported
+
+    def setFilepath(self, newpath):
+        import shutil
+        shutil.move(self.filepath, os.path.join(newpath, self.fileName))
+
+    def getFileName(self):
+        return os.path.basename(self._filepath)
+
+    def setFileName(self, newName):
+        os.rename(self.filepath, os.path.join(os.path.dirname(self._filepath), newName))
+
+    def getFileWeight(self):
+        return self._fileWeight
+
     def getFileTime(self):
         from pyTuttle import tuttle
         g = tuttle.Graph()
@@ -107,36 +115,31 @@ class FileItem(QtCore.QObject):
         g.setup()
         time = node.getTimeDomain()
         return time
-    
+
     def getFileExtension(self):
         return self._fileExtension
-        
+
     def getSelected(self):
         return self._isSelected
-    
+
     def setSelected(self, isSelected):
         self._isSelected = isSelected
         self.isSelectedChange.emit()
-        
+
     def getFileImg(self):
         return self._fileImg
-    
+
     def getSequence(self):
         return self._seq
 
-    @QtCore.pyqtSlot(result=bool)
-    def getSupported(self):
-        return self._isSupported
-
+    # Info about the file
     filepath = QtCore.pyqtProperty(str, getFilepath, setFilepath, constant=True)
     fileType = QtCore.pyqtProperty(str, getFileType, constant=True)
     fileName = QtCore.pyqtProperty(str, getFileName, setFileName, constant=True)
-    imageSize = QtCore.pyqtProperty(QtCore.QSize, getImageSize, constant=True)
-
-    #Infos about the file
     fileWeight = QtCore.pyqtProperty(float, getFileWeight, constant=True)
     fileExtension = QtCore.pyqtProperty(str, getFileExtension, constant=True)
-    
+
+    imageSize = QtCore.pyqtProperty(QtCore.QSize, getImageSize, constant=True)
     isSelectedChange = QtCore.pyqtSignal()
     isSelected = QtCore.pyqtProperty(bool, getSelected, setSelected, notify=isSelectedChange)
     fileImg = QtCore.pyqtProperty(str, getFileImg, constant=True)
@@ -145,53 +148,71 @@ class FileItem(QtCore.QObject):
 
 class FileModelBrowser(QtQuick.QQuickItem):
     """Class FileModelBrowser"""
-    
+
     _folder = ""
     _firstFolder = ""
-    
+    _fileItems = []
+    _fileItemsModel = None
+    _nameFilter = "*"
+
     def __init__(self, parent=None):
         super(FileModelBrowser, self).__init__(parent)
         self._fileItemsModel = QObjectListModel(self)
         self._showSeq = False
-    
-    def getFolder(self):
-        return self._folder
 
-    @QtCore.pyqtSlot(result=str)
-    def getFirstFolder(self):
-        return self._firstFolder
+    @QtCore.pyqtSlot(str, int)
+    def changeFileName(self, newName, index):
+        if index < len(self._fileItems):
+            self._fileItems[index].fileName = newName
+        self.updateFileItems(self._folder)
 
-    @QtCore.pyqtSlot(str)
-    def setFirstFolder(self, firstFolder):
-        self._firstFolder = firstFolder
-    
-    def setFolder(self, folder):
-        self._folder = folder
-        self.updateFileItems(folder)
-        self.folderChanged.emit()
-  
     @QtCore.pyqtSlot(str)
     def createFolder(self, path):
         os.mkdir(path)
         self.updateFileItems(self._folder)
-        
+
+    @QtCore.pyqtSlot(int)
+    def deleteItem(self, index):
+        if index < len(self._fileItems):
+            if self._fileItems[index].fileType == FileItem.Type.Folder:
+                import shutil
+                shutil.rmtree(self._fileItems[index].filepath)
+            if self._fileItems[index].fileType == FileItem.Type.File:
+                os.remove(self._fileItems[index].filepath)
+        self.updateFileItems(self._folder)
+
+    @QtCore.pyqtSlot(result=bool)
+    def isEmpty(self):
+        return not self._fileItems
+
     @QtCore.pyqtSlot(int, str)
     def moveItem(self, index, newpath):
         if index < len(self._fileItems):
             self._fileItems[index].filepath = newpath
         self.updateFileItems(self._folder)
-    
-    def getFolderExists(self):
-        return os.path.exists(self._folder)
-    
-    def getParentFolder(self):
-        return os.path.dirname(self._folder)
 
-    folderChanged = QtCore.pyqtSignal()
-    folder = QtCore.pyqtProperty(str, getFolder, setFolder, notify=folderChanged)
-    exists = QtCore.pyqtProperty(bool, getFolderExists, notify=folderChanged)
-    parentFolder = QtCore.pyqtProperty(str, getParentFolder, constant=True)
-    
+    @QtCore.pyqtSlot(int)
+    def selectItem(self, index):
+        for item in self._fileItems:
+            item.isSelected = False
+        if index < len(self._fileItems):
+            self._fileItems[index].isSelected = True
+
+    @QtCore.pyqtSlot(int)
+    def selectItems(self, index):
+        if index < len(self._fileItems):
+            self._fileItems[index].isSelected = True
+
+    @QtCore.pyqtSlot(int, int)
+    def selectItemsByShift(self, begin, end):
+        if(begin > end):
+            tmp = begin
+            begin = end
+            end = tmp
+        for i in range(begin, end + 1):
+            if i < len(self._fileItems):
+                self._fileItems[i].isSelected = True
+
     @QtCore.pyqtSlot(str)
     def updateFileItems(self, folder):
         self._fileItems = []
@@ -242,7 +263,7 @@ class FileModelBrowser(QtQuick.QQuickItem):
         self._fileItems = allDirs + allFiles + allSeqs
 
         self._fileItemsModel.setObjectList(self._fileItems)
-    
+
     @QtCore.pyqtSlot(str, result=QtCore.QObject)
     def getFilteredFileItems(self, fileFilter):
         suggestions = []
@@ -257,41 +278,22 @@ class FileModelBrowser(QtQuick.QQuickItem):
                     continue
                 if d.startswith(os.path.basename(fileFilter)):
                     suggestions.append(FileItem(os.path.dirname(fileFilter), d, FileItem.Type.Folder, "", True))
-            
+
         except Exception:
             pass
         suggestions.sort(key=lambda fileItem: fileItem.fileName.lower())
-        
+
         suggestionsQt = QObjectListModel(self)
         suggestionsQt.setObjectList(suggestions)
         return suggestionsQt
-    
-    _fileItems = []
-    _fileItemsModel = None
-    
-    @QtCore.pyqtSlot(str, int)
-    def changeFileName(self, newName, index):
-        if index < len(self._fileItems):
-            self._fileItems[index].fileName = newName
-        self.updateFileItems(self._folder)
-    
-    @QtCore.pyqtSlot(int)
-    def deleteItem(self, index):
-        if index < len(self._fileItems):
-            if self._fileItems[index].fileType == FileItem.Type.Folder:
-                import shutil
-                shutil.rmtree(self._fileItems[index].filepath)
-            if self._fileItems[index].fileType == FileItem.Type.File:
-                os.remove(self._fileItems[index].filepath)
-        self.updateFileItems(self._folder)
-    
+
+    @QtCore.pyqtSlot(result=str)
+    def getFirstFolder(self):
+        return self._firstFolder
+
     @QtCore.pyqtSlot(result=QtCore.QObject)
-    def getSelectedItems(self):
-        selectedList = QObjectListModel(self)
-        for item in self._fileItems:
-            if item.isSelected == True:
-                selectedList.append(item)
-        return selectedList
+    def getFileItems(self):
+        return self._fileItemsModel
 
     @QtCore.pyqtSlot(result=QtCore.QObject)
     def getLastSelected(self):
@@ -300,63 +302,62 @@ class FileModelBrowser(QtQuick.QQuickItem):
                 return item
         return None
 
-    @QtCore.pyqtSlot(result=QtCore.QObject)    
-    def getFileItems(self):
-        return self._fileItemsModel
-    
-    @QtCore.pyqtSlot(int)
-    def selectItem(self, index):
+    @QtCore.pyqtSlot(result=QtCore.QObject)
+    def getSelectedItems(self):
+        selectedList = QObjectListModel(self)
         for item in self._fileItems:
-            item.isSelected = False
-        if index < len(self._fileItems):
-            self._fileItems[index].isSelected = True
+            if item.isSelected == True:
+                selectedList.append(item)
+        return selectedList
 
-    @QtCore.pyqtSlot(int)
-    def selectItems(self, index):
-        if index < len(self._fileItems):
-            self._fileItems[index].isSelected = True
-    
-    @QtCore.pyqtSlot(int, int)
-    def selectItemsByShift(self, begin, end):
-        if(begin > end):
-            tmp = begin
-            begin = end
-            end = tmp
-        for i in range(begin, end + 1):
-            if i < len(self._fileItems):
-                self._fileItems[i].isSelected = True
-    
+    @QtCore.pyqtSlot(str)
+    def setFirstFolder(self, firstFolder):
+        self._firstFolder = firstFolder
+
     def getFilter(self):
         return self._nameFilter
+
+    def getFolder(self):
+        return self._folder
+
+    def getFolderExists(self):
+        return os.path.exists(self._folder)
+
+    def getParentFolder(self):
+        return os.path.dirname(self._folder)
+
+    def getShowSeq(self):
+        return self._showSeq
+
+    def getSize(self):
+        return len(self._fileItems) - 1
 
     def setFilter(self, nameFilter):
         self._nameFilter = nameFilter
         self.updateFileItems(self._folder)
         self.nameFilterChange.emit()
 
-    def getSize(self):
-        return len(self._fileItems) - 1
+    def setFolder(self, folder):
+        self._folder = folder
+        self.updateFileItems(folder)
+        self.folderChanged.emit()
 
-    fileItems = QtCore.pyqtProperty(QtCore.QObject, getFileItems, notify=folderChanged)
-    _nameFilter = "*"
-    nameFilterChange = QtCore.pyqtSignal()
-    nameFilter = QtCore.pyqtProperty(str, getFilter, setFilter, notify=nameFilterChange)
-    size = QtCore.pyqtProperty(int, getSize, constant=True)
-    
-    def getShowSeq(self):
-        return self._showSeq
-    
     def setShowSeq(self, checkSeq):
         self._showSeq = checkSeq
         self.updateFileItems(self._folder)
         self.showSeqChanged.emit()
-    
+
+    folderChanged = QtCore.pyqtSignal()
+    folder = QtCore.pyqtProperty(str, getFolder, setFolder, notify=folderChanged)
+    exists = QtCore.pyqtProperty(bool, getFolderExists, notify=folderChanged)
+    parentFolder = QtCore.pyqtProperty(str, getParentFolder, constant=True)
+
+    fileItems = QtCore.pyqtProperty(QtCore.QObject, getFileItems, notify=folderChanged)
+    nameFilterChange = QtCore.pyqtSignal()
+    nameFilter = QtCore.pyqtProperty(str, getFilter, setFilter, notify=nameFilterChange)
+    size = QtCore.pyqtProperty(int, getSize, constant=True)
     showSeqChanged = QtCore.pyqtSignal()
     showSeq = QtCore.pyqtProperty(bool, getShowSeq, setShowSeq, notify=showSeqChanged)
-
-    @QtCore.pyqtSlot(result=bool)
-    def isEmpty(self):
-        return not self._fileItems
 
 
 # This class exists just because there are problems when a class extends 2 other classes (Singleton and QObject)

@@ -44,14 +44,15 @@ Rectangle {
         winFile.forceActiveFocusOnRefresh()
     }
 
-    function selectItem(index){
+    function selectItem(index) {
         fileModel.selectItem(index)
         var sel = fileModel.getSelectedItems()
-        // if it's an image, we assign it to the viewer
-        if(sel && !sel.isEmpty()){
+
+        // If it's an image, we assign it to the viewer
+        if (sel && !sel.isEmpty()) {
             if (sel.get(0).fileType != "Folder" && sel.get(0).getSupported()) {
-                player.changeViewer(11) // we come to the temporary viewer
-                // we save the last node wrapper of the last view
+                player.changeViewer(11) // We come to the temporary viewer
+                // We save the last node wrapper of the last view
                 player.lastNodeWrapper = _buttleData.getNodeWrapperByViewerIndex(player.lastView)
 
                 readerNode.nodeWrapper = _buttleData.nodeReaderWrapperForBrowser(sel.get(0).filepath)
@@ -61,12 +62,12 @@ Rectangle {
 
                 _buttleData.currentViewerNodeWrapper = readerNode.nodeWrapper
                 _buttleData.currentViewerFrame = 0
-                // we assign the node to the viewer, at the frame 0
+                // We assign the node to the viewer, at the frame 0
                 _buttleData.assignNodeToViewerIndex(readerNode.nodeWrapper, 10)
-                _buttleData.currentViewerIndex = 10 // we assign to the viewer the 10th view
+                _buttleData.currentViewerIndex = 10 // We assign to the viewer the 10th view
                 _buttleEvent.emitViewerChangedSignal()
             }
-       }
+        }
     }
 
     function forceActiveFocusOnRefresh() {
@@ -75,31 +76,32 @@ Rectangle {
     }
 
     function forceActiveFocusOnChangeIndexOnRight() {
-        if(itemIndex < fileModel.size) {
+        if (itemIndex < fileModel.size) {
             winFile.selectItem(++itemIndex)
         }
     }
 
     function forceActiveFocusOnChangeIndexOnLeft() {
-        if(itemIndex > 0) {
+        if (itemIndex > 0) {
             winFile.selectItem(--itemIndex)
         }
     }
 
     function forceActiveFocusOnChangeIndexOnDown() {
-        if(itemIndex + winFile.nbCell  < fileModel.size) {
+        if (itemIndex + winFile.nbCell  < fileModel.size) {
             itemIndex += winFile.nbCell
             winFile.selectItem(itemIndex)
-        }else {
+        } else {
             itemIndex = fileModel.size
             winFile.selectItem(itemIndex)
         }
     }
+
     function forceActiveFocusOnChangeIndexOnUp() {
-        if(itemIndex - winFile.nbCell  >= 0) {
+        if (itemIndex - winFile.nbCell  >= 0) {
             itemIndex -= winFile.nbCell
             winFile.selectItem(itemIndex)
-        }else {
+        } else {
             itemIndex = 0
             winFile.selectItem(itemIndex)
         }
@@ -193,45 +195,47 @@ Rectangle {
         visible: viewList ? false : true
 
         style: ScrollViewStyle {
-                        scrollBarBackground: Rectangle {
-                            id: scrollBar
-                            width:15
-                            color: "#212121"
-                            border.width: 1
-                            border.color: "#333"
-                        }
-                        decrementControl : Rectangle {
-                            id: scrollLower
-                            width:15
-                            height:15
-                            color: styleData.pressed? "#212121" : "#343434"
-                            border.width: 1
-                            border.color: "#333"
-                            radius: 3
+            scrollBarBackground: Rectangle {
+                id: scrollBar
+                width:15
+                color: "#212121"
+                border.width: 1
+                border.color: "#333"
+            }
 
-                            Image {
-                                id: arrow
-                                source: "file:///" + _buttleData.buttlePath + "/gui/img/buttons/params/arrow2.png"
-                                x:4
-                                y:4
-                            }
-                        }
-                        incrementControl : Rectangle {
-                            id: scrollHigher
-                            width:15
-                            height:15
-                            color: styleData.pressed? "#212121" : "#343434"
-                            border.width: 1
-                            border.color: "#333"
-                            radius: 3
-                            Image {
-                                id: arrow
-                                source: "file:///" + _buttleData.buttlePath + "/gui/img/buttons/params/arrow.png"
-                                x:4
-                                y:4
-                            }
-                        }
-                    }
+            decrementControl : Rectangle {
+                id: scrollLower
+                width:15
+                height:15
+                color: styleData.pressed? "#212121" : "#343434"
+                border.width: 1
+                border.color: "#333"
+                radius: 3
+
+                Image {
+                    id: arrow
+                    source: "file:///" + _buttleData.buttlePath + "/gui/img/buttons/params/arrow2.png"
+                    x:4
+                    y:4
+                }
+            }
+
+            incrementControl : Rectangle {
+                id: scrollHigher
+                width:15
+                height:15
+                color: styleData.pressed? "#212121" : "#343434"
+                border.width: 1
+                border.color: "#333"
+                radius: 3
+                Image {
+                    id: arrow
+                    source: "file:///" + _buttleData.buttlePath + "/gui/img/buttons/params/arrow.png"
+                    x:4
+                    y:4
+                }
+            }
+        }
 
         GridView {
             id: gridview
@@ -312,9 +316,9 @@ Rectangle {
 
                             if (mouse.button == Qt.RightButton)
                                 winFile.showEditFile(rootFileItem_mouseArea.mapToItem(null, mouse.x, mouse.y))
-                                fileModel.selectItem(index)
-                                fileInfo.currentFile = fileModel.getSelectedItems() ? fileModel.getSelectedItems().get(0) : undefined
-                                //options.popup()
+                            fileModel.selectItem(index)
+                            fileInfo.currentFile = fileModel.getSelectedItems() ? fileModel.getSelectedItems().get(0) : undefined
+                            //options.popup()
 
 
                             //if shift:
@@ -339,42 +343,42 @@ Rectangle {
                             winFile.changeSelectedList(sel)
 
                             // if it's an image, we assign it to the viewer
-                             if (model.object.fileType != "Folder") {
-                                 player.changeViewer(11) // we come to the temporary viewer
-                                 // we save the last node wrapper of the last view
-                                 player.lastNodeWrapper = _buttleData.getNodeWrapperByViewerIndex(player.lastView)
+                            if (model.object.fileType != "Folder") {
+                                player.changeViewer(11) // we come to the temporary viewer
+                                // we save the last node wrapper of the last view
+                                player.lastNodeWrapper = _buttleData.getNodeWrapperByViewerIndex(player.lastView)
 
-                                 readerNode.nodeWrapper = _buttleData.nodeReaderWrapperForBrowser(model.object.filepath)
+                                readerNode.nodeWrapper = _buttleData.nodeReaderWrapperForBrowser(model.object.filepath)
 
-                                 _buttleData.currentGraphIsGraphBrowser()
-                                 _buttleData.currentGraphWrapper = _buttleData.graphBrowserWrapper
+                                _buttleData.currentGraphIsGraphBrowser()
+                                _buttleData.currentGraphWrapper = _buttleData.graphBrowserWrapper
 
-                                 _buttleData.currentViewerNodeWrapper = readerNode.nodeWrapper
-                                 _buttleData.currentViewerFrame = 0
-                                 // we assign the node to the viewer, at the frame 0
-                                 _buttleData.assignNodeToViewerIndex(readerNode.nodeWrapper, 10)
-                                 _buttleData.currentViewerIndex = 10 // we assign to the viewer the 10th view
-                                 _buttleEvent.emitViewerChangedSignal()
-                             }
+                                _buttleData.currentViewerNodeWrapper = readerNode.nodeWrapper
+                                _buttleData.currentViewerFrame = 0
+                                // we assign the node to the viewer, at the frame 0
+                                _buttleData.assignNodeToViewerIndex(readerNode.nodeWrapper, 10)
+                                _buttleData.currentViewerIndex = 10 // we assign to the viewer the 10th view
+                                _buttleEvent.emitViewerChangedSignal()
+                            }
                         }
 
                         onDoubleClicked: {
                             // if it's an image, we create a node
-                             if (model.object.fileType != "Folder") {
-                                 _buttleData.currentGraphWrapper = _buttleData.graphWrapper
-                                 _buttleData.currentGraphIsGraph()
-                                 // if before the viewer was showing an image from the browser, we change the currentView
-                                 if (_buttleData.currentViewerIndex > 9){
-                                     _buttleData.currentViewerIndex = player.lastView
-                                     if (player.lastNodeWrapper != undefined)
-                                         _buttleData.currentViewerNodeWrapper = player.lastNodeWrapper
-                                     player.changeViewer(player.lastView)
-                                 }
+                            if (model.object.fileType != "Folder") {
+                                _buttleData.currentGraphWrapper = _buttleData.graphWrapper
+                                _buttleData.currentGraphIsGraph()
+                                // if before the viewer was showing an image from the browser, we change the currentView
+                                if (_buttleData.currentViewerIndex > 9){
+                                    _buttleData.currentViewerIndex = player.lastView
+                                    if (player.lastNodeWrapper != undefined)
+                                        _buttleData.currentViewerNodeWrapper = player.lastNodeWrapper
+                                    player.changeViewer(player.lastView)
+                                }
 
-                                 _buttleManager.nodeManager.dropFile(model.object.filepath, 10, 10)
-                             } else {
-                                 winFile.goToFolder(model.object.filepath)
-                             }
+                                _buttleManager.nodeManager.dropFile(model.object.filepath, 10, 10)
+                            } else {
+                                winFile.goToFolder(model.object.filepath)
+                            }
                         }
                     }
 
@@ -483,45 +487,45 @@ Rectangle {
         visible: viewList
 
         style: ScrollViewStyle {
-                        scrollBarBackground: Rectangle {
-                            id: scrollBar2
-                            width:15
-                            color: "#212121"
-                            border.width: 1
-                            border.color: "#333"
-                        }
-                        decrementControl : Rectangle {
-                            id: scrollLower2
-                            width:15
-                            height:15
-                            color: styleData.pressed? "#212121" : "#343434"
-                            border.width: 1
-                            border.color: "#333"
-                            radius: 3
-                            Image{
-                                id: arrowBis2
-                                source: "file:///" + _buttleData.buttlePath + "/gui/img/buttons/params/arrow2.png"
-                                x:4
-                                y:4
-                            }
-                        }
-                        incrementControl : Rectangle {
-                            id: scrollHigher2
-                            width:15
-                            height:15
-                            color: styleData.pressed? "#212121" : "#343434"
-                            border.width: 1
-                            border.color: "#333"
-                            radius: 3
+            scrollBarBackground: Rectangle {
+                id: scrollBar2
+                width:15
+                color: "#212121"
+                border.width: 1
+                border.color: "#333"
+            }
+            decrementControl : Rectangle {
+                id: scrollLower2
+                width:15
+                height:15
+                color: styleData.pressed? "#212121" : "#343434"
+                border.width: 1
+                border.color: "#333"
+                radius: 3
+                Image{
+                    id: arrowBis2
+                    source: "file:///" + _buttleData.buttlePath + "/gui/img/buttons/params/arrow2.png"
+                    x:4
+                    y:4
+                }
+            }
+            incrementControl : Rectangle {
+                id: scrollHigher2
+                width:15
+                height:15
+                color: styleData.pressed? "#212121" : "#343434"
+                border.width: 1
+                border.color: "#333"
+                radius: 3
 
-                            Image {
-                                id: arrow
-                                source: "file:///" + _buttleData.buttlePath + "/gui/img/buttons/params/arrow.png"
-                                x:4
-                                y:4
-                            }
-                        }
-                    }
+                Image {
+                    id: arrow
+                    source: "file:///" + _buttleData.buttlePath + "/gui/img/buttons/params/arrow.png"
+                    x:4
+                    y:4
+                }
+            }
+        }
 
         ListView {
             id: listview
@@ -589,18 +593,18 @@ Rectangle {
                     Drag.hotSpot.x: 20
                     Drag.hotSpot.y: 20
                     //Drag.dragType: Drag.Automatic
-                   // Drag.mimeData: {"urls": [fileInRow.selectedFiles]}
+                    // Drag.mimeData: {"urls": [fileInRow.selectedFiles]}
                     //Drag.mimeData: {"text/plain": file.filePath, "text/uri-list": ""}
                     // Drag.keys: "text/uri-list"
                     Drag.keys: "internFileDrag"
 
                     StateGroup {
-                      id: fileStateRow
-                      states: State {
-                          name: "dragging"
-                          when: dragMouseAreaRow.pressed
-                          PropertyChanges { target: fileInRow; x: fileInRow.x; y: fileInRow.y }
-                      }
+                        id: fileStateRow
+                        states: State {
+                            name: "dragging"
+                            when: dragMouseAreaRow.pressed
+                            PropertyChanges { target: fileInRow; x: fileInRow.x; y: fileInRow.y }
+                        }
                     }
 
                     MouseArea {
@@ -661,21 +665,21 @@ Rectangle {
 
                         onDoubleClicked: {
                             // if it's an image, we create a node
-                             if (model.object.fileType != "Folder") {
-                                 _buttleData.currentGraphWrapper = _buttleData.graphWrapper
-                                 _buttleData.currentGraphIsGraph()
-                                 // if before the viewer was showing an image from the browser, we change the currentView
-                                 if (_buttleData.currentViewerIndex > 9){
-                                     _buttleData.currentViewerIndex = player.lastView
-                                     if (player.lastNodeWrapper != undefined)
-                                         _buttleData.currentViewerNodeWrapper = player.lastNodeWrapper
-                                     player.changeViewer(player.lastView)
-                                 }
+                            if (model.object.fileType != "Folder") {
+                                _buttleData.currentGraphWrapper = _buttleData.graphWrapper
+                                _buttleData.currentGraphIsGraph()
+                                // if before the viewer was showing an image from the browser, we change the currentView
+                                if (_buttleData.currentViewerIndex > 9){
+                                    _buttleData.currentViewerIndex = player.lastView
+                                    if (player.lastNodeWrapper != undefined)
+                                        _buttleData.currentViewerNodeWrapper = player.lastNodeWrapper
+                                    player.changeViewer(player.lastView)
+                                }
 
-                                 _buttleManager.nodeManager.dropFile(model.object.filepath, 10, 10)
-                             } else {
-                                 winFile.goToFolder(model.object.filepath)
-                             }
+                                _buttleManager.nodeManager.dropFile(model.object.filepath, 10, 10)
+                            } else {
+                                winFile.goToFolder(model.object.filepath)
+                            }
                         }
                     }
                 }// end Rectangle

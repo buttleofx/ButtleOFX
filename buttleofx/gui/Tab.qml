@@ -23,6 +23,7 @@ Item {
             implicitWidth: 100
             implicitHeight: 25
             color: tabBar.tabColor
+
             Text {
                 id: tabLabel
                 anchors.top: parent.top
@@ -42,9 +43,9 @@ Item {
                 anchors.topMargin: 2
 
                 iconSource:
-                    if (hovered){
+                    if (hovered) {
                         "img/icons/close_hover.png"
-                    }else{
+                    } else {
                         "img/icons/close.png"
                     }
 
@@ -68,9 +69,9 @@ Item {
                 anchors.topMargin: 2
 
                 iconSource:
-                    if (hovered){
+                    if (hovered) {
                         "img/icons/fullscreen_hover.png"
-                    }else{
+                    } else {
                         "img/icons/fullscreen.png"
                     }
 
@@ -84,6 +85,6 @@ Item {
 
                 onClicked: fullscreenClicked(true)
             }
-        }//tab
-    }//Row
-}//tabBar
+        } // Tab
+    } // Row
+} // Tab bar

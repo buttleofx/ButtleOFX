@@ -1,7 +1,6 @@
-from PyQt5 import QtCore, QtWidgets, QtQuick, QtQml
-
 import sys
 import os
+from PyQt5 import QtCore, QtWidgets, QtQuick, QtQml
 
 currentFilePath = os.path.dirname(os.path.abspath(__file__))
 quickmambaPath = os.path.join(currentFilePath, '../../../QuickMamba')

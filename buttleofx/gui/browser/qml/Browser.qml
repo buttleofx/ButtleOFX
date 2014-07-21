@@ -6,7 +6,7 @@ import ButtleFileModel 1.0
 import "../../../gui"
 
 Rectangle {
-	id: browser
+    id: browser
     color: "#353535"
 
     signal buttonCloseClicked(bool clicked)
@@ -44,17 +44,17 @@ Rectangle {
         anchors.fill: parent
         anchors.topMargin: tabBar.height
 
-	    HeaderBar {
+        HeaderBar {
             id: headerBar
             y: tabBar.height
+            z: files.z + 1
             Layout.fillWidth: true
             Layout.preferredHeight: 40
-
-           	z: files.z + 1
 
             listPrevious: listPrevious
             parentFolder: m.fileFolder
             folder: m.directory
+
             onChangeFolder: {
                 m.directory = folder
             }
@@ -64,7 +64,7 @@ Rectangle {
             onChangeSeq: {
                 m.showSeq = seq
             }
-	    }
+        }
 
         WindowFiles {
             id: files
@@ -76,12 +76,12 @@ Rectangle {
             showSeq: m.showSeq
             viewList: headerBar.isInListView
             folder: m.directory
+            filterName: m.filter
+
             onGoToFolder: {
                 listPrevious.append({"url": m.directory})
                 m.directory= newFolder
             }
-            filterName: m.filter
-
             onChangeFileFolder: {
                 m.fileFolder = fileFolder
             }
@@ -93,8 +93,8 @@ Rectangle {
             }
         }
 
-	    FooterBar {
-		    id: footerBar
+        FooterBar {
+            id: footerBar
             Layout.fillWidth: true
             Layout.preferredHeight: 40
 
@@ -107,17 +107,16 @@ Rectangle {
                 listPrevious.append({"url": m.directory})
                 m.directory = newFolder
             }
-	    }
-
+        }
     }
 
 
     Keys.onPressed: {
-        if ((event.key == Qt.Key_Tab)) {
+        if (event.key == Qt.Key_Tab) {
             headerBar.forceActiveFocusOnPathWithTab()
             event.accepted = true
         }
-        if ((event.key == Qt.Key_Return)) {
+        if (event.key == Qt.Key_Return) {
             files.enterFolder()
             event.accepted = true
         }
@@ -137,7 +136,7 @@ Rectangle {
             files.forceActiveFocusOnRefresh()
             event.accepted = true
         }
-        if (event.key == Qt.Key_Delete){
+        if (event.key == Qt.Key_Delete) {
             files.forceActiveFocusOnDelete()
             event.accepted = true
         }
@@ -160,4 +159,3 @@ Rectangle {
     }
 
 }
-

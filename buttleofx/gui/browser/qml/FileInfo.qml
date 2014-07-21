@@ -31,16 +31,17 @@ ApplicationWindow {
     color: fileInfo.background
 
     onVisibleChanged: {
-        if( visible )
+        if (visible)
             rootMouseArea.forceActiveFocus()
     }
+
     MouseArea {
         id: rootMouseArea
         anchors.fill: parent
         hoverEnabled: true
         onContainsMouseChanged: {
             // Hack TODO: need another solution to hide the window
-            if( ! containsMouse )
+            if (!containsMouse)
             {
                 fileInfo.visible = ! ( mouseX <= 3 || mouseY <= 3 ||
                                        mouseX >= rootMouseArea.width - 3 || mouseY >= rootMouseArea.height - 3 )
@@ -115,6 +116,7 @@ ApplicationWindow {
                                     }
 
                                 }
+
                                 MouseArea {
                                     anchors.fill: parent
                                     acceptedButtons: Qt.RightButton
@@ -158,7 +160,7 @@ ApplicationWindow {
                                         implicitWidth: 200
                                         clip: true
                                         color: "transparent"
-                                        Text{
+                                        Text {
                                             id: fileExtensionInput
                                             text: currentFile.fileExtension
                                             color: "grey"
@@ -183,7 +185,7 @@ ApplicationWindow {
                                         implicitWidth: 200
                                         clip: true
                                         color: "transparent"
-                                        Text{
+                                        Text {
                                             id: fileWeightInput
                                             text: (currentFile.fileWeight > 1000000 ? (currentFile.fileWeight/1000000).toFixed(2) +" Mo" : (currentFile.fileWeight/1000).toFixed(2) + " Ko")
                                             color: "grey"
@@ -246,22 +248,21 @@ ApplicationWindow {
         }
     }
 
-/*
-    MessageDialog {
-        id: deleteMessage
-        title: "Delete?"
-        icon: StandardIcon.Warning
-        text: "Do you really want to delete " + currentFile.fileName + "?"
-        standardButtons: StandardButton.No | StandardButton.Yes
-        onYes: {
-            deleteItem()
-            console.log("deleted")
-            editFile=false
-        }
-        onNo: {
-            console.log("didn't delete")
-        }
-    }
-*/
+    /*
+      MessageDialog {
+      id: deleteMessage
+      title: "Delete?"
+      icon: StandardIcon.Warning
+      text: "Do you really want to delete " + currentFile.fileName + "?"
+      standardButtons: StandardButton.No | StandardButton.Yes
+      onYes: {
+      deleteItem()
+      console.log("deleted")
+      editFile=false
+      }
+      onNo: {
+      console.log("didn't delete")
+      }
+      }
+    */
 }
-

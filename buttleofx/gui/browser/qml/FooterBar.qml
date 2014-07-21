@@ -3,7 +3,7 @@ import QtQuick.Layouts 1.0
 import QtQuick.Controls 1.0
 
 Rectangle {
-	id: footer
+    id: footer
     color: "#141414"
 
     property string filter: "*"
@@ -14,64 +14,63 @@ Rectangle {
     signal openFolder(string newFolder)
 
     RowLayout {
-		anchors.fill: parent
+        anchors.fill: parent
         spacing: 6
         anchors.leftMargin: spacing
         anchors.rightMargin: spacing
 
         Item {
-			Layout.fillHeight: true
-			Layout.fillWidth: true
+            Layout.fillHeight: true
+            Layout.fillWidth: true
         }
 
         Text {
             id: nbOfFiles
             text: {
-                if(selected.count > 1){
+                if (selected.count > 1) {
                     selected.count + " files selected"
-                }else if(selected.count == 1){
+                } else if (selected.count == 1) {
                     selected.get(0).fileType == "Sequence" ? nbInSeq + " files in Sequence" : ""
-                }else{
+                } else {
                     ""
                 }
             }
+
             color: "white"
         }
 
         ComboBox {
             width: 200
-            model: [ "*", "Tuttle Readable" ]
+            model: ["*", "Tuttle Readable"]
 
             onCurrentTextChanged: {
                 changeFilter(currentText)
-                //console.log("currentText = " + currentText)
+                // console.log("currentText = " + currentText)
             }
         }
 
-		Button{
-			id: openButton
+        Button {
+            id: openButton
             text: "Import"
             height: parent.height
-			
-			// import selected files in the graph
+
+            // Import selected files in the graph
             onClicked: {
                 _buttleData.currentGraphWrapper = _buttleData.graphWrapper
                 _buttleData.currentGraphIsGraph()
-                // if before the viewer was showing an image from the brower, we change the currentView
-                if (_buttleData.currentViewerIndex > 9){
+                // If before the viewer was showing an image from the brower, we change the currentView
+                if (_buttleData.currentViewerIndex > 9) {
                     _buttleData.currentViewerIndex = player.lastView
                     if (player.lastNodeWrapper != undefined)
                         _buttleData.currentViewerNodeWrapper = player.lastNodeWrapper
                     player.changeViewer(player.lastView)
                 }
-                
-                for(var i=0; i< selected.count; ++i)
+
+                for (var i=0; i < selected.count; ++i)
                 {
                     _buttleManager.nodeManager.dropFile(selected.get(i).filepath, 10*i, 10*i)
                 }
-
             }
-		}
-	}
+        }
+    }
 }
-

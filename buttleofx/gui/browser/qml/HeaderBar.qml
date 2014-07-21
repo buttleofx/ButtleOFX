@@ -51,19 +51,19 @@ Rectangle {
             height: 15
 
             iconSource:
-                if (hovered){
-                    "../../img/buttons/browser/previous_hover.png"
-                }else{
-                    "../../img/buttons/browser/previous.png"
-                }
+            if (hovered) {
+                "../../img/buttons/browser/previous_hover.png"
+            } else {
+                "../../img/buttons/browser/previous.png"
+            }
 
             style:
-                ButtonStyle {
-                    background: Rectangle {
-                        anchors.fill: parent
-                        color: "transparent"
-                    }
+            ButtonStyle {
+                background: Rectangle {
+                    anchors.fill: parent
+                    color: "transparent"
                 }
+            }
 
             onClicked: {
                 if (listPrevious.count > 0)
@@ -81,19 +81,19 @@ Rectangle {
             height: 15
 
             iconSource:
-                if (hovered){
-                    "../../img/buttons/browser/next_hover.png"
-                }else{
-                    "../../img/buttons/browser/next.png"
-                }
+            if (hovered) {
+                "../../img/buttons/browser/next_hover.png"
+            } else {
+                "../../img/buttons/browser/next.png"
+            }
 
             style:
-                ButtonStyle {
-                    background: Rectangle {
-                        anchors.fill: parent
-                        color: "transparent"
-                    }
+            ButtonStyle {
+                background: Rectangle {
+                    anchors.fill: parent
+                    color: "transparent"
                 }
+            }
 
             onClicked: {
                 if (nextList.count > 0)
@@ -111,19 +111,19 @@ Rectangle {
             height: 15
 
             iconSource:
-                if (hovered){
-                    "../../img/buttons/browser/parent_hover.png"
-                }else{
-                    "../../img/buttons/browser/parent.png"
-                }
+            if (hovered) {
+                "../../img/buttons/browser/parent_hover.png"
+            } else {
+                "../../img/buttons/browser/parent.png"
+            }
 
             style:
-                ButtonStyle {
-                    background: Rectangle {
-                        anchors.fill: parent
-                        color: "transparent"
-                    }
+            ButtonStyle {
+                background: Rectangle {
+                    anchors.fill: parent
+                    color: "transparent"
                 }
+            }
 
             onClicked: changeFolder(parentFolder)
         }
@@ -152,34 +152,35 @@ Rectangle {
                 selectionColor: "#00b2a1"
 
                 onAccepted: {
-                    if(acceptableInput) {
+                    if (acceptableInput) {
                         listPrevious.append({"url": headerBar.folder})
                         changeFolder(text)
                         textEditContainer.forceActiveFocus()
                     }
                 }
-                onFocusChanged:{
-                    if(texteditPath.focus) {
-                        if(!withTab) {
+                onFocusChanged: {
+                    if (texteditPath.focus) {
+                        if (!withTab) {
                             selectAll()
                         }
-                    }else {
-                        if(acceptableInput) {
+                    } else {
+                        if (acceptableInput) {
                             listPrevious.append({"url": headerBar.folder})
                             changeFolder(text)
                         }
                     }
-                }
-                validator: RegExpValidator {
-                    regExp: if(!suggestion.isEmpty()) {
-                         /suggestion.getFilteredFileItems(suggestion.folder).get(0).filepath/
-                    } else { /.*/ }
                 }
                 onTextChanged: {
                     suggestion.folder = texteditPath.getText(0, texteditPath.cursorPosition + 1)
                 }
                 onCursorPositionChanged: {
                     suggestion.folder = texteditPath.getText(0, texteditPath.cursorPosition + 1)
+                }
+
+                validator: RegExpValidator {
+                    regExp: if (!suggestion.isEmpty()) {
+                            /suggestion.getFilteredFileItems(suggestion.folder).get(0).filepath/
+                    } else { /.*/ }
                 }
 
                 Keys.onTabPressed: {
@@ -213,11 +214,12 @@ Rectangle {
                     onObjectAdded: suggestionsMenu.insertItem(index, object)
                     onObjectRemoved: suggestionsMenu.removeItem(object)
                 }
+
                 function show() {
                     // Retrieve position of last "/" instead of cursorRectangle.x
                     var index = suggestion.folder.lastIndexOf("/")
                     var x = 0
-                    if( index != -1 )
+                    if (index != -1)
                     {
                         var rect = texteditPath.positionToRectangle(index)
                         x = rect.x
@@ -233,19 +235,19 @@ Rectangle {
             width: 1
             height: 1
 
-            iconSource: if (hovered){
-                            "../../img/buttons/browser/refresh_hover.png"
-                        }else{
-                            "../../img/buttons/browser/refresh.png"
-                        }
+            iconSource: if (hovered) {
+                "../../img/buttons/browser/refresh_hover.png"
+            } else {
+                "../../img/buttons/browser/refresh.png"
+            }
 
             style:
-                ButtonStyle {
-                    background: Rectangle {
-                        anchors.fill: parent
-                        color: "transparent"
-                    }
+            ButtonStyle {
+                background: Rectangle {
+                    anchors.fill: parent
+                    color: "transparent"
                 }
+            }
 
             onClicked: refreshFolder()
         }
@@ -255,11 +257,11 @@ Rectangle {
             width: 12
             height: 12
 
-            iconSource: if (hovered){
-                            "../../img/buttons/browser/listview_hover.png"
-                        }else{
-                            "../../img/buttons/browser/listview.png"
-                        }
+            iconSource: if (hovered) {
+                "../../img/buttons/browser/listview_hover.png"
+            } else {
+                "../../img/buttons/browser/listview.png"
+            }
 
             states: [
                 State {
@@ -267,11 +269,11 @@ Rectangle {
                     when: headerBar.isInListView == true
                     PropertyChanges {
                         target: view;
-                        iconSource: if (hovered){
-                                        "../../img/buttons/browser/gridview_hover.png"
-                                    }else{
-                                        "../../img/buttons/browser/gridview.png"
-                                    }
+                        iconSource: if (hovered) {
+                            "../../img/buttons/browser/gridview_hover.png"
+                        } else {
+                            "../../img/buttons/browser/gridview.png"
+                        }
                     }
                 },
                 State {
@@ -279,24 +281,24 @@ Rectangle {
                     when: headerBar.isInListView == false
                     PropertyChanges {
                         target: view;
-                        iconSource: if (hovered){
-                                        "../../img/buttons/browser/listview_hover.png"
-                                    }else{
-                                        "../../img/buttons/browser/listview.png"
-                                    }
+                        iconSource: if (hovered) {
+                            "../../img/buttons/browser/listview_hover.png"
+                        } else {
+                            "../../img/buttons/browser/listview.png"
+                        }
                     }
                 }
             ]
 
             style:
-                ButtonStyle {
-                    background: Rectangle {
-                        anchors.fill: parent
-                        color: "transparent"
-                    }
+            ButtonStyle {
+                background: Rectangle {
+                    anchors.fill: parent
+                    color: "transparent"
                 }
+            }
 
-            onClicked: if(isInListView) {isInListView = false} else {isInListView = true}
+            onClicked: if (isInListView) {isInListView = false} else {isInListView = true}
         }
 
         CheckBox {
@@ -311,8 +313,5 @@ Rectangle {
 
             onClicked: headerBar.changeSeq(check.checked)
         }
-
-
-	}
-
+    }
 }

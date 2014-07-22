@@ -9,25 +9,19 @@ Rectangle {
     Keys.onPressed: {
         // Graph toolbar
         if ((event.key == Qt.Key_N) && (event.modifiers & Qt.ControlModifier)){
-            //the fileDialog is opened and closed because the first which appear doesn't work
             if(!_buttleData.graphCanBeSaved){
                 _buttleData.newData()
             }
             else{
                 newGraph.open()
-                newGraph.close()
-                newGraph.open()
             }
         }
 
         if ((event.key == Qt.Key_O) && (event.modifiers & Qt.ControlModifier)){
-            //the fileDialog is opened and closed because the first which appear doesn't work
             if(!_buttleData.graphCanBeSaved){
                 finderLoadGraph.open()
             }
             else{
-                openGraph.open()
-                openGraph.close()
                 openGraph.open()
             }
         }

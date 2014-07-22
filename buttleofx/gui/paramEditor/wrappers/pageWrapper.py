@@ -1,23 +1,22 @@
-from .paramWrapper import ParamWrapper
-
 from PyQt5 import QtCore
+from .paramWrapper import ParamWrapper
 
 
 class PageWrapper(ParamWrapper):
     """
-        Gui class, which maps a ParamPage.
+        GUI class, which maps a ParamPage.
     """
 
     def __init__(self, param):
         ParamWrapper.__init__(self, param)
 
-    # #################### getters ####################
+    #################################################### Methods private to this class ##################################################
 
     def getLabel(self):
         return self._param.getLabel()
 
-    changed = QtCore.pyqtSignal()
+    #################################################### Data exposed to QML ##################################################
 
-    # ################################################## DATA EXPOSED TO QML ##################################################
+    changed = QtCore.pyqtSignal()
 
     label = QtCore.pyqtProperty(str, getLabel, constant=True)

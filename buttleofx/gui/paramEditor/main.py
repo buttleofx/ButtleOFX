@@ -1,17 +1,17 @@
-# graph
+import sys
+import os
+
 from buttleofx.core.graph import Graph
 from buttleofx.gui.graph import GraphWrapper
-# undo_redo
+
+from PyQt5 import QtCore, QtWidgets, QtQuick
+
 from buttleofx.core.undo_redo.manageTools import CommandManager
-# params
+
 from buttleofx.gui.paramEditor.params import ParamInt
 from buttleofx.gui.paramEditor.params import ParamString
 from buttleofx.gui.paramEditor.wrappers import ParamEditorWrapper
 
-from PyQt5 import QtCore, QtWidgets, QtQuick
-
-import sys
-import os
 
 currentFilePath = os.path.dirname(os.path.abspath(__file__))
 
@@ -28,21 +28,21 @@ if __name__ == '__main__':
             ParamString(defaultValue="somethingelse.jpg", stringType="type2")
     ]
 
-    # create undo-redo context
+    # Create undo-redo context
     cmdManager = CommandManager()
     cmdManager.setActive()
     cmdManager.clean()
 
-    # data
-    # graph and graphWrapper
+    # Data
+    # Graph and graphWrapper
     graph = Graph()
     graphWrapper = GraphWrapper(graph, view)
 
-    # test node creation
+    # Test node creation
     graph.createNode("Blur", cmdManager)
     graphWrapper.__str__()
 
-    # params
+    # Params
     paramList = []
     for node in graph.getNodes():
         nodeName = ParamString(defaultValue=node.getName(), stringType="Name")
@@ -74,5 +74,4 @@ if __name__ == '__main__':
     view.setResizeMode(QtQuick.QQuickView.SizeRootObjectToView)
 
     view.show()
-
     app.exec_()

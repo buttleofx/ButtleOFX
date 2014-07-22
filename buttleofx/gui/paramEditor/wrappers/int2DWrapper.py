@@ -1,17 +1,16 @@
-from .paramWrapper import ParamWrapper
-
 from PyQt5 import QtCore
+from .paramWrapper import ParamWrapper
 
 
 class Int2DWrapper(ParamWrapper):
     """
-        Gui class, which maps a ParamInt2D.
+        GUI class, which maps a ParamInt2D.
     """
 
     def __init__(self, param):
         ParamWrapper.__init__(self, param)
 
-    #################### getters ####################
+    #################################################### Methods exposed to QML ##################################################
 
     @QtCore.pyqtSlot(result=int)
     def getDefaultValue1(self):
@@ -21,11 +20,9 @@ class Int2DWrapper(ParamWrapper):
     def getDefaultValue2(self):
         return self._param.getDefaultValue2()
 
-    def getValue1(self):
-        return self._param.getValue1()
+    #################################################### Methods private to this class ##################################################
 
-    def getValue2(self):
-        return self._param.getValue2()
+    ### Getters ###
 
     def getMaximum1(self):
         return self._param.getMaximum1()
@@ -39,13 +36,19 @@ class Int2DWrapper(ParamWrapper):
     def getMinimum2(self):
         return self._param.getMinimum2()
 
+    def getValue1(self):
+        return self._param.getValue1()
+
+    def getValue2(self):
+        return self._param.getValue2()
+
     def getValue1HasChanged(self):
         return self._param.getValue1HasChanged()
 
     def getValue2HasChanged(self):
         return self._param.getValue2HasChanged()
 
-    #################### setters ####################
+    ### Setters ###
 
     def setValue1(self, value):
         self._param.setValue1(value)
@@ -59,9 +62,9 @@ class Int2DWrapper(ParamWrapper):
     def setValue2HasChanged(self, changed):
         self._param.setValue2HasChanged(changed)
 
-    changed = QtCore.pyqtSignal()
+    ################################################## Data exposed to QML ##################################################
 
-    ################################################## DATA EXPOSED TO QML ##################################################
+    changed = QtCore.pyqtSignal()
 
     value1 = QtCore.pyqtProperty(int, getValue1, setValue1, notify=changed)
     value2 = QtCore.pyqtProperty(int, getValue2, setValue2, notify=changed)

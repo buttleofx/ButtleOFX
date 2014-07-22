@@ -1,28 +1,35 @@
-from .paramWrapper import ParamWrapper
-
 from PyQt5 import QtCore
+from .paramWrapper import ParamWrapper
 
 
 class DoubleWrapper(ParamWrapper):
     """
-        Gui class, which maps a ParamDouble.
+        GUI class, which maps a ParamDouble.
     """
 
     def __init__(self, param):
         ParamWrapper.__init__(self, param)
 
-    #################### getters ####################
+    ################################################## Methods exposed to QML ##################################################
 
     @QtCore.pyqtSlot(result=float)
     def getDefaultValue(self):
         return self._param.getDefaultValue()
 
-    def getValue(self):
-        return self._param.getValue()
-
     @QtCore.pyqtSlot(result=float)
     def getOldValue(self):
         return self._param.getOldValue()
+
+    @QtCore.pyqtSlot(float)
+    def pushValue(self, value):
+        self._param.pushValue(value)
+
+    ################################################## Methods private to this class ##################################################
+
+    ### Getters ###
+
+    def getHasChanged(self):
+        return self._param.getHasChanged()
 
     def getMaximum(self):
         return self._param.getMaximum()
@@ -30,24 +37,20 @@ class DoubleWrapper(ParamWrapper):
     def getMinimum(self):
         return self._param.getMinimum()
 
-    def getHasChanged(self):
-        return self._param.getHasChanged()
+    def getValue(self):
+        return self._param.getValue()
 
-    #################### setters ####################
-
-    def setValue(self, value):
-        self._param.setValue(value)
+    ### Setters ###
 
     def setHasChanged(self, changed):
         self._param.setHasChanged(changed)
 
-    @QtCore.pyqtSlot(float)
-    def pushValue(self, value):
-        self._param.pushValue(value)
+    def setValue(self, value):
+        self._param.setValue(value)
+
+    ################################################## Data exposed to QML ##################################################
 
     changed = QtCore.pyqtSignal()
-
-    ################################################## DATA EXPOSED TO QML ##################################################
 
     value = QtCore.pyqtProperty(float, getValue, setValue, notify=changed)
 

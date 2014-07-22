@@ -1,43 +1,46 @@
-from .paramWrapper import ParamWrapper
-
 from PyQt5 import QtCore
+from .paramWrapper import ParamWrapper
 
 
 class BooleanWrapper(ParamWrapper):
     """
-        Gui class, which maps a ParamBoolean.
+        GUI class, which maps a ParamBoolean.
     """
 
     def __init__(self, param):
         ParamWrapper.__init__(self, param)
 
-    #################### getters ####################
+    ################################################## Methods exposed to QML ##################################################
 
     @QtCore.pyqtSlot(result=bool)
     def getDefaultValue(self):
         return self._param.getDefaultValue()
 
-    def getValue(self):
-        return self._param.getValue()
-
-    def getHasChanged(self):
-        return self._param.getHasChanged()
-
-    #################### setters ####################
-
-    def setValue(self, value):
-        self._param.setValue(value)
-
-    def setHasChanged(self, changed):
-        self._param.setHasChanged(changed)
-
     @QtCore.pyqtSlot(bool)
     def pushValue(self, value):
         self._param.pushValue(value)
 
-    changed = QtCore.pyqtSignal()
+    ################################################## Methods private to this class ##################################################
 
-    ################################################## DATA EXPOSED TO QML ##################################################
+    ### Getters ###
+
+    def getHasChanged(self):
+        return self._param.getHasChanged()
+
+    def getValue(self):
+        return self._param.getValue()
+
+    ### Setters ###
+
+    def setHasChanged(self, changed):
+        self._param.setHasChanged(changed)
+
+    def setValue(self, value):
+        self._param.setValue(value)
+
+    ################################################## Data exposed to QML ##################################################
+
+    changed = QtCore.pyqtSignal()
 
     value = QtCore.pyqtProperty(bool, getValue, setValue, notify=changed)
     hasChanged = QtCore.pyqtProperty(bool, getHasChanged, setHasChanged, notify=changed)

@@ -1,16 +1,17 @@
-from .paramWrapper import ParamWrapper
-
 from PyQt5 import QtCore
+from .paramWrapper import ParamWrapper
 
 class RGBAWrapper(ParamWrapper):
     """
-        Gui class, which maps a ParamRGBA.
+        GUI class, which maps a ParamRGBA.
     """
 
     def __init__(self, param):
         ParamWrapper.__init__(self, param)
 
-    #################### getters ####################
+    #################################################### Methods private to this class ##################################################
+
+    ### Getters ###
 
     def getDefaultR(self):
         return self._param.getDefaultR()
@@ -36,7 +37,7 @@ class RGBAWrapper(ParamWrapper):
     def getValueA(self):
         return self._param.getValueA()
 
-    #################### setters ####################
+    ### Setters ###
 
     def setValueR(self, value):
         self._param.setValueR(value)
@@ -50,13 +51,13 @@ class RGBAWrapper(ParamWrapper):
     def setValueA(self, value):
         self._param.setValueA(value)
 
-    #@QtCore.pyqtSlot(float, float, float, float)
-    #def setValue(self, r, g, b, a):
-    #    self._param.setValue(r, g, b, a)
+    # @QtCore.pyqtSlot(float, float, float, float)
+    # def setValue(self, r, g, b, a):
+    #     self._param.setValue(r, g, b, a)
+
+    ################################################## Data exposed to QML ##################################################
 
     changed = QtCore.pyqtSignal()
-
-    ################################################## DATA EXPOSED TO QML ##################################################
 
     r = QtCore.pyqtProperty(float, getValueR, setValueR, notify=changed)
     g = QtCore.pyqtProperty(float, getValueG, setValueG, notify=changed)

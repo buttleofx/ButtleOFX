@@ -1,13 +1,11 @@
-from .paramWrapper import ParamWrapper
-
-from quickmamba.models import QObjectListModel
-
 from PyQt5 import QtCore
+from .paramWrapper import ParamWrapper
+from quickmamba.models import QObjectListModel
 
 
 class ChoiceWrapper(ParamWrapper):
     """
-        Gui class, which maps a ParamChoice.
+        GUI class, which maps a ParamChoice.
     """
 
     def __init__(self, param):
@@ -17,17 +15,19 @@ class ChoiceWrapper(ParamWrapper):
         for value in self._param.getListValue():
             self._listValue.append(value)
 
-    #################### getters ####################
+    ################################################## Methods exposed to QML ##################################################
 
     @QtCore.pyqtSlot(result=str)
     def getDefaultValue(self):
         return self._param.getDefaultValue()
 
-    def getListValue(self):
-        return self._listValue
+    @QtCore.pyqtSlot(str)
+    def pushValue(self, value):
+        self._param.pushValue(value)
 
-    def getValue(self):
-        return self._param.getValue()
+    ################################################## Methods private to this class ##################################################
+
+    ### Getters ###
 
     def getCurrentIndex(self):
         return self._param.getCurrentIndex()
@@ -35,24 +35,25 @@ class ChoiceWrapper(ParamWrapper):
     def getHasChanged(self):
         return self._param.getHasChanged()
 
-    #################### setters ####################
+    def getListValue(self):
+        return self._listValue
 
-    def setValue(self, value):
-        self._param.setValue(value)
+    def getValue(self):
+        return self._param.getValue()
+
+    ### Setters ###
 
     def setHasChanged(self, changed):
         self._param.setHasChanged(changed)
 
-    @QtCore.pyqtSlot(str)
-    def pushValue(self, value):
-        self._param.pushValue(value)
+    def setValue(self, value):
+        self._param.setValue(value)
+
+    ################################################## Data exposed to QML ##################################################
 
     changed = QtCore.pyqtSignal()
-
-    ################################################## DATA EXPOSED TO QML ##################################################
 
     listValue = QtCore.pyqtProperty(QtCore.QObject, getListValue, constant=True)
     value = QtCore.pyqtProperty(str, getValue, setValue, notify=changed)
     currentIndex = QtCore.pyqtProperty(int, getCurrentIndex, notify=changed)
-
     hasChanged = QtCore.pyqtProperty(bool, getHasChanged, setHasChanged, notify=changed)

@@ -14,7 +14,7 @@ Rectangle {
 
     property bool readOnly
     property real miniatureScale
-    property bool miniatureState   
+    property bool miniatureState
     property bool invertState : m.invertState
 
     QtObject {
@@ -32,12 +32,12 @@ Rectangle {
     radius: width * 0.5
     visible: miniatureState ? false : true
 
-    // Synchronize QML graphic information (clip position) into the model,
-    // to share it with connection objects
+    // Synchronize QML graphic information (clip position) into the model to share it with connection objects
     property double x_inGraph
     property double y_inGraph
     property double xCenter_inGraph: x_inGraph + m.radius
     property double yCenter_inGraph: y_inGraph + m.radius
+
     onXCenter_inGraphChanged: {
         m.clipWrapper.xCoord = xCenter_inGraph
     }
@@ -55,7 +55,7 @@ Rectangle {
         x: clipRoot.port == "output" ? parent.x + 7 : parent.x - clipNameText.width - 7
         y: -5
 
-        Text{
+        Text {
             id: clipNameText
             text: m.clipWrapper.name
             font.pointSize: 8
@@ -71,6 +71,7 @@ Rectangle {
         width: 15
         height: 15
         keys: "clip_connection"
+
         onDropped: {
             // Accepts the drop and erase the handle
             drop.accept()
@@ -79,52 +80,50 @@ Rectangle {
 
             var clipOut = null
             var clipIn = null
-            if( m.clipWrapper.name == "Output" )
-            {
+            if (m.clipWrapper.name == "Output") {
                 // Drop on output
                 clipOut = m.clipWrapper
                 clipIn = drag.source.clipWrapper
-            }
-            else
-            {
+            } else {
                 // Drop on input
                 clipOut = drag.source.clipWrapper
 
                 var clipOut_tmp = _buttleData.graphWrapper.getConnectedClipWrapper(clipOut, true)
-                if( clipOut_tmp ){
+                if (clipOut_tmp) {
                     clipOut = clipOut_tmp
                     _buttleManager.connectionManager.unHook(drag.source.clipWrapper)
                 }
 
                 clipIn = m.clipWrapper
             }
-            if(accept && !replace){
+
+            if (accept && !replace) {
                 _buttleManager.connectionManager.connectWrappers(clipOut, clipIn)
             }
 
-            if(accept && replace){
+            if (accept && replace) {
                 _buttleManager.connectionManager.replace(m.clipWrapper, clipOut, clipIn)
             }
-
         }
         onEntered: {
             var connected = false
-            if(_buttleData.graphWrapper.getConnectedClipWrapper(drag.source.clipWrapper, true)){
+            if (_buttleData.graphWrapper.getConnectedClipWrapper(drag.source.clipWrapper, true)) {
                 accept = !accept
                 connected = true
             }
+
             accept = _buttleManager.connectionManager.canConnect(m.clipWrapper, drag.source.clipWrapper, connected)
             replace = m.clipWrapper.name != "Output" && _buttleManager.connectionManager.connectionExists(m.clipWrapper)
 
-            if(accept){
+            if (accept) {
                 dropHandle.state = "entereddrop"
                 connections.alpha = 1
-            }else{
+            } else {
                 dropHandle.state = "cantconnect"
-                if(m.clipWrapper.nodeName !== drag.source.clipWrapper.nodeName)
+                if (m.clipWrapper.nodeName !== drag.source.clipWrapper.nodeName)
                     connections.alpha = 0.2
             }
-            if(replace && accept)
+            if (replace && accept)
                 dropHandle.state = "canreplace"
         }
         onExited: {
@@ -133,6 +132,7 @@ Rectangle {
             connections.alpha = 1
         }
     }
+
     // Area that accepts the drop
     Item {
         id: dropHandle
@@ -151,27 +151,27 @@ Rectangle {
         }
         states: [
             State {
-               name: "entereddrop"
-               PropertyChanges {
-                  target: dropVisualHandle
-                  opacity: 0.6
-               }
+                name: "entereddrop"
+                PropertyChanges {
+                    target: dropVisualHandle
+                    opacity: 0.6
+                }
             },
             State {
-               name: "cantconnect"
-               PropertyChanges {
-                  target: dropVisualHandle
-                  opacity: 0.6
-                  color: "#212121"
-               }
+                name: "cantconnect"
+                PropertyChanges {
+                    target: dropVisualHandle
+                    opacity: 0.6
+                    color: "#212121"
+                }
             },
             State {
-               name: "canreplace"
-               PropertyChanges {
-                  target: dropVisualHandle
-                  opacity: 0.6
-                  color: "#f7ff76"
-               }
+                name: "canreplace"
+                PropertyChanges {
+                    target: dropVisualHandle
+                    opacity: 0.6
+                    color: "#f7ff76"
+                }
             }
         ]
     }
@@ -185,11 +185,10 @@ Rectangle {
         drag.target: handle
         Drag.active: true
 
-
-        // position of the center of the clip when starting a mouse event
+        // Position of the center of the clip when starting a mouse event
         property int xStart
         property int yStart
-        // position of the mouse when starting a mouse event
+        // Position of the mouse when starting a mouse event
         property int mouseXStart
         property int mouseYStart
         property variant connectedClip
@@ -197,7 +196,7 @@ Rectangle {
         onReleased: {
             var dropStatus = handle.Drag.drop()
             connections.tmpConnectionExists = false
-            if(invertState == true)
+            if (invertState == true)
                 _buttleManager.connectionManager.unHook(m.clipWrapper)
         }
 
@@ -228,70 +227,70 @@ Rectangle {
             }
             states: [
                 State {
-                   name: "nodragging"
-                   when: ! handle.Drag.active
-                   PropertyChanges {
-                      target: handle
-                      opacity: 0
-                      x: 0
-                      y: 0
-                   }
+                    name: "nodragging"
+                    when: ! handle.Drag.active
+                    PropertyChanges {
+                        target: handle
+                        opacity: 0
+                        x: 0
+                        y: 0
+                    }
                 },
                 State {
-                   name: "dragging"
-                   when: drag.source.clipWrapper
-                   PropertyChanges {
-                      target: handle
-                      opacity: 1
-                      x: 0
-                      y: 0
-                      width: 0.6*width
-                      height: 0.6*height
-                   }
+                    name: "dragging"
+                    when: drag.source.clipWrapper
+                    PropertyChanges {
+                        target: handle
+                        opacity: 1
+                        x: 0
+                        y: 0
+                        width: 0.6*width
+                        height: 0.6*height
+                    }
                 },
                 State {
-                   name: "draggable"
-                   when: handle.Drag.active
-                   PropertyChanges {
-                      target: handle
-                      Drag.keys: "clip_connection"
-                   }
+                    name: "draggable"
+                    when: handle.Drag.active
+                    PropertyChanges {
+                        target: handle
+                        Drag.keys: "clip_connection"
+                    }
                 }
             ]
         }
 
         onPressed: {
-            // take the focus of the MainWindow
+            // Take the focus of the MainWindow
             clipRoot.forceActiveFocus()
             mouseXStart = mouse.x
             mouseYStart = mouse.y
             xStart = xCenter_inGraph
             yStart = yCenter_inGraph
 
-            // display of the tmpConnection with right coordinates
+            // Display of the tmpConnection with right coordinates
             connections.tmpConnectionExists = true
             connections.tmpClipName = m.clipWrapper.name
 
-            if(_buttleManager.connectionManager.connectionExists(m.clipWrapper) && m.clipWrapper.name != "Output"){
+            if (_buttleManager.connectionManager.connectionExists(m.clipWrapper) && m.clipWrapper.name != "Output") {
                 connectedClip = _buttleData.graphWrapper.getConnectedClipWrapper(m.clipWrapper, true)
                 connections.tmpConnectionX1 = connectedClip.xCoord
                 connections.tmpConnectionY1 = connectedClip.yCoord
                 connections.tmpConnectionX2 = xCenter_inGraph
                 connections.tmpConnectionY2 = yCenter_inGraph
                 m.invertState = true
-            }else{
+            } else {
                 connections.tmpConnectionX1 = xCenter_inGraph
                 connections.tmpConnectionY1 = yCenter_inGraph
                 connections.tmpConnectionX2 = xCenter_inGraph
                 connections.tmpConnectionY2 = yCenter_inGraph
                 m.invertState = false
             }
-       }
+        }
 
-       onPositionChanged: {
-           // Update of the connection during the drag
-           if(clipMouseArea.drag.active) {
-                if(!m.invertState){
+        onPositionChanged: {
+            // Update of the connection during the drag
+            if (clipMouseArea.drag.active) {
+                if (!m.invertState) {
                     if (connections.tmpClipName == "Output") {
                         connections.tmpConnectionX2 = x_inGraph + mouse.x
                         connections.tmpConnectionY2 = y_inGraph + mouse.y
@@ -299,7 +298,7 @@ Rectangle {
                         connections.tmpConnectionX1 = x_inGraph + mouse.x
                         connections.tmpConnectionY1 = y_inGraph + mouse.y
                     }
-                }else{
+                } else {
                     if (connections.tmpClipName == "Output") {
                         connections.tmpConnectionX1 = x_inGraph + mouse.x
                         connections.tmpConnectionY1 = y_inGraph + mouse.y
@@ -312,7 +311,7 @@ Rectangle {
                 //Hack to position correctly the handle (the drag in QML creates a gap)
                 handle.x = mouseX - handle.width/2
                 handle.y = mouseY - handle.height/2
-           }
+            }
         }
     }
 }

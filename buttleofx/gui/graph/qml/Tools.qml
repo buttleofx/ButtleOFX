@@ -6,7 +6,7 @@ import "../../plugin/qml"
 Rectangle {
     id: tools
 
-    // if the menu is open (= if "tools has children"), property children is the first list created. Else, null.
+    // If the menu is open (= if "tools has children"), property children is the first list created. Else, null.
     property variant menuComponent
     property color gradian1: "#111111"
     property color gradian2: "#212121"
@@ -37,15 +37,19 @@ Rectangle {
                 buttonName: "createNode"
                 buttonText: "Create a new node"
                 locked: false
+
                 onClicked: {
-                    if(pluginVisible==true){pluginVisible=false}
-                    else{pluginVisible=true}
+                    if (pluginVisible==true){
+                        pluginVisible=false
+                    } else {
+                        pluginVisible=true
+                    }
+
                     editNode=false
                 }
             }
 
             ToolElement {
-
                 imageSource: parent.imgPath + "open.png"
                 imageSourceHover: parent.imgPath + "open_hover.png"
                 imageSourceLocked: parent.imgPath + "open_locked.png"
@@ -56,10 +60,9 @@ Rectangle {
                 onClicked: {
                     pluginVisible=false
                     editNode=false
-                    if(!_buttleData.graphCanBeSaved){
+                    if (!_buttleData.graphCanBeSaved) {
                         finderLoadGraph.open()
-                    }
-                    else{
+                    } else {
                         openGraph.open()
                         openGraph.close()
                         openGraph.open()
@@ -68,7 +71,6 @@ Rectangle {
             }
 
             ToolElement {
-
                 imageSource: parent.imgPath + "save.png"
                 imageSourceHover: parent.imgPath + "save_hover.png"
                 imageSourceLocked: parent.imgPath + "save_locked.png"
@@ -79,10 +81,9 @@ Rectangle {
                 onClicked: {
                     pluginVisible=false
                     editNode=false
-                    if(urlOfFileToSave!=""){
+                    if (urlOfFileToSave!="") {
                         _buttleData.saveData(urlOfFileToSave)
-                    }
-                    else{
+                    } else {
                         finderSaveGraph.open()
                     }
                 }
@@ -127,8 +128,8 @@ Rectangle {
                 locked: _buttleData.currentSelectedNodeWrappers.isEmpty() ? true : false
 
                 onClicked: {
-                    pluginVisible=false
-                    editNode=false
+                    pluginVisible = false
+                    editNode = false
                     _buttleManager.nodeManager.copyNode()
                     _buttleManager.connectionManager.copyConnections()
                 }
@@ -143,8 +144,8 @@ Rectangle {
                 locked: _buttleData.currentSelectedNodeWrappers.isEmpty() ? true : false
 
                 onClicked: {
-                    pluginVisible=false
-                    editNode=false
+                    pluginVisible = false
+                    editNode = false
                     _buttleManager.nodeManager.cutNode()
                 }
             }
@@ -158,8 +159,8 @@ Rectangle {
                 locked: _buttleData.canPaste ? false : true
 
                 onClicked: {
-                    pluginVisible=false
-                    editNode=false
+                    pluginVisible = false
+                    editNode = false
                     _buttleManager.nodeManager.pasteNode()
                     _buttleManager.connectionManager.pasteConnection()
                 }
@@ -174,8 +175,8 @@ Rectangle {
                 locked: _buttleData.currentSelectedNodeWrappers.isEmpty() ? true : false
 
                 onClicked: {
-                    pluginVisible=false
-                    editNode=false
+                    pluginVisible = false
+                    editNode = false
                     _buttleManager.nodeManager.duplicationNode()
                 }
             }
@@ -186,11 +187,11 @@ Rectangle {
                 imageSourceLocked: parent.imgPath + "delete_locked.png"
                 buttonName: "deleteNode"
                 buttonText: "Delete the node (del)"
-                locked: (!_buttleData.currentSelectedNodeWrappers.isEmpty() || _buttleData.currentConnectionWrapper)? false : true
+                locked: (!_buttleData.currentSelectedNodeWrappers.isEmpty() || _buttleData.currentConnectionWrapper) ? false : true
 
                 onClicked: {
-                    pluginVisible=false
-                    editNode=false
+                    pluginVisible = false
+                    editNode = false
                     _buttleManager.deleteSelection()
                 }
             }
@@ -204,8 +205,8 @@ Rectangle {
                 locked: false
 
                 onClicked: {
-                    pluginVisible=false
-                    editNode=false
+                    pluginVisible = false
+                    editNode = false
                     graph.zoomCoeff = _buttleData.graphWrapper.fitInScreenSize(graph.width, graph.height).get(2)
                     graph.offsetX = (graph.container.width * 0.5 ) - (_buttleData.graphWrapper.fitInScreenSize(graph.width, graph.height).get(0) * graph.zoomCoeff)
                     graph.offsetY = (graph.container.height * 0.5 ) - (_buttleData.graphWrapper.fitInScreenSize(graph.width, graph.height).get(1) * graph.zoomCoeff)

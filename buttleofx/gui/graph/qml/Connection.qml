@@ -42,9 +42,9 @@ Item {
         MouseArea {
             // Returns true if we click on the curve
             function intersectPath(mouseX, mouseY, margin){
-                for(var x = mouseX - margin; x< mouseX + margin; x++){
-                    for(var y = mouseY - margin; y< mouseY + margin; y++){
-                        if(connection.getContext("2d").isPointInPath(x, y)){
+                for (var x = mouseX - margin; x < mouseX + margin; x++) {
+                    for (var y = mouseY - margin; y< mouseY + margin; y++) {
+                        if (connection.getContext("2d").isPointInPath(x, y)) {
                             return true;
                         }
                     }
@@ -55,20 +55,20 @@ Item {
             anchors.fill: parent
             hoverEnabled: true
 
-            //Propagate the event to the connections below
+            // Propagate the event to the connections below
             onPressed: mouse.accepted = intersectPath(mouseX, mouseY, 5)
             onClicked: {
                 _buttleData.currentConnectionWrapper = m.connectionWrapper
                 _buttleData.clearCurrentSelectedNodeNames();
             }
 
-            // The accepted property of the MouseEvent parameter is ignored in this handler.
+            // The accepted property of the MouseEvent parameter is ignored in this handler
             onPositionChanged: {
                 mouse.accepted = intersectPath(mouseX, mouseY, 5)
             }
         }
 
-        StateGroup{
+        StateGroup {
             id: stateConnection
             states: [
                 State {
@@ -77,45 +77,45 @@ Item {
                     PropertyChanges { target: connection; r: 187; g: 187; b: 187 }
                 }
             ]
-            // Need to re-paint the connection after each change of state.
+            // Need to re-paint the connection after each change of state
             onStateChanged: {
                 connection.requestPaint()
             }
         }
 
-        DropArea{
+        DropArea {
             id: droparea1
             objectName: "DropArea"
             anchors.verticalCenter: parent.verticalCenter
             anchors.horizontalCenter: parent.horizontalCenter
-            //anchors.fill: parent
-            //anchors.margins: 30
+            // anchors.fill: parent
+            // anchors.margins: 30
             width : 50 * zoomCoeff
             height : 50 * zoomCoeff
             Drag.keys: "node"
             onDropped: {
-
-                if(!_buttleManager.connectionManager.connectionExists(drop.source.nodeWrapper.srcClips.get(0))){
-                    //we assure that the node dropped is not part of the actual connection
-                    if(drop.source.nodeWrapper !== undefined && drop.source.nodeWrapper.name != clipIn.nodeName && drop.source.nodeWrapper.name != clipOut.nodeName){
-                            drop.accept()
-                            //Create two connections from one and delete the previous one
-                            _buttleManager.connectionManager.dissociate(clipOut, clipIn, drop.source.nodeWrapper.getClip("Source"), drop.source.nodeWrapper.getClip(drop.source.nodeWrapper.outputClip.name), m.connectionWrapper)
+                if (!_buttleManager.connectionManager.connectionExists(drop.source.nodeWrapper.srcClips.get(0))) {
+                    // We assure that the node dropped is not part of the actual connection
+                    if (drop.source.nodeWrapper !== undefined && drop.source.nodeWrapper.name != clipIn.nodeName && drop.source.nodeWrapper.name != clipOut.nodeName) {
+                        drop.accept()
+                        // Create two connections from one and delete the previous one
+                        _buttleManager.connectionManager.dissociate(clipOut, clipIn, drop.source.nodeWrapper.getClip("Source"), drop.source.nodeWrapper.getClip(drop.source.nodeWrapper.outputClip.name), m.connectionWrapper)
                     }
                     dropIndicator.state = ""
                 }
 
-               // drop.source.nodeWrapper.xCoord = 0
-               // m.nodeWrapper.coord.x
+                // drop.source.nodeWrapper.xCoord = 0
+                // m.nodeWrapper.coord.x
             }
             onEntered: {
-                if(drag.source.nodeWrapper !== undefined && drag.source.nodeWrapper.name !== clipIn.nodeName && drag.source.nodeWrapper.name !== clipOut.nodeName){
+                if (drag.source.nodeWrapper !== undefined && drag.source.nodeWrapper.name !== clipIn.nodeName && drag.source.nodeWrapper.name !== clipOut.nodeName){
                     dropIndicator.state = "entereddrop"
                 }
             }
             onExited: {
                 dropIndicator.state = ""
             }
+
             Item{
                 anchors.fill: parent
             }
@@ -131,14 +131,13 @@ Item {
             visible: false
             states: [
                 State {
-                   name: "entereddrop"
-                   PropertyChanges {
-                      target: dropIndicator
-                      visible: true
-                   }
+                    name: "entereddrop"
+                    PropertyChanges {
+                        target: dropIndicator
+                        visible: true
+                    }
                 }
             ]
         }
-
     }
 }

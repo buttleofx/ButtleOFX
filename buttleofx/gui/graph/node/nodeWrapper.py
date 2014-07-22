@@ -1,10 +1,8 @@
-from PyQt5 import QtCore, QtGui
 import logging
-#quickmamba
+from PyQt5 import QtCore, QtGui
 from quickmamba.models import QObjectListModel
-# wrappers
-from buttleofx.gui.paramEditor.wrappers import ParamEditorWrapper
 from buttleofx.gui.graph.connection import ClipWrapper
+from buttleofx.gui.paramEditor.wrappers import ParamEditorWrapper
 
 
 class NodeWrapper(QtCore.QObject):
@@ -19,7 +17,7 @@ class NodeWrapper(QtCore.QObject):
 
     def __init__(self, node, view):
         # print("NodeWrapper constructor")
-        
+
         super(NodeWrapper, self).__init__(view)
 
         self._node = node
@@ -29,29 +27,59 @@ class NodeWrapper(QtCore.QObject):
         # paramWrappers
         self._paramWrappers = ParamEditorWrapper(self._view, self._node.getParams())
 
-        # potential errors
+        # Potential errors
         self._fpsError = ""
         self._frameError = ""
 
-        # link signals of the node and the corresponding node wrapper
+        # Link signals of the node and the corresponding node wrapper
         self._node.nodeLookChanged.connect(self.emitNodeLookChanged)
         self._node.nodePositionChanged.connect(self.emitNodePositionChanged)
         self._node.nodeContentChanged.connect(self.emitNodeContentChanged)
-        
+
         self._clipWrappers = [ClipWrapper(clip, self.getName(), self._view) for clip in self._node.getClips()]
-        
         self._srcClips = QObjectListModel(self)
 
         logging.info("Gui : NodeWrapper created")
 
-    def __str__(self):
-        return "Node Wrapper : " + self.getName()
+    ################################################## Methods exposed to QML ##################################################
 
-    def __del__(self):
-        logging.info("Gui : NodeWrapper deleted")
+    @QtCore.pyqtSlot(result=QtGui.QColor)
+    def getDefaultColor(self):
+        return QtGui.QColor(0, 178, 161)
 
-    ######## getters ########
+    @QtCore.pyqtSlot(str, result=QtCore.QObject)
+    def getClip(self, name):
+        """
+            Returns the ClipWrapper of the output clip of this node.
+        """
+        return next(clip for clip in self._clipWrappers if clip.name == name)
 
+    ################################################## Methods private to this class ##################################################
+
+
+    def emitNodeLookChanged(self):
+        """
+            Emits the signal emitNodeLookChanged.
+        """
+        self.nodeLookChanged.emit()
+
+    def emitNodePositionChanged(self):
+        """
+            Emits the signal emitNodePositionChanged.
+        """
+        self.nodePositionChanged.emit()
+
+    def emitNodeContentChanged(self):
+        """
+            Emits the signal nodeContentChanged and warns the other params of the node that something just happened.
+        """
+        for paramW in self.getParams():
+            paramW.emitOtherParamOfTheNodeChanged()
+
+        # Emit signal
+        self.nodeContentChanged.emit()
+
+    ### Getters ###
     def getNode(self):
         return self._node
 
@@ -60,9 +88,6 @@ class NodeWrapper(QtCore.QObject):
 
     def getNameUser(self):
         return self._node.getNameUser()
-
-    def getType(self):
-        return self._node.getType()
 
     def getPluginDescription(self):
         return self._node.getPluginDescription()
@@ -85,10 +110,6 @@ class NodeWrapper(QtCore.QObject):
     def getColor(self):
         return QtGui.QColor(*self._node.getColor())
 
-    @QtCore.pyqtSlot(result=QtGui.QColor)
-    def getDefaultColor(self):
-        return QtGui.QColor(0, 178, 161)
-
     def getNbInput(self):
         return self._node.getNbInput()
 
@@ -105,22 +126,15 @@ class NodeWrapper(QtCore.QObject):
         """
         return next(clip for clip in self._clipWrappers if clip.name == "Output")
 
-    @QtCore.pyqtSlot(str, result=QtCore.QObject)
-    def getClip(self, name):
-        """
-            Returns the ClipWrapper of the output clip of this node.
-        """
-        return next(clip for clip in self._clipWrappers if clip.name == name)
-
     def getParams(self):
         return self._paramWrappers.getParamElts()
 
-    #for video
+    # For video
     def getFPS(self):
         """
             Returns the FPS of this node.
         """
-        #import which needs to be changed in the future
+        # Import which needs to be changed in the future
         from buttleofx.data import ButtleDataSingleton
         buttleData = ButtleDataSingleton().get()
 
@@ -130,10 +144,11 @@ class NodeWrapper(QtCore.QObject):
             self.setFpsError("")
             graph.setup()
         except Exception as e:
-            logging.debug("can't get fps of the node" + self._node.getName())
+            logging.debug("Can't get fps of the node" + self._node.getName())
             self.setFpsError(str(e))
             return 1
             raise
+
         framerate = node.getOutputFrameRate()
         #print("framerate: ", framerate)
         return framerate
@@ -148,11 +163,12 @@ class NodeWrapper(QtCore.QObject):
         """
             Returns the number of frames of this node.
         """
-        #import which needs to be changed in the future
+        # Import which needs to be changed in the future
         from buttleofx.data import ButtleDataSingleton
         buttleData = ButtleDataSingleton().get()
         graph = buttleData.getCurrentGraph().getGraphTuttle()
         node = self._node.getTuttleNode().asImageEffectNode()
+
         try:
             self.setFrameError("")
             graph.setup()
@@ -161,31 +177,36 @@ class NodeWrapper(QtCore.QObject):
             self.setFrameError(str(e))
             return 0
             raise
+
         timeDomain = node.getTimeDomain() #getTimeDomain() returns first frame and last one
         nbFrames = timeDomain.max - timeDomain.min
-        #not very elegant but allow to avoid a problem because an image returns a number of frames very high
+
+        # Not very elegant but allows us to avoid a problem because an image returns a number of frames very high
         if nbFrames > 100000000 or nbFrames < 0:
             nbFrames = 1
-        #print("nbFrames: ", nbFrames)
+        # print("nbFrames: ", nbFrames)
         return nbFrames
 
     def getFrameError(self):
         return self._frameError
 
-    def setFrameError(self, nodeName):
-        self._frameError = nodeName
+    def getType(self):
+        return self._node.getType()
 
     def isHighlighted(self):
         return self._isHighlighted
 
-    ######## setters ########
+    ### Setters ###
+
+    def setFrameError(self, nodeName):
+        self._frameError = nodeName
 
     def setNameUser(self, nameUser):
         if(nameUser == ''):
             nameUser = 'Undefined name'
         self._node.setNameUser(nameUser)
 
-    #from a QPoint
+    # From a QPoint
     def setCoord(self, point):
         self._node.setCoord(point.x(), point.y())
 
@@ -195,7 +216,7 @@ class NodeWrapper(QtCore.QObject):
     def setYCoord(self, y):
         self._node.setCoord(self.getXCoord(), y)
 
-    # from a QColor
+    # From a QColor
     def setColor(self, color):
         self._node.setColorRGB(color.red(), color.green(), color.blue())
 
@@ -206,56 +227,39 @@ class NodeWrapper(QtCore.QObject):
         self._isHighlighted = value
         self.emitNodeLookChanged()
 
+    def __str__(self):
+        return "Node Wrapper : " + self.getName()
 
-    ################################################## LINK WRAPPER LAYER TO QML ##################################################
+    def __del__(self):
+        logging.info("Gui : NodeWrapper deleted")
+
+    ################################################## Data exposed to QML ##################################################
 
     nodeLookChanged = QtCore.pyqtSignal()
     nodePositionChanged = QtCore.pyqtSignal()
     nodeContentChanged = QtCore.pyqtSignal()
 
-    def emitNodeLookChanged(self):
-        """
-            Emits the signal emitNodeLookChanged.
-        """
-        self.nodeLookChanged.emit()
-
-    def emitNodePositionChanged(self):
-        """
-            Emits the signal emitNodePositionChanged.
-        """
-        self.nodePositionChanged.emit()
-
-    def emitNodeContentChanged(self):
-        """
-            Emits the signal nodeContentChanged and warns the other params of the node that something just happened.
-        """
-        for paramW in self.getParams():
-            paramW.emitOtherParamOfTheNodeChanged()
-        # emit signal
-        self.nodeContentChanged.emit()
-
-    ################################################## DATA EXPOSED TO QML ##################################################
-
-    # params from Buttle
+    # Params from Buttle
     name = QtCore.pyqtProperty(str, getName, constant=True)
     nameUser = QtCore.pyqtProperty(str, getNameUser, setNameUser, notify=nodeLookChanged)
     nodeType = QtCore.pyqtProperty(str, getType, constant=True)
     pluginDoc = QtCore.pyqtProperty(str, getPluginDescription, constant=True)
-    pluginGroup = QtCore.pyqtProperty(str, getPluginGroup, constant=True)   
+    pluginGroup = QtCore.pyqtProperty(str, getPluginGroup, constant=True)
     pluginContext = QtCore.pyqtProperty(str, getPluginContext, constant=True)
-    coord = QtCore.pyqtProperty(QtCore.QPointF, getCoord, setCoord, notify=nodePositionChanged)  # problem to access to x property with QPoint !
+    coord = QtCore.pyqtProperty(QtCore.QPointF, getCoord, setCoord, notify=nodePositionChanged)  # Problem to access to x property with QPoint !
     xCoord = QtCore.pyqtProperty(int, getXCoord, setXCoord, notify=nodePositionChanged)
     yCoord = QtCore.pyqtProperty(int, getYCoord, setYCoord, notify=nodePositionChanged)
     nbInput = QtCore.pyqtProperty(int, getNbInput, constant=True)
     isHighlighted = QtCore.pyqtProperty(bool, isHighlighted, setIsHighlighted, notify=nodeLookChanged)
-    # params (wrappers)
+
+    # Params (wrappers)
     params = QtCore.pyqtProperty(QtCore.QObject, getParams, notify=nodeContentChanged)
 
-    # video
+    # Video
     fps = QtCore.pyqtProperty(float, getFPS, constant=True)
     nbFrames = QtCore.pyqtProperty(int, getNbFrames, constant=True)
 
-    # for a clean display of  connections
+    # For a clean display of  connections
     srcClips = QtCore.pyqtProperty(QtCore.QObject, getSrcClips, constant=True)
     outputClip = QtCore.pyqtProperty(QtCore.QObject, getOutputClip, constant=True)
 

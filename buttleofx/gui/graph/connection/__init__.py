@@ -1,2 +1,2 @@
-from .connectionWrapper import ConnectionWrapper
 from .clipWrapper import ClipWrapper
+from .connectionWrapper import ConnectionWrapper

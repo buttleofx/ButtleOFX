@@ -5,27 +5,25 @@ import QuickMamba 1.0
 Rectangle {
     id: qml_graphRoot
     focus: true
-    
+
     Keys.onPressed: {
         // Graph toolbar
-        if ((event.key == Qt.Key_N) && (event.modifiers & Qt.ControlModifier)){
-            //the fileDialog is opened and closed because the first which appear doesn't work
-            if(!_buttleData.graphCanBeSaved){
+        if ((event.key == Qt.Key_N) && (event.modifiers & Qt.ControlModifier)) {
+            // The fileDialog is opened and closed because the first which appears doesn't work
+            if (!_buttleData.graphCanBeSaved) {
                 _buttleData.newData()
-            }
-            else{
+            } else {
                 newGraph.open()
                 newGraph.close()
                 newGraph.open()
             }
         }
 
-        if ((event.key == Qt.Key_O) && (event.modifiers & Qt.ControlModifier)){
-            //the fileDialog is opened and closed because the first which appear doesn't work
-            if(!_buttleData.graphCanBeSaved){
+        if ((event.key == Qt.Key_O) && (event.modifiers & Qt.ControlModifier)) {
+            // The fileDialog is opened and closed because the first which appears doesn't work
+            if (!_buttleData.graphCanBeSaved) {
                 finderLoadGraph.open()
-            }
-            else{
+            } else {
                 openGraph.open()
                 openGraph.close()
                 openGraph.open()
@@ -33,12 +31,11 @@ Rectangle {
         }
 
         // Save or save as
-        if ((event.key == Qt.Key_S) && (event.modifiers & Qt.ControlModifier)){
-            if(_buttleData.graphCanBeSaved) {
+        if ((event.key == Qt.Key_S) && (event.modifiers & Qt.ControlModifier)) {
+            if (_buttleData.graphCanBeSaved) {
                 if(urlOfFileToSave!=""){
                     _buttleData.saveData(urlOfFileToSave)
-                }
-                else{
+                } else {
                     finderSaveGraph.open()
                 }
             }
@@ -48,24 +45,24 @@ Rectangle {
         if ((event.key == Qt.Key_P)) {
             var selectedNodes = _buttleData.currentSelectedNodeWrappers
 
-            // we send the node only if there is only one node selected
-            if(selectedNodes.count == 1) {
+            // We send the node only if there is only one node selected
+            if (selectedNodes.count == 1) {
                 var node = selectedNodes.get(0)
                 _buttleData.currentParamNodeWrapper = node
             }
         }
 
-        //Plugin window
+        // Plugin window
         if (event.key == Qt.Key_H) {
             doc.show()
         }
-        
+
         // Assign the mosquito to the selected node
         if ((event.key == Qt.Key_Return)||(event.key == Qt.Key_Enter)) {
             var selectedNodes = _buttleData.currentSelectedNodeWrappers
 
-            // we assign the mosquito only if there is only one node selected
-            if(selectedNodes.count == 1) {
+            // We assign the mosquito only if there is only one node selected
+            if (selectedNodes.count == 1) {
                 var node = selectedNodes.get(0)
                 _buttleData.currentViewerNodeWrapper = node
                 _buttleData.currentViewerFrame = 0
@@ -75,42 +72,41 @@ Rectangle {
         }
 
         if (event.key == Qt.Key_Delete) {
-           _buttleManager.deleteSelection();
+            _buttleManager.deleteSelection();
         }
         if ((event.key == Qt.Key_Z) && (event.modifiers & Qt.ControlModifier)) {
-            if(_buttleManager.canUndo) {
+            if (_buttleManager.canUndo) {
                 _buttleManager.undo();
             }
         }
         if ((event.key == Qt.Key_Y) && (event.modifiers & Qt.ControlModifier)) {
-            if(_buttleManager.canRedo) {
+            if (_buttleManager.canRedo) {
                 _buttleManager.redo();
             }
         }
-        if ((event.key == Qt.Key_D) && (event.modifiers & Qt.ControlModifier)){
+        if ((event.key == Qt.Key_D) && (event.modifiers & Qt.ControlModifier)) {
             if (!_buttleData.currentSelectedNodeWrappers.isEmpty()) {
                 _buttleManager.nodeManager.duplicationNode()
             }
         }
-        if ((event.key == Qt.Key_A) && (event.modifiers & Qt.ControlModifier)){
+        if ((event.key == Qt.Key_A) && (event.modifiers & Qt.ControlModifier)) {
             _buttleManager.selectAllNodes()
         }
-        if ((event.key == Qt.Key_C) && (event.modifiers & Qt.ControlModifier)){
+        if ((event.key == Qt.Key_C) && (event.modifiers & Qt.ControlModifier)) {
             if (!_buttleData.currentSelectedNodeWrappers.isEmpty()) {
                 _buttleManager.nodeManager.copyNode()
             }
         }
-        if ((event.key == Qt.Key_V) && (event.modifiers & Qt.ControlModifier)){
-           if (_buttleData.canPaste) {
+        if ((event.key == Qt.Key_V) && (event.modifiers & Qt.ControlModifier)) {
+            if (_buttleData.canPaste) {
                 _buttleManager.nodeManager.pasteNode();
-           }
+            }
         }
-        if ((event.key == Qt.Key_X) && (event.modifiers & Qt.ControlModifier)){
+        if ((event.key == Qt.Key_X) && (event.modifiers & Qt.ControlModifier)) {
             if (!_buttleData.currentSelectedNodeWrappers.isEmpty()) {
                 _buttleManager.nodeManager.cutNode()
             }
         }
-
     }
 
     QtObject {
@@ -136,19 +132,19 @@ Rectangle {
     property var container: graphContainer
 
     /*
-    ExternDropArea {
-        anchors.fill: parent
-        acceptDrop: true
-        onDragEnter: {
-            acceptDrop = hasUrls
-        }
-        onDrop: {
-            console.log("Drop external files:", acceptDrop)
-            if(acceptDrop) {
-                _buttleManager.nodeManager.dropFile(firstUrl, pos.x - m.graphRoot.originX, pos.y - m.graphRoot.originY)
-            }
-        }
-    }
+      ExternDropArea {
+      anchors.fill: parent
+      acceptDrop: true
+      onDragEnter: {
+      acceptDrop = hasUrls
+      }
+      onDrop: {
+      console.log("Drop external files:", acceptDrop)
+      if(acceptDrop) {
+      _buttleManager.nodeManager.dropFile(firstUrl, pos.x - m.graphRoot.originX, pos.y - m.graphRoot.originY)
+      }
+      }
+      }
     */
 
     // Drag&Drop from outside the app
@@ -158,31 +154,30 @@ Rectangle {
         keys: ["text/uri-list"]
 
         onDropped: {
-            if( ! drop.hasUrls )
-            {
+            if (!drop.hasUrls) {
                 drop.accepted = false
                 return
             }
 
             _buttleData.currentGraphWrapper = _buttleData.graphWrapper
             _buttleData.currentGraphIsGraph()
-            // if before the viewer was showing an image from the brower, we change the currentView
-            if (_buttleData.currentViewerIndex > 9){
+            // If before the viewer was showing an image from the brower, we change the currentView
+            if (_buttleData.currentViewerIndex > 9) {
                 _buttleData.currentViewerIndex = player.lastView
                 if (player.lastNodeWrapper != undefined)
                     _buttleData.currentViewerNodeWrapper = player.lastNodeWrapper
-                player.changeViewer(player.lastView)                
+                player.changeViewer(player.lastView)
             }
 
-            for(var urlIndex in drop.urls)
-            {
+            for (var urlIndex in drop.urls) {
                 _buttleManager.nodeManager.dropFile(drop.urls[urlIndex], drag.x - m.graphRoot.originX + 10*urlIndex, drag.y - m.graphRoot.originY + 10*urlIndex)
             }
+
             drop.accepted = true
         }
     }
 
-    // Drag&Drop from Browser to Graph
+    // Drag & Drop from Browser to Graph
     DropArea {
         anchors.fill: parent
         keys: "internFileDrag"
@@ -190,16 +185,15 @@ Rectangle {
         onDropped: {
             _buttleData.currentGraphWrapper = _buttleData.graphWrapper
             _buttleData.currentGraphIsGraph()
-            // if before the viewer was showing an image from the brower, we change the currentView
-            if (_buttleData.currentViewerIndex > 9){
+            // If before the viewer was showing an image from the brower, we change the currentView
+            if (_buttleData.currentViewerIndex > 9) {
                 _buttleData.currentViewerIndex = player.lastView
                 if (player.lastNodeWrapper != undefined)
                     _buttleData.currentViewerNodeWrapper = player.lastNodeWrapper
                 player.changeViewer(player.lastView)
             }
 
-            for(var urlIndex in drag.source.selectedFiles)
-            {
+            for (var urlIndex in drag.source.selectedFiles) {
                 _buttleManager.nodeManager.dropFile(drag.source.selectedFiles[urlIndex], drag.x - m.graphRoot.originX + 10*urlIndex, drag.y - m.graphRoot.originY + 10*urlIndex)
             }
         }
@@ -214,28 +208,28 @@ Rectangle {
         color: "transparent"
 
         /*Item {
-            id: repere
-            property color repereColor: "red"
-            property double size: 50 * zoomCoeff
-            property double thickness: 2
-            visible: miniatureState ? false : true
-            Rectangle {
-                id: axeX
-                x: -repere.size - 0.5 * repere.thickness
-                y: 0
-                width: 2 * repere.size + repere.thickness
-                height: 2
-                color: repere.repereColor
-            }
-            Rectangle {
-                id: axeY
-                x: 0
-                y: -repere.size - 0.5 * repere.thickness
-                width: 2
-                height: 2 * repere.size + repere.thickness
-                color: repere.repereColor
-            }
-        }*/
+          id: repere
+          property color repereColor: "red"
+          property double size: 50 * zoomCoeff
+          property double thickness: 2
+          visible: miniatureState ? false : true
+          Rectangle {
+          id: axeX
+          x: -repere.size - 0.5 * repere.thickness
+          y: 0
+          width: 2 * repere.size + repere.thickness
+          height: 2
+          color: repere.repereColor
+          }
+          Rectangle {
+          id: axeY
+          x: 0
+          y: -repere.size - 0.5 * repere.thickness
+          width: 2
+          height: 2 * repere.size + repere.thickness
+          color: repere.repereColor
+          }
+          }*/
 
         Item {
             id: nodes
@@ -246,6 +240,7 @@ Rectangle {
                 id: nodesRepeater
                 //model: _buttleData.graphBrowserWrapper.nodeWrappers
                 model: _buttleData.graphWrapper.nodeWrappers
+
                 Node {
                     id: node
                     nodeWrapper: model.object
@@ -256,49 +251,47 @@ Rectangle {
                     miniatureScale: qml_graphRoot.miniatureScale
                     miniatureState: qml_graphRoot.miniatureState
 
-
                     StateGroup {
                         id: stateViewerNode
-                         states: [
-                             State {
-                                 name: "miniatureStateAndReader"
-                                 when: miniatureState && model.object.pluginContext =="OfxImageEffectContextReader"
-                                 PropertyChanges {
-                                     target: node
-                                     width: node.nodeWidth * qml_graphRoot.miniatureScale
-                                     height: node.nodeWidth * qml_graphRoot.miniatureScale
-                                 }
-                             },
-                             State {
-                                 name: "miniatureStateAndNotReader"
-                                 when: miniatureState && model.object.pluginContext !="OfxImageEffectContextReader"
-                                 PropertyChanges {
-                                     target: node
-                                     width: node.nodeWidth * qml_graphRoot.miniatureScale
-                                     height: node.nodeWidth /2 * qml_graphRoot.miniatureScale
-                                 }
-                             },
-                             State {
-                                 name: "readerAndSrc"
-                                 when: model.object.pluginContext =="OfxImageEffectContextReader" && model.object.params.get(0).value!=""
-                                 PropertyChanges {
-                                     target: node
-                                     width: nodeWidth * zoomCoeff
-                                     height: nodeWidth * zoomCoeff
-                                 }
-                             },
-                             State {
-                                 name: "notReaderOrReaderAndNoSrc"
-                                 when: model.object.pluginContext !="OfxImageEffectContextReader" || (model.object.pluginContext =="OfxImageEffectContextReader" && model.object.params.get(0).value=="")
-                                 PropertyChanges {
-                                     target: node
-                                     width: nodeWidth * zoomCoeff
-                                     height: nodeWidth/2 * zoomCoeff
-                                 }
-                             }
-                         ]
+                        states: [
+                            State {
+                                name: "miniatureStateAndReader"
+                                when: miniatureState && model.object.pluginContext == "OfxImageEffectContextReader"
+                                PropertyChanges {
+                                    target: node
+                                    width: node.nodeWidth * qml_graphRoot.miniatureScale
+                                    height: node.nodeWidth * qml_graphRoot.miniatureScale
+                                }
+                            },
+                            State {
+                                name: "miniatureStateAndNotReader"
+                                when: miniatureState && model.object.pluginContext != "OfxImageEffectContextReader"
+                                PropertyChanges {
+                                    target: node
+                                    width: node.nodeWidth * qml_graphRoot.miniatureScale
+                                    height: node.nodeWidth /2 * qml_graphRoot.miniatureScale
+                                }
+                            },
+                            State {
+                                name: "readerAndSrc"
+                                when: model.object.pluginContext == "OfxImageEffectContextReader" && model.object.params.get(0).value!= ""
+                                PropertyChanges {
+                                    target: node
+                                    width: nodeWidth * zoomCoeff
+                                    height: nodeWidth * zoomCoeff
+                                }
+                            },
+                            State {
+                                name: "notReaderOrReaderAndNoSrc"
+                                when: model.object.pluginContext != "OfxImageEffectContextReader" || (model.object.pluginContext == "OfxImageEffectContextReader" && model.object.params.get(0).value== "")
+                                PropertyChanges {
+                                    target: node
+                                    width: nodeWidth * zoomCoeff
+                                    height: nodeWidth/2 * zoomCoeff
+                                }
+                            }
+                        ]
                     }
-
                 }
             }
         }
@@ -308,6 +301,7 @@ Rectangle {
             anchors.fill: parent
             // We set the z to 0 so the canvas is not over the node's clips
             z: 0
+
             Repeater {
                 model : _buttleData.graphWrapper.connectionWrappers
                 Connection {

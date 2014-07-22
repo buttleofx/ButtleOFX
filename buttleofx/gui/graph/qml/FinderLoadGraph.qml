@@ -7,8 +7,9 @@ FileDialog {
     id: finderLoadGraph
     title: "Open a graph"
     folder: _buttleData.buttlePath
-    nameFilters: [ "ButtleOFX Graph files (*.bofx)", "All files (*)" ]
+    nameFilters: ["ButtleOFX Graph files (*.bofx)", "All files (*)"]
     selectedNameFilter: "All files (*)"
+
     onAccepted: {
         console.log(finderLoadGraph.fileUrl)
         _buttleData.loadData(finderLoadGraph.fileUrl)

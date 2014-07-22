@@ -24,18 +24,20 @@ Rectangle {
         anchors.verticalCenter: parent.verticalCenter
         anchors.horizontalCenter: parent.horizontalCenter
     }
+
     MouseArea {
         id: buttonMouseArea
         hoverEnabled: true
         anchors.fill: parent
         onClicked: {
-            if(!locked) {
+            if (!locked) {
                 buttonTools.clicked()
-                //take the focus of the mainWindow
+                // Take the focus of the mainWindow
                 parent.forceActiveFocus()
             }
         }
     }
+
     Rectangle {
         id: infoTools
         x: 15
@@ -50,55 +52,55 @@ Rectangle {
 
     StateGroup {
         id: stateButtonEvents
-         states: [
-             State {
-                 name: "locked"
-                 when: locked
-                 PropertyChanges {
-                     target: buttonTools
-                     color:  "transparent"
-                 }
-                 PropertyChanges {
+        states: [
+            State {
+                name: "locked"
+                when: locked
+                PropertyChanges {
+                    target: buttonTools
+                    color: "transparent"
+                }
+                PropertyChanges {
                     target: imageButton
                     file: imageSourceLocked
-                 }
-             },
-             State {
-                 name: "normal"
-                 when: !buttonMouseArea.containsMouse
-                 PropertyChanges {
-                     target: buttonTools
-                     color:  "transparent"
-                 }
-                 PropertyChanges {
+                }
+            },
+            State {
+                name: "normal"
+                when: !buttonMouseArea.containsMouse
+                PropertyChanges {
+                    target: buttonTools
+                    color: "transparent"
+                }
+                PropertyChanges {
                     target: imageButton
                     file: imageSource
-                 }
-             },
-             State {
-                 name: "pressed"
-                 when: buttonMouseArea.containsMouse && buttonMouseArea.pressed
-                 PropertyChanges {
-                     target: buttonTools
-                     color:  "#00b2a1"
-                 }
-                 PropertyChanges {
+                }
+            },
+            State {
+                name: "pressed"
+                when: buttonMouseArea.containsMouse && buttonMouseArea.pressed
+                PropertyChanges {
+                    target: buttonTools
+                    color: "#00b2a1"
+                }
+                PropertyChanges {
                     target: imageButton
                     file: imageSource
-                 }
-             },
-             State {
-                 name: "hover"
-                 when: buttonMouseArea.containsMouse
-                 PropertyChanges {
-                     target: buttonTools
-                     color:  "#555555"
-                 }
-                 PropertyChanges {
+                }
+            },
+            State {
+                name: "hover"
+                when: buttonMouseArea.containsMouse
+                PropertyChanges {
+                    target: buttonTools
+                    color: "#555555"
+                }
+                PropertyChanges {
                     target: imageButton
                     file: imageSourceHover
-                 }
-             }
-         ]
+                }
+            }
+        ]
     }
 }

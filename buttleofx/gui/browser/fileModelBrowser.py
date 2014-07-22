@@ -160,6 +160,8 @@ class FileModelBrowser(QtQuick.QQuickItem):
         self._fileItemsModel = QObjectListModel(self)
         self._showSeq = False
 
+    ################################################## Methods exposed to QML ##################################################
+
     @QtCore.pyqtSlot(str, int)
     def changeFileName(self, newName, index):
         if index < len(self._fileItems):
@@ -314,6 +316,8 @@ class FileModelBrowser(QtQuick.QQuickItem):
     def setFirstFolder(self, firstFolder):
         self._firstFolder = firstFolder
 
+    ################################################## Methods private to this class ##################################################
+
     def getFilter(self):
         return self._nameFilter
 
@@ -346,6 +350,8 @@ class FileModelBrowser(QtQuick.QQuickItem):
         self._showSeq = checkSeq
         self.updateFileItems(self._folder)
         self.showSeqChanged.emit()
+
+    ################################################## Data exposed to QML ##################################################
 
     folderChanged = QtCore.pyqtSignal()
     folder = QtCore.pyqtProperty(str, getFolder, setFolder, notify=folderChanged)

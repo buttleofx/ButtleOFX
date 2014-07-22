@@ -7,7 +7,7 @@ Item {
     property string parentName
     property variant clickFrom: tools
     property int heightElement: 22
-    //property int widthElement: 160
+    // property int widthElement: 160
     property int max: 0
     property string side: "prout"
     z: 1000
@@ -22,10 +22,9 @@ Item {
 
         // Destroy the next menu if it exists
         function destroyNextMenu() {
-            if( nodeMenuView.nextMenu ) {
-                nodeMenuView.nextMenu.destroy()   
+            if (nodeMenuView.nextMenu) {
+                nodeMenuView.nextMenu.destroy()
             }
-                
         }
 
         // Create a next menu
@@ -33,9 +32,9 @@ Item {
             destroyNextMenu()
             var newComponent = Qt.createQmlObject('MenuList { parentName: "' + parentName + labelElement + '/"; x: ' + x + '; y: ' + y + '; side: "' + side + '";}', nodeMenuView);
             newComponent.clickFrom = clickFrom;
-            //newComponent.side = menulist.side;
+            // newComponent.side = menulist.side;
             nodeMenuView.nextMenu = newComponent
-       }
+        }
 
         delegate {
             Component {
@@ -54,7 +53,7 @@ Item {
 
                     // Calculates the length of the longest label in the menuElement
                     function maxElement(nodeMenuElement) {
-                        if(menulist.max < nodeMenuElement.labelElement.length) {
+                        if (menulist.max < nodeMenuElement.labelElement.length) {
                             menulist.max = nodeMenuElement.labelElement.length;
                         }
                         return menulist.max
@@ -62,10 +61,9 @@ Item {
 
                     // Return -1 if side = left, else 0
                     function stringToInt(nodeMenuElement) {
-                        if(menulist.side == "left") {
+                        if (menulist.side == "left") {
                             return -1;
-                        }
-                        else {
+                        } else {
                             return 0;
                         }
                     }

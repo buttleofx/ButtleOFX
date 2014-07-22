@@ -9,6 +9,7 @@ class MenuItem(QtCore.QObject):
         self._type = typeItem
         self._listMenuItem = listMenuItem
 
+    ### Getters ###
     def getLabel(self):
         return self._label
 
@@ -18,6 +19,7 @@ class MenuItem(QtCore.QObject):
     def getListMenuItem(self):
         return self._listMenuItem
 
+    ### Setters ###
     def setLabel(self, label):
         self._label = label
 
@@ -26,6 +28,8 @@ class MenuItem(QtCore.QObject):
 
     def setListMenuItem(self, listMenuItem):
         self._listMenuItem = listMenuItem
+
+    ################################################## Data exposed to QML ##################################################
 
     changed = QtCore.pyqtSignal()
     label = QtCore.pyqtProperty(str, getLabel, setLabel, notify=changed)

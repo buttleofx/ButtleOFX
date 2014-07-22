@@ -10,12 +10,12 @@ import "../../plugin/qml"
 Item {
     id: graphEditor
 
-    signal buttonCloseClicked(bool clicked)  
+    signal buttonCloseClicked(bool clicked)
     signal buttonFullscreenClicked(bool clicked)
 
     Tab {
         id: tabBar
-        name: urlOfFileToSave==""? "Graph :    Untitled graph": "Graph :    " + _buttleData.getFileName(urlOfFileToSave)
+        name: urlOfFileToSave == "" ? "Graph :    Untitled graph" : "Graph :    " + _buttleData.getFileName(urlOfFileToSave)
         onCloseClicked: graphEditor.buttonCloseClicked(true)
         onFullscreenClicked: graphEditor.buttonFullscreenClicked(true)
     }
@@ -27,19 +27,21 @@ Item {
         pluginVisible = true
     }
 
-    //List of plugins
+    // List of plugins
     PluginBrowser {
         id: pluginBrowser
         visible:pluginVisible
         graphEditor:true
         x:leftColumn.width
         y:topLeftView.height + mainWindowQML.y + 74
+
         StateGroup {
             id: statesBrowser
             states: [
                 State {
                     name: "view1&2"
                     when: selectedView == 3
+
                     PropertyChanges {
                         target: pluginBrowser
                         x: mainWindowQML.x + 13
@@ -48,6 +50,7 @@ Item {
                 State {
                     name: "view3"
                     when: selectedView != 3
+
                     PropertyChanges {
                         target: pluginBrowser
                         x: leftColumn.width + mainWindowQML.x + 13
@@ -57,28 +60,31 @@ Item {
         }
     }
 
-    ParamButtleEditor {         
-        id : paramButtleEditor       
+    ParamButtleEditor {
+        id : paramButtleEditor
         visible: editNode ? true:false
         currentParamNode: _buttleData.currentParamNodeWrapper
-        x:_buttleData.currentParamNodeWrapper? (currentParamNode.coord.x + 80)*graph.zoomCoeff  + graph.offsetX + (1-graph.zoomCoeff)*420 + leftColumn.width: 0
-        y:_buttleData.currentParamNodeWrapper? (currentParamNode.coord.y + 95)*graph.zoomCoeff  + graph.offsetY + (1-graph.zoomCoeff)*200 + topLeftView.height + 35 + mainWindowQML.y: 0
+        x:_buttleData.currentParamNodeWrapper ? (currentParamNode.coord.x + 80)*graph.zoomCoeff + graph.offsetX + (1-graph.zoomCoeff)*420 + leftColumn.width: 0
+        y:_buttleData.currentParamNodeWrapper ? (currentParamNode.coord.y + 95)*graph.zoomCoeff  + graph.offsetY + (1-graph.zoomCoeff)*200 + topLeftView.height + 35 + mainWindowQML.y: 0
+
         StateGroup {
             id: states
             states: [
                 State {
                     name: "view1&2"
                     when: selectedView == 3
+
                     PropertyChanges {
-                        target: paramButtleEditor 
+                        target: paramButtleEditor
                         x: _buttleData.currentParamNodeWrapper? (currentParamNode.coord.x + 80)*graph.zoomCoeff  + graph.offsetX + (1-graph.zoomCoeff)*420 + mainWindowQML.x : 0
                     }
                 },
                 State {
                     name: "view3"
                     when: selectedView != 3
+
                     PropertyChanges {
-                        target: paramButtleEditor 
+                        target: paramButtleEditor
                         x: _buttleData.currentParamNodeWrapper? (currentParamNode.coord.x + 80)*graph.zoomCoeff  + graph.offsetX + (1-graph.zoomCoeff)*420 + leftColumn.width + mainWindowQML.x  : 0
                     }
                 }
@@ -93,7 +99,7 @@ Item {
 
         Tools {
             id: tools
-            //y: tabBar.height
+            // y: tabBar.height
             implicitWidth : parent.width
             Layout.minimumHeight: 40
             Layout.preferredHeight: 40
@@ -104,23 +110,24 @@ Item {
                 // console.log("Node created clicking from Tools")
                 _buttleData.currentGraphIsGraph()
                 _buttleData.currentGraphWrapper = _buttleData.graphWrapper
-                // if before the viewer was showing an image from the brower, we change the currentView
-                if (_buttleData.currentViewerIndex > 9){
+                // If before the viewer was showing an image from the brower, we change the currentView
+                if (_buttleData.currentViewerIndex > 9) {
                     _buttleData.currentViewerIndex = player.lastView
                     if (player.lastNodeWrapper != undefined)
                         _buttleData.currentViewerNodeWrapper = player.lastNodeWrapper
-                    player.changeViewer(player.lastView)                    
+                    player.changeViewer(player.lastView)
                 }
                 _buttleManager.nodeManager.creationNode("_buttleData.graph", nodeType, -graph.originX + 20, -graph.originY + 20)
             }
         }
+
         Item {
             implicitWidth: parent.width
             Layout.minimumHeight: 100
             implicitHeight: 300
             Layout.fillHeight: true
 
-            Graph{
+            Graph {
                 id: graph
                 implicitWidth: parent.width
                 Layout.minimumHeight: 100
@@ -130,12 +137,13 @@ Item {
                 color: "transparent"
                 readOnly: false
                 miniatureState: false
+
                 onClickCreationNode: {
                     // console.log("Node created clicking from Graph")
                     _buttleData.currentGraphIsGraph()
                     _buttleData.currentGraphWrapper = _buttleData.graphWrapper
-                    // if before the viewer was showing an image from the brower, we change the currentView
-                    if (_buttleData.currentViewerIndex > 9){
+                    // If before the viewer was showing an image from the brower, we change the currentView
+                    if (_buttleData.currentViewerIndex > 9) {
                         _buttleData.currentViewerIndex = player.lastView
                         if (player.lastNodeWrapper != undefined)
                             _buttleData.currentViewerNodeWrapper = player.lastNodeWrapper
@@ -159,6 +167,7 @@ Item {
                     anchors.fill: parent
                     hoverEnabled: true
                     acceptedButtons: Qt.LeftButton | Qt.MiddleButton |Qt.RightButton
+
                     onPressed: {
                         pluginVisible=false
                         editNode=false
@@ -173,20 +182,22 @@ Item {
                         rectangleSelection.height = 1;
                         selectMode = leftMouseArea.pressedButtons & Qt.MiddleButton ? false : true
                         moveMode = leftMouseArea.pressedButtons & Qt.MiddleButton ? true : false
-                        if( selectMode ) {
+
+                        if (selectMode) {
                             rectangleSelection.visible = true;
                             drawingSelection = true;
                         }
                     }
+
                     onReleased: {
-                        if(moveMode){
+                        if (moveMode) {
                             moveMode=false
                             var xOffset = mouse.x - xStart
                             var yOffset = mouse.y - yStart
                             graph.offsetX += xOffset
                             graph.offsetY += yOffset
                         }
-                        if( selectMode ) {
+                        if (selectMode) {
                             rectangleSelection.visible = false;
                             _buttleData.clearCurrentSelectedNodeNames();
                             graph.drawSelection(rectangleSelection.x - graph.originX, rectangleSelection.y - graph.originY, rectangleSelection.width, rectangleSelection.height)
@@ -194,22 +205,21 @@ Item {
                     }
 
                     onPositionChanged: {
-                        if( mouse.x < xStart ) {
+                        if (mouse.x < xStart) {
                             rectangleSelection.x = mouse.x
                             rectangleSelection.width = xStart - mouse.x;
-                        }
-                        else {
+                        } else {
                             rectangleSelection.width = mouse.x - xStart;
                         }
-                        if( mouse.y < yStart ) {
+
+                        if (mouse.y < yStart) {
                             rectangleSelection.y = mouse.y
                             rectangleSelection.height = yStart - mouse.y;
-                        }
-                        else {
+                        } else {
                             rectangleSelection.height = mouse.y - yStart;
                         }
 
-                        if( moveMode ) {
+                        if (moveMode) {
                             var xOffset = mouse.x - xStart
                             var yOffset = mouse.y - yStart
                             graph.originX = graphContainer_xStart + xOffset
@@ -217,11 +227,11 @@ Item {
                         }
                     }
 
-                    onWheel:{
-                        if(wheel.angleDelta.y > 0){
+                    onWheel: {
+                        if (wheel.angleDelta.y > 0) {
                             graph.zoomCoeff += graph.zoomStep
-                        }else{
-                            if(graph.zoomCoeff - graph.zoomStep >= 0)
+                        } else {
+                            if (graph.zoomCoeff - graph.zoomStep >= 0)
                                 graph.zoomCoeff -= graph.zoomStep
                         }
 
@@ -231,6 +241,7 @@ Item {
                         parent.container.y = ((graph.height * mouseRatioY) - (parent.container.height * mouseRatioY )) + graph.offsetY - miniGraph.miniOffsetY / miniGraph.scaleFactor *graph.zoomCoeff
                     }
                 }
+
                 onDrawSelection: {
                     _buttleData.addNodeWrappersInRectangleSelection(selectionX / container.width * graph.width, selectionY / container.width * graph.width, selectionWidth / graph.zoomCoeff, selectionHeight / graph.zoomCoeff);
                 }
@@ -244,8 +255,8 @@ Item {
                 }
             }
 
-            //The miniature of the graph
-            Rectangle{
+            // The miniature of the graph
+            Rectangle {
                 id: miniGraph
                 property real scaleFactor: 0.05
                 property real marginTop: 1600
@@ -269,7 +280,7 @@ Item {
                 opacity: 0.7
                 clip: true
 
-                MouseArea{
+                MouseArea {
                     anchors.fill: parent
                     width: miniGraph.width
                     height: miniGraph.height
@@ -282,6 +293,7 @@ Item {
 
                     hoverEnabled: true
                     acceptedButtons: Qt.LeftButton
+
                     onPressed: {
                         xStart = mouse.x
                         yStart = mouse.y
@@ -290,22 +302,23 @@ Item {
                         moveMode = pressedButtons & Qt.LeftButton ? true : false
                     }
                     onReleased: {
-                        if(moveMode){
+                        if (moveMode) {
                             moveMode = false
                             miniGraph.tmpMode = false
-                            if(mouse.x>0 && mouse.x < miniGraph.width){
+
+                            if (mouse.x>0 && mouse.x < miniGraph.width) {
                                 miniGraph.xOffset = mouse.x - xStart
-                            }else if(mouse.x > miniGraph.width){
+                            } else if (mouse.x > miniGraph.width) {
                                 miniGraph.xOffset = miniGraph.width - xStart
-                            }else{
+                            } else {
                                 miniGraph.xOffset = -xStart
                             }
 
-                            if(mouse.y > 0 && mouse.y < miniGraph.height){
+                            if (mouse.y > 0 && mouse.y < miniGraph.height) {
                                 miniGraph.yOffset = mouse.y - yStart
-                            }else if (mouse.y > miniGraph.height){
+                            } else if (mouse.y > miniGraph.height) {
                                 miniGraph.yOffset = miniGraph.height - yStart
-                            }else{
+                            } else {
                                 miniGraph.yOffset = -yStart
                             }
 
@@ -314,7 +327,7 @@ Item {
                             graph.container.x -= (miniGraph.xOffset/miniGraph.scaleFactor*graph.zoomCoeff)
                             graph.container.y -= (miniGraph.yOffset/miniGraph.scaleFactor*graph.zoomCoeff)
 
-                            //to map the tmpVisuWindow (zoom)
+                            // To map the tmpVisuWindow (zoom)
                             miniGraph.originX = visuWindow.x
                             miniGraph.originY = visuWindow.y
                             tmpVisuWindow.width = visuWindow.width
@@ -322,15 +335,16 @@ Item {
                         }
                     }
                     onPositionChanged: {
-                        if(moveMode){
+                        if (moveMode) {
                             miniGraph.tmpMode = true
-                            if((mouse.x > 0 && mouse.x < miniGraph.width) && (mouse.y > 0 && mouse.y < miniGraph.height)){
+
+                            if ((mouse.x > 0 && mouse.x < miniGraph.width) && (mouse.y > 0 && mouse.y < miniGraph.height)) {
                                 var xOffset = mouse.x - xStart
                                 var yOffset = mouse.y - yStart
                                 miniGraph.originX = visuWindowXStart + xOffset
                                 miniGraph.originY = visuWindowYStart + yOffset
                             }
-                        }else{ //to map the tmpVisuWindow (zoom)
+                        } else { // To map the tmpVisuWindow (zoom)
                             miniGraph.originX = visuWindow.x
                             miniGraph.originY = visuWindow.y
                             tmpVisuWindow.width = visuWindow.width
@@ -377,6 +391,5 @@ Item {
                 }
             }
         }
-
     }
 }

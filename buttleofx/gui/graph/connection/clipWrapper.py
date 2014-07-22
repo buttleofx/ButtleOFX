@@ -13,17 +13,18 @@ class ClipWrapper(QtCore.QObject):
         super(ClipWrapper, self).__init__(view)
         self._nodeName = nodeName
         self._clipName = clipName
-        
-        # determined by QML, but declared in model to be shared with connections
+
+        # Determined by QML, but declared in model to be shared with connections
         self._xCoord = 1234
         self._yCoord = 123
 
+    ### Getters ###
     def getNodeName(self):
         return self._nodeName
 
     def getClipName(self):
         return self._clipName
-    
+
     def getFullName(self):
         return "%s.%s" % (self.getNodeName(), self.getClipName())
 
@@ -35,6 +36,7 @@ class ClipWrapper(QtCore.QObject):
         # print("ClipWrapper  << getCoord:", self.getFullName(), self._coord.x(), self._coord.y())
         return self._yCoord
 
+    ### Setters ###
     def setXCoord(self, x):
         # print("ClipWrapper  >> setXCoord:", self.getFullName(), x)
         self._xCoord = x
@@ -44,6 +46,8 @@ class ClipWrapper(QtCore.QObject):
         # print("ClipWrapper  >> setYCoord:", self.getFullName(), y)
         self._yCoord = y
         self.yCoordChanged.emit()
+
+    ################################################## Data exposed to QML ##################################################
 
     name = QtCore.pyqtProperty(str, getClipName, constant=True)
     nodeName = QtCore.pyqtProperty(str, getNodeName, constant=True)

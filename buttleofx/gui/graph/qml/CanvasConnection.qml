@@ -20,7 +20,7 @@ Canvas {
     height: Math.abs(y1 - y2) + 2*canvasMargin
     x: Math.min(x1, x2) - canvasMargin
     y: Math.min(y1, y2) - canvasMargin
-    //color: "transparent"
+    // color: "transparent"
 
     // Drawing a curve for the connection
     onPaint: {
@@ -32,34 +32,30 @@ Canvas {
         var endX = 0
         var endY = 0
         var controlPointXOffset = miniatureState ? 40 * zoomCoeff * miniatureScale : 40 * zoomCoeff;
-        ctx.strokeStyle = "rgb("+r+", "+g+", "+b+")";
+        ctx.strokeStyle = "rgb(" + r + ", " + g + ", " + b + ")";
         ctx.lineWidth = miniatureState ? 2 * miniatureScale : 2;
 
         ctx.beginPath()
 
-        if(x1 <= x2
-        && y1 <= y2){
+        if (x1 <= x2 && y1 <= y2) {
             startX = canvasMargin
             startY = canvasMargin
             endX = width - canvasMargin
             endY = height - canvasMargin
         }
-        if(x1 <= x2
-        && y1 > y2){
+        if (x1 <= x2 && y1 > y2) {
             startX = canvasMargin
             startY = height - canvasMargin
             endX = width - canvasMargin
             endY = canvasMargin
         }
-        if(x1 > x2
-        && y1 <= y2){
+        if (x1 > x2 && y1 <= y2) {
             startX = width - canvasMargin
             startY = canvasMargin
             endX = canvasMargin
             endY = height - canvasMargin
         }
-        if(x1 > x2
-        && y1 > y2){
+        if (x1 > x2 && y1 > y2) {
             startX = width - canvasMargin
             startY = height - canvasMargin
             endX = canvasMargin

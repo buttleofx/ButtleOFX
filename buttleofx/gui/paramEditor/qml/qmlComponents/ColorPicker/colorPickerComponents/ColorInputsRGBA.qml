@@ -1,23 +1,23 @@
 import QtQuick 2.0
 import "ColorFunctions.js" as ColorFunctions
 
-// group of inputs
+// Group of inputs
 Rectangle {
     id: colorFields
     implicitWidth: 80
     implicitHeight: 200
     color: "transparent"
 
-    // properties used to change the text int the boxes r, g, b with default values here
+    // Properties used to change the text in the boxes r, g, b with default values here
     property color currentColor: "white"
     property string alphaColorText: "#FFFFFFFF"
 
-    property real redInput : 0 
-    property real greenInput : 0 
-    property real blueInput : 0
+    property real redInput: 0
+    property real greenInput: 0
+    property real blueInput: 0
     property real alphaInput: 0
 
-    // used to inform colorPicker.qml that the value has changed
+    // Used to inform colorPicker.qml that the value has changed
     property real newAlphaInput
     property real newRedInput
     property real newGreenInput
@@ -25,7 +25,7 @@ Rectangle {
 
     property bool hasAlpha: true
 
-    // column containing the inputs colors 
+    // Column containing the inputs colors
     Column {
         anchors.fill: parent
         anchors.leftMargin: 5
@@ -34,29 +34,32 @@ Rectangle {
         height: parent.height
         spacing: 6
 
-        // Rectangle displaying the current selected color 
+        // Rectangle displaying the current selected color
         Rectangle {
             id: currentColorBox
             width: parent.width
             height: parent.height / 5 + 1
-            SquaresGrid { 
+
+            SquaresGrid {
                 cellSide: 3
                 height: currentColorBox.height
                 width: currentColorBox.width
             }
-            Rectangle{
+
+            Rectangle {
                 width: parent.width
                 height: parent.height
                 border.width: 1
                 border.color: "black"
                 color: colorFields.currentColor
             }
-            MouseArea{
+
+            MouseArea {
                 anchors.fill: parent
             }
         }
 
-        // rectangle displaying the current alphacolor under the text form for example #FF112233 (hexadecimal notation)
+        // Rectangle displaying the current alpha color under the text form, for example #FF112233 (hexadecimal notation)
         Rectangle {
             id: alphaColorBox
             width: 70
@@ -68,6 +71,7 @@ Rectangle {
             clip: true
             anchors.horizontalCenter: parent.horizontalCenter
             visible: colorFields.hasAlpha
+
             TextInput {
                 id: alphaColorText
                 anchors.fill: parent
@@ -75,7 +79,7 @@ Rectangle {
                 anchors.topMargin: 1
                 color: "white"
                 selectionColor: "grey"
-                font.pixelSize: 11            
+                font.pixelSize: 11
                 maximumLength: 9
                 focus: true
                 selectByMouse: true
@@ -89,43 +93,50 @@ Rectangle {
             spacing: 4
 
             // newRedInput, newGreenInput, newBlueInput, newAlphaInput defined as properties in this file, newValueInput defined in ColorInput.qml
-            // we need to divide the values by 255 to send a value between 0 and 1
+            // We need to divide the values by 255 to send a value between 0 and 1
             ColorInput {
                 id: rInput
                 colorName: "R:"
                 valueInput: redInput
                 minValue: 0
                 maxValue: 255
+
                 onNewValueInputChanged: {
                     newRedInput = newValueInput/255
                 }
             }
+
             ColorInput {
                 id: gInput
                 colorName: "G:"
                 valueInput: greenInput
                 minValue: 0
                 maxValue: 255
+
                 onNewValueInputChanged: {
                     newGreenInput = newValueInput/255
                 }
             }
+
             ColorInput {
                 id: bInput
                 colorName: "B:"
-                valueInput: blueInput 
-                minValue: 0 
+                valueInput: blueInput
+                minValue: 0
                 maxValue: 255
+
                 onNewValueInputChanged: {
                     newBlueInput = newValueInput/255
                 }
             }
+
             ColorInput {
                 id: aInput
-                colorName: "A:";
+                colorName: "A:"
                 valueInput: alphaInput
                 minValue: 0
                 maxValue: 255
+
                 onNewValueInputChanged: {
                     newAlphaInput = newValueInput/255
                 }

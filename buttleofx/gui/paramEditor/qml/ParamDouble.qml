@@ -8,32 +8,36 @@ Item {
 
     property variant paramObject: model.object
 
-    // Is this param secret ?
+    // Is this param secret?
     visible: !paramObject.isSecret
     height: paramObject.isSecret ? 0 : implicitHeight
 
     // To fix binding loops
     property bool mousePressed: false
+
     function updateXcursor() {
         return ((sliderInput.text - paramObject.minimum) * barSlider.width) / (paramObject.maximum - paramObject.minimum);
     }
+
     function updateTextValue() {
         return (cursorSlider.x * (paramObject.maximum - paramObject.minimum)) / barSlider.width + paramObject.minimum;
     }
 
-    /* Title of the paramSlider */
+    // Title of the paramSlider
     Row {
         spacing: 10
 
-        /* Title of the paramSlider */
+        // Title of the paramSlider
         Text {
             id: paramDoubleTitle
             text: paramObject.text + " : "
             color: "white"
             font.bold: paramObject.hasChanged ? true : false
+
             MouseArea {
                 anchors.fill: parent
                 acceptedButtons: Qt.RightButton
+
                 onClicked: {
                     paramObject.hasChanged = false
                     paramObject.value = paramObject.getDefaultValue()
@@ -50,7 +54,8 @@ Item {
             color: "white"
             y: 5
         }
-        //The slider
+
+        // The slider
         Item {
             width: 100
             height: parent.height
@@ -65,27 +70,30 @@ Item {
                 text: paramObject.value
                 font.family: "Helvetica"
                 font.pointSize: 8
-                //font bold if param has been modified
+                // Font bold if param has been modified
                 font.bold: paramObject.hasChanged ? true : false
                 maximumLength: 8
                 color: activeFocus ? "white" : "grey"
                 selectByMouse : true
+
                 /*validator: DoubleValidator {
-                    bottom: paramObject.minimum
-                    top: paramObject.maximum
-                }*/
+                  bottom: paramObject.minimum
+                  top: paramObject.maximum
+                  }*/
+
                 onAccepted: {
                     if (sliderInput.text <= paramObject.maximum && sliderInput.text >= paramObject.minimum) {
                         paramObject.value = updateTextValue()
                         paramObject.pushValue(paramObject.value)
-                    } 
-                    else {
+                    } else {
                         paramObject.value = paramObject.getOldValue();
-                    } 
+                    }
                 }
+
                 Component.onCompleted: {
                     cursorSlider.x = updateXcursor();
                 }
+
                 onTextChanged: {
                     if (!mousePressed) {
                         // The doubleValidator is not as good as intValidator, so we need this test.
@@ -97,12 +105,12 @@ Item {
                 onActiveFocusChanged: {
                     if (sliderInput.text <= paramObject.maximum && sliderInput.text >= paramObject.minimum) {
                         paramObject.value = updateTextValue();
-                        paramObject.pushValue(paramObject.value); 
-                    }  
-                    else {
+                        paramObject.pushValue(paramObject.value);
+                    } else {
                         paramObject.value = paramObject.getOldValue();
-                    } 
+                    }
                 }
+
                 MouseArea {
                     anchors.fill: parent
                     acceptedButtons: Qt.RightButton
@@ -114,20 +122,22 @@ Item {
                 }
             }
 
-            // bar slider : one green, one white
+            // Bar slider: one green, one white
             Rectangle {
                 id: barSlider
                 width: 100
                 height: 2
                 y: 8
-                Rectangle{
+
+                Rectangle {
                     id: whiteBar
                     x: 0
                     width: cursorSlider.x
                     height: parent.height
                     color: "#00b2a1"
                 }
-                Rectangle{
+
+                Rectangle {
                     id: greyBar
                     x: cursorSlider.x
                     width: barSlider.width - whiteBar.width
@@ -136,7 +146,7 @@ Item {
                 }
             }
 
-            // cursor slider (little white rectangle)
+            // Cursor slider (little white rectangle)
             Rectangle {
                 id: cursorSlider
                 x: ((paramObject.value - paramObject.minimum) * barSlider.width) / (paramObject.maximum - paramObject.minimum)
@@ -145,16 +155,18 @@ Item {
                 width: 5
                 radius: 2
                 color: "white"
+
                 MouseArea {
                     anchors.fill: parent
                     drag.target: parent
                     drag.axis: Drag.XAxis
-                    drag.minimumX: 0// - cursorSlider.width/2
-                    drag.maximumX: barSlider.width// - cursorSlider.width/2
-                    anchors.margins: -10 // allow to have an area around the cursor which allows to select the cursor even if we are not exactly on it
+                    drag.minimumX: 0 // - cursorSlider.width/2
+                    drag.maximumX: barSlider.width // - cursorSlider.width/2
+                    anchors.margins: -10 // Allow to have an area around the cursor which allows to select the cursor even if we are not exactly on it
+
                     onPressed: {
                         mousePressed = true
-                        // take the focus
+                        // Take the focus
                         paramDouble.forceActiveFocus()
                     }
                     onReleased: {
@@ -163,13 +175,15 @@ Item {
                         mousePressed = false
                     }
                 }
+
                 onXChanged: {
-                    if(mousePressed) {
+                    if (mousePressed) {
                         paramObject.value = updateTextValue();
                     }
                 }
             }
         }
+
         // The max value (at the end of the bar slider)
         Text {
             id: maxValue

@@ -8,26 +8,28 @@ Item {
 
     property variant paramObject: model.object
 
-    // Is this param secret ?
+    // Is this param secret?
     visible: !paramObject.isSecret
     height: paramObject.isSecret ? 0 : implicitHeight
 
-    /*Container of the textInput*/
+    // Container of the textInput
     Row {
         id: paramInt2DInputContainer
         spacing: 10
 
-        /*Title of the paramInt */
+        // Title of the paramInt
         Text {
             id: paramInt2DTitle
             text: paramObject.text + " : "
             color: "white"
-            // if param has been modified, title in bold font
+            // If param has been modified, set title font to bold
             font.bold: (paramObject.value1HasChanged || paramObject.value2HasChanged) ? true : false
+
             MouseArea {
                 anchors.fill: parent
                 acceptedButtons: Qt.RightButton
-                // reinitialise the value of the param to her default value
+
+                // Reinitialise the param to its default value
                 onClicked: {
                     paramObject.value1HasChanged = false
                     paramObject.value2HasChanged = false
@@ -38,7 +40,7 @@ Item {
             }
         }
 
-        /* First Input */
+        // First Input
         Rectangle {
             height: 20
             width:40
@@ -57,14 +59,16 @@ Item {
                 font.bold: paramObject.value1HasChanged ? true : false
                 color: activeFocus ? "white" : "grey"
                 width: 40
-                selectByMouse : true
+                selectByMouse: true
+
                 onAccepted: {
-                    if(acceptableInput) {
+                    if (acceptableInput) {
                         paramObject.value1 = paramInt2DInput1.text
                     }
                 }
+
                 onActiveFocusChanged: {
-                    if(acceptableInput) {
+                    if (acceptableInput) {
                         paramObject.value1 = paramInt2DInput1.text
                     }
                 }
@@ -77,18 +81,19 @@ Item {
                 KeyNavigation.backtab: paramInt2DInput2
                 KeyNavigation.tab: paramInt2DInput2
             }
+
             MouseArea {
                 anchors.fill: parent
                 acceptedButtons: Qt.RightButton
                 onClicked: {
-                    // reinitialise the value of the value1 to her default value
+                    // Reinitialise value1 to its default value
                     paramObject.value1HasChanged = false
                     paramObject.value1 = paramObject.getDefaultValue1()
                 }
             }
         }
 
-        /* Second Input */
+        // Second Input
         Rectangle {
             height: 20
             width:40
@@ -98,7 +103,7 @@ Item {
             radius: 3
             clip: true
 
-            TextInput{
+            TextInput {
                 id: paramInt2DInput2
                 text: paramObject.value2
                 anchors.left: parent.left
@@ -107,17 +112,20 @@ Item {
                 font.bold: paramObject.value2HasChanged ? true : false
                 color: activeFocus ? "white" : "grey"
                 width: 40
-                selectByMouse : true
+                selectByMouse: true
+
                 onAccepted: {
-                    if(acceptableInput) {
+                    if (acceptableInput) {
                         paramObject.value2 = paramInt2DInput2.text
                     }
                 }
+
                 onActiveFocusChanged: {
-                    if(acceptableInput) {
+                    if (acceptableInput) {
                         paramObject.value2 = paramInt2DInput2.text
                     }
                 }
+
                 validator: IntValidator {
                     bottom: model.object.minimum2
                     top:  model.object.maximum2
@@ -126,16 +134,16 @@ Item {
                 KeyNavigation.backtab: paramInt2DInput1
                 KeyNavigation.tab: paramInt2DInput1
             }
+
             MouseArea {
                 anchors.fill: parent
                 acceptedButtons: Qt.RightButton
                 onClicked: {
-                    // reinitialise the value of the value2 to her default value
-                    paramObject.value2HasChanged = false   
+                    // Reinitialise value2 to its default value
+                    paramObject.value2HasChanged = false
                     paramObject.value2 = paramObject.getDefaultValue2()
                 }
             }
         }
     }
-
 }

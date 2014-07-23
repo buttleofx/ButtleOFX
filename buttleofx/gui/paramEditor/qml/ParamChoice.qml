@@ -11,16 +11,17 @@ Item {
     property variant paramObject: model.object
     // property variant menuItems: paramObject.listValue
 
-    // Is this param secret ?
+    // Is this param secret?
     visible: !paramObject.isSecret
     height: paramObject.isSecret ? 0 : implicitHeight
 
-    // convert the qobjectlistmodel into a qml ListModel
+    // Convert the qobjectlistmodel into a qml ListModel
     ListModel {
         id: menuItems
     }
+
     Component.onCompleted: {
-        for( var i=0; i < paramObject.listValue.count; i++ )
+        for (var i = 0; i < paramObject.listValue.count; i++)
         {
             menuItems.append( {text: paramObject.listValue.get(i)} )
         }
@@ -30,18 +31,20 @@ Item {
         id: paramChoiceInputContainer
         spacing: 10
         clip: true
-        //Title of the param
+
+        // Title of the param
         Text {
             id: paramChoiceTitle
             text: paramObject.text + " : "
             color: "white"
             y:5
 
-            // if param has been modified, title in bold font
+            // If param has been modified, title in bold font
             font.bold: paramObject.hasChanged ? true : false
             MouseArea {
                 anchors.fill: parent
                 acceptedButtons: Qt.RightButton
+
                 onClicked: {
                     paramObject.hasChanged = false
                     paramObject.value = paramObject.getDefaultValue()
@@ -57,13 +60,13 @@ Item {
             height: 30
 
             style: ComboBoxStyle {
-
                 background: Rectangle {
                     id: choiceButton
                     color: "#212121"
                     border.width: 1
                     border.color: "#333"
                     radius: 3
+
                     Image{
                         id: arrow
                         source: "file:///" + _buttleData.buttlePath + "/gui/img/buttons/params/arrow.png"
@@ -72,26 +75,25 @@ Item {
                     }
                 }
                 label: Text {
-                        color: "white"
-                        text: paramObject.value
-                        width: comboBox.width
-                        y: 2
-                        x: -2
-                        elide:Text.ElideRight
-                      }
+                    color: "white"
+                    text: paramObject.value
+                    width: comboBox.width
+                    y: 2
+                    x: -2
+                    elide:Text.ElideRight
+                }
             }
 
-            // usefull to avoid setting paramObject.value when loaded the comboBox
+            // Useful to avoid setting paramObject.value when loaded the comboBox
             property int comboBoxCharged: 0
 
-           currentIndex: paramObject.value
+            currentIndex: paramObject.value
 
-           onCurrentIndexChanged: {
+            onCurrentIndexChanged: {
                 if (comboBoxCharged) {
                     paramObject.value = menuItems.get(currentIndex).text
                     paramObject.pushValue(paramObject.value)
-                }
-                else {
+                } else {
                     comboBoxCharged = 1
                 }
             }

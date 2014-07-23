@@ -1,22 +1,23 @@
 import QtQuick 2.0
 
-// an input field with a title
+// An input field with a title
 Row {
-    property alias  colorName: colorName.text
-    property alias  minValue: numValidator.bottom
-    property alias  maxValue: numValidator.top
-    property alias  decimals: numValidator.decimals
+    property alias colorName: colorName.text
+    property alias minValue: numValidator.bottom
+    property alias maxValue: numValidator.top
+    property alias decimals: numValidator.decimals
 
-    // property used to take or give the value of Input from ColorInputsRGBA
-    property real valueInput 
+    // Property used to take or give the value of Input from ColorInputsRGBA
+    property real valueInput
 
-    // used for the update of the current color
+    // Used for the update of the current color
     property real newValueInput
 
     width: 80
     height: 14
     spacing: 4
-    // title of the color (R, G or B for example)
+
+    // Title of the color (R, G or B for example)
     Text {
         id: colorName
         width: 18
@@ -29,7 +30,8 @@ Row {
         anchors.bottomMargin: 3
         text: "R"
     }
-    //input of the color
+
+    // Input of the color
     Rectangle {
         width: 30
         height: parent.height
@@ -38,28 +40,30 @@ Row {
         border.color: "#FF525255"
         color: "#333"
         clip: true
+
         TextInput {
             id: input
             anchors.leftMargin: 4
-            anchors.topMargin: 0 
+            anchors.topMargin: 0
             anchors.fill: parent
-            font.pixelSize: 11            
+            font.pixelSize: 11
             maximumLength: 3
             focus: true
             selectByMouse: true
             color: "white"
             text: valueInput
+
             validator: DoubleValidator {
                 id: numValidator
-                //default values
+                // Default values
                 bottom: 0; top: 255; decimals: 2
                 notation: DoubleValidator.StandardNotation
             }
+
             onAccepted: {
-                // every time the user confirms the entry we save the value in newValueInput and we recup it in colorInputsRGBA.qml
+                // Every time the user confirms the entry we save the value in newValueInput and we recup it in colorInputsRGBA.qml
                 newValueInput = parseInt(input.text)
             }
         }
     }
 }
-

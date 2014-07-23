@@ -2,10 +2,9 @@ import QtQuick 2.0
 import QtQuick.Controls 1.0
 import QtQuick.Layouts 1.0
 import QtQuick.Controls.Styles 1.0
-
 import "../../../gui"
 
-//parent of the ParamEditor is the Row of the ButtleAp
+// Parent of the ParamEditor is the Row of the ButtleApp
 Item {
     id: paramEditor
 
@@ -21,9 +20,9 @@ Item {
     property color gradian2: "#141414"
     property color borderInput: "#444"
 
-    property color textColor : "white"
-    property color activeFocusOn : "white"
-    property color activeFocusOff : "grey"
+    property color textColor: "white"
+    property color activeFocusOn: "white"
+    property color activeFocusOff: "grey"
 
     implicitWidth: 300
     implicitHeight: 500
@@ -39,10 +38,10 @@ Item {
         width: parent.width
         height: parent.height
         y: tabBar.height
-        //handleWidth: 3
+        // handleWidth: 3
         orientation: Qt.Vertical
 
-        /*TUTTLE PARAMS*/
+        // Tuttle params
         Rectangle {
             Layout.minimumHeight: tuttleParamTitle.height
 
@@ -51,14 +50,14 @@ Item {
             width: parent.width
             color: paramEditor.background
 
-            /* Params depend on the node type (Tuttle data)*/
+            // Params depend on the node type (Tuttle data)
             Item {
                 id: tuttleParamContent
                 height: parent.height - tuttleParamTitle.height
                 width: parent.width
                 y: tuttleParamTitle.height + 5
 
-                property string lastGroupParam : "No Group."
+                property string lastGroupParam: "No Group."
 
                 ScrollView {
                     anchors.fill: parent
@@ -79,10 +78,11 @@ Item {
                             id: scrollLower
                             width:15
                             height:15
-                            color: styleData.pressed? "#212121" : "#343434"
+                            color: styleData.pressed ? "#212121" : "#343434"
                             border.width: 1
                             border.color: "#333"
                             radius: 3
+
                             Image{
                                 id: arrow
                                 source: "file:///" + _buttleData.buttlePath + "/gui/img/buttons/params/arrow2.png"
@@ -98,6 +98,7 @@ Item {
                             border.width: 1
                             border.color: "#333"
                             radius: 3
+
                             Image{
                                 id: arrow
                                 source: "file:///" + _buttleData.buttlePath + "/gui/img/buttons/params/arrow.png"
@@ -108,7 +109,7 @@ Item {
                     }
 
 
-                    //frame: false
+                    // frame: false
                     // frameWidth: 0
                     ListView {
                         id: tuttleParam
@@ -121,19 +122,20 @@ Item {
                         model: params
 
                         delegate: Component {
+
                             Loader {
                                 id: param
-                                source : model.object.paramType + ".qml"
+                                source: model.object.paramType + ".qml"
                                 width: parent.width
-                                x: 15 // here is the distance to the left of the listview
+                                x: 15 // Here is the distance to the left of the listview
                             }
                         }
-                    }//Listview
-                }//scrollArea
-            }//rectangle param
+                    } // Listview
+                } // scrollArea
+            } //Rectangle param
 
-            //placed here to avoid a bug of display with the listView (should be displayed after the listview)
-            Rectangle{
+            // Placed here to avoid a bug of display with the listView (should be displayed after the listview)
+            Rectangle {
                 id: tuttleParamTitle
                 width: paramEditor.width
                 height: 40
@@ -156,19 +158,20 @@ Item {
             }
         }
 
-        /*BUTTLE PARAMS*/
-        Rectangle{
+        // Buttle params
+        Rectangle {
             Layout.minimumHeight: buttleParamTitle.height
             id: buttleParams
             height: 190
             width: paramEditor.width
             color: paramEditor.background
 
-            Rectangle{
+            Rectangle {
                 id: buttleParamTitle
                 width: parent.width
                 height: 40
                 color: paramEditor.background
+
                 gradient: Gradient {
                     GradientStop { position: 0.0; color: gradian2 }
                     GradientStop { position: 0.85; color: gradian2 }
@@ -190,12 +193,14 @@ Item {
                 sourceComponent: currentParamNode ? nodeParamComponent : undefined
                 anchors.top: parent.top
                 anchors.topMargin: 50
+
                 Component {
                     id: nodeParamComponent
+
                     Column {
                         spacing: 5
 
-                        /*Name of the node (Buttle data)*/
+                        // Name of the node (Buttle data)
                         Item {
                             id: nodeNameUserItem
                             implicitWidth: 300
@@ -207,7 +212,7 @@ Item {
                                 id: nodeNameUserContainer
                                 spacing: 5
 
-                                /* Title */
+                                // Title
                                 Text {
                                     id: nodeNameUserText
                                     anchors.top: parent.top
@@ -216,7 +221,7 @@ Item {
                                     text: "Name : "
                                 }
 
-                                /* Input field limited to 50 characters */
+                                // Input field limited to 50 characters
                                 Rectangle {
                                     height: 20
                                     implicitWidth: 200
@@ -225,6 +230,7 @@ Item {
                                     border.color: paramEditor.borderInput
                                     radius: 3
                                     clip: true
+
                                     TextInput {
                                         id: nodeNameUserInput
                                         text: currentParamNode ? currentParamNode.nameUser : ""
@@ -233,12 +239,13 @@ Item {
                                         height: parent.height
                                         anchors.leftMargin: 5
                                         maximumLength: 100
-                                        selectByMouse : true
+                                        selectByMouse: true
                                         color: activeFocus ? activeFocusOn : activeFocusOff
 
                                         onAccepted: {
                                             currentParamNode.nameUser = nodeNameUserInput.text
                                         }
+
                                         onActiveFocusChanged: {
                                             currentParamNode.nameUser = nodeNameUserInput.text
                                         }
@@ -246,6 +253,7 @@ Item {
                                         KeyNavigation.backtab: nodeCoordYInput
                                         KeyNavigation.tab: nodeColorRGBInput
                                     }
+
                                     MouseArea {
                                         anchors.fill: parent
                                         acceptedButtons: Qt.RightButton
@@ -255,7 +263,7 @@ Item {
                             }
                         }
 
-                        /* Type of the node (Buttle data) */
+                        // Type of the node (Buttle data)
                         Item {
                             id: nodeTypeItem
                             implicitWidth: 300
@@ -267,7 +275,7 @@ Item {
                                 id: nodeTypeContainer
                                 spacing: 10
 
-                                /* Title */
+                                // Title
                                 Text {
                                     id: nodeTypeText
                                     text: "Type : "
@@ -276,13 +284,14 @@ Item {
                                     anchors.verticalCenter: parent.verticalCenter
                                 }
 
-                                /* Input field limited to 50 characters */
-                                Rectangle{
+                                // Input field limited to 50 characters
+                                Rectangle {
                                     height: 20
                                     implicitWidth: 200
                                     clip: true
                                     color: "transparent"
-                                    Text{
+
+                                    Text {
                                         id: nodeTypeInput
                                         text: currentParamNode ? currentParamNode.nodeType : ""
                                         anchors.left: parent.left
@@ -293,7 +302,7 @@ Item {
                             }
                         }
 
-                        /* Color of the node (Buttle data) */
+                        // Color of the node (Buttle data)
                         Item {
                             id: nodecolorItem
                             implicitWidth: 300
@@ -305,7 +314,7 @@ Item {
                                 id: nodeColorContainer
                                 spacing: 10
 
-                                /* Title */
+                                // Title
                                 Text {
                                     id: nodeColorText
                                     text: "Color : "
@@ -314,7 +323,7 @@ Item {
                                     anchors.verticalCenter: parent.verticalCenter
                                 }
 
-                                /* Input field limited : rgb */
+                                // Input field limited: rgb
                                 Rectangle {
                                     height: 20
                                     implicitWidth: 80
@@ -323,16 +332,17 @@ Item {
                                     border.color: paramEditor.borderInput
                                     radius: 3
                                     clip: true
+
                                     TextInput {
                                         id: nodeColorRGBInput
-                                        //text: currentParamNode ? currentParamNode.color : ""
+                                        // text: currentParamNode ? currentParamNode.color : ""
                                         anchors.left: parent.left
                                         anchors.verticalCenter: parent.verticalCenter
                                         anchors.leftMargin: 5
                                         width: parent.width - 10
                                         height: parent.height
                                         maximumLength: 50
-                                        selectByMouse : true
+                                        selectByMouse: true
                                         color: activeFocus ? activeFocusOn : activeFocusOff
 
                                         onAccepted: currentParamNode.color = nodeColorRGBInput.text
@@ -340,20 +350,22 @@ Item {
 
                                         KeyNavigation.backtab: nodeNameUserInput
                                         KeyNavigation.tab: nodeCoordXInput
-                                    }//textinput
+                                    } // textinput
+
                                     MouseArea {
                                         anchors.fill: parent
                                         acceptedButtons: Qt.RightButton
+
                                         onClicked: {
                                             currentParamNode.color = currentParamNode.getDefaultColor();
                                             console.log("Clicked");
                                         }
                                     }
-                                }//rectangle of nodeColorContainer
-                            }//row nodeColorContainer
-                        }//item nodeColorItem
+                                } // Rectangle of nodeColorContainer
+                            } // Row nodeColorContainer
+                        } // Item nodeColorItem
 
-                        /* Coord of the node (Buttle data) */
+                        // Coord of the node (Buttle data)
                         Item {
                             id: nodecoordItem
                             implicitWidth: 300
@@ -365,12 +377,13 @@ Item {
                                 id: nodeCoordContainer
                                 spacing: 10
 
-                                /* Input label : "x : " */
+                                // Input label : "x : "
                                 Rectangle {
                                     height: 20
                                     implicitWidth: 15
                                     color: "transparent"
-                                    Text{
+
+                                    Text {
                                         id: nodeCoordXLabel
                                         text: "x :"
                                         anchors.left: parent.left
@@ -378,7 +391,8 @@ Item {
                                         color: textColor
                                     }
                                 }
-                                /* Input field limited : x */
+
+                                // Input field limited : x
                                 Rectangle {
                                     height: 20
                                     implicitWidth: 35
@@ -387,6 +401,7 @@ Item {
                                     border.color: paramEditor.borderInput
                                     radius: 3
                                     clip: true
+
                                     TextInput {
                                         id: nodeCoordXInput
                                         text: currentParamNode ? currentParamNode.coord.x : ""
@@ -395,26 +410,27 @@ Item {
                                         width: parent.width - 10
                                         height: parent.height
                                         color: activeFocus ? activeFocusOn : activeFocusOff
-                                        selectByMouse : true
+                                        selectByMouse: true
 
                                         onAccepted: {
                                             currentParamNode.xCoord = nodeCoordXInput.text
                                         }
+
                                         onActiveFocusChanged: {
                                             currentParamNode.xCoord = nodeCoordXInput.text
                                         }
 
                                         KeyNavigation.backtab: nodeColorRGBInput
                                         KeyNavigation.tab: nodeCoordYInput
-
                                     }
                                 }
 
-                                /* Input label : "y : " */
+                                // Input label : "y : "
                                 Rectangle {
                                     height: 20
                                     implicitWidth: 15
                                     color: "transparent"
+
                                     Text {
                                         id: nodeCoordYLabel
                                         text: "y :"
@@ -423,7 +439,8 @@ Item {
                                         color: textColor
                                     }
                                 }
-                                /* Input field limited : y */
+
+                                // Input field limited : y
                                 Rectangle {
                                     height: 20
                                     implicitWidth: 35
@@ -432,6 +449,7 @@ Item {
                                     border.color: paramEditor.borderInput
                                     radius: 3
                                     clip: true
+
                                     TextInput {
                                         id: nodeCoordYInput
                                         text: currentParamNode ? currentParamNode.coord.y : ""
@@ -440,11 +458,12 @@ Item {
                                         width: parent.width - 10
                                         height: parent.height
                                         color: activeFocus ? activeFocusOn : activeFocusOff
-                                        selectByMouse : true
+                                        selectByMouse: true
 
                                         onAccepted: {
                                             currentParamNode.yCoord = nodeCoordYInput.text
                                         }
+
                                         onActiveFocusChanged: {
                                             currentParamNode.yCoord = nodeCoordYInput.text
                                         }
@@ -455,9 +474,9 @@ Item {
                                 }
                             }
                         }
-                    }//column
-                }//component
-            }//loader
-        }//rectangle of buttleParam
-    }//splitterColumn
+                    } // Column
+                } // Component
+            } // Loader
+        } // Rectangle of buttleParam
+    } // splitterColumn
 }

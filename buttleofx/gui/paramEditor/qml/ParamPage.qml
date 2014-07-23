@@ -3,10 +3,10 @@ import QtQuick 2.0
 Item {
     implicitWidth: 100
     implicitHeight: 20
-    
+
     property variant paramObject: model.object
 
-    // Is this param secret ?
+    // Is this param secret?
     visible: !paramObject.isSecret
     height: paramObject.isSecret ? 0 : implicitHeight
 
@@ -19,7 +19,7 @@ Item {
             y: 8
         }
 
-        /*Title of the param*/
+        // Title of the param
         Text {
             id: paramGroupTitle
             text: paramObject.label

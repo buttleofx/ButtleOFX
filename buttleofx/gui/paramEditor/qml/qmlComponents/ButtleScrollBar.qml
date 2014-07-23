@@ -10,18 +10,17 @@ Rectangle {
     // If set to false, scrollbar is visible even when not scrolling
     property bool hideScrollBarsWhenStopped: true
 
-    // Thickness of the scrollbar, in pixels      
+    // Thickness of the scrollbar, in pixels
     property int scrollbarWidth: 7
 
     color: "white"
     radius: vertical ? width/2 : height/2
 
-    function sbOpacity()      {
-     if (!hideScrollBarsWhenStopped) {
-         return 0.5;
-     }
-
-     return (flickable.flicking || flickable.moving) ? (vertical ? (height >= parent.height ? 0 : 0.5) : (width >= parent.width ? 0 : 0.5)) : 0;
+    function sbOpacity() {
+        if (!hideScrollBarsWhenStopped) {
+            return 0.5;
+        }
+        return (flickable.flicking || flickable.moving) ? (vertical ? (height >= parent.height ? 0 : 0.5) : (width >= parent.width ? 0 : 0.5)) : 0;
     }
 
     // Scrollbar appears automatically when content is bigger than the Flickable
@@ -37,4 +36,3 @@ Rectangle {
     // Animate scrollbar appearing/disappearing
     Behavior on opacity { NumberAnimation { duration: 200 }}
 }
- 

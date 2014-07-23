@@ -7,7 +7,7 @@ Item {
 
     property variant paramObject: model.object
 
-    // Is this param secret ?
+    // Is this param secret?
     visible: !paramObject.isSecret
     height: paramObject.isSecret ? 0 : implicitHeight
 
@@ -32,6 +32,7 @@ Item {
             anchors.horizontalCenter: parent.horizontalCenter
             y: 2
             font.pixelSize: 14
+
             Component.onCompleted:
             {
                 pushButton.height = font.pixelSize + 6
@@ -44,7 +45,7 @@ Item {
             onPressed:
             {
                 pushButton.state = (pushButton.state == "enabled" ? "disabled" : "enabled")
-                // take the focus of the MainWindow
+                // Take the focus of the MainWindow
                 pushButton.forceActiveFocus()
             }
         }
@@ -54,12 +55,12 @@ Item {
                 id: stateEnabled
                 name: "enabled"
                 when: pushButton.enabled
-                PropertyChanges { 
+                PropertyChanges {
                     target: buttonid
                     color: "white"
                 }
-                PropertyChanges { 
-                    target: pushButton 
+                PropertyChanges {
+                    target: pushButton
                     color: "555"
                 }
             },
@@ -67,13 +68,13 @@ Item {
                 id: stateDisabled
                 name: "disabled"
                 when: !pushButton.enabled
-                PropertyChanges { 
+                PropertyChanges {
                     target: buttonid
                     color: "grey"
                 }
-                PropertyChanges { 
-                    target: pushButton 
-                    color: "#343434" 
+                PropertyChanges {
+                    target: pushButton
+                    color: "#343434"
                 }
             }
         ]

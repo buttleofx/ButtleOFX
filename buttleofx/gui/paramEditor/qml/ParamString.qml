@@ -1,9 +1,8 @@
 import QtQuick 2.0
-import FolderListViewItem 1.0
 import QtQuick.Dialogs 1.0
+import FolderListViewItem 1.0
 
-/*ParamString is an input field*/
-
+// ParamString is an input field
 Item {
     id: containerParamString
     implicitWidth: 300
@@ -13,31 +12,32 @@ Item {
     property variant paramObject: model.object
     property bool existPath: paramObject.filePathExist
 
-    // Is this param secret ?
+    // Is this param secret?
     visible: !paramObject.isSecret
     height: paramObject.isSecret ? 0 : implicitHeight
 
-  /*  FolderListView {
+    /*  FolderListView {
         id: finder
         property bool existPath: _buttleData.currentParamNodeWrapper.pluginContext=="OfxImageEffectContextReader":false
         typeDialog: existPath ? "OpenFile" : "SaveFile"
         messageDialog: existPath ? "Open file" : "Save file as"
-    }
-*/
+        }
+    */
 
-    Row{
+    Row {
         id: paramStringInputContainer
         spacing: 10
 
-        /*Title of the paramString */
+        // Title of the paramString
         Text {
             id: paramStringTitle
             text: paramObject.text + " : "
             color: "white"
             elide: Text.ElideRight
             clip: true
-            // if param has been modified, title in bold font
+            // if param has been modified, set the title font to bold
             font.bold: paramObject.hasChanged ? true : false
+
             MouseArea {
                 anchors.fill: parent
                 acceptedButtons: Qt.RightButton
@@ -47,8 +47,8 @@ Item {
             }
         }
 
-        /*Input field limited to 50 characters*/
-        Rectangle{
+        // Input field limited to 50 characters
+        Rectangle {
             id: stringInput
             height: 20
             color: "#212121"
@@ -57,14 +57,16 @@ Item {
             radius: 3
             clip: true
 
-            /*Container of the textInput*/
+            // Container of the textInput
             Loader {
-                sourceComponent: paramObject.stringType == "OfxParamStringIsMultiLine" ? paramObject.stringType == "OfxParamStringIsLabel"  ? paramStringLabel : paramStringMultiline :  paramStringNotMultiline 
-                anchors.fill : parent
-                Component{
+                sourceComponent: paramObject.stringType == "OfxParamStringIsMultiLine" ? paramObject.stringType == "OfxParamStringIsLabel" ? paramStringLabel : paramStringMultiline : paramStringNotMultiline
+                anchors.fill: parent
+
+                Component {
                     id : paramStringMultiline
-                    // we need a multi line input
-                    Flickable { 
+
+                    // We need a multi line input
+                    Flickable {
                         id: flick
                         width: parent.width - 10
                         height: parent.height
@@ -72,13 +74,13 @@ Item {
                         contentHeight: paramStringMultilines.paintedHeight
                         clip: true
 
-                        function ensureVisible(r) 
-                        { 
-                            if (contentX >= r.x) 
-                                contentX = r.x 
-                            else if (contentX+width <= r.x+r.width) 
-                                contentX = r.x+r.width-width 
-                            if (contentY >= r.y) 
+                        function ensureVisible(r) {
+                            if (contentX >= r.x)
+                                contentX = r.x
+                            else if (contentX+width <= r.x+r.width)
+                                contentX = r.x+r.width-width
+
+                            if (contentY >= r.y)
                                 contentY = r.y
                             else if (contentY+height <= r.y+r.height)
                                 contentY = r.y+r.height-height
@@ -92,43 +94,48 @@ Item {
                             color: activeFocus ? "white" : "grey"
                             font.pointSize: 10
                             onCursorRectangleChanged: flick.ensureVisible(cursorRectangle)
+
                             Keys.onEnterPressed: {
                                 paramObject.changeValue(paramStringMultilines.text)
                             }
-                            focus: true 
-                        } 
+                            focus: true
+                        }
                     }
                 }
-                Component{
+
+                Component {
                     id : paramStringNotMultiline
-                    TextInput{ 
-                        id: paramStringInput 
+                    TextInput{
+                        id: paramStringInput
                         text: paramObject.value
                         anchors.left: parent.left
                         anchors.leftMargin: 5
                         anchors.rightMargin: 5
-                        width: parent.width - 10 
+                        width: parent.width - 10
                         height: parent.height
                         color: activeFocus ? "white" : "grey"
                         selectByMouse: true
-                        onAccepted: { 
-                            // call 2 times paramObject here in qml doesn't work, so add a fonction which do both of them in python
-                            // paramObject.value = paramStringInput.text 
+
+                        onAccepted: {
+                            // Calling paramObject twice here in qml doesn't work, so we add a function which does both of them in python
+                            // paramObject.value = paramStringInput.text
                             // paramObject.pushValue(paramObject.value)
                             paramObject.changeValue(paramStringInput.text)
-                        } 
+                        }
                         focus: true
                     }
                 }
+
                 Component{
                     id : paramStringLabel
-                    Text{
+
+                    Text {
                         id: paramStringLabelText
                         text: paramObject.value
                         anchors.left: parent.left
                         anchors.leftMargin: 5
                         anchors.rightMargin: 5
-                        width: parent.width - 10 
+                        width: parent.width - 10
                         height: parent.height
                     }
                 }
@@ -142,7 +149,7 @@ Item {
                 }
             }
 
-            // state which enable us to update display, depend on what type of String we have on TuttleOFX
+            // State which enables us to update display, depending on what type of String we have on TuttleOFX
             states: [
                 State {
                     name: "singleLine"
@@ -186,9 +193,9 @@ Item {
                     }
                 }
             ]
-        }//Rectangle
+        } //Rectangle
 
-        // hidden by default
+        // Hidden by default
         Image {
             id: folderforFileOrDirectory
             source: "file:///" + _buttleData.buttlePath + "/gui/img/buttons/params/folder.png"
@@ -199,24 +206,28 @@ Item {
                 anchors.fill: parent
 
                 onPressed: {
-                    if(existPath){finderLoadFile.open()}else{finderSaveFile.open()}
+                    if (existPath){
+                        finderLoadFile.open()
+                    } else {
+                        finderSaveFile.open()
+                    }
                 }
 
-                // open a file dialog to select a file
-                /*FileDialog {
+                // Open a file dialog to select a file
+                /* FileDialog {
 
-                    id: folderfiledialog
-                    title: "Open"
-                    folder: _buttleData.buttlePath
-                    nameFilters: [ "All files (*)" ]
-                    selectedNameFilter: "All files (*)"
-                    onAccepted: {
-                        if (folderfiledialog.fileUrl){
-                            paramObject.value = folderfiledialog.fileUrl
-                            paramObject.pushValue(paramObject.value)
-                        }
-                    }
-                }*/
+                  id: folderfiledialog
+                  title: "Open"
+                  folder: _buttleData.buttlePath
+                  nameFilters: [ "All files (*)" ]
+                  selectedNameFilter: "All files (*)"
+                  onAccepted: {
+                  if (folderfiledialog.fileUrl){
+                  paramObject.value = folderfiledialog.fileUrl
+                  paramObject.pushValue(paramObject.value)
+                  }
+                  }
+                  }*/
 
                 FileDialog {
                     id: finderLoadFile
@@ -224,8 +235,9 @@ Item {
                     folder: _buttleData.buttlePath
                     nameFilters: [ "All files (*)" ]
                     selectedNameFilter: "All files (*)"
+
                     onAccepted: {
-                        if (finderLoadFile.fileUrl){
+                        if (finderLoadFile.fileUrl) {
                             paramObject.value = finderLoadFile.fileUrl
                             paramObject.pushValue(paramObject.value)
                         }
@@ -238,15 +250,16 @@ Item {
                     folder: _buttleData.buttlePath
                     nameFilters:  [ "All files (*)" ]
                     selectedNameFilter: "All files (*)"
+
                     onAccepted: {
-                        if (finderSaveFile.fileUrl){
+                        if (finderSaveFile.fileUrl) {
                             paramObject.value = finderSaveFile.fileUrl
                             paramObject.pushValue(paramObject.value)
                         }
                     }
                     selectExisting: false
                 }
-            }//MouseArea
-        }//Image
-    }//Row
+            } // MouseArea
+        } // Image
+    } // Row
 }

@@ -1,7 +1,6 @@
 import QtQuick 2.0
 
-/*ParamDouble2D containts two input field*/
-
+// ParamDouble2D containts two input field
 Item {
     id: containerParamDouble2D
     implicitWidth: 300
@@ -10,26 +9,28 @@ Item {
 
     property variant paramObject: model.object
 
-    // Is this param secret ?
+    // Is this param secret?
     visible: !paramObject.isSecret
     height: paramObject.isSecret ? 0 : implicitHeight
 
-    /*Container of the two input field*/
-     Row {
+    // Container of the two input field
+    Row {
         id: paramDouble2DInputContainer
-        spacing : 10
+        spacing: 10
 
         // Title of the paramDouble
         Text {
             id: paramDouble2DTitle
             text: paramObject.text + " : "
             color: "white"
-            // if param has been modified, title in bold font
+            // If param has been modified, title in bold font
             font.bold: (paramObject.value1HasChanged || paramObject.value2HasChanged) ? true : false
+
             MouseArea {
                 anchors.fill: parent
                 acceptedButtons: Qt.RightButton
-                // reinitialise the value of the param to her default value
+                // Reinitialise the value of the param to its default value
+
                 onClicked: {
                     paramObject.value1HasChanged = false
                     paramObject.value2HasChanged = false
@@ -39,7 +40,7 @@ Item {
             }
         }
 
-        /* First input */
+        // First input
         Rectangle {
             height: 20
             width: 40
@@ -59,44 +60,46 @@ Item {
                 anchors.verticalCenter: parent.verticalCenter
                 font.bold: paramObject.value1HasChanged ? true : false
                 color: activeFocus ? "white" : "grey"
-                selectByMouse : true
+                selectByMouse: true
+
                 onAccepted: {
-                    if(text <= paramObject.maximum1 && text >= paramObject.minimum1){
+                    if (text <= paramObject.maximum1 && text >= paramObject.minimum1) {
                         paramObject.value1 = paramDouble2Dinput1.text;
-                    }
-                    else {
+                    } else {
                         text = paramObject.value1;
                     }
                 }
+
                 onActiveFocusChanged: {
-                    if(text <= paramObject.maximum1 && text >= paramObject.minimum1){
+                    if (text <= paramObject.maximum1 && text >= paramObject.minimum1) {
                         paramObject.value1 = paramDouble2Dinput1.text;
-                    }
-                    else {
+                    } else {
                         text = paramObject.value1;
                     }
                 }
-        
+
                 /*validator: DoubleValidator {
-                    bottom: paramObject.minimum1
-                    top:  paramObject.maximum1
-                }*/
+                  bottom: paramObject.minimum1
+                  top:  paramObject.maximum1
+                  }*/
 
                 KeyNavigation.backtab: paramDouble2Dinput2
                 KeyNavigation.tab: paramDouble2Dinput2
             }
+
             MouseArea {
                 anchors.fill: parent
                 acceptedButtons: Qt.RightButton
+
                 onClicked: {
-                    // reinitialise the value of the value1 to her default value
+                    // Reinitialise value1 to its default value
                     paramObject.value1HasChanged = false
                     paramObject.value1 = paramObject.getDefaultValue1()
                 }
             }
         }
 
-        /* Second input */
+        // Second input
         Rectangle {
             height: 20
             width: 40
@@ -116,36 +119,39 @@ Item {
                 anchors.rightMargin: 2
                 color: activeFocus ? "white" : "grey"
                 font.bold: paramObject.value2HasChanged ? true : false
-                selectByMouse : true
+                selectByMouse: true
+
                 onAccepted: {
-                     if(text <= paramObject.maximum2 && text >= paramObject.minimum2){
+                    if (text <= paramObject.maximum2 && text >= paramObject.minimum2) {
                         paramObject.value2 = paramDouble2Dinput2.text;
-                    }
-                    else {
+                    } else {
                         text = paramObject.value2;
                     }
                 }
+
                 onActiveFocusChanged: {
-                    if(text <= paramObject.maximum2 && text >= paramObject.minimum2){
+                    if (text <= paramObject.maximum2 && text >= paramObject.minimum2) {
                         paramObject.value1 = paramDouble2Dinput1.text;
-                    }
-                    else {
+                    } else {
                         text = paramObject.value2;
                     }
                 }
+
                 /*validator: DoubleValidator {
-                    bottom: paramObject.minimum2
-                    top: paramObject.maximum2
-                }*/
+                  bottom: paramObject.minimum2
+                  top: paramObject.maximum2
+                  }*/
 
                 KeyNavigation.backtab: paramDouble2Dinput1
                 KeyNavigation.tab: paramDouble2Dinput1
             }
+
             MouseArea {
                 anchors.fill: parent
                 acceptedButtons: Qt.RightButton
+
                 onClicked: {
-                    // reinitialise the value of the value2 to her default value
+                    // Reinitialise the value of value2 to its default value
                     paramObject.value2HasChanged = false
                     paramObject.value2 = paramObject.getDefaultValue2()
                 }

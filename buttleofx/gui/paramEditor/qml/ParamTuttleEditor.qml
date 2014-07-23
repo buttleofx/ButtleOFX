@@ -1,12 +1,11 @@
 import QtQuick 2.0
-import QtQuick.Controls 1.0
 import QtQuick.Layouts 1.0
+import QtQuick.Controls 1.0
 import QtQuick.Controls.Styles 1.0
+import "../../../gui"
 import "qmlComponents"
 
-import "../../../gui"
-
-//parent of the ParamEditor is the Row of the ButtleAp
+// Parent of the ParamEditor is the Row of the ButtleApp
 Item {
     id: paramEditor
 
@@ -22,30 +21,29 @@ Item {
     property color gradian2: "#141414"
     property color borderInput: "#444"
 
-    property color textColor : "white"
-    property color activeFocusOn : "white"
-    property color activeFocusOff : "grey"
+    property color textColor: "white"
+    property color activeFocusOn: "white"
+    property color activeFocusOff: "grey"
 
     implicitWidth: 300
     implicitHeight: 500
 
     Tab {
         id: tabBar
-        name:!_buttleData.currentParamNodeWrapper? "Parameters" : "Parameters of :    " + _buttleData.currentParamNodeWrapper.nameUser
+        name:!_buttleData.currentParamNodeWrapper ? "Parameters" : "Parameters of :    " + _buttleData.currentParamNodeWrapper.nameUser
         onCloseClicked: paramEditor.buttonCloseClicked(true)
         onFullscreenClicked: paramEditor.buttonFullscreenClicked(true)
     }
 
-    /*TUTTLE PARAMS*/
+    // Tuttle params
     Rectangle {
-
         id: tuttleParams
         height: parent.height-5
         width: parent.width
         y: tabBar.height
         color: paramEditor.background
 
-        /* Params depend on the node type (Tuttle data)*/
+        // Params depend on the node type (Tuttle data)
         Item {
             id: tuttleParamContent
             height: parent.height
@@ -78,7 +76,8 @@ Item {
                         border.width: 1
                         border.color: "#333"
                         radius: 3
-                        Image{
+
+                        Image {
                             id: arrow
                             source: "file:///" + _buttleData.buttlePath + "/gui/img/buttons/params/arrow2.png"
                             x:4
@@ -93,6 +92,7 @@ Item {
                         border.width: 1
                         border.color: "#333"
                         radius: 3
+
                         Image{
                             id: arrow
                             source: "file:///" + _buttleData.buttlePath + "/gui/img/buttons/params/arrow.png"
@@ -103,7 +103,7 @@ Item {
                 }
 
 
-                //frame: false
+                // frame: false
                 // frameWidth: 0
                 ListView {
                     id: tuttleParam
@@ -116,23 +116,26 @@ Item {
                     model: params
 
                     delegate: Component {
+
                         Loader {
                             id: param
                             source : model.object.paramType + ".qml"
                             width: parent.width
-                            x: 15 // here is the distance to the left of the listview
+                            x: 15 // Here is the distance to the left of the listview
                             z:0
 
-                            ToolTip{
+                            ToolTip {
                                 id:tooltip
                                 visible: false
                                 paramHelp: model.object.doc
                                 z:param.z+1
                             }
+
                             MouseArea {
                                 anchors.fill: parent
                                 acceptedButtons: Qt.RightButton
                                 hoverEnabled:true
+
                                 onClicked: {
                                     model.object.hasChanged = false
                                     model.object.value = model.object.getDefaultValue()
@@ -147,8 +150,8 @@ Item {
                             }
                         }
                     }
-                }//Listview
-            }//scrollArea
-        }//rectangle param
+                } // Listview
+            } // scrollArea
+        } // rectangle param
     }
 }

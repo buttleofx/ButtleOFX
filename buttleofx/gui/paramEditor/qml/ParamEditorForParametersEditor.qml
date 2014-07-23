@@ -3,7 +3,7 @@ import QtQuick.Controls 1.0
 import QtQuick.Layouts 1.0
 import QtQuick.Controls.Styles 1.0
 
-//parent of the ParamEditor is the Row of the ButtleAp
+// Parent of the ParamEditor is the Row of the ButtleApp
 Item {
     id: paramEditor
 
@@ -16,15 +16,15 @@ Item {
     property color gradian2: "#141414"
     property color borderInput: "#444"
 
-    property color textColor : "white"
-    property color activeFocusOn : "white"
-    property color activeFocusOff : "grey"
+    property color textColor: "white"
+    property color activeFocusOn: "white"
+    property color activeFocusOff: "grey"
 
     implicitWidth: 300
     implicitHeight: 500
     height: tuttleParamContent.height
 
-    /*TUTTLE PARAMS*/
+    // Tuttle params
 
     Rectangle {
         Layout.minimumHeight: tuttleParamTitle.height
@@ -35,14 +35,16 @@ Item {
         color: paramEditor.background
 
         // Title of the node
-        Button{
+        Button {
             id: tuttleParamTitle
             height: 40
+
             style: ButtonStyle {
                 background: Rectangle {
                     implicitWidth: paramEditor.width
                     implicitHeight: 40
                     color: paramEditor.background
+
                     gradient: Gradient {
                         GradientStop { position: 0.0; color: gradian2 }
                         GradientStop { position: 0.85; color: gradian2 }
@@ -51,7 +53,7 @@ Item {
                     }
                 }
 
-                label: Text{
+                label: Text {
                     color: textColor
                     text: currentParamNode.name
                     anchors.verticalCenter: parent.verticalCenter
@@ -61,23 +63,21 @@ Item {
                     clip: true
                 }
             }
+
             onClicked: {
-                 if (tuttleParamContent.visible == true){
+                if (tuttleParamContent.visible == true) {
                     tuttleParamContent.visible = false
                     tuttleParamContent.height = 0
-                }
-                else{
-                    //tuttleParamContent.height = newHeight
+                } else {
+                    // tuttleParamContent.height = newHeight
                     tuttleParamContent.height = tuttleParam.contentHeight + 20
                     tuttleParamContent.visible = true
                 }
-
             }
-
         }
 
 
-        /* Params depend on the node type (Tuttle data)*/
+        // Params depend on the node type (Tuttle data)
         Rectangle {
             id: tuttleParamContent
             height: tuttleParam.contentHeight + 20
@@ -87,9 +87,9 @@ Item {
 
             visible: true
 
-            color : "transparent"
+            color: "transparent"
 
-            property string lastGroupParam : "No Group."
+            property string lastGroupParam: "No Group."
 
 
             ListView {
@@ -109,12 +109,12 @@ Item {
                 delegate: Component {
                     Loader {
                         id: param
-                        source : model.object.paramType + ".qml"
+                        source: model.object.paramType + ".qml"
                         width: parent.width
-                        x: 15 // here is the distance to the left of the listview
+                        x: 15 // Here is the distance to the left of the listview
                     }
                 }
-            }//Listview
-        }//item param
+            } //Listview
+        } // Item param
     }
 }

@@ -1,18 +1,18 @@
 import QtQuick 2.0
 
-// square where we can choose the saturation and the brightness of the color
-Item{
+// Square where we can choose the saturation and the brightness of the color
+Item {
     id: bsPicker // bs for brightness and saturation
     implicitWidth: 120
     implicitHeight: 120
     clip: true
 
-    // properties used to manage the update of saturation in colorPicker
+    // Properties used to manage the update of saturation in colorPicker
     property real saturation
     property real newSaturation
-    property real editingSaturation : cursorPicker.x/bsPicker.width
+    property real editingSaturation: cursorPicker.x/bsPicker.width
 
-    // properties used to manage the update of brightness in colorPicker
+    // Properties used to manage the update of brightness in colorPicker
     property real brightness
     property real newBrightness
     property real editingBrightness : 1 - cursorPicker.y/bsPicker.height
@@ -20,13 +20,13 @@ Item{
     // currentColor is the color displayed in the little rectangle (black by default)
     property color currentColor : "black"
 
-    SquaresGrid { 
+    SquaresGrid {
         height: parent.height
         width: parent.width
-        cellSide: 3 
-    } 
+        cellSide: 3
+    }
 
-    Rectangle{
+    Rectangle {
         anchors.fill: parent;
         rotation: -90
         gradient: Gradient {
@@ -34,7 +34,8 @@ Item{
             GradientStop { position: 1.0; color: bsPicker.currentColor }
         }
     }
-    Rectangle{
+
+    Rectangle {
         anchors.fill: parent
         gradient: Gradient {
             GradientStop { position: 1.0; color: "#FF000000" }
@@ -45,10 +46,11 @@ Item{
     Item {
         id: cursorPicker
         property int r : 5
+
         Rectangle {
-            // - parent.r is used to match center of the circle and position
-            /* x and y are updated in StateGroup and so when the colorPicker is charged, x and y adapt 
-            their value to saturation and brightness (as defined in colorPicker) */
+            // parent.r is used to match center of the circle and position
+            /* x and y are updated in StateGroup so when the colorPicker is changed, x and y adapt
+               their value to saturation and brightness (as defined in colorPicker) */
             x: - parent.r
             y: -parent.r
             width: parent.r*2
@@ -57,6 +59,7 @@ Item{
             border.color: "black"
             border.width: 1
             color: "transparent"
+
             Rectangle {
                 anchors.fill: parent; anchors.margins: 1;
                 border.color: "white"
@@ -66,15 +69,18 @@ Item{
             }
         }
     }
+
     MouseArea {
         anchors.fill: parent
-        //handleMouse used to manage the displacement of the little circle cursor in the square
+        // handleMouse used to manage the displacement of the little circle cursor in the square
+
         function handleMouse(mouse) {
             if (mouse.buttons & Qt.LeftButton) {
                 cursorPicker.x =  Math.max(0, Math.min(width,  mouse.x));
                 cursorPicker.y = Math.max(0, Math.min(height, mouse.y));
             }
         }
+
         onPositionChanged: {
             handleMouse(mouse)
         }
@@ -93,18 +99,19 @@ Item{
     }
 
     StateGroup {
-        // this state concerns the state of the cursor mooved with the mouse and used to choose the value of brightness and saturation
+        // This state concerns the state of the cursor mooved with the mouse and used to choose the value of brightness and saturation
         id: stateMoving
-        // state by default, cursor doesn't moved
+        // State by default, cursor doesn't moved
         state: "normal"
+
         states: [
             State {
-                // cursor is immobile
+                // Cursor is immobile
                 name: "normal"
                 PropertyChanges { target: cursorPicker; y: (1 - brightness)*bsPicker.height; x: saturation*bsPicker.width; }
             },
             State {
-                // cursor is moved by the user
+                // Cursor is moved by the user
                 name: "moving"
                 PropertyChanges { target: cursorPicker; y: (1 - brightness)*bsPicker.height; x: saturation*bsPicker.width; }
             }

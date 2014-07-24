@@ -37,7 +37,7 @@ Item {
         onFullscreenClicked: parametersEditor.buttonFullscreenClicked(true)
     }
 
-    property bool pluginVisible: false
+    property bool pluginVisible:false
 
     // List of plugins
     PluginBrowser {
@@ -47,7 +47,7 @@ Item {
         y: mainWindowQML.y + mainWindowQML.height - 302
     }
 
-    // Drag & drop from Browser to ParametersEditor
+    // Drag&Drop from Browser to ParametersEditor
     DropArea {
         anchors.fill: parent
         keys: "internFileDrag"
@@ -55,7 +55,7 @@ Item {
         onDropped: {
             _buttleData.currentGraphWrapper = _buttleData.graphWrapper
             _buttleData.currentGraphIsGraph()
-            // If the viewer was already showing an image from the brower, we change the currentView
+            // If before the viewer was showing an image from the brower, we change the currentView
             if (_buttleData.currentViewerIndex > 9) {
                 _buttleData.currentViewerIndex = player.lastView
                 if (player.lastNodeWrapper != undefined)
@@ -64,7 +64,7 @@ Item {
             }
 
             for (var urlIndex in drag.source.selectedFiles) {
-                _buttleManager.nodeManager.dropFile(drag.source.selectedFiles[urlIndex], 10*urlIndex, 10*urlIndex)
+                _buttleManager.nodeManager.dropFile(drag.source.selectedFiles[urlIndex], 10 * urlIndex, 10 * urlIndex)
             }
         }
     }
@@ -88,13 +88,15 @@ Item {
             y: 10
 
             style: ScrollViewStyle {
-                scrollBarBackground : Rectangle {
+
+                scrollBarBackground: Rectangle {
                     id: scrollBar
                     width:15
                     color: "#212121"
                     border.width: 1
                     border.color: "#333"
                 }
+
                 decrementControl : Rectangle {
                     id: scrollLower
                     width:15
@@ -120,7 +122,7 @@ Item {
                     border.color: "#333"
                     radius: 3
 
-                    Image {
+                    Image{
                         id: arrow
                         source: "file:///" + _buttleData.buttlePath + "/gui/img/buttons/params/arrow.png"
                         x:4
@@ -136,7 +138,6 @@ Item {
                 model: _buttleData.graphCanBeSaved? _buttleData.getSortedNodesWrapper():_buttleData.getSortedNodesWrapper()
                 delegate: paramDelegate
             }
-
         }
 
         // Delegate of the list of paramNode
@@ -152,7 +153,7 @@ Item {
                 Layout.minimumHeight: tuttleParamTitle.height
                 color: "#141414"
 
-                property variant params : model.object ? model.object.params : null
+                property variant params: model.object ? model.object.params : null
                 property variant currentParamNode: model.object
 
                 property color backgroundInput: "#343434"
@@ -166,7 +167,6 @@ Item {
                 Rectangle {
                     id: tuttleParamTitle
                     height: 40
-
                     implicitWidth: paramNode.width
                     implicitHeight: 40
                     color: "#141414"
@@ -179,7 +179,7 @@ Item {
                     }
 
                     Image {
-                        source: tuttleParamContent.visible ? "file:///" + _buttleData.buttlePath +  "/gui/img/buttons/params/arrow_hover.png" : "file:///" + _buttleData.buttlePath +  "/gui/img/buttons/params/arrow_right.png"
+                        source: tuttleParamContent.visible ? "file:///" + _buttleData.buttlePath + "/gui/img/buttons/params/arrow_hover.png" : "file:///" + _buttleData.buttlePath + "/gui/img/buttons/params/arrow_right.png"
                         width: 12
                         height: 12
                         anchors.right: parent.right
@@ -243,8 +243,9 @@ Item {
 
                         onPressed: {
                             pluginVisible =false
+
                             if (mouse.button == Qt.LeftButton) {
-                                if (tuttleParamContent.visible == true) {
+                                if (tuttleParamContent.visible == true){
                                     tuttleParamContent.visible = false
                                     tuttleParamContent.height = 0
                                 } else {
@@ -280,8 +281,8 @@ Item {
                     Image {
                         id: upNode
                         source: "file:///" + _buttleData.buttlePath + "/gui/img/buttons/params/arrow2.png"
-                        x:8
-                        y:0
+                        x: 8
+                        y: 0
 
                         MouseArea {
                             id: upNodeMouseArea
@@ -295,6 +296,7 @@ Item {
                                 if (listViewParam.currentIndex>0) {
                                     var firstUpNode = _buttleData.graphWrapper.getNodeWrapperByIndex(index-1)
                                     var secondUpNode = _buttleData.graphWrapper.getNodeWrapperByIndex(index)
+
                                     if (firstUpNode.pluginContext != "OfxImageEffectContextReader")
                                         _buttleManager.connectionManager.switchNodes(firstUpNode,secondUpNode)
                                 }
@@ -304,20 +306,23 @@ Item {
                         StateGroup {
                             id: upNodeStateButtonEvents
                             states: [
+
                                 State {
                                     name: "reader"
                                     when: currentParamNode.pluginContext == "OfxImageEffectContextReader"
+
                                     PropertyChanges {
                                         target: upNode
-                                        source:  ""
+                                        source: ""
                                     }
                                 },
                                 State {
                                     name: "hover"
                                     when: upNodeMouseArea.containsMouse
+
                                     PropertyChanges {
                                         target: upNode
-                                        source: "file:///" + _buttleData.buttlePath +  "/gui/img/buttons/params/arrow2_hover.png"
+                                        source: "file:///" + _buttleData.buttlePath + "/gui/img/buttons/params/arrow2_hover.png"
                                     }
                                 }
                             ]
@@ -326,8 +331,8 @@ Item {
 
                     Image {
                         id: downNode
-                        source: "file:///" + _buttleData.buttlePath +"/gui/img/buttons/params/arrow.png"
-                        x:8
+                        source: "file:///" + _buttleData.buttlePath + "/gui/img/buttons/params/arrow.png"
+                        x: 8
                         y: 20
 
                         MouseArea {
@@ -342,6 +347,7 @@ Item {
                                 if (listViewParam.count-1>listViewParam.currentIndex) {
                                     var firstDownNode = _buttleData.graphWrapper.getNodeWrapperByIndex(index)
                                     var secondDownNode = _buttleData.graphWrapper.getNodeWrapperByIndex(index+1)
+
                                     if (firstDownNode.pluginContext != "OfxImageEffectContextReader")
                                         _buttleManager.connectionManager.switchNodes(firstDownNode,secondDownNode)
                                 }
@@ -350,10 +356,12 @@ Item {
 
                         StateGroup {
                             id: downNodeStateButtonEvents
+
                             states: [
                                 State {
                                     name: "reader"
                                     when: currentParamNode.pluginContext == "OfxImageEffectContextReader"
+
                                     PropertyChanges {
                                         target: downNode
                                         source: ""
@@ -362,6 +370,7 @@ Item {
                                 State {
                                     name: "hover"
                                     when: downNodeMouseArea.containsMouse
+
                                     PropertyChanges {
                                         target: downNode
                                         source: "file:///" + _buttleData.buttlePath + "/gui/img/buttons/params/arrow_hover.png"
@@ -391,6 +400,7 @@ Item {
 
                         StateGroup {
                             id: stateButtonEvents
+
                             states: [
                                 State {
                                     name: "hover"
@@ -413,8 +423,7 @@ Item {
                     width: parent.width
                     y: tuttleParamTitle.height
                     visible: index == listViewParam.count-1 ? true : false
-                    color : "transparent"
-
+                    color: "transparent"
                     property string lastGroupParam: "No Group."
 
                     ListView {
@@ -425,9 +434,7 @@ Item {
                         height: count ? tuttleParam.contentHeight : 0
                         y: parent.y + 10
                         spacing: 6
-
                         interactive: false
-
                         model: paramNode.params
 
                         delegate: Component {
@@ -442,7 +449,7 @@ Item {
                                     id:tooltip
                                     visible: false
                                     paramHelp: model.object.doc
-                                    z: param.z+1
+                                    z:param.z+1
                                 }
 
                                 MouseArea {
@@ -475,7 +482,7 @@ Item {
         id: addNode
         anchors.bottom: parent.bottom
         // y: listViewParam.height
-        width: parent.width
+        width : parent.width
         height: 50
 
         iconSource:
@@ -494,10 +501,10 @@ Item {
         }
 
         onClicked: {
-            if (pluginVisible==false) {
-                pluginVisible=true
+            if (pluginVisible == false) {
+                pluginVisible = true
             } else {
-                pluginVisible=false
+                pluginVisible = false
             }
         }
     }
@@ -505,12 +512,12 @@ Item {
     Button {
         id: displayTheGraph
 
-        property string imageSource: hovered ? "file:///" + _buttleData.buttlePath + "/gui/img/buttons/tools/plus_hover.png": "file:///" + _buttleData.buttlePath +  "/gui/img/buttons/tools/plus.png"
+        property string imageSource: hovered ? "file:///" + _buttleData.buttlePath + "/gui/img/buttons/tools/plus_hover.png": "file:///" + _buttleData.buttlePath + "/gui/img/buttons/tools/plus.png"
 
         anchors.top: parent.top
-        anchors.topMargin: 25
+        anchors.topMargin : 25
         anchors.left: parent.left
-        width: parent.width
+        width : parent.width
         height: 43
 
         iconSource: imageSource
@@ -529,27 +536,29 @@ Item {
 
         StateGroup {
             id: states
+
             states: [
                 State {
                     name: "browser"
                     when: !displayGraph
+
                     PropertyChanges {
                         target: displayTheGraph
-                        imageSource: hovered ? "file:///" + _buttleData.buttlePath + "/gui/img/buttons/params/graph_hover.png" : "file:///" + _buttleData.buttlePath +  "/gui/img/buttons/params/graph.png"
+                        imageSource: hovered ? "file:///" + _buttleData.buttlePath + "/gui/img/buttons/params/graph_hover.png" : "file:///" + _buttleData.buttlePath + "/gui/img/buttons/params/graph.png"
                     }
                 },
                 State {
                     name: "graph"
                     when: displayGraph
+
                     PropertyChanges {
                         target: displayTheGraph
-                        imageSource: hovered ? "file:///" + _buttleData.buttlePath + "/gui/img/buttons/params/browser_hover.png" : "file:///" + _buttleData.buttlePath +  "/gui/img/buttons/params/browser.png"
+                        imageSource: hovered ? "file:///" + _buttleData.buttlePath + "/gui/img/buttons/params/browser_hover.png" : "file:///" + _buttleData.buttlePath + "/gui/img/buttons/params/browser.png"
                     }
                 }
             ]
         }
     }
-
     /*
       Menu {
       id: nodesMenu

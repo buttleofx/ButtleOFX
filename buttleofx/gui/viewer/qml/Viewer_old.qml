@@ -1,6 +1,5 @@
 import QtQuick 2.0
 
-
 Rectangle {
     id: viewer
 
@@ -32,58 +31,59 @@ Rectangle {
 
         onClicked:{
             console.log("image : " + imageFile)
-           /* if((mouse.button === Qt.LeftButton)) {
-                // Lorsque l'outil Loupe + est activé
-                if(magGlassIn.state == "clicked") {
-                    imageViewed.x -= (mouseX - viewer.width/2)
-                    imageViewed.y -= (mouseY - viewer.height/2)
-                    imageViewed.scale += sizeScaleEvent
-                }
-                // Lorsque l'outil Loupe - est activé
-                if(magGlassOut.state == "clicked") {
-                    imageViewed.x -= (mouseX - viewer.width/2)
-                    imageViewed.y -= (mouseY - viewer.height/2)
-                    imageViewed.scale -= sizeScaleEvent
-                }
-                //Zoom simple
-                if(mouse.modifiers & Qt.ShiftModifier){
-                    if (imageViewed.scale-sizeScaleEvent > 0) {
-                        imageViewed.scale -= sizeScaleEvent
-                    }
-                }
-                else {
-                    imageViewed.scale += sizeScaleEvent
-                }
+            /* if((mouse.button === Qt.LeftButton)) {
+            // Lorsque l'outil Loupe + est activé
+            if(magGlassIn.state == "clicked") {
+            imageViewed.x -= (mouseX - viewer.width/2)
+            imageViewed.y -= (mouseY - viewer.height/2)
+            imageViewed.scale += sizeScaleEvent
+            }
+            // Lorsque l'outil Loupe - est activé
+            if(magGlassOut.state == "clicked") {
+            imageViewed.x -= (mouseX - viewer.width/2)
+            imageViewed.y -= (mouseY - viewer.height/2)
+            imageViewed.scale -= sizeScaleEvent
+            }
+            //Zoom simple
+            if(mouse.modifiers & Qt.ShiftModifier){
+            if (imageViewed.scale-sizeScaleEvent > 0) {
+            imageViewed.scale -= sizeScaleEvent
+            }
+            }
+            else {
+            imageViewed.scale += sizeScaleEvent
+            }
             }*/
         }
 
         Item {
             focus: true
+
             Keys.onPressed: {
                 if (event.modifiers & Qt.ControlModifier) {
-                    if (event.key==Qt.Key_Plus) {
+                    if (event.key == Qt.Key_Plus) {
                         imageViewed.scale += sizeScaleEvent
                     }
-                    else if (event.key==Qt.Key_Minus) {
-                        if (imageViewed.scale-sizeScaleEvent > 0) {
-                          imageViewed.scale -= sizeScaleEvent
+                    else if (event.key == Qt.Key_Minus) {
+                        if (imageViewed.scale - sizeScaleEvent > 0) {
+                            imageViewed.scale -= sizeScaleEvent
                         }
                     }
-                    else if (event.key==Qt.Key_0) {
+                    else if (event.key == Qt.Key_0) {
                         imageViewed.scale = 1;
                         imageViewed.x = (container.width - imageViewed.width) / 2;
                         imageViewed.y = (container.height - tools.height - imageViewed.height) / 2;
                     }
-                    else if (event.key==Qt.Key_Left) {
+                    else if (event.key == Qt.Key_Left) {
                         imageViewed.x -= sizeDragEvent;
                     }
-                    else if (event.key==Qt.Key_Right) {
+                    else if (event.key == Qt.Key_Right) {
                         imageViewed.x += sizeDragEvent;
                     }
-                    else if (event.key==Qt.Key_Up) {
+                    else if (event.key == Qt.Key_Up) {
                         imageViewed.y -= sizeDragEvent;
                     }
-                    else if (event.key==Qt.Key_Down) {
+                    else if (event.key == Qt.Key_Down) {
                         imageViewed.y += sizeDragEvent;
                     }
                 }

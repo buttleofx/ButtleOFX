@@ -1,5 +1,4 @@
 from PyQt5 import QtCore, QtGui
-#quickmamba
 from quickmamba.models import QObjectListModel
 
 class Shortcut(QtCore.QObject):
@@ -20,8 +19,15 @@ class Shortcut(QtCore.QObject):
         self._shortcutDoc = shortcutDoc
         self._shortcutContext = shortcutContext
 
+    ################################################## Methods private to this class ##################################################
 
-    #################### getters ####################
+    ### Getters ###
+
+    def getShortcutContext(self):
+        return self._shortcutContext
+
+    def getShortcutDoc(self):
+        return self._shortcutDoc
 
     def getShortcutKey1(self):
         return self._shortcutKey1
@@ -32,13 +38,13 @@ class Shortcut(QtCore.QObject):
     def getShortcutName(self):
         return self._shortcutName
 
-    def getShortcutDoc(self):
-        return self._shortcutDoc
+    ### Setters ###
 
-    def getShortcutContext(self):
-        return self._shortcutContext
+    def setShortcutContext(self, context):
+        self._shortcutContext = context
 
-    #################### setters ####################
+    def setShortcutDoc(self, doc):
+        self._shortcutDoc = doc
 
     def setShortcutKey1(self, key):
         self._shortcutKeys = key
@@ -49,17 +55,11 @@ class Shortcut(QtCore.QObject):
     def setShortcutName(self, name):
         self._shortcutName = name
 
-    def setShortcutDoc(self, doc):
-        self._shortcutDoc = doc
-
-    def setShortcutContext(self, context):
-        self._shortcutContext = context
-
-    ################################################## DATA EXPOSED TO QML ##################################################
+    ################################################## Data exposed to QML ##################################################
 
     changed = QtCore.pyqtSignal()
-    shortcutKey1 = QtCore.pyqtProperty(str, getShortcutKey1, setShortcutKey1, constant=True)   
-    shortcutKey2 = QtCore.pyqtProperty(str, getShortcutKey2, setShortcutKey2, constant=True)   
-    shortcutName = QtCore.pyqtProperty(str, getShortcutName, setShortcutName, constant=True) 
-    shortcutDoc = QtCore.pyqtProperty(str, getShortcutDoc, setShortcutDoc, constant=True) 
-    shortcutContext = QtCore.pyqtProperty(str, getShortcutContext, setShortcutContext, constant=True) 
+    shortcutKey1 = QtCore.pyqtProperty(str, getShortcutKey1, setShortcutKey1, constant=True)
+    shortcutKey2 = QtCore.pyqtProperty(str, getShortcutKey2, setShortcutKey2, constant=True)
+    shortcutName = QtCore.pyqtProperty(str, getShortcutName, setShortcutName, constant=True)
+    shortcutDoc = QtCore.pyqtProperty(str, getShortcutDoc, setShortcutDoc, constant=True)
+    shortcutContext = QtCore.pyqtProperty(str, getShortcutContext, setShortcutContext, constant=True)

@@ -12,22 +12,22 @@ ApplicationWindow {
     property string selectedNodeLabel
     property string selectedNodeDoc
     property string selectedNodeGroup
-	property color gradian1: "#010101"
+    property color gradian1: "#010101"
     property color gradian2: "#141414"
 
-	id:pluginsIdentifiers
-	x: 400
-	y: 400
-	width: 800
-	height: 600
-	color: "#212121"
+    id: pluginsIdentifiers
+    x: 400
+    y: 400
+    width: 800
+    height: 600
+    color: "#212121"
 
     SplitView {
         width: parent.width
         height: parent.height
         orientation: Qt.Horizontal
 
-    	Rectangle {
+        Rectangle {
             id: list
             height: parent.height
             width: 200
@@ -37,7 +37,7 @@ ApplicationWindow {
 
             property string lastGroupParam : "No Group."
 
-            Rectangle{
+            Rectangle {
                 id: searchBar
                 height: 20
                 width: parent.width-20
@@ -45,21 +45,21 @@ ApplicationWindow {
                 border.width: 1
                 border.color: "#333"
                 radius: 3
-                x:10
-                y:60
+                x: 10
+                y: 60
                 clip: true
 
-                Image{
+                Image {
                     id: searchPicture
                     source: "file:///" + _buttleData.buttlePath + "/gui/img/icons/search.png"
-                    height:10
-                    width:10
-                    x:5
-                    y:5
+                    height: 10
+                    width: 10
+                    x: 5
+                    y: 5
                 }
 
                 TextInput {
-                    id : searchPlugin
+                    id: searchPlugin
                     y: 2
                     x: 20
                     height: parent.height
@@ -68,18 +68,18 @@ ApplicationWindow {
                     selectByMouse: true
                     selectionColor: "#00b2a1"
                     color: "white"
-                    focus:true
+                    focus: true
 
                     Keys.onPressed: {
-                        //previous plugin
-                        if (event.key == Qt.Key_Up){
+                        // Previous plugin
+                        if (event.key == Qt.Key_Up) {
                             pluginList.moveSelectionUp()
                         }
-                        //next plugin
-                        else if (event.key == Qt.Key_Down){
+                        // Next plugin
+                        else if (event.key == Qt.Key_Down) {
                             pluginList.moveSelectionDown()
                         }
-                        else if (event.key == Qt.Key_Enter || event.key == Qt.Key_Return){
+                        else if (event.key == Qt.Key_Enter || event.key == Qt.Key_Return) {
                             pluginList.instanciateSelectedPlugin()
                         }
                     }
@@ -89,7 +89,7 @@ ApplicationWindow {
             ScrollView {
                 height: parent.height-100
                 width: parent.width
-                y:100
+                y: 100
 
                 style: ScrollViewStyle {
                     scrollBarBackground: Rectangle {
@@ -99,6 +99,7 @@ ApplicationWindow {
                         border.width: 1
                         border.color: "#333"
                     }
+
                     decrementControl : Rectangle {
                         id: scrollLower
                         width:15
@@ -107,11 +108,12 @@ ApplicationWindow {
                         border.width: 1
                         border.color: "#333"
                         radius: 3
-                        Image{
+
+                        Image {
                             id: arrow
                             source: "file:///" + _buttleData.buttlePath + "/gui/img/buttons/params/arrow2.png"
-                            x:4
-                            y:4
+                            x: 4
+                            y: 4
                         }
                     }
                     incrementControl : Rectangle {
@@ -122,11 +124,12 @@ ApplicationWindow {
                         border.width: 1
                         border.color: "#333"
                         radius: 3
-                        Image{
+
+                        Image {
                             id: arrow
                             source: "file:///" + _buttleData.buttlePath + "/gui/img/buttons/params/arrow.png"
-                            x:4
-                            y:4
+                            x: 4
+                            y: 4
                         }
                     }
                 }
@@ -143,12 +146,14 @@ ApplicationWindow {
 
                     Component {
                         id: highlightComponent
+
                         Rectangle {
                             width: pluginList.currentItem.width
                             height: pluginList.currentItem.height
                             color: "#333"
                             radius: 5
                             y: pluginList.currentItem.y
+
                             Behavior on y {
                                 SpringAnimation {
                                     spring: 3
@@ -160,26 +165,25 @@ ApplicationWindow {
 
                     highlight: highlightComponent
 
-                    function moveSelectionUp()
-                    {
-                        if( pluginList.currentIndex == -1 )
+                    function moveSelectionUp() {
+                        if (pluginList.currentIndex == -1)
                             pluginList.currentIndex = 0
                         else
                             pluginList.decrementCurrentIndex()
                     }
-                    function moveSelectionDown()
-                    {
-                        if( pluginList.currentIndex == -1 )
+
+                    function moveSelectionDown() {
+                        if (pluginList.currentIndex == -1)
                             pluginList.currentIndex = 0
                         else
                             pluginList.incrementCurrentIndex()
                     }
-                    function instanciateSelectedPlugin()
-                    {
+
+                    function instanciateSelectedPlugin() {
                         var currentObject = pluginList.model.get(pluginList.currentIndex)
-                        currentPluginLabel=currentObject.pluginLabel
-                        currentPluginDoc=currentObject.pluginDescription
-                        currentPluginGroup=currentObject.pluginGroup
+                        currentPluginLabel = currentObject.pluginLabel
+                        currentPluginDoc = currentObject.pluginDescription
+                        currentPluginGroup = currentObject.pluginGroup
                         searchPluginText = ""
                     }
 
@@ -191,28 +195,27 @@ ApplicationWindow {
                             border.width: 1
                             radius: 3
                             width: 198
-                            height: 30 
+                            height: 30
                             x: 1
 
                             Keys.onPressed: {
-                                //previous plugin
-                                if (event.key == Qt.Key_Up)
-                                {
+                                // Previous plugin
+                                if (event.key == Qt.Key_Up) {
                                     pluginList.moveSelectionUp()
                                 }
-                                //next plugin
-                                else if (event.key == Qt.Key_Down)
-                                {
+                                // Next plugin
+                                else if (event.key == Qt.Key_Down) {
                                     pluginList.moveSelectionDown()
                                 }
-                                else if (event.key == Qt.Key_Enter || event.key == Qt.Key_Return)
-                                {
+                                else if (event.key == Qt.Key_Enter || event.key == Qt.Key_Return) {
                                     pluginList.instanciateSelectedPlugin()
                                 }
                             }
+
                             MouseArea {
                                 anchors.fill: parent
                                 hoverEnabled: true
+
                                 onEntered: {
                                     pluginList.currentIndex = index
                                 }
@@ -221,30 +224,32 @@ ApplicationWindow {
                                     pluginList.instanciateSelectedPlugin()
                                 }
                             }
+
                             Text{
                                 text: object.pluginLabel
                                 color: "white"
-                                y:6
-                                x:15
+                                y: 6
+                                x: 15
                                 width: 170
-                                elide:Text.ElideRight
+                                elide: Text.ElideRight
                             }
                         }
                     }
                 }
             }
 
-            Rectangle{
+            Rectangle {
                 id: pluginTitle
                 width: list.width-2
                 height: 40
                 color: "#141414"
+
                 gradient: Gradient {
                     GradientStop { position: 0.0; color: gradian2 }
                     GradientStop { position: 0.85; color: gradian2 }
                     GradientStop { position: 0.86; color: gradian1 }
                     GradientStop { position: 1; color: gradian2 }
-                } 
+                }
 
                 Text {
                     anchors.verticalCenter: parent.verticalCenter
@@ -256,24 +261,26 @@ ApplicationWindow {
                 }
             }
         }
-        Rectangle{
+
+        Rectangle {
             id: hint
             height: parent.height
             width: parent.width-list.width
             color: "#141414"
-            x:list.width
-            Text{
+            x: list.width
+
+            Text {
                 text:_buttleData.currentSelectedNodeWrappers.count!=0 ? selectedNodeLabel : currentPluginLabel
                 color: "white"
                 font.pointSize: 11
                 wrapMode:Text.Wrap
                 width: parent.width-15
                 height: parent.height-15
-                x:15
-                y:15
+                x: 15
+                y: 15
             }
 
-            Text{
+            Text {
                 text:_buttleData.currentSelectedNodeWrappers.count!=0 ? selectedNodeGroup : currentPluginGroup
                 color: "#00b2a1"
                 width: parent.width-15
@@ -289,9 +296,9 @@ ApplicationWindow {
                 width: parent.width-15
                 height: parent.height-15
                 wrapMode:Text.Wrap
-                x:15
-                y:100
+                x: 15
+                y: 100
             }
         }
-    }//splitview
+    } // Splitview
 }

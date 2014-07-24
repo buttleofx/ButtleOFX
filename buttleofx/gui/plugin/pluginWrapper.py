@@ -1,6 +1,5 @@
-from PyQt5 import QtCore, QtGui
 import logging
-#quickmamba
+from PyQt5 import QtCore, QtGui
 from quickmamba.models import QObjectListModel
 
 class PluginWrapper(QtCore.QObject):
@@ -13,16 +12,15 @@ class PluginWrapper(QtCore.QObject):
 
         self._plugin = plugin
 
-    #################### getters ####################
+    ################################################## Methods private to this class ##################################################
 
-    def getPlugin(self):
-        return self._plugin
-
-    def getType(self):
-        return self._plugin.getIdentifier()
+    ### Getters ###
 
     def getLabel(self):
         return self._plugin.getDescriptor().getLabel()
+
+    def getPlugin(self):
+        return self._plugin
 
     def getPluginDescription(self):
         return self._plugin.getDescriptor().getProperties().getStringProperty("OfxPropPluginDescription")
@@ -30,7 +28,10 @@ class PluginWrapper(QtCore.QObject):
     def getPluginGroup(self):
         return self._plugin.getDescriptor().getProperties().getStringProperty("OfxImageEffectPluginPropGrouping")
 
-    ################################################## DATA EXPOSED TO QML ##################################################
+    def getType(self):
+        return self._plugin.getIdentifier()
+
+    ################################################## Data exposed to QML ##################################################
            
     pluginGroup = QtCore.pyqtProperty(str, getPluginGroup, constant=True)   
     pluginType = QtCore.pyqtProperty(str, getType, constant=True)

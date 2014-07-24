@@ -1,6 +1,6 @@
 import QtQuick 2.1
-import QtQuick.Controls 1.0
 import QtQuick.Layouts 1.0
+import QtQuick.Controls 1.0
 import QtQuick.Controls.Styles 1.0
 
 ApplicationWindow {
@@ -10,8 +10,8 @@ ApplicationWindow {
     property color backgroundInput: "#343434"
     property color borderInput: "#444"
 
-    property color textColor : "white"
-    property alias searchPluginText : searchPlugin.text
+    property color textColor: "white"
+    property alias searchPluginText: searchPlugin.text
     property alias searchPlugin: searchPlugin
     property bool graphEditor
 
@@ -19,7 +19,7 @@ ApplicationWindow {
     height: 250
     flags: Qt.FramelessWindowHint | Qt.Tool
 
-    Rectangle{
+    Rectangle {
         id: pluginRect
         height: parent.height
         width: parent.width
@@ -28,7 +28,7 @@ ApplicationWindow {
         border.color: "#333"
         z:2
 
-        Rectangle{
+        Rectangle {
             id: searchBar
             height: 20
             width: parent.width-20
@@ -40,7 +40,7 @@ ApplicationWindow {
             y:10
             clip: true
 
-            Image{
+            Image {
                 id: searchPicture
                 source: "file:///" + _buttleData.buttlePath + "/gui/img/icons/search.png"
                 height:10
@@ -48,8 +48,9 @@ ApplicationWindow {
                 x:5
                 y:5
             }
+
             TextInput {
-                id : searchPlugin
+                id: searchPlugin
                 y: 2
                 x: 20
                 height: parent.height
@@ -74,15 +75,15 @@ ApplicationWindow {
                 // }
 
                 Keys.onPressed: {
-                    //previous plugin
-                    if (event.key == Qt.Key_Up){
+                    // Previous plugin
+                    if (event.key == Qt.Key_Up) {
                         listOfPlugin.moveSelectionUp()
                     }
-                    //next plugin
-                    else if (event.key == Qt.Key_Down){
+                    // Next plugin
+                    else if (event.key == Qt.Key_Down) {
                         listOfPlugin.moveSelectionDown()
                     }
-                    else if (event.key == Qt.Key_Enter || event.key == Qt.Key_Return){
+                    else if (event.key == Qt.Key_Enter || event.key == Qt.Key_Return) {
                         listOfPlugin.instanciateSelectedPlugin()
                     }
                 }
@@ -97,8 +98,9 @@ ApplicationWindow {
             width: parent.width-2
             y:41
             x:1
-            
+
             style: ScrollViewStyle {
+
                 scrollBarBackground: Rectangle {
                     id: scrollBar
                     width:15
@@ -106,6 +108,7 @@ ApplicationWindow {
                     border.width: 1
                     border.color: "#333"
                 }
+
                 decrementControl : Rectangle {
                     id: scrollLower
                     width:15
@@ -114,7 +117,8 @@ ApplicationWindow {
                     border.width: 1
                     border.color: "#333"
                     radius: 3
-                    Image{
+
+                    Image {
                         id: arrow
                         source: "file:///" + _buttleData.buttlePath + "/gui/img/buttons/params/arrow2.png"
                         x:4
@@ -129,7 +133,8 @@ ApplicationWindow {
                     border.width: 1
                     border.color: "#333"
                     radius: 3
-                    Image{
+
+                    Image {
                         id: arrow
                         source: "file:///" + _buttleData.buttlePath + "/gui/img/buttons/params/arrow.png"
                         x:4
@@ -150,12 +155,14 @@ ApplicationWindow {
 
                 Component {
                     id: highlightComponent
+
                     Rectangle {
                         width: listOfPlugin.currentItem.width
                         height: listOfPlugin.currentItem.height
                         color: "#333"
                         radius: 5
                         y: listOfPlugin.currentItem.y
+
                         Behavior on y {
                             SpringAnimation {
                                 spring: 3
@@ -167,58 +174,52 @@ ApplicationWindow {
 
                 highlight: highlightComponent
 
-                function moveSelectionUp()
-                {
-                    if( listOfPlugin.currentIndex == -1 )
+                function moveSelectionUp() {
+                    if (listOfPlugin.currentIndex == -1)
                         listOfPlugin.currentIndex = 0
                     else
                         listOfPlugin.decrementCurrentIndex()
                 }
-                function moveSelectionDown()
-                {
-                    if( listOfPlugin.currentIndex == -1 )
+
+                function moveSelectionDown() {
+                    if (listOfPlugin.currentIndex == -1)
                         listOfPlugin.currentIndex = 0
                     else
                         listOfPlugin.incrementCurrentIndex()
                 }
-                function instanciateSelectedPlugin()
-                {
+
+                function instanciateSelectedPlugin() {
                     var currentObject = listOfPlugin.model.get(listOfPlugin.currentIndex)
-                    if (!graphEditor)
-                    {
-                        // we create a new node and connect it to the last but one node of the concerned graph
+
+                    if (!graphEditor) {
+                        // We create a new node and connect it to the last but one node of the concerned graph
                         previousNode =_buttleData.lastNode()
 
                         _buttleData.currentGraphWrapper = _buttleData.graphWrapper
-                        if (previousNode == undefined)
-                        {
+                        if (previousNode == undefined) {
                             _buttleManager.nodeManager.creationNode("_buttleData.graph", currentObject.pluginType, 0, 0)
-                        }
-                        else
-                        {
-                            _buttleManager.nodeManager.creationNode("_buttleData.graph", currentObject.pluginType, previousNode.xCoord+140, previousNode.yCoord)
+                        } else {
+                            _buttleManager.nodeManager.creationNode("_buttleData.graph", currentObject.pluginType,
+                                                                    previousNode.xCoord+140, previousNode.yCoord)
 
                             // If there is no input clip, no auto-connection
                             newNode = _buttleData.lastNode()
                             if (newNode.nbInput > 0)
                                 _buttleManager.connectionManager.connectWrappers(previousNode.outputClip, newNode.srcClips.get(0))
                         }
-                    }
-                    else
-                    {
-                        if (_buttleData.currentSelectedNodeWrappers.count == 1)
-                        {
+                    } else {
+                        if (_buttleData.currentSelectedNodeWrappers.count == 1) {
                             var selectedNode = _buttleData.currentSelectedNodeWrappers.get(0)
-                            _buttleManager.nodeManager.creationNode("_buttleData.graph", currentObject.pluginType, selectedNode.xCoord+140, selectedNode.yCoord)
+                            _buttleManager.nodeManager.creationNode("_buttleData.graph", currentObject.pluginType,
+                                                                    selectedNode.xCoord+140, selectedNode.yCoord)
                             var createdNode = _buttleData.lastNode()
                             if (createdNode.nbInput != 0)
                                 _buttleManager.connectionManager.connectWrappers(selectedNode.outputClip, createdNode.srcClips.get(0))
-                        }
-                        else
-                        {
+                        } else {
                             _buttleManager.nodeManager.creationNode("_buttleData.graph", currentObject.pluginType, 0, 0)
                         }
                     }
+
                     pluginVisible=false
                     searchPluginText = ""
                 }
@@ -235,18 +236,15 @@ ApplicationWindow {
                         x: 3
 
                         Keys.onPressed: {
-                            //previous plugin
-                            if (event.key == Qt.Key_Up)
-                            {
+                            // Previous plugin
+                            if (event.key == Qt.Key_Up) {
                                 listOfPlugin.moveSelectionUp()
                             }
-                            //next plugin
-                            else if (event.key == Qt.Key_Down)
-                            {
+                            // Next plugin
+                            else if (event.key == Qt.Key_Down) {
                                 listOfPlugin.moveSelectionDown()
                             }
-                            else if (event.key == Qt.Key_Enter || event.key == Qt.Key_Return)
-                            {
+                            else if (event.key == Qt.Key_Enter || event.key == Qt.Key_Return) {
                                 listOfPlugin.instanciateSelectedPlugin()
                             }
                         }
@@ -254,6 +252,7 @@ ApplicationWindow {
                         MouseArea {
                             anchors.fill: parent
                             hoverEnabled: true
+
                             onEntered: {
                                 listOfPlugin.currentIndex = index
                             }
@@ -262,7 +261,8 @@ ApplicationWindow {
                                 listOfPlugin.instanciateSelectedPlugin()
                             }
                         }
-                        Text{
+
+                        Text {
                             text: object.pluginLabel
                             color: "white"
                             y:6
@@ -276,4 +276,3 @@ ApplicationWindow {
         }
     }
 }
-

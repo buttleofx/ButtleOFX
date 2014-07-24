@@ -1,8 +1,6 @@
-from PyQt5 import QtGui, QtQml, QtQuick, QtCore
-
-from OpenGL import GL
-
 import numpy
+from OpenGL import GL
+from PyQt5 import QtGui, QtQml, QtQuick, QtCore
 
 
 def nbChannelsToGlPixelType(nbChannels):
@@ -15,7 +13,6 @@ def nbChannelsToGlPixelType(nbChannels):
     else:
         raise NotImplementedError("load_texture: Unsupported pixel type, nb channels is " + str(nbChannels) + ".")
 
-
 def numpyValueTypeToGlType(valueType):
     if valueType == numpy.uint8:
         return GL.GL_UNSIGNED_BYTE
@@ -26,29 +23,28 @@ def numpyValueTypeToGlType(valueType):
     else:
         raise NotImplementedError("load_texture: Unsupported image value type: " + str(valueType))
 
-
 def load_texture(array, width, height):
-    #print('loading texture')
-    #print('shape:', array.shape)
-    #print('array.ndim', array.ndim)
-    #print('array.dtype', array.dtype)
+    # print('loading texture')
+    # print('shape:', array.shape)
+    # print('array.ndim', array.ndim)
+    # print('array.dtype', array.dtype)
 
     array_type = numpyValueTypeToGlType(array.dtype)
 
     if array.ndim == 2:
-        # linear array of pixels
+        # Linear array of pixels
         size, channels = array.shape
-        #print('size:%d, channels:%d' % (size, channels))
+        # print('size:%d, channels:%d' % (size, channels))
         array_channelGL = nbChannelsToGlPixelType(channels)
         return GL.glTexImage2D(GL.GL_TEXTURE_2D, 0, GL.GL_RGBA, width, height, 0, array_channelGL, array_type, array)
     elif array.ndim == 3:
         # 2D array of pixels
         array_height, array_width, channels = array.shape
-        #print('width:%d, height:%d, channels:%d' % (width, height, channels))
+        # print('width:%d, height:%d, channels:%d' % (width, height, channels))
         array_channelGL = nbChannelsToGlPixelType(channels)
         return GL.glTexImage2D(GL.GL_TEXTURE_2D, 0, GL.GL_RGBA, array_width, array_height, 0, array_channelGL, array_type, array)
 
-    # if you get here, it means a case was missed
+    # If you get here, it means a case was missed
     raise NotImplementedError("load_texture: Unsupported image type, ndim is " + str(array.ndim) + ".")
 
 

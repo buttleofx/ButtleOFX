@@ -1,4 +1,6 @@
+import os
 import logging
+from PyQt5 import QtCore, QtWidgets, QtQuick, QtQml, QtOpenGL
 
 tuttleofx_installed = False
 try:
@@ -7,26 +9,21 @@ try:
     logging.debug('Use TuttleOFX.')
 except:
     logging.debug('TuttleFX not installed, use Python Image Library instead.')
-
 if tuttleofx_installed:
     from glviewport_tuttleofx import GLViewport_tuttleofx
 else:
     from glviewport_pil import GLViewport_pil
 
 
-from PyQt5 import QtCore, QtWidgets, QtQuick, QtQml, QtOpenGL
-
-import os
-
 currentFilePath = os.path.dirname(os.path.abspath(__file__))
 
 class ButtleApp(QtWidgets.QApplication):
     def __init__(self, argv):
         super(ButtleApp, self).__init__(argv)
-    
+
     def notify(self, receiver, event):
         try:
-            #print("QApp notify")
+            # print("QApp notify")
             return QtWidgets.QApplication.notify(self, receiver, event)
         except Exception as e:
             print("QApp notify exception: " + str(e))
@@ -41,14 +38,14 @@ def main(argv):
     decView = QtQuick.QQuickView()
     decView.setViewport( QtOpenGL.QGLWidget() )
     decView.setViewportUpdateMode(QtQuick.QQuickView.FullViewportUpdate)
+
     if tuttleofx_installed:
         QtQml.qmlRegisterType(GLViewport_tuttleofx, "Viewport", 1, 0, "GLViewport")
     else:
         QtQml.qmlRegisterType(GLViewport_pil, "Viewport", 1, 0, "GLViewport")
-    
+
     decView.setSource(QtCore.QUrl(os.path.join(currentFilePath, "Viewer.qml")))
     decView.setResizeMode(QtQuick.QQuickView.SizeRootObjectToView)
     decView.setWindowTitle("Viewer OpenGL")
     decView.show()
     app.exec_()
-

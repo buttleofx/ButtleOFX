@@ -42,14 +42,14 @@ class StringWrapper(ParamWrapper):
     def getHasChanged(self):
         return self._param.getHasChanged()
 
+    def getStringType(self):
+        return self._param.getStringType()
+
     def getStringFilePathExist(self):
         return self._param.getStringFilePathExist()
 
     def getValue(self):
         return self._param.getValue()
-
-    def getStringType(self):
-        return self._param.getStringType()
 
     ### Setters ###
 

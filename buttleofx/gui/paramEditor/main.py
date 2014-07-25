@@ -1,15 +1,11 @@
 import sys
 import os
-
 from buttleofx.core.graph import Graph
 from buttleofx.gui.graph import GraphWrapper
-
 from PyQt5 import QtCore, QtWidgets, QtQuick
-
-from buttleofx.core.undo_redo.manageTools import CommandManager
-
 from buttleofx.gui.paramEditor.params import ParamInt
 from buttleofx.gui.paramEditor.params import ParamString
+from buttleofx.core.undo_redo.manageTools import CommandManager
 from buttleofx.gui.paramEditor.wrappers import ParamEditorWrapper
 
 
@@ -53,7 +49,7 @@ if __name__ == '__main__':
         nodeColor_r = ParamInt(defaultValue=node.getColor().red(), minimum=0, maximum=255, text="Color red")
         nodeColor_g = ParamInt(defaultValue=node.getColor().green(), minimum=0, maximum=255, text="Color green")
         nodeColor_b = ParamInt(defaultValue=node.getColor().blue(), minimum=0, maximum=255, text="Color blue")
-        
+
         nodeNbInput = ParamInt(defaultValue=node.getNbInput(), minimum=1, maximum=15, text="Nb input")
         nodeImage = ParamString(defaultValue=node.getImage(), stringType="Image file")
 

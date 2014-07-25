@@ -15,12 +15,15 @@ class SequenceWrapper(QtCore.QObject):
 
         self._sequence = sequence
 
+    ################################################## Methods exposed to QML ##################################################
+
     @QtCore.pyqtSlot(result=int)
     def getNbFiles(self):
         return self._sequence.getNbFiles()
 
-    def __str__(self):
-        return 'Test'
+    ################################################## Methods private to this class ##################################################
+
+    ### Getters ###
 
     def getFirstFileName(self):
         return self._sequence.getFirstFilename()
@@ -38,6 +41,13 @@ class SequenceWrapper(QtCore.QObject):
 
     def getTime(self):
         return self._sequence.getDuration()
+
+    ### Others ###
+
+    def __str__(self):
+        return 'Test'
+
+    ################################################## Data exposed to QML ##################################################
 
     firstFilePath = QtCore.pyqtProperty(str, getFirstFilePath, constant=True)
     firstFileName = QtCore.pyqtProperty(str, getFirstFileName, constant=True)

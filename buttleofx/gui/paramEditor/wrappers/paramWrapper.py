@@ -19,9 +19,6 @@ class ParamWrapper(QtCore.QObject):
 
     ### Getters ###
 
-    def isSecret(self):
-        return self._param.isSecret()
-
     def getParam(self):
         return self._param
 
@@ -37,7 +34,11 @@ class ParamWrapper(QtCore.QObject):
     def getText(self):
         return self._param.getText()
 
-    ### Emitters ###
+    ### Others ###
+
+    def isSecret(self):
+        return self._param.isSecret()
+
     def emitParamChanged(self):
         self.changed.emit()
 

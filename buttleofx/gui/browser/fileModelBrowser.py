@@ -1,16 +1,12 @@
 import os
 import logging
-
 from pyTuttle import tuttle
-
+from PyQt5 import QtGui, QtCore, QtQuick
 from quickmamba.patterns import Singleton
 from pySequenceParser import sequenceParser
-from quickmamba.models import QObjectListModel
-
-from PyQt5 import QtGui, QtCore, QtQuick
-from PyQt5.QtWidgets import QWidget, QFileDialog
-
 from .sequenceWrapper import SequenceWrapper
+from quickmamba.models import QObjectListModel
+from PyQt5.QtWidgets import QWidget, QFileDialog
 
 
 class FileItem(QtCore.QObject):
@@ -54,6 +50,7 @@ class FileItem(QtCore.QObject):
         elif fileType == FileItem.Type.Sequence:
             time = int(seq.getFirstTime() + (seq.getLastTime() - seq.getFirstTime()) * 0.5)
             seqPath = seq.getAbsoluteFilenameAt(time)
+
             if not os.path.exists(seqPath):
                 time = seq.getFirstTime()
                 seqPath = seq.getAbsoluteFilenameAt(time)
@@ -69,6 +66,8 @@ class FileItem(QtCore.QObject):
             self._fileWeight = self._seq.getWeight()
             (_, extension) = os.path.splitext(seqPath)
             self._fileExtension = extension
+
+    ################################################## Methods exposed to QML ##################################################
 
     @QtCore.pyqtSlot(result=str)
     def getFilepath(self):
@@ -95,15 +94,18 @@ class FileItem(QtCore.QObject):
     def getSupported(self):
         return self._isSupported
 
-    def setFilepath(self, newpath):
-        import shutil
-        shutil.move(self.filepath, os.path.join(newpath, self.fileName))
+    ################################################## Methods private to this class ##################################################
+
+    ### Getters ###
+
+    def getFileImg(self):
+        return self._fileImg
+
+    def getFileExtension(self):
+        return self._fileExtension
 
     def getFileName(self):
         return os.path.basename(self._filepath)
-
-    def setFileName(self, newName):
-        os.rename(self.filepath, os.path.join(os.path.dirname(self._filepath), newName))
 
     def getFileWeight(self):
         return self._fileWeight
@@ -116,23 +118,27 @@ class FileItem(QtCore.QObject):
         time = node.getTimeDomain()
         return time
 
-    def getFileExtension(self):
-        return self._fileExtension
-
     def getSelected(self):
         return self._isSelected
+
+    def getSequence(self):
+        return self._seq
+
+    ### Setters ###
+
+    def setFileName(self, newName):
+        os.rename(self.filepath, os.path.join(os.path.dirname(self._filepath), newName))
+
+    def setFilepath(self, newpath):
+        import shutil
+        shutil.move(self.filepath, os.path.join(newpath, self.fileName))
 
     def setSelected(self, isSelected):
         self._isSelected = isSelected
         self.isSelectedChange.emit()
 
-    def getFileImg(self):
-        return self._fileImg
+    ################################################## Data exposed to QML ##################################################
 
-    def getSequence(self):
-        return self._seq
-
-    # Info about the file
     filepath = QtCore.pyqtProperty(str, getFilepath, setFilepath, constant=True)
     fileType = QtCore.pyqtProperty(str, getFileType, constant=True)
     fileName = QtCore.pyqtProperty(str, getFileName, setFileName, constant=True)
@@ -161,6 +167,63 @@ class FileModelBrowser(QtQuick.QQuickItem):
         self._showSeq = False
 
     ################################################## Methods exposed to QML ##################################################
+
+    ### Getters ###
+
+    @QtCore.pyqtSlot(str, result=QtCore.QObject)
+    def getFilteredFileItems(self, fileFilter):
+        suggestions = []
+
+        try:
+            _, dirs, _ = next(os.walk(os.path.dirname(fileFilter)))
+            dirs = sorted(dirs, key=lambda v: v.upper())
+
+            for d in dirs:
+                if d.startswith("."):
+                    # Ignore hidden files by default
+                    # TODO: need an option for that
+                    continue
+                if d.startswith(os.path.basename(fileFilter)):
+                    suggestions.append(FileItem(os.path.dirname(fileFilter), d, FileItem.Type.Folder, "", True))
+
+        except Exception:
+            pass
+        suggestions.sort(key=lambda fileItem: fileItem.fileName.lower())
+
+        suggestionsQt = QObjectListModel(self)
+        suggestionsQt.setObjectList(suggestions)
+        return suggestionsQt
+
+    @QtCore.pyqtSlot(result=QtCore.QObject)
+    def getFileItems(self):
+        return self._fileItemsModel
+
+    @QtCore.pyqtSlot(result=str)
+    def getFirstFolder(self):
+        return self._firstFolder
+
+    @QtCore.pyqtSlot(result=QtCore.QObject)
+    def getLastSelected(self):
+        for item in reversed(self._fileItems):
+            if item.isSelected == True:
+                return item
+        return None
+
+    @QtCore.pyqtSlot(result=QtCore.QObject)
+    def getSelectedItems(self):
+        selectedList = QObjectListModel(self)
+        for item in self._fileItems:
+            if item.isSelected == True:
+                selectedList.append(item)
+        return selectedList
+
+    ### Setters ###
+
+    @QtCore.pyqtSlot(str)
+    def setFirstFolder(self, firstFolder):
+        self._firstFolder = firstFolder
+
+    ### Others ###
 
     @QtCore.pyqtSlot(str, int)
     def changeFileName(self, newName, index):
@@ -207,7 +270,7 @@ class FileModelBrowser(QtQuick.QQuickItem):
 
     @QtCore.pyqtSlot(int, int)
     def selectItemsByShift(self, begin, end):
-        if(begin > end):
+        if begin > end:
             tmp = begin
             begin = end
             end = tmp
@@ -266,57 +329,9 @@ class FileModelBrowser(QtQuick.QQuickItem):
 
         self._fileItemsModel.setObjectList(self._fileItems)
 
-    @QtCore.pyqtSlot(str, result=QtCore.QObject)
-    def getFilteredFileItems(self, fileFilter):
-        suggestions = []
-
-        try:
-            _, dirs, _ = next(os.walk(os.path.dirname(fileFilter)))
-            dirs = sorted(dirs, key=lambda v: v.upper())
-            for d in dirs:
-                if d.startswith("."):
-                    # Ignore hidden files by default
-                    # TODO: need an option for that
-                    continue
-                if d.startswith(os.path.basename(fileFilter)):
-                    suggestions.append(FileItem(os.path.dirname(fileFilter), d, FileItem.Type.Folder, "", True))
-
-        except Exception:
-            pass
-        suggestions.sort(key=lambda fileItem: fileItem.fileName.lower())
-
-        suggestionsQt = QObjectListModel(self)
-        suggestionsQt.setObjectList(suggestions)
-        return suggestionsQt
-
-    @QtCore.pyqtSlot(result=str)
-    def getFirstFolder(self):
-        return self._firstFolder
-
-    @QtCore.pyqtSlot(result=QtCore.QObject)
-    def getFileItems(self):
-        return self._fileItemsModel
-
-    @QtCore.pyqtSlot(result=QtCore.QObject)
-    def getLastSelected(self):
-        for item in reversed(self._fileItems):
-            if item.isSelected == True:
-                return item
-        return None
-
-    @QtCore.pyqtSlot(result=QtCore.QObject)
-    def getSelectedItems(self):
-        selectedList = QObjectListModel(self)
-        for item in self._fileItems:
-            if item.isSelected == True:
-                selectedList.append(item)
-        return selectedList
-
-    @QtCore.pyqtSlot(str)
-    def setFirstFolder(self, firstFolder):
-        self._firstFolder = firstFolder
-
     ################################################## Methods private to this class ##################################################
+
+    ### Getters ###
 
     def getFilter(self):
         return self._nameFilter
@@ -335,6 +350,8 @@ class FileModelBrowser(QtQuick.QQuickItem):
 
     def getSize(self):
         return len(self._fileItems) - 1
+
+    ### Setters ###
 
     def setFilter(self, nameFilter):
         self._nameFilter = nameFilter

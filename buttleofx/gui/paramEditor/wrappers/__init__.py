@@ -1,18 +1,18 @@
 from .paramWrapper import ParamWrapper
 
 from .intWrapper import IntWrapper
+from .rgbWrapper import RGBWrapper
+from .rgbaWrapper import RGBAWrapper
+from .pageWrapper import PageWrapper
 from .int2DWrapper import Int2DWrapper
 from .int3DWrapper import Int3DWrapper
+from .groupWrapper import GroupWrapper
 from .stringWrapper import StringWrapper
-from .booleanWrapper import BooleanWrapper
 from .doubleWrapper import DoubleWrapper
+from .choiceWrapper import ChoiceWrapper
+from .booleanWrapper import BooleanWrapper
 from .double2DWrapper import Double2DWrapper
 from .double3DWrapper import Double3DWrapper
-from .choiceWrapper import ChoiceWrapper
 from .pushButtonWrapper import PushButtonWrapper
-from .rgbaWrapper import RGBAWrapper
-from .rgbWrapper import RGBWrapper
-from .groupWrapper import GroupWrapper
-from .pageWrapper import PageWrapper
 
 from .paramEditorWrapper import ParamEditorWrapper

@@ -27,6 +27,7 @@ class Double3DWrapper(ParamWrapper):
     ################################################## Methods private to this class  ##################################################
 
     ### Getters ###
+
     def getMaximum1(self):
         return self._param.getMaximum1()
 

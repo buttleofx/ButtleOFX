@@ -1,14 +1,13 @@
-import sys
 import os
+import sys
 from PyQt5 import QtCore, QtWidgets, QtQuick, QtQml
+
 
 currentFilePath = os.path.dirname(os.path.abspath(__file__))
 quickmambaPath = os.path.join(currentFilePath, '../../../QuickMamba')
 sys.path.append(quickmambaPath)
 
-
 if __name__ == '__main__':
-
     app = QtWidgets.QApplication(sys.argv)
     view = QtQuick.QQuickView()
 

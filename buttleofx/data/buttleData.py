@@ -1,37 +1,27 @@
-from PyQt5 import QtCore
-# to parse data
-import json
-# to save and load data
+# To save and load data
 import os
 import io
-from datetime import datetime
-# tools
-from buttleofx.data import tuttleTools
-# quickmamba
-from quickmamba.patterns import Singleton, Signal
-from quickmamba.models import QObjectListModel
-# core : graph
-from buttleofx.core.graph import Graph
-from buttleofx.core.graph.connection import IdClip
-# gui : graphWrapper
-from buttleofx.gui.graph import GraphWrapper
-# gui : pluginWrapper
-from buttleofx.gui.plugin import PluginWrapper
-# gui : shortcut
-from buttleofx.gui.shortcut import Shortcut
-# commands
-from buttleofx.core.undo_redo.manageTools import CommandManager
-# events
-from buttleofx.event import ButtleEvent
+# To parse data
+import json
+import math
 
-# node
+from PyQt5 import QtCore
+from pyTuttle import tuttle
+from datetime import datetime
+from buttleofx.data import tuttleTools
+from buttleofx.core.graph import Graph
+from buttleofx.event import ButtleEvent
+from buttleofx.gui.shortcut import Shortcut
+from buttleofx.gui.graph import GraphWrapper
+from quickmamba.models import QObjectListModel
+from buttleofx.gui.plugin import PluginWrapper
+from quickmamba.patterns import Singleton, Signal
+from buttleofx.core.graph.connection import IdClip
+from buttleofx.core.undo_redo.manageTools import CommandManager
+
 from buttleofx.core.graph.node import Node
 from buttleofx.gui.graph.node import NodeWrapper
 
-from pyTuttle import tuttle
-
-
-import math
 
 class ButtleData(QtCore.QObject):
     """
@@ -43,16 +33,18 @@ class ButtleData(QtCore.QObject):
         - _graph : the graph (core)
         - _graphBrowser : the graph of the browser
         - _graphBrowserWrapper : the graphWrapper of the browser
-        - _listOfShortcut : list of all shortcuts used 
-       	- _currentViewerNodeName : the name of the node currently in the viewer
+        - _listOfShortcut : list of all shortcuts used
+        - _currentViewerNodeName : the name of the node currently in the viewer
         - _currentSelectedNodeNames : list of the names of the nodes currently selected
         - _currentParamNodeName : the name of the node currently displayed in the paramEditor
         - _currentConnectionId : the list of the id of the connections currently selected
         - _currentCopiedConnectionsInfo : the list of buttle info for the connections of the current nodes copied
         - _currentCopiedNodesInfo : the list of buttle info for the current node(s) copied
-        - _mapNodeNameToComputedImage : this map makes the correspondance between a gloablHash and a computed image (max 20 images stored)
+        - _mapNodeNameToComputedImage : this map makes the correspondance between a gloablHash and a computed image
+          (max 20 images stored)
         - _buttlePath : the path of the root directory (useful to import images)
-        - _graphCanBeSaved : a boolean indicating if the graph had changed since the last saving (useful for the display of the icon "save graph")
+        - _graphCanBeSaved : a boolean indicating if the graph had changed since the last saving
+          (useful for the display of the icon "save graph")
         This class contains all data we need to manage the application.
     """
 
@@ -69,28 +61,30 @@ class ButtleData(QtCore.QObject):
 
     _graphCanBeSaved = False
 
-    # the current params
+    # The current params
     _currentParamNodeName = None
     _currentSelectedNodeNames = []
 
-    # for the connections
+    # For the connections
     _currentConnectionId = None
 
-    # to eventually save current nodes data
+    # To eventually save current nodes data
     _currentCopiedNodesInfo = {}
-    
-    # to eventually save current connections data
+
+    # To eventually save current connections data
     _currentCopiedConnectionsInfo = {}
 
-    # for the viewer
+    # For the viewer
     _currentViewerIndex = 1
     _currentViewerFrame = 0
     _currentViewerNodeName = None
     _mapViewerIndextoNodeName = {}
     _mapNodeNameToComputedImage = {}
-    # boolean used in viewerManager
+
+    # Boolean used in viewerManager
     _videoIsPlaying = False
-    # processGraph used in viewerManager to compute images
+
+    # Processgraph used in viewerManager to compute images
     _processGraph = None
     _timeRange = None
 
@@ -103,15 +97,15 @@ class ButtleData(QtCore.QObject):
         self._graphBrowser = Graph()
         self._graphBrowserWrapper = GraphWrapper(self._graphBrowser, view)
 
-        self._listOfShortcut =QObjectListModel(self)
+        self._listOfShortcut = QObjectListModel(self)
 
         self._mapGraph = {
             "graph": self._graph,
             "graphBrowser": self._graphBrowser,
         }
 
-        self._currentGraph = self._graph #by default, the current graph is the graph of the graphEditor
-        self._currentGraphWrapper = self._graphWrapper #by default, the current graph is the graph of the graphEditor
+        self._currentGraph = self._graph  # By default, the current graph is the graph of the graphEditor
+        self._currentGraphWrapper = self._graphWrapper  # By default, the current graph is the graph of the graphEditor
 
         self._buttlePath = filePath
 
@@ -121,9 +115,9 @@ class ButtleData(QtCore.QObject):
 
         return self
 
-    ################################################## GETTERS ET SETTERS ##################################################
+    # ---------------------------------------------- Getters and Setters --------------------------------------------- #
 
-    #################### getters ####################
+    # ------------------- Getters ------------------- #
 
     def getUrlOfFileToSave(self):
         return self._urlOfFileToSave
@@ -149,7 +143,7 @@ class ButtleData(QtCore.QObject):
     def getButtlePath(self):
         return self._buttlePath
 
-    ### current data ###
+    # Current data
 
     def getCurrentParamNodeName(self):
         """
@@ -169,13 +163,12 @@ class ButtleData(QtCore.QObject):
             Returns the name of the current viewer node.
         """
         return self._currentViewerNodeName
-        
+
     def getCurrentCopiedConnectionsInfo(self):
         """
             Returns the list of buttle info for the connection(s) of the current nodes copied.
         """
         return self._currentCopiedConnectionsInfo
-
 
     def getCurrentCopiedNodesInfo(self):
         """
@@ -183,7 +176,7 @@ class ButtleData(QtCore.QObject):
         """
         return self._currentCopiedNodesInfo
 
-    ### current data wrapper ###
+    # Current data wrapper
 
     def getCurrentParamNodeWrapper(self):
         """
@@ -196,7 +189,8 @@ class ButtleData(QtCore.QObject):
             Returns the current selected nodeWrappers as a QObjectListModel.
         """
         currentSelectedNodeWrappers = QObjectListModel(self)
-        currentSelectedNodeWrappers.setObjectList([self.getGraphWrapper().getNodeWrapper(nodeName) for nodeName in self.getCurrentSelectedNodeNames()])
+        currentSelectedNodeWrappers.setObjectList([self.getGraphWrapper().getNodeWrapper(nodeName)
+                                                   for nodeName in self.getCurrentSelectedNodeNames()])
         return currentSelectedNodeWrappers
 
     def getCurrentViewerIndex(self):
@@ -217,26 +211,27 @@ class ButtleData(QtCore.QObject):
             Returns the total of sorted param nodeWrapper for the parametersEditor.
         """
         listOfNodes = QObjectListModel(self)
-        if len(self._graphWrapper.getNodeWrappers())!=0 :
-            for nodes in self._graphWrapper.getNodeWrappers() :
-                if (nodes.pluginContext=="OfxImageEffectContextReader") :
+        if len(self._graphWrapper.getNodeWrappers()) != 0:
+            for nodes in self._graphWrapper.getNodeWrappers():
+                if (nodes.pluginContext == "OfxImageEffectContextReader"):
                     listOfNodes.append(nodes)
                     firstNode = nodes
-                else :
+                else:
                     firstNode = self._graphWrapper.getNodeWrappers()[0]
 
             toVisit = set()
             visited = set()
             toVisit.add(firstNode)
-            while len(toVisit) != 0 :
+            while len(toVisit) != 0:
                 currentNodeWrapper = toVisit.pop()
-                #if the node has not already been visited
+                # If the node has not already been visited
                 if currentNodeWrapper not in visited:
                     # if the node has inputs
                     currentNodeOutputClip = currentNodeWrapper.getOutputClip()
                     # if the input is connected to a parent
-                    if self.getGraphWrapper().getConnectedClipWrapper_Output(currentNodeOutputClip) != None :
-                        parentNodeWrapper = self.getGraphWrapper().getNodeWrapper(self.getGraphWrapper().getConnectedClipWrapper_Output(currentNodeOutputClip).getNodeName())
+                    if self.getGraphWrapper().getConnectedClipWrapper_Output(currentNodeOutputClip) is not None:
+                        parentNodeWrapper = self.getGraphWrapper().getNodeWrapper(
+                            self.getGraphWrapper().getConnectedClipWrapper_Output(currentNodeOutputClip).getNodeName())
                         toVisit.add(parentNodeWrapper)
                     visited.add(currentNodeWrapper)
             listOfParents = QObjectListModel(self)
@@ -245,16 +240,17 @@ class ButtleData(QtCore.QObject):
             while len(visited) != 0:
                 listOfParents.append(visited.pop())
 
-            for i in range(len(listOfParents)) :
-                if len(listOfNodes)>0 :
+            for i in range(len(listOfParents)):
+                if len(listOfNodes) > 0:
                     currentNode = listOfNodes[len(listOfNodes) - 1]
                     currentNodeOutputClip = currentNode.getOutputClip()
-                    # if the input is connected to a parent
-                    if self.getGraphWrapper().getConnectedClipWrapper_Output(currentNodeOutputClip) != None :
-                        parentNode = self.getGraphWrapper().getNodeWrapper(self.getGraphWrapper().getConnectedClipWrapper_Output(currentNodeOutputClip).getNodeName())
+                    # If the input is connected to a parent
+                    if self.getGraphWrapper().getConnectedClipWrapper_Output(currentNodeOutputClip) is not None:
+                        parentNode = self.getGraphWrapper().getNodeWrapper(
+                            self.getGraphWrapper().getConnectedClipWrapper_Output(currentNodeOutputClip).getNodeName())
                         listOfNodes.append(parentNode)
             return listOfNodes
-        else :
+        else:
             return None
 
     @QtCore.pyqtSlot(int, result=QtCore.QObject)
@@ -262,9 +258,9 @@ class ButtleData(QtCore.QObject):
         """
             The node which position in list is index goes to the position index-1
         """
-        if index>0:
+        if index > 0:
 
-            if self._graphWrapper.getNodeWrapperByIndex(index-1).pluginContext != "OfxImageEffectContextReader" :
+            if self._graphWrapper.getNodeWrapperByIndex(index-1).pluginContext != "OfxImageEffectContextReader":
 
                 firstNodeX = self._graphWrapper.getNodeWrapperByIndex(index-1).getXCoord()
                 firstNodeY = self._graphWrapper.getNodeWrapperByIndex(index-1).getYCoord()
@@ -277,8 +273,8 @@ class ButtleData(QtCore.QObject):
                 self._graphWrapper.getNodeWrapperByIndex(index).setXCoord(firstNodeX)
                 self._graphWrapper.getNodeWrapperByIndex(index).setYCoord(firstNodeY)
 
-                self._graphWrapper.getNodeWrappers().move(index,index-1)
-                
+                self._graphWrapper.getNodeWrappers().move(index, index - 1)
+
         return self._graphWrapper.getNodeWrappers()
 
     @QtCore.pyqtSlot(int, result=QtCore.QObject)
@@ -286,22 +282,22 @@ class ButtleData(QtCore.QObject):
         """
             The node which position in list is index goes to the position index+1
         """
-        if index<self._graphWrapper.getNodeWrappers().size()-1:
+        if index < self._graphWrapper.getNodeWrappers().size() - 1:
 
-            if self._graphWrapper.getNodeWrapperByIndex(index).pluginContext != "OfxImageEffectContextReader" :
+            if self._graphWrapper.getNodeWrapperByIndex(index).pluginContext != "OfxImageEffectContextReader":
 
                 firstNodeX = self._graphWrapper.getNodeWrapperByIndex(index).getXCoord()
                 firstNodeY = self._graphWrapper.getNodeWrapperByIndex(index).getYCoord()
-                secondNodeX = self._graphWrapper.getNodeWrapperByIndex(index+1).getXCoord()
-                secondNodeY = self._graphWrapper.getNodeWrapperByIndex(index+1).getYCoord()
+                secondNodeX = self._graphWrapper.getNodeWrapperByIndex(index + 1).getXCoord()
+                secondNodeY = self._graphWrapper.getNodeWrapperByIndex(index + 1).getYCoord()
 
                 self._graphWrapper.getNodeWrapperByIndex(index).setXCoord(secondNodeX)
                 self._graphWrapper.getNodeWrapperByIndex(index).setYCoord(secondNodeY)
 
-                self._graphWrapper.getNodeWrapperByIndex(index+1).setXCoord(firstNodeX)
-                self._graphWrapper.getNodeWrapperByIndex(index+1).setYCoord(firstNodeY)
+                self._graphWrapper.getNodeWrapperByIndex(index + 1).setXCoord(firstNodeX)
+                self._graphWrapper.getNodeWrapperByIndex(index + 1).setYCoord(firstNodeY)
 
-                self._graphWrapper.getNodeWrappers().move(index,index+1)
+                self._graphWrapper.getNodeWrappers().move(index, index + 1)
 
         return self._graphWrapper.getNodeWrappers()
 
@@ -310,7 +306,8 @@ class ButtleData(QtCore.QObject):
         """
             Returns the nodeWrapper of the node contained in the viewer at the corresponding index.
         """
-        # We get the infos of this node. It's a tuple (fodeName, frame), so we have to return the first element nodeViewerInfos[0].
+        # We get info about this node. It's a tuple (fodeName, frame), so we have to return
+        # the first element nodeViewerInfos[0].
         nodeViewerInfos = self._mapViewerIndextoNodeName[str(index)]
         if nodeViewerInfos is None:
             return None
@@ -322,19 +319,19 @@ class ButtleData(QtCore.QObject):
         """
             Returns the frame of the node contained in the viewer at the corresponding index.
         """
-        # We get the infos of this node. It's a tuple (fodeName, frame), so we have to return the second element nodeViewerInfos[1].
+        # We get info about this node. It's a tuple (fodeName, frame), so we have to return
+        # the second element nodeViewerInfos[1].
         nodeViewerInfos = self._mapViewerIndextoNodeName[str(index)]
         if nodeViewerInfos is None:
             return 0
         else:
             return nodeViewerInfos[1]
 
-
-    #def getCurrentViewerNodeWrapper(self):
-    #    """
-    #        Returns the current viewer nodeWrapper.
-    #    """
-    #    return self._graphWrapper.getNodeWrapper(self.getCurrentViewerNodeName())
+    # def getCurrentViewerNodeWrapper(self):
+    #     """
+    #         Returns the current viewer nodeWrapper.
+    #     """
+    #     return self._graphWrapper.getNodeWrapper(self.getCurrentViewerNodeName())
 
     def getCurrentViewerNodeWrapper(self):
         """
@@ -366,12 +363,11 @@ class ButtleData(QtCore.QObject):
         """
         return self._graphCanBeSaved
 
+    # ------------------- Setters ------------------- #
 
-    #################### setters ####################
+    # Current data
 
-    ### current data ###
-
-    def setUrlOfFileToSave(self,url):
+    def setUrlOfFileToSave(self, url):
         self._urlOfFileToSave = url
         self.urlOfFileToSaveChanged.emit()
 
@@ -389,14 +385,14 @@ class ButtleData(QtCore.QObject):
     def setCurrentViewerFrame(self, frame):
         self._currentViewerFrame = frame
         self.currentViewerFrameChanged.emit()
-        
+
     def setCurrentCopiedConnectionsInfo(self, connectionsInfo):
         self._currentCopiedConnectionsInfo = connectionsInfo
 
     def setCurrentCopiedNodesInfo(self, nodesInfo):
         self._currentCopiedNodesInfo = nodesInfo
 
-    ### current data wrapper ###
+    # Current data wrapper
 
     def setCurrentParamNodeWrapper(self, nodeWrapper):
         """
@@ -421,18 +417,18 @@ class ButtleData(QtCore.QObject):
         # Emit signal
         self.currentViewerIndexChanged.emit()
 
-    #def setCurrentViewerNodeWrapper(self, nodeWrapper):
-    #    """
-    #        Changes the current viewer node and emits the change.
-    #    """
-    #    if nodeWrapper is None:
-    #        self._currentViewerNodeName = None
-    #    elif self._currentViewerNodeName == nodeWrapper.getName():
-    #        return
-    #    else:
-    #        self._currentViewerNodeName = nodeWrapper.getName()
-    #    # emit signal
-    #    self.currentViewerNodeChanged.emit()
+    # def setCurrentViewerNodeWrapper(self, nodeWrapper):
+    #     """
+    #         Changes the current viewer node and emits the change.
+    #     """
+    #     if nodeWrapper is None:
+    #         self._currentViewerNodeName = None
+    #     elif self._currentViewerNodeName == nodeWrapper.getName():
+    #         return
+    #     else:
+    #         self._currentViewerNodeName = nodeWrapper.getName()
+    #     # emit signal
+    #     self.currentViewerNodeChanged.emit()
 
     def setCurrentViewerNodeWrapper(self, nodeWrapper):
         """
@@ -444,11 +440,11 @@ class ButtleData(QtCore.QObject):
             return
         else:
             self._currentViewerNodeName = nodeWrapper.getName()
-        # emit signal
-        #print ("setCurrentViewerId buttleData.getCurrentGraphWrapper()", self.getCurrentGraphWrapper())
-        #print ("setCurrentViewerId nodeWrapper.getName()", nodeWrapper.getName())
+        # Emit signal
+        # print ("setCurrentViewerId buttleData.getCurrentGraphWrapper()", self.getCurrentGraphWrapper())
+        # print ("setCurrentViewerId nodeWrapper.getName()", nodeWrapper.getName())
 
-        #print ("setCurrentViewerId self._graphBrowser._graphTuttle", self._graphBrowser._graphTuttle)
+        # print ("setCurrentViewerId self._graphBrowser._graphTuttle", self._graphBrowser._graphTuttle)
 
         self.currentViewerNodeChanged.emit()
 
@@ -497,9 +493,8 @@ class ButtleData(QtCore.QObject):
         """
         self._currentGraph = self._graph
 
+    ############################################### Video functions ##################################################
 
-
-    ############################################### VIDEO FONCTIONS ##################################################
     def getVideoIsPlaying(self):
         return self._videoIsPlaying
 
@@ -512,7 +507,7 @@ class ButtleData(QtCore.QObject):
     def setProcessGraph(self, processGraph):
         self._processGraph = processGraph
 
-    ############################################### ADDITIONAL FUNCTIONS ##################################################
+    ############################################## Additional functions ################################################
 
     @QtCore.pyqtSlot(QtCore.QObject)
     def appendToCurrentSelectedNodeWrappers(self, nodeWrapper):
@@ -563,7 +558,6 @@ class ButtleData(QtCore.QObject):
             if overlap:
                 self.appendToCurrentSelectedNodeNames(nodeW.getName())
 
-
     @QtCore.pyqtSlot(QtCore.QObject, int)
     def assignNodeToViewerIndex(self, nodeWrapper, frame):
         """
@@ -582,7 +576,7 @@ class ButtleData(QtCore.QObject):
     def clearCurrentConnectionId(self):
         self._currentConnectionId = None
         self.currentConnectionWrapperChanged.emit()
-        
+
     def clearCurrentCopiedConnectionsInfo(self):
         self._currentCopiedConnectionsInfo.clear()
 
@@ -594,30 +588,31 @@ class ButtleData(QtCore.QObject):
             Returns True if we can paste (= if there is at least one node selected).
         """
         return self._currentCopiedNodesInfo != {}
-        
-    @QtCore.pyqtSlot(int, int, int, float, float, float, float, float, int, int)
-    def zoom(self, width, height, nodeWidth, zoomCoeff, graphPreviousWidth, graphPreviousHeight, mouseX, mouseY, offsetX, offsetY):
-    
-          mouseXRatio = (mouseX - offsetX) / width
-          mouseYRatio = (mouseY - offsetY) / height
-          newWidth = zoomCoeff * width
-          newHeight = zoomCoeff * height
-          reinitOriginX = (width * mouseXRatio) - (graphPreviousWidth * mouseXRatio)
-          reinitOriginY = (height * mouseYRatio) - (graphPreviousHeight * mouseYRatio)
-          newOriginX = (width * mouseXRatio) - (newWidth * mouseXRatio)
-          newOriginY = (height * mouseYRatio) - (newHeight * mouseYRatio)  
 
-          nodes = self._graphWrapper.getNodeWrappers()
-          for i in nodes:
-              if graphPreviousWidth != width :
-                  i.xCoord = ((i.xCoord - reinitOriginX) * width) / graphPreviousWidth
-                  i.yCoord = ((i.yCoord - reinitOriginY) * height) / graphPreviousHeight
-                  
-              i.xCoord = ((i.xCoord * newWidth) / width) + newOriginX #- (nodeWidth * 0.5)
-              i.yCoord = ((i.yCoord * newHeight) / height) + newOriginY #- (nodeWidth * 0.5)
-     
-          self._graphWrapper.updateNodeWrappers()
-          self._graphWrapper.updateConnectionWrappers()
+    @QtCore.pyqtSlot(int, int, int, float, float, float, float, float, int, int)
+    def zoom(self, width, height, nodeWidth, zoomCoeff, graphPreviousWidth, graphPreviousHeight,
+             mouseX, mouseY, offsetX, offsetY):
+
+        mouseXRatio = (mouseX - offsetX) / width
+        mouseYRatio = (mouseY - offsetY) / height
+        newWidth = zoomCoeff * width
+        newHeight = zoomCoeff * height
+        reinitOriginX = (width * mouseXRatio) - (graphPreviousWidth * mouseXRatio)
+        reinitOriginY = (height * mouseYRatio) - (graphPreviousHeight * mouseYRatio)
+        newOriginX = (width * mouseXRatio) - (newWidth * mouseXRatio)
+        newOriginY = (height * mouseYRatio) - (newHeight * mouseYRatio)
+
+        nodes = self._graphWrapper.getNodeWrappers()
+        for i in nodes:
+            if graphPreviousWidth != width:
+                i.xCoord = ((i.xCoord - reinitOriginX) * width) / graphPreviousWidth
+                i.yCoord = ((i.yCoord - reinitOriginY) * height) / graphPreviousHeight
+
+            i.xCoord = ((i.xCoord * newWidth) / width) + newOriginX  # (nodeWidth * 0.5)
+            i.yCoord = ((i.yCoord * newHeight) / height) + newOriginY  # (nodeWidth * 0.5)
+
+        self._graphWrapper.updateNodeWrappers()
+        self._graphWrapper.updateConnectionWrappers()
 
     @QtCore.pyqtSlot(result=QtCore.QObject)
     def getParentNodes(self):
@@ -629,29 +624,29 @@ class ButtleData(QtCore.QObject):
         visited = set()
         for selectedNodeWrapper in currentSelectedNodeWrappers:
             toVisit.add(selectedNodeWrapper)
-        while len(toVisit) != 0 :
+        while len(toVisit) != 0:
             currentNodeWrapper = toVisit.pop()
-            #if the node has not already been visited
+            # If the node has not already been visited
             if currentNodeWrapper not in visited:
-                # if the node has inputs
-                if currentNodeWrapper.getNbInput() > 0 :
+                # If the node has inputs
+                if currentNodeWrapper.getNbInput() > 0:
                     currentNodeSrcClips = currentNodeWrapper.getSrcClips()
-                    # for all inputs
+                    # For all inputs
                     for currentNodeSrcClip in currentNodeSrcClips:
-                        # if the input is connected to a parent
-                        if self.getGraphWrapper().getConnectedClipWrapper(currentNodeSrcClip, False) != None:
-                            parentNodeWrapper = self.getGraphWrapper().getNodeWrapper(self.getGraphWrapper().getConnectedClipWrapper(currentNodeSrcClip, False).getNodeName())
+                        # If the input is connected to a parent
+                        if self.getGraphWrapper().getConnectedClipWrapper(currentNodeSrcClip, False) is not None:
+                            parentNodeWrapper = self.getGraphWrapper().getNodeWrapper(
+                                self.getGraphWrapper().getConnectedClipWrapper(currentNodeSrcClip, False).getNodeName())
                             toVisit.add(parentNodeWrapper)
-                #currentNodeWrapper.getNode().setColorRGB(255, 255, 255)
-                #currentNodeWrapper.setIsHighlighted(True)
+                # currentNodeWrapper.getNode().setColorRGB(255, 255, 255)
+                # currentNodeWrapper.setIsHighlighted(True)
                 visited.add(currentNodeWrapper)
         parentNodesWrappers = QObjectListModel(self)
         while len(visited) != 0:
             parentNodesWrappers.append(visited.pop())
         return parentNodesWrappers
 
-        
-    ################################################## PLUGIN LIST #####################################################
+    ################################################## Plugin list #####################################################
 
     def getPluginsIdentifiers(self):
         from pyTuttle import tuttle
@@ -669,7 +664,7 @@ class ButtleData(QtCore.QObject):
     def getPluginsWrappers(self):
         from pyTuttle import tuttle
         pluginCache = tuttle.core().getImageEffectPluginCache()
-        plugins = pluginCache.getPlugins()         
+        plugins = pluginCache.getPlugins()
         plugins = sorted(plugins, key=lambda plugin: plugin.getDescriptor().getLabel())
         pluginsW = [PluginWrapper(plugin) for plugin in plugins]
         pluginsWModel = QObjectListModel(self)
@@ -682,11 +677,11 @@ class ButtleData(QtCore.QObject):
         from pyTuttle import tuttle
         pluginCache = tuttle.core().getImageEffectPluginCache()
         plugins = pluginCache.getPlugins()
-        plugins = sorted(plugins, key=lambda plugin: plugin.getDescriptor().getLabel())         
+        plugins = sorted(plugins, key=lambda plugin: plugin.getDescriptor().getLabel())
         pluginsW = [PluginWrapper(plugin) for plugin in plugins]
         pluginsWModel = QObjectListModel(self)
         for p in pluginsW:
-            if pluginSearched in p.pluginLabel.lower() or pluginSearched in p.pluginLabel :
+            if pluginSearched in p.pluginLabel.lower() or pluginSearched in p.pluginLabel:
                 pluginsWModel.append(p)
         return pluginsWModel
 
@@ -694,33 +689,34 @@ class ButtleData(QtCore.QObject):
     def getSinglePluginSuggestion(self, pluginSearched):
         from pyTuttle import tuttle
         pluginCache = tuttle.core().getImageEffectPluginCache()
-        plugins = pluginCache.getPlugins()         
+        plugins = pluginCache.getPlugins()
         pluginsW = [PluginWrapper(plugin) for plugin in plugins]
         pluginList = QObjectListModel(self)
-        for p in pluginsW :
-            if pluginSearched in p.pluginLabel.lower() or pluginSearched in p.pluginLabel :
+
+        for p in pluginsW:
+            if pluginSearched in p.pluginLabel.lower() or pluginSearched in p.pluginLabel:
                 pluginList.append(p)
-        if len(pluginList)==1 :
+        if len(pluginList) == 1:
             return pluginList[0]
 
     @QtCore.pyqtSlot(str, result=QtCore.QObject)
     def getPluginsByPath(self, menuPath):
         from pyTuttle import tuttle
         pluginCache = tuttle.core().getImageEffectPluginCache()
-        plugins = pluginCache.getPlugins()         
+        plugins = pluginCache.getPlugins()
         plugins = sorted(plugins, key=lambda plugin: plugin.getDescriptor().getLabel())
         pluginsW = [PluginWrapper(plugin) for plugin in plugins]
         pluginsWModel = QObjectListModel(self)
-        #for each plugin
+        # For each plugin
         for p in pluginsW:
             path = p.pluginGroup
 
-            #while path is not the final submenu, path is cropped
-            while "/" in path :
+            # While path is not the final submenu, path is cropped
+            while "/" in path:
                 listOfPath = path.split("/")
-                path = path.replace(listOfPath[0] + "/","")
-            #if the parentMenu name is in the parentPath of the plugin, we add the plugin to the list
-            if menuPath == path :
+                path = path.replace(listOfPath[0] + "/", "")
+            # If the parentMenu name is in the parentPath of the plugin, we add the plugin to the list
+            if menuPath == path:
                 pluginsWModel.append(p)
         return pluginsWModel
 
@@ -728,40 +724,41 @@ class ButtleData(QtCore.QObject):
     def getMenu(self, nb, parentMenuPath):
         from pyTuttle import tuttle
         pluginCache = tuttle.core().getImageEffectPluginCache()
-        plugins = pluginCache.getPlugins()         
+        plugins = pluginCache.getPlugins()
         pluginsW = [PluginWrapper(plugin) for plugin in plugins]
         pluginsListMenu = QObjectListModel(self)
 
-        #for each plugin
+        # For each plugin
         for p in pluginsW:
             path = p.pluginGroup + "/"
             parentPath = path
 
-            #if the number of submenus of the plugin is higher than nb 
-            if path.count("/") >= nb :
+            # If the number of submenus of the plugin is higher than nb
+            if path.count("/") >= nb:
 
-                #withdraw one submenu per loop from the path
-                for i in range(nb) :
+                # Withdraw one submenu per loop from the path
+                for i in range(nb):
                     listOfPath = path.split("/")
-                    path = path.replace(listOfPath[0] + "/","")
+                    path = path.replace(listOfPath[0] + "/", "")
 
-                #if the submenu is not already in the list of submenu
-                if not pluginsListMenu.contains(listOfPath[0]) and listOfPath[0] :
+                # If the submenu is not already in the list of submenu
+                if not pluginsListMenu.contains(listOfPath[0]) and listOfPath[0]:
 
-                    #if the submenu is not the first
-                    if nb>2 :
-                        #if the parentMenu name is in the parentPath of the plugin, the plugin is add to the list
-                        if "/" + parentMenuPath + "/" in parentPath :
+                    # If the submenu is not the first
+                    if nb > 2:
+                        # If the parentMenu name is in the parentPath of the plugin, the plugin is add to the list
+                        if "/" + parentMenuPath + "/" in parentPath:
                             pluginsListMenu.append(listOfPath[0])
                     else:
-                        if parentMenuPath + "/" in parentPath :
+                        if parentMenuPath + "/" in parentPath:
                             pluginsListMenu.append(listOfPath[0])
         return pluginsListMenu
-        
+
     @QtCore.pyqtSlot(str, result=QtCore.QObject)
     def getQObjectPluginsIdentifiersByParentPath(self, pathname):
         """
-            Returns a QObjectListModel of all the PluginsIdentifiers (String) we expect to find after the submenu 'pathname'.
+            Returns a QObjectListModel of all the PluginsIdentifiers (String) we expect to
+            find after the submenu 'pathname'.
         """
         pluginsIds = QObjectListModel(self)
         pluginsIds.setObjectList(tuttleTools.getPluginsIdentifiersByParentPath(pathname))
@@ -774,124 +771,119 @@ class ButtleData(QtCore.QObject):
         """
         return pluginId in tuttleTools.getPluginsIdentifiers()
 
-    ################################################## SHORTCUTS #####################################################
+    ################################################## Shortcuts #####################################################
 
-    @QtCore.pyqtSlot(str,str,str,str,str,result=QtCore.QObject)
-    def addShortcut(self,key1,key2,name,doc,context):
-        shortcut = Shortcut(key1,key2,name,doc,context)
-        if not self._listOfShortcut.contains(shortcut) :
+    @QtCore.pyqtSlot(str, str, str, str, str, result=QtCore.QObject)
+    def addShortcut(self, key1, key2, name, doc, context):
+        shortcut = Shortcut(key1, key2, name, doc, context)
+        if not self._listOfShortcut.contains(shortcut):
             self._listOfShortcut.append(shortcut)
 
     @QtCore.pyqtSlot(result=QtCore.QObject)
     def getlistOfShortcut(self):
-        self._listOfShortcut= QObjectListModel(self)
+        self._listOfShortcut = QObjectListModel(self)
 
-        self.addShortcut("Ctrl","C", "Copy", "Permit to copy nodes or portions of graph", "Graph")
-        self.addShortcut("Ctrl","X", "Cut", "Permit to cut nodes or portions of graph", "Graph")
-        self.addShortcut("Ctrl","V", "Paste", "Permit to paste nodes or portions of graph previously cut or copied", "Graph")
-        self.addShortcut("Ctrl","S", "Save", "Permit to save the current graph", "Graph")
-        self.addShortcut("Ctrl","Z", "Undo", "Abort the last modification in the graph", "Graph")
-        self.addShortcut("Ctrl","Y", "Redo", "Restore the last action undid", "Graph")
-        self.addShortcut("Ctrl","A", "Select all", "Select all nodes of the graph", "Graph")
-        self.addShortcut("Ctrl","D", "Duplicate", "Duplicate selected nodes", "Graph")
-        self.addShortcut("Ctrl","N", "New graph", "Close the current graph and create an other one", "Graph")
-        self.addShortcut("Ctrl","O", "Open graph", "Close the current graph and open a browser which permit to open another one", "Graph")
-        self.addShortcut("Del","", "Delete", "Delete selected nodes or oprtion of graph", "Graph")
-        self.addShortcut("P","", "Parameters", "Show parameters of the node in the parameter editor", "Graph")
-        self.addShortcut("Return","", "Display", "Assign the mosquito to the selected node, and diplay it in the viewer", "Graph")
-        self.addShortcut("Enter","", "Display", "Assign the mosquito to the selected node, and diplay it in the viewer", "Graph")
-        self.addShortcut("Tab","", "Plugin browser", "Permit to paste a node or a portion of graph previously cut or copied", "Graph")
+        self.addShortcut("Ctrl", "C", "Copy", "Permit to copy nodes or portions of graph", "Graph")
+        self.addShortcut("Ctrl", "X", "Cut", "Permit to cut nodes or portions of graph", "Graph")
+        self.addShortcut("Ctrl", "V", "Paste", "Permit to paste nodes or portions of graph previously cut or copied", "Graph")
+        self.addShortcut("Ctrl", "S", "Save", "Permit to save the current graph", "Graph")
+        self.addShortcut("Ctrl", "Z", "Undo", "Abort the last modification in the graph", "Graph")
+        self.addShortcut("Ctrl", "Y", "Redo", "Restore the last action undid", "Graph")
+        self.addShortcut("Ctrl", "A", "Select all", "Select all nodes of the graph", "Graph")
+        self.addShortcut("Ctrl", "D", "Duplicate", "Duplicate selected nodes", "Graph")
+        self.addShortcut("Ctrl", "N", "New graph", "Close the current graph and create an other one", "Graph")
+        self.addShortcut("Ctrl", "O", "Open graph", "Close the current graph and open a browser which permit to open another one", "Graph")
+        self.addShortcut("Del", "", "Delete", "Delete selected nodes or oprtion of graph", "Graph")
+        self.addShortcut("P", "", "Parameters", "Show parameters of the node in the parameter editor", "Graph")
+        self.addShortcut("Return", "", "Display", "Assign the mosquito to the selected node, and diplay it in the viewer", "Graph")
+        self.addShortcut("Enter", "", "Display", "Assign the mosquito to the selected node, and diplay it in the viewer", "Graph")
+        self.addShortcut("Tab", "", "Plugin browser", "Permit to paste a node or a portion of graph previously cut or copied", "Graph")
 
-        self.addShortcut("Up","", "Previous", "Go to the next plugin in the list", "Plugin Documentation")
-        self.addShortcut("Down","", "Next", "Go to the previous plugin in the list", "Plugin Documentation")
-        self.addShortcut("Return","", "Plugin help", "Show the documentation for the selected plugin", "Plugin Documentation")
-        self.addShortcut("Enter","", "Plugin help", "Show the documentation for the selected plugin", "Plugin Documentation")
+        self.addShortcut("Up", "", "Previous", "Go to the next plugin in the list", "Plugin Documentation")
+        self.addShortcut("Down", "", "Next", "Go to the previous plugin in the list", "Plugin Documentation")
+        self.addShortcut("Return", "", "Plugin help", "Show the documentation for the selected plugin", "Plugin Documentation")
+        self.addShortcut("Enter", "", "Plugin help", "Show the documentation for the selected plugin", "Plugin Documentation")
 
+        self.addShortcut("Up", "", "Previous", "Go to the next plugin in the list", "Plugin Browser")
+        self.addShortcut("Down", "", "Next", "Go to the previous plugin in the list", "Plugin Browser")
+        self.addShortcut("Return", "", "Add", "Create the selected plugin", "Plugin Browser")
+        self.addShortcut("Enter", "", "Add", "Create the selected plugin", "Plugin Browser")
 
-        self.addShortcut("Up","", "Previous", "Go to the next plugin in the list", "Plugin Browser")
-        self.addShortcut("Down","", "Next", "Go to the previous plugin in the list", "Plugin Browser")
-        self.addShortcut("Return","", "Add", "Create the selected plugin", "Plugin Browser")
-        self.addShortcut("Enter","", "Add", "Create the selected plugin", "Plugin Browser")
+        self.addShortcut("1", "", "Viewer 1", "Show the view 1 of the viewer previously assigned to a node", "Viewer")
+        self.addShortcut("2", "", "Viewer 2", "Show the view 2 of the viewer previously assigned to a node", "Viewer")
+        self.addShortcut("3", "", "Viewer 3", "Show the view 3 of the viewer previously assigned to a node", "Viewer")
+        self.addShortcut("4", "", "Viewer 4", "Show the view 4 of the viewer previously assigned to a node", "Viewer")
+        self.addShortcut("5", "", "Viewer 5", "Show the view 5 of the viewer previously assigned to a node", "Viewer")
+        self.addShortcut("6", "", "Viewer 6", "Show the view 6 of the viewer previously assigned to a node", "Viewer")
+        self.addShortcut("7", "", "Viewer 7", "Show the view 7 of the viewer previously assigned to a node", "Viewer")
+        self.addShortcut("8", "", "Viewer 8", "Show the view 8 of the viewer previously assigned to a node", "Viewer")
+        self.addShortcut("9", "", "Viewer 9", "Show the view 9 of the viewer previously assigned to a node", "Viewer")
+        self.addShortcut("Space", "", "Pause/Play", "If you are visionning an image sequence, then you can press this key to pause or play/resume", "Viewer")
 
-
-        self.addShortcut("1","", "Viewer 1", "Show the view 1 of the viewer previously assigned to a node", "Viewer")
-        self.addShortcut("2","", "Viewer 2", "Show the view 2 of the viewer previously assigned to a node", "Viewer")
-        self.addShortcut("3","", "Viewer 3", "Show the view 3 of the viewer previously assigned to a node", "Viewer")
-        self.addShortcut("4","", "Viewer 4", "Show the view 4 of the viewer previously assigned to a node", "Viewer")
-        self.addShortcut("5","", "Viewer 5", "Show the view 5 of the viewer previously assigned to a node", "Viewer")
-        self.addShortcut("6","", "Viewer 6", "Show the view 6 of the viewer previously assigned to a node", "Viewer")
-        self.addShortcut("7","", "Viewer 7", "Show the view 7 of the viewer previously assigned to a node", "Viewer")
-        self.addShortcut("8","", "Viewer 8", "Show the view 8 of the viewer previously assigned to a node", "Viewer")
-        self.addShortcut("9","", "Viewer 9", "Show the view 9 of the viewer previously assigned to a node", "Viewer")
-        self.addShortcut("Space","", "Pause/Play", "If you are visionning an image sequence, then you can press this key to pause or play/resume", "Viewer")
-
-        self.addShortcut("Ctrl","L", "", "", "Browser")
-        self.addShortcut("Ctrl","N", "New folder", "Create a new folder which default name is ''New directory''", "Browser")
-        self.addShortcut("F2","", "Rename", "Rename the selected file or folder", "Browser")
-        self.addShortcut("Tab","","Auto-completion", "Propose subfolders of the current, which name starts with what you already wrote in the search bar", "Browser")
-        self.addShortcut("Del","", "Delete", "Delete selected folders. Warning : it still irreversible!", "Browser")
+        self.addShortcut("Ctrl", "L", "", "", "Browser")
+        self.addShortcut("Ctrl", "N", "New folder", "Create a new folder which default name is ''New directory''", "Browser")
+        self.addShortcut("F2", "", "Rename", "Rename the selected file or folder", "Browser")
+        self.addShortcut("Tab", "", "Auto-completion", "Propose subfolders of the current, which name starts with what you already wrote in the search bar", "Browser")
+        self.addShortcut("Del", "", "Delete", "Delete selected folders. Warning: it still irreversible!", "Browser")
 
         return self._listOfShortcut
-        
+
     @QtCore.pyqtSlot(result=QtCore.QObject)
     def getlistOfContext(self):
         listOfShortcutContext = QObjectListModel(self)
         self.getlistOfShortcut()
-        for s in self._listOfShortcut :
-            if not listOfShortcutContext.contains(s._shortcutContext) :
+        for s in self._listOfShortcut:
+            if not listOfShortcutContext.contains(s._shortcutContext):
                 listOfShortcutContext.append(s._shortcutContext)
         return listOfShortcutContext
 
-    @QtCore.pyqtSlot(str,result=QtCore.QObject)
+    @QtCore.pyqtSlot(str, result=QtCore.QObject)
     def getlistOfShortcutByContext(self, context):
         listOfShortcutByContext = QObjectListModel(self)
         self.getlistOfShortcut()
-        for s in self._listOfShortcut :
-            if s._shortcutContext == context :
-                if not listOfShortcutByContext.contains(s) :
+        for s in self._listOfShortcut:
+            if s._shortcutContext == context:
+                if not listOfShortcutByContext.contains(s):
                     listOfShortcutByContext.append(s)
         return listOfShortcutByContext
 
-    ################################################## GRAPH BROWSER & GRAPH PARAMETERS EDITOR ##################################################
+    ##################################### Graph browser & graph parameters editor #####################################
 
     @QtCore.pyqtSlot(str, result=str)
     def getFileName(self, path):
         return os.path.basename(path)
-         
+
     @QtCore.pyqtSlot(str, result=QtCore.QObject)
     def nodeReaderWrapperForBrowser(self, url):
-        self._graphBrowser._nodes = []  # clear the graph
-        self._graphBrowser._graphTuttle = tuttle.Graph()  # clear the graphTuttle
+        self._graphBrowser._nodes = []  # Clear the graph
+        self._graphBrowser._graphTuttle = tuttle.Graph()  # Clear the graphTuttle
         self._currentGraph = self._graphBrowser
         self._currentGraphWrapper = self._graphBrowserWrapper
 
-        readerNode = self._graphBrowser.createReaderNode(url, 0, 0) # create a reader node (like for the drag & drop of file)
+        readerNode = self._graphBrowser.createReaderNode(url, 0, 0)  # Create a reader node (like for file drag & drop)
 
-        readerNodeWrapper = NodeWrapper(readerNode, self._graphBrowserWrapper._view) # wrapper of the reader file
+        readerNodeWrapper = NodeWrapper(readerNode, self._graphBrowserWrapper._view)  # Wrapper of the reader file
 
         return readerNodeWrapper
 
-
     @QtCore.pyqtSlot(result=QtCore.QObject)
     def lastNode(self):
-        # return the last node to connect to the new node
+        # Return the last node to connect to the new node
 
         sizeOfGraph = self._currentGraphWrapper._nodeWrappers.size()
 
         if (sizeOfGraph >= 1):
-            #nodes to connect
+            # Nodes to connect
             lastNode = self._currentGraphWrapper._nodeWrappers[sizeOfGraph-1]
-
-        else : lastNode = None
+        else:
+            lastNode = None
 
         # update undo/redo display
-        #self.undoRedoChanged()
+        # self.undoRedoChanged()
 
         return lastNode
 
-
-
-    ################################################## SAVE / LOAD ##################################################
+    ################################################## Save / Load ##################################################
 
     @QtCore.pyqtSlot(QtCore.QUrl)
     def saveData(self, url):
@@ -903,7 +895,7 @@ class ButtleData(QtCore.QObject):
             filepath = QtCore.QUrl.fromLocalFile(url).toLocalFile()
         else:
             filepath = QtCore.QUrl(url).toLocalFile()
-        
+
         if not filepath.lower().endswith(".bofx"):
             filepath = filepath + ".bofx"
 
@@ -990,7 +982,7 @@ class ButtleData(QtCore.QObject):
             for index, current_view in decoded["viewer"]["current_view"].items():
                 nodeName, frame = current_view["nodeName"], current_view["frame"]
                 self._mapViewerIndextoNodeName.update({index: (nodeName, frame)})
-            # #The next commands doesn't work : we need to click on the viewer's number to see the image in the viewer. Need to be fixed.
+            # # The next commands need to be fixed: We need to click on the viewers number to see the image in the viewer.
             #     self.setCurrentViewerIndex(int(index))
             #     self.setCurrentViewerNodeName(current_view)
             #     self.setCurrentViewerNodeWrapper = self.getNodeWrapperByViewerIndex(int(index))
@@ -1005,11 +997,11 @@ class ButtleData(QtCore.QObject):
         """
             Create a new graph
         """
-        self.urlOfFileToSave=""
+        self.urlOfFileToSave = ""
         self.graphWrapper.deleteGraphWrapper()
         CommandManager().clean()
 
-    ################################################## DATA EXPOSED TO QML ##################################################
+    ############################################### Data exposed to QML ###############################################
 
     pluginsIdentifiers = QtCore.pyqtProperty(QtCore.QObject, getPluginsIdentifiers, constant=True)
     pluginsDocs = QtCore.pyqtProperty(QtCore.QObject, getPluginsWrappers, constant=True)
@@ -1024,46 +1016,55 @@ class ButtleData(QtCore.QObject):
     # filePath
     buttlePath = QtCore.pyqtProperty(str, getButtlePath, constant=True)
 
-    # current param, view, and selected node
+    # Current param, view, and selected node
     currentParamNodeChanged = QtCore.pyqtSignal()
-    currentParamNodeWrapper = QtCore.pyqtProperty(QtCore.QObject, getCurrentParamNodeWrapper, setCurrentParamNodeWrapper, notify=currentParamNodeChanged)
+    currentParamNodeWrapper = QtCore.pyqtProperty(QtCore.QObject, getCurrentParamNodeWrapper,
+                                                  setCurrentParamNodeWrapper, notify=currentParamNodeChanged)
 
     currentViewerNodeChanged = QtCore.pyqtSignal()
-    currentViewerNodeWrapper = QtCore.pyqtProperty(QtCore.QObject, getCurrentViewerNodeWrapper, setCurrentViewerNodeWrapper, notify=currentViewerNodeChanged)
+    currentViewerNodeWrapper = QtCore.pyqtProperty(QtCore.QObject, getCurrentViewerNodeWrapper,
+                                                   setCurrentViewerNodeWrapper, notify=currentViewerNodeChanged)
     currentViewerFrameChanged = QtCore.pyqtSignal()
-    currentViewerFrame = QtCore.pyqtProperty(int, getCurrentViewerFrame, setCurrentViewerFrame, notify=currentViewerFrameChanged)
+    currentViewerFrame = QtCore.pyqtProperty(int, getCurrentViewerFrame, setCurrentViewerFrame,
+                                             notify=currentViewerFrameChanged)
 
     currentViewerNodeName = QtCore.pyqtProperty(QtCore.QObject, getCurrentViewerNodeName, constant=True)
 
     currentSelectedNodesChanged = QtCore.pyqtSignal()
-    currentSelectedNodeWrappers = QtCore.pyqtProperty("QVariant", getCurrentSelectedNodeWrappers, setCurrentSelectedNodeWrappers, notify=currentSelectedNodesChanged)
+    currentSelectedNodeWrappers = QtCore.pyqtProperty("QVariant", getCurrentSelectedNodeWrappers,
+                                                      setCurrentSelectedNodeWrappers, notify=currentSelectedNodesChanged)
 
     currentConnectionWrapperChanged = QtCore.pyqtSignal()
-    currentConnectionWrapper = QtCore.pyqtProperty(QtCore.QObject, getCurrentConnectionWrapper, setCurrentConnectionWrapper, notify=currentConnectionWrapperChanged)
+    currentConnectionWrapper = QtCore.pyqtProperty(QtCore.QObject, getCurrentConnectionWrapper,
+                                                   setCurrentConnectionWrapper, notify=currentConnectionWrapperChanged)
 
     currentViewerIndexChanged = QtCore.pyqtSignal()
-    currentViewerIndex = QtCore.pyqtProperty(int, getCurrentViewerIndex, setCurrentViewerIndex, notify=currentViewerIndexChanged)
+    currentViewerIndex = QtCore.pyqtProperty(int, getCurrentViewerIndex, setCurrentViewerIndex,
+                                             notify=currentViewerIndexChanged)
 
-    # total of the nodes
+    # Total of the nodes
     editedNodesWrapper = QtCore.pyqtProperty(QtCore.QObject, getEditedNodesWrapper, constant=True)
 
     currentGraphWrapperChanged = QtCore.pyqtSignal()
-    currentGraphWrapper = QtCore.pyqtProperty(QtCore.QObject, getCurrentGraphWrapper, setCurrentGraphWrapper, notify=currentGraphWrapperChanged)
+    currentGraphWrapper = QtCore.pyqtProperty(QtCore.QObject, getCurrentGraphWrapper,
+                                              setCurrentGraphWrapper, notify=currentGraphWrapperChanged)
 
     currentGraphChanged = QtCore.pyqtSignal()
-    currentGraph = QtCore.pyqtProperty(QtCore.QObject, getCurrentGraph, setCurrentGraph, notify=currentGraphChanged)
+    currentGraph = QtCore.pyqtProperty(QtCore.QObject, getCurrentGraph, setCurrentGraph,
+                                       notify=currentGraphChanged)
 
-    # paste possibility
+    # Paste possibility
     pastePossibilityChanged = QtCore.pyqtSignal()
     canPaste = QtCore.pyqtProperty(bool, canPaste, notify=pastePossibilityChanged)
 
-    # possibility to save graph
+    # Possibility to save graph
     graphCanBeSavedChanged = QtCore.pyqtSignal()
     graphCanBeSaved = QtCore.pyqtProperty(bool, graphCanBeSaved, notify=graphCanBeSavedChanged)
 
-    # url of the file to save
+    # Url of the file to save
     urlOfFileToSaveChanged = QtCore.pyqtSignal()
     urlOfFileToSave = QtCore.pyqtProperty(str, getUrlOfFileToSave, setUrlOfFileToSave, notify=urlOfFileToSaveChanged)
+
 
 # This class exists just because there are problems when a class extends 2 other classes (Singleton and QObject)
 class ButtleDataSingleton(Singleton):
@@ -1076,7 +1077,8 @@ class ButtleDataSingleton(Singleton):
 
 def _decode_dict(dict_):
     """
-        This function will recursively pass in nested dicts, and will convert all str elements into string (essential for some Tuttle functions). 
+        This function will recursively pass in nested dicts, and will convert
+        all str elements into string (essential for some Tuttle functions).
     """
     for key in dict_:
         if isinstance(dict_[key], str):

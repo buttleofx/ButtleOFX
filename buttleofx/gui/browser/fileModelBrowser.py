@@ -67,7 +67,7 @@ class FileItem(QtCore.QObject):
             (_, extension) = os.path.splitext(seqPath)
             self._fileExtension = extension
 
-    ################################################## Methods exposed to QML ##################################################
+    # ############################################ Methods exposed to QML ############################################ #
 
     @QtCore.pyqtSlot(result=str)
     def getFilepath(self):
@@ -79,7 +79,6 @@ class FileItem(QtCore.QObject):
 
     @QtCore.pyqtSlot(result=QtCore.QSizeF)
     def getImageSize(self):
-        from pyTuttle import tuttle
         g = tuttle.Graph()
         node = g.createNode(tuttle.getBestReader(self._fileExtension), self._fileImg).asImageEffectNode()
         g.setup()
@@ -94,9 +93,9 @@ class FileItem(QtCore.QObject):
     def getSupported(self):
         return self._isSupported
 
-    ################################################## Methods private to this class ##################################################
+    # ######################################## Methods private to this class ####################################### #
 
-    ### Getters ###
+    # ## Getters ## #
 
     def getFileImg(self):
         return self._fileImg
@@ -111,7 +110,6 @@ class FileItem(QtCore.QObject):
         return self._fileWeight
 
     def getFileTime(self):
-        from pyTuttle import tuttle
         g = tuttle.Graph()
         node = g.createNode(tuttle.getBestReader(self._fileExtension), self._filepath).asImageEffectNode()
         g.setup()
@@ -124,7 +122,7 @@ class FileItem(QtCore.QObject):
     def getSequence(self):
         return self._seq
 
-    ### Setters ###
+    # ## Setters ## #
 
     def setFileName(self, newName):
         os.rename(self.filepath, os.path.join(os.path.dirname(self._filepath), newName))
@@ -137,7 +135,7 @@ class FileItem(QtCore.QObject):
         self._isSelected = isSelected
         self.isSelectedChange.emit()
 
-    ################################################## Data exposed to QML ##################################################
+    # ############################################# Data exposed to QML ############################################## #
 
     filepath = QtCore.pyqtProperty(str, getFilepath, setFilepath, constant=True)
     fileType = QtCore.pyqtProperty(str, getFileType, constant=True)
@@ -166,9 +164,9 @@ class FileModelBrowser(QtQuick.QQuickItem):
         self._fileItemsModel = QObjectListModel(self)
         self._showSeq = False
 
-    ################################################## Methods exposed to QML ##################################################
+    # ############################################ Methods exposed to QML ############################################ #
 
-    ### Getters ###
+    # ## Getters ## #
 
     @QtCore.pyqtSlot(str, result=QtCore.QObject)
     def getFilteredFileItems(self, fileFilter):
@@ -205,7 +203,7 @@ class FileModelBrowser(QtQuick.QQuickItem):
     @QtCore.pyqtSlot(result=QtCore.QObject)
     def getLastSelected(self):
         for item in reversed(self._fileItems):
-            if item.isSelected == True:
+            if item.isSelected:
                 return item
         return None
 
@@ -213,17 +211,17 @@ class FileModelBrowser(QtQuick.QQuickItem):
     def getSelectedItems(self):
         selectedList = QObjectListModel(self)
         for item in self._fileItems:
-            if item.isSelected == True:
+            if item.isSelected:
                 selectedList.append(item)
         return selectedList
 
-    ### Setters ###
+    # ## Setters ## #
 
     @QtCore.pyqtSlot(str)
     def setFirstFolder(self, firstFolder):
         self._firstFolder = firstFolder
 
-    ### Others ###
+    # ## Others ## #
 
     @QtCore.pyqtSlot(str, int)
     def changeFileName(self, newName, index):
@@ -329,9 +327,9 @@ class FileModelBrowser(QtQuick.QQuickItem):
 
         self._fileItemsModel.setObjectList(self._fileItems)
 
-    ################################################## Methods private to this class ##################################################
+    # ######################################## Methods private to this class ######################################## #
 
-    ### Getters ###
+    # ## Getters ## #
 
     def getFilter(self):
         return self._nameFilter
@@ -351,7 +349,7 @@ class FileModelBrowser(QtQuick.QQuickItem):
     def getSize(self):
         return len(self._fileItems) - 1
 
-    ### Setters ###
+    # ## Setters ## #
 
     def setFilter(self, nameFilter):
         self._nameFilter = nameFilter
@@ -368,7 +366,7 @@ class FileModelBrowser(QtQuick.QQuickItem):
         self.updateFileItems(self._folder)
         self.showSeqChanged.emit()
 
-    ################################################## Data exposed to QML ##################################################
+    # ############################################# Data exposed to QML ############################################# #
 
     folderChanged = QtCore.pyqtSignal()
     folder = QtCore.pyqtProperty(str, getFolder, setFolder, notify=folderChanged)

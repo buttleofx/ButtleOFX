@@ -26,6 +26,7 @@ Rectangle {
 
         Text {
             id: nbOfFiles
+
             text: {
                 if (selected.count > 1) {
                     selected.count + " files selected"
@@ -58,6 +59,7 @@ Rectangle {
             onClicked: {
                 _buttleData.currentGraphWrapper = _buttleData.graphWrapper
                 _buttleData.currentGraphIsGraph()
+
                 // If before the viewer was showing an image from the brower, we change the currentView
                 if (_buttleData.currentViewerIndex > 9) {
                     _buttleData.currentViewerIndex = player.lastView
@@ -66,9 +68,8 @@ Rectangle {
                     player.changeViewer(player.lastView)
                 }
 
-                for (var i=0; i < selected.count; ++i)
-                {
-                    _buttleManager.nodeManager.dropFile(selected.get(i).filepath, 10*i, 10*i)
+                for (var i = 0; i < selected.count; ++i) {
+                    _buttleManager.nodeManager.dropFile(selected.get(i).filepath, 10 * i, 10 * i)
                 }
             }
         }

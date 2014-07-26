@@ -9,8 +9,8 @@ Rectangle {
         id: listview
         y: 20
         x: 10
-        height : parent.height
-        width : parent.height
+        height: parent.height
+        width: parent.height
         currentIndex: -1
 
         model: FolderListModel {
@@ -27,6 +27,7 @@ Rectangle {
                 MouseArea {
                     id: mouseRegion
                     anchors.fill : parent
+
                     onClicked: {
                         console.log( fileName + " Clicked")
                         listview.currentIndex = index

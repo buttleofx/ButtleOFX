@@ -1,12 +1,12 @@
 import logging
-# fix thow to display our info
-    # from the lowest to the highest level : DEBUG - INFO - WARNING - ERROR - CRITICAL (default = WARNING)
-    # to use it :
-        # logging.debug("debug message")
-        # logging.info("info message")
-        # logging.warning("warning message")
-        # logging.error("error message")
-        # logging.critical("critical message")
+# Fix throw to display our info
+# From the lowest to the highest level : DEBUG - INFO - WARNING - ERROR - CRITICAL (default = WARNING)
+# To use it:
+# logging.debug("debug message")
+# logging.info("info message")
+# logging.warning("warning message")
+# logging.error("error message")
+# logging.critical("critical message")
 import os
 DEV_MODE = os.environ.get("BUTTLEOFX_DEV", False)
 
@@ -15,16 +15,15 @@ if DEV_MODE:
     logging.basicConfig(format='Buttle - %(levelname)s - %(message)s', level=logging.DEBUG)
 else:
     # print in a file
-    logging.basicConfig(format='Buttle - %(levelname)s - %(asctime)-15s - %(message)s', filename='console.log', filemode='w', level=logging.DEBUG)
+    logging.basicConfig(format='Buttle - %(levelname)s - %(asctime)-15s - %(message)s',
+                        filename='console.log', filemode='w', level=logging.DEBUG)
 
-# Tuttle
 from pyTuttle import tuttle
-# quickmamba
 from quickmamba.utils import QmlInstantCoding
 # PyCheck
-#import pychecker.checker
+# import pychecker.checker
 
-# for glViewport
+# For glViewport
 tuttleofx_installed = False
 try:
     import pyTuttle
@@ -40,24 +39,19 @@ if tuttleofx_installed:
 else:
     from buttleofx.gui.viewerGL.glviewport_pil import GLViewport_pil as GLViewportImpl
 
-# data
 from buttleofx.data import ButtleDataSingleton
-# manager
 from buttleofx.manager import ButtleManagerSingleton
-# event
+# Event
 from buttleofx.event import ButtleEventSingleton
-# new QML type
+# New QML type
 from buttleofx.data import Finder
-#TimerPlayer
 from buttleofx.gui.viewer import TimerPlayer
-#FileModelBrowser
-from buttleofx.gui.browser import FileModelBrowser,FileModelBrowserSingleton
-# undo_redo
+from buttleofx.gui.browser import FileModelBrowser, FileModelBrowserSingleton
+# Undo_redo
 from buttleofx.core.undo_redo.manageTools import CommandManager
 # Menu
 from buttleofx.gui.graph.menu import MenuWrapper
 
-# PyQt5
 from PyQt5 import QtCore, QtGui, QtQml, QtQuick, QtWidgets
 from PyQt5.QtWidgets import QWidget, QFileDialog, QApplication, QMessageBox
 
@@ -91,14 +85,14 @@ class EventFilter(QtCore.QObject):
         buttleData = ButtleDataSingleton().get()
         browser = FileModelBrowserSingleton().get()
         if event.type() == QtCore.QEvent.KeyPress:
-            # if alt f4 event ignored
-            if event.modifiers() == QtCore.Qt.AltModifier and event.key() == QtCore.Qt.Key_F4 :
+            # If alt f4 event ignored
+            if event.modifiers() == QtCore.Qt.AltModifier and event.key() == QtCore.Qt.Key_F4:
                 event.ignore()
-        if event.type() != QtCore.QEvent.Close :
-            return super(EventFilter,self).eventFilter(receiver, event)
-        if not isinstance(receiver,QtQuick.QQuickWindow) or not receiver.title() =="ButtleOFX" :
+        if event.type() != QtCore.QEvent.Close:
+            return super(EventFilter, self).eventFilter(receiver, event)
+        if not isinstance(receiver, QtQuick.QQuickWindow) or not receiver.title() == "ButtleOFX":
             return False
-        if not buttleData.graphCanBeSaved :
+        if not buttleData.graphCanBeSaved:
             return False
         msgBox = QMessageBox()
         msgBox.setText("Save graph changes before closing ?")
@@ -113,7 +107,7 @@ class EventFilter(QtCore.QObject):
                 # Save on the already existing file
                 buttleData.saveData(buttleData.urlOfFileToSave)
                 # Close the application
-                return super(EventFilter,self).eventFilter(receiver, event)
+                return super(EventFilter, self).eventFilter(receiver, event)
             # This project has never been saved, so ask the user on which file to save.
             dialog = QFileDialog()
             fileToSave = dialog.getSaveFileName(None, "Save the graph", browser.getFirstFolder())[0]
@@ -122,10 +116,10 @@ class EventFilter(QtCore.QObject):
             buttleData.urlOfFileToSave = fileToSave
             buttleData.saveData(fileToSave)
             # Close the application
-            return super(EventFilter,self).eventFilter(receiver, event)
-        if ret == QMessageBox.Discard :
+            return super(EventFilter, self).eventFilter(receiver, event)
+        if ret == QMessageBox.Discard:
             # Close the application
-            return super(EventFilter,self).eventFilter(receiver, event)
+            return super(EventFilter, self).eventFilter(receiver, event)
         # Don't call the parent class, so we don't close the application
         return True
 
@@ -147,6 +141,7 @@ class ButtleApp(QtWidgets.QApplication):
 
 gray_color_table = [QtGui.qRgb(i, i, i) for i in range(256)]
 
+
 def toQImage(im):
     if im is None:
         return QtGui.QImage()
@@ -159,10 +154,10 @@ def toQImage(im):
 
         elif len(im.shape) == 3:
             if im.shape[2] == 3:
-                qim = QtGui.QImage(im.data, im.shape[1], im.shape[0], im.strides[0], QtGui.QImage.Format_RGB888);
+                qim = QtGui.QImage(im.data, im.shape[1], im.shape[0], im.strides[0], QtGui.QImage.Format_RGB888)
                 return qim
             elif im.shape[2] == 4:
-                qim = QtGui.QImage(im.data, im.shape[1], im.shape[0], im.strides[0], QtGui.QImage.Format_ARGB32);
+                qim = QtGui.QImage(im.data, im.shape[1], im.shape[0], im.strides[0], QtGui.QImage.Format_ARGB32)
                 return qim
 
     raise ValueError("toQImage: case not implemented.")
@@ -170,11 +165,13 @@ def toQImage(im):
 # for debug purposes
 count_thumbnail = 0
 
+
 class ImageProvider(QtQuick.QQuickImageProvider):
     def __init__(self):
         QtQuick.QQuickImageProvider.__init__(self, QtQuick.QQuickImageProvider.Image)
         self.thumbnailCache = tuttle.ThumbnailDiskCache()
-        self.thumbnailCache.setRootDir(os.path.join(tuttle.core().getPreferences().getTuttleHomeStr(), "thumbnails_cache"))
+        self.thumbnailCache.setRootDir(os.path.join(tuttle.core().getPreferences().getTuttleHomeStr(),
+                                                    "thumbnails_cache"))
 
     def requestImage(self, id, size):
         """
@@ -183,59 +180,59 @@ class ImageProvider(QtQuick.QQuickImageProvider):
         logging.debug("Tuttle ImageProvider: file='%s'" % id)
         try:
             outputCache = tuttle.MemoryCache()
-            
+
             img = self.thumbnailCache.getThumbnail(id)
             numpyImage = img.getNumpyArray()
-            
+
             # convert numpyImage to QImage
             qtImage = toQImage(numpyImage)
-            
+
             # for debug purposes:
             # global count_thumbnail
             # qtImage.save("/tmp/buttle/thumbnail_%s.png" % str(count_thumbnail))
             # count_thumbnail += 1
-            
+
             return qtImage.copy(), qtImage.size()
 
         except Exception as e:
             logging.debug("Tuttle ImageProvider: file='%s' => error: %s" % (id, str(e)))
             qtImage = QtGui.QImage()
             return qtImage, qtImage.size()
-    
+
 
 def main(argv, app):
 
-    #preload Tuttle
+    # Preload Tuttle
     tuttle.core().preload()
 
-    # give to QML acces to TimerPlayer defined in buttleofx/gui/viewer
+    # Give to QML acces to TimerPlayer defined in buttleofx/gui/viewer
     QtQml.qmlRegisterType(TimerPlayer, "TimerPlayer", 1, 0, "TimerPlayer")
-    # give to QML access to FileModelBrowser defined in buttleofx/gui/browser
+    # Give to QML access to FileModelBrowser defined in buttleofx/gui/browser
     QtQml.qmlRegisterType(FileModelBrowser, "ButtleFileModel", 1, 0, "FileModelBrowser")
-    # add new QML type
+    # Add new QML type
     QtQml.qmlRegisterType(Finder, "FolderListViewItem", 1, 0, "FolderListView")
-    
+
     QtQml.qmlRegisterType(GLViewportImpl, "Viewport", 1, 0, "GLViewport")
 
-    # init undo_redo contexts
+    # Init undo_redo contexts
     cmdManager = CommandManager()
     cmdManager.setActive()
     cmdManager.clean()
 
-    # create the QML engine
+    # Create the QML engine
     engine = QtQml.QQmlEngine(app)
     engine.quit.connect(app.quit)
     engine.addImageProvider("buttleofx", ImageProvider())
 
-    # data
+    # Data
     buttleData = ButtleDataSingleton().get().init(engine, currentFilePath)
-    # manager
+    # Manager
     buttleManager = ButtleManagerSingleton().get().init()
-    # event
+    # Event
     buttleEvent = ButtleEventSingleton().get()
-    #fileModelBrowser
+    # fileModelBrowser
     browser = FileModelBrowserSingleton().get()
-    
+
     parser = argparse.ArgumentParser(description='A command line to execute ButtleOFX, an opensource compositing software. If you pass a folder as an argument, ButtleOFX will start at this path.')
     parser.add_argument('folder', nargs='?', help='Folder to browse')
     args = parser.parse_args()
@@ -261,12 +258,12 @@ def main(argv, app):
     mainFilepath = os.path.join(currentFilePath, "MainWindow.qml")
     if windows:
         mainFilepath = mainFilepath.replace('\\', '/')
-    
+
     component = QtQml.QQmlComponent(engine)
     component.loadUrl(QtCore.QUrl("file:///" + mainFilepath))
     topLevel = component.create()
-    #engine.load(QtCore.QUrl("file:///" + mainFilepath))
-    #topLevel = engine.rootObjects()[0]
+    # engine.load(QtCore.QUrl("file:///" + mainFilepath))
+    # topLevel = engine.rootObjects()[0]
     if not topLevel:
         print("Errors:")
         for error in component.errors():
@@ -277,7 +274,7 @@ def main(argv, app):
     if DEV_MODE:
         # Declare we are using instant coding tool on this view
         qic = QmlInstantCoding(topLevel, verbose=True)
-    
+
         # Add any source file (.qml and .js by default) in current working directory
         parentDir = os.path.dirname(currentFilePath)
         print("Watch directory:", parentDir)
@@ -285,6 +282,6 @@ def main(argv, app):
 
     aFilter = EventFilter()
     app.installEventFilter(aFilter)
-    
+
     topLevel.show()
     sys.exit(app.exec_())

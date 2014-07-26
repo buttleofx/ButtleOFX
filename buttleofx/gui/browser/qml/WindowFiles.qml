@@ -1,10 +1,9 @@
 import QtQuick 2.1
 import QtQuick.Controls 1.0
+import ButtleFileModel 1.0
 import QtQuick.Dialogs 1.0
 import QtQuick.Layouts 1.0
 import QtQuick.Controls.Styles 1.0
-
-import ButtleFileModel 1.0
 
 
 Rectangle {
@@ -109,6 +108,7 @@ Rectangle {
 
     MouseArea {
         anchors.fill: parent
+
         onClicked: {
             forceActiveFocus()
             // TODO: unselect
@@ -120,6 +120,7 @@ Rectangle {
 
         MenuItem {
             text: "Create a Directory"
+
             onTriggered: {
                 fileModel.createFolder(fileModel.folder + "/New Directory")
             }
@@ -173,6 +174,7 @@ Rectangle {
     MouseArea {
         anchors.fill: parent
         acceptedButtons: Qt.RightButton
+
         onClicked: {
             if (mouse.button == Qt.RightButton)
                 creation.popup()
@@ -197,7 +199,7 @@ Rectangle {
         style: ScrollViewStyle {
             scrollBarBackground: Rectangle {
                 id: scrollBar
-                width:15
+                width: 15
                 color: "#212121"
                 border.width: 1
                 border.color: "#333"
@@ -205,9 +207,9 @@ Rectangle {
 
             decrementControl : Rectangle {
                 id: scrollLower
-                width:15
-                height:15
-                color: styleData.pressed? "#212121" : "#343434"
+                width: 15
+                height: 15
+                color: styleData.pressed ? "#212121" : "#343434"
                 border.width: 1
                 border.color: "#333"
                 radius: 3
@@ -215,24 +217,25 @@ Rectangle {
                 Image {
                     id: arrow
                     source: "file:///" + _buttleData.buttlePath + "/gui/img/buttons/params/arrow2.png"
-                    x:4
-                    y:4
+                    x: 4
+                    y: 4
                 }
             }
 
             incrementControl : Rectangle {
                 id: scrollHigher
-                width:15
-                height:15
-                color: styleData.pressed? "#212121" : "#343434"
+                width: 15
+                height: 15
+                color: styleData.pressed ? "#212121" : "#343434"
                 border.width: 1
                 border.color: "#333"
                 radius: 3
+
                 Image {
                     id: arrow
                     source: "file:///" + _buttleData.buttlePath + "/gui/img/buttons/params/arrow.png"
-                    x:4
-                    y:4
+                    x: 4
+                    y: 4
                 }
             }
         }
@@ -244,12 +247,12 @@ Rectangle {
             cellWidth: 120
             cellHeight: cellWidth
             property int gridMargin: 4
-            visible: ! viewList
+            visible: !viewList
             boundsBehavior: Flickable.StopAtBounds
             flickableDirection: Flickable.VerticalFlick
             interactive: false
             currentIndex: -1
-            cacheBuffer: 10 * cellHeight  // caches 10 lines below and above
+            cacheBuffer: 10 * cellHeight  // Caches 10 lines below and above
 
             property int previousIndex: -1
 
@@ -261,14 +264,10 @@ Rectangle {
                 Rectangle {
                     id: rootFileItem
                     color: model.object.isSelected ? "#00b2a1" : "transparent"
-
                     width: gridview.cellWidth - gridview.gridMargin
                     height: gridview.cellHeight - gridview.gridMargin
                     radius: 5
-
                     objectName: index
-
-
                     property variant selectedFiles
 
                     /*DropArea {
@@ -288,15 +287,17 @@ Rectangle {
                     Drag.active: rootFileItem_mouseArea.drag.active
                     Drag.hotSpot.x: 20
                     Drag.hotSpot.y: 20
-                    //Drag.dragType: Drag.Automatic
-                    //Drag.mimeData: {"urls": [rootFileItem.selectedFiles]}
-                    //Drag.mimeData: {"text/plain": file.filePath, "text/uri-list": ""}
+                    // Drag.dragType: Drag.Automatic
+                    // Drag.mimeData: {"urls": [rootFileItem.selectedFiles]}
+                    // Drag.mimeData: {"text/plain": file.filePath, "text/uri-list": ""}
                     // Drag.keys: "text/uri-list"
                     Drag.keys: "internFileDrag"
 
                     StateGroup {
                         id: fileStateColumn
-                        states: State {
+
+                        states:
+                        State {
                             name: "dragging"
                             when: rootFileItem_mouseArea.pressed
                             PropertyChanges { target: rootFileItem; x: rootFileItem.x; y: rootFileItem.y }
@@ -318,36 +319,35 @@ Rectangle {
                                 winFile.showEditFile(rootFileItem_mouseArea.mapToItem(null, mouse.x, mouse.y))
                             fileModel.selectItem(index)
                             fileInfo.currentFile = fileModel.getSelectedItems() ? fileModel.getSelectedItems().get(0) : undefined
-                            //options.popup()
+                            // options.popup()
 
 
-                            //if shift:
-                            if(mouse.modifiers & Qt.ShiftModifier)
+                            // If shift:
+                            if (mouse.modifiers & Qt.ShiftModifier)
                                 fileModel.selectItemsByShift(gridview.previousIndex, index)
 
                             gridview.previousIndex = index
-                            //if ctrl:
-                            if(mouse.modifiers & Qt.ControlModifier)
+                            // If ctrl:
+                            if (mouse.modifiers & Qt.ControlModifier)
                                 fileModel.selectItems(index)
-
-                            else if(!(mouse.modifiers & Qt.ShiftModifier))
+                            else if (!(mouse.modifiers & Qt.ShiftModifier))
                                 fileModel.selectItem(index)
 
                             var sel = fileModel.getSelectedItems()
                             var selection = new Array()
-                            for(var selIndex = 0; selIndex < sel.count; ++selIndex)
-                            {
+
+                            for (var selIndex = 0; selIndex < sel.count; ++selIndex) {
                                 selection[selIndex] = sel.get(selIndex).filepath
                             }
+
                             rootFileItem.selectedFiles = selection
                             winFile.changeSelectedList(sel)
 
-                            // if it's an image, we assign it to the viewer
+                            // If it's an image, we assign it to the viewer
                             if (model.object.fileType != "Folder") {
-                                player.changeViewer(11) // we come to the temporary viewer
-                                // we save the last node wrapper of the last view
+                                player.changeViewer(11) // We come to the temporary viewer
+                                // We save the last node wrapper of the last view
                                 player.lastNodeWrapper = _buttleData.getNodeWrapperByViewerIndex(player.lastView)
-
                                 readerNode.nodeWrapper = _buttleData.nodeReaderWrapperForBrowser(model.object.filepath)
 
                                 _buttleData.currentGraphIsGraphBrowser()
@@ -355,21 +355,23 @@ Rectangle {
 
                                 _buttleData.currentViewerNodeWrapper = readerNode.nodeWrapper
                                 _buttleData.currentViewerFrame = 0
-                                // we assign the node to the viewer, at the frame 0
+                                // We assign the node to the viewer, at the frame 0
                                 _buttleData.assignNodeToViewerIndex(readerNode.nodeWrapper, 10)
-                                _buttleData.currentViewerIndex = 10 // we assign to the viewer the 10th view
+                                _buttleData.currentViewerIndex = 10 // We assign to the viewer the 10th view
                                 _buttleEvent.emitViewerChangedSignal()
                             }
                         }
 
                         onDoubleClicked: {
-                            // if it's an image, we create a node
+                            // If it's an image, we create a node
                             if (model.object.fileType != "Folder") {
                                 _buttleData.currentGraphWrapper = _buttleData.graphWrapper
                                 _buttleData.currentGraphIsGraph()
-                                // if before the viewer was showing an image from the browser, we change the currentView
-                                if (_buttleData.currentViewerIndex > 9){
+
+                                // If before the viewer was showing an image from the browser, we change the currentView
+                                if (_buttleData.currentViewerIndex > 9) {
                                     _buttleData.currentViewerIndex = player.lastView
+
                                     if (player.lastNodeWrapper != undefined)
                                         _buttleData.currentViewerNodeWrapper = player.lastNodeWrapper
                                     player.changeViewer(player.lastView)
@@ -386,19 +388,21 @@ Rectangle {
                         id: file
                         spacing: 0
                         anchors.fill: parent
+
                         Item {
                             Layout.fillWidth: true
                             Layout.fillHeight: true
+
                             Rectangle {
                                 anchors.fill: parent
                                 anchors.margins: 4
                                 property int minSize: Math.min(width, height)
 
-                                color: if( thumbnail.status == Image.Error )
+                                color: if (thumbnail.status == Image.Error)
                                            "red"
-                                       else if( thumbnail.status == Image.Null )
+                                       else if (thumbnail.status == Image.Null)
                                            "lightred"
-                                       else if( thumbnail.status == Image.Loading )
+                                       else if (thumbnail.status == Image.Loading)
                                            "#33FFFFFF"
                                        else
                                            "transparent"
@@ -411,6 +415,7 @@ Rectangle {
                                     height: width
                                     visible: !thumbnail.isFolder && thumbnail.status == Image.Loading
                                     // source: "images/loading.png"
+
                                     NumberAnimation on rotation {
                                         from: 0
                                         to: 360
@@ -418,6 +423,7 @@ Rectangle {
                                         loops: Animation.Infinite
                                         duration: 1000
                                     }
+
                                     color: "lightblue"
                                 }
 
@@ -443,6 +449,7 @@ Rectangle {
                         Item {
                             Layout.fillWidth: true
                             implicitHeight: hack_fontMetrics.height * 3 // 3 lines of text
+
                             Rectangle {
                                 id: filename_background
                                 width: filename_text.width
@@ -453,21 +460,18 @@ Rectangle {
 
                                 visible: filename_text.activeFocus
                             }
+
                             Text {
                                 id: filename_text
-
                                 horizontalAlignment: Text.AlignHCenter
                                 anchors.fill: parent
-
                                 text: model.object.fileName
-
                                 color: model.object.isSelected ? "black" : "white"
                                 font.bold: model.object.isSelected
                                 textFormat: Text.PlainText
                                 wrapMode: Text.Wrap
 
-
-                                clip: ! activeFocus
+                                clip: !activeFocus
                                 z: 9999  // TODO: need another solution to be truly on top.
                             }
                         }
@@ -489,31 +493,32 @@ Rectangle {
         style: ScrollViewStyle {
             scrollBarBackground: Rectangle {
                 id: scrollBar2
-                width:15
+                width: 15
                 color: "#212121"
                 border.width: 1
                 border.color: "#333"
             }
             decrementControl : Rectangle {
                 id: scrollLower2
-                width:15
-                height:15
-                color: styleData.pressed? "#212121" : "#343434"
+                width: 15
+                height: 15
+                color: styleData.pressed ? "#212121" : "#343434"
                 border.width: 1
                 border.color: "#333"
                 radius: 3
-                Image{
+
+                Image {
                     id: arrowBis2
                     source: "file:///" + _buttleData.buttlePath + "/gui/img/buttons/params/arrow2.png"
-                    x:4
-                    y:4
+                    x: 4
+                    y: 4
                 }
             }
             incrementControl : Rectangle {
                 id: scrollHigher2
-                width:15
-                height:15
-                color: styleData.pressed? "#212121" : "#343434"
+                width: 15
+                height: 15
+                color: styleData.pressed ? "#212121" : "#343434"
                 border.width: 1
                 border.color: "#333"
                 radius: 3
@@ -521,16 +526,16 @@ Rectangle {
                 Image {
                     id: arrow
                     source: "file:///" + _buttleData.buttlePath + "/gui/img/buttons/params/arrow.png"
-                    x:4
-                    y:4
+                    x: 4
+                    y: 4
                 }
             }
         }
 
         ListView {
             id: listview
-            height : parent.height
-            width : parent.width
+            height: parent.height
+            width: parent.width
             visible: viewList
             boundsBehavior: Flickable.StopAtBounds
             flickableDirection: Flickable.VerticalFlick
@@ -551,7 +556,7 @@ Rectangle {
 
                     property variant selectedFiles
                     property variant currentFile: model.object
-                    //property variant filePath: model.object.filepath
+                    // property variant filePath: model.object.filepath
 
                     /*DropArea {
                         id: moveItemInRow
@@ -587,19 +592,20 @@ Rectangle {
                             color: model.object.isSelected ? "black" : "white"
                             font.bold: model.object.isSelected
                         }
-                    }// endRow
+                    }
 
                     Drag.active: dragMouseAreaRow.drag.active
                     Drag.hotSpot.x: 20
                     Drag.hotSpot.y: 20
-                    //Drag.dragType: Drag.Automatic
+                    // Drag.dragType: Drag.Automatic
                     // Drag.mimeData: {"urls": [fileInRow.selectedFiles]}
-                    //Drag.mimeData: {"text/plain": file.filePath, "text/uri-list": ""}
+                    // Drag.mimeData: {"text/plain": file.filePath, "text/uri-list": ""}
                     // Drag.keys: "text/uri-list"
                     Drag.keys: "internFileDrag"
 
                     StateGroup {
                         id: fileStateRow
+
                         states: State {
                             name: "dragging"
                             when: dragMouseAreaRow.pressed
@@ -622,33 +628,32 @@ Rectangle {
                             fileModel.selectItem(index)
                             fileInfo.currentFile = fileModel.getSelectedItems() ? fileModel.getSelectedItems().get(0) : undefined
 
-                            //if shift:
+                            // If shift:
                             if (mouse.modifiers & Qt.ShiftModifier)
                                 fileModel.selectItemsByShift(listview.previousIndex, index)
 
                             listview.previousIndex = index
-                            //if ctrl:
+
+                            // If ctrl:
                             if (mouse.modifiers & Qt.ControlModifier)
                                 fileModel.selectItems(index)
-
                             else if (!(mouse.modifiers & Qt.ShiftModifier))
                                 fileModel.selectItem(index)
 
                             var sel = fileModel.getSelectedItems()
                             var selection = new Array()
-                            for (var selIndex = 0; selIndex < sel.count; ++selIndex)
-                            {
+                            for (var selIndex = 0; selIndex < sel.count; ++selIndex) {
                                 selection[selIndex] = sel.get(selIndex).filepath
                             }
+
                             fileInRow.selectedFiles = selection
                             winFile.changeSelectedList(sel)
 
-                            // if it's an image, we assign it to the viewer
+                            // If it's an image, we assign it to the viewer
                             if (model.object.fileType != "Folder") {
-                                player.changeViewer(11) // we come to the temporary viewer
-                                // we save the last node wrapper of the last view
+                                player.changeViewer(11) // We come to the temporary viewer
+                                // We save the last node wrapper of the last view
                                 player.lastNodeWrapper = _buttleData.getNodeWrapperByViewerIndex(player.lastView)
-
                                 readerNode.nodeWrapper = _buttleData.nodeReaderWrapperForBrowser(model.object.filepath)
 
                                 _buttleData.currentGraphIsGraphBrowser()
@@ -656,21 +661,23 @@ Rectangle {
 
                                 _buttleData.currentViewerNodeWrapper = readerNode.nodeWrapper
                                 _buttleData.currentViewerFrame = 0
-                                // we assign the node to the viewer, at the frame 0
+                                // We assign the node to the viewer, at the frame 0
                                 _buttleData.assignNodeToViewerIndex(readerNode.nodeWrapper, 10)
-                                _buttleData.currentViewerIndex = 10 // we assign to the viewer the 10th view
+                                _buttleData.currentViewerIndex = 10 // We assign to the viewer the 10th view
                                 _buttleEvent.emitViewerChangedSignal()
                             }
                         }
 
                         onDoubleClicked: {
-                            // if it's an image, we create a node
+                            // If it's an image, we create a node
                             if (model.object.fileType != "Folder") {
                                 _buttleData.currentGraphWrapper = _buttleData.graphWrapper
                                 _buttleData.currentGraphIsGraph()
-                                // if before the viewer was showing an image from the browser, we change the currentView
+
+                                // If before the viewer was showing an image from the browser, we change the currentView
                                 if (_buttleData.currentViewerIndex > 9){
                                     _buttleData.currentViewerIndex = player.lastView
+
                                     if (player.lastNodeWrapper != undefined)
                                         _buttleData.currentViewerNodeWrapper = player.lastNodeWrapper
                                     player.changeViewer(player.lastView)
@@ -682,8 +689,8 @@ Rectangle {
                             }
                         }
                     }
-                }// end Rectangle
-            }//endComponent
+                }
+            }
         }
     }
 }

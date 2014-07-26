@@ -1,7 +1,7 @@
 import QtQuick 2.1
-import QtQuick.Controls 1.0
 import QtQuick.Layouts 1.0
 import ButtleFileModel 1.0
+import QtQuick.Controls 1.0
 
 import "../../../gui"
 
@@ -38,7 +38,6 @@ Rectangle {
         onCloseClicked: browser.buttonCloseClicked(true)
         onFullscreenClicked: browser.buttonFullscreenClicked(true)
     }
-
 
     ColumnLayout {
         anchors.fill: parent
@@ -100,6 +99,7 @@ Rectangle {
 
             selected: m.selected
             nbInSeq: m.nbInSeq
+
             onChangeFilter: {
                 m.filter = newFilter
             }

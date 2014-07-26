@@ -1,14 +1,13 @@
 import QtQuick 2.1
+import ButtleFileModel 1.0
+import QtQuick.Layouts 1.0
 import QtQuick.Controls 1.0
 import QtQuick.Controls.Styles 1.0
-import QtQuick.Layouts 1.0
-
-import ButtleFileModel 1.0
 
 
 Rectangle {
     id: headerBar
-    color : "#141414"
+    color: "#141414"
 
     property string folder
     signal changeFolder(string folder)
@@ -31,7 +30,6 @@ Rectangle {
 
     FileModelBrowser {
         id: suggestion
-
         folder: headerBar.folder
     }
 
@@ -66,8 +64,7 @@ Rectangle {
             }
 
             onClicked: {
-                if (listPrevious.count > 0)
-                {
+                if (listPrevious.count > 0) {
                     nextList.append({"url": headerBar.folder})
                     changeFolder(listPrevious.get(listPrevious.count - 1).url)
                     listPrevious.remove(listPrevious.count - 1)
@@ -96,8 +93,7 @@ Rectangle {
             }
 
             onClicked: {
-                if (nextList.count > 0)
-                {
+                if (nextList.count > 0) {
                     listPrevious.append({"url": headerBar.folder})
                     changeFolder(nextList.get(nextList.count - 1).url)
                     nextList.remove(nextList.count - 1)
@@ -138,7 +134,7 @@ Rectangle {
             radius: 5
 
             TextInput {
-                id : texteditPath
+                id: texteditPath
                 y: 4
                 x: 5
                 height: parent.height
@@ -158,6 +154,7 @@ Rectangle {
                         textEditContainer.forceActiveFocus()
                     }
                 }
+
                 onFocusChanged: {
                     if (texteditPath.focus) {
                         if (!withTab) {
@@ -178,9 +175,12 @@ Rectangle {
                 }
 
                 validator: RegExpValidator {
-                    regExp: if (!suggestion.isEmpty()) {
+                    regExp:
+                    if (!suggestion.isEmpty()) {
                             /suggestion.getFilteredFileItems(suggestion.folder).get(0).filepath/
-                    } else { /.*/ }
+                    } else {
+                            /.*/
+                    }
                 }
 
                 Keys.onTabPressed: {
@@ -205,12 +205,14 @@ Rectangle {
                     MenuItem {
                         id: textComponent
                         text: model.object.fileName
+
                         onTriggered: {
                             changeFolder(model.object.filepath)
                         }
                         // checkable: true
                         // exclusiveGroup: eg
                     }
+
                     onObjectAdded: suggestionsMenu.insertItem(index, object)
                     onObjectRemoved: suggestionsMenu.removeItem(object)
                 }
@@ -219,11 +221,11 @@ Rectangle {
                     // Retrieve position of last "/" instead of cursorRectangle.x
                     var index = suggestion.folder.lastIndexOf("/")
                     var x = 0
-                    if (index != -1)
-                    {
+                    if (index != -1) {
                         var rect = texteditPath.positionToRectangle(index)
                         x = rect.x
                     }
+
                     var y = texteditPath.height
                     suggestionsMenu.__popup(x, y)
                 }
@@ -235,7 +237,8 @@ Rectangle {
             width: 1
             height: 1
 
-            iconSource: if (hovered) {
+            iconSource:
+            if (hovered) {
                 "../../img/buttons/browser/refresh_hover.png"
             } else {
                 "../../img/buttons/browser/refresh.png"
@@ -257,7 +260,8 @@ Rectangle {
             width: 12
             height: 12
 
-            iconSource: if (hovered) {
+            iconSource:
+            if (hovered) {
                 "../../img/buttons/browser/listview_hover.png"
             } else {
                 "../../img/buttons/browser/listview.png"
@@ -268,8 +272,9 @@ Rectangle {
                     name: "gridview"
                     when: headerBar.isInListView == true
                     PropertyChanges {
-                        target: view;
-                        iconSource: if (hovered) {
+                        target: view
+                        iconSource:
+                        if (hovered) {
                             "../../img/buttons/browser/gridview_hover.png"
                         } else {
                             "../../img/buttons/browser/gridview.png"
@@ -280,8 +285,9 @@ Rectangle {
                     name: "listview"
                     when: headerBar.isInListView == false
                     PropertyChanges {
-                        target: view;
-                        iconSource: if (hovered) {
+                        target: view
+                        iconSource:
+                        if (hovered) {
                             "../../img/buttons/browser/listview_hover.png"
                         } else {
                             "../../img/buttons/browser/listview.png"
@@ -298,7 +304,12 @@ Rectangle {
                 }
             }
 
-            onClicked: if (isInListView) {isInListView = false} else {isInListView = true}
+            onClicked:
+            if (isInListView) {
+                isInListView = false
+            } else {
+                isInListView = true
+            }
         }
 
         CheckBox {

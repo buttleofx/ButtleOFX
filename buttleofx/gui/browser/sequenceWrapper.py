@@ -15,15 +15,15 @@ class SequenceWrapper(QtCore.QObject):
 
         self._sequence = sequence
 
-    ################################################## Methods exposed to QML ##################################################
+    # ############################################ Methods exposed to QML ############################################ #
 
     @QtCore.pyqtSlot(result=int)
     def getNbFiles(self):
         return self._sequence.getNbFiles()
 
-    ################################################## Methods private to this class ##################################################
+    # ######################################## Methods private to this class ####################################### #
 
-    ### Getters ###
+    # ## Getters ## #
 
     def getFirstFileName(self):
         return self._sequence.getFirstFilename()
@@ -33,7 +33,8 @@ class SequenceWrapper(QtCore.QObject):
 
     def getWeight(self):
         res = 0
-        for i in range(self._sequence.getFirstTime(), self._sequence.getLastTime() + self._sequence.getStep(), self._sequence.getStep()):
+        for i in range(self._sequence.getFirstTime(), self._sequence.getLastTime() + self._sequence.getStep(),
+                       self._sequence.getStep()):
             fullpath = self._sequence.getAbsoluteFilenameAt(i)
             if os.path.exists(fullpath):
                 res = res + os.stat(fullpath).st_size
@@ -42,12 +43,12 @@ class SequenceWrapper(QtCore.QObject):
     def getTime(self):
         return self._sequence.getDuration()
 
-    ### Others ###
+    # ## Others ## #
 
     def __str__(self):
         return 'Test'
 
-    ################################################## Data exposed to QML ##################################################
+    # ############################################# Data exposed to QML ############################################# #
 
     firstFilePath = QtCore.pyqtProperty(str, getFirstFilePath, constant=True)
     firstFileName = QtCore.pyqtProperty(str, getFirstFileName, constant=True)

@@ -15,7 +15,9 @@ Rectangle {
 
     RowLayout {
 		anchors.fill: parent
-        spacing: 10
+        spacing: 6
+        anchors.leftMargin: spacing
+        anchors.rightMargin: spacing
 
         Item {
 			Layout.fillHeight: true
@@ -49,7 +51,7 @@ Rectangle {
 		Button{
 			id: openButton
             text: "Import"
-            height: parent.height - 5
+            height: parent.height
 			
 			// import selected files in the graph
             onClicked: {

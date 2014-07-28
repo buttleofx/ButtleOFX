@@ -7,7 +7,8 @@ import logging
         # logging.warning("warning message")
         # logging.error("error message")
         # logging.critical("critical message")
-DEV_MODE = False
+import os
+DEV_MODE = os.environ.get("BUTTLEOFX_DEV", False)
 
 if DEV_MODE:
     # print in console

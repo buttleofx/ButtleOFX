@@ -23,6 +23,7 @@ Rectangle {
         withTab = false
         texteditPath.forceActiveFocus()
     }
+
     function forceActiveFocusOnPathWithTab() {
         withTab = true
         texteditPath.forceActiveFocus()
@@ -39,8 +40,10 @@ Rectangle {
     }
 
     RowLayout {
-        spacing: 10
+        spacing: 6
         anchors.fill: parent
+        anchors.leftMargin: spacing
+        anchors.rightMargin: spacing
 
         Button {
             id: previous
@@ -298,6 +301,7 @@ Rectangle {
 
         CheckBox {
             id: check
+
             style: CheckBoxStyle {
                 label: Text {
                     text: "Seq"

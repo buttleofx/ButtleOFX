@@ -55,6 +55,8 @@ ApplicationWindow {
 
         Loader {
             id: fileLoader
+            width: parent.width
+            height: childrenRect.height
             sourceComponent: currentFile ? fileComponent : undefined
 
             Component {
@@ -66,7 +68,7 @@ ApplicationWindow {
                     height: childrenRect.height
 
                     // Name of the file
-                    Item {
+                    Rectangle {
                         id: fileName
                         width: parent.width
                         implicitHeight: childrenRect.height
@@ -74,8 +76,10 @@ ApplicationWindow {
                         RowLayout {
                             id: fileNameContainer
                             spacing: 5
+                            width: parent.width
+                            height: childrenRect.height
 
-                            /* Title */
+                            // Title
                             Text {
                                 id: fileNameText
                                 color: textColor
@@ -84,7 +88,8 @@ ApplicationWindow {
 
                             // Input field limited to 50 characters
                             Rectangle {
-                                height: 20
+                                height: fileNameText.height
+                                Layout.fillWidth: true
                                 implicitWidth: 200
                                 color: fileInfo.backgroundInput
                                 border.width: 1
@@ -95,8 +100,9 @@ ApplicationWindow {
                                 TextInput {
                                     id: fileNameInput
                                     text: currentFile.fileName
-                                    width: parent.width - 10
-                                    height: parent.height
+                                    anchors.fill: parent
+                                    anchors.leftMargin: 5
+                                    anchors.rightMargin: 5
                                     maximumLength: 100
                                     selectByMouse : true
                                     color: activeFocus ? activeFocusOn : activeFocusOff
@@ -122,7 +128,6 @@ ApplicationWindow {
                         id: fileDetailedInfoContainer
                         width: parent.width
                         implicitHeight: fileDetailedInfoLoader.childrenRect.height
-                        color: "red"
 
                         Loader {
                             id: fileDetailedInfoLoader
@@ -135,7 +140,7 @@ ApplicationWindow {
                                 width: parent.width
                                 implicitHeight: childrenRect.height
 
-                                /* Extension of file */
+                                // Extension of file
                                 RowLayout {
                                     id: fieExtensionContainer
                                     spacing: 5
@@ -216,12 +221,11 @@ ApplicationWindow {
                         }
                     }
 
-                    Rectangle {
+                    Item {
                         id:remove
                         width: parent.width
                         implicitHeight: 30
                         Layout.minimumHeight: 20
-                        color: "blue"
 
                         Button {
                             id: removeButton

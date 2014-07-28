@@ -22,26 +22,34 @@ Rectangle {
     property bool showSeq: false
     property int nbCell: viewList ? 1 : gridview.width/gridview.cellWidth
 
-    function showEditFile(pos)
-    {
+    function showEditFile(pos) {
         fileInfo.visible = true
         fileInfo.x = mainWindowQML.x + pos.x - 5
         fileInfo.y = mainWindowQML.y + pos.y - 5
     }
 
+    function enterFolder() {
+        var lastSelected = fileModel.getLastSelected()
+        if (lastSelected.getFileType() == 'Folder') {
+            winFile.goToFolder(lastSelected.getFilepath())
+        }
+    }
+
     function forceActiveFocusOnCreate() {
         fileModel.createFolder(fileModel.folder + "/New Directory")
     }
+
     function forceActiveFocusOnDelete() {
         fileModel.deleteItem(itemIndex)
         winFile.forceActiveFocusOnRefresh()
     }
+
     function selectItem(index){
         fileModel.selectItem(index)
         var sel = fileModel.getSelectedItems()
         // if it's an image, we assign it to the viewer
         if(sel && !sel.isEmpty()){
-            if (sel.get(0).fileType != "Folder") {
+            if (sel.get(0).fileType != "Folder" && sel.get(0).getSupported()) {
                 player.changeViewer(11) // we come to the temporary viewer
                 // we save the last node wrapper of the last view
                 player.lastNodeWrapper = _buttleData.getNodeWrapperByViewerIndex(player.lastView)
@@ -63,13 +71,15 @@ Rectangle {
 
     function forceActiveFocusOnRefresh() {
         fileModel.updateFileItems(fileModel.folder)
-        winFile.selectItem(0)
+        winFile.selectItem(itemIndex)
     }
+
     function forceActiveFocusOnChangeIndexOnRight() {
         if(itemIndex < fileModel.size) {
             winFile.selectItem(++itemIndex)
         }
     }
+
     function forceActiveFocusOnChangeIndexOnLeft() {
         if(itemIndex > 0) {
             winFile.selectItem(--itemIndex)
@@ -145,6 +155,7 @@ Rectangle {
             itemIndex = 0
         }
     }
+
     FileInfo {
         id: fileInfo
         visible: false
@@ -166,6 +177,13 @@ Rectangle {
         }
     }
 
+    Text {
+        id: hack_fontMetrics
+        text: "A"
+        visible: false
+    }
+
+    // Code for the (default) grid  layout
     ScrollView {
         anchors.fill: parent
         anchors.topMargin: 5
@@ -421,11 +439,6 @@ Rectangle {
                         Item {
                             Layout.fillWidth: true
                             implicitHeight: hack_fontMetrics.height * 3 // 3 lines of text
-                            Text {
-                                id: hack_fontMetrics
-                                text: "A"
-                                visible: false
-                            }
                             Rectangle {
                                 id: filename_background
                                 width: filename_text.width
@@ -460,6 +473,7 @@ Rectangle {
         }
     }
 
+    // Code for the list layout
     ScrollView {
         anchors.fill: parent
         anchors.topMargin: 5
@@ -528,7 +542,7 @@ Rectangle {
                     id: fileInRow
                     color: model.object.isSelected ? "#00b2a1" : "transparent"
                     radius: 5
-                    height: 25
+                    height: hack_fontMetrics.height * 1.5 // 1.5 lines of text
                     width: listview.width
 
                     property variant selectedFiles
@@ -546,24 +560,28 @@ Rectangle {
                         }
                     }*/
 
-                    Row {
-                        width: parent.width
+                    RowLayout {
+                        anchors.fill: parent
                         spacing: 10
+
                         Image {
-                            x: 25
                             source: model.object.fileImg
-                            sourceSize.width: 20
-                            sourceSize.height: 20
+                            sourceSize.width: parent.height
+                            sourceSize.height: parent.height
+                            Layout.fillHeight: true
+                            Layout.preferredWidth: parent.height
+                            fillMode: Image.PreserveAspectFit
                         }
 
                         Text {
                             id: textInRow
-                            x: 10
+                            Layout.fillWidth: true
+                            Layout.fillHeight: true
+                            Layout.minimumWidth: 40
 
                             text: model.object.fileName
                             color: model.object.isSelected ? "black" : "white"
                             font.bold: model.object.isSelected
-                            width: parent.width
                         }
                     }// endRow
 
@@ -601,20 +619,20 @@ Rectangle {
                             fileInfo.currentFile = fileModel.getSelectedItems() ? fileModel.getSelectedItems().get(0) : undefined
 
                             //if shift:
-                            if(mouse.modifiers & Qt.ShiftModifier)
+                            if (mouse.modifiers & Qt.ShiftModifier)
                                 fileModel.selectItemsByShift(listview.previousIndex, index)
 
                             listview.previousIndex = index
                             //if ctrl:
-                            if(mouse.modifiers & Qt.ControlModifier)
+                            if (mouse.modifiers & Qt.ControlModifier)
                                 fileModel.selectItems(index)
 
-                            else if(!(mouse.modifiers & Qt.ShiftModifier))
+                            else if (!(mouse.modifiers & Qt.ShiftModifier))
                                 fileModel.selectItem(index)
 
                             var sel = fileModel.getSelectedItems()
                             var selection = new Array()
-                            for(var selIndex = 0; selIndex < sel.count; ++selIndex)
+                            for (var selIndex = 0; selIndex < sel.count; ++selIndex)
                             {
                                 selection[selIndex] = sel.get(selIndex).filepath
                             }
@@ -622,23 +640,23 @@ Rectangle {
                             winFile.changeSelectedList(sel)
 
                             // if it's an image, we assign it to the viewer
-                             if (model.object.fileType != "Folder") {
-                                 player.changeViewer(11) // we come to the temporary viewer
-                                 // we save the last node wrapper of the last view
-                                 player.lastNodeWrapper = _buttleData.getNodeWrapperByViewerIndex(player.lastView)
+                            if (model.object.fileType != "Folder") {
+                                player.changeViewer(11) // we come to the temporary viewer
+                                // we save the last node wrapper of the last view
+                                player.lastNodeWrapper = _buttleData.getNodeWrapperByViewerIndex(player.lastView)
 
-                                 readerNode.nodeWrapper = _buttleData.nodeReaderWrapperForBrowser(model.object.filepath)
+                                readerNode.nodeWrapper = _buttleData.nodeReaderWrapperForBrowser(model.object.filepath)
 
-                                 _buttleData.currentGraphIsGraphBrowser()
-                                 _buttleData.currentGraphWrapper = _buttleData.graphBrowserWrapper
+                                _buttleData.currentGraphIsGraphBrowser()
+                                _buttleData.currentGraphWrapper = _buttleData.graphBrowserWrapper
 
-                                 _buttleData.currentViewerNodeWrapper = readerNode.nodeWrapper
-                                 _buttleData.currentViewerFrame = 0
-                                 // we assign the node to the viewer, at the frame 0
-                                 _buttleData.assignNodeToViewerIndex(readerNode.nodeWrapper, 10)
-                                 _buttleData.currentViewerIndex = 10 // we assign to the viewer the 10th view
-                                 _buttleEvent.emitViewerChangedSignal()
-                             }
+                                _buttleData.currentViewerNodeWrapper = readerNode.nodeWrapper
+                                _buttleData.currentViewerFrame = 0
+                                // we assign the node to the viewer, at the frame 0
+                                _buttleData.assignNodeToViewerIndex(readerNode.nodeWrapper, 10)
+                                _buttleData.currentViewerIndex = 10 // we assign to the viewer the 10th view
+                                _buttleEvent.emitViewerChangedSignal()
+                            }
                         }
 
                         onDoubleClicked: {

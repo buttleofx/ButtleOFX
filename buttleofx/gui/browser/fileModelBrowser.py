@@ -25,11 +25,9 @@ class FileItem(QtCore.QObject):
     
     def __init__(self, folder, fileName, fileType, seq, supported):
         super(FileItem, self).__init__()
-        if folder == "/":
-            self._filepath = folder + fileName
-        else:
-            self._filepath = folder + "/" + fileName
+        self._filepath = os.path.join(folder, fileName)
         self._fileType = fileType
+        self._isSupported = supported
         
         if fileType == FileItem.Type.File:
             if supported:
@@ -37,9 +35,12 @@ class FileItem(QtCore.QObject):
             else:
                 self._fileImg = "../../img/buttons/browser/file-icon.png"
             self._seq = None
-            self._fileWeight = os.stat(self._filepath).st_size
-            (_, extension) = os.path.splitext(fileName)
-            self._fileExtension = extension
+            try:
+                # may throw on bad symlink
+                self._fileWeight = os.stat(self._filepath).st_size
+            except FileNotFoundError:
+                self._fileWeight = 0
+            self._fileExtension = os.path.splitext(fileName)[1]
         
         elif fileType == FileItem.Type.Folder:
             self._fileImg = "../../img/buttons/browser/folder-icon.png"
@@ -64,14 +65,16 @@ class FileItem(QtCore.QObject):
             self._fileWeight = self._seq.getWeight()
             (_, extension) = os.path.splitext(seqPath)
             self._fileExtension = extension
-           
+
+    @QtCore.pyqtSlot(result=str)
     def getFilepath(self):
         return self._filepath
     
     def setFilepath(self, newpath):
         import shutil
-        shutil.move(self.filepath, newpath + "/" + self.fileName)
-    
+        shutil.move(self.filepath, os.path.join(newpath, self.fileName))
+
+    @QtCore.pyqtSlot(result=str)
     def getFileType(self):
         return self._fileType
     
@@ -79,7 +82,7 @@ class FileItem(QtCore.QObject):
         return os.path.basename(self._filepath)
     
     def setFileName(self, newName):
-        os.rename(self.filepath, os.path.dirname(self._filepath) + "/" + newName)
+        os.rename(self.filepath, os.path.join(os.path.dirname(self._filepath), newName))
         
     def getFileWeight(self):
         return self._fileWeight
@@ -120,6 +123,10 @@ class FileItem(QtCore.QObject):
     
     def getSequence(self):
         return self._seq
+
+    @QtCore.pyqtSlot(result=bool)
+    def getSupported(self):
+        return self._isSupported
 
     filepath = QtCore.pyqtProperty(str, getFilepath, setFilepath, constant=True)
     fileType = QtCore.pyqtProperty(str, getFileType, constant=True)
@@ -284,9 +291,16 @@ class FileModelBrowser(QtQuick.QQuickItem):
         for item in self._fileItems:
             if item.isSelected == True:
                 selectedList.append(item)
-
         return selectedList
-    
+
+    @QtCore.pyqtSlot(result=QtCore.QObject)
+    def getLastSelected(self):
+        for item in reversed(self._fileItems):
+            if item.isSelected == True:
+                return item
+        return None
+
+    @QtCore.pyqtSlot(result=QtCore.QObject)    
     def getFileItems(self):
         return self._fileItemsModel
     

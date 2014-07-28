@@ -78,37 +78,41 @@ Item {
             orientation: ListView.Horizontal
             spacing: 20
             interactive: false
-            delegate {
-                Component {
-                    Rectangle {
-                        id: buttonTimeline
+            delegate: delegateButton
+        }
+    }
 
-                        property string imgPath: "file:///" + _buttleData.buttlePath + "/gui/img/buttons/viewer/"
+    Component {
+        id: delegateButton
+        Rectangle {
+            id: buttonTimeline
 
-                        width: 8
-                        height: 8
-                        y: 5
-                        color: "transparent"
+            property string imgPath: "file:///" + _buttleData.buttlePath + "/gui/img/buttons/viewer/"
 
-                        Image {
-                            id: imageButton
-                            source: parent.imgPath + imageSource
-                            MouseArea {
-                                id: buttonTimelineMousearea
-                                hoverEnabled: true
-                                anchors.fill: parent
-                                anchors.margins: -2 //to allow to push the button easily
-                                onClicked: {
-                                    timelineTools.doAction(buttonName)
-                                    //take the focus of the mainWindow
-                                    imageButton.forceActiveFocus()
-                                }
-                            }
-                        }
+            width: 8
+            height: 8
+            y: 5
+            color: "transparent"
 
-                        StateGroup {
-                            id: stateButtonEvents
-                             states: [
+            Image {
+                id: imageButton
+                source: parent.imgPath + imageSource
+                MouseArea {
+                    id: buttonTimelineMousearea
+                    hoverEnabled: true
+                    anchors.fill: parent
+                    anchors.margins: -2 //to allow to push the button easily
+                    onClicked: {
+                        timelineTools.doAction(buttonName)
+                        //take the focus of the mainWindow
+                        imageButton.forceActiveFocus()
+                    }
+                }
+            }
+
+            StateGroup {
+                id: stateButtonEvents
+                 states: [
 //                                 State {
 //                                     name: "locked"
 //                                     PropertyChanges {
@@ -116,26 +120,23 @@ Item {
 //                                        source: parent.imgPath + imageSourceLocked
 //                                     }
 //                                 },
-                                 State {
-                                     name: "normal"
-                                     when: !buttonTimelineMousearea.containsMouse
-                                     PropertyChanges {
-                                        target: imageButton
-                                        source: parent.imgPath + imageSource
-                                     }
-                                 },
-                                 State {
-                                     name: "hover"
-                                     when: buttonTimelineMousearea.containsMouse
-                                     PropertyChanges {
-                                        target: imageButton
-                                        source: parent.imgPath + imageSourceHover
-                                     }
-                                 }
-                             ]
-                        }
-                    }
-                }
+                     State {
+                         name: "normal"
+                         when: !buttonTimelineMousearea.containsMouse
+                         PropertyChanges {
+                            target: imageButton
+                            source: parent.imgPath + imageSource
+                         }
+                     },
+                     State {
+                         name: "hover"
+                         when: buttonTimelineMousearea.containsMouse
+                         PropertyChanges {
+                            target: imageButton
+                            source: parent.imgPath + imageSourceHover
+                         }
+                     }
+                 ]
             }
         }
     }

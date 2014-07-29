@@ -58,8 +58,9 @@ Rectangle {
                 locked: false
 
                 onClicked: {
-                    pluginVisible=false
-                    editNode=false
+                    pluginVisible = false
+                    editNode = false
+
                     if (!_buttleData.graphCanBeSaved) {
                         finderLoadGraph.open()
                     } else {
@@ -79,9 +80,9 @@ Rectangle {
                 locked: !_buttleData.graphCanBeSaved
 
                 onClicked: {
-                    pluginVisible=false
-                    editNode=false
-                    if (urlOfFileToSave!="") {
+                    pluginVisible = false
+                    editNode = false
+                    if (urlOfFileToSave != "") {
                         _buttleData.saveData(urlOfFileToSave)
                     } else {
                         finderSaveGraph.open()
@@ -98,8 +99,8 @@ Rectangle {
                 locked: _buttleManager.canUndo ? false : true
 
                 onClicked: {
-                    pluginVisible=false
-                    editNode=false
+                    pluginVisible = false
+                    editNode = false
                     _buttleManager.undo()
                 }
             }
@@ -113,8 +114,8 @@ Rectangle {
                 locked: _buttleManager.canRedo ? false : true
 
                 onClicked: {
-                    pluginVisible=false
-                    editNode=false
+                    pluginVisible = false
+                    editNode = false
                     _buttleManager.redo()
                 }
             }
@@ -208,12 +209,16 @@ Rectangle {
                     pluginVisible = false
                     editNode = false
                     graph.zoomCoeff = _buttleData.graphWrapper.fitInScreenSize(graph.width, graph.height).get(2)
-                    graph.offsetX = (graph.container.width * 0.5 ) - (_buttleData.graphWrapper.fitInScreenSize(graph.width, graph.height).get(0) * graph.zoomCoeff)
-                    graph.offsetY = (graph.container.height * 0.5 ) - (_buttleData.graphWrapper.fitInScreenSize(graph.width, graph.height).get(1) * graph.zoomCoeff)
+                    graph.offsetX = (graph.container.width * 0.5 ) -
+                        (_buttleData.graphWrapper.fitInScreenSize(graph.width, graph.height).get(0) * graph.zoomCoeff)
+                    graph.offsetY = (graph.container.height * 0.5 ) -
+                        (_buttleData.graphWrapper.fitInScreenSize(graph.width, graph.height).get(1) * graph.zoomCoeff)
                     miniGraph.miniOffsetX = 0
                     miniGraph.miniOffsetY = 0
-                    graph.container.x = ((graph.width * 0.5) - (graph.container.width * 0.5)) + graph.offsetX - (miniGraph.miniOffsetX / miniGraph.scaleFactor *graph.zoomCoeff)
-                    graph.container.y = ((graph.height * 0.5) - (graph.container.height * 0.5 )) + graph.offsetY - (miniGraph.miniOffsetY / miniGraph.scaleFactor *graph.zoomCoeff)
+                    graph.container.x = ((graph.width * 0.5) - (graph.container.width * 0.5)) + graph.offsetX -
+                        (miniGraph.miniOffsetX / miniGraph.scaleFactor *graph.zoomCoeff)
+                    graph.container.y = ((graph.height * 0.5) - (graph.container.height * 0.5 )) + graph.offsetY -
+                        (miniGraph.miniOffsetY / miniGraph.scaleFactor *graph.zoomCoeff)
                 }
             }
         }

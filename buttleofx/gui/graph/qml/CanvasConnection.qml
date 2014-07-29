@@ -16,24 +16,24 @@ Canvas {
     property int g: 178
     property int b: 161
 
-    width: Math.abs(x1 - x2) + 2*canvasMargin
-    height: Math.abs(y1 - y2) + 2*canvasMargin
+    width: Math.abs(x1 - x2) + 2* canvasMargin
+    height: Math.abs(y1 - y2) + 2* canvasMargin
     x: Math.min(x1, x2) - canvasMargin
     y: Math.min(y1, y2) - canvasMargin
     // color: "transparent"
 
     // Drawing a curve for the connection
     onPaint: {
-        var ctx = getContext("2d");
-        var cHeight = height;
-        var cWidth = width;
+        var ctx = getContext("2d")
+        var cHeight = height
+        var cWidth = width
         var startX = 0
         var startY = 0
         var endX = 0
         var endY = 0
-        var controlPointXOffset = miniatureState ? 40 * zoomCoeff * miniatureScale : 40 * zoomCoeff;
-        ctx.strokeStyle = "rgb(" + r + ", " + g + ", " + b + ")";
-        ctx.lineWidth = miniatureState ? 2 * miniatureScale : 2;
+        var controlPointXOffset = miniatureState ? 40 * zoomCoeff * miniatureScale : 40 * zoomCoeff
+        ctx.strokeStyle = "rgb(" + r + ", " + g + ", " + b + ")"
+        ctx.lineWidth = miniatureState ? 2 * miniatureScale : 2
 
         ctx.beginPath()
 

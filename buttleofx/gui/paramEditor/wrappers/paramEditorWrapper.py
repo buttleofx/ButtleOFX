@@ -1,7 +1,11 @@
 from PyQt5 import QtCore
 from quickmamba.models import QObjectListModel
-from buttleofx.core.params import ParamInt, ParamInt2D, ParamInt3D, ParamString, ParamBoolean, ParamDouble, ParamDouble2D, ParamDouble3D, ParamChoice, ParamPushButton, ParamRGBA, ParamRGB, ParamGroup, ParamPage
-from buttleofx.gui.paramEditor.wrappers import IntWrapper, Int2DWrapper, Int3DWrapper, StringWrapper, BooleanWrapper, DoubleWrapper, Double2DWrapper, Double3DWrapper, ChoiceWrapper, PushButtonWrapper, RGBAWrapper, RGBWrapper, GroupWrapper, PageWrapper
+from buttleofx.core.params import (ParamInt, ParamInt2D, ParamInt3D, ParamString, ParamBoolean, ParamDouble,
+                                   ParamDouble2D, ParamDouble3D, ParamChoice, ParamPushButton, ParamRGBA, ParamRGB,
+                                   ParamGroup, ParamPage)
+from buttleofx.gui.paramEditor.wrappers import (IntWrapper, Int2DWrapper, Int3DWrapper, StringWrapper, BooleanWrapper,
+                                                DoubleWrapper, Double2DWrapper, Double3DWrapper, ChoiceWrapper,
+                                                PushButtonWrapper, RGBAWrapper, RGBWrapper, GroupWrapper, PageWrapper)
 
 
 class ParamEditorWrapper(QtCore.QObject):

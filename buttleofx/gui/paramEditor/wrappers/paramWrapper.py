@@ -15,9 +15,9 @@ class ParamWrapper(QtCore.QObject):
         # Link buttle param to the paramWrapper
         self._param.paramChanged.connect(self.emitParamChanged)
 
-    #################################################### Methods private to this class ##################################################
+    # ######################################## Methods private to this class ####################################### #
 
-    ### Getters ###
+    # ## Getters ## #
 
     def getParam(self):
         return self._param
@@ -34,7 +34,7 @@ class ParamWrapper(QtCore.QObject):
     def getText(self):
         return self._param.getText()
 
-    ### Others ###
+    # ## Others ## #
 
     def isSecret(self):
         return self._param.isSecret()
@@ -45,7 +45,7 @@ class ParamWrapper(QtCore.QObject):
     def emitOtherParamOfTheNodeChanged(self):
         self.otherParamOfTheNodeChanged.emit()
 
-    #################################################### Data exposed to QML ##################################################
+    # ############################################# Data exposed to QML ############################################## #
 
     otherParamOfTheNodeChanged = QtCore.pyqtSignal()
 

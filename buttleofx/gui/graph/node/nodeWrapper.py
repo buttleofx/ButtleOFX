@@ -11,7 +11,8 @@ class NodeWrapper(QtCore.QObject):
             - _node : the buttle node (core)
             - _view : the view (necessary for all wrapper, to construct a QtCore.QObject)
             - _paramWrappers : the paramWrappers (it's a ParamEditorWrapper object)
-            - _width, _heightEmptyNode , _clipSpacing, _clipSize, _inputSideMargin, _isHighlighted : data given to QML to have nodes with good looking
+            - _width, _heightEmptyNode , _clipSpacing, _clipSize, _inputSideMargin, _isHighlighted : data given to QML
+              to have good looking nodes
             - _fpsError, _frameError : potential errors that we need to displayed.
     """
 
@@ -41,7 +42,7 @@ class NodeWrapper(QtCore.QObject):
 
         logging.info("Gui : NodeWrapper created")
 
-    ################################################## Methods exposed to QML ##################################################
+    # ############################################ Methods exposed to QML ############################################ #
 
     @QtCore.pyqtSlot(result=QtGui.QColor)
     def getDefaultColor(self):
@@ -54,8 +55,7 @@ class NodeWrapper(QtCore.QObject):
         """
         return next(clip for clip in self._clipWrappers if clip.name == name)
 
-    ################################################## Methods private to this class ##################################################
-
+    # ######################################## Methods private to this class ####################################### #
 
     def emitNodeLookChanged(self):
         """
@@ -79,7 +79,7 @@ class NodeWrapper(QtCore.QObject):
         # Emit signal
         self.nodeContentChanged.emit()
 
-    ### Getters ###
+    # ## Getters ## #
     def getNode(self):
         return self._node
 
@@ -150,7 +150,7 @@ class NodeWrapper(QtCore.QObject):
             raise
 
         framerate = node.getOutputFrameRate()
-        #print("framerate: ", framerate)
+        # print("framerate: ", framerate)
         return framerate
 
     def getFpsError(self):
@@ -178,10 +178,10 @@ class NodeWrapper(QtCore.QObject):
             return 0
             raise
 
-        timeDomain = node.getTimeDomain() #getTimeDomain() returns first frame and last one
+        timeDomain = node.getTimeDomain()  # getTimeDomain() returns the first and last frames
         nbFrames = timeDomain.max - timeDomain.min
 
-        # Not very elegant but allows us to avoid a problem because an image returns a number of frames very high
+        # Not very elegant, but allows us to avoid a problem if an image returns a lot of frames
         if nbFrames > 100000000 or nbFrames < 0:
             nbFrames = 1
         # print("nbFrames: ", nbFrames)
@@ -196,13 +196,13 @@ class NodeWrapper(QtCore.QObject):
     def isHighlighted(self):
         return self._isHighlighted
 
-    ### Setters ###
+    # ## Setters ## #
 
     def setFrameError(self, nodeName):
         self._frameError = nodeName
 
     def setNameUser(self, nameUser):
-        if(nameUser == ''):
+        if nameUser == '':
             nameUser = 'Undefined name'
         self._node.setNameUser(nameUser)
 
@@ -233,7 +233,7 @@ class NodeWrapper(QtCore.QObject):
     def __del__(self):
         logging.info("Gui : NodeWrapper deleted")
 
-    ################################################## Data exposed to QML ##################################################
+    # ############################################# Data exposed to QML ############################################## #
 
     nodeLookChanged = QtCore.pyqtSignal()
     nodePositionChanged = QtCore.pyqtSignal()
@@ -246,7 +246,10 @@ class NodeWrapper(QtCore.QObject):
     pluginDoc = QtCore.pyqtProperty(str, getPluginDescription, constant=True)
     pluginGroup = QtCore.pyqtProperty(str, getPluginGroup, constant=True)
     pluginContext = QtCore.pyqtProperty(str, getPluginContext, constant=True)
-    coord = QtCore.pyqtProperty(QtCore.QPointF, getCoord, setCoord, notify=nodePositionChanged)  # Problem to access to x property with QPoint !
+
+    # Problem to access to x property with QPoint!
+    coord = QtCore.pyqtProperty(QtCore.QPointF, getCoord, setCoord, notify=nodePositionChanged)
+
     xCoord = QtCore.pyqtProperty(int, getXCoord, setXCoord, notify=nodePositionChanged)
     yCoord = QtCore.pyqtProperty(int, getYCoord, setYCoord, notify=nodePositionChanged)
     nbInput = QtCore.pyqtProperty(int, getNbInput, constant=True)

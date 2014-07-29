@@ -10,7 +10,7 @@ class Double3DWrapper(ParamWrapper):
     def __init__(self, param):
         ParamWrapper.__init__(self, param)
 
-    ################################################## Methods exposed to QML ##################################################
+    # ############################################ Methods exposed to QML ############################################ #
 
     @QtCore.pyqtSlot(result=float)
     def getDefaultValue1(self):
@@ -24,9 +24,9 @@ class Double3DWrapper(ParamWrapper):
     def getDefaultValue3(self):
         return self._param.getDefaultValue3()
 
-    ################################################## Methods private to this class  ##################################################
+    # ######################################## Methods private to this class ####################################### #
 
-    ### Getters ###
+    # ## Getters ## #
 
     def getMaximum1(self):
         return self._param.getMaximum1()
@@ -64,7 +64,7 @@ class Double3DWrapper(ParamWrapper):
     def getValue3HasChanged(self):
         return self._param.getValue3HasChanged()
 
-    ### Setters ###
+    # ## Setters ## #
 
     def setValue1(self, value1):
         self._param.setValue1(value1)
@@ -84,7 +84,7 @@ class Double3DWrapper(ParamWrapper):
     def setValue3HasChanged(self, changed):
         self._param.setValue3HasChanged(changed)
 
-    ################################################## Data exposed to QML ##################################################
+    # ############################################# Data exposed to QML ############################################## #
 
     changed = QtCore.pyqtSignal()
 

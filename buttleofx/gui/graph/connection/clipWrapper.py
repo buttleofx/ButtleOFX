@@ -18,7 +18,7 @@ class ClipWrapper(QtCore.QObject):
         self._xCoord = 1234
         self._yCoord = 123
 
-    ### Getters ###
+    # ## Getters ## #
     def getNodeName(self):
         return self._nodeName
 
@@ -26,7 +26,7 @@ class ClipWrapper(QtCore.QObject):
         return self._clipName
 
     def getFullName(self):
-        return "%s.%s" % (self.getNodeName(), self.getClipName())
+        return "{0}.{1}".format(self.getNodeName(), self.getClipName())
 
     def getXCoord(self):
         # print("ClipWrapper  << getCoord:", self.getFullName(), self._coord.x(), self._coord.y())
@@ -36,7 +36,7 @@ class ClipWrapper(QtCore.QObject):
         # print("ClipWrapper  << getCoord:", self.getFullName(), self._coord.x(), self._coord.y())
         return self._yCoord
 
-    ### Setters ###
+    # ## Setters ## #
     def setXCoord(self, x):
         # print("ClipWrapper  >> setXCoord:", self.getFullName(), x)
         self._xCoord = x
@@ -47,7 +47,7 @@ class ClipWrapper(QtCore.QObject):
         self._yCoord = y
         self.yCoordChanged.emit()
 
-    ################################################## Data exposed to QML ##################################################
+    # ############################################# Data exposed to QML ############################################## #
 
     name = QtCore.pyqtProperty(str, getClipName, constant=True)
     nodeName = QtCore.pyqtProperty(str, getNodeName, constant=True)

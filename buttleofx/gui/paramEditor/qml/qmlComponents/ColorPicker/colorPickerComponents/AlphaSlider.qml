@@ -25,12 +25,13 @@ Rectangle {
     Rectangle {
         anchors.fill: parent
         border.color: "black"
+
         gradient: Gradient {
             GradientStop { position: 0.0; color: "#FF000000" }
             GradientStop { position: 1.0; color: "#00000000" }
         }
 
-        MouseArea{
+        MouseArea {
             anchors.fill: parent
 
             onClicked: {

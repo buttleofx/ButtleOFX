@@ -15,10 +15,10 @@ Item {
     // Properties used to manage the update of brightness in colorPicker
     property real brightness
     property real newBrightness
-    property real editingBrightness : 1 - cursorPicker.y/bsPicker.height
+    property real editingBrightness: 1 - cursorPicker.y/bsPicker.height
 
     // currentColor is the color displayed in the little rectangle (black by default)
-    property color currentColor : "black"
+    property color currentColor: "black"
 
     SquaresGrid {
         height: parent.height
@@ -27,8 +27,9 @@ Item {
     }
 
     Rectangle {
-        anchors.fill: parent;
+        anchors.fill: parent
         rotation: -90
+
         gradient: Gradient {
             GradientStop { position: 0.0;  color: "#FFFFFFFF" }
             GradientStop { position: 1.0; color: bsPicker.currentColor }
@@ -45,7 +46,7 @@ Item {
 
     Item {
         id: cursorPicker
-        property int r : 5
+        property int r: 5
 
         Rectangle {
             // parent.r is used to match center of the circle and position
@@ -61,7 +62,8 @@ Item {
             color: "transparent"
 
             Rectangle {
-                anchors.fill: parent; anchors.margins: 1;
+                anchors.fill: parent
+                anchors.margins: 1
                 border.color: "white"
                 border.width: 1
                 radius: width/2
@@ -76,8 +78,8 @@ Item {
 
         function handleMouse(mouse) {
             if (mouse.buttons & Qt.LeftButton) {
-                cursorPicker.x =  Math.max(0, Math.min(width,  mouse.x));
-                cursorPicker.y = Math.max(0, Math.min(height, mouse.y));
+                cursorPicker.x =  Math.max(0, Math.min(width,  mouse.x))
+                cursorPicker.y = Math.max(0, Math.min(height, mouse.y))
             }
         }
 
@@ -89,7 +91,7 @@ Item {
             handleMouse(mouse)
         }
         onReleased: {
-            // warning : order of the lines matters
+            // Warning: order of the lines matters
             // editingSaturation and editingBrightness defined on top of this file
             // newSaturation and newBrightness only send when the mouse is released to avoid too much signals
             newSaturation = editingSaturation

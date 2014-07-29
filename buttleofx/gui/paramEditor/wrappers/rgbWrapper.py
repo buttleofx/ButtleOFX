@@ -10,9 +10,9 @@ class RGBWrapper(ParamWrapper):
     def __init__(self, param):
         ParamWrapper.__init__(self, param)
 
-    #################################################### Methods private to this class ##################################################
+    # ######################################## Methods private to this class ####################################### #
 
-    ### Getters ###
+    # ## Getters ## #
 
     def getDefaultR(self):
         return self._param.getDefaultR()
@@ -32,7 +32,7 @@ class RGBWrapper(ParamWrapper):
     def getValueB(self):
         return self._param.getValueB()
 
-    ### Setters ###
+    # ## Setters ## #
 
     def setValueR(self, value):
         self._param.setValueR(value)
@@ -43,7 +43,7 @@ class RGBWrapper(ParamWrapper):
     def setValueB(self, value):
         self._param.setValueB(value)
 
-    ################################################## Data exposed to QML ##################################################
+    # ############################################# Data exposed to QML ############################################## #
 
     changed = QtCore.pyqtSignal()
 

@@ -15,13 +15,13 @@ Item {
 
     Tab {
         id: tabBar
-        name: urlOfFileToSave == "" ? "Graph :    Untitled graph" : "Graph :    " + _buttleData.getFileName(urlOfFileToSave)
+        name: urlOfFileToSave == "" ? "Graph:    Untitled graph" : "Graph:    " + _buttleData.getFileName(urlOfFileToSave)
         onCloseClicked: graphEditor.buttonCloseClicked(true)
         onFullscreenClicked: graphEditor.buttonFullscreenClicked(true)
     }
 
-    property bool editNode:false
-    property bool pluginVisible:false
+    property bool editNode: false
+    property bool pluginVisible: false
 
     Keys.onTabPressed: {
         pluginVisible = true
@@ -30,10 +30,10 @@ Item {
     // List of plugins
     PluginBrowser {
         id: pluginBrowser
-        visible:pluginVisible
-        graphEditor:true
-        x:leftColumn.width
-        y:topLeftView.height + mainWindowQML.y + 74
+        visible: pluginVisible
+        graphEditor: true
+        x: leftColumn.width
+        y: topLeftView.height + mainWindowQML.y + 74
 
         StateGroup {
             id: statesBrowser
@@ -61,11 +61,13 @@ Item {
     }
 
     ParamButtleEditor {
-        id : paramButtleEditor
+        id: paramButtleEditor
         visible: editNode ? true:false
         currentParamNode: _buttleData.currentParamNodeWrapper
-        x:_buttleData.currentParamNodeWrapper ? (currentParamNode.coord.x + 80)*graph.zoomCoeff + graph.offsetX + (1-graph.zoomCoeff)*420 + leftColumn.width: 0
-        y:_buttleData.currentParamNodeWrapper ? (currentParamNode.coord.y + 95)*graph.zoomCoeff  + graph.offsetY + (1-graph.zoomCoeff)*200 + topLeftView.height + 35 + mainWindowQML.y: 0
+        x: _buttleData.currentParamNodeWrapper ? (currentParamNode.coord.x + 80) * graph.zoomCoeff + graph.offsetX +
+            (1-graph.zoomCoeff)*420 + leftColumn.width: 0
+        y: _buttleData.currentParamNodeWrapper ? (currentParamNode.coord.y + 95)*graph.zoomCoeff  + graph.offsetY +
+            (1-graph.zoomCoeff)*200 + topLeftView.height + 35 + mainWindowQML.y: 0
 
         StateGroup {
             id: states
@@ -76,7 +78,8 @@ Item {
 
                     PropertyChanges {
                         target: paramButtleEditor
-                        x: _buttleData.currentParamNodeWrapper? (currentParamNode.coord.x + 80)*graph.zoomCoeff  + graph.offsetX + (1-graph.zoomCoeff)*420 + mainWindowQML.x : 0
+                        x: _buttleData.currentParamNodeWrapper ? (currentParamNode.coord.x + 80) * graph.zoomCoeff +
+                            graph.offsetX + (1-graph.zoomCoeff)*420 + mainWindowQML.x : 0
                     }
                 },
                 State {
@@ -85,7 +88,8 @@ Item {
 
                     PropertyChanges {
                         target: paramButtleEditor
-                        x: _buttleData.currentParamNodeWrapper? (currentParamNode.coord.x + 80)*graph.zoomCoeff  + graph.offsetX + (1-graph.zoomCoeff)*420 + leftColumn.width + mainWindowQML.x  : 0
+                        x: _buttleData.currentParamNodeWrapper ? (currentParamNode.coord.x + 80) * graph.zoomCoeff +
+                            graph.offsetX + (1-graph.zoomCoeff)*420 + leftColumn.width + mainWindowQML.x : 0
                     }
                 }
             ]
@@ -100,7 +104,7 @@ Item {
         Tools {
             id: tools
             // y: tabBar.height
-            implicitWidth : parent.width
+            implicitWidth: parent.width
             Layout.minimumHeight: 40
             Layout.preferredHeight: 40
             implicitHeight: 40
@@ -117,6 +121,7 @@ Item {
                         _buttleData.currentViewerNodeWrapper = player.lastNodeWrapper
                     player.changeViewer(player.lastView)
                 }
+
                 _buttleManager.nodeManager.creationNode("_buttleData.graph", nodeType, -graph.originX + 20, -graph.originY + 20)
             }
         }
@@ -149,6 +154,7 @@ Item {
                             _buttleData.currentViewerNodeWrapper = player.lastNodeWrapper
                         player.changeViewer(player.lastView)
                     }
+
                     _buttleManager.nodeManager.creationNode("_buttleData.graph", nodeType, -graph.originX + graph.mouseX, -graph.originY + graph.mouseY)
                 }
 
@@ -176,16 +182,16 @@ Item {
                         graphContainer_xStart = parent.container.x
                         graphContainer_yStart = parent.container.y
 
-                        rectangleSelection.x = mouse.x;
-                        rectangleSelection.y = mouse.y;
-                        rectangleSelection.width = 1;
-                        rectangleSelection.height = 1;
+                        rectangleSelection.x = mouse.x
+                        rectangleSelection.y = mouse.y
+                        rectangleSelection.width = 1
+                        rectangleSelection.height = 1
                         selectMode = leftMouseArea.pressedButtons & Qt.MiddleButton ? false : true
                         moveMode = leftMouseArea.pressedButtons & Qt.MiddleButton ? true : false
 
                         if (selectMode) {
-                            rectangleSelection.visible = true;
-                            drawingSelection = true;
+                            rectangleSelection.visible = true
+                            drawingSelection = true
                         }
                     }
 
@@ -198,25 +204,26 @@ Item {
                             graph.offsetY += yOffset
                         }
                         if (selectMode) {
-                            rectangleSelection.visible = false;
-                            _buttleData.clearCurrentSelectedNodeNames();
-                            graph.drawSelection(rectangleSelection.x - graph.originX, rectangleSelection.y - graph.originY, rectangleSelection.width, rectangleSelection.height)
+                            rectangleSelection.visible = false
+                            _buttleData.clearCurrentSelectedNodeNames()
+                            graph.drawSelection(rectangleSelection.x - graph.originX, rectangleSelection.y - graph.originY,
+                                                rectangleSelection.width, rectangleSelection.height)
                         }
                     }
 
                     onPositionChanged: {
                         if (mouse.x < xStart) {
                             rectangleSelection.x = mouse.x
-                            rectangleSelection.width = xStart - mouse.x;
+                            rectangleSelection.width = xStart - mouse.x
                         } else {
-                            rectangleSelection.width = mouse.x - xStart;
+                            rectangleSelection.width = mouse.x - xStart
                         }
 
                         if (mouse.y < yStart) {
                             rectangleSelection.y = mouse.y
-                            rectangleSelection.height = yStart - mouse.y;
+                            rectangleSelection.height = yStart - mouse.y
                         } else {
-                            rectangleSelection.height = mouse.y - yStart;
+                            rectangleSelection.height = mouse.y - yStart
                         }
 
                         if (moveMode) {
@@ -237,13 +244,18 @@ Item {
 
                         var mouseRatioX = 0.5
                         var mouseRatioY = 0.5
-                        parent.container.x = ((graph.width * mouseRatioX) - (parent.container.width * mouseRatioX)) + graph.offsetX - miniGraph.miniOffsetX / miniGraph.scaleFactor *graph.zoomCoeff
-                        parent.container.y = ((graph.height * mouseRatioY) - (parent.container.height * mouseRatioY )) + graph.offsetY - miniGraph.miniOffsetY / miniGraph.scaleFactor *graph.zoomCoeff
+                        parent.container.x = ((graph.width * mouseRatioX) - (parent.container.width * mouseRatioX)) +
+                            graph.offsetX - miniGraph.miniOffsetX / miniGraph.scaleFactor *graph.zoomCoeff
+                        parent.container.y = ((graph.height * mouseRatioY) - (parent.container.height * mouseRatioY)) +
+                            graph.offsetY - miniGraph.miniOffsetY / miniGraph.scaleFactor *graph.zoomCoeff
                     }
                 }
 
                 onDrawSelection: {
-                    _buttleData.addNodeWrappersInRectangleSelection(selectionX / container.width * graph.width, selectionY / container.width * graph.width, selectionWidth / graph.zoomCoeff, selectionHeight / graph.zoomCoeff);
+                    _buttleData.addNodeWrappersInRectangleSelection(selectionX / container.width * graph.width,
+                                                                    selectionY / container.width * graph.width,
+                                                                    selectionWidth / graph.zoomCoeff,
+                                                                    selectionHeight / graph.zoomCoeff)
                 }
 
                 Rectangle {
@@ -265,11 +277,11 @@ Item {
                 property real yOffset
                 property real miniOffsetX: 0
                 property real miniOffsetY: 0
-                property alias originX : tmpVisuWindow.x
-                property alias originY : tmpVisuWindow.y
-                property real previousW : graph.width * scaleFactor
-                property real previousH : graph.height * scaleFactor
-                property bool tmpMode : false
+                property alias originX: tmpVisuWindow.x
+                property alias originY: tmpVisuWindow.y
+                property real previousW: graph.width * scaleFactor
+                property real previousH: graph.height * scaleFactor
+                property bool tmpMode: false
 
                 anchors.top: graph.top
                 anchors.right: graph.right
@@ -374,8 +386,10 @@ Item {
                     width: graph.width / graph.zoomCoeff * miniGraph.scaleFactor
                     height: graph.height / graph.zoomCoeff * miniGraph.scaleFactor
                     visible: !miniGraph.tmpMode
-                    x: (miniGraph.marginLeft * 0.5) * miniGraph.scaleFactor + ((miniGraph.previousW * 0.5) - (width * 0.5)) - graph.offsetX * miniGraph.scaleFactor / graph.zoomCoeff + miniGraph.miniOffsetX
-                    y: (miniGraph.marginTop * 0.5) * miniGraph.scaleFactor + ((miniGraph.previousH * 0.5) - (height * 0.5)) - graph.offsetY * miniGraph.scaleFactor / graph.zoomCoeff+ miniGraph.miniOffsetY
+                    x: (miniGraph.marginLeft * 0.5) * miniGraph.scaleFactor + ((miniGraph.previousW * 0.5) - (width * 0.5)) -
+                        graph.offsetX * miniGraph.scaleFactor / graph.zoomCoeff + miniGraph.miniOffsetX
+                    y: (miniGraph.marginTop * 0.5) * miniGraph.scaleFactor + ((miniGraph.previousH * 0.5) - (height * 0.5)) -
+                        graph.offsetY * miniGraph.scaleFactor / graph.zoomCoeff+ miniGraph.miniOffsetY
                 }
 
                 Rectangle {
@@ -385,9 +399,11 @@ Item {
                     color: "transparent"
                     visible: miniGraph.tmpMode
                     width: graph.width / graph.zoomCoeff * miniGraph.scaleFactor
-                    height: graph.height / graph.zoomCoeff * miniGraph.scaleFactor+15
-                    x: (miniGraph.marginLeft * 0.5) * miniGraph.scaleFactor + ((miniGraph.previousW * 0.5) - (width * 0.5)) - graph.offsetX * miniGraph.scaleFactor / graph.zoomCoeff+ miniGraph.miniOffsetX
-                    y: (miniGraph.marginTop * 0.5) * miniGraph.scaleFactor + ((miniGraph.previousH * 0.5) - (height * 0.5)) - graph.offsetY * miniGraph.scaleFactor / graph.zoomCoeff+ miniGraph.miniOffsetY
+                    height: graph.height / graph.zoomCoeff * miniGraph.scaleFactor + 15
+                    x: (miniGraph.marginLeft * 0.5) * miniGraph.scaleFactor + ((miniGraph.previousW * 0.5) - (width * 0.5)) -
+                        graph.offsetX * miniGraph.scaleFactor / graph.zoomCoeff+ miniGraph.miniOffsetX
+                    y: (miniGraph.marginTop * 0.5) * miniGraph.scaleFactor + ((miniGraph.previousH * 0.5) - (height * 0.5)) -
+                        graph.offsetY * miniGraph.scaleFactor / graph.zoomCoeff+ miniGraph.miniOffsetY
                 }
             }
         }

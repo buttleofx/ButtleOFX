@@ -1,31 +1,32 @@
 import QtQuick 2.1
 
 Rectangle {
-    id: button;
+    id: button
 
-    width: 150; height : 35;
-    radius: 2;
+    width: 150
+    height: 35
+    radius: 2
 
-    property color buttonColor: "lightblue";
-    property color onHoverColor: "blue";
-    property color borderColor: "white";
+    property color buttonColor: "lightblue"
+    property color onHoverColor: "blue"
+    property color borderColor: "white"
 
-    property string text: "Button";
+    property string text: "Button"
 
-    signal buttonClick();
+    signal buttonClick()
 
     onButtonClick: {
-        console.log(buttonLabel.text + " clicked");
+        console.log(buttonLabel.text + " clicked")
     }
 
     border {
-        color : button.borderColor;
+        color: button.borderColor
     }
 
     Text {
-        id: buttonLabel;
-        anchors.centerIn: parent;
-        text: button.text;
+        id: buttonLabel
+        anchors.centerIn: parent
+        text: button.text
     }
 
     MouseArea {
@@ -34,11 +35,11 @@ Rectangle {
         // Anchor all sides of the mouse area to the rectangle's anchors
         anchors.fill: parent
 
-        onClicked: buttonClick();
-        hoverEnabled: true;
-        onEntered: parent.color = onHoverColor;
-        onExited: parent.color = buttonColor;
+        onClicked: buttonClick()
+        hoverEnabled: true
+        onEntered: parent.color = onHoverColor
+        onExited: parent.color = buttonColor
     }
 
-    color: buttonMouseArea.pressed ? Qt.darker(buttonColor, 1.5): buttonColor;
+    color: buttonMouseArea.pressed ? Qt.darker(buttonColor, 1.5): buttonColor
 }

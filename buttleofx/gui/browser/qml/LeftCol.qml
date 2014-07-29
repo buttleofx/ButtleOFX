@@ -26,7 +26,7 @@ Rectangle {
 
                 MouseArea {
                     id: mouseRegion
-                    anchors.fill : parent
+                    anchors.fill: parent
 
                     onClicked: {
                         console.log( fileName + " Clicked")

@@ -25,14 +25,14 @@ Item {
             break;
 
         case "pause":
-            if(player.isPlaying) {
+            if (player.isPlaying) {
                 timer.pause()
                 player.isPlaying = false
             }
             break;
 
         case "play":
-            if(!player.isPlaying) {
+            if (!player.isPlaying) {
                 timer.play()
                 player.isPlaying = true
             }

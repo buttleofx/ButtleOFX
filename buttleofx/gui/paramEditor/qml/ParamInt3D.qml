@@ -5,7 +5,7 @@ Item {
     id: containerParamDouble3D
     implicitWidth: 300
     implicitHeight: 30
-    y:10
+    y: 10
 
     property variant paramObject: model.object
 
@@ -16,7 +16,7 @@ Item {
     //Container of the two input field
     Row {
         id: paramDouble3DInputContainer
-        spacing : 10
+        spacing: 10
 
         // Title of the paramDouble
         Text {
@@ -45,14 +45,14 @@ Item {
         // First input
         Rectangle {
             height: 20
-            width:40
+            width: 40
             color: "#343434"
             border.width: 1
             border.color: "#444"
             radius: 3
             clip: true
 
-            TextInput{
+            TextInput {
                 id: paramDouble3Dinput1
                 text: paramObject.value1
                 anchors.left: parent.left
@@ -61,7 +61,7 @@ Item {
                 font.bold: paramObject.value1HasChanged ? true : false
                 color: activeFocus ? "white" : "grey"
                 width: 40
-                activeFocusOnPress : true
+                activeFocusOnPress: true
                 selectByMouse: true
 
                 onAccepted: {
@@ -100,7 +100,7 @@ Item {
         // Second input
         Rectangle {
             height: 20
-            width:40
+            width: 40
             color: "#343434"
             border.width: 1
             border.color: "#444"
@@ -154,7 +154,7 @@ Item {
         // Third input
         Rectangle {
             height: 20
-            width:40
+            width: 40
             color: "#343434"
             border.width: 1
             border.color: "#444"

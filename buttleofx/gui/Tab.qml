@@ -13,7 +13,7 @@ Item {
     signal closeClicked(bool clicked)
     signal fullscreenClicked(bool clicked)
 
-    Row{
+    Row {
         spacing: 1
         width: parent.width
 
@@ -43,19 +43,19 @@ Item {
                 anchors.topMargin: 2
 
                 iconSource:
-                    if (hovered) {
-                        "img/icons/close_hover.png"
-                    } else {
-                        "img/icons/close.png"
-                    }
+                if (hovered) {
+                    "img/icons/close_hover.png"
+                } else {
+                    "img/icons/close.png"
+                }
 
                 style:
-                    ButtonStyle {
-                        background: Rectangle {
-                            anchors.fill: parent
-                            color: "transparent"
-                        }
+                ButtonStyle {
+                    background: Rectangle {
+                        anchors.fill: parent
+                        color: "transparent"
                     }
+                }
 
                 onClicked: closeClicked(true)
             }
@@ -69,22 +69,22 @@ Item {
                 anchors.topMargin: 2
 
                 iconSource:
-                    if (hovered) {
-                        "img/icons/fullscreen_hover.png"
-                    } else {
-                        "img/icons/fullscreen.png"
-                    }
+                if (hovered) {
+                    "img/icons/fullscreen_hover.png"
+                } else {
+                    "img/icons/fullscreen.png"
+                }
 
                 style:
-                    ButtonStyle {
-                        background: Rectangle {
-                            anchors.fill: parent
-                            color: "transparent"
-                        }
+                ButtonStyle {
+                    background: Rectangle {
+                        anchors.fill: parent
+                        color: "transparent"
                     }
+                }
 
                 onClicked: fullscreenClicked(true)
             }
-        } // Tab
-    } // Row
-} // Tab bar
+        }
+    }
+}

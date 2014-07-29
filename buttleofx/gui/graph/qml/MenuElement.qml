@@ -31,11 +31,11 @@ Rectangle {
         onExited: {
             // Menu rolls out on the right
             if ((mouseX <= nodeMenuElement.x + nodeMenuElement.width - 10) && (menulist.side == "right")) {
-                //menuListItem.destroyNextMenu();
+                //menuListItem.destroyNextMenu()
             }
             // Menu rolls out on the left
             if ((mouseX >= nodeMenuElement.x + 10) && (menulist.side == "left")) {
-                //menuListItem.destroyNextMenu();
+                //menuListItem.destroyNextMenu()
             }
         }
 
@@ -44,24 +44,26 @@ Rectangle {
             menuListItem.currentElementLabel = textMenuElement.text
 
             if (type=="category") {
-                menuListItem.destroyNextMenu();
+                menuListItem.destroyNextMenu()
                 // Menu rolls out on the right
                 if (menulist.side == "right") {
-                    menuListItem.createNextMenu(nodeMenuElement.parentName, nodeMenuElement.labelElement, nodeMenuElement.x + nodeMenuElement.width, nodeMenuElement.y, nodeMenuElement.clickFrom, "right");
+                    menuListItem.createNextMenu(nodeMenuElement.parentName, nodeMenuElement.labelElement,
+                                                nodeMenuElement.x + nodeMenuElement.width, nodeMenuElement.y,
+                                                nodeMenuElement.clickFrom, "right")
                 } else if (menulist.side == "left") { // Menu rolls out on the left
-                    menuListItem.createNextMenu(nodeMenuElement.parentName, nodeMenuElement.labelElement, nodeMenuElement.x, nodeMenuElement.y, nodeMenuElement.clickFrom, "left");
+                    menuListItem.createNextMenu(nodeMenuElement.parentName, nodeMenuElement.labelElement,
+                                                nodeMenuElement.x, nodeMenuElement.y, nodeMenuElement.clickFrom, "left")
                     // menuListItem.nextMenu.x = menuListItem.nextMenu.x - menulist.width
                 }
-
             }
         }
 
         // On mouse clicked, we call the creationNode fonction if the element is a plugin. Then we destroy the menu.
         onClicked: {
             if (nodeMenuElement.type == "plugin") {
-                clickFrom.clickCreationNode(nodeMenuElement.idElement);
+                clickFrom.clickCreationNode(nodeMenuElement.idElement)
                 if (tools.menuComponent) {
-                    tools.menuComponent.destroy();
+                    tools.menuComponent.destroy()
                 }
             }
         }

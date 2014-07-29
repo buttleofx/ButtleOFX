@@ -30,9 +30,10 @@ Item {
         // Create a next menu
         function createNextMenu(parentName, labelElement, x, y, clickFrom, side) {
             destroyNextMenu()
-            var newComponent = Qt.createQmlObject('MenuList { parentName: "' + parentName + labelElement + '/"; x: ' + x + '; y: ' + y + '; side: "' + side + '";}', nodeMenuView);
-            newComponent.clickFrom = clickFrom;
-            // newComponent.side = menulist.side;
+            var newComponent = Qt.createQmlObject('MenuList { parentName: "' + parentName + labelElement + '/"; x: ' +
+                                                  x + '; y: ' + y + '; side: "' + side + '";}', nodeMenuView)
+            newComponent.clickFrom = clickFrom
+            // newComponent.side = menulist.side
             nodeMenuView.nextMenu = newComponent
         }
 
@@ -54,7 +55,7 @@ Item {
                     // Calculates the length of the longest label in the menuElement
                     function maxElement(nodeMenuElement) {
                         if (menulist.max < nodeMenuElement.labelElement.length) {
-                            menulist.max = nodeMenuElement.labelElement.length;
+                            menulist.max = nodeMenuElement.labelElement.length
                         }
                         return menulist.max
                     }
@@ -62,9 +63,9 @@ Item {
                     // Return -1 if side = left, else 0
                     function stringToInt(nodeMenuElement) {
                         if (menulist.side == "left") {
-                            return -1;
+                            return -1
                         } else {
-                            return 0;
+                            return 0
                         }
                     }
                 }

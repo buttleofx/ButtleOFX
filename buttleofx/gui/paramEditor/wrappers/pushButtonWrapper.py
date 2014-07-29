@@ -10,9 +10,9 @@ class PushButtonWrapper(ParamWrapper):
     def __init__(self, param):
         ParamWrapper.__init__(self, param)
 
-    #################################################### Methods private to this class ##################################################
+    # ######################################## Methods private to this class ####################################### #
 
-    ### Getters ###
+    # ## Getters ## #
 
     def getName(self):
         return self._param.getName()
@@ -20,7 +20,7 @@ class PushButtonWrapper(ParamWrapper):
     def getEnabled(self):
         return self._param.getEnabled()
 
-    ################################################## Data exposed to QML ##################################################
+    # ############################################# Data exposed to QML ############################################## #
 
     changed = QtCore.pyqtSignal()
 

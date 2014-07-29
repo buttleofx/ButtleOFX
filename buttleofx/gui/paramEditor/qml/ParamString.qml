@@ -16,12 +16,13 @@ Item {
     visible: !paramObject.isSecret
     height: paramObject.isSecret ? 0 : implicitHeight
 
-    /*  FolderListView {
+    /*
+    FolderListView {
         id: finder
         property bool existPath: _buttleData.currentParamNodeWrapper.pluginContext=="OfxImageEffectContextReader":false
         typeDialog: existPath ? "OpenFile" : "SaveFile"
         messageDialog: existPath ? "Open file" : "Save file as"
-        }
+    }
     */
 
     Row {
@@ -35,7 +36,7 @@ Item {
             color: "white"
             elide: Text.ElideRight
             clip: true
-            // if param has been modified, set the title font to bold
+            // If param has been modified, set the title font to bold
             font.bold: paramObject.hasChanged ? true : false
 
             MouseArea {
@@ -59,11 +60,12 @@ Item {
 
             // Container of the textInput
             Loader {
-                sourceComponent: paramObject.stringType == "OfxParamStringIsMultiLine" ? paramObject.stringType == "OfxParamStringIsLabel" ? paramStringLabel : paramStringMultiline : paramStringNotMultiline
+                sourceComponent: paramObject.stringType == "OfxParamStringIsMultiLine" ?
+                    paramObject.stringType == "OfxParamStringIsLabel" ? paramStringLabel : paramStringMultiline : paramStringNotMultiline
                 anchors.fill: parent
 
                 Component {
-                    id : paramStringMultiline
+                    id: paramStringMultiline
 
                     // We need a multi line input
                     Flickable {
@@ -98,13 +100,15 @@ Item {
                             Keys.onEnterPressed: {
                                 paramObject.changeValue(paramStringMultilines.text)
                             }
+
                             focus: true
                         }
                     }
                 }
 
                 Component {
-                    id : paramStringNotMultiline
+                    id: paramStringNotMultiline
+
                     TextInput{
                         id: paramStringInput
                         text: paramObject.value
@@ -122,12 +126,13 @@ Item {
                             // paramObject.pushValue(paramObject.value)
                             paramObject.changeValue(paramStringInput.text)
                         }
+
                         focus: true
                     }
                 }
 
                 Component{
-                    id : paramStringLabel
+                    id: paramStringLabel
 
                     Text {
                         id: paramStringLabelText
@@ -144,6 +149,7 @@ Item {
             MouseArea {
                 anchors.fill: parent
                 acceptedButtons: Qt.RightButton
+
                 onClicked: {
                     paramObject.resetValue()
                 }
@@ -154,6 +160,7 @@ Item {
                 State {
                     name: "singleLine"
                     when: paramObject.stringType == "OfxParamStringIsSingleLine"
+
                     PropertyChanges {
                         target: stringInput
                         width: 200
@@ -162,6 +169,7 @@ Item {
                 State {
                     name: "multiLine"
                     when: paramObject.stringType == "OfxParamStringIsMultiLine"
+
                     PropertyChanges {
                         target: stringInput
                         width: 280
@@ -171,6 +179,7 @@ Item {
                 State {
                     name: "filePath"
                     when: paramObject.stringType == "OfxParamStringIsFilePath"
+
                     PropertyChanges {
                         target: stringInput
                         width: 180
@@ -179,6 +188,7 @@ Item {
                 State {
                     name: "directoryPath"
                     when: paramObject.stringType == "OfxParamStringIsDirectoryPath"
+
                     PropertyChanges {
                         target: stringInput
                         width: 180
@@ -193,7 +203,7 @@ Item {
                     }
                 }
             ]
-        } //Rectangle
+        }
 
         // Hidden by default
         Image {
@@ -214,20 +224,22 @@ Item {
                 }
 
                 // Open a file dialog to select a file
-                /* FileDialog {
+                /*
+                FileDialog {
+                    id: folderfiledialog
+                    title: "Open"
+                    folder: _buttleData.buttlePath
+                    nameFilters: [ "All files (*)" ]
+                    selectedNameFilter: "All files (*)"
 
-                  id: folderfiledialog
-                  title: "Open"
-                  folder: _buttleData.buttlePath
-                  nameFilters: [ "All files (*)" ]
-                  selectedNameFilter: "All files (*)"
-                  onAccepted: {
-                  if (folderfiledialog.fileUrl){
-                  paramObject.value = folderfiledialog.fileUrl
-                  paramObject.pushValue(paramObject.value)
-                  }
-                  }
-                  }*/
+                    onAccepted: {
+                        if (folderfiledialog.fileUrl){
+                            paramObject.value = folderfiledialog.fileUrl
+                            paramObject.pushValue(paramObject.value)
+                        }
+                    }
+                }
+                */
 
                 FileDialog {
                     id: finderLoadFile
@@ -259,7 +271,7 @@ Item {
                     }
                     selectExisting: false
                 }
-            } // MouseArea
-        } // Image
-    } // Row
+            }
+        }
+    }
 }

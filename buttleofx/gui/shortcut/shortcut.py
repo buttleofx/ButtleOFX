@@ -1,6 +1,7 @@
 from PyQt5 import QtCore, QtGui
 from quickmamba.models import QObjectListModel
 
+
 class Shortcut(QtCore.QObject):
     """
         Class Shortcuts
@@ -19,9 +20,9 @@ class Shortcut(QtCore.QObject):
         self._shortcutDoc = shortcutDoc
         self._shortcutContext = shortcutContext
 
-    ################################################## Methods private to this class ##################################################
+    # ######################################## Methods private to this class ####################################### #
 
-    ### Getters ###
+    # ## Getters ## #
 
     def getShortcutContext(self):
         return self._shortcutContext
@@ -38,7 +39,7 @@ class Shortcut(QtCore.QObject):
     def getShortcutName(self):
         return self._shortcutName
 
-    ### Setters ###
+    # ## Setters ## #
 
     def setShortcutContext(self, context):
         self._shortcutContext = context
@@ -55,7 +56,7 @@ class Shortcut(QtCore.QObject):
     def setShortcutName(self, name):
         self._shortcutName = name
 
-    ################################################## Data exposed to QML ##################################################
+    # ############################################# Data exposed to QML ############################################## #
 
     changed = QtCore.pyqtSignal()
     shortcutKey1 = QtCore.pyqtProperty(str, getShortcutKey1, setShortcutKey1, constant=True)

@@ -15,7 +15,7 @@ class ChoiceWrapper(ParamWrapper):
         for value in self._param.getListValue():
             self._listValue.append(value)
 
-    ################################################## Methods exposed to QML ##################################################
+    # ############################################ Methods exposed to QML ############################################ #
 
     @QtCore.pyqtSlot(result=str)
     def getDefaultValue(self):
@@ -25,9 +25,9 @@ class ChoiceWrapper(ParamWrapper):
     def pushValue(self, value):
         self._param.pushValue(value)
 
-    ################################################## Methods private to this class ##################################################
+    # ######################################## Methods private to this class ####################################### #
 
-    ### Getters ###
+    # ## Getters ## #
 
     def getCurrentIndex(self):
         return self._param.getCurrentIndex()
@@ -41,7 +41,7 @@ class ChoiceWrapper(ParamWrapper):
     def getValue(self):
         return self._param.getValue()
 
-    ### Setters ###
+    # ## Setters ## #
 
     def setHasChanged(self, changed):
         self._param.setHasChanged(changed)
@@ -49,7 +49,7 @@ class ChoiceWrapper(ParamWrapper):
     def setValue(self, value):
         self._param.setValue(value)
 
-    ################################################## Data exposed to QML ##################################################
+    # ############################################# Data exposed to QML ############################################## #
 
     changed = QtCore.pyqtSignal()
 

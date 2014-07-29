@@ -56,7 +56,9 @@ Row {
             validator: DoubleValidator {
                 id: numValidator
                 // Default values
-                bottom: 0; top: 255; decimals: 2
+                bottom: 0
+                top: 255
+                decimals: 2
                 notation: DoubleValidator.StandardNotation
             }
 

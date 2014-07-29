@@ -14,7 +14,7 @@ Item {
 
     property alias title: titleColorPicker.text // Defined in ParamRGBA
 
-    // property bool initialisationOfObject : true // first passage in the file
+    // property bool initialisationOfObject: true // first passage in the file
     property real defaultValueRed
     property real defaultValueGreen
     property real defaultValueBlue
@@ -26,6 +26,7 @@ Item {
         id: extendedColor
         entireColor: colorValue // entireColor is a property (a QColor) exposed in colorExtended from Quickmamba
         // Other properties are accessible as hue, saturation, value, alpha
+
         Component.onCompleted: {
             red = defaultValueRed
             green = defaultValueGreen
@@ -63,6 +64,7 @@ Item {
 
     Column {
         spacing: 10
+
         Text {
             id: titleColorPicker
             color: "white"
@@ -81,7 +83,7 @@ Item {
                 saturation: currentSaturation
                 brightness: currentBrightness
 
-                /* doing an onNewSaturationChanged implies problems (because happens at the same time as onNewBrigthnessChanged ?)
+                /* Doing an onNewSaturationChanged implies problems (because happens at the same time as onNewBrigthnessChanged ?)
                    onNewSaturationChanged: {
                    extendedColor.saturation = newSaturation
                    }*/
@@ -98,7 +100,7 @@ Item {
                 id: hueSlider
                 height: colorPicker.height - titleColorPicker.height - 20
 
-                /* when the color is white, hue value is -1.0, so to avoid the cursor
+                /* When the color is white, hue value is -1.0, so to avoid the cursor
                    of hueSlider going out of colorPicker, we set the value to 0.0 */
                 hue: currentHue >= 0.0 ? currentHue : 0.0
 
@@ -117,6 +119,7 @@ Item {
                 onNewAlphaValueChanged: {
                     extendedColor.alpha = newAlphaValue
                 }
+
                 visible: colorPicker.hasAlpha
             }
 

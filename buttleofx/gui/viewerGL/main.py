@@ -17,6 +17,7 @@ else:
 
 currentFilePath = os.path.dirname(os.path.abspath(__file__))
 
+
 class ButtleApp(QtWidgets.QApplication):
     def __init__(self, argv):
         super(ButtleApp, self).__init__(argv)
@@ -31,12 +32,13 @@ class ButtleApp(QtWidgets.QApplication):
             traceback.print_exc()
             return False
 
+
 def main(argv):
     # Launch a QuickView
     app = ButtleApp(argv)
 
     decView = QtQuick.QQuickView()
-    decView.setViewport( QtOpenGL.QGLWidget() )
+    decView.setViewport(QtOpenGL.QGLWidget())
     decView.setViewportUpdateMode(QtQuick.QQuickView.FullViewportUpdate)
 
     if tuttleofx_installed:

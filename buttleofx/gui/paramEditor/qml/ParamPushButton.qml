@@ -3,7 +3,7 @@ import QtQuick 2.0
 Item {
     implicitWidth: 120
     implicitHeight: 30
-    y:10
+    y: 10
 
     property variant paramObject: model.object
 
@@ -33,8 +33,7 @@ Item {
             y: 2
             font.pixelSize: 14
 
-            Component.onCompleted:
-            {
+            Component.onCompleted: {
                 pushButton.height = font.pixelSize + 6
             }
         }
@@ -42,8 +41,8 @@ Item {
         MouseArea {
             id: buttonmousearea
             anchors.fill: parent
-            onPressed:
-            {
+
+            onPressed: {
                 pushButton.state = (pushButton.state == "enabled" ? "disabled" : "enabled")
                 // Take the focus of the MainWindow
                 pushButton.forceActiveFocus()
@@ -55,6 +54,7 @@ Item {
                 id: stateEnabled
                 name: "enabled"
                 when: pushButton.enabled
+
                 PropertyChanges {
                     target: buttonid
                     color: "white"
@@ -68,6 +68,7 @@ Item {
                 id: stateDisabled
                 name: "disabled"
                 when: !pushButton.enabled
+
                 PropertyChanges {
                     target: buttonid
                     color: "grey"

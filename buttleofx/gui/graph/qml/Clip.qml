@@ -15,7 +15,7 @@ Rectangle {
     property bool readOnly
     property real miniatureScale
     property bool miniatureState
-    property bool invertState : m.invertState
+    property bool invertState: m.invertState
 
     QtObject {
         id: m
@@ -80,6 +80,7 @@ Rectangle {
 
             var clipOut = null
             var clipIn = null
+
             if (m.clipWrapper.name == "Output") {
                 // Drop on output
                 clipOut = m.clipWrapper
@@ -89,6 +90,7 @@ Rectangle {
                 clipOut = drag.source.clipWrapper
 
                 var clipOut_tmp = _buttleData.graphWrapper.getConnectedClipWrapper(clipOut, true)
+
                 if (clipOut_tmp) {
                     clipOut = clipOut_tmp
                     _buttleManager.connectionManager.unHook(drag.source.clipWrapper)
@@ -123,6 +125,7 @@ Rectangle {
                 if (m.clipWrapper.nodeName !== drag.source.clipWrapper.nodeName)
                     connections.alpha = 0.2
             }
+
             if (replace && accept)
                 dropHandle.state = "canreplace"
         }
@@ -188,6 +191,7 @@ Rectangle {
         // Position of the center of the clip when starting a mouse event
         property int xStart
         property int yStart
+
         // Position of the mouse when starting a mouse event
         property int mouseXStart
         property int mouseYStart
@@ -196,6 +200,7 @@ Rectangle {
         onReleased: {
             var dropStatus = handle.Drag.drop()
             connections.tmpConnectionExists = false
+
             if (invertState == true)
                 _buttleManager.connectionManager.unHook(m.clipWrapper)
         }
@@ -220,15 +225,15 @@ Rectangle {
                 id: visualHandle
                 opacity: 1
                 radius: parent.handleRadius
-
                 anchors.fill: parent
-
                 color: "#32d2cc"
             }
+
             states: [
                 State {
                     name: "nodragging"
                     when: ! handle.Drag.active
+
                     PropertyChanges {
                         target: handle
                         opacity: 0
@@ -239,6 +244,7 @@ Rectangle {
                 State {
                     name: "dragging"
                     when: drag.source.clipWrapper
+
                     PropertyChanges {
                         target: handle
                         opacity: 1
@@ -251,6 +257,7 @@ Rectangle {
                 State {
                     name: "draggable"
                     when: handle.Drag.active
+
                     PropertyChanges {
                         target: handle
                         Drag.keys: "clip_connection"
@@ -308,9 +315,9 @@ Rectangle {
                     }
                 }
 
-                //Hack to position correctly the handle (the drag in QML creates a gap)
-                handle.x = mouseX - handle.width/2
-                handle.y = mouseY - handle.height/2
+                // Hack to position correctly the handle (the drag in QML creates a gap)
+                handle.x = mouseX - handle.width/ 2
+                handle.y = mouseY - handle.height / 2
             }
         }
     }

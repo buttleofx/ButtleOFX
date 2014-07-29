@@ -50,7 +50,7 @@ Item {
     }
 
     // Changes the viewer: displays the vew n°indexViewer.
-    // It updates in ButtleData all informations of the current viewer : the nodeWrapper, the viewerIndex, the frame, and it sets the right frame on the timeline.
+    // It updates in ButtleData all informations of the current viewer: the nodeWrapper, the viewerIndex, the frame, and it sets the right frame on the timeline.
     function changeViewer(indexViewer) {
         // First we save the frame for the current node, to be able to retrieve the frame later
         if (_buttleData.currentViewerNodeWrapper != null)
@@ -73,7 +73,7 @@ Item {
     }
 
     onNodeChanged: {
-        // console.log("Node Changed : ", node)
+        // console.log("Node Changed: ", node)
     }
 
     Tab {
@@ -133,7 +133,7 @@ Item {
                         anchors.left: parent.left
                         anchors.leftMargin: 10
                         anchors.verticalCenter: parent.verticalCenter
-                        text: node ? "Can't display node : " + node.name : "No current node"
+                        text: node ? "Can't display node: " + node.name: "No current node"
                     }
 
                     Rectangle {
@@ -378,10 +378,10 @@ Item {
                         }
 
                         MouseArea {
-                            anchors.fill : parent
+                            anchors.fill: parent
                             anchors.margins: -10
 
-                            onPressed : {
+                            onPressed: {
                                 // -10 because of margins
 
                                 //cursorTimeline.x = mouse.x - 10 - cursorTimeline.width/2

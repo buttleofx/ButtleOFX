@@ -10,12 +10,12 @@ class PageWrapper(ParamWrapper):
     def __init__(self, param):
         ParamWrapper.__init__(self, param)
 
-    #################################################### Methods private to this class ##################################################
+    # ######################################## Methods private to this class ####################################### #
 
     def getLabel(self):
         return self._param.getLabel()
 
-    #################################################### Data exposed to QML ##################################################
+    # ############################################# Data exposed to QML ############################################## #
 
     changed = QtCore.pyqtSignal()
 

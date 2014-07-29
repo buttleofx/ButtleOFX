@@ -18,11 +18,11 @@ Item {
 
     property variant newNode
     property variant previousNode
-
     property bool displayGraph
 
     MouseArea {
         anchors.fill:parent
+
         onClicked:{
             pluginVisible =false
         }
@@ -42,12 +42,12 @@ Item {
     // List of plugins
     PluginBrowser {
         id: pluginBrowser
-        visible:pluginVisible
-        x: leftColumn.width + mainWindowQML.x + addNode.width/2 - width/2
+        visible: pluginVisible
+        x: leftColumn.width + mainWindowQML.x + addNode.width / 2 - width / 2
         y: mainWindowQML.y + mainWindowQML.height - 302
     }
 
-    // Drag&Drop from Browser to ParametersEditor
+    // Drag & Drop from Browser to ParametersEditor
     DropArea {
         anchors.fill: parent
         keys: "internFileDrag"
@@ -81,17 +81,16 @@ Item {
         ScrollView {
             id: scrollParam
             // anchors.fill: parent
-            width : parent.width
+            width: parent.width
             height: parent.height
             anchors.topMargin: 5
             anchors.bottomMargin: 5
             y: 10
 
             style: ScrollViewStyle {
-
                 scrollBarBackground: Rectangle {
                     id: scrollBar
-                    width:15
+                    width: 15
                     color: "#212121"
                     border.width: 1
                     border.color: "#333"
@@ -99,8 +98,8 @@ Item {
 
                 decrementControl : Rectangle {
                     id: scrollLower
-                    width:15
-                    height:15
+                    width: 15
+                    height: 15
                     color: styleData.pressed? "#212121" : "#343434"
                     border.width: 1
                     border.color: "#333"
@@ -109,24 +108,24 @@ Item {
                     Image {
                         id: arrow
                         source: "file:///" + _buttleData.buttlePath + "/gui/img/buttons/params/arrow2.png"
-                        x:4
-                        y:4
+                        x: 4
+                        y: 4
                     }
                 }
                 incrementControl : Rectangle {
                     id: scrollHigher
-                    width:15
-                    height:15
+                    width: 15
+                    height: 15
                     color: styleData.pressed? "#212121" : "#343434"
                     border.width: 1
                     border.color: "#333"
                     radius: 3
 
-                    Image{
+                    Image {
                         id: arrow
                         source: "file:///" + _buttleData.buttlePath + "/gui/img/buttons/params/arrow.png"
-                        x:4
-                        y:4
+                        x: 4
+                        y: 4
                     }
                 }
             }
@@ -162,7 +161,6 @@ Item {
                 property color activeFocusOn: "white"
                 property color activeFocusOff: "grey"
 
-
                 // Title of the node
                 Rectangle {
                     id: tuttleParamTitle
@@ -179,7 +177,8 @@ Item {
                     }
 
                     Image {
-                        source: tuttleParamContent.visible ? "file:///" + _buttleData.buttlePath + "/gui/img/buttons/params/arrow_hover.png" : "file:///" + _buttleData.buttlePath + "/gui/img/buttons/params/arrow_right.png"
+                        source: tuttleParamContent.visible ? "file:///" + _buttleData.buttlePath +
+                            "/gui/img/buttons/params/arrow_hover.png" : "file:///" + _buttleData.buttlePath + "/gui/img/buttons/params/arrow_right.png"
                         width: 12
                         height: 12
                         anchors.right: parent.right
@@ -220,16 +219,18 @@ Item {
                                 State {
                                     name: "normal"
                                     when: paramNode.currentParamNode != _buttleData.currentViewerNodeWrapper
+
                                     PropertyChanges {
-                                        target: deadMosquitoImage;
+                                        target: deadMosquitoImage
                                         source: ""
                                     }
                                 },
                                 State {
                                     name: "currentViewerNode"
                                     when: paramNode.currentParamNode == _buttleData.currentViewerNodeWrapper
+
                                     PropertyChanges {
-                                        target: deadMosquitoImage;
+                                        target: deadMosquitoImage
                                         source: "file:///" + _buttleData.buttlePath + "/gui/img/mosquito/mosquito_dead.png"
                                     }
                                 }
@@ -245,7 +246,7 @@ Item {
                             pluginVisible =false
 
                             if (mouse.button == Qt.LeftButton) {
-                                if (tuttleParamContent.visible == true){
+                                if (tuttleParamContent.visible == true) {
                                     tuttleParamContent.visible = false
                                     tuttleParamContent.height = 0
                                 } else {
@@ -293,8 +294,8 @@ Item {
                                 listViewParam.currentIndex = index
                                 _buttleData.nodeGoesUp(listViewParam.currentIndex)
 
-                                if (listViewParam.currentIndex>0) {
-                                    var firstUpNode = _buttleData.graphWrapper.getNodeWrapperByIndex(index-1)
+                                if (listViewParam.currentIndex > 0) {
+                                    var firstUpNode = _buttleData.graphWrapper.getNodeWrapperByIndex(index - 1)
                                     var secondUpNode = _buttleData.graphWrapper.getNodeWrapperByIndex(index)
 
                                     if (firstUpNode.pluginContext != "OfxImageEffectContextReader")
@@ -344,9 +345,9 @@ Item {
                                 listViewParam.currentIndex = index
                                 _buttleData.nodeGoesDown(listViewParam.currentIndex)
 
-                                if (listViewParam.count-1>listViewParam.currentIndex) {
+                                if (listViewParam.count - 1 > listViewParam.currentIndex) {
                                     var firstDownNode = _buttleData.graphWrapper.getNodeWrapperByIndex(index)
-                                    var secondDownNode = _buttleData.graphWrapper.getNodeWrapperByIndex(index+1)
+                                    var secondDownNode = _buttleData.graphWrapper.getNodeWrapperByIndex(index + 1)
 
                                     if (firstDownNode.pluginContext != "OfxImageEffectContextReader")
                                         _buttleManager.connectionManager.switchNodes(firstDownNode,secondDownNode)
@@ -405,6 +406,7 @@ Item {
                                 State {
                                     name: "hover"
                                     when: closeMouseArea.containsMouse
+
                                     PropertyChanges {
                                         target: closeButton
                                         source: "file:///" + _buttleData.buttlePath + "/gui/img/icons/close_hover.png"
@@ -440,16 +442,16 @@ Item {
                         delegate: Component {
                             Loader {
                                 id: param
-                                source : model.object.paramType + ".qml"
+                                source: model.object.paramType + ".qml"
                                 width: parent.width
                                 x: 15 // Here is the distance to the left of the listview
                                 z: 0
 
                                 ToolTip {
-                                    id:tooltip
+                                    id: tooltip
                                     visible: false
                                     paramHelp: model.object.doc
-                                    z:param.z+1
+                                    z: param.z + 1
                                 }
 
                                 MouseArea {
@@ -471,8 +473,8 @@ Item {
                                 }
                             }
                         }
-                    } // Listview
-                } // Item param
+                    }
+                }
             }
         }
     }
@@ -482,7 +484,7 @@ Item {
         id: addNode
         anchors.bottom: parent.bottom
         // y: listViewParam.height
-        width : parent.width
+        width: parent.width
         height: 50
 
         iconSource:
@@ -512,12 +514,13 @@ Item {
     Button {
         id: displayTheGraph
 
-        property string imageSource: hovered ? "file:///" + _buttleData.buttlePath + "/gui/img/buttons/tools/plus_hover.png": "file:///" + _buttleData.buttlePath + "/gui/img/buttons/tools/plus.png"
+        property string imageSource: hovered ? "file:///" + _buttleData.buttlePath +
+            "/gui/img/buttons/tools/plus_hover.png": "file:///" + _buttleData.buttlePath + "/gui/img/buttons/tools/plus.png"
 
         anchors.top: parent.top
-        anchors.topMargin : 25
+        anchors.topMargin: 25
         anchors.left: parent.left
-        width : parent.width
+        width: parent.width
         height: 43
 
         iconSource: imageSource
@@ -544,7 +547,8 @@ Item {
 
                     PropertyChanges {
                         target: displayTheGraph
-                        imageSource: hovered ? "file:///" + _buttleData.buttlePath + "/gui/img/buttons/params/graph_hover.png" : "file:///" + _buttleData.buttlePath + "/gui/img/buttons/params/graph.png"
+                        imageSource: hovered ? "file:///" + _buttleData.buttlePath +
+                            "/gui/img/buttons/params/graph_hover.png" : "file:///" + _buttleData.buttlePath + "/gui/img/buttons/params/graph.png"
                     }
                 },
                 State {
@@ -553,41 +557,44 @@ Item {
 
                     PropertyChanges {
                         target: displayTheGraph
-                        imageSource: hovered ? "file:///" + _buttleData.buttlePath + "/gui/img/buttons/params/browser_hover.png" : "file:///" + _buttleData.buttlePath + "/gui/img/buttons/params/browser.png"
+                        imageSource: hovered ? "file:///" + _buttleData.buttlePath +
+                            "/gui/img/buttons/params/browser_hover.png" : "file:///" + _buttleData.buttlePath + "/gui/img/buttons/params/browser.png"
                     }
                 }
             ]
         }
     }
+
     /*
-      Menu {
-      id: nodesMenu
-      title: "Nodes"
+    Menu {
+        id: nodesMenu
+        title: "Nodes"
 
-      Instantiator {
-      model: _buttleData.pluginsIdentifiers
-      MenuItem {
-      text: object
-      onTriggered: {
-      // we create a new node and connect it to the last but one node of the concerned graph
-      previousNode =_buttleData.lastNode()
+        Instantiator {
+            model: _buttleData.pluginsIdentifiers
+            MenuItem {
+                text: object
 
-      _buttleData.currentGraphWrapper = _buttleData.graphWrapper
-      if (previousNode == undefined)
-      _buttleManager.nodeManager.creationNode("_buttleData.graph", object, 0, 0)
-      else
-      _buttleManager.nodeManager.creationNode("_buttleData.graph", object, previousNode.xCoord+140, previousNode.yCoord)
+                onTriggered: {
+                    // We create a new node and connect it to the last but one node of the concerned graph
+                    previousNode =_buttleData.lastNode()
 
-      // if there is only one node, we don't connect it
-      if (previousNode != undefined){
-      newNode = _buttleData.lastNode()
-      _buttleManager.connectionManager.connectWrappers(previousNode.outputClip, newNode.srcClips.get(0))
-      }
-      }
-      }// menuItem
-      onObjectAdded: nodesMenu.insertItem(index, object)
-      onObjectRemoved: nodesMenu.removeItem(object)
-      } // Instantiator
-      } //Menu
+                    _buttleData.currentGraphWrapper = _buttleData.graphWrapper
+                    if (previousNode == undefined)
+                        _buttleManager.nodeManager.creationNode("_buttleData.graph", object, 0, 0)
+                    else
+                        _buttleManager.nodeManager.creationNode("_buttleData.graph", object, previousNode.xCoord+140, previousNode.yCoord)
+
+                    // If there is only one node, we don't connect it
+                    if (previousNode != undefined){
+                        newNode = _buttleData.lastNode()
+                        _buttleManager.connectionManager.connectWrappers(previousNode.outputClip, newNode.srcClips.get(0))
+                    }
+                }
+            }
+            onObjectAdded: nodesMenu.insertItem(index, object)
+            onObjectRemoved: nodesMenu.removeItem(object)
+        }
+    }
     */
 }

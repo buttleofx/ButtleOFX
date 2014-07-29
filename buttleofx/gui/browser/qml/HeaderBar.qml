@@ -14,7 +14,7 @@ Rectangle {
     signal refreshFolder()
     property string parentFolder
     property variant listPrevious
-    property bool isInListView : false
+    property bool isInListView: false
     signal changeSeq(bool seq)
     property bool withTab: false
 

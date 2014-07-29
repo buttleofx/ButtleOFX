@@ -28,7 +28,7 @@ Item {
         x2: parent.x2
         y2: parent.y2
 
-        visible : miniatureState ? false : true
+        visible: miniatureState ? false : true
 
         readOnly: connectionItem.readOnly
         miniatureScale: connectionItem.miniatureScale
@@ -45,11 +45,11 @@ Item {
                 for (var x = mouseX - margin; x < mouseX + margin; x++) {
                     for (var y = mouseY - margin; y< mouseY + margin; y++) {
                         if (connection.getContext("2d").isPointInPath(x, y)) {
-                            return true;
+                            return true
                         }
                     }
                 }
-                return false;
+                return false
             }
 
             anchors.fill: parent
@@ -59,7 +59,7 @@ Item {
             onPressed: mouse.accepted = intersectPath(mouseX, mouseY, 5)
             onClicked: {
                 _buttleData.currentConnectionWrapper = m.connectionWrapper
-                _buttleData.clearCurrentSelectedNodeNames();
+                _buttleData.clearCurrentSelectedNodeNames()
             }
 
             // The accepted property of the MouseEvent parameter is ignored in this handler
@@ -90,25 +90,30 @@ Item {
             anchors.horizontalCenter: parent.horizontalCenter
             // anchors.fill: parent
             // anchors.margins: 30
-            width : 50 * zoomCoeff
-            height : 50 * zoomCoeff
+            width: 50 * zoomCoeff
+            height: 50 * zoomCoeff
             Drag.keys: "node"
+
             onDropped: {
                 if (!_buttleManager.connectionManager.connectionExists(drop.source.nodeWrapper.srcClips.get(0))) {
                     // We assure that the node dropped is not part of the actual connection
-                    if (drop.source.nodeWrapper !== undefined && drop.source.nodeWrapper.name != clipIn.nodeName && drop.source.nodeWrapper.name != clipOut.nodeName) {
+                    if (drop.source.nodeWrapper !== undefined && drop.source.nodeWrapper.name != clipIn.nodeName &&
+                        drop.source.nodeWrapper.name != clipOut.nodeName) {
                         drop.accept()
                         // Create two connections from one and delete the previous one
-                        _buttleManager.connectionManager.dissociate(clipOut, clipIn, drop.source.nodeWrapper.getClip("Source"), drop.source.nodeWrapper.getClip(drop.source.nodeWrapper.outputClip.name), m.connectionWrapper)
+                        _buttleManager.connectionManager.dissociate(clipOut, clipIn,
+                                                                    drop.source.nodeWrapper.getClip("Source"),
+                                                                    drop.source.nodeWrapper.getClip(drop.source.nodeWrapper.outputClip.name),
+                                                                    m.connectionWrapper)
                     }
                     dropIndicator.state = ""
                 }
-
                 // drop.source.nodeWrapper.xCoord = 0
                 // m.nodeWrapper.coord.x
             }
             onEntered: {
-                if (drag.source.nodeWrapper !== undefined && drag.source.nodeWrapper.name !== clipIn.nodeName && drag.source.nodeWrapper.name !== clipOut.nodeName){
+                if (drag.source.nodeWrapper !== undefined && drag.source.nodeWrapper.name !== clipIn.nodeName &&
+                    drag.source.nodeWrapper.name !== clipOut.nodeName) {
                     dropIndicator.state = "entereddrop"
                 }
             }
@@ -116,12 +121,12 @@ Item {
                 dropIndicator.state = ""
             }
 
-            Item{
+            Item {
                 anchors.fill: parent
             }
         }
 
-        Rectangle{
+        Rectangle {
             id: dropIndicator
             anchors.centerIn: parent
             width: 12
@@ -129,9 +134,11 @@ Item {
             radius: 0.5 * width
             color: "#00b2a1"
             visible: false
+
             states: [
                 State {
                     name: "entereddrop"
+
                     PropertyChanges {
                         target: dropIndicator
                         visible: true

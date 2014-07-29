@@ -80,7 +80,7 @@ Rectangle {
           anchors.fill: parent
 
           onDrop: {
-          if( hasUrls )
+          if (hasUrls)
           {
           //viewport.imageFilepath = firstUrl
           }

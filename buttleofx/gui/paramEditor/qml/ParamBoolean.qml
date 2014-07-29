@@ -4,7 +4,7 @@ Item {
     id: paramBoolean
     implicitWidth: 100
     implicitHeight: 30
-    y:10
+    y: 10
 
     property alias title: paramBooleanTitle.text
     property variant paramObject: model.object
@@ -17,7 +17,7 @@ Item {
         id: paramBoleanInputContainer
         spacing: 10
 
-        // Title of the param 
+        // Title of the param
         Text {
             id: paramBooleanTitle
             text: paramObject.text + " : "
@@ -52,7 +52,7 @@ Item {
             Rectangle {
                 id: interiorBox
                 anchors.centerIn: parent
-                width: box.width/2+2
+                width: box.width / 2 + 2
                 height: width
                 radius: 1
 
@@ -76,7 +76,7 @@ Item {
 
                 onPressed: {
                     paramObject.value = (paramObject.value == false) ? true : false
-                    paramObject.pushValue(paramObject.value);
+                    paramObject.pushValue(paramObject.value)
                     // Take the focus of the MainWindow
                     paramBoolean.forceActiveFocus()
                 }
@@ -84,6 +84,7 @@ Item {
             MouseArea {
                 anchors.fill: parent
                 acceptedButtons: Qt.RightButton
+
                 onClicked: {
                     paramObject.value = paramObject.getDefaultValue()
                     paramObject.pushValue(paramObject.value)

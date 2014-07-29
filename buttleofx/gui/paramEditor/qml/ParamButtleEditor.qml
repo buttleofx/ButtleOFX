@@ -58,12 +58,11 @@ ApplicationWindow {
                         close.source = "file:///" + _buttleData.buttlePath + "/gui/img/icons/close.png"
                     }
                     onClicked: {
-                        editNode=false
+                        editNode = false
                     }
                 }
             }
         }
-
 
         Loader {
             sourceComponent: currentParamNode ? nodeParamComponent : undefined
@@ -175,7 +174,7 @@ ApplicationWindow {
                                 }
 
                                 Rectangle {
-                                    id:helpButton
+                                    id: helpButton
                                     width: 15
                                     height: 15
                                     x: nodeTypeInput.x + nodeTypeInput.width + 4
@@ -184,7 +183,7 @@ ApplicationWindow {
                                     border.width: 1
                                     border.color: "#444"
 
-                                    Text{
+                                    Text {
                                         id: helpText
                                         text: "?"
                                         color: "white"
@@ -259,19 +258,20 @@ ApplicationWindow {
 
                                     KeyNavigation.backtab: nodeNameUserInput
                                     KeyNavigation.tab: nodeCoordXInput
-                                } // textinput
+                                }
 
                                 MouseArea {
                                     anchors.fill: parent
                                     acceptedButtons: Qt.RightButton
+
                                     onClicked: {
-                                        currentParamNode.color = currentParamNode.getDefaultColor();
-                                        console.log("Clicked");
+                                        currentParamNode.color = currentParamNode.getDefaultColor()
+                                        console.log("Clicked")
                                     }
                                 }
-                            } // Rectangle of nodeColorContainer
-                        } // Row nodeColorContainer
-                    } // Item nodeColorItem
+                            }
+                        }
+                    }
 
                     // Coord of the node (Buttle data)
                     Item {
@@ -291,7 +291,7 @@ ApplicationWindow {
                                 implicitWidth: 15
                                 color: "transparent"
 
-                                Text{
+                                Text {
                                     id: nodeCoordXLabel
                                     text: "x :"
                                     anchors.left: parent.left
@@ -300,7 +300,7 @@ ApplicationWindow {
                                 }
                             }
 
-                            // Input field limited : x
+                            // Input field limited: x
                             Rectangle {
                                 height: 20
                                 implicitWidth: 35
@@ -329,7 +329,6 @@ ApplicationWindow {
 
                                     KeyNavigation.backtab: nodeColorRGBInput
                                     KeyNavigation.tab: nodeCoordYInput
-
                                 }
                             }
 
@@ -381,8 +380,8 @@ ApplicationWindow {
                             }
                         }
                     }
-                } // Column
-            } // Component
-        } // Loader
-    } // Rectangle of buttleParam
+                }
+            }
+        }
+    }
 }

@@ -9,12 +9,9 @@ class GraphWrapper(QtCore.QObject):
     """
         Class GraphWrapper defined by:
             - _view : to have the view object
-
             - _nodeWrappers : list of node wrappers (the python objects we use to communicate with the QML)
             - _connectionWrappers : list of connections wrappers (the python objects we use to communicate with the QML)
-
             - _zMax : to manage the depth of the graph (in QML)
-
             - _graph : the name of the graph mapped by the instance of this class.
 
         This class is a view (= a map) of a graph.
@@ -32,7 +29,7 @@ class GraphWrapper(QtCore.QObject):
         self._connectionWrappers = QObjectListModel(self)
         self._zMax = 2
         self._graph = graph
-        self.tmpMoveNode = [0,0]
+        self.tmpMoveNode = [0, 0]
 
         # Links core signals to wrapper layer
         self._graph.nodesChanged.connect(self.updateWrappers)
@@ -40,7 +37,7 @@ class GraphWrapper(QtCore.QObject):
 
         logging.info("Gui : GraphWrapper created")
 
-    ################################################## Methods exposed to QML ##################################################
+    # ############################################ Methods exposed to QML ############################################ #
 
     @QtCore.pyqtSlot(result=QtCore.QObject)
     def deleteGraphWrapper(self):
@@ -55,14 +52,14 @@ class GraphWrapper(QtCore.QObject):
         clips = QObjectListModel(self)
         for nodeWrapper in self._nodeWrappers:
             if nodeWrapper.getName() == nodeName:
-                if nodeWrapper.getNbInput() > 0 :
+                if nodeWrapper.getNbInput() > 0:
                     clipConnected_input = self.getConnectedClipWrapper(nodeWrapper.getSrcClips().get(0), False)
                 else:
                     clipConnected_input = None
 
                 clipConnected_output = self.getConnectedClipWrapper_Output(nodeWrapper.getOutputClip())
 
-                if (clipConnected_input and clipConnected_output):
+                if clipConnected_input and clipConnected_output:
                     clips.append(clipConnected_input)
                     clips.append(clipConnected_output)
                     print(clipConnected_input.getNodeName())
@@ -70,7 +67,7 @@ class GraphWrapper(QtCore.QObject):
 
                 self._graph.deleteNodes([nodeWrapper.getNode()])
 
-        if (clipConnected_input and clipConnected_output):
+        if clipConnected_input and clipConnected_output:
             return clips
 
     @QtCore.pyqtSlot(int, int, result=QtCore.QObject)
@@ -92,7 +89,7 @@ class GraphWrapper(QtCore.QObject):
         heightCoeff = height / self.maxHeight(height)
         widthCoeff = width / self.maxWidth(width)
 
-        if (heightCoeff < widthCoeff):
+        if heightCoeff < widthCoeff:
             zoomCoeff = height / self.maxHeight(height)
         else:
             zoomCoeff = width / self.maxWidth(width)
@@ -126,9 +123,9 @@ class GraphWrapper(QtCore.QObject):
             Returns the clip connected to an input clip if it exists.
         """
         for connection in self._connectionWrappers:
-            if (clipWrapper.getNodeName() == connection.getIn_clipNodeName() \
-                and clipWrapper.getClipName() == connection.getIn_clipName()):
-                if (disable):
+            if (clipWrapper.getNodeName() == connection.getIn_clipNodeName() and
+                clipWrapper.getClipName() == connection.getIn_clipName()):
+                if disable:
                     connection.setEnabled(False)
                 connection.currentConnectionStateChanged.emit()
                 return self.getNodeWrapper(connection.out_clipNodeName).getClip(connection.out_clipName)
@@ -141,8 +138,9 @@ class GraphWrapper(QtCore.QObject):
             Returns the clip connected to an output clip if it exists.
         """
         for connection in self._connectionWrappers:
-            if (clipWrapper.getNodeName() == connection.getOut_clipNodeName() \
+            if (clipWrapper.getNodeName() == connection.getOut_clipNodeName()
                 and clipWrapper.getClipName() == connection.getOut_clipName()):
+
                 connection.currentConnectionStateChanged.emit()
                 return self.getNodeWrapper(connection.in_clipNodeName).getClip(connection.in_clipName)
 
@@ -171,9 +169,9 @@ class GraphWrapper(QtCore.QObject):
         max = height
         min = 0
         for nodeWrapper in self._nodeWrappers:
-            if (max < nodeWrapper.yCoord):
+            if max < nodeWrapper.yCoord:
                 max = nodeWrapper.yCoord
-            if (min > nodeWrapper.yCoord):
+            if min > nodeWrapper.yCoord:
                 min = nodeWrapper.yCoord
         return max - min
 
@@ -185,9 +183,9 @@ class GraphWrapper(QtCore.QObject):
         max = width
         min = 0
         for nodeWrapper in self._nodeWrappers:
-            if (max < nodeWrapper.xCoord):
+            if max < nodeWrapper.xCoord:
                 max = nodeWrapper.xCoord
-            if (min > nodeWrapper.xCoord):
+            if min > nodeWrapper.xCoord:
                 min = nodeWrapper.xCoord
         return max - min
 
@@ -197,7 +195,7 @@ class GraphWrapper(QtCore.QObject):
         self.tmpMoveNode[0] = node.xCoord
         self.tmpMoveNode[1] = node.yCoord
 
-    ################################################## Methods private to this class ##################################################
+    # ######################################## Methods private to this class ####################################### #
 
     def createNodeWrapper(self, nodeName):
         """
@@ -315,7 +313,7 @@ class GraphWrapper(QtCore.QObject):
 
         return ''.join(str_list)
 
-    ################################################## Data exposed to QML ##################################################
+    # ############################################# Data exposed to QML ############################################## #
 
     # nodeWrappers and connectionWrappers
     nodeWrappers = QtCore.pyqtProperty(QtCore.QObject, getNodeWrappers, constant=True)

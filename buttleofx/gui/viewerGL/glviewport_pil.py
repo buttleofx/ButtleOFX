@@ -7,12 +7,12 @@ class GLViewport_pil(GLViewport):
     def __init__(self, parent=None):
         super(GLViewport_pil, self).__init__(parent)
 
-    ################################################## Methods private to this class ##################################################
+    # ######################################## Methods private to this class ####################################### #
 
     def loadImageFile_pil(self, filename):
         self.img = Image.open(filename)
         self.img_data = numpy.array(self.img.getdata(), numpy.uint8)
-        self.setImageBounds( QtCore.QRect(0, 0, self.img.size[0], self.img.size[1]) )
+        self.setImageBounds(QtCore.QRect(0, 0, self.img.size[0], self.img.size[1]))
         self.tuttleOverlay = None
         self.recomputeOverlay = False
         print("image size: ", self._imageBoundsValue.width(), "x", self._imageBoundsValue.height())

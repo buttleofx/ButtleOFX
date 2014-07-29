@@ -19,7 +19,7 @@ class TimerPlayer(QtQuick.QQuickItem):
         self._processGraph = None
         self._processOptions = None
 
-    ################################################## Methods exposed to QML ##################################################
+    # ############################################ Methods exposed to QML ############################################ #
 
     @QtCore.pyqtSlot()
     def frameChanged(self):
@@ -78,7 +78,7 @@ class TimerPlayer(QtQuick.QQuickItem):
         processGraph.beginSequence(timeRange)
 
         # Communicate processGraph to buttleData
-        buttleData.setProcessGraph(processGraphf)
+        buttleData.setProcessGraph(processGraph)
         buttleData.setVideoIsPlaying(True)
 
         self._speed = 1000 / self._fps
@@ -86,7 +86,7 @@ class TimerPlayer(QtQuick.QQuickItem):
 
     @QtCore.pyqtSlot()
     def previousFrame(self):
-        if (self._frame > 0):
+        if self._frame > 0:
             self._frame = self._frame - 1
         else:
             return
@@ -109,9 +109,9 @@ class TimerPlayer(QtQuick.QQuickItem):
         self._frame = 0
         self.framePlayerChanged.emit()
 
-    ################################################## Methods private to this class ##################################################
+    # ######################################## Methods private to this class ######################################## #
 
-    ### Getters ###
+    # ## Getters ## #
 
     def getFrame(self):
         return self._frame
@@ -122,15 +122,15 @@ class TimerPlayer(QtQuick.QQuickItem):
     def getNbFrames(self):
         return self.nbFrames
 
-    ### Setters ###
+    # ## Setters ## #
 
     def setFrame(self, frame):
-        if (int(frame) >= self._nbFrames):
+        if int(frame) >= self._nbFrames:
             logging.debug('setFrame, ignore: frame outside bounds')
             self.pause()
             return
 
-        if (int(frame) == self._nbFrames - 1):
+        if int(frame) == self._nbFrames - 1:
             self.pause()
 
         self._frame = int(frame)
@@ -145,13 +145,13 @@ class TimerPlayer(QtQuick.QQuickItem):
         self.nbFramesChanged.emit()
 
     def nextFrame(self):
-        if (self._frame < self._nbFrames - 1):
+        if self._frame < self._nbFrames - 1:
             self._frame = self._frame + 1
         else:
             return
         self.framePlayerChanged.emit()
 
-    ################################################## Data exposed to QML ##################################################
+    # ############################################# Data exposed to QML ############################################# #
 
     framePlayerChanged = QtCore.pyqtSignal()
     fpsVideoChanged = QtCore.pyqtSignal()

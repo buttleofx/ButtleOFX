@@ -13,6 +13,7 @@ def nbChannelsToGlPixelType(nbChannels):
     else:
         raise NotImplementedError("load_texture: Unsupported pixel type, nb channels is " + str(nbChannels) + ".")
 
+
 def numpyValueTypeToGlType(valueType):
     if valueType == numpy.uint8:
         return GL.GL_UNSIGNED_BYTE
@@ -22,6 +23,7 @@ def numpyValueTypeToGlType(valueType):
         return GL.GL_FLOAT
     else:
         raise NotImplementedError("load_texture: Unsupported image value type: " + str(valueType))
+
 
 def load_texture(array, width, height):
     # print('loading texture')
@@ -42,7 +44,8 @@ def load_texture(array, width, height):
         array_height, array_width, channels = array.shape
         # print('width:%d, height:%d, channels:%d' % (width, height, channels))
         array_channelGL = nbChannelsToGlPixelType(channels)
-        return GL.glTexImage2D(GL.GL_TEXTURE_2D, 0, GL.GL_RGBA, array_width, array_height, 0, array_channelGL, array_type, array)
+        return GL.glTexImage2D(GL.GL_TEXTURE_2D, 0, GL.GL_RGBA, array_width, array_height,
+                               0, array_channelGL, array_type, array)
 
     # If you get here, it means a case was missed
     raise NotImplementedError("load_texture: Unsupported image type, ndim is " + str(array.ndim) + ".")
@@ -59,9 +62,11 @@ def loadTextureFromImage(imgBounds, img_data):
     GL.glTexParameterf(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_WRAP_T, GL.GL_CLAMP)
     # GL_TEXTURE_MAG_FILTER: a surface is bigger than the texture being applied (near objects)
     GL.glTexParameterf(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_MAG_FILTER, GL.GL_NEAREST)
-    # GL_TEXTURE_MIN_FILTER: a surface is rendered with smaller dimensions than its corresponding texture bitmap (far away objects)
-    GL.glTexParameterf(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_MIN_FILTER, GL.GL_LINEAR)  # GL.GL_LINEAR_MIPMAP_LINEAR) #GL.GL_NEAREST)
-    #GL.glTexImage2D(GL.GL_TEXTURE_2D, 0, GL.GL_RGB, imgBounds.width(), imgBounds.height(), 0, GL.GL_RGB, GL.GL_UNSIGNED_BYTE, img_data)
+    # GL_TEXTURE_MIN_FILTER: a surface is rendered with smaller dimensions than its corresponding
+    # texture bitmap (far away objects)
+    GL.glTexParameterf(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_MIN_FILTER, GL.GL_LINEAR)
+    # GL.glTexImage2D(GL.GL_TEXTURE_2D, 0, GL.GL_RGB, imgBounds.width(), imgBounds.height(), 0,
+    #                 GL.GL_RGB, GL.GL_UNSIGNED_BYTE, img_data)
 
     load_texture(img_data, imgBounds.width(), imgBounds.height())
     return texture
@@ -106,21 +111,21 @@ class GLViewport(QtQuick.QQuickPaintedItem):
 
     def prepareGL(self):
 
-        GL.glViewport(int(self._glGeometry.left()), int(self.height() - self._glGeometry.bottom()), int(self._glGeometry.width()), int(self._glGeometry.height()))
+        GL.glViewport(int(self._glGeometry.left()), int(self.height() - self._glGeometry.bottom()),
+                      int(self._glGeometry.width()), int(self._glGeometry.height()))
 
-        #GL.glClearDepth(1) # just for completeness
-        #GL.glClearColor( self._bgColorValue.red(), self._bgColorValue.green(), self._bgColorValue.blue(), self._bgColorValue.alpha() )
-        #GL.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT)
+        # GL.glClearDepth(1) # Just for completeness
+        # GL.glClearColor(self._bgColorValue.red(), self._bgColorValue.green(), self._bgColorValue.blue(),
+        #                 self._bgColorValue.alpha())
+        # GL.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT)
 
         GL.glMatrixMode(GL.GL_PROJECTION)
         GL.glLoadIdentity()
 
-        # glOrtho( left, right, bottom, top, near, far )
-        #GL.glOrtho(0, self.width(), 0, self.height(), -1, 1)
-        GL.glOrtho(
-            self._offsetValue.x(), self._offsetValue.x() + self.width() / self._scaleValue,
-            self._offsetValue.y(), self._offsetValue.y() + self.height() / self._scaleValue,
-            -1, 1)
+        # glOrtho(left, right, bottom, top, near, far)
+        # GL.glOrtho(0, self.width(), 0, self.height(), -1, 1)
+        GL.glOrtho(self._offsetValue.x(), self._offsetValue.x() + self.width() / self._scaleValue,
+                   self._offsetValue.y(), self._offsetValue.y() + self.height() / self._scaleValue, -1, 1)
 
         GL.glMatrixMode(GL.GL_MODELVIEW)
         GL.glLoadIdentity()
@@ -162,14 +167,14 @@ class GLViewport(QtQuick.QQuickPaintedItem):
         GL.glLineStipple(1, 0xAAAA)
 
         GL.glColor3d(1., 0., 0.)
-        #self.drawRect(self._rodValue)  # RoD
+        # self.drawRect(self._rodValue)  # RoD
 
         GL.glColor3d(1., 1., 1.)
-        #self.drawRect(self._rowValue)  # RoW
+        # self.drawRect(self._rowValue)  # RoW
 
         GL.glDisable(GL.GL_LINE_STIPPLE)
 
-        #self.tuttleReaderNode
+        # self.tuttleReaderNode
 
     def internPaintGL(self):
         # print("GLViewport.internPaintGL:", self.img_data)
@@ -193,19 +198,19 @@ class GLViewport(QtQuick.QQuickPaintedItem):
         GL.glVertex2d(rect.right(), rect.bottom())
         GL.glVertex2d(rect.left(), rect.bottom())
         GL.glEnd()
-    
+
     def drawTest(self):
         # print("GLViewport.drawTest")
-        
+
         GL.glBegin(GL.GL_TRIANGLES)
         GL.glColor3f(1, 0, 0)
         GL.glVertex3f(0, 1, -2)
-        
+
         GL.glColor3f(0, 1, 0)
-        GL.glVertex3f(-1,-1, -2)
-        
+        GL.glVertex3f(-1, -1, -2)
+
         GL.glColor3f(0, 0, 1)
-        GL.glVertex3f(1,-1, -2)
+        GL.glVertex3f(1, -1, -2)
         GL.glEnd()
 
     def geometryChanged(self, new, old):
@@ -221,7 +226,7 @@ class GLViewport(QtQuick.QQuickPaintedItem):
         QtQuick.QQuickItem.geometryChanged(self, new, old)
 
     def mousePressEvent(self, event):
-        #print("GLViewport.mousePressEvent")
+        # print("GLViewport.mousePressEvent")
         QtQuick.QQuickItem.mousePressEvent(self, event)
 
     def getBgColor(self):
@@ -282,7 +287,7 @@ class GLViewport(QtQuick.QQuickPaintedItem):
         return self._offsetValue
 
     def setOffset(self, offset):
-        #print("setOffset:", offset)
+        # print("setOffset:", offset)
         self._offsetValue = offset
         self.update()
         self.offsetChanged.emit()

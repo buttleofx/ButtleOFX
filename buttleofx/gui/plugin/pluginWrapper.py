@@ -2,6 +2,7 @@ import logging
 from PyQt5 import QtCore, QtGui
 from quickmamba.models import QObjectListModel
 
+
 class PluginWrapper(QtCore.QObject):
     """
         Define the common methods and fields for pluginWrapper.
@@ -12,9 +13,9 @@ class PluginWrapper(QtCore.QObject):
 
         self._plugin = plugin
 
-    ################################################## Methods private to this class ##################################################
+    # ######################################## Methods private to this class ####################################### #
 
-    ### Getters ###
+    # ## Getters ## #
 
     def getLabel(self):
         return self._plugin.getDescriptor().getLabel()
@@ -31,9 +32,9 @@ class PluginWrapper(QtCore.QObject):
     def getType(self):
         return self._plugin.getIdentifier()
 
-    ################################################## Data exposed to QML ##################################################
-           
-    pluginGroup = QtCore.pyqtProperty(str, getPluginGroup, constant=True)   
+    # ############################################# Data exposed to QML ############################################## #
+
+    pluginGroup = QtCore.pyqtProperty(str, getPluginGroup, constant=True)
     pluginType = QtCore.pyqtProperty(str, getType, constant=True)
     pluginLabel = QtCore.pyqtProperty(str, getLabel, constant=True)
     pluginDescription = QtCore.pyqtProperty(str, getPluginDescription, constant=True)

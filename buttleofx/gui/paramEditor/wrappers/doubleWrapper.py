@@ -10,7 +10,7 @@ class DoubleWrapper(ParamWrapper):
     def __init__(self, param):
         ParamWrapper.__init__(self, param)
 
-    ################################################## Methods exposed to QML ##################################################
+    # ############################################ Methods exposed to QML ############################################ #
 
     @QtCore.pyqtSlot(result=float)
     def getDefaultValue(self):
@@ -24,9 +24,9 @@ class DoubleWrapper(ParamWrapper):
     def pushValue(self, value):
         self._param.pushValue(value)
 
-    ################################################## Methods private to this class ##################################################
+    # ######################################## Methods private to this class ####################################### #
 
-    ### Getters ###
+    # ## Getters ## #
 
     def getHasChanged(self):
         return self._param.getHasChanged()
@@ -40,7 +40,7 @@ class DoubleWrapper(ParamWrapper):
     def getValue(self):
         return self._param.getValue()
 
-    ### Setters ###
+    # ## Setters ## #
 
     def setHasChanged(self, changed):
         self._param.setHasChanged(changed)
@@ -48,7 +48,7 @@ class DoubleWrapper(ParamWrapper):
     def setValue(self, value):
         self._param.setValue(value)
 
-    ################################################## Data exposed to QML ##################################################
+    # ############################################# Data exposed to QML ############################################## #
 
     changed = QtCore.pyqtSignal()
 

@@ -49,9 +49,9 @@ class MenuWrapper(QtCore.QObject):
         self._menu = QMenu()  # QMenu(view)
         self._menu.setTitle(parentName)
 
-        if (check == 0):
+        if check == 0:
             # File Menu
-            if (parentName == 'file'):
+            if parentName == 'file':
                 action = QAction("Open", self._menu,  statusTip='Open a graph')
                 action.setData(0)
                 self._menu.addAction(action)
@@ -66,7 +66,7 @@ class MenuWrapper(QtCore.QObject):
                 self._menu.addAction(action)
 
             # EditMenu
-            elif (parentName == 'edit'):
+            elif parentName == 'edit':
                 action = QAction("Undo", self._menu, shortcut='Ctrl+Z', statusTip='Undo the last action',
                                  triggered=ButtleManagerSingleton().get().undo)
                 action.setData(0)
@@ -115,22 +115,21 @@ class MenuWrapper(QtCore.QObject):
              TODO : Need to be documented.
         """
         if action.data() is not None:
-            # If it cames from the other menus
+            # If it comes from the other menus
             if action.data() == 0:
-                # if(action.triggered is not None):
-                    trigger = pyqtSignal()
+                # if action.triggered is not None:
                     action.trigger.connect()
                     action.triggered.emit()
-                    # this.connect(action, SIGNAL(triggered(bool)), this, SLOT(app.quit))
-                # elif(action.text() == "Delete"):
-                #     if(ButtleDataSingleton().get().currentConnectionWrapper):
+                    # self.connect(action, SIGNAL(triggered(bool)), this, SLOT(app.quit))
+                # elif action.text() == "Delete":
+                #     if ButtleDataSingleton().get().currentConnectionWrapper:
                 #         ButtleManagerSingleton().get().connectionManager.disconnect(ButtleDataSingleton().get().currentConnectionWrapper)
                 #     else:
                 #         ButtleManagerSingleton().get().nodeManager.destructionNodes()
 
             # If it cames from the NodeMenu
-            #else:
-                #ButtleManagerSingleton().get().nodeManager.creationNode(action.data())
+            # else:
+                # ButtleManagerSingleton().get().nodeManager.creationNode(action.data())
 
     @QtCore.pyqtSlot(float, float)
     def showMenu(self, x, y):

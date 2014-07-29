@@ -22,7 +22,7 @@ class GLViewport_tuttleofx(GLViewport):
 
         self.connectToButtleEvent()
 
-    ################################################## Methods exposed to QML ##################################################
+    # ######################################## Methods exposed to QML ####################################### #
 
     @QtCore.pyqtSlot()
     def unconnectToButtleEvent(self):
@@ -32,15 +32,15 @@ class GLViewport_tuttleofx(GLViewport):
         # disconnect : load image when one param changed
         buttleEvent.oneParamChangedSignal.disconnect(self.loadImage)
 
-    ################################################## Methods private to this class ##################################################
+    # ######################################## Methods private to this class ####################################### #
 
-    ### Getters ###
+    # ## Getters ## #
 
     # Frame management
     def getFrame(self):
         return self._frame
 
-    ### Setters ###
+    # ## Setters ## #
 
     def setFrame(self, currentFrame):
         self._frameHasChanged = True
@@ -49,7 +49,7 @@ class GLViewport_tuttleofx(GLViewport):
         self.frameChanged.emit()
         self.update()
 
-    ### Others ###
+    # ## Others ## #
 
     def clearMapOfImageAlreadyCalculated(self):
         buttleData = ButtleDataSingleton().get()
@@ -101,7 +101,7 @@ class GLViewport_tuttleofx(GLViewport):
 
         self.setImageBounds(QtCore.QRect(bounds.x1, bounds.y1, width, height))
 
-    ################################################## Data exposed to QML ##################################################
+    # ############################################# Data exposed to QML ############################################## #
 
     frameChanged = QtCore.pyqtSignal()
     frame = QtCore.pyqtProperty(int, getFrame, setFrame, notify=frameChanged)

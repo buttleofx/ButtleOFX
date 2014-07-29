@@ -31,21 +31,21 @@ Rectangle {
 
         onClicked:{
             console.log("image : " + imageFile)
-            /* if((mouse.button === Qt.LeftButton)) {
+            /* if (mouse.button === Qt.LeftButton) {
             // Lorsque l'outil Loupe + est activé
-            if(magGlassIn.state == "clicked") {
+            if (magGlassIn.state == "clicked") {
             imageViewed.x -= (mouseX - viewer.width/2)
             imageViewed.y -= (mouseY - viewer.height/2)
             imageViewed.scale += sizeScaleEvent
             }
             // Lorsque l'outil Loupe - est activé
-            if(magGlassOut.state == "clicked") {
+            if (magGlassOut.state == "clicked") {
             imageViewed.x -= (mouseX - viewer.width/2)
             imageViewed.y -= (mouseY - viewer.height/2)
             imageViewed.scale -= sizeScaleEvent
             }
             //Zoom simple
-            if(mouse.modifiers & Qt.ShiftModifier){
+            if (mouse.modifiers & Qt.ShiftModifier) {
             if (imageViewed.scale-sizeScaleEvent > 0) {
             imageViewed.scale -= sizeScaleEvent
             }

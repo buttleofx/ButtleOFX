@@ -4,7 +4,7 @@ from PyQt5 import QtCore
 
 class ConnectionWrapper(QtCore.QObject):
     """
-        Class ConnectionWrapper defined by :
+        Class ConnectionWrapper defined by:
             - _connection : the buttle connection
     """
 
@@ -18,7 +18,7 @@ class ConnectionWrapper(QtCore.QObject):
 
         logging.info("Gui : ConnectionWrapper created")
 
-    ### Getters ###
+    # ## Getters ## #
 
     def getConnection(self):
         return self._connection
@@ -41,22 +41,22 @@ class ConnectionWrapper(QtCore.QObject):
     def getIn_clipName(self):
         return self._connection.getClipIn().getClipName()
 
-    ### Setters ###
+    # ## Setters ## #
 
     def setEnabled(self, value):
         self._enabled = value
         self.currentConnectionStateChanged.emit()
 
     def __str__(self):
-        return 'Connection between the clip "%s (%s %d)" and the clip "%s (%s %d)' % \
-        (self._connection._clipOut._nodeName, self._connection._clipOut._port,
-         self._connection._clipOut._clipNumber, self._connection._clipIn._nodeName,
-         self._connection._clipIn._port, self._connection._clipIn._clipNumber)
+        return 'Connection between the clip "{0} ({1} {2})" and the clip "{3} ({4} {5})'.format(
+            self._connection._clipOut._nodeName, self._connection._clipOut._port,
+            self._connection._clipOut._clipNumber, self._connection._clipIn._nodeName,
+            self._connection._clipIn._port, self._connection._clipIn._clipNumber)
 
     def __del__(self):
         logging.info("Gui : ConnectionWrapper deleted")
 
-    ################################################## Data exposed to QML ##################################################
+    # ############################################# Data exposed to QML ############################################## #
 
     in_clipNodeName = QtCore.pyqtProperty(str, getIn_clipNodeName, constant=True)
     in_clipName = QtCore.pyqtProperty(str, getIn_clipName, constant=True)

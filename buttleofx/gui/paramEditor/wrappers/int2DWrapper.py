@@ -10,7 +10,7 @@ class Int2DWrapper(ParamWrapper):
     def __init__(self, param):
         ParamWrapper.__init__(self, param)
 
-    #################################################### Methods exposed to QML ##################################################
+    # ############################################ Methods exposed to QML ############################################ #
 
     @QtCore.pyqtSlot(result=int)
     def getDefaultValue1(self):
@@ -20,9 +20,9 @@ class Int2DWrapper(ParamWrapper):
     def getDefaultValue2(self):
         return self._param.getDefaultValue2()
 
-    #################################################### Methods private to this class ##################################################
+    # ######################################## Methods private to this class ####################################### #
 
-    ### Getters ###
+    # ## Getters ## #
 
     def getMaximum1(self):
         return self._param.getMaximum1()
@@ -48,7 +48,7 @@ class Int2DWrapper(ParamWrapper):
     def getValue2HasChanged(self):
         return self._param.getValue2HasChanged()
 
-    ### Setters ###
+    # ## Setters ## #
 
     def setValue1(self, value):
         self._param.setValue1(value)
@@ -62,7 +62,7 @@ class Int2DWrapper(ParamWrapper):
     def setValue2HasChanged(self, changed):
         self._param.setValue2HasChanged(changed)
 
-    ################################################## Data exposed to QML ##################################################
+    # ############################################# Data exposed to QML ############################################## #
 
     changed = QtCore.pyqtSignal()
 

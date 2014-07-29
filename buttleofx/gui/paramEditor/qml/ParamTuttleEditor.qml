@@ -30,7 +30,7 @@ Item {
 
     Tab {
         id: tabBar
-        name:!_buttleData.currentParamNodeWrapper ? "Parameters" : "Parameters of :    " + _buttleData.currentParamNodeWrapper.nameUser
+        name: !_buttleData.currentParamNodeWrapper ? "Parameters" : "Parameters of :    " + _buttleData.currentParamNodeWrapper.nameUser
         onCloseClicked: paramEditor.buttonCloseClicked(true)
         onFullscreenClicked: paramEditor.buttonFullscreenClicked(true)
     }
@@ -38,7 +38,7 @@ Item {
     // Tuttle params
     Rectangle {
         id: tuttleParams
-        height: parent.height-5
+        height: parent.height - 5
         width: parent.width
         y: tabBar.height
         color: paramEditor.background
@@ -50,7 +50,7 @@ Item {
             width: parent.width
             y: 5
 
-            property string lastGroupParam : "No Group."
+            property string lastGroupParam: "No Group."
 
             ScrollView {
                 anchors.fill: parent
@@ -58,21 +58,21 @@ Item {
                 anchors.bottomMargin: 15
                 height: 110
                 width: 110
-                z:0
+                z: 0
 
                 style: ScrollViewStyle {
                     scrollBarBackground: Rectangle {
                         id: scrollBar
-                        width:15
+                        width: 15
                         color: "#212121"
                         border.width: 1
                         border.color: "#333"
                     }
                     decrementControl : Rectangle {
                         id: scrollLower
-                        width:15
-                        height:15
-                        color: styleData.pressed? "#212121" : "#343434"
+                        width: 15
+                        height: 15
+                        color: styleData.pressed ? "#212121" : "#343434"
                         border.width: 1
                         border.color: "#333"
                         radius: 3
@@ -80,24 +80,24 @@ Item {
                         Image {
                             id: arrow
                             source: "file:///" + _buttleData.buttlePath + "/gui/img/buttons/params/arrow2.png"
-                            x:4
-                            y:4
+                            x: 4
+                            y: 4
                         }
                     }
                     incrementControl : Rectangle {
                         id: scrollHigher
-                        width:15
-                        height:15
-                        color: styleData.pressed? "#212121" : "#343434"
+                        width: 15
+                        height: 15
+                        color: styleData.pressed ? "#212121" : "#343434"
                         border.width: 1
                         border.color: "#333"
                         radius: 3
 
-                        Image{
+                        Image {
                             id: arrow
                             source: "file:///" + _buttleData.buttlePath + "/gui/img/buttons/params/arrow.png"
-                            x:4
-                            y:4
+                            x: 4
+                            y: 4
                         }
                     }
                 }
@@ -116,19 +116,18 @@ Item {
                     model: params
 
                     delegate: Component {
-
                         Loader {
                             id: param
-                            source : model.object.paramType + ".qml"
+                            source: model.object.paramType + ".qml"
                             width: parent.width
                             x: 15 // Here is the distance to the left of the listview
-                            z:0
+                            z: 0
 
                             ToolTip {
-                                id:tooltip
+                                id: tooltip
                                 visible: false
                                 paramHelp: model.object.doc
-                                z:param.z+1
+                                z: param.z+1
                             }
 
                             MouseArea {
@@ -150,8 +149,8 @@ Item {
                             }
                         }
                     }
-                } // Listview
-            } // scrollArea
-        } // rectangle param
+                }
+            }
+        }
     }
 }

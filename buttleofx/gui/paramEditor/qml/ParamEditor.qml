@@ -44,7 +44,6 @@ Item {
         // Tuttle params
         Rectangle {
             Layout.minimumHeight: tuttleParamTitle.height
-
             id: tuttleParams
             height: 500
             width: parent.width
@@ -69,41 +68,41 @@ Item {
                     style: ScrollViewStyle {
                         scrollBarBackground: Rectangle {
                             id: scrollBar
-                            width:15
+                            width: 15
                             color: "#212121"
                             border.width: 1
                             border.color: "#333"
                         }
                         decrementControl : Rectangle {
                             id: scrollLower
-                            width:15
-                            height:15
+                            width: 15
+                            height: 15
                             color: styleData.pressed ? "#212121" : "#343434"
                             border.width: 1
                             border.color: "#333"
                             radius: 3
 
-                            Image{
+                            Image {
                                 id: arrow
                                 source: "file:///" + _buttleData.buttlePath + "/gui/img/buttons/params/arrow2.png"
-                                x:4
-                                y:4
+                                x: 4
+                                y: 4
                             }
                         }
                         incrementControl : Rectangle {
                             id: scrollHigher
-                            width:15
-                            height:15
+                            width: 15
+                            height: 15
                             color: styleData.pressed? "#212121" : "#343434"
                             border.width: 1
                             border.color: "#333"
                             radius: 3
 
-                            Image{
+                            Image {
                                 id: arrow
                                 source: "file:///" + _buttleData.buttlePath + "/gui/img/buttons/params/arrow.png"
-                                x:4
-                                y:4
+                                x: 4
+                                y: 4
                             }
                         }
                     }
@@ -122,7 +121,6 @@ Item {
                         model: params
 
                         delegate: Component {
-
                             Loader {
                                 id: param
                                 source: model.object.paramType + ".qml"
@@ -130,9 +128,9 @@ Item {
                                 x: 15 // Here is the distance to the left of the listview
                             }
                         }
-                    } // Listview
-                } // scrollArea
-            } //Rectangle param
+                    }
+                }
+            }
 
             // Placed here to avoid a bug of display with the listView (should be displayed after the listview)
             Rectangle {
@@ -140,6 +138,7 @@ Item {
                 width: paramEditor.width
                 height: 40
                 color: paramEditor.background
+
                 gradient: Gradient {
                     GradientStop { position: 0.0; color: gradian2 }
                     GradientStop { position: 0.85; color: gradian2 }
@@ -350,20 +349,20 @@ Item {
 
                                         KeyNavigation.backtab: nodeNameUserInput
                                         KeyNavigation.tab: nodeCoordXInput
-                                    } // textinput
+                                    }
 
                                     MouseArea {
                                         anchors.fill: parent
                                         acceptedButtons: Qt.RightButton
 
                                         onClicked: {
-                                            currentParamNode.color = currentParamNode.getDefaultColor();
-                                            console.log("Clicked");
+                                            currentParamNode.color = currentParamNode.getDefaultColor()
+                                            console.log("Clicked")
                                         }
                                     }
-                                } // Rectangle of nodeColorContainer
-                            } // Row nodeColorContainer
-                        } // Item nodeColorItem
+                                }
+                            }
+                        }
 
                         // Coord of the node (Buttle data)
                         Item {
@@ -377,7 +376,7 @@ Item {
                                 id: nodeCoordContainer
                                 spacing: 10
 
-                                // Input label : "x : "
+                                // Input label: "x : "
                                 Rectangle {
                                     height: 20
                                     implicitWidth: 15
@@ -392,7 +391,7 @@ Item {
                                     }
                                 }
 
-                                // Input field limited : x
+                                // Input field limited: x
                                 Rectangle {
                                     height: 20
                                     implicitWidth: 35
@@ -425,7 +424,7 @@ Item {
                                     }
                                 }
 
-                                // Input label : "y : "
+                                // Input label: "y : "
                                 Rectangle {
                                     height: 20
                                     implicitWidth: 15
@@ -440,7 +439,7 @@ Item {
                                     }
                                 }
 
-                                // Input field limited : y
+                                // Input field limited: y
                                 Rectangle {
                                     height: 20
                                     implicitWidth: 35
@@ -474,9 +473,9 @@ Item {
                                 }
                             }
                         }
-                    } // Column
-                } // Component
-            } // Loader
-        } // Rectangle of buttleParam
-    } // splitterColumn
+                    }
+                }
+            }
+        }
+    }
 }

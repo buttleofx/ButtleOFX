@@ -4,7 +4,7 @@ Item {
     id: containerParamInt2D
     implicitWidth: 300
     implicitHeight: 30
-    y:10
+    y: 10
 
     property variant paramObject: model.object
 
@@ -36,14 +36,13 @@ Item {
                     paramObject.value1 = paramObject.getDefaultValue1()
                     paramObject.value2 = paramObject.getDefaultValue2()
                 }
-
             }
         }
 
         // First Input
         Rectangle {
             height: 20
-            width:40
+            width: 40
             color: "#343434"
             border.width: 1
             border.color: "#444"
@@ -85,6 +84,7 @@ Item {
             MouseArea {
                 anchors.fill: parent
                 acceptedButtons: Qt.RightButton
+
                 onClicked: {
                     // Reinitialise value1 to its default value
                     paramObject.value1HasChanged = false
@@ -96,7 +96,7 @@ Item {
         // Second Input
         Rectangle {
             height: 20
-            width:40
+            width: 40
             color: "#343434"
             border.width: 1
             border.color: "#444"
@@ -138,6 +138,7 @@ Item {
             MouseArea {
                 anchors.fill: parent
                 acceptedButtons: Qt.RightButton
+
                 onClicked: {
                     // Reinitialise value2 to its default value
                     paramObject.value2HasChanged = false

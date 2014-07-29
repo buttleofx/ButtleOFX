@@ -25,12 +25,9 @@ Item {
     height: tuttleParamContent.height
 
     // Tuttle params
-
     Rectangle {
-        Layout.minimumHeight: tuttleParamTitle.height
-
         id: tuttleParams
-
+        Layout.minimumHeight: tuttleParamTitle.height
         width: parent.width
         color: paramEditor.background
 
@@ -114,7 +111,7 @@ Item {
                         x: 15 // Here is the distance to the left of the listview
                     }
                 }
-            } //Listview
-        } // Item param
+            }
+        }
     }
 }

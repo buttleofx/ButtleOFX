@@ -33,7 +33,7 @@ Rectangle {
         // Save or save as
         if ((event.key == Qt.Key_S) && (event.modifiers & Qt.ControlModifier)) {
             if (_buttleData.graphCanBeSaved) {
-                if(urlOfFileToSave!=""){
+                if (urlOfFileToSave != "") {
                     _buttleData.saveData(urlOfFileToSave)
                 } else {
                     finderSaveGraph.open()
@@ -72,16 +72,16 @@ Rectangle {
         }
 
         if (event.key == Qt.Key_Delete) {
-            _buttleManager.deleteSelection();
+            _buttleManager.deleteSelection()
         }
         if ((event.key == Qt.Key_Z) && (event.modifiers & Qt.ControlModifier)) {
             if (_buttleManager.canUndo) {
-                _buttleManager.undo();
+                _buttleManager.undo()
             }
         }
         if ((event.key == Qt.Key_Y) && (event.modifiers & Qt.ControlModifier)) {
             if (_buttleManager.canRedo) {
-                _buttleManager.redo();
+                _buttleManager.redo()
             }
         }
         if ((event.key == Qt.Key_D) && (event.modifiers & Qt.ControlModifier)) {
@@ -99,7 +99,7 @@ Rectangle {
         }
         if ((event.key == Qt.Key_V) && (event.modifiers & Qt.ControlModifier)) {
             if (_buttleData.canPaste) {
-                _buttleManager.nodeManager.pasteNode();
+                _buttleManager.nodeManager.pasteNode()
             }
         }
         if ((event.key == Qt.Key_X) && (event.modifiers & Qt.ControlModifier)) {
@@ -132,22 +132,22 @@ Rectangle {
     property var container: graphContainer
 
     /*
-      ExternDropArea {
-      anchors.fill: parent
-      acceptDrop: true
-      onDragEnter: {
-      acceptDrop = hasUrls
-      }
-      onDrop: {
-      console.log("Drop external files:", acceptDrop)
-      if(acceptDrop) {
-      _buttleManager.nodeManager.dropFile(firstUrl, pos.x - m.graphRoot.originX, pos.y - m.graphRoot.originY)
-      }
-      }
-      }
+    ExternDropArea {
+        anchors.fill: parent
+        acceptDrop: true
+        onDragEnter: {
+            acceptDrop = hasUrls
+        }
+        onDrop: {
+            console.log("Drop external files:", acceptDrop)
+            if (acceptDrop) {
+                _buttleManager.nodeManager.dropFile(firstUrl, pos.x - m.graphRoot.originX, pos.y - m.graphRoot.originY)
+            }
+        }
+    }
     */
 
-    // Drag&Drop from outside the app
+    // Drag & Drop from outside the app
     DropArea {
         id: graphDropArea
         anchors.fill: parent
@@ -170,7 +170,8 @@ Rectangle {
             }
 
             for (var urlIndex in drop.urls) {
-                _buttleManager.nodeManager.dropFile(drop.urls[urlIndex], drag.x - m.graphRoot.originX + 10*urlIndex, drag.y - m.graphRoot.originY + 10*urlIndex)
+                _buttleManager.nodeManager.dropFile(drop.urls[urlIndex], drag.x - m.graphRoot.originX + 10 * urlIndex,
+                                                    drag.y - m.graphRoot.originY + 10 * urlIndex)
             }
 
             drop.accepted = true
@@ -194,7 +195,8 @@ Rectangle {
             }
 
             for (var urlIndex in drag.source.selectedFiles) {
-                _buttleManager.nodeManager.dropFile(drag.source.selectedFiles[urlIndex], drag.x - m.graphRoot.originX + 10*urlIndex, drag.y - m.graphRoot.originY + 10*urlIndex)
+                _buttleManager.nodeManager.dropFile(drag.source.selectedFiles[urlIndex], drag.x - m.graphRoot.originX + 10*urlIndex,
+                                                    drag.y - m.graphRoot.originY + 10*urlIndex)
             }
         }
     }
@@ -207,29 +209,31 @@ Rectangle {
         height: parent.height * zoomCoeff
         color: "transparent"
 
-        /*Item {
-          id: repere
-          property color repereColor: "red"
-          property double size: 50 * zoomCoeff
-          property double thickness: 2
-          visible: miniatureState ? false : true
-          Rectangle {
-          id: axeX
-          x: -repere.size - 0.5 * repere.thickness
-          y: 0
-          width: 2 * repere.size + repere.thickness
-          height: 2
-          color: repere.repereColor
-          }
-          Rectangle {
-          id: axeY
-          x: 0
-          y: -repere.size - 0.5 * repere.thickness
-          width: 2
-          height: 2 * repere.size + repere.thickness
-          color: repere.repereColor
-          }
-          }*/
+        /*
+        Item {
+            id: repere
+            property color repereColor: "red"
+            property double size: 50 * zoomCoeff
+            property double thickness: 2
+            visible: miniatureState ? false : true
+            Rectangle {
+                id: axeX
+                x: -repere.size - 0.5 * repere.thickness
+                y: 0
+                width: 2 * repere.size + repere.thickness
+                height: 2
+                color: repere.repereColor
+            }
+            Rectangle {
+                id: axeY
+                x: 0
+                y: -repere.size - 0.5 * repere.thickness
+                width: 2
+                height: 2 * repere.size + repere.thickness
+                color: repere.repereColor
+            }
+        }
+        */
 
         Item {
             id: nodes
@@ -238,7 +242,7 @@ Rectangle {
 
             Repeater {
                 id: nodesRepeater
-                //model: _buttleData.graphBrowserWrapper.nodeWrappers
+                // model: _buttleData.graphBrowserWrapper.nodeWrappers
                 model: _buttleData.graphWrapper.nodeWrappers
 
                 Node {
@@ -257,6 +261,7 @@ Rectangle {
                             State {
                                 name: "miniatureStateAndReader"
                                 when: miniatureState && model.object.pluginContext == "OfxImageEffectContextReader"
+
                                 PropertyChanges {
                                     target: node
                                     width: node.nodeWidth * qml_graphRoot.miniatureScale
@@ -266,15 +271,17 @@ Rectangle {
                             State {
                                 name: "miniatureStateAndNotReader"
                                 when: miniatureState && model.object.pluginContext != "OfxImageEffectContextReader"
+
                                 PropertyChanges {
                                     target: node
                                     width: node.nodeWidth * qml_graphRoot.miniatureScale
-                                    height: node.nodeWidth /2 * qml_graphRoot.miniatureScale
+                                    height: node.nodeWidth / 2 * qml_graphRoot.miniatureScale
                                 }
                             },
                             State {
                                 name: "readerAndSrc"
                                 when: model.object.pluginContext == "OfxImageEffectContextReader" && model.object.params.get(0).value!= ""
+
                                 PropertyChanges {
                                     target: node
                                     width: nodeWidth * zoomCoeff
@@ -283,11 +290,13 @@ Rectangle {
                             },
                             State {
                                 name: "notReaderOrReaderAndNoSrc"
-                                when: model.object.pluginContext != "OfxImageEffectContextReader" || (model.object.pluginContext == "OfxImageEffectContextReader" && model.object.params.get(0).value== "")
+                                when: model.object.pluginContext != "OfxImageEffectContextReader" ||
+                                    (model.object.pluginContext == "OfxImageEffectContextReader" && model.object.params.get(0).value== "")
+
                                 PropertyChanges {
                                     target: node
                                     width: nodeWidth * zoomCoeff
-                                    height: nodeWidth/2 * zoomCoeff
+                                    height: nodeWidth / 2 * zoomCoeff
                                 }
                             }
                         ]
@@ -303,7 +312,7 @@ Rectangle {
             z: 0
 
             Repeater {
-                model : _buttleData.graphWrapper.connectionWrappers
+                model: _buttleData.graphWrapper.connectionWrappers
                 Connection {
                     id: connection
                     connectionWrapper: model.object

@@ -14,7 +14,7 @@ Grid {
         Rectangle {
             width: gridOfSquares.cellSide
             height: gridOfSquares.cellSide
-            color: (index%2 == 0) ? "gray" : "white"
+            color: (index % 2 == 0) ? "gray" : "white"
         }
     }
 }

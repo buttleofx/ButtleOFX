@@ -29,6 +29,7 @@ Rectangle {
         id: buttonMouseArea
         hoverEnabled: true
         anchors.fill: parent
+
         onClicked: {
             if (!locked) {
                 buttonTools.clicked()
@@ -44,6 +45,7 @@ Rectangle {
         y: 35
         color: "grey"
         opacity: buttonMouseArea.containsMouse ? 1 : 0
+
         Text {
             text: buttonText
             color: "#bbbbbb"
@@ -56,6 +58,7 @@ Rectangle {
             State {
                 name: "locked"
                 when: locked
+
                 PropertyChanges {
                     target: buttonTools
                     color: "transparent"
@@ -68,6 +71,7 @@ Rectangle {
             State {
                 name: "normal"
                 when: !buttonMouseArea.containsMouse
+
                 PropertyChanges {
                     target: buttonTools
                     color: "transparent"
@@ -80,6 +84,7 @@ Rectangle {
             State {
                 name: "pressed"
                 when: buttonMouseArea.containsMouse && buttonMouseArea.pressed
+
                 PropertyChanges {
                     target: buttonTools
                     color: "#00b2a1"
@@ -92,6 +97,7 @@ Rectangle {
             State {
                 name: "hover"
                 when: buttonMouseArea.containsMouse
+
                 PropertyChanges {
                     target: buttonTools
                     color: "#555555"

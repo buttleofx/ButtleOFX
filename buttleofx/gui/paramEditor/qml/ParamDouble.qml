@@ -2,9 +2,9 @@ import QtQuick 2.0
 
 Item {
     id: paramDouble
-    implicitWidth : 300
-    implicitHeight : 30
-    y:10
+    implicitWidth: 300
+    implicitHeight: 30
+    y: 10
 
     property variant paramObject: model.object
 
@@ -16,11 +16,11 @@ Item {
     property bool mousePressed: false
 
     function updateXcursor() {
-        return ((sliderInput.text - paramObject.minimum) * barSlider.width) / (paramObject.maximum - paramObject.minimum);
+        return ((sliderInput.text - paramObject.minimum) * barSlider.width) / (paramObject.maximum - paramObject.minimum)
     }
 
     function updateTextValue() {
-        return (cursorSlider.x * (paramObject.maximum - paramObject.minimum)) / barSlider.width + paramObject.minimum;
+        return (cursorSlider.x * (paramObject.maximum - paramObject.minimum)) / barSlider.width + paramObject.minimum
     }
 
     // Title of the paramSlider
@@ -65,7 +65,7 @@ Item {
                 id: sliderInput
                 width: barSlider.width / 2
                 x: barSlider.width / 2 - width / 2
-                y:-8
+                y: -8
                 horizontalAlignment: TextInput.AlignHCenter
                 text: paramObject.value
                 font.family: "Helvetica"
@@ -74,40 +74,42 @@ Item {
                 font.bold: paramObject.hasChanged ? true : false
                 maximumLength: 8
                 color: activeFocus ? "white" : "grey"
-                selectByMouse : true
+                selectByMouse: true
 
-                /*validator: DoubleValidator {
-                  bottom: paramObject.minimum
-                  top: paramObject.maximum
-                  }*/
+                /*
+                validator: DoubleValidator {
+                    bottom: paramObject.minimum
+                    top: paramObject.maximum
+                }
+                */
 
                 onAccepted: {
                     if (sliderInput.text <= paramObject.maximum && sliderInput.text >= paramObject.minimum) {
                         paramObject.value = updateTextValue()
                         paramObject.pushValue(paramObject.value)
                     } else {
-                        paramObject.value = paramObject.getOldValue();
+                        paramObject.value = paramObject.getOldValue()
                     }
                 }
 
                 Component.onCompleted: {
-                    cursorSlider.x = updateXcursor();
+                    cursorSlider.x = updateXcursor()
                 }
 
                 onTextChanged: {
                     if (!mousePressed) {
                         // The doubleValidator is not as good as intValidator, so we need this test.
                         if (sliderInput.text <= paramObject.maximum && sliderInput.text >= paramObject.minimum) {
-                            cursorSlider.x = updateXcursor();
+                            cursorSlider.x = updateXcursor()
                         }
                     }
                 }
                 onActiveFocusChanged: {
                     if (sliderInput.text <= paramObject.maximum && sliderInput.text >= paramObject.minimum) {
-                        paramObject.value = updateTextValue();
-                        paramObject.pushValue(paramObject.value);
+                        paramObject.value = updateTextValue()
+                        paramObject.pushValue(paramObject.value)
                     } else {
-                        paramObject.value = paramObject.getOldValue();
+                        paramObject.value = paramObject.getOldValue()
                     }
                 }
 
@@ -160,8 +162,8 @@ Item {
                     anchors.fill: parent
                     drag.target: parent
                     drag.axis: Drag.XAxis
-                    drag.minimumX: 0 // - cursorSlider.width/2
-                    drag.maximumX: barSlider.width // - cursorSlider.width/2
+                    drag.minimumX: 0 // cursorSlider.width/2
+                    drag.maximumX: barSlider.width // cursorSlider.width/2
                     anchors.margins: -10 // Allow to have an area around the cursor which allows to select the cursor even if we are not exactly on it
 
                     onPressed: {
@@ -170,15 +172,15 @@ Item {
                         paramDouble.forceActiveFocus()
                     }
                     onReleased: {
-                        paramObject.value = updateTextValue();
-                        paramObject.pushValue(paramObject.value);
+                        paramObject.value = updateTextValue()
+                        paramObject.pushValue(paramObject.value)
                         mousePressed = false
                     }
                 }
 
                 onXChanged: {
                     if (mousePressed) {
-                        paramObject.value = updateTextValue();
+                        paramObject.value = updateTextValue()
                     }
                 }
             }

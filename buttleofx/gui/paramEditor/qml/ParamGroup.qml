@@ -12,6 +12,7 @@ Item {
 
     Row {
         spacing: 10
+
         Rectangle {
             width: 100
             height: 1

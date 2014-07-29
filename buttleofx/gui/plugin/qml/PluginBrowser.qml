@@ -64,12 +64,12 @@ ApplicationWindow {
                 property variant plugin
 
                 // onFocusChanged:{
-                //     if(searchPlugin.visible){
+                //     if (searchPlugin.visible) {
                 //         searchPlugin.focus= true
                 //     }
                 // }
                 // onVisibleChanged: {
-                //     if(searchPlugin.visible){
+                //     if (searchPlugin.visible) {
                 //         searchPlugin.focus= true
                 //     }
                 // }

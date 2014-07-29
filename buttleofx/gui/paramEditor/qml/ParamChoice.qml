@@ -6,7 +6,7 @@ Item {
     id: choiceList
     implicitWidth: 300
     implicitHeight: 30
-    y:5
+    y: 5
 
     property variant paramObject: model.object
     // property variant menuItems: paramObject.listValue
@@ -15,14 +15,13 @@ Item {
     visible: !paramObject.isSecret
     height: paramObject.isSecret ? 0 : implicitHeight
 
-    // Convert the qobjectlistmodel into a qml ListModel
+    // Convert the QObjectListmodel into a qml ListModel
     ListModel {
         id: menuItems
     }
 
     Component.onCompleted: {
-        for (var i = 0; i < paramObject.listValue.count; i++)
-        {
+        for (var i = 0; i < paramObject.listValue.count; i++) {
             menuItems.append( {text: paramObject.listValue.get(i)} )
         }
     }
@@ -37,10 +36,11 @@ Item {
             id: paramChoiceTitle
             text: paramObject.text + " : "
             color: "white"
-            y:5
+            y: 5
 
             // If param has been modified, title in bold font
             font.bold: paramObject.hasChanged ? true : false
+
             MouseArea {
                 anchors.fill: parent
                 acceptedButtons: Qt.RightButton
@@ -67,7 +67,7 @@ Item {
                     border.color: "#333"
                     radius: 3
 
-                    Image{
+                    Image {
                         id: arrow
                         source: "file:///" + _buttleData.buttlePath + "/gui/img/buttons/params/arrow.png"
                         y: 12

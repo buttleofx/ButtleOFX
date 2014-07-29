@@ -94,17 +94,19 @@ Rectangle {
 
             // Highlight parents of selected node
             var parentsToHighlight = _buttleData.getParentNodes()
-            for (var i=0; i<parentsToHighlight.count; ++i) {
+            for (var i = 0; i < parentsToHighlight.count; ++i) {
                 parentsToHighlight.get(i).isHighlighted = true
             }
         }
         onReleased: {
             var dropStatus = parent.Drag.drop()
-            //if (dropStatus !== Qt.IgnoreAction)
-            // left button : we end moving
+            // if (dropStatus !== Qt.IgnoreAction)
+            // Left button: we end moving
+
             if (mouse.button == Qt.LeftButton) {
-                _buttleManager.nodeManager.nodeMoved(m.nodeWrapper.name, qml_nodeRoot.x / graph.zoomCoeff, qml_nodeRoot.y / graph.zoomCoeff)
-            } else if (mouse.button == Qt.MidButton) { // middle button : assign the node to the viewer
+                _buttleManager.nodeManager.nodeMoved(m.nodeWrapper.name, qml_nodeRoot.x / graph.zoomCoeff,
+                                                     qml_nodeRoot.y / graph.zoomCoeff)
+            } else if (mouse.button == Qt.MidButton) { // Middle button: assign the node to the viewer
                 _buttleData.currentGraphIsGraph()
                 _buttleData.currentGraphWrapper = _buttleData.graphWrapper
                 _buttleData.currentViewerNodeWrapper = m.nodeWrapper
@@ -116,12 +118,11 @@ Rectangle {
             }
         }
 
-        // Double click : we change the current param node
+        // Double click: we change the current param node
         onDoubleClicked: {
-            aNodeIsSelected=true
+            aNodeIsSelected = true
             _buttleData.currentParamNodeWrapper = m.nodeWrapper
         }
-
     }
 
     DropArea {
@@ -156,6 +157,7 @@ Rectangle {
                 State {
                     name: "currentParamNode"
                     when: m.nodeWrapper == _buttleData.currentParamNodeWrapper
+
                     PropertyChanges {
                         target: nodeBorder
                         opacity: 1
@@ -165,6 +167,7 @@ Rectangle {
                     name: "highlightNode"
                     when: m.nodeWrapper.isHighlighted == true && m.nodeWrapper != _buttleData.currentParamNodeWrapper
                     // When: m.nodeWrapper == _buttleData.currentParamNodeWrapper
+
                     PropertyChanges {
                         target: nodeBorder
                         color: m.nodeWrapper.color
@@ -182,7 +185,7 @@ Rectangle {
         // inputClips
         Item {
             id: inputClipsItem
-            y: parent.height /2
+            y: parent.height / 2
             Layout.alignment: Qt.AlignVCenter | Qt.AlignLeft
 
             ListView {
@@ -204,7 +207,7 @@ Rectangle {
                         graphRoot: m.nodeRoot.graphRoot
                         nodeRoot: m.nodeRoot
                         clipSize: m.clipSize
-                        x:-10
+                        x: -10
                         readOnly: qml_nodeRoot.readOnly
                         miniatureScale: qml_nodeRoot.miniatureScale
                         miniatureState: qml_nodeRoot.miniatureState
@@ -214,7 +217,7 @@ Rectangle {
         }
 
         Item {
-            y: parent.height /2
+            y: parent.height / 2
             Layout.fillWidth: true
         }
 
@@ -222,7 +225,7 @@ Rectangle {
         Item {
             id: outputClipContainer
 
-            y: parent.height /2
+            y: parent.height / 2
             implicitWidth: childrenRect.width
             Layout.preferredWidth: childrenRect.width
             Layout.alignment: Qt.AlignVCenter | Qt.AlignRight
@@ -239,7 +242,7 @@ Rectangle {
                 graphRoot: m.nodeRoot.graphRoot
                 nodeRoot: m.nodeRoot
                 clipSize: m.clipSize
-                x:10
+                x: 10
                 readOnly: qml_nodeRoot.readOnly
                 miniatureScale: qml_nodeRoot.miniatureScale
                 miniatureState: qml_nodeRoot.miniatureState
@@ -255,7 +258,8 @@ Rectangle {
         color: "#bbbbbb"
         radius: 8
         clip: nodeText.isSelected ? false : true
-        Rectangle{
+
+        Rectangle {
             id: background
             anchors.fill: nodeText
             anchors.leftMargin: -4
@@ -282,7 +286,8 @@ Rectangle {
                 states: [
                     State {
                         name: "readerAndSrc"
-                        when: m.nodeWrapper.pluginContext == "OfxImageEffectContextReader" && m.nodeWrapper.params.get(0).value!= ""
+                        when: m.nodeWrapper.pluginContext == "OfxImageEffectContextReader" && m.nodeWrapper.params.get(0).value != ""
+
                         PropertyChanges {
                             target: nodeText
                             y: isSelected ? nodeWidth * zoomCoeff : nodeWidth * 0.65 * zoomCoeff
@@ -291,7 +296,9 @@ Rectangle {
                     },
                     State {
                         name: "notReaderOrReaderAndNoSrc"
-                        when: m.nodeWrapper.pluginContext != "OfxImageEffectContextReader" || (m.nodeWrapper.pluginContext == "OfxImageEffectContextReader" && m.nodeWrapper.params.get(0).value== "")
+                        when: m.nodeWrapper.pluginContext != "OfxImageEffectContextReader" ||
+                            (m.nodeWrapper.pluginContext == "OfxImageEffectContextReader" && m.nodeWrapper.params.get(0).value == "")
+
                         PropertyChanges {
                             target: nodeText
                             y: isSelected ? nodeWidth * 0.5 * zoomCoeff : 0
@@ -302,8 +309,8 @@ Rectangle {
             }
 
             // onTextChanged: {
-            //     m.nodeWrapper.fitWidth(nodeText.width);
-            //     // _buttleData.graphWrapper.updateConnectionsCoord(m.nodeWrapper);
+            //     m.nodeWrapper.fitWidth(nodeText.width)
+            //     // _buttleData.graphWrapper.updateConnectionsCoord(m.nodeWrapper)
             // }
 
             Connections {
@@ -313,6 +320,7 @@ Rectangle {
                     nodeText.isSelected = _buttleData.nodeIsSelected(m.nodeWrapper)
                 }
             }
+
             color: isSelected ? m.nodeWrapper.color : "black"
         }
 
@@ -322,7 +330,7 @@ Rectangle {
             height: miniatureState ? nodeWidth * 0.5 * zoomCoeff * miniatureScale : nodeWidth * 0.5 * zoomCoeff
             x: miniatureState ? nodeWidth * 0.05 * zoomCoeff * miniatureScale : nodeWidth * 0.05 * zoomCoeff
             y: miniatureState ? nodeWidth * 0.05 * zoomCoeff * miniatureScale : nodeWidth * 0.05 * zoomCoeff
-            radius : 2
+            radius: 2
             state: "normal"
             color: "transparent"
             visible: miniatureState ? false : true
@@ -340,16 +348,18 @@ Rectangle {
                     State {
                         name: "reader"
                         when: m.nodeWrapper.pluginContext == "OfxImageEffectContextReader" && m.nodeWrapper.params.get(0).value!= ""
+
                         PropertyChanges {
-                            target: miniPicture;
+                            target: miniPicture
                             source: 'image://buttleofx/' + m.nodeWrapper.params.get(0).value
                         }
                     },
                     State {
                         name: "notReader"
                         when: m.nodeWrapper.pluginContext != "OfxImageEffectContextReader"
+
                         PropertyChanges {
-                            target: miniPicture;
+                            target: miniPicture
                             source: ""
                         }
                     }
@@ -357,8 +367,6 @@ Rectangle {
             }
         }
     }
-
-
 
     Rectangle {
         id: deadMosquito
@@ -381,16 +389,18 @@ Rectangle {
                 State {
                     name: "normal"
                     when: m.nodeWrapper != _buttleData.currentViewerNodeWrapper
+
                     PropertyChanges {
-                        target: deadMosquitoImage;
+                        target: deadMosquitoImage
                         source: ""
                     }
                 },
                 State {
                     name: "currentViewerNode"
                     when: m.nodeWrapper == _buttleData.currentViewerNodeWrapper
+
                     PropertyChanges {
-                        target: deadMosquitoImage;
+                        target: deadMosquitoImage
                         source: "file:///" + _buttleData.buttlePath + "/gui/img/mosquito/mosquito_dead.png"
                     }
                 }
@@ -398,20 +408,22 @@ Rectangle {
         }
     }
 
-    /*StateGroup {
-      id: stateMoving
-      state: "normal"
-      states: [
-      State {
-      name: "normal"
-      PropertyChanges { target: m.nodeRoot; x: m.nodeWrapper.coord.x; y: m.nodeWrapper.coord.y }
-      },
-      State {
-      name: "moving"
-      PropertyChanges { target: m.nodeRoot; x: m.nodeWrapper.coord.x; y: m.nodeWrapper.coord.y }
-      }
-      ]
-      }*/
+    /*
+    StateGroup {
+        id: stateMoving
+        state: "normal"
+        states: [
+            State {
+                name: "normal"
+                PropertyChanges { target: m.nodeRoot; x: m.nodeWrapper.coord.x; y: m.nodeWrapper.coord.y }
+            },
+            State {
+                name: "moving"
+                PropertyChanges { target: m.nodeRoot; x: m.nodeWrapper.coord.x; y: m.nodeWrapper.coord.y }
+            }
+        ]
+    }
+    */
 
     StateGroup {
         id: statePressed
@@ -424,6 +436,7 @@ Rectangle {
             State {
                 name: "miniature"
                 when: miniatureState
+
                 PropertyChanges {
                     target: m.nodeRoot
                     x: ((m.nodeWrapper.coord.x * graphContainer.width) / qml_graphRoot.width) * miniatureScale

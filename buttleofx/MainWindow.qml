@@ -233,6 +233,19 @@ ApplicationWindow {
             title: "File"
 
             MenuItem {
+                text: "New"
+                shortcut: "Ctrl+N"
+                onTriggered: {
+                    if(!_buttleData.graphCanBeSaved){
+                        _buttleData.newData()
+                    }
+                    else{
+                        newGraph.open()
+                    }
+                }
+            }
+
+            MenuItem {
                 text: "Open"
                 shortcut: "Ctrl+O"
                 onTriggered: {

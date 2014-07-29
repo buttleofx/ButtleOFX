@@ -997,9 +997,10 @@ class ButtleData(QtCore.QObject):
         """
             Create a new graph
         """
-        self.urlOfFileToSave = ""
         self.graphWrapper.deleteGraphWrapper()
         CommandManager().clean()
+        self.setUrlOfFileToSave("")
+        self.setGraphCanBeSaved(False)
 
     ############################################### Data exposed to QML ###############################################
 

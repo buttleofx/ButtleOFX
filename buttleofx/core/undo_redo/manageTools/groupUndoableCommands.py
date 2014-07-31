@@ -1,7 +1,3 @@
-#!/usr/bin/env python
-# -*-coding:utf-8-*
-
-
 class GroupUndoableCommands:
     """
     Group of objects saved in the Command Manager.
@@ -11,36 +7,17 @@ class GroupUndoableCommands:
 
     def __init__(self, commands, label):
         self.groupUndoableCommands = commands
-        if label != "" :
+        if label != "":
             self.label = label
-        else :
+        else:
             self.label = "Undocumented Command"
 
-        for command in commands :
+        for command in commands:
             self.label += " '" + command.getLabel() + "' "
 
+    # ######################################## Methods private to this class ####################################### #
 
-    def undoCmd(self):
-        """
-        Executes the user request (ctrl Z) (undo a group of commands).
-        """
-        for command in self.groupUndoableCommands:
-            command.undoCmd()
-
-    def redoCmd(self):
-        """
-        Undoes the operations performed by undoCmd method.
-        """
-        self.doCmd()
-
-    def doCmd(self):
-        """
-        Executes the user request (the groupe of functions).
-        Returns nothing : maybe need to be improved in the future (list of return value of each command ?).
-        """
-        for command in self.groupUndoableCommands:
-            command.doCmd()
-        return
+    # ## Getters ## #
 
     def getLabel(self):
         """
@@ -48,3 +25,26 @@ class GroupUndoableCommands:
         """
         return self.label
 
+    # ## Others ## #
+
+    def doCmd(self):
+        """
+        Executes the user request (the group of functions).
+        Returns nothing, maybe need to be improved in the future (list of return value of each command?).
+        """
+        for command in self.groupUndoableCommands:
+            command.doCmd()
+        return
+
+    def redoCmd(self):
+        """
+        Undoes the operations performed by undoCmd method.
+        """
+        self.doCmd()
+
+    def undoCmd(self):
+        """
+        Executes the user request (Ctrl Z) (undo a group of commands).
+        """
+        for command in self.groupUndoableCommands:
+            command.undoCmd()

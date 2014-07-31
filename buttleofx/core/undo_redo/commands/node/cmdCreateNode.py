@@ -1,10 +1,7 @@
 from PyQt5 import QtCore
-# Tuttle
 from pyTuttle import tuttle
-# undo_redo
-from buttleofx.core.undo_redo.manageTools import UndoableCommand
-# core
 from buttleofx.core.graph.node import Node
+from buttleofx.core.undo_redo.manageTools import UndoableCommand
 
 
 class CmdCreateNode(UndoableCommand):
@@ -25,29 +22,17 @@ class CmdCreateNode(UndoableCommand):
         self._nodeType = nodeType
         self._nodeCoord = (x, y)
 
+    # ######################################## Methods private to this class ####################################### #
+
+    # ## Getters ## #
+
+    def getLabel(self):
+        return "Create node '{0}'".format(self._nodeName)
+
     def getNodeName(self):
         return self._nodeName
 
-    def undoCmd(self):
-        """
-            Undoes the creation of the node.
-        """
-        # The tuttle node is not deleted. We keep it so we don't need to recreate it when the redo command is called.
-        node = self._graphTarget.getNode(self._nodeName)
-        self._graphTarget.getNodes().remove(node)
-
-        # emit nodesChanged signal
-        self._graphTarget.nodesChanged()
-
-    def redoCmd(self):
-        """
-            Redoes the creation of the node.
-        """
-        # We don't have to recreate the connections because when a node is created, it can't have connections !
-        self._graphTarget.getNodes().append(self._node)
-
-        # emit nodesChanged signal
-        self._graphTarget.nodesChanged()
+    # ## Others ## #
 
     def doCmd(self):
         """
@@ -61,19 +46,39 @@ class CmdCreateNode(UndoableCommand):
         self._node = Node(self._nodeName, self._nodeType, self._nodeCoord, tuttleNode)
         self._graphTarget._nodes.append(self._node)
 
-        # connect each param to the node
+        # Connect each param to the node
         for param in self._node.getParams():
             if param.paramChanged is not None:
-                # warn the node that one of his param just changed
+                # Warn the node that one of his param just changed
                 param.paramChanged.connect(self._node.emitNodeContentChanged)
 
-        # emit nodesChanged signal
+        # Emit nodesChanged signal
         self._graphTarget.nodesChanged()
 
-        # return the buttle node
+        # Return the buttle node
         return self._node
 
-    def getLabel(self):
-        return "Create node '%s'" % self._nodeName
+    def redoCmd(self):
+        """
+            Redoes the creation of the node.
+        """
+        # We don't have to recreate the connections because when a node is created, it can't have connections !
+        self._graphTarget.getNodes().append(self._node)
+
+        # Emit nodesChanged signal
+        self._graphTarget.nodesChanged()
+
+    def undoCmd(self):
+        """
+            Undoes the creation of the node.
+        """
+        # The tuttle node is not deleted. We keep it so we don't need to recreate it when the redo command is called.
+        node = self._graphTarget.getNode(self._nodeName)
+        self._graphTarget.getNodes().remove(node)
+
+        # Emit nodesChanged signal
+        self._graphTarget.nodesChanged()
+
+    # ############################################# Data exposed to QML ############################################# #
 
     nodeName = QtCore.pyqtProperty(str, getNodeName, constant=True)

@@ -1,6 +1,3 @@
-#!/usr/bin/env python
-# -*-coding:utf-8-*
-
 from core.undo_redo.tests.Vec2d.vec2d import Vec2d
 
 
@@ -11,22 +8,24 @@ class CmdAdditionVec2d():
 
     def __init__(self, vec2d_target, vec2d_add):
         """
-            Iinitializes the member variables :
-            vec2d_target is the target vector wich will be changed by the addition
-            vec2d_add is the vector wich will be added to the target
-            vec2d_old is the old value of the target vector, wich will be used for reset the target in case of undo command
+            Initializes the member variables :
+            vec2d_target is the target vector which will be changed by the addition
+            vec2d_add is the vector which will be added to the target
+            vec2d_old is the old value of the target vector, which will be used to reset
+            the target in case of undo command
         """
         self.vec2dTarget = vec2d_target
         self.vec2dAdd = vec2d_add
         self.vec2dOld = Vec2d(vec2d_target.x, vec2d_target.y)
 
-    def undoCmd(self):
+    # ######################################## Methods private to this class ####################################### #
+
+    def doCmd(self):
         """
-            Undoes the addition of the vectors.
-            The target vector is reset with the old coordinates.
+            Executes the addition of the vectors.
         """
-        self.vec2dTarget.x = self.vec2dOld.x
-        self.vec2dTarget.y = self.vec2dOld.y
+        self.vec2dTarget.x += self.vec2dAdd.x
+        self.vec2dTarget.y += self.vec2dAdd.y
         return self.vec2dTarget
 
     def redoCmd(self):
@@ -35,10 +34,11 @@ class CmdAdditionVec2d():
         """
         return self.doCmd()
 
-    def doCmd(self):
+    def undoCmd(self):
         """
-            Executes the addition of the vectors.
+            Undoes the addition of the vectors.
+            The target vector is reset with the old coordinates.
         """
-        self.vec2dTarget.x += self.vec2dAdd.x
-        self.vec2dTarget.y += self.vec2dAdd.y
+        self.vec2dTarget.x = self.vec2dOld.x
+        self.vec2dTarget.y = self.vec2dOld.y
         return self.vec2dTarget

@@ -1,4 +1,3 @@
-# quickmamba
 from quickmamba.patterns import Signal
 
 
@@ -9,23 +8,26 @@ class Param:
         - _tuttleParam : the tuttle Param.
         - _paramChanged : signal emitted when we set value(s) of the param.
     """
+
     def __init__(self, tuttleParam):
-        # the tuttle param
+        # The tuttle param
         self._tuttleParam = tuttleParam
 
-        # signal
+        # Signal
         self.paramChanged = Signal()
 
-    #################### getters ####################
+    # ######################################## Methods private to this class ####################################### #
 
-    def getTuttleParam(self):
-        return self._tuttleParam
-    
-    def getParamType(self):
+    # ## Getters ## #
+
+    def getDefaultValue(self):
         """
             Virtual function.
-            Returns the type of the param.
+            Returns the default value(s) of the param.
         """
+
+    def getName(self):
+        return self._tuttleParam.getName()
 
     def getParamDoc(self):
         """
@@ -33,8 +35,11 @@ class Param:
             Returns the doc of the param.
         """
 
-    def getName(self):
-        return self._tuttleParam.getName()
+    def getParamType(self):
+        """
+            Virtual function.
+            Returns the type of the param.
+        """
 
     def getText(self):
         """
@@ -42,14 +47,8 @@ class Param:
         """
         return self._tuttleParam.getName()[0].capitalize() + self._tuttleParam.getName()[1:]
 
-    def isSecret(self):
-        return self._tuttleParam.getSecret()
-
-    def getDefaultValue(self):
-        """
-            Virtual function.
-            Returns the default value(s) of the param.
-        """
+    def getTuttleParam(self):
+        return self._tuttleParam
 
     def getValue(self):
         """
@@ -63,23 +62,26 @@ class Param:
             Set the tuttle value(s) of the param (but do not push a command in the CommandManager.
         """
 
-    ######## SAVE / LOAD ########
-
-    def object_to_dict(self):
-        """
-            Convert the param to a dictionary of his representation.
-            We do not save param which had not been changed.
-        """
-        if (self.getValue() == self.getDefaultValue()):
-            return None
-        param = {
-            "name": self.getName(),
-            "value": self.getValue()
-        }
-        return param
+    # ## Others ## #
 
     def dict_to_object(self, paramData):
         """
             Set all values of the param, from a dictionary.
         """
         self.setValue(paramData["value"])
+
+    def isSecret(self):
+        return self._tuttleParam.getSecret()
+
+    def object_to_dict(self):
+        """
+            Convert the param to a dictionary of his representation.
+            We do not save param which had not been changed.
+        """
+        if self.getValue() == self.getDefaultValue():
+            return None
+        param = {
+            "name": self.getName(),
+            "value": self.getValue()
+        }
+        return param

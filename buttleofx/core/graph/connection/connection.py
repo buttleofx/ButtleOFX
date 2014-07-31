@@ -1,5 +1,4 @@
 import logging
-# quickmamba
 from quickmamba.patterns import Signal
 
 
@@ -23,46 +22,29 @@ class Connection(object):
     def __init__(self, clipOut, clipIn, tuttleConnection):
         super(Connection, self).__init__()
 
-        # tuttle connection
+        # Tuttle connection
         self._tuttleConnection = tuttleConnection
 
-        # buttle data
+        # Buttle data
         self._id = clipOut.getId() + " => " + clipIn.getId()
         self._clipOut = clipOut
         self._clipIn = clipIn
 
-        # signal
+        # Signal
         self.connectionClipOutChanged = Signal()
         self.connectionClipInChanged = Signal()
 
         logging.info("Core : Connection created")
 
-    def __str__(self):
-        str_list = []
+    # ######################################## Methods private to this class ####################################### #
 
-        str_list.append("Connection : ")
-        str_list.append(self._clipOut.__str__())
-        str_list.append(" => ")
-        str_list.append(self._clipIn.__str__())
-
-        return "".join(str_list)
-
-    def __del__(self):
-        logging.info("Core : Connection deleted")
-
-    ######## getters ########
-
-    def getTuttleConnection(self):
-        return self._tuttleConnection
-
-    def getId(self):
-        return self._id
-
-    def getClipOut(self):
-        return self._clipOut
+    # ## Getters ## #
 
     def getClipIn(self):
         return self._clipIn
+
+    def getClipOut(self):
+        return self._clipOut
 
     def getConcernedNodes(self):
         """
@@ -73,7 +55,13 @@ class Connection(object):
         nameOfConcernedNodes.append(self._clipIn.getNodeName())
         return nameOfConcernedNodes
 
-    ######## setters ########
+    def getId(self):
+        return self._id
+
+    def getTuttleConnection(self):
+        return self._tuttleConnection
+
+    # ## Setters ## #
 
     def setClipOut(self, clipOut):
         self._clipOut = clipOut
@@ -86,7 +74,7 @@ class Connection(object):
     def setTuttleConnection(self, tuttleConnection):
         self._tuttleConnection = tuttleConnection
 
-    ######## SAVE  ########
+    # ## Others ## #
 
     def object_to_dict(self):
         """
@@ -98,3 +86,16 @@ class Connection(object):
             "clipIn": self._clipIn.object_to_dict()
         }
         return connection
+
+    def __del__(self):
+        logging.info("Core : Connection deleted")
+
+    def __str__(self):
+        str_list = []
+
+        str_list.append("Connection : ")
+        str_list.append(self._clipOut.__str__())
+        str_list.append(" => ")
+        str_list.append(self._clipIn.__str__())
+
+        return "".join(str_list)

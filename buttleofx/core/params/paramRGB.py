@@ -1,4 +1,3 @@
-# common
 from buttleofx.core.params import Param
 
 
@@ -9,14 +8,10 @@ class ParamRGB(Param):
 
     def __init__(self, tuttleParam):
         Param.__init__(self, tuttleParam)
-        
-    #################### getters ####################
 
-    def getParamType(self):
-        return "ParamRGB"
+    # ######################################## Methods private to this class ####################################### #
 
-    def getParamDoc(self):
-        return self._tuttleParam.getProperties().getStringProperty("OfxParamPropHint")
+    # ## Getters ## #
 
     def getDefaultR(self):
         return self._tuttleParam.getDoubleValueAtIndex(0)
@@ -30,6 +25,18 @@ class ParamRGB(Param):
     def getDefaultValue(self):
         return (self.getDefaultR(), self.getDefaultG(), self.getDefaultB())
 
+    def getParamDoc(self):
+        return self._tuttleParam.getProperties().getStringProperty("OfxParamPropHint")
+
+    def getParamType(self):
+        return "ParamRGB"
+
+    def getText(self):
+        return self._tuttleParam.getName()[0].capitalize() + self._tuttleParam.getName()[1:]
+
+    def getValue(self):
+        return (self.getValueR(), self.getValueG(), self.getValueB())
+
     def getValueR(self):
         return self._tuttleParam.getDoubleValueAtIndex(0)
 
@@ -39,13 +46,7 @@ class ParamRGB(Param):
     def getValueB(self):
         return self._tuttleParam.getDoubleValueAtIndex(2)
 
-    def getValue(self):
-        return (self.getValueR(), self.getValueG(), self.getValueB())
-
-    def getText(self):
-        return self._tuttleParam.getName()[0].capitalize() + self._tuttleParam.getName()[1:]
-
-    #################### setters ####################
+    # ## Setters ## #
 
     def setValue(self, values):
         self._tuttleParam.setValueAtIndex(0, values[0])

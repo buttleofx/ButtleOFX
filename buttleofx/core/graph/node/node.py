@@ -1,15 +1,13 @@
+import json
 import logging
 from PyQt5 import QtGui
-# to parse
-import json
-# Tuttle
 from buttleofx.data import tuttleTools
-# Quickmamba
 from quickmamba.patterns import Signal
-# paramEditor
-from buttleofx.core.params import ParamInt, ParamInt2D, ParamInt3D, ParamString, ParamDouble, ParamDouble2D, ParamBoolean, ParamDouble3D, ParamChoice, ParamPushButton, ParamRGBA, ParamRGB, ParamGroup, ParamPage
-# event
 from buttleofx.event import ButtleEventSingleton
+from buttleofx.core.params import (ParamInt, ParamInt2D, ParamInt3D, ParamString, ParamDouble, ParamDouble2D,
+                                   ParamBoolean, ParamDouble3D, ParamChoice, ParamPushButton, ParamRGBA, ParamRGB,
+                                   ParamGroup, ParamPage)
+
 
 mapTuttleParamToButtleParam = {
     "OfxParamTypeInteger": ParamInt,
@@ -23,7 +21,7 @@ mapTuttleParamToButtleParam = {
     "OfxParamTypeDouble3D": ParamDouble3D,
     "OfxParamTypeInteger3D": ParamInt3D,
     "OfxParamTypeString": ParamString,
-    #"OfxParamTypeCustom": ParamCustom,
+    # "OfxParamTypeCustom": ParamCustom,
     "OfxParamTypeGroup": ParamGroup,
     "OfxParamTypePage": ParamPage,
     "OfxParamTypePushButton": ParamPushButton
@@ -54,42 +52,49 @@ class Node(object):
             - nodeContentChanged : a signal emited when one of the params of the node changed
     """
 
-    def __init__(self, nodeName, nodeType, nodeCoord, tuttleNode):    
+    def __init__(self, nodeName, nodeType, nodeCoord, tuttleNode):
         super(Node, self).__init__()
 
-        # tuttle node
+        # Tuttle node
         self._tuttleNode = tuttleNode
 
-        # buttle data
-        self._name = nodeName  # useful for us inside buttle (same id as tuttle)
-        self._nameUser = nodeName.strip('tuttle.')  # the name visible for the user
+        # Buttle data
+        self._name = nodeName  # Useful for us inside buttle (same id as tuttle)
+        self._nameUser = nodeName.strip('tuttle.')  # The name visible for the user
         self._type = nodeType
         self._coord = nodeCoord
         self._oldCoord = nodeCoord
         self._color = (0, 178, 161)
         self._nbInput = self._tuttleNode.asImageEffectNode().getClipImageSet().getNbClips() - 1
-        self._clipWrappers = [clip.getName() for clip in self._tuttleNode.asImageEffectNode().getClipImageSet().getClips()]
+        self._clipWrappers = [clip.getName() for clip in
+                              self._tuttleNode.asImageEffectNode().getClipImageSet().getClips()]
 
-        # buttle params
+        # Buttle params
         self._params = []
         for param in range(self._tuttleNode.asImageEffectNode().getNbParams()):
             tuttleParam = self._tuttleNode.asImageEffectNode().getParam(param)
-            self._params.append(mapTuttleParamToButtleParam[tuttleParam.getProperties().fetchProperty("OfxParamPropType").getStringValue(0)](tuttleParam))
+            self._params.append(mapTuttleParamToButtleParam[
+                tuttleParam.getProperties().fetchProperty("OfxParamPropType").getStringValue(0)](tuttleParam))
 
-        # signals
+        # Signals
         self.nodeLookChanged = Signal()
         self.nodePositionChanged = Signal()
         self.nodeContentChanged = Signal()
 
         logging.info("Core : Node created")
 
-    def __str__(self):
-        return 'Node ' + self.getName()
+    # ######################################## Methods private to this class ####################################### #
 
-    def __del__(self):
-        logging.info("Core : Node deleted")
+    # ## Getters ## #
 
-    ######## getters ########
+    def getClips(self):
+        return self._clipWrappers
+
+    def getColor(self):
+        return self._color
+
+    def getCoord(self):
+        return self._coord
 
     def getName(self):
         return str(self._name)
@@ -97,32 +102,17 @@ class Node(object):
     def getNameUser(self):
         return str(self._nameUser)
 
-    def getType(self):
-        return str(self._type)
-
-    def getCoord(self):
-        return self._coord
+    def getNbInput(self):
+        return self._nbInput
 
     def getOldCoord(self):
         return self._oldCoord
 
-    def getColor(self):
-        return self._color
-
-    def getNbInput(self):
-        return self._nbInput
-
-    def getClips(self):
-        return self._clipWrappers
-
     def getParams(self):
         return self._params
 
-    def getTuttleNode(self):
-        return self._tuttleNode
-
-    def getPluginVersion(self):
-        return self._tuttleNode.getVersionStr()
+    def getPluginContext(self):
+        return self._tuttleNode.getProperties().getStringProperty("OfxImageEffectPropContext")
 
     def getPluginDescription(self):
         return self._tuttleNode.getProperties().getStringProperty("OfxPropPluginDescription")
@@ -130,11 +120,31 @@ class Node(object):
     def getPluginGroup(self):
         return self._tuttleNode.getProperties().getStringProperty("OfxImageEffectPluginPropGrouping")
 
-    def getPluginContext(self):
-        return self._tuttleNode.getProperties().getStringProperty("OfxImageEffectPropContext")
+    def getPluginVersion(self):
+        return self._tuttleNode.getVersionStr()
 
+    def getType(self):
+        return str(self._type)
 
-    ######## setters ########
+    def getTuttleNode(self):
+        return self._tuttleNode
+
+    # ## Setters ## #
+
+    def setClips(self, clips):
+        self._clipWrappers = clips
+
+    def setColor(self, color):
+        self._color = color
+        self.nodeLookChanged()
+
+    def setColorRGB(self, r, g, b):
+        self._color = (r, g, b)
+        self.nodeLookChanged()
+
+    def setCoord(self, x, y):
+        self._coord = (x, y)
+        self.nodePositionChanged()
 
     def setName(self, name):
         self._name = name
@@ -143,46 +153,14 @@ class Node(object):
         self._nameUser = nameUser
         self.nodeLookChanged()
 
-    def setCoord(self, x, y):
-        self._coord = (x, y)
-        self.nodePositionChanged()
-
     def setOldCoord(self, x, y):
         self._oldCoord = (x, y)
 
-    def setColorRGB(self, r, g, b):
-        self._color = (r, g, b)
-        self.nodeLookChanged()
-
-    def setColor(self, color):
-        self._color = color
-        self.nodeLookChanged()
-
-    def setClips(self, clips):
-        self._clipWrappers = clips
-
-    ######## emit signal ########
-
-    def emitNodeContentChanged(self):
-        """
-            If necessary, call emitOneParamChangedSignal, to warn buttleEvent that a param just changed (to update the viewer)
-            Also emit nodeContentChanged signal, to warn the node wrapper that a param just changed (for property si secret of other params for example !)
-        """
-        from buttleofx.data import ButtleDataSingleton
-        buttleData = ButtleDataSingleton().get()
-        if (self._name == buttleData.getCurrentViewerNodeName()):
-            # to buttleEvent
-            buttleEvent = ButtleEventSingleton().get()
-            buttleEvent.emitOneParamChangedSignal()
-
-        # to the node wrapper
-        self.nodeContentChanged()
-
-    ######## SAVE / LOAD ########
+    # ## Others ## #
 
     def object_to_dict(self):
         """
-            Convert the node to a dictionary of his representation.
+            Convert the node to a dictionary of its representation.
         """
         node = {
             "name": self._name,
@@ -195,6 +173,7 @@ class Node(object):
             },
             "params": []
         }
+
         for param in self.getParams():
             paramDict = param.object_to_dict()
             if paramDict is not None:
@@ -211,8 +190,31 @@ class Node(object):
         self.setColor(nodeData["uiParams"]["color"])
         self.setNameUser(nodeData["uiParams"]["nameUser"])
 
-        # params
+        # Params
         for param in self.getParams():
             for paramData in nodeData["params"]:
                 if param.getName() == paramData["name"]:
                     param.dict_to_object(paramData)
+
+    def emitNodeContentChanged(self):
+        """
+            If necessary, call emitOneParamChangedSignal, to warn buttleEvent that a param just
+            changed (to update the viewer). Also emit nodeContentChanged signal, to warn the node
+            wrapper that a param just changed (for properties of other params for example!)
+        """
+        from buttleofx.data import ButtleDataSingleton
+        buttleData = ButtleDataSingleton().get()
+
+        if self._name == buttleData.getCurrentViewerNodeName():
+            # To buttleEvent
+            buttleEvent = ButtleEventSingleton().get()
+            buttleEvent.emitOneParamChangedSignal()
+
+        # To the node wrapper
+        self.nodeContentChanged()
+
+    def __str__(self):
+        return 'Node ' + self.getName()
+
+    def __del__(self):
+        logging.info("Core : Node deleted")

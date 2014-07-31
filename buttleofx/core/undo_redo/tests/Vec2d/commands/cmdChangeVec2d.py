@@ -1,7 +1,3 @@
-#!/usr/bin/env python
-# -*-coding:utf-8-*
-
-
 class CmdChangeVec2d():
     """
         Command which enable us to change the coordinates of a Vector2d
@@ -14,12 +10,14 @@ class CmdChangeVec2d():
         self.oldX = vec2d_target.x
         self.oldY = vec2d_target.y
 
-    def undoCmd(self):
+    # ######################################## Methods private to this class ####################################### #
+
+    def doCmd(self):
         """
-            Undoes the vector's change
+            Executes the vector's change
         """
-        self.vec2dTarget.x = self.oldX
-        self.vec2dTarget.y = self.oldY
+        self.vec2dTarget.x = self.newX
+        self.vec2dTarget.y = self.newY
         return self.vec2dTarget
 
     def redoCmd(self):
@@ -28,10 +26,10 @@ class CmdChangeVec2d():
         """
         return self.doCmd()
 
-    def doCmd(self):
+    def undoCmd(self):
         """
-            Executes the vector's change
+            Undoes the vector's change
         """
-        self.vec2dTarget.x = self.newX
-        self.vec2dTarget.y = self.newY
+        self.vec2dTarget.x = self.oldX
+        self.vec2dTarget.y = self.oldY
         return self.vec2dTarget

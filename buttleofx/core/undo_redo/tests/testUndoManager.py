@@ -1,9 +1,6 @@
-#!/usr/bin/env python
-# -*-coding:utf-8-*
-
 from Vec2d import Vec2d
-from Vec2d.commands import CmdAdditionVec2d
 from Vec2d.commands import CmdChangeVec2d
+from Vec2d.commands import CmdAdditionVec2d
 
 from core.undo_redo.ManageTools import CommandManager
 from core.undo_redo.ManageTools import GroupUndoableCommands
@@ -20,8 +17,8 @@ def testVec2DCmds():
 
     assert cmdManager.countUndo() == 0
     assert cmdManager.countRedo() == 0
-    assert cmdManager.canUndo() == False
-    assert cmdManager.canRedo() == False
+    assert cmdManager.canUndo() is False
+    assert cmdManager.canRedo() is False
     assert v1.x == 1
     assert v1.y == 2
     assert v2.x == 3
@@ -29,12 +26,12 @@ def testVec2DCmds():
     assert v3.x == 0
     assert v3.y == 1
 
-    # push the addition command
+    # Push the addition command
     cmdAddition = CmdAdditionVec2d.CmdAdditionVec2d(v1, v2)
     cmdManager.push(cmdAddition)
 
     # cmdManager.getCommands()[0].runDo()
-    # the addition command is at 0 on the list of commands (CmdManager.commands)
+    # The addition command is at 0 on the list of commands (CmdManager.commands)
     assert cmdManager.count() == 1
     assert cmdManager.countUndo() == 1
     assert cmdManager.countRedo() == 0
@@ -45,12 +42,12 @@ def testVec2DCmds():
     assert v3.x == 0
     assert v3.y == 1
 
-    # push the addition command
+    # Push the addition command
     cmdAddition = CmdAdditionVec2d.CmdAdditionVec2d(v2, v2)
     cmdManager.push(cmdAddition)
 
     # cmdManager.getCommands()[0].runDo()
-    # the addition command is at 0 on the list of commands (CmdManager.commands)
+    # The addition command is at 0 on the list of commands (CmdManager.commands)
     assert cmdManager.count() == 2
     assert cmdManager.countUndo() == 2
     assert cmdManager.countRedo() == 0
@@ -61,9 +58,9 @@ def testVec2DCmds():
     assert v3.x == 0
     assert v3.y == 1
 
-    #undo the addition command
-    assert cmdManager.canUndo() == True
-    assert cmdManager.canRedo() == False
+    # Undo the addition command
+    assert cmdManager.canUndo() is True
+    assert cmdManager.canRedo() is False
     cmdManager.undo()
     assert cmdManager.count() == 2
     assert cmdManager.countUndo() == 1
@@ -75,9 +72,9 @@ def testVec2DCmds():
     assert v3.x == 0
     assert v3.y == 1
 
-    #undo the addition command
-    assert(cmdManager.canUndo()) == True
-    assert(cmdManager.canRedo()) == True
+    # Undo the addition command
+    assert cmdManager.canUndo() is True
+    assert cmdManager.canRedo() is True
     cmdManager.undo()
     assert cmdManager.count() == 2
     assert cmdManager.countUndo() == 0
@@ -89,9 +86,9 @@ def testVec2DCmds():
     assert v3.x == 0
     assert v3.y == 1
 
-    #undo the addition command
-    assert(cmdManager.canUndo()) == False
-    assert(cmdManager.canRedo()) == True
+    # Undo the addition command
+    assert cmdManager.canUndo() is False
+    assert cmdManager.canRedo() is True
     cmdManager.undo()
     assert cmdManager.count() == 2
     assert cmdManager.countUndo() == 0
@@ -103,9 +100,9 @@ def testVec2DCmds():
     assert v3.x == 0
     assert v3.y == 1
 
-    #redo the addition command
-    assert(cmdManager.canUndo()) == False
-    assert(cmdManager.canRedo()) == True
+    # Redo the addition command
+    assert cmdManager.canUndo() is False
+    assert cmdManager.canRedo() is True
     cmdManager.redo()
     assert cmdManager.count() == 2
     assert cmdManager.countUndo() == 1
@@ -117,9 +114,9 @@ def testVec2DCmds():
     assert v3.x == 0
     assert v3.y == 1
 
-    #redo the addition command
-    assert(cmdManager.canUndo()) == True
-    assert(cmdManager.canRedo()) == True
+    # Redo the addition command
+    assert cmdManager.canUndo() is True
+    assert cmdManager.canRedo() is True
     cmdManager.redo()
     assert cmdManager.count() == 2
     assert cmdManager.countUndo() == 2
@@ -131,9 +128,9 @@ def testVec2DCmds():
     assert v3.x == 0
     assert v3.y == 1
 
-    #redo
-    assert(cmdManager.canUndo()) == True
-    assert(cmdManager.canRedo()) == False
+    # Redo
+    assert cmdManager.canUndo() is True
+    assert cmdManager.canRedo() is False
     cmdManager.redo()
     assert cmdManager.count() == 2
     assert cmdManager.countUndo() == 2
@@ -145,8 +142,8 @@ def testVec2DCmds():
     assert v3.x == 0
     assert v3.y == 1
 
-    assert(cmdManager.canUndo()) == True
-    assert(cmdManager.canRedo()) == False
+    assert cmdManager.canUndo() is True
+    assert cmdManager.canRedo() is False
     cmdManager.undo()
     assert cmdManager.count() == 2
     assert cmdManager.countUndo() == 1
@@ -158,7 +155,7 @@ def testVec2DCmds():
     assert v3.x == 0
     assert v3.y == 1
 
-    # push a group of addition commands :
+    # Push a group of addition commands :
     groupeCmds = GroupUndoableCommands.GroupUndoableCommands([
         CmdAdditionVec2d.CmdAdditionVec2d(v1, v3),
         CmdAdditionVec2d.CmdAdditionVec2d(v1, v3),
@@ -175,9 +172,9 @@ def testVec2DCmds():
     assert v3.x == 0
     assert v3.y == 1
 
-    #undo the group of addition commands
-    assert(cmdManager.canUndo()) == True
-    assert(cmdManager.canRedo()) == False
+    # Undo the group of addition commands
+    assert cmdManager.canUndo() is True
+    assert cmdManager.canRedo() is False
     cmdManager.undo()
     assert cmdManager.count() == 2
     assert cmdManager.countUndo() == 1
@@ -189,8 +186,8 @@ def testVec2DCmds():
     assert v3.x == 0
     assert v3.y == 1
 
-    assert(cmdManager.canUndo()) == True
-    assert(cmdManager.canRedo()) == True
+    assert cmdManager.canUndo() is True
+    assert cmdManager.canRedo() is True
     cmdManager.undo()
     assert cmdManager.count() == 2
     assert cmdManager.countUndo() == 0
@@ -213,8 +210,8 @@ def testVec2DCmds():
     assert v3.x == 0
     assert v3.y == 1
 
-    assert(cmdManager.canUndo()) == True
-    assert(cmdManager.canRedo()) == False
+    assert cmdManager.canUndo() is True
+    assert cmdManager.canRedo() is False
     cmdManager.undo()
     assert cmdManager.count() == 1
     assert cmdManager.countUndo() == 0
@@ -226,8 +223,8 @@ def testVec2DCmds():
     assert v3.x == 0
     assert v3.y == 1
 
-    assert(cmdManager.canUndo()) == False
-    assert(cmdManager.canRedo()) == True
+    assert cmdManager.canUndo() is False
+    assert cmdManager.canRedo() is True
     cmdManager.redo()
     assert cmdManager.count() == 1
     assert cmdManager.countUndo() == 1
@@ -239,8 +236,8 @@ def testVec2DCmds():
     assert v3.x == 0
     assert v3.y == 1
 
-    assert(cmdManager.canUndo()) == True
-    assert(cmdManager.canRedo()) == False
+    assert cmdManager.canUndo() is True
+    assert cmdManager.canRedo() is False
     cmdManager.redo()
     assert cmdManager.count() == 1
     assert cmdManager.countUndo() == 1

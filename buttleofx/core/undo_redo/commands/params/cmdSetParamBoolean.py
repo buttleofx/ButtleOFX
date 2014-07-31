@@ -1,5 +1,6 @@
-from buttleofx.core.undo_redo.manageTools import UndoableCommand
 from PyQt5 import QtCore
+from buttleofx.core.undo_redo.manageTools import UndoableCommand
+
 
 class CmdSetParamBoolean(UndoableCommand):
     """
@@ -13,8 +14,30 @@ class CmdSetParamBoolean(UndoableCommand):
         self._param = param
         self._newValue = newValue
 
+    # ######################################## Methods private to this class ####################################### #
+
+    # ## Getters ## #
+
+    def getLabel(self):
+        return "Modify param '{0}'".format(self._param.getName())
+
     def getParam(self):
         return self._param
+
+    # ## Others ## #
+
+    def doCmd(self):
+        """
+        Executes the update of the param.
+        """
+        self._param.getTuttleParam().setValue((bool)(self._newValue))
+        self._param.paramChanged()
+
+    def redoCmd(self):
+        """
+        Redoes the update of the param.
+        """
+        return self.doCmd()
 
     def undoCmd(self):
         """
@@ -26,20 +49,6 @@ class CmdSetParamBoolean(UndoableCommand):
             self._param.getTuttleParam().setValue(True)
         self._param.paramChanged()
 
-    def redoCmd(self):
-        """
-        Redoes the update of the param.
-        """
-        return self.doCmd()
-
-    def doCmd(self):
-        """
-        Executes the update of the param.
-        """
-        self._param.getTuttleParam().setValue((bool)(self._newValue))
-        self._param.paramChanged()
-
-    def getLabel(self):
-        return "Modify param '%s'" % self._param.getName()
+    # ############################################# Data exposed to QML ############################################# #
 
     param = QtCore.pyqtProperty(str, getParam, constant=True)

@@ -1,14 +1,11 @@
-import logging
-# Tuttle
-from pyTuttle import tuttle
-# quickmamba
-from quickmamba.patterns import Signal
-# undo_redo
-from buttleofx.core.undo_redo.manageTools import CommandManager, GroupUndoableCommands
-from buttleofx.core.undo_redo.commands.node import CmdCreateNode, CmdDeleteNodes, CmdCreateReaderNode, CmdSetCoord
-from buttleofx.core.undo_redo.commands.connection import CmdCreateConnection, CmdDeleteConnection
-
 import os
+import logging
+from pyTuttle import tuttle
+from quickmamba.patterns import Signal
+from buttleofx.core.undo_redo.manageTools import CommandManager, GroupUndoableCommands
+from buttleofx.core.undo_redo.commands.connection import CmdCreateConnection, CmdDeleteConnection
+from buttleofx.core.undo_redo.commands.node import CmdCreateNode, CmdDeleteNodes, CmdCreateReaderNode, CmdSetCoord
+
 
 class Graph(object):
     """
@@ -21,7 +18,7 @@ class Graph(object):
             Signals :
                 - nodesChanged : the signal emited when a node changed
                 - connectionsChanged : the signal emited when a connection changed
-                - connectionsCoordChanged : the signal emited when the coords of a connection changed (it's a trick in QML)
+                - connectionsCoordChanged : the signal emited when the coords of a connection changed (it's a QML trick)
     """
 
     def __init__(self):
@@ -30,50 +27,16 @@ class Graph(object):
         self._nodes = []
         self._connections = []
 
-        # signals
+        # Signals
         self.nodesChanged = Signal()
         self.connectionsChanged = Signal()
         self.connectionsCoordChanged = Signal()
 
         logging.info("Core : Graph created")
 
-    def __str__(self):
-        """
-            Displays on terminal some data.
-            Usefull to debug the class.
-        """
-        str_list = []
+    # ######################################## Methods private to this class ####################################### #
 
-        str_list.append("=== Graph Buttle === \n")
-        str_list.append("---- all nodes ---- \n")
-
-        for node in self._nodes:
-            str_list.append(node.__str__())
-            str_list.append("\n")
-
-        str_list.append("---- all connections ----")
-        for con in self._connections:
-            str_list.append(con.__str__())
-            str_list.append("\n")
-
-        return "".join(str_list)
-
-    ################################################## ACCESSORS ##################################################
-
-    def getNodes(self):
-        """
-            Returns the node List.
-        """
-        return self._nodes
-
-    def getNode(self, nodeName):
-        """
-            Returns the right node object given its name (None if no node found).
-        """
-        for node in self._nodes:
-            if node.getName() == nodeName:
-                return node
-        return None
+    # ## Getters ## #
 
     def getConnections(self):
         """
@@ -106,9 +69,33 @@ class Graph(object):
         """
         return self._graphTuttle
 
-    ################################################## CREATION & DESTRUCTION ##################################################
+    def getNode(self, nodeName):
+        """
+            Returns the right node object given its name (None if no node found).
+        """
+        for node in self._nodes:
+            if node.getName() == nodeName:
+                return node
+        return None
 
-    def createNode(self, nodeType, x = 20, y = 20):
+    def getNodes(self):
+        """
+            Returns the node List.
+        """
+        return self._nodes
+
+    # ## Creators & Deleters ## #
+
+    def createConnection(self, clipOut, clipIn):
+        """
+            Adds a connection in the connection list when a connection is created.
+            Pushes a command in the CommandManager.
+        """
+        cmdCreateConnection = CmdCreateConnection(self, clipOut, clipIn)
+        cmdManager = CommandManager()
+        return cmdManager.push(cmdCreateConnection)
+
+    def createNode(self, nodeType, x=20, y=20):
         """
             Adds a node from the node list when a node is created.
         """
@@ -128,30 +115,13 @@ class Graph(object):
             return
 
         # We create the node.
-        # We can't use a group of commands because we need the tuttle node to set the value, and this tuttle node is created in the function doCmd() of the cmdCreateNode.
-        # So we use a special command CmdCreateReaderNode which creates a new node and set its value with the correct url.
+        # We can't use a group of commands because we need the tuttle node to set the value, and this tuttle node is
+        # created in the function doCmd() of the cmdCreateNode. So we use a special command CmdCreateReaderNode which
+        # creates a new node and set its value with the correct url.
         # See the definition of the class CmdCreateReaderNode.
         cmdCreateReaderNode = CmdCreateReaderNode(self, nodeType, x, y, url)
         cmdManager = CommandManager()
         return cmdManager.push(cmdCreateReaderNode)
-
-    def deleteNodes(self, nodes):
-        """
-            Removes a node in the node list when a node is deleted.
-            Pushes a command in the CommandManager.
-        """
-        cmdDeleteNodes = CmdDeleteNodes(self, nodes)
-        cmdManager = CommandManager()
-        cmdManager.push(cmdDeleteNodes)
-
-    def createConnection(self, clipOut, clipIn):
-        """
-            Adds a connection in the connection list when a connection is created.
-            Pushes a command in the CommandManager.
-        """
-        cmdCreateConnection = CmdCreateConnection(self, clipOut, clipIn)
-        cmdManager = CommandManager()
-        return cmdManager.push(cmdCreateConnection)
 
     def deleteConnection(self, connection):
         """
@@ -167,9 +137,42 @@ class Graph(object):
             Removes all the connections of the node.
         """
         # We have to rebuild the list of connections, based on the current values.
-        self._connections = [connection for connection in self._connections if not (connection.getClipOut().getNodeName() == nodeName or connection.getClipIn().getNodeName() == nodeName)]
+        self._connections = [connection for connection in self._connections if not
+                             (connection.getClipOut().getNodeName() == nodeName or
+                              connection.getClipIn().getNodeName() == nodeName)]
 
-    ############################################### INTERACTION ###############################################
+    def deleteNodes(self, nodes):
+        """
+            Removes a node in the node list when a node is deleted.
+            Pushes a command in the CommandManager.
+        """
+        cmdDeleteNodes = CmdDeleteNodes(self, nodes)
+        cmdManager = CommandManager()
+        cmdManager.push(cmdDeleteNodes)
+
+    # ## Others ## #
+
+    def contains(self, clip):
+        """
+            Returns True if the clip is already connected, else False.
+        """
+        for connection in self._connections:
+            if (clip.getNodeName() == connection.getClipOut().getNodeName() and
+                clip.getClipName() == connection.getClipOut().getClipName()) or (
+                    clip.getNodeName() == connection.getClipIn().getNodeName() and
+                    clip.getClipName() == connection.getClipIn().getClipName()):
+                return True
+        return False
+
+    def nodesConnected(self, clipOut, clipIn):
+        """
+            Returns True if the nodes containing the clips are already connected (in the other direction).
+        """
+        for connection in self._connections:
+            if (clipOut.getNodeName() == connection.getClipIn().getNodeName() and
+                clipIn.getNodeName() == connection.getClipOut().getNodeName()):
+                return True
+        return False
 
     def nodeMoved(self, nodeName, newX, newY):
         """
@@ -180,53 +183,31 @@ class Graph(object):
         buttleData = ButtleDataSingleton().get()
         node = buttleData.getCurrentGraph().getNode(nodeName)
 
-        # What is the value of the movement (compared to the old position) ?
+        # What is the value of the movement (compared to the old position)?
         oldX, oldY = node.getOldCoord()
         xMovement = newX - oldX
         yMovement = newY - oldY
 
-        # if the node did'nt really move, nothing is done
+        # If the node didn't really move, nothing is done
         if (xMovement, xMovement) == (0, 0):
             return
 
         commands = []
 
-        # we create a GroupUndoableCommands of CmdSetCoord for each selected node
+        # We create a GroupUndoableCommands of CmdSetCoord for each selected node
         for selectedNodeWrapper in buttleData.getCurrentSelectedNodeWrappers():
-            # we get the needed informations for this node
+            # We get the needed informations for this node
             selectedNode = selectedNodeWrapper.getNode()
             selectedNodeName = selectedNode.getName()
             oldX, oldY = selectedNode.getOldCoord()
 
-            # we set the new coordinates of the node (each selected node is doing the same movement)
+            # We set the new coordinates of the node (each selected node is doing the same movement)
             cmdMoved = CmdSetCoord(self, selectedNodeName, (oldX + xMovement, oldY + yMovement))
 
             commands.append(cmdMoved)
 
-        # then we push the group of commands
+        # Then we push the group of commands
         CommandManager().push(GroupUndoableCommands(commands, "Move nodes"))
-
-    ################################################## FLAGS ##################################################
-
-    def contains(self, clip):
-        """
-            Returns True if the clip is already connected, else False.
-        """
-        for connection in self._connections:
-            if((clip.getNodeName() == connection.getClipOut().getNodeName() and clip.getClipName() == connection.getClipOut().getClipName()) or (clip.getNodeName() == connection.getClipIn().getNodeName() and clip.getClipName() == connection.getClipIn().getClipName())):
-                return True
-        return False
-
-    def nodesConnected(self, clipOut, clipIn):
-        """
-            Returns True if the nodes containing the clips are already connected (in the other direction).
-        """
-        for connection in self._connections:
-            if (clipOut.getNodeName() == connection.getClipIn().getNodeName() and clipIn.getNodeName() == connection.getClipOut().getNodeName()):
-                return True
-        return False
-
-    ################################################ SAVE / LOAD ################################################
 
     def object_to_dict(self):
         """
@@ -238,11 +219,11 @@ class Graph(object):
             "currentSelectedNodes": []
         }
 
-        # nodes
+        # Nodes
         for node in self.getNodes():
             graph["nodes"].append(node.object_to_dict())
 
-        # connections
+        # Connections
         for con in self.getConnections():
             graph["connections"].append(con.object_to_dict())
 
@@ -252,13 +233,13 @@ class Graph(object):
         """
             Set all elements of the graph (nodes, connections...), from a dictionary.
         """
-        # create the nodes
+        # Create the nodes
         for nodeData in graphData["nodes"]:
             node = self.createNode(nodeData["pluginIdentifier"])
             self.getGraphTuttle().renameNode(node.getTuttleNode(), nodeData["name"])
             node.dict_to_object(nodeData)
 
-        # create the connections
+        # Create the connections
         from buttleofx.core.graph.connection import IdClip
         for connectionData in graphData["connections"]:
             clipIn_nodeName = connectionData["clipIn"]["nodeName"]
@@ -270,3 +251,24 @@ class Graph(object):
             clipOut = IdClip(clipOut_nodeName, clipOut_clipName)
 
             connection = self.createConnection(clipOut, clipIn)
+
+    def __str__(self):
+        """
+            Displays on terminal some data.
+            Usefull to debug the class.
+        """
+        str_list = []
+
+        str_list.append("=== Graph Buttle === \n")
+        str_list.append("---- all nodes ---- \n")
+
+        for node in self._nodes:
+            str_list.append(node.__str__())
+            str_list.append("\n")
+
+        str_list.append("---- all connections ----")
+        for con in self._connections:
+            str_list.append(con.__str__())
+            str_list.append("\n")
+
+        return "".join(str_list)

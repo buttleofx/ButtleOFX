@@ -1,4 +1,3 @@
-# common
 from buttleofx.core.params import Param
 
 
@@ -12,13 +11,15 @@ class ParamPage(Param):
     def __init__(self, tuttleParam):
         Param.__init__(self, tuttleParam)
 
-    # #################### getters ####################
+    # ######################################## Methods private to this class ####################################### #
 
-    def getParamType(self):
-        return "ParamPage"
+    # ## Getters ## #
+
+    def getLabel(self):
+        return self._tuttleParam.getProperties().fetchProperty("OfxPropLabel").getStringValue(0)
 
     def getParamDoc(self):
         return self._tuttleParam.getProperties().getStringProperty("OfxParamPropHint")
 
-    def getLabel(self):
-        return self._tuttleParam.getProperties().fetchProperty("OfxPropLabel").getStringValue(0)
+    def getParamType(self):
+        return "ParamPage"

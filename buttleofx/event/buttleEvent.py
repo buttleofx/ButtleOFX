@@ -1,8 +1,6 @@
 from PyQt5 import QtCore, QtGui
-# quickmamba
-from quickmamba.patterns import Singleton, Signal
-# tools
 from buttleofx.data import tuttleTools
+from quickmamba.patterns import Singleton, Signal
 
 
 class ButtleEvent(QtCore.QObject):
@@ -14,17 +12,11 @@ class ButtleEvent(QtCore.QObject):
         This class contains all data we need to manage the application.
     """
 
-    # signals
+    # Signals
     oneParamChangedSignal = Signal()
     viewerChangedSignal = Signal()
 
-    ### emit signals ###
-
-    def emitOneParamChangedSignal(self):
-        """
-            Emits the signal paramChangedSignal.
-        """
-        self.oneParamChangedSignal()
+    # ############################################ Methods exposed to QML ############################################ #
 
     @QtCore.pyqtSlot()
     def emitViewerChangedSignal(self):
@@ -32,6 +24,14 @@ class ButtleEvent(QtCore.QObject):
             Emits the signal viewerChangedSignal.
         """
         self.viewerChangedSignal()
+
+    # ######################################## Methods private to this class ####################################### #
+
+    def emitOneParamChangedSignal(self):
+        """
+            Emits the signal paramChangedSignal.
+        """
+        self.oneParamChangedSignal()
 
 
 # This class exists just because thre are problems when a class extends 2 other class (Singleton and QObject)

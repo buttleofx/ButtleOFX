@@ -1,4 +1,4 @@
-from .buttleManager import ButtleManager, ButtleManagerSingleton
 from .nodeManager import NodeManager
-from .connectionManager import ConnectionManager
 from .viewerManager import ViewerManager
+from .connectionManager import ConnectionManager
+from .buttleManager import ButtleManager, ButtleManagerSingleton

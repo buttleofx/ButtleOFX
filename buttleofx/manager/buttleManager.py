@@ -1,15 +1,11 @@
-# 'little' managers
-from .nodeManager import NodeManager
-from .connectionManager import ConnectionManager
-from .viewerManager import ViewerManager
-
-from buttleofx.core.undo_redo.manageTools import CommandManager
-from buttleofx.data import ButtleDataSingleton
-
-from quickmamba.patterns import Singleton
-from quickmamba.models import QObjectListModel
-
 from PyQt5 import QtCore
+from .nodeManager import NodeManager
+from .viewerManager import ViewerManager
+from quickmamba.patterns import Singleton
+from buttleofx.data import ButtleDataSingleton
+from quickmamba.models import QObjectListModel
+from .connectionManager import ConnectionManager
+from buttleofx.core.undo_redo.manageTools import CommandManager
 
 
 class ButtleManager(QtCore.QObject):
@@ -24,52 +20,41 @@ class ButtleManager(QtCore.QObject):
         self._connectionManager = ConnectionManager()
         self._viewerManager = ViewerManager()
 
-        # connect undoRedoChanged signal
+        # Connect undoRedoChanged signal
         self._nodeManager.undoRedoChanged.connect(self.emitUndoRedoChanged)
         self._connectionManager.undoRedoChanged.connect(self.emitUndoRedoChanged)
         self._viewerManager.undoRedoChanged.connect(self.emitUndoRedoChanged)
 
         return self
-        
-    @QtCore.pyqtSlot()  
-    def selectAllNodes(self):
-        buttleData = ButtleDataSingleton().get()
-        for nodeWrapper in buttleData.graphWrapper.getNodeWrappers():
-            buttleData.appendNodeWrapper(nodeWrapper)
-        
-    ############### getters ###############
 
-    def getNodeManager(self):
-        return self._nodeManager
+    # ############################################ Methods exposed to QML ############################################ #
 
-    def getConnectionManager(self):
-        return self._connectionManager
-
-    def getViewerManager(self):
-        return self._viewerManager
-
-    ############### UNDO & REDO ###############
-
-    def getUndoRedoStack(self):
-        listOfCommand = QObjectListModel(self)
-        for cmd in CommandManager().getCommands():
-            listOfCommand.append(str(CommandManager().getCommands().index(cmd)) +" : " + cmd.getLabel())
-        return listOfCommand
-
-    @QtCore.pyqtSlot(str, result=int)
-    def getIndexOfUndoRedoStack(self,cmd):
-        listOfCommand = self.getUndoRedoStack()
-        return listOfCommand.indexOf(cmd)
+    # ## Getters ## #
 
     @QtCore.pyqtSlot(result=int)
     def getIndex(self):
         listOfCommand = CommandManager()
         return listOfCommand.index
 
+    @QtCore.pyqtSlot(str, result=int)
+    def getIndexOfUndoRedoStack(self, cmd):
+        listOfCommand = self.getUndoRedoStack()
+        return listOfCommand.indexOf(cmd)
+
+    # ## Others ## #
+
+    @QtCore.pyqtSlot()
+    def clean(self):
+        """
+            Calls the cmdManager to clean the undo redo pile.
+        """
+        cmdManager = CommandManager()
+        cmdManager.clean()
+
     @QtCore.pyqtSlot(result=int)
-    def countUndo(self):
+    def count(self):
         listOfCommand = CommandManager()
-        return listOfCommand.index
+        return len(listOfCommand.commands)
 
     @QtCore.pyqtSlot(result=int)
     def countRedo(self):
@@ -77,43 +62,17 @@ class ButtleManager(QtCore.QObject):
         return len(listOfCommand.commands) - listOfCommand.index
 
     @QtCore.pyqtSlot(result=int)
-    def count(self):
+    def countUndo(self):
         listOfCommand = CommandManager()
-        return len(listOfCommand.commands)
+        return listOfCommand.index
 
     @QtCore.pyqtSlot()
-    def undo(self):
-        """
-            Calls the cmdManager to undo the last command.
-        """
-        cmdManager = CommandManager()
-        cmdManager.undo()
-
-        # emit undo/redo display
-        self.emitUndoRedoChanged()
-
-        # if we need to update params or viewer
+    def deleteSelection(self):
         buttleData = ButtleDataSingleton().get()
-        buttleData.currentParamNodeChanged.emit()
-        buttleData.currentViewerNodeChanged.emit()
-
-    @QtCore.pyqtSlot(int)
-    def undoNTimes(self, n):
-        """
-            Calls the cmdManager to undo n commands.
-        """
-        cmdManager = CommandManager()
-        for i in range(n-1):
-            cmdManager.undo()
-
-        # emit undo/redo display
-        self.emitUndoRedoChanged()
-
-        # if we need to update params or viewer
-        buttleData = ButtleDataSingleton().get()
-        buttleData.currentParamNodeChanged.emit()
-        buttleData.currentViewerNodeChanged.emit()
-
+        if buttleData.currentConnectionWrapper:
+            self._connectionManager.disconnect(buttleData.currentConnectionWrapper)
+        else:
+            self._nodeManager.destructionNodes()
 
     @QtCore.pyqtSlot()
     def redo(self):
@@ -123,10 +82,10 @@ class ButtleManager(QtCore.QObject):
         cmdManager = CommandManager()
         cmdManager.redo()
 
-        # emit undo/redo display
+        # Emit undo/redo display
         self.emitUndoRedoChanged()
 
-        # if we need to update params or viewer
+        # If we need to update params or viewer
         buttleData = ButtleDataSingleton().get()
         buttleData.currentParamNodeChanged.emit()
         buttleData.currentViewerNodeChanged.emit()
@@ -137,34 +96,78 @@ class ButtleManager(QtCore.QObject):
             Calls the cmdManager to redo n commands.
         """
         cmdManager = CommandManager()
-        for i in range(n+1):
+        for i in range(n + 1):
             cmdManager.redo()
 
-        # emit undo/redo display
+        # Emit undo/redo display
         self.emitUndoRedoChanged()
 
-        # if we need to update params or viewer
+        # If we need to update params or viewer
         buttleData = ButtleDataSingleton().get()
         buttleData.currentParamNodeChanged.emit()
         buttleData.currentViewerNodeChanged.emit()
 
     @QtCore.pyqtSlot()
-    def clean(self):
+    def selectAllNodes(self):
+        buttleData = ButtleDataSingleton().get()
+
+        for nodeWrapper in buttleData.graphWrapper.getNodeWrappers():
+            buttleData.appendNodeWrapper(nodeWrapper)
+
+    @QtCore.pyqtSlot()
+    def undo(self):
         """
-            Calls the cmdManager to clean the undo redo pile.
+            Calls the cmdManager to undo the last command.
         """
         cmdManager = CommandManager()
-        cmdManager.clean()
+        cmdManager.undo()
 
-    def signalUndoRedo(self):
-        self.undoRedoChanged.emit()
+        # Emit undo/redo display
+        self.emitUndoRedoChanged()
 
-    def canUndo(self):
+        # If we need to update params or viewer
+        buttleData = ButtleDataSingleton().get()
+        buttleData.currentParamNodeChanged.emit()
+        buttleData.currentViewerNodeChanged.emit()
+
+    @QtCore.pyqtSlot(int)
+    def undoNTimes(self, n):
         """
-            Calls the cmdManager to return if we can undo or not.
+            Calls the cmdManager to undo n commands.
         """
         cmdManager = CommandManager()
-        return cmdManager.canUndo()
+        for i in range(n - 1):
+            cmdManager.undo()
+
+        # Emit undo/redo display
+        self.emitUndoRedoChanged()
+
+        # If we need to update params or viewer
+        buttleData = ButtleDataSingleton().get()
+        buttleData.currentParamNodeChanged.emit()
+        buttleData.currentViewerNodeChanged.emit()
+
+    # ######################################## Methods private to this class ####################################### #
+
+    # ## Getters ## #
+
+    def getConnectionManager(self):
+        return self._connectionManager
+
+    def getNodeManager(self):
+        return self._nodeManager
+
+    def getUndoRedoStack(self):
+        listOfCommand = QObjectListModel(self)
+
+        for cmd in CommandManager().getCommands():
+            listOfCommand.append(str(CommandManager().getCommands().index(cmd)) + " : " + cmd.getLabel())
+        return listOfCommand
+
+    def getViewerManager(self):
+        return self._viewerManager
+
+    # ## Others ## #
 
     def canRedo(self):
         """
@@ -173,35 +176,35 @@ class ButtleManager(QtCore.QObject):
         cmdManager = CommandManager()
         return cmdManager.canRedo()
 
-    ############### DELETION ###############
-    @QtCore.pyqtSlot()
-    def deleteSelection(self):
-        buttleData = ButtleDataSingleton().get()
-        if(buttleData.currentConnectionWrapper):
-            self._connectionManager.disconnect(buttleData.currentConnectionWrapper)
-        else:
-            self._nodeManager.destructionNodes()
-
-    ################################################## DATA EXPOSED TO QML ##################################################
-
-    changed = QtCore.pyqtSignal()
+    def canUndo(self):
+        """
+            Calls the cmdManager to return if we can undo or not.
+        """
+        cmdManager = CommandManager()
+        return cmdManager.canUndo()
 
     def emitUndoRedoChanged(self):
         self.changed.emit()
 
-    # undo redo
+    def signalUndoRedo(self):
+        self.undoRedoChanged.emit()
+
+    # ############################################# Data exposed to QML ############################################## #
+
+    changed = QtCore.pyqtSignal()
+
+    # Undo redo
     canUndo = QtCore.pyqtProperty(bool, canUndo, notify=changed)
     canRedo = QtCore.pyqtProperty(bool, canRedo, notify=changed)
+    undoRedoStack = QtCore.pyqtProperty(QtCore.QObject, getUndoRedoStack, constant=True)
 
-    undoRedoStack = QtCore.pyqtProperty(QtCore.QObject,getUndoRedoStack, constant=True)
-
-    # managers
+    # Managers
     nodeManager = QtCore.pyqtProperty(QtCore.QObject, getNodeManager, constant=True)
     connectionManager = QtCore.pyqtProperty(QtCore.QObject, getConnectionManager, constant=True)
     viewerManager = QtCore.pyqtProperty(QtCore.QObject, getViewerManager, constant=True)
 
 
-# This class exists just because thre are problems when a class extends 2 other class (Singleton and QObject)
+# This class exists just because there are problems when a class extends 2 other class (Singleton and QObject)
 class ButtleManagerSingleton(Singleton):
 
     _buttleManager = ButtleManager()

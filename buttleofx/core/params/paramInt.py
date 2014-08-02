@@ -1,6 +1,4 @@
-# common
 from buttleofx.core.params import Param
-# undo redo
 from buttleofx.core.undo_redo.manageTools import CommandManager
 from buttleofx.core.undo_redo.commands.params import CmdSetParamInt
 
@@ -20,33 +18,35 @@ class ParamInt(Param):
 
         self._hasChanged = False
 
-    #################### getters ####################
+    # ######################################## Methods private to this class ####################################### #
 
-    def getParamType(self):
-        return "ParamInt"
-
-    def getParamDoc(self):
-        return self._tuttleParam.getProperties().getStringProperty("OfxParamPropHint")
+    # ## Getters ## #
 
     def getDefaultValue(self):
         return self._tuttleParam.getProperties().getIntProperty("OfxParamPropDefault")
 
-    def getOldValue(self):
-        return self._oldValue
-
-    def getValue(self):
-        return self._tuttleParam.getIntValue()
-
-    def getMinimum(self):
-        return self._tuttleParam.getProperties().getIntProperty("OfxParamPropDisplayMin")
+    def getHasChanged(self):
+        return self._hasChanged
 
     def getMaximum(self):
         return self._tuttleParam.getProperties().getIntProperty("OfxParamPropDisplayMax")
 
-    def getHasChanged(self):
-        return self._hasChanged
+    def getMinimum(self):
+        return self._tuttleParam.getProperties().getIntProperty("OfxParamPropDisplayMin")
 
-    #################### setters ####################
+    def getOldValue(self):
+        return self._oldValue
+
+    def getParamDoc(self):
+        return self._tuttleParam.getProperties().getStringProperty("OfxParamPropHint")
+
+    def getParamType(self):
+        return "ParamInt"
+
+    def getValue(self):
+        return self._tuttleParam.getIntValue()
+
+    # ## Setters ## #
 
     def setHasChanged(self, changed):
         self._hasChanged = changed
@@ -54,11 +54,12 @@ class ParamInt(Param):
     def setOldValue(self, value):
         self._oldValue = value
 
-    # distinction between setValue and pushValue, because it's a slider : we do not push a command until the user don't release the cursor (but we update the model).
+    # Distinction between setValue and pushValue, because it's a slider, we do not push a command
+    # until the user don't release the cursor (but we update the model)
 
     def setValue(self, value):
-        # used to know if bold font or not
-        if(self.getDefaultValue() != value):
+        # Used to know if bold font or not
+        if self.getDefaultValue() != value:
             self.setHasChanged(True)
 
         self._tuttleParam.setValue(int(value))

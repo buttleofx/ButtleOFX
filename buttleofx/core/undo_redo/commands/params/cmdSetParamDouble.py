@@ -1,12 +1,13 @@
-from buttleofx.core.undo_redo.manageTools import UndoableCommand
 from PyQt5 import QtCore
+from buttleofx.core.undo_redo.manageTools import UndoableCommand
+
 
 class CmdSetParamDouble(UndoableCommand):
     """
         Command that update the value of a paramDouble.
         Attributes :
         - _param : the target buttle param which will be changed by the update.
-        - _oldValue : the old value of the target param, which will be used for reset the target in case of undo command.
+        - _oldValue : the old value of the target param, which will be used to reset the target in case of undo command.
         - _newValue : the value which will be mofidied.
     """
 
@@ -15,8 +16,30 @@ class CmdSetParamDouble(UndoableCommand):
         self._oldValue = param.getOldValue()
         self._newValue = newValue
 
+    # ######################################## Methods private to this class ####################################### #
+
+    # ## Getters ## #
+
+    def getLabel(self):
+        return "Modify param '{0}'".format(self._param.getName())
+
     def getParam(self):
         return self._param
+
+    # ## Others ## #
+    def doCmd(self):
+        """
+        Executes the update of the param.
+        """
+        self._param.getTuttleParam().setValue(self._newValue)
+        self._param.setOldValue(self._newValue)
+        self._param.paramChanged()
+
+    def redoCmd(self):
+        """
+        Redoes the update of the param.
+        """
+        self.doCmd()
 
     def undoCmd(self):
         """
@@ -26,21 +49,6 @@ class CmdSetParamDouble(UndoableCommand):
         self._param.setOldValue(self._oldValue)
         self._param.paramChanged()
 
-    def redoCmd(self):
-        """
-        Redoes the update of the param.
-        """
-        self.doCmd()
-
-    def doCmd(self):
-        """
-        Executes the update of the param.
-        """
-        self._param.getTuttleParam().setValue(self._newValue)
-        self._param.setOldValue(self._newValue)
-        self._param.paramChanged()
-
-    def getLabel(self):
-        return "Modify param '%s'" % self._param.getName()
+    # ############################################# Data exposed to QML ############################################# #
 
     param = QtCore.pyqtProperty(str, getParam, constant=True)

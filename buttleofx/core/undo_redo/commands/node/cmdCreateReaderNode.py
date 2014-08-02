@@ -1,5 +1,4 @@
 from PyQt5 import QtCore
-# undo_redo
 from buttleofx.core.undo_redo.manageTools import UndoableCommand
 from buttleofx.core.undo_redo.commands.node import CmdCreateNode
 
@@ -7,7 +6,9 @@ from buttleofx.core.undo_redo.commands.node import CmdCreateNode
 class CmdCreateReaderNode(CmdCreateNode):
     """
         Command that creates a node and sets its filename. It's the case when an image is dropped in the graph.
-        We can't use a group of commands because we need the tuttle node to set the value, and this tuttle node is created in the function doCmd() of the cmdCreateNode.!
+        We can't use a group of commands because we need the tuttle node to set the value, and this tuttle node
+        is created in the function doCmd() of the cmdCreateNode!
+
         Then we need a separate class CmdCreateReaderNode.
         This class inherits CmdCreateNode and reuses its commands.
 
@@ -24,22 +25,17 @@ class CmdCreateReaderNode(CmdCreateNode):
         CmdCreateNode.__init__(self, graphTarget, nodeType, x, y)
         self._filename = filename
 
+    # ######################################## Methods private to this class ####################################### #
+
+    # ## Getters ## #
+
+    def getLabel(self):
+        return "Create reader node '{0}'".format(self._nodeName)
+
     def getNodeName(self):
         return self._nodeName
 
-    def undoCmd(self):
-        """
-            Undoes the creation of the node.
-            Just calls the function undoCmd() of the class CmdCreateNode.
-        """
-        CmdCreateNode.undoCmd(self)
-
-    def redoCmd(self):
-        """
-            Redoes the creation of the node.
-            Just calls the function redoCmd() of the class CmdCreateNode.
-        """
-        CmdCreateNode.redoCmd(self)
+    # ## Others ## #
 
     def doCmd(self):
         """
@@ -51,7 +47,20 @@ class CmdCreateReaderNode(CmdCreateNode):
         self._graphTarget.nodesChanged()
         return node
 
-    def getLabel(self):
-        return "Create reader node '%s'" % self._nodeName
+    def redoCmd(self):
+        """
+            Redoes the creation of the node.
+            Just calls the function redoCmd() of the class CmdCreateNode.
+        """
+        CmdCreateNode.redoCmd(self)
+
+    def undoCmd(self):
+        """
+            Undoes the creation of the node.
+            Just calls the function undoCmd() of the class CmdCreateNode.
+        """
+        CmdCreateNode.undoCmd(self)
+
+    # ############################################# Data exposed to QML ############################################# #
 
     nodeName = QtCore.pyqtProperty(str, getNodeName, constant=True)

@@ -1,14 +1,15 @@
 import logging
-from buttleofx.core.undo_redo.manageTools import UndoableCommand
 from PyQt5 import QtCore
+from buttleofx.core.undo_redo.manageTools import UndoableCommand
+
 
 class CmdSetParamND(UndoableCommand):
     """
         Command that update the value of a paramDouble2D, paramDouble3D, paramInt2D or paramInt3D.
         Attributes :
         - _param : the target buttle param which will be changed by the update.
-        - _oldValue : the old values of the target param, which will be used for reset the target in case of undo command.
-        - _newValue : the values which will be mofidied.
+        - _oldValue : the old value of the target param, which will be used to reset the target in case of undo command.
+        - _newValue : the value which will be mofidied.
     """
 
     def __init__(self, param, newValues):
@@ -24,22 +25,17 @@ class CmdSetParamND(UndoableCommand):
 
         self._newValues = newValues
 
+    # ######################################## Methods private to this class ####################################### #
+
+    # ## Getters ## #
+
+    def getLabel(self):
+        return "Modify param '{0}'".format(self._param.getName())
+
     def getParam(self):
         return self._param
 
-    def undoCmd(self):
-        """
-        Undoes the update of the param.
-        """
-        self._param.getTuttleParam().setValue(self._oldValues)
-        self._param.setOldValues(self._oldValues)
-        self._param.paramChanged()
-
-    def redoCmd(self):
-        """
-        Redoes the update of the param.
-        """
-        return self.doCmd()
+    # ## Others ## #
 
     def doCmd(self):
         """
@@ -49,7 +45,20 @@ class CmdSetParamND(UndoableCommand):
         self._param.setOldValues(self._newValues)
         self._param.paramChanged()
 
-    def getLabel(self):
-        return "Modify param '%s'" % self._param.getName()
+    def redoCmd(self):
+        """
+        Redoes the update of the param.
+        """
+        return self.doCmd()
+
+    def undoCmd(self):
+        """
+        Undoes the update of the param.
+        """
+        self._param.getTuttleParam().setValue(self._oldValues)
+        self._param.setOldValues(self._oldValues)
+        self._param.paramChanged()
+
+    # ############################################# Data exposed to QML ############################################# #
 
     param = QtCore.pyqtProperty(str, getParam, constant=True)

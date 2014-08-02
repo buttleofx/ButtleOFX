@@ -140,7 +140,6 @@ class GraphWrapper(QtCore.QObject):
         for connection in self._connectionWrappers:
             if (clipWrapper.getNodeName() == connection.getOut_clipNodeName()
                 and clipWrapper.getClipName() == connection.getOut_clipName()):
-
                 connection.currentConnectionStateChanged.emit()
                 return self.getNodeWrapper(connection.in_clipNodeName).getClip(connection.in_clipName)
 

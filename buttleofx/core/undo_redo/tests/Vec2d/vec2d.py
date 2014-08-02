@@ -1,7 +1,3 @@
-#!/usr/bin/env python
-# -*-coding:utf-8-*
-
-
 class Vec2d:
     """
         Vector with 2 dimensions :
@@ -12,11 +8,9 @@ class Vec2d:
         self.x = x
         self.y = y
 
-    def __str__(self):
-        """
-            Prints the Vector coordinates
-        """
-        print("({0}, {1})".format(self.x, self.y))
+    # ######################################## Methods private to this class ####################################### #
+
+    # ## Getters ## #
 
     def getX(self):
         """
@@ -30,6 +24,8 @@ class Vec2d:
         """
         return self.y
 
+    # ## Setters ## #
+
     def setX(self, new_x):
         """
             Sets the x coordinate
@@ -41,3 +37,10 @@ class Vec2d:
             Sets the y coordinate
         """
         self.y = new_y
+
+    # ## Others ## #
+    def __str__(self):
+        """
+            Prints the Vector coordinates
+        """
+        print("({0}, {1})".format(self.x, self.y))

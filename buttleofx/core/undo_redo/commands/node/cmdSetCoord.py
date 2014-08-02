@@ -8,7 +8,8 @@ class CmdSetCoord(UndoableCommand):
         - graphTarget
         - nodeTargetName : the name of the target node wich will be changed by the movement
         - newCoord : the coordinate wich will be mofidy in the target
-        - coordOld : the old coordinate of the target node, wich will be used for reset the target in case of undo command
+        - coordOld : the old coordinate of the target node, which will be used for reset the
+                     target in case of undo command
     """
 
     def __init__(self, graphTarget, nodeTargetName, newCoord):
@@ -17,21 +18,14 @@ class CmdSetCoord(UndoableCommand):
         self.oldCoord = graphTarget.getNode(nodeTargetName).getOldCoord()
         self.newCoord = newCoord
 
-    def undoCmd(self):
-        """
-            Undoes the movement of the node.
-            The target node is reset with the old coordinates.
-        """
-        node = self.graphTarget.getNode(self.nodeTargetName)
-        node.setCoord(self.oldCoord[0], self.oldCoord[1])
-        node.setOldCoord(self.oldCoord[0], self.oldCoord[1])
+    # ######################################## Methods private to this class ####################################### #
 
-    def redoCmd(self):
-        """
-            Redoes the movement of the node.
-            Just calls the doCmd() function.
-        """
-        return self.doCmd()
+    # ## Getters ## #
+
+    def getLabel(self):
+        return self.nodeTargetName
+
+    # ## Others ## #
 
     def doCmd(self):
         """
@@ -41,5 +35,18 @@ class CmdSetCoord(UndoableCommand):
         node.setCoord(self.newCoord[0], self.newCoord[1])
         node.setOldCoord(self.newCoord[0], self.newCoord[1])
 
-    def getLabel(self):
-        return self.nodeTargetName
+    def redoCmd(self):
+        """
+            Redoes the movement of the node.
+            Just calls the doCmd() function.
+        """
+        return self.doCmd()
+
+    def undoCmd(self):
+        """
+            Undoes the movement of the node.
+            The target node is reset with the old coordinates.
+        """
+        node = self.graphTarget.getNode(self.nodeTargetName)
+        node.setCoord(self.oldCoord[0], self.oldCoord[1])
+        node.setOldCoord(self.oldCoord[0], self.oldCoord[1])

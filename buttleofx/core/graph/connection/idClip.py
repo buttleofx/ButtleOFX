@@ -8,21 +8,17 @@ class IdClip(object):
 
     def __init__(self, nodeName, clipName):
         super(IdClip, self).__init__()
-        
+
         self._id = nodeName + clipName
         self._nodeName = nodeName
         self._clipName = clipName
 
-    def __eq__(self, otherClip):
-        """
-            Overloads the operator ==
-        """
-        return (self._nodeName == otherClip._nodeName and self._clipName == otherClip._clipName)
+    # ######################################## Methods private to this class ####################################### #
 
-    def __str__(self):
-        return 'Node  "%s" , Clip "%s" (index %d)' % (self._nodeName, self._clipName)
+    # ## Getters ## #
 
-    ######## getters ########
+    def getClipName(self):
+        return self._clipName
 
     def getId(self):
         return self._id
@@ -30,10 +26,7 @@ class IdClip(object):
     def getNodeName(self):
         return self._nodeName
 
-    def getClipName(self):
-        return self._clipName
-
-    ######## setters ########
+    # ## Setters ## #
 
     def setCoord(self, coord):
         self._coord = coord
@@ -44,7 +37,7 @@ class IdClip(object):
     def setYCoord(self, yCoord):
         self._coord[1] = yCoord
 
-    ######## SAVE  ########
+    # ## Others ## #
 
     def object_to_dict(self):
         """
@@ -55,3 +48,12 @@ class IdClip(object):
             "clipName": self._clipName,
         }
         return clip
+
+    def __eq__(self, otherClip):
+        """
+            Overloads the operator ==
+        """
+        return (self._nodeName == otherClip._nodeName and self._clipName == otherClip._clipName)
+
+    def __str__(self):
+        return 'Node  "%s" , Clip "%s" (index %d)' % (self._nodeName, self._clipName)

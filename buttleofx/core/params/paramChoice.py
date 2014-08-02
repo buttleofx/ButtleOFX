@@ -1,6 +1,4 @@
-# common
 from buttleofx.core.params import Param
-# undo redo
 from buttleofx.core.undo_redo.manageTools import CommandManager
 from buttleofx.core.undo_redo.commands.params import CmdSetParamChoice
 
@@ -21,53 +19,58 @@ class ParamChoice(Param):
 
         self._listValue = []
         for choice in range(tuttleParam.getProperties().fetchProperty("OfxParamPropChoiceOption").getDimension()):
-            self._listValue.append(tuttleParam.getProperties().fetchProperty("OfxParamPropChoiceOption").getStringValue(choice))
+            self._listValue.append(tuttleParam.getProperties().fetchProperty("OfxParamPropChoiceOption").
+                                   getStringValue(choice))
 
         self._hasChanged = False
 
-    #################### getters ####################
+    # ######################################## Methods private to this class ####################################### #
 
-    def getParamType(self):
-        return "ParamChoice"
-
-    def getParamDoc(self):
-        return self._tuttleParam.getProperties().getStringProperty("OfxParamPropHint")
-
-    def getDefaultValue(self):
-        defaultIndex = self._tuttleParam.getProperties().getIntProperty("OfxParamPropDefault")
-        return self._tuttleParam.getProperties().getStringProperty("OfxParamPropChoiceOption",defaultIndex)
-
-    def getOldValue(self):
-        return self._oldValue
-
-    def getValue(self):
-        return self._tuttleParam.getStringValue()
+    # ## Getters ## #
 
     def getCurrentIndex(self):
         return self._tuttleParam.getIntValue()
 
-    def getListValue(self):
-        return self._listValue
-
     def getHasChanged(self):
         return self._hasChanged
 
-    #################### setters ####################
+    def getListValue(self):
+        return self._listValue
 
-    def setOldValue(self, value):
-        self._oldValue = value
+    def getDefaultValue(self):
+        defaultIndex = self._tuttleParam.getProperties().getIntProperty("OfxParamPropDefault")
+        return self._tuttleParam.getProperties().getStringProperty("OfxParamPropChoiceOption", defaultIndex)
+
+    def getOldValue(self):
+        return self._oldValue
+
+    def getParamDoc(self):
+        return self._tuttleParam.getProperties().getStringProperty("OfxParamPropHint")
+
+    def getParamType(self):
+        return "ParamChoice"
+
+    def getValue(self):
+        return self._tuttleParam.getStringValue()
+
+    # ## Setters ## #
 
     def setHasChanged(self, changed):
         self._hasChanged = changed
 
+    def setOldValue(self, value):
+        self._oldValue = value
+
     def setValue(self, value):
-        if(self.getDefaultValue() != value):
+        if self.getDefaultValue() != value:
             self.setHasChanged(True)
         self._tuttleParam.setValue(str(value))
 
+    # ## Others ## #
+
     def pushValue(self, value):
         if value != self.getOldValue():
-            # push the command
+            # Push the command
             cmdUpdate = CmdSetParamChoice(self, str(value))
             cmdManager = CommandManager()
             cmdManager.push(cmdUpdate)

@@ -1,4 +1,3 @@
-# common
 from buttleofx.core.params import Param
 
 
@@ -9,14 +8,16 @@ class ParamPushButton(Param):
 
     def __init__(self, tuttleParam):
         Param.__init__(self, tuttleParam)
-        
-    #################### getters ####################
-    
-    def getParamType(self):
-        return "ParamPushButton"
+
+    # ######################################## Methods private to this class ####################################### #
+
+    # ## Getters ## #
+
+    def getEnabled(self):
+        return self._tuttleParam.getProperties().getIntProperty("OfxParamPropEnabled")
 
     def getParamDoc(self):
         return self._tuttleParam.getProperties().getStringProperty("OfxParamPropHint")
 
-    def getEnabled(self):
-        return self._tuttleParam.getProperties().getIntProperty("OfxParamPropEnabled")
+    def getParamType(self):
+        return "ParamPushButton"

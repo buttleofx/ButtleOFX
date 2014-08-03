@@ -4,7 +4,7 @@ from PyQt5 import QtCore, QtWidgets, QtQuick, QtQml, QtOpenGL
 
 tuttleofx_installed = False
 try:
-    import pyTuttle
+    import pyTuttle  # noqa
     tuttleofx_installed = True
     logging.debug('Use TuttleOFX.')
 except:

@@ -5,7 +5,7 @@ from .glviewport import GLViewport
 from buttleofx.data import ButtleDataSingleton
 from buttleofx.event import ButtleEventSingleton
 from buttleofx.manager import ButtleManagerSingleton
-from .tuttleOverlayInteract import TuttleOverlayInteract
+# from .tuttleOverlayInteract import TuttleOverlayInteract
 
 
 class GLViewport_tuttleofx(GLViewport):

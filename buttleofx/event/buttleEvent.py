@@ -1,5 +1,4 @@
-from PyQt5 import QtCore, QtGui
-from buttleofx.data import tuttleTools
+from PyQt5 import QtCore
 from quickmamba.patterns import Singleton, Signal
 
 

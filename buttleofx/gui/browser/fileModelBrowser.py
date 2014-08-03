@@ -1,12 +1,15 @@
 import os
-import logging
+
 from pyTuttle import tuttle
-from PyQt5 import QtGui, QtCore, QtQuick
+
+from PyQt5 import QtCore
+from PyQt5 import QtQuick
+
 from quickmamba.patterns import Singleton
 from pySequenceParser import sequenceParser
 from .sequenceWrapper import SequenceWrapper
+
 from quickmamba.models import QObjectListModel
-from PyQt5.QtWidgets import QWidget, QFileDialog
 
 
 class FileItem(QtCore.QObject):

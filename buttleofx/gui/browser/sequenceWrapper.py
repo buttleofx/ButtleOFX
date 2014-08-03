@@ -1,7 +1,6 @@
 import os
-import logging
+
 from PyQt5 import QtCore
-from quickmamba.models import QObjectListModel
 
 
 class SequenceWrapper(QtCore.QObject):

@@ -1,4 +1,3 @@
-from PyQt5 import QtCore
 from buttleofx.core.undo_redo.manageTools import UndoableCommand
 
 
@@ -23,8 +22,6 @@ class CmdSetParamChoice(UndoableCommand):
 
     def getLabel(self):
         return "Modify param '{0}'".format(self._param.getName())
-
-        param = QtCore.pyqtProperty(str, getParam, constant=True)
 
     def getParam(self):
         return self._param

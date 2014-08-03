@@ -124,7 +124,7 @@ class GraphWrapper(QtCore.QObject):
         """
         for connection in self._connectionWrappers:
             if (clipWrapper.getNodeName() == connection.getIn_clipNodeName() and
-                clipWrapper.getClipName() == connection.getIn_clipName()):
+                    clipWrapper.getClipName() == connection.getIn_clipName()):
                 if disable:
                     connection.setEnabled(False)
                 connection.currentConnectionStateChanged.emit()
@@ -139,7 +139,7 @@ class GraphWrapper(QtCore.QObject):
         """
         for connection in self._connectionWrappers:
             if (clipWrapper.getNodeName() == connection.getOut_clipNodeName()
-                and clipWrapper.getClipName() == connection.getOut_clipName()):
+                    and clipWrapper.getClipName() == connection.getOut_clipName()):
                 connection.currentConnectionStateChanged.emit()
                 return self.getNodeWrapper(connection.in_clipNodeName).getClip(connection.in_clipName)
 

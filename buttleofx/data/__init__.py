@@ -1,2 +1,4 @@
+# flake8: noqa
 from .finder import Finder
-from .buttleData import ButtleData, ButtleDataSingleton
+from .buttleData import ButtleData
+from .buttleData import ButtleDataSingleton

@@ -1,7 +1,9 @@
 import logging
-import functools
+
 from pyTuttle import tuttle
+
 from PyQt5 import QtCore, QtQuick
+
 from buttleofx.data import ButtleDataSingleton
 
 

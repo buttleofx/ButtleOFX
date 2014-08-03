@@ -1,6 +1,4 @@
-import logging
-from PyQt5 import QtCore, QtGui
-from quickmamba.models import QObjectListModel
+from PyQt5 import QtCore
 
 
 class PluginWrapper(QtCore.QObject):

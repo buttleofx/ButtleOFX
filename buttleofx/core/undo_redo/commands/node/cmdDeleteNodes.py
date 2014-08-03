@@ -1,5 +1,3 @@
-from PyQt5 import QtCore
-from buttleofx.core.graph.node import Node
 from buttleofx.core.undo_redo.manageTools import UndoableCommand
 
 

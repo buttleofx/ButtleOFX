@@ -1,6 +1,9 @@
 import os
 import sys
-from PyQt5 import QtCore, QtWidgets, QtQuick, QtQml
+
+from PyQt5 import QtCore
+from PyQt5 import QtWidgets
+from PyQt5 import QtQuick
 
 
 currentFilePath = os.path.dirname(os.path.abspath(__file__))

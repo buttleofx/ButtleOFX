@@ -1,8 +1,5 @@
 from PyQt5 import QtCore
-from PyQt5.QtGui import *
-from PyQt5.QtCore import *
 from quickmamba.patterns import Signal
-from buttleofx.core.graph import Graph
 from buttleofx.data import ButtleDataSingleton
 
 
@@ -184,14 +181,12 @@ class NodeManager(QtCore.QObject):
             when one or several nodes are moving.
         """
         buttleData = ButtleDataSingleton().get()
-        node = buttleData.getGraph().getNode(nodeName)
         graphWrapper = buttleData.getGraphWrapper()
 
         oldX = graphWrapper.getTmpMoveNodeX()
         oldY = graphWrapper.getTmpMoveNodeY()
 
         # What is the value of the movement (compared to the old position) ?
-        # oldX, oldY = node.getCoord()
         xMovement = newX - oldX
         yMovement = newY - oldY
         graphWrapper.setTmpMoveNodeX(newX)

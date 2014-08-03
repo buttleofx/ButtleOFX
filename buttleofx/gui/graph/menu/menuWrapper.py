@@ -1,5 +1,4 @@
 from PyQt5 import QtCore
-from PyQt5 import QtGui
 
 # TODO: no * in imports
 from PyQt5.QtGui import *
@@ -123,7 +122,8 @@ class MenuWrapper(QtCore.QObject):
                     # self.connect(action, SIGNAL(triggered(bool)), this, SLOT(app.quit))
                 # elif action.text() == "Delete":
                 #     if ButtleDataSingleton().get().currentConnectionWrapper:
-                #         ButtleManagerSingleton().get().connectionManager.disconnect(ButtleDataSingleton().get().currentConnectionWrapper)
+                #         ButtleManagerSingleton().get().connectionManager.disconnect(
+                #             ButtleDataSingleton().get().currentConnectionWrapper)
                 #     else:
                 #         ButtleManagerSingleton().get().nodeManager.destructionNodes()
 

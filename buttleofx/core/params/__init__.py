@@ -1,3 +1,4 @@
+# flake8: noqa
 from .param import Param
 from .paramInt import ParamInt
 from .paramRGB import ParamRGB

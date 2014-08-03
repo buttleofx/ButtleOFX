@@ -1,6 +1,6 @@
 import logging
 from pyTuttle import tuttle
-from PyQt5 import QtCore, QtGui
+from PyQt5 import QtCore
 from quickmamba.patterns import Signal
 from buttleofx.data import ButtleDataSingleton
 
@@ -104,10 +104,10 @@ class ViewerManager(QtCore.QObject):
 
         # Max 15 computedImages saved in memory
         if (hasCode not in buttleData._mapNodeNameToComputedImage.keys() and
-            len(buttleData._mapNodeNameToComputedImage) < 15):
+                len(buttleData._mapNodeNameToComputedImage) < 15):
             buttleData._mapNodeNameToComputedImage.update({hasCode: self._computedImage})
         elif (hasCode not in buttleData._mapNodeNameToComputedImage.keys() and
-              len(buttleData._mapNodeNameToComputedImage) >= 15):
+                len(buttleData._mapNodeNameToComputedImage) >= 15):
             # Delete a computed image from the memory (random)
             buttleData._mapNodeNameToComputedImage.popitem()
             buttleData._mapNodeNameToComputedImage.update({hasCode: self._computedImage})

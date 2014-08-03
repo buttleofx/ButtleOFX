@@ -1,25 +1,21 @@
-# To save and load data
 import os
 import io
-# To parse data
 import json
-import math
+from datetime import datetime
 
 from PyQt5 import QtCore
+
 from pyTuttle import tuttle
-from datetime import datetime
+
+from quickmamba.models import QObjectListModel
+from quickmamba.patterns import Singleton
+
 from buttleofx.data import tuttleTools
 from buttleofx.core.graph import Graph
-from buttleofx.event import ButtleEvent
 from buttleofx.gui.shortcut import Shortcut
 from buttleofx.gui.graph import GraphWrapper
-from quickmamba.models import QObjectListModel
 from buttleofx.gui.plugin import PluginWrapper
-from quickmamba.patterns import Singleton, Signal
-from buttleofx.core.graph.connection import IdClip
 from buttleofx.core.undo_redo.manageTools import CommandManager
-
-from buttleofx.core.graph.node import Node
 from buttleofx.gui.graph.node import NodeWrapper
 
 
@@ -157,24 +153,38 @@ class ButtleData(QtCore.QObject):
 
         self.addShortcut("Ctrl", "C", "Copy", "Permit to copy nodes or portions of graph", "Graph")
         self.addShortcut("Ctrl", "X", "Cut", "Permit to cut nodes or portions of graph", "Graph")
-        self.addShortcut("Ctrl", "V", "Paste", "Permit to paste nodes or portions of graph previously cut or copied", "Graph")
+        self.addShortcut(
+            "Ctrl", "V", "Paste",
+            "Permit to paste nodes or portions of graph previously cut or copied", "Graph")
         self.addShortcut("Ctrl", "S", "Save", "Permit to save the current graph", "Graph")
         self.addShortcut("Ctrl", "Z", "Undo", "Abort the last modification in the graph", "Graph")
         self.addShortcut("Ctrl", "Y", "Redo", "Restore the last action undid", "Graph")
         self.addShortcut("Ctrl", "A", "Select all", "Select all nodes of the graph", "Graph")
         self.addShortcut("Ctrl", "D", "Duplicate", "Duplicate selected nodes", "Graph")
         self.addShortcut("Ctrl", "N", "New graph", "Close the current graph and create an other one", "Graph")
-        self.addShortcut("Ctrl", "O", "Open graph", "Close the current graph and open a browser which permit to open another one", "Graph")
+        self.addShortcut(
+            "Ctrl", "O", "Open graph",
+            "Close the current graph and open a browser which permit to open another one", "Graph")
         self.addShortcut("Del", "", "Delete", "Delete selected nodes or oprtion of graph", "Graph")
         self.addShortcut("P", "", "Parameters", "Show parameters of the node in the parameter editor", "Graph")
-        self.addShortcut("Return", "", "Display", "Assign the mosquito to the selected node, and diplay it in the viewer", "Graph")
-        self.addShortcut("Enter", "", "Display", "Assign the mosquito to the selected node, and diplay it in the viewer", "Graph")
-        self.addShortcut("Tab", "", "Plugin browser", "Permit to paste a node or a portion of graph previously cut or copied", "Graph")
+        self.addShortcut(
+            "Return", "", "Display",
+            "Assign the mosquito to the selected node, and diplay it in the viewer", "Graph")
+        self.addShortcut(
+            "Enter", "", "Display",
+            "Assign the mosquito to the selected node, and diplay it in the viewer", "Graph")
+        self.addShortcut(
+            "Tab", "", "Plugin browser",
+            "Permit to paste a node or a portion of graph previously cut or copied", "Graph")
 
         self.addShortcut("Up", "", "Previous", "Go to the next plugin in the list", "Plugin Documentation")
         self.addShortcut("Down", "", "Next", "Go to the previous plugin in the list", "Plugin Documentation")
-        self.addShortcut("Return", "", "Plugin help", "Show the documentation for the selected plugin", "Plugin Documentation")
-        self.addShortcut("Enter", "", "Plugin help", "Show the documentation for the selected plugin", "Plugin Documentation")
+        self.addShortcut(
+            "Return", "", "Plugin help",
+            "Show the documentation for the selected plugin", "Plugin Documentation")
+        self.addShortcut(
+            "Enter", "", "Plugin help",
+            "Show the documentation for the selected plugin", "Plugin Documentation")
 
         self.addShortcut("Up", "", "Previous", "Go to the next plugin in the list", "Plugin Browser")
         self.addShortcut("Down", "", "Next", "Go to the previous plugin in the list", "Plugin Browser")
@@ -190,12 +200,19 @@ class ButtleData(QtCore.QObject):
         self.addShortcut("7", "", "Viewer 7", "Show the view 7 of the viewer previously assigned to a node", "Viewer")
         self.addShortcut("8", "", "Viewer 8", "Show the view 8 of the viewer previously assigned to a node", "Viewer")
         self.addShortcut("9", "", "Viewer 9", "Show the view 9 of the viewer previously assigned to a node", "Viewer")
-        self.addShortcut("Space", "", "Pause/Play", "If you are visionning an image sequence, then you can press this key to pause or play/resume", "Viewer")
+        self.addShortcut(
+            "Space", "", "Pause/Play",
+            "If you are visionning an image sequence, then you can press this key to pause or play/resume", "Viewer")
 
         self.addShortcut("Ctrl", "L", "", "", "Browser")
-        self.addShortcut("Ctrl", "N", "New folder", "Create a new folder which default name is ''New directory''", "Browser")
+        self.addShortcut(
+            "Ctrl", "N",
+            "New folder", "Create a new folder which default name is ''New directory''", "Browser")
         self.addShortcut("F2", "", "Rename", "Rename the selected file or folder", "Browser")
-        self.addShortcut("Tab", "", "Auto-completion", "Propose subfolders of the current, which name starts with what you already wrote in the search bar", "Browser")
+        self.addShortcut(
+            "Tab", "", "Auto-completion",
+            "Propose subfolders of the current directory that match what you already wrote in the search bar",
+            "Browser")
         self.addShortcut("Del", "", "Delete", "Delete selected folders. Warning: it still irreversible!", "Browser")
 
         return self._listOfShortcut
@@ -239,21 +256,23 @@ class ButtleData(QtCore.QObject):
             currentNodeWrapper = toVisit.pop()
 
             # If the node has not already been visited
-            if currentNodeWrapper not in visited:
-                # If the node has inputs
-                if currentNodeWrapper.getNbInput() > 0:
-                    currentNodeSrcClips = currentNodeWrapper.getSrcClips()
+            if currentNodeWrapper in visited:
+                continue
 
-                    # For all inputs
-                    for currentNodeSrcClip in currentNodeSrcClips:
-                        # If the input is connected to a parent
-                        if self.getGraphWrapper().getConnectedClipWrapper(currentNodeSrcClip, False) is not None:
-                            parentNodeWrapper = self.getGraphWrapper().getNodeWrapper(
-                                self.getGraphWrapper().getConnectedClipWrapper(currentNodeSrcClip, False).getNodeName())
-                            toVisit.add(parentNodeWrapper)
-                # currentNodeWrapper.getNode().setColorRGB(255, 255, 255)
-                # currentNodeWrapper.setIsHighlighted(True)
-                visited.add(currentNodeWrapper)
+            # If the node has inputs
+            if currentNodeWrapper.getNbInput() > 0:
+                currentNodeSrcClips = currentNodeWrapper.getSrcClips()
+
+                # For all inputs
+                for currentNodeSrcClip in currentNodeSrcClips:
+                    # If the input is connected to a parent
+                    if self.getGraphWrapper().getConnectedClipWrapper(currentNodeSrcClip, False) is not None:
+                        parentNodeWrapper = self.getGraphWrapper().getNodeWrapper(
+                            self.getGraphWrapper().getConnectedClipWrapper(currentNodeSrcClip, False).getNodeName())
+                        toVisit.add(parentNodeWrapper)
+            # currentNodeWrapper.getNode().setColorRGB(255, 255, 255)
+            # currentNodeWrapper.setIsHighlighted(True)
+            visited.add(currentNodeWrapper)
 
         parentNodesWrappers = QObjectListModel(self)
 
@@ -1037,11 +1056,13 @@ class ButtleData(QtCore.QObject):
 
     currentSelectedNodesChanged = QtCore.pyqtSignal()
     currentSelectedNodeWrappers = QtCore.pyqtProperty("QVariant", getCurrentSelectedNodeWrappers,
-                                                      setCurrentSelectedNodeWrappers, notify=currentSelectedNodesChanged)
+                                                      setCurrentSelectedNodeWrappers,
+                                                      notify=currentSelectedNodesChanged)
 
     currentConnectionWrapperChanged = QtCore.pyqtSignal()
     currentConnectionWrapper = QtCore.pyqtProperty(QtCore.QObject, getCurrentConnectionWrapper,
-                                                   setCurrentConnectionWrapper, notify=currentConnectionWrapperChanged)
+                                                   setCurrentConnectionWrapper,
+                                                   notify=currentConnectionWrapperChanged)
 
     currentViewerIndexChanged = QtCore.pyqtSignal()
     currentViewerIndex = QtCore.pyqtProperty(int, getCurrentViewerIndex, setCurrentViewerIndex,

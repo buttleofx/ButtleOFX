@@ -1,6 +1,7 @@
 import logging
-from PyQt5 import QtGui, QtCore, QtQuick
-from PyQt5.QtWidgets import QWidget, QFileDialog
+from PyQt5 import QtCore
+from PyQt5 import QtQuick
+from PyQt5 import QtWidgets
 
 
 class Finder(QtQuick.QQuickItem):
@@ -25,7 +26,7 @@ class Finder(QtQuick.QQuickItem):
 
     @QtCore.pyqtSlot()
     def browseFile(self):
-        dialog = QFileDialog()
+        dialog = QtWidgets.QFileDialog()
 
         # If the current node is a reader
         if self._type == "OpenFile":

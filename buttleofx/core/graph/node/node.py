@@ -1,8 +1,7 @@
-import json
 import logging
-from PyQt5 import QtGui
-from buttleofx.data import tuttleTools
+
 from quickmamba.patterns import Signal
+
 from buttleofx.event import ButtleEventSingleton
 from buttleofx.core.params import (ParamInt, ParamInt2D, ParamInt3D, ParamString, ParamDouble, ParamDouble2D,
                                    ParamBoolean, ParamDouble3D, ParamChoice, ParamPushButton, ParamRGBA, ParamRGB,

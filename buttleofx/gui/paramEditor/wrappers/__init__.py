@@ -1,3 +1,4 @@
+# flake8: noqa
 from .paramWrapper import ParamWrapper
 
 from .intWrapper import IntWrapper

@@ -4,21 +4,20 @@ import numpy
 import signal
 import logging
 import argparse
+
 from pyTuttle import tuttle
-from pySequenceParser import sequenceParser
+
 from quickmamba.utils import QmlInstantCoding
 
 from buttleofx.data import Finder
 from buttleofx.gui.viewer import TimerPlayer
 from buttleofx.data import ButtleDataSingleton
-from buttleofx.gui.graph.menu import MenuWrapper
 from buttleofx.event import ButtleEventSingleton
 from buttleofx.manager import ButtleManagerSingleton
 from buttleofx.core.undo_redo.manageTools import CommandManager
 from buttleofx.gui.browser import FileModelBrowser, FileModelBrowserSingleton
 
 from PyQt5 import QtCore, QtGui, QtQml, QtQuick, QtWidgets
-from PyQt5.QtWidgets import QWidget, QFileDialog, QApplication, QMessageBox
 
 # PyCheck
 # import pychecker.checker
@@ -45,7 +44,7 @@ else:
 # For glViewport
 tuttleofx_installed = False
 try:
-    import pyTuttle
+    import pyTuttle  # noqa
     tuttleofx_installed = True
     logging.debug('Use TuttleOFX.')
 except:
@@ -90,16 +89,17 @@ class EventFilter(QtCore.QObject):
         if not buttleData.graphCanBeSaved:
             return False
 
-        msgBox = QMessageBox()
+        msgBox = QtWidgets.QMessageBox()
         msgBox.setText("Save graph changes before closing ?")
         msgBox.setModal(True)
         msgBox.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint)
         msgBox.setInformativeText("If you don't save the graph, unsaved modifications will be lost.")
-        msgBox.setStandardButtons(QMessageBox.Save | QMessageBox.Discard | QMessageBox.Abort)
-        msgBox.setDefaultButton(QMessageBox.Save)
+        msgBox.setStandardButtons(
+            QtWidgets.QMessageBox.Save | QtWidgets.QMessageBox.Discard | QtWidgets.QMessageBox.Abort)
+        msgBox.setDefaultButton(QtWidgets.QMessageBox.Save)
         ret = msgBox.exec_()
 
-        if ret == QMessageBox.Save:
+        if ret == QtWidgets.QMessageBox.Save:
             if buttleData.urlOfFileToSave:
                 # Save on the already existing file
                 buttleData.saveData(buttleData.urlOfFileToSave)
@@ -107,7 +107,7 @@ class EventFilter(QtCore.QObject):
                 return super(EventFilter, self).eventFilter(receiver, event)
 
             # This project has never been saved, so ask the user on which file to save.
-            dialog = QFileDialog()
+            dialog = QtWidgets.QFileDialog()
             fileToSave = dialog.getSaveFileName(None, "Save the graph", browser.getFirstFolder())[0]
             if not (fileToSave.endswith(".bofx")):
                 fileToSave += ".bofx"
@@ -116,7 +116,7 @@ class EventFilter(QtCore.QObject):
             # Close the application
             return super(EventFilter, self).eventFilter(receiver, event)
 
-        if ret == QMessageBox.Discard:
+        if ret == QtWidgets.QMessageBox.Discard:
             # Close the application
             return super(EventFilter, self).eventFilter(receiver, event)
 
@@ -179,7 +179,6 @@ class ImageProvider(QtQuick.QQuickImageProvider):
         """
         logging.debug("Tuttle ImageProvider: file='%s'" % id)
         try:
-            outputCache = tuttle.MemoryCache()
             img = self.thumbnailCache.getThumbnail(id)
             numpyImage = img.getNumpyArray()
 

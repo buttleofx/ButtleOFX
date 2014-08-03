@@ -170,7 +170,7 @@ class Graph(object):
         """
         for connection in self._connections:
             if (clipOut.getNodeName() == connection.getClipIn().getNodeName() and
-                clipIn.getNodeName() == connection.getClipOut().getNodeName()):
+                    clipIn.getNodeName() == connection.getClipOut().getNodeName()):
                 return True
         return False
 
@@ -250,7 +250,7 @@ class Graph(object):
             clipOut_clipName = connectionData["clipOut"]["clipName"]
             clipOut = IdClip(clipOut_nodeName, clipOut_clipName)
 
-            connection = self.createConnection(clipOut, clipIn)
+            self.createConnection(clipOut, clipIn)
 
     def __str__(self):
         """

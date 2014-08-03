@@ -1,6 +1,10 @@
 import numpy
+
 from OpenGL import GL
-from PyQt5 import QtGui, QtQml, QtQuick, QtCore
+
+from PyQt5 import QtGui
+from PyQt5 import QtQuick
+from PyQt5 import QtCore
 
 
 def nbChannelsToGlPixelType(nbChannels):

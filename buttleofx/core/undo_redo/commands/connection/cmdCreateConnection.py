@@ -1,5 +1,5 @@
 from PyQt5 import QtCore
-from buttleofx.event import ButtleEventSingleton
+
 from buttleofx.core.graph.connection import Connection
 from buttleofx.core.undo_redo.manageTools import UndoableCommand
 

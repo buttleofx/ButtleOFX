@@ -8,5 +8,5 @@ install:
 
 # command to run tests
 script:
-  - flake8 buttleofx/ --max-complexity=12 --max-line-length=120
+  - flake8 buttleofx/
 

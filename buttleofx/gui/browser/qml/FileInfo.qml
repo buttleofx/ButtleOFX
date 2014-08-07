@@ -141,33 +141,6 @@ ApplicationWindow {
                                 width: parent.width
                                 implicitHeight: childrenRect.height
 
-                                // Extension of file
-                                RowLayout {
-                                    id: fieExtensionContainer
-                                    spacing: 5
-                                    width: parent.width
-                                    implicitHeight: childrenRect.height
-
-                                    Text {
-                                        id: fileExtensionText
-                                        color: textColor
-                                        text: "Extension: "
-                                    }
-
-                                    Rectangle {
-                                        height: 20
-                                        implicitWidth: 200
-                                        clip: true
-                                        color: "transparent"
-
-                                        Text {
-                                            id: fileExtensionInput
-                                            text: currentFile.fileExtension
-                                            color: "grey"
-                                        }
-                                    }
-                                }
-
                                 // Weight of file
                                 RowLayout {
                                     id: fileWeight

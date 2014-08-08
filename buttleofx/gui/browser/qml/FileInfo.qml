@@ -128,51 +128,30 @@ ApplicationWindow {
                     Rectangle {
                         id: fileDetailedInfoContainer
                         width: parent.width
-                        implicitHeight: fileDetailedInfoLoader.childrenRect.height
+                        implicitHeight: fileSizeInfoLoader.childrenRect.height + imageDimensionsLoader.childrenRect.height
 
-                        Loader {
-                            id: fileDetailedInfoLoader
-                            sourceComponent: currentFile.fileType != 'Folder' ? fileDetailedInfo : undefined
-                        }
+                        ColumnLayout {
+                            width: parent.width
+                            implicitHeight: childrenRect.height
 
-                        Component {
-                            id: fileDetailedInfo
-                            ColumnLayout {
-                                width: parent.width
-                                implicitHeight: childrenRect.height
+                            Loader {
+                                id: fileSizeInfoLoader
+                                sourceComponent: currentFile.fileType != 'Folder' ? fileSizeInfo : undefined
+                            }
 
-                                // Weight of file
-                                RowLayout {
-                                    id: fileWeight
-                                    width: parent.width
-                                    implicitHeight: childrenRect.height
+                            Loader {
+                                id: imageDimensionsLoader
+                                sourceComponent: (currentFile.fileType != 'Folder' && currentFile.getSupported() ?
+                                                  imageDimensionsInfo : undefined)
+                            }
 
-                                    Text {
-                                        id: fileWeightText
-                                        color: textColor
-                                        text: "Weight: "
-                                    }
+                            Component {
+                                id: fileSizeInfo
 
-                                    Rectangle {
-                                        height: 20
-                                        implicitWidth: 200
-                                        clip: true
-                                        color: "transparent"
-
-                                        Text {
-                                            id: fileWeightInput
-                                            text: (currentFile.fileWeight > 1000000 ? (currentFile.fileWeight/1000000).toFixed(2)
-                                                   + " Mo" : (currentFile.fileWeight/1000).toFixed(2) + " Ko")
-                                            color: "grey"
-                                        }
-                                    }
-                                }
-
-                                // Size of File
+                                // Size of file
                                 RowLayout {
                                     id: fileSize
                                     width: parent.width
-                                    implicitHeight: childrenRect.height
 
                                     Text {
                                         id: fileSizeText
@@ -180,18 +159,34 @@ ApplicationWindow {
                                         text: "Size: "
                                     }
 
-                                    Rectangle {
-                                        height: 20
-                                        implicitWidth: 200
-                                        clip: true
-                                        color: "transparent"
+                                    Text {
+                                        id: fileSizeInput
+                                        text: (currentFile.fileWeight > 1000000 ? (currentFile.fileWeight / 1000000).toFixed(2)
+                                               + " MB" : (currentFile.fileWeight / 1000).toFixed(2) + " KB")
+                                        color: "grey"
+                                    }
+                                }
+                            }
 
-                                        Text {
-                                            id: fileSizeInput
-                                            property size imageSize: currentFile.imageSize
-                                            text: "width: " + imageSize.width + ", height: " + imageSize.height
-                                            color: "grey"
-                                        }
+                            Component {
+                                id: imageDimensionsInfo
+
+                                // Dimensions of image (only displayed if the file is an image, of course)
+                                RowLayout {
+                                    id: imageDimensions
+                                    width: parent.width
+
+                                    Text {
+                                        id: imageDimensionsText
+                                        color: textColor
+                                        text: "Dimensions: "
+                                    }
+
+                                    Text {
+                                        id: imageDimensionsInput
+                                        property size imageDimensions: currentFile.imageSize
+                                        text: "width: " + imageDimensions.width + ", height: " + imageDimensions.height
+                                        color: "grey"
                                     }
                                 }
                             }
@@ -199,17 +194,15 @@ ApplicationWindow {
                     }
 
                     Item {
-                        id:remove
+                        id: remove
                         width: parent.width
                         implicitHeight: 30
                         Layout.minimumHeight: 20
 
                         Button {
                             id: removeButton
-
                             height: parent.height - 10
                             width: 200
-
                             text: "Remove"
 
                             onClicked: {

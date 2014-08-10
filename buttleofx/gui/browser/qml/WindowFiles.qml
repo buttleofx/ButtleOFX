@@ -283,7 +283,6 @@ Rectangle {
                         }
                     }*/
 
-
                     Drag.active: rootFileItem_mouseArea.drag.active
                     Drag.hotSpot.x: 20
                     Drag.hotSpot.y: 20
@@ -378,7 +377,7 @@ Rectangle {
                                 }
 
                                 _buttleManager.nodeManager.dropFile(model.object.filepath, 10, 10)
-                            } else {
+                            } else if (model.object.fileType == "Folder") {
                                 winFile.goToFolder(model.object.filepath)
                             }
                         }
@@ -684,7 +683,7 @@ Rectangle {
                                 }
 
                                 _buttleManager.nodeManager.dropFile(model.object.filepath, 10, 10)
-                            } else {
+                            } else if (model.object.fileType == "Folder") {
                                 winFile.goToFolder(model.object.filepath)
                             }
                         }

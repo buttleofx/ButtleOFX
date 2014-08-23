@@ -1,10 +1,10 @@
-import QtQuick 2.0
-import QtQuick.Controls 1.0
-import QtQuick.Layouts 1.0
 import QtQml 2.1
+import QtQuick 2.0
 import QuickMamba 1.0
-import QtQuick.Dialogs 1.1
 import QtQuick.Window 2.1
+import QtQuick.Dialogs 1.1
+import QtQuick.Layouts 1.0
+import QtQuick.Controls 1.0
 import QtQuick.LocalStorage 2.0
 
 import "gui/graph/qml"
@@ -13,6 +13,7 @@ import "gui/paramEditor/qml"
 import "gui/browser/qml"
 import "gui/plugin/qml"
 import "gui/shortcut/qml"
+import "gui/dialogs"
 
 ApplicationWindow {
     property var settingsDatabase: getInitializedDatabase()
@@ -65,7 +66,7 @@ ApplicationWindow {
     property variant view3: [player, browser, advancedParamEditor, graphEditor]
 
     property string urlOfFileToSave: _buttleData.urlOfFileToSave
-
+    
     width: 1200
     height: 800
     id: mainWindowQML
@@ -209,28 +210,8 @@ ApplicationWindow {
         }
     }
 
-    MessageDialog {
+    ExitDialog {
         id: closeButtle
-        title: "Save the graph?"
-        icon: StandardIcon.Warning
-        modality: Qt.WindowStaysOnTopHint && Qt.WindowModal
-        text: urlOfFileToSave == "" ? "Save graph changes before closing ?" : "Save " + _buttleData.getFileName(urlOfFileToSave) + " changes before closing ?"
-        detailedText: "If you don't save the graph, unsaved modifications will be lost. "
-        standardButtons: StandardButton.Yes | StandardButton.No | StandardButton.Abort
-        Component.onCompleted: visible = false
-
-        onYes: {
-            if(urlOfFileToSave!="") {
-                _buttleData.saveData(urlOfFileToSave)
-            } else {
-                finderSaveGraph.open()
-                finderSaveGraph.close()
-                finderSaveGraph.open()
-            }
-        }
-        onNo: {
-            Qt.quit()
-        }
     }
 
     menuBar: MenuBar {
@@ -288,7 +269,7 @@ ApplicationWindow {
                     if (!_buttleData.graphCanBeSaved) {
                         Qt.quit()
                     } else {
-                        closeButtle.open()
+                        closeButtle.visible = true
                     }
                 }
             }

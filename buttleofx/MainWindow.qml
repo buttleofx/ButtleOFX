@@ -66,7 +66,7 @@ ApplicationWindow {
     property variant view3: [player, browser, advancedParamEditor, graphEditor]
 
     property string urlOfFileToSave: _buttleData.urlOfFileToSave
-    
+
     width: 1200
     height: 800
     id: mainWindowQML
@@ -83,7 +83,6 @@ ApplicationWindow {
             player.changeViewer(1)
         }
         if ((event.key == Qt.Key_2) && (event.modifiers & Qt.KeypadModifier)) {
-
             player.changeViewer(2)
         }
         if ((event.key == Qt.Key_3) && (event.modifiers & Qt.KeypadModifier)) {
@@ -282,7 +281,7 @@ ApplicationWindow {
                 id: undoRedoStack
                 title: "Undo/Redo stack"
 
-                property variant undoRedoList:_buttleData.graphCanBeSaved ? _buttleManager.undoRedoStack:_buttleManager.undoRedoStack
+                property variant undoRedoList: _buttleData.graphCanBeSaved ? _buttleManager.undoRedoStack:_buttleManager.undoRedoStack
 
                 Instantiator {
                     model: undoRedoStack.undoRedoList
@@ -394,9 +393,10 @@ ApplicationWindow {
 
             Instantiator {
                 model: _buttleData.getMenu(1,"")
+
                 Menu {
                     id: firstMenu
-                    title:object
+                    title: object
                     __parentContentItem: nodesMenu.__contentItem  // To remove warning
 
                     Instantiator {
@@ -426,11 +426,11 @@ ApplicationWindow {
                     }
 
                     Instantiator {
-                        model: _buttleData.getMenu(2,firstMenu.title)
+                        model: _buttleData.getMenu(2, firstMenu.title)
 
                         Menu {
                             id: secondMenu
-                            title:object
+                            title: object
                             __parentContentItem: nodesMenu.__contentItem  // To remove warning
 
                             Instantiator {
@@ -460,11 +460,11 @@ ApplicationWindow {
                             }
 
                             Instantiator {
-                                model: _buttleData.getMenu(3,secondMenu.title)
+                                model: _buttleData.getMenu(3, secondMenu.title)
 
                                 Menu {
                                     id: thirdMenu
-                                    title:object
+                                    title: object
                                     __parentContentItem: nodesMenu.__contentItem  // To remove warning
 
                                     Instantiator {
@@ -494,10 +494,10 @@ ApplicationWindow {
                                     }
 
                                     Instantiator {
-                                        model: _buttleData.getMenu(4,thirdMenu.title)
+                                        model: _buttleData.getMenu(4, thirdMenu.title)
 
                                         Menu {
-                                            id:fourthMenu
+                                            id: fourthMenu
                                             title: object
                                             __parentContentItem: nodesMenu.__contentItem  // To remove warning
 
@@ -528,7 +528,7 @@ ApplicationWindow {
                                             }
 
                                             Instantiator {
-                                                model: _buttleData.getMenu(5,fourthMenu.title)
+                                                model: _buttleData.getMenu(5, fourthMenu.title)
 
                                                 Menu {
                                                     id: fifthMenu
@@ -601,7 +601,6 @@ ApplicationWindow {
             }
         }
 
-
         Menu {
             title: "View"
 
@@ -616,7 +615,7 @@ ApplicationWindow {
                     browserView.checked = false
                     advancedView.checked = false
                     selectedView = 1
-                    saveSetting("view",selectedView)
+                    saveSetting("view", selectedView)
                     lastSelectedDefaultView = view1
                     topLeftView.visible = true
                     bottomLeftView.visible = true
@@ -637,7 +636,7 @@ ApplicationWindow {
                     defaultView.checked = false
                     advancedView.checked = false
                     selectedView = 2
-                    saveSetting("view",selectedView)
+                    saveSetting("view", selectedView)
                     lastSelectedDefaultView = view2
                     topLeftView.visible = true
                     bottomLeftView.visible = true
@@ -658,9 +657,9 @@ ApplicationWindow {
                     defaultView.checked = false
                     browserView.checked = false
                     selectedView = 3
-                    saveSetting("view",selectedView)
+                    saveSetting("view", selectedView)
                     lastSelectedDefaultView = view3
-                    topLeftView.visible=true
+                    topLeftView.visible = true
                     bottomLeftView.visible = true
                     topRightView.visible = true
                     bottomRightView.visible = false
@@ -674,29 +673,29 @@ ApplicationWindow {
             MenuItem {
                 text: "Browser"
                 checkable: true
-                checked: browser.parent.visible==true ? true : false
-                onTriggered: browser.parent.visible == false ? browser.parent.visible=true : browser.parent.visible=false
+                checked: browser.parent.visible == true ? true : false
+                onTriggered: browser.parent.visible == false ? browser.parent.visible = true : browser.parent.visible = false
             }
 
             MenuItem {
                 text: "Viewer"
                 checkable: true
                 checked: player.parent.visible==true ? true : false
-                onTriggered: player.parent.visible == false ? player.parent.visible=true : player.parent.visible=false
+                onTriggered: player.parent.visible == false ? player.parent.visible = true : player.parent.visible = false
             }
 
             MenuItem {
                 text: "Graph"
                 checkable: true
                 checked: graphEditor.parent.visible==true ? true : false
-                onTriggered: graphEditor.parent.visible == false ? graphEditor.parent.visible=true : graphEditor.parent.visible=false
+                onTriggered: graphEditor.parent.visible == false ? graphEditor.parent.visible = true : graphEditor.parent.visible = false
             }
 
             MenuItem {
                 text: "Parameters"
                 checkable: true
                 checked: paramEditor.parent.visible==true ? true : false
-                onTriggered: paramEditor.parent.visible == false ? paramEditor.parent.visible=true : paramEditor.parent.visible=false
+                onTriggered: paramEditor.parent.visible == false ? paramEditor.parent.visible = true : paramEditor.parent.visible = false
             }
             */
         }
@@ -712,7 +711,6 @@ ApplicationWindow {
         }
     }
     */
-
 
     // This rectangle represents the zone under the menu, it allows to define the anchors.fill and margins for the SplitterRow
     Rectangle {
@@ -777,7 +775,7 @@ ApplicationWindow {
                         view2[1]
                         break
                     case 3:
-                        if(advancedParamEditor.displayGraph)
+                        if (advancedParamEditor.displayGraph)
                             view3[3]
                         else
                             view3[1]
@@ -831,7 +829,7 @@ ApplicationWindow {
                     implicitWidth: parent.width
                     implicitHeight: topRightView.visible ? 0.5 * parent.height : parent.height
                     z: -1
-                    visible: selectedView ==3 ? false : true
+                    visible: selectedView == 3 ? false : true
 
                     children:
                     switch (selectedView) {
@@ -857,7 +855,7 @@ ApplicationWindow {
         id: subviews
         visible: false
 
-        property variant parentBeforeFullscreen : null
+        property variant parentBeforeFullscreen: null
 
         Player {
             id: player
@@ -874,7 +872,7 @@ ApplicationWindow {
                 }
             }
             onButtonFullscreenClicked:
-            if (parent != fullscreenContent){
+            if (parent != fullscreenContent) {
                 subviews.parentBeforeFullscreen = parent
                 fullscreenWindow.visibility = Window.FullScreen
                 fullscreenContent.children = player
@@ -886,8 +884,8 @@ ApplicationWindow {
             anchors.fill: parent
 
             onButtonCloseClicked: {
-                if (parent!=fullscreenContent) {
-                    selectedView=-1
+                if (parent != fullscreenContent) {
+                    selectedView = -1
                     parent.visible = false
                 } else {
                     fullscreenWindow.visibility = Window.Hidden
@@ -895,7 +893,7 @@ ApplicationWindow {
                 }
             }
             onButtonFullscreenClicked:
-            if (parent != fullscreenContent){
+            if (parent != fullscreenContent) {
                 subviews.parentBeforeFullscreen = parent
                 fullscreenWindow.visibility = Window.FullScreen
                 fullscreenContent.children = graphEditor
@@ -909,7 +907,7 @@ ApplicationWindow {
             currentParamNode: _buttleData.currentParamNodeWrapper ? _buttleData.currentParamNodeWrapper : null
 
             onButtonCloseClicked: {
-                if (parent!=fullscreenContent) {
+                if (parent != fullscreenContent) {
                     selectedView =- 1
                     parent.visible = false
                 } else {
@@ -918,7 +916,7 @@ ApplicationWindow {
                 }
             }
             onButtonFullscreenClicked:
-            if (parent != fullscreenContent){
+            if (parent != fullscreenContent) {
                 subviews.parentBeforeFullscreen = parent
                 fullscreenWindow.visibility = Window.FullScreen
                 fullscreenContent.children = paramEditor
@@ -939,7 +937,7 @@ ApplicationWindow {
                 }
             }
             onButtonFullscreenClicked:
-            if (parent != fullscreenContent){
+            if (parent != fullscreenContent) {
                 subviews.parentBeforeFullscreen = parent
                 fullscreenWindow.visibility = Window.FullScreen
                 fullscreenContent.children = advancedParamEditor
@@ -960,7 +958,7 @@ ApplicationWindow {
                 }
             }
             onButtonFullscreenClicked:
-            if (parent != fullscreenContent){
+            if (parent != fullscreenContent) {
                 subviews.parentBeforeFullscreen = parent
                 fullscreenWindow.visibility = Window.FullScreen
                 fullscreenContent.children = browser

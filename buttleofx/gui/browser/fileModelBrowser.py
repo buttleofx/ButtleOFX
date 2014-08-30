@@ -103,9 +103,6 @@ class FileItem(QtCore.QObject):
     def getFileImg(self):
         return self._fileImg
 
-    def getFileExtension(self):
-        return self._fileExtension
-
     def getFileName(self):
         return os.path.basename(self._filepath)
 
@@ -144,7 +141,6 @@ class FileItem(QtCore.QObject):
     fileType = QtCore.pyqtProperty(str, getFileType, constant=True)
     fileName = QtCore.pyqtProperty(str, getFileName, setFileName, constant=True)
     fileWeight = QtCore.pyqtProperty(float, getFileWeight, constant=True)
-    fileExtension = QtCore.pyqtProperty(str, getFileExtension, constant=True)
 
     imageSize = QtCore.pyqtProperty(QtCore.QSize, getImageSize, constant=True)
     isSelectedChange = QtCore.pyqtSignal()

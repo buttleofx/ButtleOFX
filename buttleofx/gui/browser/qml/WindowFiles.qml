@@ -283,7 +283,6 @@ Rectangle {
                         }
                     }*/
 
-
                     Drag.active: rootFileItem_mouseArea.drag.active
                     Drag.hotSpot.x: 20
                     Drag.hotSpot.y: 20
@@ -344,7 +343,7 @@ Rectangle {
                             winFile.changeSelectedList(sel)
 
                             // If it's an image, we assign it to the viewer
-                            if (model.object.fileType != "Folder") {
+                            if (model.object.fileType != "Folder" && model.object.getSupported()) {
                                 player.changeViewer(11) // We come to the temporary viewer
                                 // We save the last node wrapper of the last view
                                 player.lastNodeWrapper = _buttleData.getNodeWrapperByViewerIndex(player.lastView)
@@ -364,7 +363,7 @@ Rectangle {
 
                         onDoubleClicked: {
                             // If it's an image, we create a node
-                            if (model.object.fileType != "Folder") {
+                            if (model.object.fileType != "Folder" && model.object.getSupported()) {
                                 _buttleData.currentGraphWrapper = _buttleData.graphWrapper
                                 _buttleData.currentGraphIsGraph()
 
@@ -378,7 +377,7 @@ Rectangle {
                                 }
 
                                 _buttleManager.nodeManager.dropFile(model.object.filepath, 10, 10)
-                            } else {
+                            } else if (model.object.fileType == "Folder") {
                                 winFile.goToFolder(model.object.filepath)
                             }
                         }
@@ -650,7 +649,7 @@ Rectangle {
                             winFile.changeSelectedList(sel)
 
                             // If it's an image, we assign it to the viewer
-                            if (model.object.fileType != "Folder") {
+                            if (model.object.fileType != "Folder" && model.object.getSupported()) {
                                 player.changeViewer(11) // We come to the temporary viewer
                                 // We save the last node wrapper of the last view
                                 player.lastNodeWrapper = _buttleData.getNodeWrapperByViewerIndex(player.lastView)
@@ -670,7 +669,7 @@ Rectangle {
 
                         onDoubleClicked: {
                             // If it's an image, we create a node
-                            if (model.object.fileType != "Folder") {
+                            if (model.object.fileType != "Folder" && model.object.getSupported()) {
                                 _buttleData.currentGraphWrapper = _buttleData.graphWrapper
                                 _buttleData.currentGraphIsGraph()
 
@@ -684,7 +683,7 @@ Rectangle {
                                 }
 
                                 _buttleManager.nodeManager.dropFile(model.object.filepath, 10, 10)
-                            } else {
+                            } else if (model.object.fileType == "Folder") {
                                 winFile.goToFolder(model.object.filepath)
                             }
                         }

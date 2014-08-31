@@ -70,14 +70,13 @@ ApplicationWindow {
     width: 1200
     height: 800
     id: mainWindowQML
-    title:"ButtleOFX"
+    title: "ButtleOFX"
 
     // TopFocusHandler {
     //     anchors.fill: parent
     // }
 
     Keys.onPressed: {
-
         // Viewer
         if ((event.key == Qt.Key_1) && (event.modifiers & Qt.KeypadModifier)) {
             player.changeViewer(1)
@@ -117,7 +116,7 @@ ApplicationWindow {
         }
     }
 
-    property bool aNodeIsSelected:true
+    property bool aNodeIsSelected: true
 
     // Window of hint for plugins
     PluginWindow {
@@ -150,7 +149,7 @@ ApplicationWindow {
     FileDialog {
         id: finderSaveGraph
         title: "Save the graph"
-        nameFilters:  [ "All files (*)" ]
+        nameFilters: [ "All files (*)" ]
         selectedNameFilter: "All files (*)"
 
         onAccepted: {
@@ -167,15 +166,15 @@ ApplicationWindow {
         title:"Save the graph?"
         icon: StandardIcon.Warning
         modality: Qt.WindowStaysOnTopHint && Qt.WindowModal
-        text: urlOfFileToSave == "" ? "Save graph changes before closing ?" : "Save " + _buttleData.getFileName(urlOfFileToSave) + " changes before closing ?"
-        detailedText: "If you don't save the graph, unsaved modifications will be lost. "
+        text: urlOfFileToSave == "" ? "Save graph changes before closing?" : "Save " + _buttleData.getFileName(urlOfFileToSave) + " changes before closing?"
+        detailedText: "If you don't save the graph, unsaved modifications will be lost."
         standardButtons: StandardButton.Yes | StandardButton.No | StandardButton.Abort
         Component.onCompleted: visible = false
 
         onYes: {
-            if(urlOfFileToSave!="") {
+            if (urlOfFileToSave != "") {
                 _buttleData.saveData(urlOfFileToSave)
-            } else{
+            } else {
                 finderSaveGraph.open()
             }
         }
@@ -190,13 +189,13 @@ ApplicationWindow {
         title: "Save the graph?"
         icon: StandardIcon.Warning
         modality: Qt.WindowStaysOnTopHint && Qt.WindowModal
-        text: urlOfFileToSave == "" ? "Save graph changes before closing ?" : "Save " + _buttleData.getFileName(urlOfFileToSave) + " changes before closing ?"
-        detailedText: "If you don't save the graph, unsaved modifications will be lost. "
+        text: urlOfFileToSave == "" ? "Save graph changes before closing?" : "Save " + _buttleData.getFileName(urlOfFileToSave) + " changes before closing?"
+        detailedText: "If you don't save the graph, unsaved modifications will be lost."
         standardButtons: StandardButton.Yes | StandardButton.No | StandardButton.Abort
         Component.onCompleted: visible = false
 
         onYes: {
-            if (urlOfFileToSave!="") {
+            if (urlOfFileToSave != "") {
                 _buttleData.saveData(urlOfFileToSave)
                 _buttleData.newData()
             } else {
@@ -281,7 +280,7 @@ ApplicationWindow {
                 id: undoRedoStack
                 title: "Undo/Redo stack"
 
-                property variant undoRedoList: _buttleData.graphCanBeSaved ? _buttleManager.undoRedoStack:_buttleManager.undoRedoStack
+                property variant undoRedoList: _buttleData.graphCanBeSaved ? _buttleManager.undoRedoStack : _buttleManager.undoRedoStack
 
                 Instantiator {
                     model: undoRedoStack.undoRedoList
@@ -392,7 +391,7 @@ ApplicationWindow {
             title: "Nodes"
 
             Instantiator {
-                model: _buttleData.getMenu(1,"")
+                model: _buttleData.getMenu(1, "")
 
                 Menu {
                     id: firstMenu
@@ -673,29 +672,41 @@ ApplicationWindow {
             MenuItem {
                 text: "Browser"
                 checkable: true
-                checked: browser.parent.visible == true ? true : false
-                onTriggered: browser.parent.visible == false ? browser.parent.visible = true : browser.parent.visible = false
+                checked: browser.parent.visible
+
+                onTriggered: {
+                    browser.parent.visible = !browser.parent.visible
+                }
             }
 
             MenuItem {
                 text: "Viewer"
                 checkable: true
-                checked: player.parent.visible==true ? true : false
-                onTriggered: player.parent.visible == false ? player.parent.visible = true : player.parent.visible = false
+                checked: player.parent.visible
+
+                onTriggered: {
+                    player.parent.visible = !player.parent.visible
+                }
             }
 
             MenuItem {
                 text: "Graph"
                 checkable: true
-                checked: graphEditor.parent.visible==true ? true : false
-                onTriggered: graphEditor.parent.visible == false ? graphEditor.parent.visible = true : graphEditor.parent.visible = false
+                checked: graphEditor.parent.visible
+
+                onTriggered: {
+                    graphEditor.parent.visible = !graphEditor.parent.visible
+                }
             }
 
             MenuItem {
                 text: "Parameters"
                 checkable: true
-                checked: paramEditor.parent.visible==true ? true : false
-                onTriggered: paramEditor.parent.visible == false ? paramEditor.parent.visible = true : paramEditor.parent.visible = false
+                checked: paramEditor.parent.visible
+
+                onTriggered: {
+                    paramEditor.parent.visible = !paramEditor.parent.visible
+                }
             }
             */
         }
@@ -829,7 +840,7 @@ ApplicationWindow {
                     implicitWidth: parent.width
                     implicitHeight: topRightView.visible ? 0.5 * parent.height : parent.height
                     z: -1
-                    visible: selectedView == 3 ? false : true
+                    visible: !selectedView
 
                     children:
                     switch (selectedView) {

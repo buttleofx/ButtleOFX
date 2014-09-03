@@ -67,7 +67,7 @@ Window {
                     Layout.fillWidth: true
 
                     color: "white"
-                    text: folderModel.folder
+                    text: folderModel.folder.toString().substring(7)
                     selectionColor: "#00b2a1"
                 }
             }

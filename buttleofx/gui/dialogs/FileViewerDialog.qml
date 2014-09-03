@@ -112,7 +112,21 @@ Window {
                             anchors.horizontalCenter: parent.horizontalCenter
                             width: 55
                             height: 55
-                            source: folderModel.isFolder(index) ? "../img/buttons/browser/folder-icon.png" : "../img/buttons/browser/file-icon.png"
+                            asynchronous: true
+                            fillMode: Image.PreserveAspectFit
+                            sourceSize.width: width
+                            sourceSize.height: height
+                            property variant supportedFormats: ["bmp", "gif", "jpg", "jpeg", "png", "pbm", "pgm", "ppm", "xbm", "xpm"]
+
+                            source: {
+                                if (folderModel.isFolder(index)) {
+                                    "../img/buttons/browser/folder-icon.png"
+                                } else if (supportedFormats.indexOf(folderModel.get(index, "fileSuffix").toLowerCase()) != -1) {
+                                    folderModel.get(index, "filePath")
+                                } else {
+                                    "../img/buttons/browser/file-icon.png"
+                                }
+                            }
                         }
                         Text {
                             width: folderView.cellWidth - 10

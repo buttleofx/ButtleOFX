@@ -210,6 +210,20 @@ ApplicationWindow {
 
     ExitDialog {
         id: closeButtle
+
+        onSaveButtonClicked: {
+            if (urlOfFileToSave != "") {
+                _buttleData.saveData(urlOfFileToSave)
+            } else {
+                closeButtle.visible = false
+                finderSaveGraph.open()
+//                finderSaveGraph.close()
+//                finderSaveGraph.open()
+            }
+//            Qt.quit()
+        }
+        onDiscardButtonClicked: Qt.quit()
+        onAbortButtonClicked: closeButtle.visible = false
     }
 
     menuBar: MenuBar {

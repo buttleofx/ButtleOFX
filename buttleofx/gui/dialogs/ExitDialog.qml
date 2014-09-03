@@ -14,6 +14,10 @@ Window {
     modality: Qt.WindowModal
     visible: false
 
+    signal saveButtonClicked
+    signal discardButtonClicked
+    signal abortButtonClicked
+
     Component {
         id: buttonStyle
 
@@ -43,7 +47,7 @@ Window {
             spacing: 20
 
             Image {
-                source: "/home/james/git/ButtleOFX/buttleofx/gui/img/icons/logo_icon.png"
+                source: "../img/icons/logo_icon.png"
             }
 
             Text {
@@ -62,13 +66,7 @@ Window {
                 style: buttonStyle
 
                 onClicked: {
-                    if (urlOfFileToSave != "") {
-                        _buttleData.saveData(urlOfFileToSave)
-                    } else {
-                        finderSaveGraph.open()
-                        finderSaveGraph.close()
-                        finderSaveGraph.open()
-                    }
+                    exitDialog.saveButtonClicked()
                 }
             }
 
@@ -76,14 +74,14 @@ Window {
                 id: discardButton
                 text: "Discard"
                 style: buttonStyle
-                onClicked: Qt.quit()
+                onClicked: exitDialog.discardButtonClicked()
             }
 
             Button {
                 id: abortButton
                 text: "Abort"
                 style: buttonStyle
-                onClicked: exitDialog.visible = false
+                onClicked: exitDialog.abortButtonClicked()
             }
         }
     }

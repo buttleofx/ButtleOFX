@@ -156,10 +156,6 @@ ApplicationWindow {
             if (finderSaveGraph.entryBarText != "") {
                 _buttleData.urlOfFileToSave = (finderSaveGraph.currentFolder + "/" + finderSaveGraph.entryBarText).substring(7)
 
-                if (_buttleData.urlOfFileToSave.substr(-5) != ".bofx") {
-                    _buttleData.urlOfFileToSave += ".bofx"
-                }
-
                 _buttleData.saveData(_buttleData.urlOfFileToSave)
                 finderSaveGraph.visible = false
 

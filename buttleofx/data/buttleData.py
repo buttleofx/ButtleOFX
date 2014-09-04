@@ -649,11 +649,11 @@ class ButtleData(QtCore.QObject):
         """
             Saves all data in a json file
         """
+        # If called from Python, it could be a str or a QUrl
         if isinstance(url, str):
-            # If called from Python, it could be a str or a QUrl.
-            filepath = QtCore.QUrl.fromLocalFile(url).toLocalFile()
+            filepath = url
         else:
-            filepath = QtCore.QUrl(url).toLocalFile()
+            filepath = url.toString()
 
         if not filepath.lower().endswith(".bofx"):
             filepath = filepath + ".bofx"

@@ -109,8 +109,6 @@ class EventFilter(QtCore.QObject):
             # This project has never been saved, so ask the user on which file to save.
             dialog = QtWidgets.QFileDialog()
             fileToSave = dialog.getSaveFileName(None, "Save the graph", browser.getFirstFolder())[0]
-            if not (fileToSave.endswith(".bofx")):
-                fileToSave += ".bofx"
             buttleData.urlOfFileToSave = fileToSave
             buttleData.saveData(fileToSave)
             # Close the application

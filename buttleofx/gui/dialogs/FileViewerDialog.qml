@@ -11,6 +11,12 @@ Window {
     height: 380
     flags: Qt.Dialog
     color: "#141414"
+    visible: false
+    property string buttonText: ""
+    property string currentFolder: folderModel.folder
+    property string entryBarText: entryBar.text
+
+    signal buttonClicked
 
     FolderListModel {
         id: folderModel
@@ -158,11 +164,12 @@ Window {
             anchors.bottom: parent.bottom
 
             TextField {
+                id: entryBar
                 Layout.fillWidth: true
             }
 
             Button {
-                text: "Save"
+                text: buttonText
 
                 style:
                 ButtonStyle {
@@ -181,6 +188,7 @@ Window {
                         }
                     }
                 }
+                onClicked: mainWindow.buttonClicked()
             }
         }
     }

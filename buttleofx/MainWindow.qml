@@ -146,19 +146,28 @@ ApplicationWindow {
         }
     }
 
-    FileDialog {
+    FileViewerDialog {
         id: finderSaveGraph
         title: "Save the graph"
-        nameFilters: [ "All files (*)" ]
-        selectedNameFilter: "All files (*)"
+        buttonText: "Save"
+        property bool quit: false
 
-        onAccepted: {
-            if (finderSaveGraph.fileUrl) {
-                _buttleData.saveData(finderSaveGraph.fileUrl)
+        onButtonClicked: {
+            if (finderSaveGraph.entryBarText != "") {
+                _buttleData.urlOfFileToSave = (finderSaveGraph.currentFolder + "/" + finderSaveGraph.entryBarText).substring(7)
+
+                if (_buttleData.urlOfFileToSave.substr(-5) != ".bofx") {
+                    _buttleData.urlOfFileToSave += ".bofx"
+                }
+
+                _buttleData.saveData(_buttleData.urlOfFileToSave)
+                finderSaveGraph.visible = false
+
+                if (quit) {
+                    Qt.quit()
+                }
             }
         }
-
-        selectExisting: false
     }
 
     MessageDialog {
@@ -175,7 +184,8 @@ ApplicationWindow {
             if (urlOfFileToSave != "") {
                 _buttleData.saveData(urlOfFileToSave)
             } else {
-                finderSaveGraph.open()
+                finderSaveGraph.quit = false
+                finderSaveGraph.visible = true
             }
         }
         onNo: {
@@ -199,7 +209,8 @@ ApplicationWindow {
                 _buttleData.saveData(urlOfFileToSave)
                 _buttleData.newData()
             } else {
-                finderSaveGraph.open()
+                finderSaveGraph.quit = false
+                finderSaveGraph.visible = true
                 _buttleData.newData()
             }
         }
@@ -216,11 +227,9 @@ ApplicationWindow {
                 _buttleData.saveData(urlOfFileToSave)
             } else {
                 closeButtle.visible = false
-                finderSaveGraph.open()
-//                finderSaveGraph.close()
-//                finderSaveGraph.open()
+                finderSaveGraph.quit = true
+                finderSaveGraph.visible = true
             }
-//            Qt.quit()
         }
         onDiscardButtonClicked: Qt.quit()
         onAbortButtonClicked: closeButtle.visible = false

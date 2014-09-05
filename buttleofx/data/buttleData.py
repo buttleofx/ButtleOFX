@@ -524,12 +524,9 @@ class ButtleData(QtCore.QObject):
         """
             Loads all data from a Json file (the default Json file if no url is given)
         """
-
-        filepath = QtCore.QUrl(url).toLocalFile()
-
         self.newData()
 
-        with open(filepath, 'r') as f:
+        with open(url, 'r') as f:
             read_data = f.read()
             decoded = json.loads(read_data, object_hook=_decode_dict)
 
@@ -563,7 +560,7 @@ class ButtleData(QtCore.QObject):
 
         f.closed
 
-        self.urlOfFileToSave = filepath
+        self.urlOfFileToSave = url
 
     @QtCore.pyqtSlot()
     def newData(self):

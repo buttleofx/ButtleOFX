@@ -133,15 +133,15 @@ ApplicationWindow {
         title: "Shortcuts"
     }
 
-    FileDialog {
+    FileViewerDialog {
         id: finderLoadGraph
         title: "Open a graph"
-        nameFilters: [ "All files (*)" ]
-        selectedNameFilter: "All files (*)"
+        buttonText: "Open"
 
-        onAccepted: {
-            if (finderLoadGraph.fileUrl) {
-                _buttleData.loadData(finderLoadGraph.fileUrl)
+        onButtonClicked: {
+            if (finderLoadGraph.entryBarText != "") {
+                _buttleData.loadData((finderLoadGraph.currentFolder + "/" + finderLoadGraph.entryBarText).substring(7))
+                finderLoadGraph.visible = false
             }
         }
     }
@@ -185,7 +185,7 @@ ApplicationWindow {
             }
         }
         onNo: {
-            finderLoadGraph.open()
+            finderLoadGraph.visible = true
         }
         onRejected: {}
     }
@@ -254,7 +254,7 @@ ApplicationWindow {
 
                 onTriggered: {
                     if (!_buttleData.graphCanBeSaved) {
-                        finderLoadGraph.open()
+                        finderLoadGraph.visible = true
                     } else {
                         openGraph.open()
                         openGraph.close()
@@ -273,7 +273,7 @@ ApplicationWindow {
             MenuItem {
                 text: "Save As"
                 shortcut: "Ctrl+Shift+S"
-                onTriggered: finderSaveGraph.open()
+                onTriggered: finderSaveGraph.visible = true
             }
 
             MenuSeparator { }

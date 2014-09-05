@@ -145,7 +145,14 @@ Window {
 
                     MouseArea {
                         anchors.fill: parent
-                        onClicked: folderView.currentIndex = index
+                        onClicked: {
+                            folderView.currentIndex = index
+                            if (!folderModel.isFolder(index)) {
+                                entryBar.text = folderModel.get(index, "fileName")
+                            } else {
+                                entryBar.text = ""
+                            }
+                        }
 
                         onDoubleClicked: {
                             if (folderModel.isFolder(index)) {

@@ -736,6 +736,9 @@ class ButtleData(QtCore.QObject):
     def getButtlePath(self):
         return self._buttlePath
 
+    def getHomeDir(self):
+        return os.path.expanduser("~")
+
     def getCurrentConnectionWrapper(self):
         """
             Returns the current currentConnectionWrapper.
@@ -1036,6 +1039,7 @@ class ButtleData(QtCore.QObject):
 
     # filePath
     buttlePath = QtCore.pyqtProperty(str, getButtlePath, constant=True)
+    homeDir = QtCore.pyqtProperty(str, getHomeDir, constant=True)
 
     # Current param, view, and selected node
     currentParamNodeChanged = QtCore.pyqtSignal()

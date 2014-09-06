@@ -6,22 +6,28 @@ import QtQuick.Controls.Styles 1.0
 import Qt.labs.folderlistmodel 2.1
 
 Window {
-    id: mainWindow
+    id: fileViewerWindow
     width: 630
     height: 380
     flags: Qt.Dialog
     color: "#141414"
-    visible: false
-    property string buttonText: ""
-    property string currentFolder: folderModel.folder
+
+    property string buttonText
+    property string folderModelFolder
     property string entryBarText: entryBar.text
+    property string currentFile: (folderModel.folder + "/" + entryBarText).substring(7) // We use .substring() to remove the 'file://' prefix
 
     signal buttonClicked
+
+    // The way the URL bar is updated is a bit kludgy because if we do simple bindings
+    // the bar will be empty the first time it's started. Hence the Component.onCompleted() call
+    // and the assignments every time the parentFolderButton is pressed or the current folder is changed.
+    Component.onCompleted: urlBar.text = folderModelFolder
 
     FolderListModel {
         id: folderModel
         showDirsFirst: true
-        folder: "/home/james/"
+        folder: folderModelFolder
     }
 
     ColumnLayout {
@@ -54,7 +60,10 @@ Window {
                     }
                 }
 
-                onClicked: { folderModel.folder = folderModel.parentFolder }
+                onClicked: {
+                    folderModel.folder = folderModel.parentFolder
+                    urlBar.text = folderModel.folder.toString().substring(7)
+                }
             }
 
             Rectangle {
@@ -65,6 +74,7 @@ Window {
                 border.color: "grey"
 
                 TextInput {
+                    id: urlBar
                     x: 5
                     y: 4
 
@@ -73,7 +83,6 @@ Window {
                     Layout.fillWidth: true
 
                     color: "white"
-                    text: folderModel.folder.toString().substring(7)
                     selectionColor: "#00b2a1"
                 }
             }
@@ -156,7 +165,8 @@ Window {
 
                         onDoubleClicked: {
                             if (folderModel.isFolder(index)) {
-                                    folderModel.folder = folderModel.get(index, "filePath")
+                                folderModel.folder = folderModel.get(index, "filePath")
+                                urlBar.text = folderModel.get(index, "filePath")
                             }
                         }
                     }
@@ -195,7 +205,7 @@ Window {
                         }
                     }
                 }
-                onClicked: mainWindow.buttonClicked()
+                onClicked: fileViewerWindow.buttonClicked()
             }
         }
     }

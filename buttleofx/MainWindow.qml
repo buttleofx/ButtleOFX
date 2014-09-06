@@ -135,12 +135,14 @@ ApplicationWindow {
 
     FileViewerDialog {
         id: finderLoadGraph
+        visible: false
         title: "Open a graph"
         buttonText: "Open"
+        folderModelFolder: _buttleData.homeDir
 
         onButtonClicked: {
             if (finderLoadGraph.entryBarText != "") {
-                _buttleData.loadData((finderLoadGraph.currentFolder + "/" + finderLoadGraph.entryBarText).substring(7))
+                _buttleData.loadData(finderLoadGraph.currentFile)
                 finderLoadGraph.visible = false
             }
         }
@@ -148,13 +150,15 @@ ApplicationWindow {
 
     FileViewerDialog {
         id: finderSaveGraph
+        visible: false
         title: "Save the graph"
         buttonText: "Save"
+        folderModelFolder: _buttleData.homeDir
         property bool quit: false
 
         onButtonClicked: {
             if (finderSaveGraph.entryBarText != "") {
-                _buttleData.urlOfFileToSave = (finderSaveGraph.currentFolder + "/" + finderSaveGraph.entryBarText).substring(7)
+                _buttleData.urlOfFileToSave = finderSaveGraph.currentFile
 
                 _buttleData.saveData(_buttleData.urlOfFileToSave)
                 finderSaveGraph.visible = false

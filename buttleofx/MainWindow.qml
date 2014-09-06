@@ -221,6 +221,8 @@ ApplicationWindow {
 
     ExitDialog {
         id: closeButtle
+        visible: false
+        dialogText: "Do you want to save before exiting?<br>If you don't, all unsaved changes will be lost"
 
         onSaveButtonClicked: {
             if (urlOfFileToSave != "") {

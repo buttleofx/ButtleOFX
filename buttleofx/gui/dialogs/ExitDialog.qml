@@ -12,7 +12,8 @@ Window {
     color: "#141414"
     flags: Qt.Dialog
     modality: Qt.WindowModal
-    visible: false
+
+    property string dialogText
 
     signal saveButtonClicked
     signal discardButtonClicked
@@ -51,7 +52,7 @@ Window {
             }
 
             Text {
-                text: "Do you want to save before exiting?<br>If you don't, all unsaved changes will be lost"
+                text: dialogText
                 color: "#FEFEFE"
             }
         }

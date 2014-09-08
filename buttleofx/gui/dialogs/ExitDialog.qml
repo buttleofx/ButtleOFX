@@ -17,7 +17,6 @@ Window {
 
     signal saveButtonClicked
     signal discardButtonClicked
-    signal abortButtonClicked
 
     Component {
         id: buttonStyle
@@ -68,6 +67,7 @@ Window {
 
                 onClicked: {
                     exitDialog.saveButtonClicked()
+                    exitDialog.visible = false
                 }
             }
 
@@ -75,14 +75,17 @@ Window {
                 id: discardButton
                 text: "Discard"
                 style: buttonStyle
-                onClicked: exitDialog.discardButtonClicked()
+                onClicked: {
+                    exitDialog.discardButtonClicked()
+                    exitDialog.visible = false
+                }
             }
 
             Button {
                 id: abortButton
                 text: "Abort"
                 style: buttonStyle
-                onClicked: exitDialog.abortButtonClicked()
+                onClicked: exitDialog.visible = false
             }
         }
     }

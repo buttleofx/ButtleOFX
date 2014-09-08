@@ -154,7 +154,13 @@ ApplicationWindow {
         title: "Save the graph"
         buttonText: "Save"
         folderModelFolder: _buttleData.homeDir
-        property bool quit: false
+
+        property bool quit
+
+        function show(doQuit) {
+            quit = doQuit
+            finderSaveGraph.visible = true
+        }
 
         onButtonClicked: {
             if (finderSaveGraph.entryBarText != "") {
@@ -163,24 +169,23 @@ ApplicationWindow {
                 _buttleData.saveData(_buttleData.urlOfFileToSave)
                 finderSaveGraph.visible = false
 
+                // There are currently only two callers of finderSaveGraph, openGraph and newGraph,
+                // so we can get away with this simple for/else statement.
                 if (quit) {
                     Qt.quit()
+                } else {
+                    _buttleData.newData()
                 }
             }
         }
     }
 
-    MessageDialog {
+    ExitDialog {
         id: openGraph
-        title:"Save the graph?"
-        icon: StandardIcon.Warning
-        modality: Qt.WindowStaysOnTopHint && Qt.WindowModal
-        text: urlOfFileToSave == "" ? "Save graph changes before closing?" : "Save " + _buttleData.getFileName(urlOfFileToSave) + " changes before closing?"
-        detailedText: "If you don't save the graph, unsaved modifications will be lost."
-        standardButtons: StandardButton.Yes | StandardButton.No | StandardButton.Abort
-        Component.onCompleted: visible = false
+        visible: false
+        dialogText: "Do you want to save before closing this file?<br>If you don't, all unsaved changes will be lost"
 
-        onYes: {
+        onSaveButtonClicked: {
             if (urlOfFileToSave != "") {
                 _buttleData.saveData(urlOfFileToSave)
             } else {
@@ -188,35 +193,28 @@ ApplicationWindow {
                 finderSaveGraph.visible = true
             }
         }
-        onNo: {
+        onDiscardButtonClicked: {
             finderLoadGraph.visible = true
         }
-        onRejected: {}
     }
 
-    MessageDialog {
+    ExitDialog {
         id: newGraph
-        title: "Save the graph?"
-        icon: StandardIcon.Warning
-        modality: Qt.WindowStaysOnTopHint && Qt.WindowModal
-        text: urlOfFileToSave == "" ? "Save graph changes before closing?" : "Save " + _buttleData.getFileName(urlOfFileToSave) + " changes before closing?"
-        detailedText: "If you don't save the graph, unsaved modifications will be lost."
-        standardButtons: StandardButton.Yes | StandardButton.No | StandardButton.Abort
-        Component.onCompleted: visible = false
+        visible: false
+        dialogText: "Do you want to save before closing this file?<br>If you don't, all unsaved changes will be lost"
 
-        onYes: {
+        signal showDialog(bool quit)
+
+        Component.onCompleted: newGraph.showDialog.connect(finderSaveGraph.show)
+
+        onSaveButtonClicked: {
             if (urlOfFileToSave != "") {
                 _buttleData.saveData(urlOfFileToSave)
-                _buttleData.newData()
             } else {
-                finderSaveGraph.quit = false
-                finderSaveGraph.visible = true
-                _buttleData.newData()
+                newGraph.showDialog(false)
             }
         }
-        onNo: {
-            _buttleData.newData()
-        }
+        onDiscardButtonClicked: _buttleData.newData()
     }
 
     ExitDialog {
@@ -224,17 +222,18 @@ ApplicationWindow {
         visible: false
         dialogText: "Do you want to save before exiting?<br>If you don't, all unsaved changes will be lost"
 
+        signal showDialog(bool quit)
+
+        Component.onCompleted: closeButtle.showDialog.connect(finderSaveGraph.show)
+
         onSaveButtonClicked: {
             if (urlOfFileToSave != "") {
                 _buttleData.saveData(urlOfFileToSave)
             } else {
-                closeButtle.visible = false
-                finderSaveGraph.quit = true
-                finderSaveGraph.visible = true
+                closeButtle.showDialog(true)
             }
         }
         onDiscardButtonClicked: Qt.quit()
-        onAbortButtonClicked: closeButtle.visible = false
     }
 
     menuBar: MenuBar {
@@ -249,7 +248,7 @@ ApplicationWindow {
                     if (!_buttleData.graphCanBeSaved) {
                         _buttleData.newData()
                     } else {
-                        newGraph.open()
+                        newGraph.visible = true
                     }
                 }
             }
@@ -262,9 +261,7 @@ ApplicationWindow {
                     if (!_buttleData.graphCanBeSaved) {
                         finderLoadGraph.visible = true
                     } else {
-                        openGraph.open()
-                        openGraph.close()
-                        openGraph.open()
+                        openGraph.visible = true
                     }
                 }
             }

@@ -157,6 +157,7 @@ ApplicationWindow {
 
         property bool quit
 
+        // This receives a bool that tells us whether to close ButtleOFX or to create a new graph
         function show(doQuit) {
             quit = doQuit
             finderSaveGraph.visible = true
@@ -185,12 +186,15 @@ ApplicationWindow {
         visible: false
         dialogText: "Do you want to save before closing this file?<br>If you don't, all unsaved changes will be lost"
 
+        signal showDialog(bool quit)
+
+        Component.onCompleted: openGraph.showDialog.connect(finderSaveGraph.show)
+
         onSaveButtonClicked: {
             if (urlOfFileToSave != "") {
                 _buttleData.saveData(urlOfFileToSave)
             } else {
-                finderSaveGraph.quit = false
-                finderSaveGraph.visible = true
+                openGraph.showDialog(true)
             }
         }
         onDiscardButtonClicked: {

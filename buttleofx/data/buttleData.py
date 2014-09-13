@@ -651,7 +651,7 @@ class ButtleData(QtCore.QObject):
         if isinstance(url, str):
             filepath = url
         else:
-            filepath = url.toString()
+            filepath = url.toLocalFile()
 
         if not filepath.lower().endswith(".bofx"):
             filepath = filepath + ".bofx"

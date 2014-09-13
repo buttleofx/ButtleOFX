@@ -155,11 +155,13 @@ ApplicationWindow {
         buttonText: "Save"
         folderModelFolder: _buttleData.homeDir
 
-        property bool quit
+        // Acceptable values are the verb parts of the callers: 'open', 'new', and 'close'
+        property string action
 
-        // This receives a bool that tells us whether to close ButtleOFX or to create a new graph
-        function show(doQuit) {
-            quit = doQuit
+        // This initializer function takes in the action being done by the user so we know
+        // what to do when called.
+        function show(doAction) {
+            action = doAction
             finderSaveGraph.visible = true
         }
 
@@ -170,12 +172,13 @@ ApplicationWindow {
                 _buttleData.saveData(_buttleData.urlOfFileToSave)
                 finderSaveGraph.visible = false
 
-                // There are currently only two callers of finderSaveGraph, openGraph and newGraph,
-                // so we can get away with this simple for/else statement.
-                if (quit) {
-                    Qt.quit()
-                } else {
+                if (action == "open") {
+                    _buttleData.newData()  // Todo: Only clear the graph if the user actually decides to save
+                    finderLoadGraph.visible = true
+                } else if (action == "new") {
                     _buttleData.newData()
+                } else if (action == "close") {
+                    Qt.quit()
                 }
             }
         }
@@ -186,7 +189,7 @@ ApplicationWindow {
         visible: false
         dialogText: "Do you want to save before closing this file?<br>If you don't, all unsaved changes will be lost"
 
-        signal showDialog(bool quit)
+        signal showDialog(string quit)
 
         Component.onCompleted: openGraph.showDialog.connect(finderSaveGraph.show)
 
@@ -194,7 +197,7 @@ ApplicationWindow {
             if (urlOfFileToSave != "") {
                 _buttleData.saveData(urlOfFileToSave)
             } else {
-                openGraph.showDialog(true)
+                openGraph.showDialog("open")
             }
         }
         onDiscardButtonClicked: {
@@ -207,7 +210,7 @@ ApplicationWindow {
         visible: false
         dialogText: "Do you want to save before closing this file?<br>If you don't, all unsaved changes will be lost"
 
-        signal showDialog(bool quit)
+        signal showDialog(string quit)
 
         Component.onCompleted: newGraph.showDialog.connect(finderSaveGraph.show)
 
@@ -215,7 +218,7 @@ ApplicationWindow {
             if (urlOfFileToSave != "") {
                 _buttleData.saveData(urlOfFileToSave)
             } else {
-                newGraph.showDialog(false)
+                newGraph.showDialog("new")
             }
         }
         onDiscardButtonClicked: _buttleData.newData()
@@ -226,7 +229,7 @@ ApplicationWindow {
         visible: false
         dialogText: "Do you want to save before exiting?<br>If you don't, all unsaved changes will be lost"
 
-        signal showDialog(bool quit)
+        signal showDialog(string quit)
 
         Component.onCompleted: closeButtle.showDialog.connect(finderSaveGraph.show)
 
@@ -234,7 +237,7 @@ ApplicationWindow {
             if (urlOfFileToSave != "") {
                 _buttleData.saveData(urlOfFileToSave)
             } else {
-                closeButtle.showDialog(true)
+                closeButtle.showDialog("close")
             }
         }
         onDiscardButtonClicked: Qt.quit()

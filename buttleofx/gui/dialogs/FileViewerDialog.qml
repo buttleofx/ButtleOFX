@@ -15,7 +15,7 @@ Window {
     property string buttonText
     property string folderModelFolder
     property string entryBarText: entryBar.text
-    property string currentFile: (folderModel.folder + "/" + entryBarText).substring(7) // We use .substring() to remove the 'file://' prefix
+    property string currentFile: folderModel.folder + "/" + entryBarText
 
     signal buttonClicked
 

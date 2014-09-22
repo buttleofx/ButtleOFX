@@ -9,15 +9,14 @@ Window {
     id: fileViewerWindow
     width: 630
     height: 380
-    flags: Qt.Dialog
     color: "#141414"
+    flags: Qt.Dialog
 
     property string buttonText
     property string folderModelFolder
     property string entryBarText: entryBar.text
-    property string currentFile: folderModel.folder + "/" + entryBarText
 
-    signal buttonClicked
+    signal buttonClicked(string currentFile)
 
     // The way the URL bar is updated is a bit kludgy because if we do simple bindings
     // the bar will be empty the first time it's started. Hence the Component.onCompleted() call
@@ -143,17 +142,19 @@ Window {
                                 }
                             }
                         }
+
                         Text {
+                            text: fileName
+                            color: "white"
                             width: folderView.cellWidth - 10
                             horizontalAlignment: Text.AlignHCenter
                             wrapMode: Text.WrapAnywhere
-                            text: fileName
-                            color: "white"
                         }
                     }
 
                     MouseArea {
                         anchors.fill: parent
+
                         onClicked: {
                             folderView.currentIndex = index
                             if (!folderModel.isFolder(index)) {
@@ -162,7 +163,6 @@ Window {
                                 entryBar.text = ""
                             }
                         }
-
                         onDoubleClicked: {
                             if (folderModel.isFolder(index)) {
                                 folderModel.folder = folderModel.get(index, "filePath")
@@ -205,7 +205,7 @@ Window {
                         }
                     }
                 }
-                onClicked: fileViewerWindow.buttonClicked()
+                onClicked: fileViewerWindow.buttonClicked(folderModel.folder + "/" + entryBarText)
             }
         }
     }

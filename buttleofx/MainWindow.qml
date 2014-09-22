@@ -142,7 +142,7 @@ ApplicationWindow {
 
         onButtonClicked: {
             if (finderLoadGraph.entryBarText != "") {
-                _buttleData.loadData(finderLoadGraph.currentFile)
+                _buttleData.loadData(currentFile)
                 finderLoadGraph.visible = false
             }
         }
@@ -155,7 +155,8 @@ ApplicationWindow {
         buttonText: "Save"
         folderModelFolder: _buttleData.homeDir
 
-        // Acceptable values are the verb parts of the callers: 'open', 'new', and 'close'
+        // Acceptable values are the verb parts of the callers ID's, i.e. 'open',
+        // 'new', and 'close'
         property string action
 
         // This initializer function takes in the action being done by the user so we know
@@ -167,7 +168,7 @@ ApplicationWindow {
 
         onButtonClicked: {
             if (finderSaveGraph.entryBarText != "") {
-                _buttleData.urlOfFileToSave = finderSaveGraph.currentFile
+                _buttleData.urlOfFileToSave = currentFile
 
                 _buttleData.saveData(_buttleData.urlOfFileToSave)
                 finderSaveGraph.visible = false
@@ -227,7 +228,6 @@ ApplicationWindow {
     ExitDialog {
         id: closeButtle
         visible: false
-        dialogText: "Do you want to save before exiting?<br>If you don't, all unsaved changes will be lost"
 
         signal showDialog(string quit)
 

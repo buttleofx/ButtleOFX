@@ -13,7 +13,7 @@ Window {
     flags: Qt.Dialog
     modality: Qt.WindowModal
 
-    property string dialogText
+    property string dialogText: "Do you want to save before exiting?<br>If you don't, all unsaved changes will be lost."
 
     signal saveButtonClicked
     signal discardButtonClicked
@@ -46,9 +46,7 @@ Window {
         RowLayout {
             spacing: 20
 
-            Image {
-                source: "../img/icons/logo_icon.png"
-            }
+            Image { source: "../img/icons/logo_icon.png" }
 
             Text {
                 text: dialogText
@@ -75,6 +73,7 @@ Window {
                 id: discardButton
                 text: "Discard"
                 style: buttonStyle
+
                 onClicked: {
                     exitDialog.discardButtonClicked()
                     exitDialog.visible = false

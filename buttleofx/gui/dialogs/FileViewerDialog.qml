@@ -18,11 +18,6 @@ Window {
 
     signal buttonClicked(string currentFile)
 
-    // The way the URL bar is updated is a bit kludgy because if we do simple bindings
-    // the bar will be empty the first time it's started. Hence the Component.onCompleted() call
-    // and the assignments every time the parentFolderButton is pressed or the current folder is changed.
-    Component.onCompleted: urlBar.text = folderModelFolder
-
     FolderListModel {
         id: folderModel
         showDirsFirst: true
@@ -61,7 +56,6 @@ Window {
 
                 onClicked: {
                     folderModel.folder = folderModel.parentFolder
-                    urlBar.text = folderModel.folder.toString().substring(7)
                 }
             }
 
@@ -77,6 +71,7 @@ Window {
                     x: 5
                     y: 4
 
+                    text: folderModel.folder.toString().substring(7)
                     readOnly: true
                     selectByMouse: true
                     Layout.fillWidth: true
@@ -166,7 +161,6 @@ Window {
                         onDoubleClicked: {
                             if (folderModel.isFolder(index)) {
                                 folderModel.folder = folderModel.get(index, "filePath")
-                                urlBar.text = folderModel.get(index, "filePath")
                             }
                         }
                     }

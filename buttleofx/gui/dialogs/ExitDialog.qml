@@ -11,7 +11,6 @@ Window {
     title: "Save Changes?"
     color: "#141414"
     flags: Qt.Dialog
-    modality: Qt.WindowModal
 
     property string dialogText: "Do you want to save before exiting?<br>If you don't, all unsaved changes will be lost."
 

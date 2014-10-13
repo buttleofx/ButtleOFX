@@ -2,20 +2,22 @@
 ========================
 **Project under early development.**
 
-ButtleOFX project is a set of GUI tools built around the [TuttleOFX](www.tuttleofx.org) framework.
+[ButtleOFX](http://buttleofx.wordpress.com) is an open source compositing software.
+
+It is built on top of the [TuttleOFX](http://tuttleofx.org) framework which relies on the [OpenFX plugin standard](http://openeffects.org).
 
 Website: [http://buttleofx.wordpress.com](http://buttleofx.wordpress.com)
 
 
 Development teams
--------
+-----------------
 
 ButtleOFX is developped within student projects at [IMAC Engineering school](http://imac.alwaysdata.net).
 
 
-###Team 2.0
+###Team 2.0 (2013-2014)
 
-Version 2.0 (2013-2014) is currently on progress.   
+Release an alpha version of the software with a new Browser module and a new Quick Parameter Editor.
 
 Tutor :   
 >- [Fabien CASTAN](https://github.com/fabiencastan)   
@@ -27,10 +29,9 @@ Students :
 >- [Virginie LALANDE](https://github.com/vilal)
 >- [Baptiste MOIZARD](https://github.com/Bazard)
 
-###Team 1.0
+###Team 1.0 (2012-2013)
 
-Version 1.0 (2012-2013) is the first iteration of the project.   
-It's a proof of concept version, closer to an Alpha than a RC.
+Creation of a basic compositing software with a Graph Editor, a Parameter Editor and a Viewer.
 
 Tutor :   
 >- [Fabien CASTAN](https://github.com/fabiencastan)   
@@ -44,36 +45,37 @@ Students :
 
 
 Pre-requisites
------------
+--------------
 
 - python 3
 - PyQt 5.2 (QtQuick 2)
+- TuttleOFX
 
 
-Compilation
------------
+Getting the source
+------------------
 
-- Getting the source  
-`git clone git://github.com/buttleofx/ButtleOFX.git`  
-`cd ButtleOFX`  
-`git submodule update -i --recursive`  
-
+```
+git clone git://github.com/buttleofx/ButtleOFX.git
+cd ButtleOFX
+git submodule update -i --recursive
+```
 
 Run
 ---
 
-``export TUTTLEOFX_BIN=/path/to/TuttleOFX/dist/`hostname`/gcc-`gcc -dumpversion`/production``  
-`export PYTHONPATH=$TUTTLEOFX_BIN/python`  
-`export OFX_PLUGIN_PATH=$TUTTLEOFX_BIN/plugin`  
-     
-`python3 buttleApp.py`  
-
+```
+export TUTTLEOFX_ROOT=/path/to/TuttleOFX/install
+export PYTHONPATH=$TUTTLEOFX_ROOT/python
+export OFX_PLUGIN_PATH=$TUTTLEOFX_ROOT/plugin
+python3 buttleApp.py
+```
 
 Errors
 ------
 
-If you encounter errors to see plugins, you may need to clear the plugins cache:
-rm -rf ~/.tuttleofx
+If you encounter errors to see plugins, you may need to clear the plugins cache:  
+`rm -rf ~/.tuttleofx`
 
 
 License
@@ -86,8 +88,14 @@ Follows the TuttleOFX license.
 More information 
 ----------------
 
-**ButtleOFX** on github: [https://github.com/tuttleofx/ButtleOFX](https://github.com/tuttleofx/ButtleOFX)
+**ButtleOFX**
+>- website: [http://buttleofx.wordpress.com](http://buttleofx.wordpress.com)
+>- github: [https://github.com/tuttleofx/ButtleOFX](https://github.com/tuttleofx/ButtleOFX)
 
-**TuttleOFX** on github: [https://github.com/tuttleofx/TuttleOFX](https://github.com/tuttleofx/TuttleOFX)
-**TuttleOFX** website: [https://tuttleofx.org](https://tuttleofx.org)
+**TuttleOFX**
+>- website: [http://tuttleofx.org](http://tuttleofx.org)
+>- github: [https://github.com/tuttleofx/TuttleOFX](https://github.com/tuttleofx/TuttleOFX)
 
+**OpenFX**
+>- website: [http://openeffects.org](http://openeffects.org)
+>- github: [http://github.com/ofxa/openfx](http://github.com/ofxa/openfx)

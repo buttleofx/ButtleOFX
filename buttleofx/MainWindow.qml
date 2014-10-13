@@ -122,9 +122,9 @@ ApplicationWindow {
     PluginWindow {
         id: doc
         title: "Plugin's Documentation"
-        selectedNodeLabel: _buttleData.currentSelectedNodeWrappers.count!=0 ? _buttleData.currentSelectedNodeWrappers.get(0).name : ""
-        selectedNodeDoc: _buttleData.currentSelectedNodeWrappers.count!=0 ? _buttleData.currentSelectedNodeWrappers.get(0).pluginDoc : ""
-        selectedNodeGroup: _buttleData.currentSelectedNodeWrappers.count!=0 ? _buttleData.currentSelectedNodeWrappers.get(0).pluginGroup : ""
+        selectedNodeLabel: _buttleData.currentSelectedNodeWrappers.count != 0 ? _buttleData.currentSelectedNodeWrappers.get(0).name : ""
+        selectedNodeDoc: _buttleData.currentSelectedNodeWrappers.count != 0 ? _buttleData.currentSelectedNodeWrappers.get(0).pluginDoc : ""
+        selectedNodeGroup: _buttleData.currentSelectedNodeWrappers.count != 0 ? _buttleData.currentSelectedNodeWrappers.get(0).pluginGroup : ""
     }
 
     // Window of shortcuts
@@ -142,6 +142,7 @@ ApplicationWindow {
 
         onButtonClicked: {
             if (finderLoadGraph.entryBarText != "") {
+                _buttleData.newData()
                 _buttleData.loadData(currentFile)
                 finderLoadGraph.visible = false
             }
@@ -169,12 +170,11 @@ ApplicationWindow {
         onButtonClicked: {
             if (finderSaveGraph.entryBarText != "") {
                 _buttleData.urlOfFileToSave = currentFile
-
                 _buttleData.saveData(_buttleData.urlOfFileToSave)
+
                 finderSaveGraph.visible = false
 
                 if (action == "open") {
-                    _buttleData.newData()  // Todo: Only clear the graph if the user actually decides to save
                     finderLoadGraph.visible = true
                 } else if (action == "new") {
                     _buttleData.newData()
@@ -190,15 +190,11 @@ ApplicationWindow {
         visible: false
         dialogText: "Do you want to save before closing this file?<br>If you don't, all unsaved changes will be lost"
 
-        signal showDialog(string quit)
-
-        Component.onCompleted: openGraph.showDialog.connect(finderSaveGraph.show)
-
         onSaveButtonClicked: {
             if (urlOfFileToSave != "") {
                 _buttleData.saveData(urlOfFileToSave)
             } else {
-                openGraph.showDialog("open")
+                finderSaveGraph.show("open")
             }
         }
         onDiscardButtonClicked: {
@@ -211,15 +207,11 @@ ApplicationWindow {
         visible: false
         dialogText: "Do you want to save before closing this file?<br>If you don't, all unsaved changes will be lost"
 
-        signal showDialog(string quit)
-
-        Component.onCompleted: newGraph.showDialog.connect(finderSaveGraph.show)
-
         onSaveButtonClicked: {
             if (urlOfFileToSave != "") {
                 _buttleData.saveData(urlOfFileToSave)
             } else {
-                newGraph.showDialog("new")
+                finderSaveGraph.show("new")
             }
         }
         onDiscardButtonClicked: _buttleData.newData()
@@ -229,15 +221,11 @@ ApplicationWindow {
         id: closeButtle
         visible: false
 
-        signal showDialog(string quit)
-
-        Component.onCompleted: closeButtle.showDialog.connect(finderSaveGraph.show)
-
         onSaveButtonClicked: {
             if (urlOfFileToSave != "") {
                 _buttleData.saveData(urlOfFileToSave)
             } else {
-                closeButtle.showDialog("close")
+                finderSaveGraph.show("close")
             }
         }
         onDiscardButtonClicked: Qt.quit()

@@ -1,7 +1,51 @@
-from PyQt5 import QtCore, QtQuick
+from PyQt5 import QtCore
 
 import os
 import time
+
+
+class ReloadComponent:
+    '''
+    Functor to reload a QML component.
+    Will destroy and recreate the component.
+    '''
+    
+    def __init__(self, qmlFile, component, topLevelItem):
+        self._qmlFile = qmlFile
+        self._component = component
+        self._topLevelItem = topLevelItem
+
+    def __call__(self):
+        self._topLevelItem.deleteLater()
+        # To reload the view, re-set the source
+        self._component.loadUrl(QtCore.QUrl(self._qmlFile))
+        self._topLevelItem = self._component.create()
+        self._topLevelItem.show()
+
+
+class ReloadView:
+    
+    def __init__(self, view):
+        '''
+        Functor to reload a QQuickView.
+        '''
+        self._view = view
+    
+    def __call__(self):
+        source = self._view.source()
+        self._view.setSource(QtCore.QUrl(source))
+
+
+class AskQmlItemToReload:
+    '''
+    Functor to ask the top QML item to reload all the content.
+    '''
+    
+    def __init__(self, topLevelItem):
+        self._topLevelItem = topLevelItem
+    
+    def __call__(self):
+        QtCore.QMetaObject.invokeMethod(self._topLevelItem, "reload")
 
 
 class QmlInstantCoding(QtCore.QObject):
@@ -10,29 +54,28 @@ class QmlInstantCoding(QtCore.QObject):
     It reloads its attached QQuickView whenever one of the watched source file is modified.
     As it consumes resources, make sure to disable file watching in production mode.
     """
-    def __init__(self, attachedView, watching=True, watchSource=False, verbose=False):
+    def __init__(self, engine, reloadFunc, watching=True, verbose=False):
         """
         Build a QmlInstantCoding instance.
 
-        attachedView -- the QQuickView on which this QmlInstantCoding is applied
-        watching -- if True, file watching is enable (default: True)
-        watchSource -- watch the attached QQuickView source file if it already has one (default: False)
+        engine -- QML engine
+        reloadFunc -- The functor that will be called to reload.
+                      Will be something like "instantcoding.ReloadComponent(qmlFile, component, topLevelItem)"
+        watching -- Defines whether the watcher is active (default: True)
         verbose -- if True, output log infos (default: False)
         """
         super(QmlInstantCoding, self).__init__()
 
-        self._fileWatcher = QtCore.QFileSystemWatcher()     # Internal Qt File Watcher
-        self._attachedView = attachedView                   # Quick view attached to our watcher
-        self._watchedFiles = []                             # Internal watched files list
-        self._verbose = verbose                             # Verbose bool
-        self._watching = False                              # Defines whether the watcher is active
-        self._extensions = ["qml", "js"]                    # File extensions that defines files to watch when adding a folder
+        self._fileWatcher = QtCore.QFileSystemWatcher()  # Internal Qt File Watcher
+        self._engine = engine
+        self._reload = reloadFunc
+        self._watchedFiles = []  # Internal watched files list
+        self._verbose = verbose  # Verbose bool
+        self._watching = False  # 
+        self._extensions = ["qml", "js"]  # File extensions that defines files to watch when adding a folder
 
         # Update the watching status
         self.setWatching(watching)
-        # If view already has a source, add it to files to watch
-        #if self._attachedView.status() != QtQuick.QQuickView.Null and watchSource:
-        #    self.addFile(self._attachedView.source())
 
     def setWatching(self, watchValue):
         """
@@ -151,9 +194,9 @@ class QmlInstantCoding(QtCore.QObject):
         if self._verbose:
             print("Source file changed : ", sourceFile)
         # Retrieve source file from attached view
-        source = self._attachedView.source()
+        # source = self._component.source()
         # Clear the QQuickEngine cache
-        self._attachedView.engine().clearComponentCache()
+        self._engine.clearComponentCache()
         # Remove the modified file from the watched list
         self.removeFile(sourceFile)
         cptTry = 0
@@ -164,9 +207,9 @@ class QmlInstantCoding(QtCore.QObject):
         while not os.path.exists(sourceFile) and cptTry < 10:
             time.sleep(0.1)
             cptTry += 1
-
+        
         print("Reloading ", sourceFile)
-        # To reload the view, re-set the source
-        self._attachedView.setSource(QtCore.QUrl(source))
-        # Finally, readd the modified file to the watch system
+        self._reload()
+        
+        # Finally, read the modified file to the watch system
         self.addFile(sourceFile)

@@ -104,7 +104,7 @@ More information
 
 **ButtleOFX**
 >- website: [http://buttleofx.wordpress.com](http://buttleofx.wordpress.com)
->- github: [https://github.com/tuttleofx/ButtleOFX](https://github.com/tuttleofx/ButtleOFX)
+>- github: [https://github.com/buttleofx/ButtleOFX](https://github.com/buttleofx/ButtleOFX)
 
 **TuttleOFX**
 >- website: [http://tuttleofx.org](http://tuttleofx.org)

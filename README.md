@@ -14,6 +14,20 @@ Development teams
 
 ButtleOFX is developped within student projects at [IMAC Engineering school](http://imac.alwaysdata.net).
 
+###Team 3.0
+
+Version 3.0 (2014-2015) is currently in progress.   
+
+Tutor :   
+>- [Fabien CASTAN](https://github.com/fabiencastan)   
+>- [Clément Champetier](https://github.com/cchampet)
+
+Students :   
+>- [Jordi BASTIDE](https://github.com/Jordinaire)
+>- [Maxime ENGEL](https://github.com/MaximeEngel)
+>- [Maxime GILBERT](https://github.com/mxmgilbert)
+>- [Mathias GOYHENECHE](https://github.com/MGoyheneche)
+>- [Alexis OBLET](https://github.com/aoblet)
 
 ###Team 2.0 (2013-2014)
 

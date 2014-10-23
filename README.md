@@ -20,7 +20,7 @@ Version 3.0 (2014-2015) is currently in progress.
 
 Tutor :   
 >- [Fabien CASTAN](https://github.com/fabiencastan)   
->- [Clément Champetier](https://github.com/cchampet)
+>- [Clément CHAMPETIER](https://github.com/cchampet)
 
 Students :   
 >- [Jordi BASTIDE](https://github.com/Jordinaire)
@@ -51,11 +51,11 @@ Tutor :
 >- [Fabien CASTAN](https://github.com/fabiencastan)   
 
 Students :   
->- [Clément Champetier](https://github.com/cchampet)
->- [Xochitl Florimont](https://github.com/Xochitl)
->- [Aurélien Graffard](https://github.com/agreffard)
->- [Elisa Prana](https://github.com/eprana)
->- [Arthur Tourneret](https://github.com/artourn)
+>- [Clément CHAMPETIER](https://github.com/cchampet)
+>- [Xochitl FLORIMONT](https://github.com/Xochitl)
+>- [Aurélien GRAFFARD](https://github.com/agreffard)
+>- [Elisa PRANA](https://github.com/eprana)
+>- [Arthur TOURNERET](https://github.com/artourn)
 
 
 Pre-requisites

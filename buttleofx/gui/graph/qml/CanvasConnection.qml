@@ -7,8 +7,7 @@ Canvas {
     property int y2
 
     property bool readOnly
-    property bool miniatureState
-    property real miniatureScale
+    property bool miniatureState  // TODO: named stated displayState
 
     property int canvasMargin: 20
     property int inPath: 0
@@ -31,9 +30,9 @@ Canvas {
         var startY = 0
         var endX = 0
         var endY = 0
-        var controlPointXOffset = miniatureState ? 40 * zoomCoeff * miniatureScale : 40 * zoomCoeff
+        var controlPointXOffset = 40 * zoomCoeff
         ctx.strokeStyle = "rgb(" + r + ", " + g + ", " + b + ")"
-        ctx.lineWidth = miniatureState ? 2 * miniatureScale : 2
+        ctx.lineWidth = 2
 
         ctx.beginPath()
 

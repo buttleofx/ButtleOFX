@@ -13,7 +13,6 @@ Rectangle {
     property bool replace: false
 
     property bool readOnly
-    property real miniatureScale
     property bool miniatureState
     property bool invertState: m.invertState
 

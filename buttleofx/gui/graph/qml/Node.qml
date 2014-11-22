@@ -9,7 +9,6 @@ Rectangle {
     property variant graphRoot
     property alias nodeWrapper: m.nodeWrapper
     property bool readOnly
-    property real miniatureScale
     property bool miniatureState
     property int nodeWidth: 80
     focus: true
@@ -35,11 +34,6 @@ Rectangle {
     x: m.nodeWrapper.coord.x * graph.zoomCoeff
     y: m.nodeWrapper.coord.y * graph.zoomCoeff
     z: _buttleData.graphWrapper.zMax
-
-    // height: 40
-    // width: 120
-
-    signal drawSelection(int x, int y, int width, int height)
 
     color: "transparent"
 
@@ -85,7 +79,7 @@ Rectangle {
                 }
 
                 // Param buttle
-                editNode = true
+                // TODO showNodeInfo()
                 _buttleData.currentParamNodeWrapper = m.nodeWrapper
             }
 
@@ -209,7 +203,6 @@ Rectangle {
                         clipSize: m.clipSize
                         x: -10
                         readOnly: qml_nodeRoot.readOnly
-                        miniatureScale: qml_nodeRoot.miniatureScale
                         miniatureState: qml_nodeRoot.miniatureState
                     }
                 }
@@ -244,7 +237,6 @@ Rectangle {
                 clipSize: m.clipSize
                 x: 10
                 readOnly: qml_nodeRoot.readOnly
-                miniatureScale: qml_nodeRoot.miniatureScale
                 miniatureState: qml_nodeRoot.miniatureState
             }
         }
@@ -254,7 +246,7 @@ Rectangle {
         id: nodeRectangle
         anchors.centerIn: parent
         anchors.fill: parent
-        anchors.margins: miniatureState ? 4 * miniatureScale : 4 * graph.zoomCoeff
+        anchors.margins: miniatureState ? 4 : 4 * graph.zoomCoeff
         color: "#bbbbbb"
         radius: 8
         clip: nodeText.isSelected ? false : true
@@ -308,11 +300,6 @@ Rectangle {
                 ]
             }
 
-            // onTextChanged: {
-            //     m.nodeWrapper.fitWidth(nodeText.width)
-            //     // _buttleData.graphWrapper.updateConnectionsCoord(m.nodeWrapper)
-            // }
-
             Connections {
                 target: _buttleData
 
@@ -326,14 +313,14 @@ Rectangle {
 
         Rectangle {
             id: miniPictureRect
-            width: miniatureState ? nodeWidth * 0.8 * zoomCoeff * miniatureScale : nodeWidth * 0.8 * zoomCoeff
-            height: miniatureState ? nodeWidth * 0.5 * zoomCoeff * miniatureScale : nodeWidth * 0.5 * zoomCoeff
-            x: miniatureState ? nodeWidth * 0.05 * zoomCoeff * miniatureScale : nodeWidth * 0.05 * zoomCoeff
-            y: miniatureState ? nodeWidth * 0.05 * zoomCoeff * miniatureScale : nodeWidth * 0.05 * zoomCoeff
+            width:  nodeWidth * 0.8 * zoomCoeff
+            height: nodeWidth * 0.5 * zoomCoeff
+            x:      nodeWidth * 0.05 * zoomCoeff
+            y:      nodeWidth * 0.05 * zoomCoeff
             radius: 2
             state: "normal"
             color: "transparent"
-            visible: miniatureState ? false : true
+            visible: ! miniatureState
 
             Image {
                 id: miniPicture
@@ -370,13 +357,13 @@ Rectangle {
 
     Rectangle {
         id: deadMosquito
-        width: miniatureState ? 23 * miniatureScale : 23
-        height: miniatureState ? 21 * miniatureScale : 21
+        width: 23
+        height: 21
         x: m.nodeRoot.width - 12
         y: -10
         state: "normal"
         color: "transparent"
-        visible: miniatureState ? false : true
+        visible: ! miniatureState
 
         Image {
             id: deadMosquitoImage
@@ -408,23 +395,6 @@ Rectangle {
         }
     }
 
-    /*
-    StateGroup {
-        id: stateMoving
-        state: "normal"
-        states: [
-            State {
-                name: "normal"
-                PropertyChanges { target: m.nodeRoot; x: m.nodeWrapper.coord.x; y: m.nodeWrapper.coord.y }
-            },
-            State {
-                name: "moving"
-                PropertyChanges { target: m.nodeRoot; x: m.nodeWrapper.coord.x; y: m.nodeWrapper.coord.y }
-            }
-        ]
-    }
-    */
-
     StateGroup {
         id: statePressed
         states: [
@@ -439,8 +409,8 @@ Rectangle {
 
                 PropertyChanges {
                     target: m.nodeRoot
-                    x: ((m.nodeWrapper.coord.x * graphContainer.width) / qml_graphRoot.width) * miniatureScale
-                    y: ((m.nodeWrapper.coord.y * graphContainer.height) / qml_graphRoot.height) * miniatureScale
+                    x: ((m.nodeWrapper.coord.x * graphContainer.width) / qml_graphRoot.width)
+                    y: ((m.nodeWrapper.coord.y * graphContainer.height) / qml_graphRoot.height)
                 }
             }
         ]
@@ -458,6 +428,7 @@ Rectangle {
     }
 
     function nodeIsMoving() {
+        // TODO rename
         _buttleManager.nodeManager.nodeIsMoving(m.nodeWrapper.name, m.nodeRoot.x / graph.zoomCoeff, m.nodeRoot.y / graph.zoomCoeff)
     }
 }

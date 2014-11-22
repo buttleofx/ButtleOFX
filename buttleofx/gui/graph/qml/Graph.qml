@@ -120,7 +120,6 @@ Rectangle {
 
     property bool readOnly
     property bool miniatureState
-    property real miniatureScale
 
     property var container: graphContainer
 
@@ -248,7 +247,6 @@ Rectangle {
                     width: nodeWidth * zoomCoeff
                     height: nodeWidth /2 * zoomCoeff
                     readOnly: qml_graphRoot.readOnly
-                    miniatureScale: qml_graphRoot.miniatureScale
                     miniatureState: qml_graphRoot.miniatureState
 
                     StateGroup {
@@ -260,8 +258,8 @@ Rectangle {
 
                                 PropertyChanges {
                                     target: node
-                                    width: node.nodeWidth * qml_graphRoot.miniatureScale
-                                    height: node.nodeWidth * qml_graphRoot.miniatureScale
+                                    width: node.nodeWidth
+                                    height: node.nodeWidth
                                 }
                             },
                             State {
@@ -270,8 +268,8 @@ Rectangle {
 
                                 PropertyChanges {
                                     target: node
-                                    width: node.nodeWidth * qml_graphRoot.miniatureScale
-                                    height: node.nodeWidth / 2 * qml_graphRoot.miniatureScale
+                                    width: node.nodeWidth
+                                    height: node.nodeWidth / 2
                                 }
                             },
                             State {
@@ -320,12 +318,11 @@ Rectangle {
 
                     readOnly: qml_graphRoot.readOnly
                     miniatureState: qml_graphRoot.miniatureState
-                    miniatureScale: qml_graphRoot.miniatureScale
 
-                    x1: connection.miniatureState ? clipOut.xCoord * connection.miniatureScale : clipOut.xCoord
-                    y1: connection.miniatureState ? clipOut.yCoord * connection.miniatureScale : clipOut.yCoord
-                    x2: connection.miniatureState ? clipIn.xCoord * connection.miniatureScale : clipIn.xCoord
-                    y2: connection.miniatureState ? clipIn.yCoord * connection.miniatureScale : clipIn.yCoord
+                    x1: connection.miniatureState ? clipOut.xCoord: clipOut.xCoord
+                    y1: connection.miniatureState ? clipOut.yCoord: clipOut.yCoord
+                    x2: connection.miniatureState ? clipIn.xCoord : clipIn.xCoord
+                    y2: connection.miniatureState ? clipIn.yCoord : clipIn.yCoord
 
                     visible: connectionWrapper.enabled ? true : false
                 }

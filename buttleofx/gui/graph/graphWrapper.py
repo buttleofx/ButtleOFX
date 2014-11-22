@@ -1,5 +1,6 @@
 import logging
 from PyQt5 import QtCore
+from PyQt5 import QtGui
 from quickmamba.models import QObjectListModel
 from buttleofx.gui.graph.node import NodeWrapper
 from buttleofx.gui.graph.connection import ConnectionWrapper
@@ -188,6 +189,29 @@ class GraphWrapper(QtCore.QObject):
                 min = nodeWrapper.xCoord
         return max - min
 
+    @QtCore.pyqtSlot(result=QtGui.QVector4D)
+    def getBBox(self):
+        print("getBBox")
+        bbox = QtGui.QVector4D()
+        if not self._nodeWrappers:
+            return bbox
+        bbox.x = bbox.z = self._nodeWrappers[0].xCoord
+        bbox.y = bbox.w = self._nodeWrappers[0].yCoord
+        for nodeWrapper in self._nodeWrappers:
+            # x min
+            if nodeWrapper.xCoord < bbox.x:
+                bbox.x = nodeWrapper.xCoord
+            # x max
+            if bbox.z < nodeWrapper.xCoord:
+                bbox.z = nodeWrapper.xCoord
+            # y min
+            if nodeWrapper.yCoord < bbox.y:
+                bbox.y = nodeWrapper.yCoord
+            # y max
+            if bbox.w < nodeWrapper.yCoord:
+                bbox.w = nodeWrapper.yCoord
+        return bbox
+
     @QtCore.pyqtSlot(str)
     def setTmpMoveNode(self, name):
         node = self.getNodeWrapper(name)
@@ -321,6 +345,9 @@ class GraphWrapper(QtCore.QObject):
     # Z index for QML (good superposition of nodes in the graph)
     zMaxChanged = QtCore.pyqtSignal()
     zMax = QtCore.pyqtProperty(int, getZMax, setZMax, notify=zMaxChanged)
+
+    bboxChanged = QtCore.pyqtSignal()
+    bbox = QtCore.pyqtProperty(QtGui.QVector4D, getBBox, notify=bboxChanged)
 
     currentSizeChanged = QtCore.pyqtSignal()
     resize = QtCore.pyqtProperty(bool, resize, notify=currentSizeChanged)

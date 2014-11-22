@@ -109,10 +109,9 @@ Rectangle {
     }
 
     signal clickCreationNode(string nodeType)
-    signal drawSelection(int selectionX, int selectionY, int selectionWidth, int selectionHeight)
 
     property real zoomCoeff: 1
-    property real zoomStep: 0.1
+    property real zoomSensitivity: 0.1
     property real nodeX
     property int offsetX: 0
     property int offsetY: 0
@@ -164,8 +163,11 @@ Rectangle {
             }
 
             for (var urlIndex in drop.urls) {
-                _buttleManager.nodeManager.dropFile(drop.urls[urlIndex], drag.x - m.graphRoot.originX + 10 * urlIndex,
-                                                    drag.y - m.graphRoot.originY + 10 * urlIndex)
+                // TODO: screenToScene to take scale into account
+                _buttleManager.nodeManager.dropFile(
+                    drop.urls[urlIndex],
+                    drag.x - m.graphRoot.originX + 10 * urlIndex,
+                    drag.y - m.graphRoot.originY + 10 * urlIndex)
             }
 
             drop.accepted = true

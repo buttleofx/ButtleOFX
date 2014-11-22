@@ -418,17 +418,16 @@ Rectangle {
 
     onXChanged: {
         if (nodeMouseArea.drag.active) {
-            m.nodeRoot.nodeIsMoving()
+            m.nodeRoot.moveNode()
         }
     }
     onYChanged: {
         if (nodeMouseArea.drag.active) {
-            m.nodeRoot.nodeIsMoving()
+            m.nodeRoot.moveNode()
         }
     }
 
-    function nodeIsMoving() {
-        // TODO rename
-        _buttleManager.nodeManager.nodeIsMoving(m.nodeWrapper.name, m.nodeRoot.x / graph.zoomCoeff, m.nodeRoot.y / graph.zoomCoeff)
+    function moveNode() {
+        _buttleManager.nodeManager.moveNode(m.nodeWrapper.name, m.nodeRoot.x / graph.zoomCoeff, m.nodeRoot.y / graph.zoomCoeff)
     }
 }

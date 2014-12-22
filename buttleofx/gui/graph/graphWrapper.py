@@ -195,21 +195,26 @@ class GraphWrapper(QtCore.QObject):
         bbox = QtGui.QVector4D()
         if not self._nodeWrappers:
             return bbox
-        bbox.x = bbox.z = self._nodeWrappers[0].xCoord
-        bbox.y = bbox.w = self._nodeWrappers[0].yCoord
+
+        bbox.setX(self._nodeWrappers[0].xCoord)
+        bbox.setZ(self._nodeWrappers[0].xCoord)
+
+        bbox.setY(self._nodeWrappers[0].yCoord)
+        bbox.setW(self._nodeWrappers[0].yCoord)
+
         for nodeWrapper in self._nodeWrappers:
             # x min
-            if nodeWrapper.xCoord < bbox.x:
-                bbox.x = nodeWrapper.xCoord
+            if nodeWrapper.xCoord < bbox.x():
+                bbox.setX(nodeWrapper.xCoord)
             # x max
-            if bbox.z < nodeWrapper.xCoord:
-                bbox.z = nodeWrapper.xCoord
+            if bbox.z() < nodeWrapper.xCoord:
+                bbox.setZ(nodeWrapper.xCoord)
             # y min
-            if nodeWrapper.yCoord < bbox.y:
-                bbox.y = nodeWrapper.yCoord
+            if nodeWrapper.yCoord < bbox.y():
+                bbox.setY(nodeWrapper.yCoord)
             # y max
-            if bbox.w < nodeWrapper.yCoord:
-                bbox.w = nodeWrapper.yCoord
+            if bbox.w() < nodeWrapper.yCoord:
+                bbox.setW(nodeWrapper.yCoord)
         return bbox
 
     @QtCore.pyqtSlot(str)
@@ -302,6 +307,7 @@ class GraphWrapper(QtCore.QObject):
         # and we fill with the new data
         for node in self._graph.getNodes():
             self.createNodeWrapper(node.getName())
+        self.getBBox()
 
     def updateConnectionWrappers(self):
         """

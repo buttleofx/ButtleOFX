@@ -3,7 +3,7 @@ import QtQuick.Dialogs 1.1
 import QuickMamba 1.0
 
 Rectangle {
-    id: qml_graphRoot
+    id: qml_graphRoot  // TODO: rename root
     focus: true
 
     Keys.onPressed: {
@@ -111,12 +111,11 @@ Rectangle {
     signal clickCreationNode(string nodeType)
 
     property real zoomCoeff: 1
-    property real zoomSensitivity: 0.1
+    property real zoomSensitivity: 1.1
     property real nodeX
-    property int offsetX: 0
-    property int offsetY: 0
-    property alias originX: graphContainer.x
-    property alias originY: graphContainer.y
+    // origin in World coordinates
+    property real originX
+    property real originY
 
     property bool readOnly
     property bool miniatureState
@@ -198,9 +197,9 @@ Rectangle {
 
     Rectangle {
         id: graphContainer
-        x: 0
-        y: 0
-        width: parent.width * zoomCoeff
+        x: qml_graphRoot.originX * zoomCoeff
+        y: qml_graphRoot.originY * zoomCoeff
+        width: parent.width * zoomCoeff  // TODO: remove zoomCoef?
         height: parent.height * zoomCoeff
         color: "transparent"
 
@@ -319,10 +318,10 @@ Rectangle {
                     readOnly: qml_graphRoot.readOnly
                     miniatureState: qml_graphRoot.miniatureState
 
-                    x1: connection.miniatureState ? clipOut.xCoord: clipOut.xCoord
-                    y1: connection.miniatureState ? clipOut.yCoord: clipOut.yCoord
-                    x2: connection.miniatureState ? clipIn.xCoord : clipIn.xCoord
-                    y2: connection.miniatureState ? clipIn.yCoord : clipIn.yCoord
+                    x1: clipOut.xCoord
+                    y1: clipOut.yCoord
+                    x2: clipIn.xCoord
+                    y2: clipIn.yCoord
 
                     visible: connectionWrapper.enabled ? true : false
                 }

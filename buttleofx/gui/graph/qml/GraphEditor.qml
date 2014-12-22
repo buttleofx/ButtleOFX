@@ -60,21 +60,21 @@ Item {
         }
     }
 
-    ParamButtleEditor {
-        id: paramButtleEditor
-        visible: editNode
-        currentParamNode: _buttleData.currentParamNodeWrapper
-        /*
-        TODO
-        property point pos: worldToScene(currentParamNode.coord)
-        x: pos.x
-        y: pos.y
-        */
-        x: _buttleData.currentParamNodeWrapper ? (currentParamNode.coord.x + 80) * graph.zoomCoeff + graph.offsetX +
-            (1-graph.zoomCoeff)*420 + leftColumn.width: 0
-        y: _buttleData.currentParamNodeWrapper ? (currentParamNode.coord.y + 95)*graph.zoomCoeff  + graph.offsetY +
-            (1-graph.zoomCoeff)*200 + topLeftView.height + 35 + mainWindowQML.y: 0
-    }
+//    ParamButtleEditor {
+//        id: paramButtleEditor
+//        visible: editNode
+//        currentParamNode: _buttleData.currentParamNodeWrapper
+//        /*
+//        TODO
+//        property point pos: worldToScene(currentParamNode.coord)
+//        x: pos.x
+//        y: pos.y
+//        */
+//        x: _buttleData.currentParamNodeWrapper ? (currentParamNode.coord.x + 80) * graph.zoomCoeff + graph.offsetX +
+//            (1-graph.zoomCoeff)*420 + leftColumn.width: 0
+//        y: _buttleData.currentParamNodeWrapper ? (currentParamNode.coord.y + 95)*graph.zoomCoeff  + graph.offsetY +
+//            (1-graph.zoomCoeff)*200 + topLeftView.height + 35 + mainWindowQML.y: 0
+//    }
 
     ColumnLayout {
         anchors.fill: parent
@@ -158,15 +158,15 @@ Item {
                         editNode=false
                         xStart = mouse.x
                         yStart = mouse.y
-                        graphContainer_xStart = parent.container.x
-                        graphContainer_yStart = parent.container.y
+                        graphContainer_xStart = graph.originX
+                        graphContainer_yStart = graph.originY
 
                         rectangleSelection.x = mouse.x
                         rectangleSelection.y = mouse.y
                         rectangleSelection.width = 1
                         rectangleSelection.height = 1
-                        selectMode = leftMouseArea.pressedButtons & Qt.MiddleButton ? false : true
-                        moveMode = leftMouseArea.pressedButtons & Qt.MiddleButton ? true : false
+                        moveMode = (leftMouseArea.pressedButtons & Qt.MiddleButton)
+                        selectMode = !moveMode
 
                         if (selectMode) {
                             rectangleSelection.visible = true
@@ -177,10 +177,7 @@ Item {
                     onReleased: {
                         if (moveMode) {
                             moveMode=false
-                            var xOffset = mouse.x - xStart
-                            var yOffset = mouse.y - yStart
-                            graph.offsetX += xOffset
-                            graph.offsetY += yOffset
+                            // TODO: call function to update graph.origin
                         }
                         if (selectMode) {
                             rectangleSelection.visible = false
@@ -206,27 +203,30 @@ Item {
                         }
 
                         if (moveMode) {
-                            var xOffset = mouse.x - xStart
-                            var yOffset = mouse.y - yStart
+                            var xOffset = (mouse.x - xStart) / graph.zoomCoeff
+                            var yOffset = (mouse.y - yStart) / graph.zoomCoeff
                             graph.originX = graphContainer_xStart + xOffset
                             graph.originY = graphContainer_yStart + yOffset
                         }
                     }
 
                     onWheel: {
-                        if (wheel.angleDelta.y > 0) {
-                            graph.zoomCoeff += graph.zoomSensitivity
-                        } else {
-                            if (graph.zoomCoeff - graph.zoomSensitivity >= 0)
-                                graph.zoomCoeff -= graph.zoomSensitivity
-                        }
+                        var zoomStep = wheel.angleDelta.y > 0 ? graph.zoomSensitivity : 1.0 / graph.zoomSensitivity
 
-                        var mouseRatioX = 0.5
-                        var mouseRatioY = 0.5
-//                        parent.container.x = ((graph.width * mouseRatioX) - (parent.container.width * mouseRatioX)) +
-//                            graph.offsetX - miniGraph.miniOffsetX / miniGraph.scaleFactor *graph.zoomCoeff
-//                        parent.container.y = ((graph.height * mouseRatioY) - (parent.container.height * mouseRatioY)) +
-//                            graph.offsetY - miniGraph.miniOffsetY / miniGraph.scaleFactor *graph.zoomCoeff
+                        console.debug("zoomCoef: " + graph.zoomCoeff)
+                        console.debug("offset: " + graph.originX + ", " + graph.originY)
+                        console.debug("wheel mouse: " + wheel.x + ", " + wheel.y)
+
+                        var mouseWorld = Qt.point(wheel.x / graph.zoomCoeff - graph.originX, wheel.y / graph.zoomCoeff - graph.originY)
+                        console.debug("wheel mouse world: " + mouseWorld.x + ", " + mouseWorld.y)
+
+                        // mouse position if we apply the new zoom (without translate compensation)
+                        var mouseWorldWithZoom = Qt.point(mouseWorld.x * zoomStep, mouseWorld.y * zoomStep)
+                        var offsetCompensation = Qt.point(mouseWorld.x - mouseWorldWithZoom.x, mouseWorld.y - mouseWorldWithZoom.y)
+
+                        graph.zoomCoeff *= zoomStep
+                        graph.originX += offsetCompensation.x
+                        graph.originY += offsetCompensation.y
                     }
                 }
 

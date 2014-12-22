@@ -98,8 +98,10 @@ Rectangle {
             // Left button: we end moving
 
             if (mouse.button == Qt.LeftButton) {
+
                 _buttleManager.nodeManager.nodeMoved(m.nodeWrapper.name, qml_nodeRoot.x / graph.zoomCoeff,
                                                      qml_nodeRoot.y / graph.zoomCoeff)
+
             } else if (mouse.button == Qt.MidButton) { // Middle button: assign the node to the viewer
                 _buttleData.currentGraphIsGraph()
                 _buttleData.currentGraphWrapper = _buttleData.graphWrapper
@@ -246,10 +248,10 @@ Rectangle {
         id: nodeRectangle
         anchors.centerIn: parent
         anchors.fill: parent
-        anchors.margins: miniatureState ? 4 : 4 * graph.zoomCoeff
+        anchors.margins: 4 * graph.zoomCoeff
         color: "#bbbbbb"
         radius: 8
-        clip: nodeText.isSelected ? false : true
+        clip: !nodeText.isSelected
 
         Rectangle {
             id: background
@@ -259,7 +261,7 @@ Rectangle {
             color: "#212121"
             opacity: 0.6
             radius: 2
-            visible: nodeText.isSelected ? miniatureState ? false : true : false
+            visible: nodeText.isSelected ? (miniatureState ? false : true) : false
         }
 
         Text {

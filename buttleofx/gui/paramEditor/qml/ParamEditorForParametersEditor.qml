@@ -73,14 +73,13 @@ Item {
             }
         }
 
-
         // Params depend on the node type (Tuttle data)
         Rectangle {
             id: tuttleParamContent
-            height: tuttleParam.contentHeight + 20
 
-            width: parent.width
             y: tuttleParamTitle.height
+            height: tuttleParam.contentHeight + 20
+            width: parent.width
 
             visible: true
 
@@ -90,13 +89,12 @@ Item {
 
 
             ListView {
-                anchors.fill: parent
+                id: tuttleParam
+                y: 10
                 anchors.topMargin: 10
                 anchors.bottomMargin: 10
-
-                id: tuttleParam
+                width: parent.width
                 height: count ? contentHeight : 0
-                y: parent.y + 10
                 spacing: 6
 
                 interactive: false

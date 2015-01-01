@@ -151,7 +151,7 @@ Item {
                     z: -1
                     anchors.fill: parent
                     hoverEnabled: true
-                    acceptedButtons: Qt.LeftButton | Qt.MiddleButton |Qt.RightButton
+                    acceptedButtons: Qt.LeftButton | Qt.MiddleButton | Qt.RightButton
 
                     onPressed: {
                         pluginVisible=false
@@ -165,8 +165,9 @@ Item {
                         rectangleSelection.y = mouse.y
                         rectangleSelection.width = 1
                         rectangleSelection.height = 1
-                        moveMode = (leftMouseArea.pressedButtons & Qt.MiddleButton)
-                        selectMode = !moveMode
+                        moveMode = (mouse.buttons & Qt.MiddleButton) ||
+                                   ((mouse.buttons & Qt.RightButton) && (mouse.modifiers & Qt.ControlModifier))
+                        selectMode = (mouse.buttons & Qt.LeftButton)
 
                         if (selectMode) {
                             rectangleSelection.visible = true

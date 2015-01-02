@@ -199,8 +199,6 @@ Rectangle {
         id: graphContainer
         x: qml_graphRoot.originX * zoomCoeff
         y: qml_graphRoot.originY * zoomCoeff
-        width: parent.width * zoomCoeff  // TODO: remove zoomCoef?
-        height: parent.height * zoomCoeff
         color: "transparent"
 
         /*
@@ -323,7 +321,7 @@ Rectangle {
                     x2: clipIn.xCoord
                     y2: clipIn.yCoord
 
-                    visible: connectionWrapper.enabled ? true : false
+                    visible: connectionWrapper.enabled
                 }
             }
 
@@ -337,7 +335,7 @@ Rectangle {
 
             CanvasConnection {
                 id: tmpCanvasConnection
-                visible: connections.tmpConnectionExists ? true : false
+                visible: connections.tmpConnectionExists
 
                 x1: connections.tmpConnectionX1
                 y1: connections.tmpConnectionY1

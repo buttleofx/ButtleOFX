@@ -223,18 +223,17 @@ Item {
                     onWheel: {
                         var zoomStep = wheel.angleDelta.y > 0 ? graph.zoomSensitivity : 1.0 / graph.zoomSensitivity
 
-                        console.debug("zoomCoef: " + graph.zoomCoeff)
-                        console.debug("offset: " + graph.originX + ", " + graph.originY)
-                        console.debug("wheel mouse: " + wheel.x + ", " + wheel.y)
+                        // console.debug("graph.zoomCoef: " + graph.zoomCoeff)
+                        // console.debug("graph.origin: " + graph.originX + ", " + graph.originY)
+                        // console.debug("wheel mouse: " + wheel.x + ", " + wheel.y)
 
-                        var mouseWorld = Qt.point(wheel.x / graph.zoomCoeff - graph.originX, wheel.y / graph.zoomCoeff - graph.originY)
-                        console.debug("wheel mouse world: " + mouseWorld.x + ", " + mouseWorld.y)
-
+                        var mouseNoZoom = Qt.point(wheel.x / graph.zoomCoeff, wheel.y / graph.zoomCoeff)
                         // mouse position if we apply the new zoom (without translate compensation)
-                        var mouseWorldWithZoom = Qt.point(mouseWorld.x * zoomStep, mouseWorld.y * zoomStep)
-                        var offsetCompensation = Qt.point(mouseWorld.x - mouseWorldWithZoom.x, mouseWorld.y - mouseWorldWithZoom.y)
-
                         graph.zoomCoeff *= zoomStep
+                        var mouseNewZoom = Qt.point(mouseNoZoom.x * graph.zoomCoeff, mouseNoZoom.y * graph.zoomCoeff)
+                        var offsetCompensation = Qt.point((wheel.x - mouseNewZoom.x) / graph.zoomCoeff,
+                                                          (wheel.y - mouseNewZoom.y) / graph.zoomCoeff)
+
                         graph.originX += offsetCompensation.x
                         graph.originY += offsetCompensation.y
                     }
@@ -257,6 +256,7 @@ Item {
                     visible: false
                 }
             }
+
             GraphMiniature{
                 id:graphMiniature
 

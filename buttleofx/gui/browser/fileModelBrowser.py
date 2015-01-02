@@ -38,7 +38,7 @@ class FileItem(QtCore.QObject):
             try:
                 # May throw exception on bad symlink
                 self._fileWeight = os.stat(self._filepath).st_size
-            except os.FileNotFoundError:
+            except FileNotFoundError:
                 self._fileWeight = 0
 
             self._fileExtension = os.path.splitext(fileName)[1]

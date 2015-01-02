@@ -154,6 +154,10 @@ Item {
                     acceptedButtons: Qt.LeftButton | Qt.MiddleButton | Qt.RightButton
 
                     onPressed: {
+                        // console.debug("graph.zoomCoef: " + graph.zoomCoeff)
+                        // console.debug("graph.origin: " + graph.originX + ", " + graph.originY)
+                        // console.debug("mouse: " + mouse.x + ", " + mouse.y)
+
                         pluginVisible=false
                         editNode=false
                         xStart = mouse.x
@@ -175,12 +179,20 @@ Item {
                         }
                     }
 
+                    function updateGraphOriginDuringMove(mouse) {
+                        var xOffset = (mouse.x - xStart) / graph.zoomCoeff
+                        var yOffset = (mouse.y - yStart) / graph.zoomCoeff
+                        graph.originX = graphContainer_xStart + xOffset
+                        graph.originY = graphContainer_yStart + yOffset
+
+                    }
+
                     onReleased: {
                         if (moveMode) {
+                            updateGraphOriginDuringMove(mouse)
                             moveMode=false
-                            // TODO: call function to update graph.origin
                         }
-                        if (selectMode) {
+                        else if (selectMode) {
                             rectangleSelection.visible = false
                             _buttleData.clearCurrentSelectedNodeNames()
                             graph.selectionRect(rectangleSelection.x - graph.originX, rectangleSelection.y - graph.originY,
@@ -189,25 +201,22 @@ Item {
                     }
 
                     onPositionChanged: {
-                        if (mouse.x < xStart) {
-                            rectangleSelection.x = mouse.x
-                            rectangleSelection.width = xStart - mouse.x
-                        } else {
-                            rectangleSelection.width = mouse.x - xStart
-                        }
-
-                        if (mouse.y < yStart) {
-                            rectangleSelection.y = mouse.y
-                            rectangleSelection.height = yStart - mouse.y
-                        } else {
-                            rectangleSelection.height = mouse.y - yStart
-                        }
-
                         if (moveMode) {
-                            var xOffset = (mouse.x - xStart) / graph.zoomCoeff
-                            var yOffset = (mouse.y - yStart) / graph.zoomCoeff
-                            graph.originX = graphContainer_xStart + xOffset
-                            graph.originY = graphContainer_yStart + yOffset
+                            updateGraphOriginDuringMove(mouse)
+                        } else if (selectMode) {
+                            if (mouse.x < xStart) {
+                                rectangleSelection.x = mouse.x
+                                rectangleSelection.width = xStart - mouse.x
+                            } else {
+                                rectangleSelection.width = mouse.x - xStart
+                            }
+
+                            if (mouse.y < yStart) {
+                                rectangleSelection.y = mouse.y
+                                rectangleSelection.height = yStart - mouse.y
+                            } else {
+                                rectangleSelection.height = mouse.y - yStart
+                            }
                         }
                     }
 

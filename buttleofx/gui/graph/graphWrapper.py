@@ -1,5 +1,6 @@
 import logging
 from PyQt5 import QtCore
+from PyQt5 import QtGui
 from quickmamba.models import QObjectListModel
 from buttleofx.gui.graph.node import NodeWrapper
 from buttleofx.gui.graph.connection import ConnectionWrapper
@@ -188,6 +189,34 @@ class GraphWrapper(QtCore.QObject):
                 min = nodeWrapper.xCoord
         return max - min
 
+    @QtCore.pyqtSlot(result=QtGui.QVector4D)
+    def getBBox(self):
+        print("getBBox")
+        bbox = QtGui.QVector4D()
+        if not self._nodeWrappers:
+            return bbox
+
+        bbox.setX(self._nodeWrappers[0].xCoord)
+        bbox.setZ(self._nodeWrappers[0].xCoord)
+
+        bbox.setY(self._nodeWrappers[0].yCoord)
+        bbox.setW(self._nodeWrappers[0].yCoord)
+
+        for nodeWrapper in self._nodeWrappers:
+            # x min
+            if nodeWrapper.xCoord < bbox.x():
+                bbox.setX(nodeWrapper.xCoord)
+            # x max
+            if bbox.z() < nodeWrapper.xCoord:
+                bbox.setZ(nodeWrapper.xCoord)
+            # y min
+            if nodeWrapper.yCoord < bbox.y():
+                bbox.setY(nodeWrapper.yCoord)
+            # y max
+            if bbox.w() < nodeWrapper.yCoord:
+                bbox.setW(nodeWrapper.yCoord)
+        return bbox
+
     @QtCore.pyqtSlot(str)
     def setTmpMoveNode(self, name):
         node = self.getNodeWrapper(name)
@@ -278,6 +307,7 @@ class GraphWrapper(QtCore.QObject):
         # and we fill with the new data
         for node in self._graph.getNodes():
             self.createNodeWrapper(node.getName())
+        self.getBBox()
 
     def updateConnectionWrappers(self):
         """
@@ -321,6 +351,9 @@ class GraphWrapper(QtCore.QObject):
     # Z index for QML (good superposition of nodes in the graph)
     zMaxChanged = QtCore.pyqtSignal()
     zMax = QtCore.pyqtProperty(int, getZMax, setZMax, notify=zMaxChanged)
+
+    bboxChanged = QtCore.pyqtSignal()
+    bbox = QtCore.pyqtProperty(QtGui.QVector4D, getBBox, notify=bboxChanged)
 
     currentSizeChanged = QtCore.pyqtSignal()
     resize = QtCore.pyqtProperty(bool, resize, notify=currentSizeChanged)

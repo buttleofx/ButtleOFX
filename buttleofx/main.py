@@ -274,10 +274,13 @@ def main(argv, app):
             print(error.toString())
             return -1
     topLevelItem.setIcon(QtGui.QIcon(iconPath))
-    
+
     if DEV_MODE:
         # Declare we are using instant coding tool on this view
-        qic = instantcoding.QmlInstantCoding(engine, instantcoding.ReloadComponent(qmlFile, component, topLevelItem), verbose=True)
+        qic = instantcoding.QmlInstantCoding(
+            engine,
+            instantcoding.ReloadComponent(qmlFile, component, topLevelItem),
+            verbose=True)
         # qic = instantcoding.QmlInstantCoding(engine, instantcoding.AskQmlItemToReload(topLevelItem), verbose=True)
 
         # Add any source file (.qml and .js by default) in current working directory

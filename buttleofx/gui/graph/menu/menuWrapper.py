@@ -1,9 +1,5 @@
+from PyQt5 import QtGui
 from PyQt5 import QtCore
-
-# TODO: no * in imports
-from PyQt5.QtGui import *
-from PyQt5.QtCore import *
-from PyQt5.QtWidgets import *
 
 from buttleofx.data import ButtleDataSingleton
 from buttleofx.manager import ButtleManagerSingleton
@@ -21,17 +17,17 @@ def createMenu(parentMenu, parentName, view):
         noPluginFound = pluginId is False
 
         if noPluginFound:
-            action = QAction(pluginParent, parentMenu)
+            action = QtCore.QAction(pluginParent, parentMenu)
             action.setData(None)
             parentMenu.addAction(action)
         # If it is a plugin, we add it to the menu
         elif isAPlugin:
-            action = QAction(pluginParent, parentMenu)
+            action = QtCore.QAction(pluginParent, parentMenu)
             action.setData(pluginId)
             parentMenu.addAction(action)
         # Else we create a new menu
         else:
-            submenu = QMenu()  # QMenu(view)
+            submenu = QtGui.QMenu()  # QtGui.QMenu(view)
             submenu.setTitle(pluginParent)
             parentMenu.addMenu(submenu)
             createMenu(submenu, parentName + pluginParent + "/", view)
@@ -45,59 +41,80 @@ class MenuWrapper(QtCore.QObject):
     def __init__(self, parentName, check, view, app):
         super(MenuWrapper, self).__init__(view)
         self._view = view
-        self._menu = QMenu()  # QMenu(view)
+        self._menu = QtGui.QMenu()  # QtGui.QMenu(view)
         self._menu.setTitle(parentName)
 
         if check == 0:
             # File Menu
             if parentName == 'file':
-                action = QAction("Open", self._menu,  statusTip='Open a graph')
+                action = QtCore.QAction(
+                    "Open", self._menu,
+                    statusTip='Open a graph')
                 action.setData(0)
                 self._menu.addAction(action)
 
-                action = QAction("Save", self._menu, shortcut='Ctrl+S', statusTip='Save the graph')
+                action = QtCore.QAction(
+                    "Save", self._menu, shortcut='Ctrl+S',
+                    statusTip='Save the graph')
                 action.setData(0)
                 self._menu.addAction(action)
                 self._menu.addSeparator()
 
-                action = QAction("Exit", self._menu, statusTip='Exit the application', triggered=app.quit)
+                action = QtCore.QAction(
+                    "Exit", self._menu,
+                    statusTip='Exit the application',
+                    triggered=app.quit)
                 action.setData(0)
                 self._menu.addAction(action)
 
             # EditMenu
             elif parentName == 'edit':
-                action = QAction("Undo", self._menu, shortcut='Ctrl+Z', statusTip='Undo the last action',
-                                 triggered=ButtleManagerSingleton().get().undo)
+                action = QtCore.QAction(
+                    "Undo", self._menu, shortcut='Ctrl+Z',
+                    statusTip='Undo the last action',
+                    triggered=ButtleManagerSingleton().get().undo)
                 action.setData(0)
                 self._menu.addAction(action)
-                action = QAction("Redo", self._menu, shortcut='Ctrl+Y', statusTip='Redo the last action',
-                                 triggered=ButtleManagerSingleton().get().redo)
+                action = QtCore.QAction(
+                    "Redo", self._menu, shortcut='Ctrl+Y',
+                    statusTip='Redo the last action',
+                    triggered=ButtleManagerSingleton().get().redo)
                 action.setData(0)
                 self._menu.addAction(action)
                 self._menu.addSeparator()
 
-                action = QAction("Copy", self._menu, shortcut='Ctrl+C', statusTip='Copy the selected node',
-                                 triggered=ButtleManagerSingleton().get().nodeManager.copyNode)
+                action = QtCore.QAction(
+                    "Copy", self._menu, shortcut='Ctrl+C',
+                    statusTip='Copy the selected node',
+                    triggered=ButtleManagerSingleton().get().nodeManager.copyNode)
                 action.setData(0)
                 self._menu.addAction(action)
 
-                action = QAction("Paste", self._menu, shortcut='Ctrl+V', statusTip='Paste the selected node',
-                                 triggered=ButtleManagerSingleton().get().nodeManager.pasteNode)
+                action = QtCore.QAction(
+                    "Paste", self._menu, shortcut='Ctrl+V',
+                    statusTip='Paste the selected node',
+                    triggered=ButtleManagerSingleton().get().nodeManager.pasteNode)
                 action.setData(0)
                 self._menu.addAction(action)
 
-                action = QAction("Cut", self._menu, shortcut='Ctrl+X', statusTip='Cut the selected node',
-                                 triggered=ButtleManagerSingleton().get().nodeManager.cutNode)
+                action = QtCore.QAction(
+                    "Cut", self._menu, shortcut='Ctrl+X',
+                    statusTip='Cut the selected node',
+                    triggered=ButtleManagerSingleton().get().nodeManager.cutNode)
                 action.setData(0)
                 self._menu.addAction(action)
 
-                action = QAction("Duplicate", self._menu, shortcut='Ctrl+D', statusTip='Duplicate the selected node',
-                                 triggered=ButtleManagerSingleton().get().nodeManager.duplicationNode)
+                action = QtCore.QAction(
+                    "Duplicate", self._menu, shortcut='Ctrl+D',
+                    statusTip='Duplicate the selected node',
+                    triggered=ButtleManagerSingleton().get().nodeManager.duplicationNode)
                 action.setData(0)
                 self._menu.addAction(action)
 
-                action = QAction("Delete", self._menu, statusTip='Delete the selected node',
-                                 triggered=ButtleManagerSingleton().get().deleteSelection)
+                action = QtCore.QAction(
+                    "Delete", self._menu,
+                    statusTip='Delete the selected node',
+                    triggered=ButtleManagerSingleton().get().deleteSelection)
                 action.setData(0)
                 self._menu.addAction(action)
 
@@ -108,7 +125,7 @@ class MenuWrapper(QtCore.QObject):
 
         self._menu.triggered.connect(self.menuSelection)
 
-    @QtCore.pyqtSlot(QAction)
+    @QtCore.pyqtSlot(QtCore.QAction)
     def menuSelection(self, action):
         """
              TODO : Need to be documented.

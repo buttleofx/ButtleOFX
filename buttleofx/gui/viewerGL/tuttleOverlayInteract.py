@@ -10,21 +10,20 @@ class TuttleOverlayInteract(tuttle.OverlayInteract):
         super(TuttleOverlayInteract, self).__init__(graph, node.asImageEffectNode())
         self.glviewport = glviewport
 
-    def getViewportSize(self, outWidth, outHeight):
+    def getViewportSize(self):
         print("TuttleOverlayInteract.getViewportSize")
-        outWidth = float(self.glviewport.width())
-        outHeight = float(self.glviewport.height())
+        return (float(self.glviewport.width()), float(self.glviewport.height()))
 
-    def getPixelScale(self, outXScale, outYScale):
+    def getPixelScale(self):
         print("TuttleOverlayInteract.getPixelScale")
-        outXScale = float(self.glviewport.getScale())
-        outYScale = outXScale
+        scale = float(self.glviewport.getScale())
+        return (scale, scale)
 
-    def getBackgroundColour(self, outR, outG, outB):
+    def getBackgroundColour(self):
         print("TuttleOverlayInteract.getBackgroundColour")
-        outR = float(self.glviewport.getBgColor().red())
-        outG = float(self.glviewport.getBgColor().green())
-        outB = float(self.glviewport.getBgColor().blue())
+        return (float(self.glviewport.getBgColor().red()),
+                float(self.glviewport.getBgColor().green()),
+                float(self.glviewport.getBgColor().blue()))
 
     def swapBuffers(self):
         print("ButtleOverlayInteract.swapBuffers")

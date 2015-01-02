@@ -1,5 +1,7 @@
 import Image
-from glviewport import *
+from glviewport import GLViewport
+import numpy
+from PyQt5 import QtCore
 
 
 class GLViewport_pil(GLViewport):

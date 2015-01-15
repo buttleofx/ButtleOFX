@@ -50,9 +50,7 @@ Item {
 
                 onColorChange: {
                     // rgba comes from signal
-                    root.colorRGBA.x = rgba.x
-                    root.colorRGBA.y = rgba.y
-                    root.colorRGBA.z = rgba.z
+                    root.colorRGBA = rgba
                 }
                 onAccepted: root.accepted()
             }

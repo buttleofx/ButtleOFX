@@ -12,24 +12,32 @@ Item
     signal accepted
     signal updatedValue(var updatedValue)
 
-    Rectangle {
-        // 4 lines to have a left-right gradient in spite of top - bottom !
-        width: parent.height
-        height: parent.width
-        anchors.centerIn: parent
-        rotation: 90
+    Item {
+        anchors.fill: parent
 
-        gradient: Gradient {
+        CheckerBoard {
+            anchors.fill: parent
+        }
 
-           GradientStop {
-               id: brightnessBeginColor
-               position: 0.0
-               color: fromColor
-           }
-           GradientStop {
-               position: 1.0
-               color: toColor
-           }
+        Rectangle {
+            // 4 lines to have a left-right gradient in spite of top - bottom !
+            width: parent.height
+            height: parent.width
+            anchors.centerIn: parent
+            rotation: 90
+
+            gradient: Gradient {
+
+               GradientStop {
+                   id: brightnessBeginColor
+                   position: 0.0
+                   color: fromColor
+               }
+               GradientStop {
+                   position: 1.0
+                   color: toColor
+               }
+            }
         }
     }
 

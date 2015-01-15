@@ -74,6 +74,7 @@ Rectangle {
             Layout.maximumHeight: 40
 
             value: root.colorHSVA.x
+            alpha: root.colorHSVA.w
 
             onUpdatedValue: root.colorChange(ColorUtils.hsva2rgba(Qt.vector4d(updatedValue, root.colorHSVA.y, root.colorHSVA.z, root.colorHSVA.w)))
             onAccepted: root.accepted()
@@ -86,8 +87,8 @@ Rectangle {
 
             caption: "S"
             value: root.colorHSVA.y
-            toColor: ColorUtils.hsva2QtHsla(root.colorHSVA.x, 0, root.colorHSVA.z, 1)
-            fromColor: ColorUtils.hsva2QtHsla(root.colorHSVA.x, 1, root.colorHSVA.z, 1)
+            toColor: ColorUtils.hsva2QtHsla(root.colorHSVA.x, 0, root.colorHSVA.z, root.colorHSVA.w)
+            fromColor: ColorUtils.hsva2QtHsla(root.colorHSVA.x, 1, root.colorHSVA.z, root.colorHSVA.w)
 
             onUpdatedValue: root.colorChange(ColorUtils.hsva2rgba(Qt.vector4d(root.colorHSVA.x, updatedValue, root.colorHSVA.z, root.colorHSVA.w)))
             onAccepted: root.accepted()
@@ -100,10 +101,24 @@ Rectangle {
 
             caption: "V"
             value: root.colorHSVA.z
-            toColor: ColorUtils.hsva2QtHsla(root.colorHSVA.x, root.colorHSVA.y, 0, 1)
-            fromColor: ColorUtils.hsva2QtHsla(root.colorHSVA.x, root.colorHSVA.y, 1, 1)
+            toColor: ColorUtils.hsva2QtHsla(root.colorHSVA.x, root.colorHSVA.y, 0, root.colorHSVA.w)
+            fromColor: ColorUtils.hsva2QtHsla(root.colorHSVA.x, root.colorHSVA.y, 1, root.colorHSVA.w)
 
             onUpdatedValue: root.colorChange(ColorUtils.hsva2rgba(Qt.vector4d(root.colorHSVA.x, root.colorHSVA.y, updatedValue, root.colorHSVA.w)))
+            onAccepted: root.accepted()
+        }
+
+        // ALPHA
+        Channel {
+            Layout.fillWidth: true
+            Layout.maximumHeight: 40
+
+            caption: "A"
+            value: root.colorRGBA.w
+            toColor: Qt.rgba(root.colorRGBA.x, root.colorRGBA.y, root.colorRGBA.z, 0)
+            fromColor: Qt.rgba(root.colorRGBA.x, root.colorRGBA.y, root.colorRGBA.z, 1)
+
+            onUpdatedValue: root.colorChange(Qt.vector4d(root.colorRGBA.x, root.colorRGBA.y, root.colorRGBA.z, updatedValue))
             onAccepted: root.accepted()
         }
     }

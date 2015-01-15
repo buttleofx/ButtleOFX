@@ -1,0 +1,110 @@
+import QtQuick 2.0
+import "ColorUtils.js" as ColorUtils
+import QtQuick.Layouts 1.1
+
+Rectangle {
+    id: root
+
+    property vector4d colorRGBA
+    property vector4d colorHSVA
+
+    // Call each time the value change
+    signal colorChange(vector4d rgba)
+    // Call when the user valids his choice (ex: mouse up)
+    signal accepted
+
+    ColumnLayout {
+        anchors.fill: parent
+        anchors.margins: 8
+
+        //*** RGB ***//
+
+        // RED
+        Channel {
+            Layout.fillWidth: true
+            Layout.maximumHeight: 40
+
+            caption: "R"
+            value: root.colorRGBA.x
+            // Change to create the hue gradient
+            toColor: Qt.rgba(0, root.colorRGBA.y, root.colorRGBA.z, root.colorRGBA.w)
+            fromColor: Qt.rgba(1, root.colorRGBA.y, root.colorRGBA.z, root.colorRGBA.w)
+
+            onUpdatedValue: root.colorChange(Qt.vector4d(updatedValue, root.colorRGBA.y, root.colorRGBA.z, root.colorRGBA.w))
+            onAccepted: root.accepted()
+        }
+
+        // GREEN
+        Channel {
+            Layout.fillWidth: true
+            Layout.maximumHeight: 40
+
+            caption: "G"
+            value: root.colorRGBA.y
+            // Change to create the hue gradient
+            toColor: Qt.rgba(root.colorRGBA.x, 0, root.colorRGBA.z, root.colorRGBA.w)
+            fromColor: Qt.rgba(root.colorRGBA.x, 1, root.colorRGBA.z, root.colorRGBA.w)
+
+            onUpdatedValue: root.colorChange(Qt.vector4d(root.colorRGBA.x, updatedValue, root.colorRGBA.z, root.colorRGBA.w))
+            onAccepted: root.accepted()
+        }
+
+        // BLUE
+        Channel {
+            Layout.fillWidth: true
+            Layout.maximumHeight: 40
+
+            caption: "B"
+            value: root.colorRGBA.z
+            // Change to create the hue gradient
+            toColor: Qt.rgba(root.colorRGBA.x, root.colorRGBA.y, 0, root.colorRGBA.w)
+            fromColor: Qt.rgba(root.colorRGBA.x, root.colorRGBA.y, 1, root.colorRGBA.w)
+
+            onUpdatedValue: root.colorChange(Qt.vector4d(root.colorRGBA.x, root.colorRGBA.y, updatedValue, root.colorRGBA.w))
+            onAccepted: root.accepted()
+        }
+
+
+        //*** HSV ***//
+
+        // HUE
+        // Work as a standard channel but has a complexe hue gradient
+        HueChannel {
+            Layout.fillWidth: true
+            Layout.maximumHeight: 40
+
+            value: root.colorHSVA.x
+
+            onUpdatedValue: root.colorChange(ColorUtils.hsva2rgba(Qt.vector4d(updatedValue, root.colorHSVA.y, root.colorHSVA.z, root.colorHSVA.w)))
+            onAccepted: root.accepted()
+        }
+
+        // SATURATION
+        Channel {
+            Layout.fillWidth: true
+            Layout.maximumHeight: 40
+
+            caption: "S"
+            value: root.colorHSVA.y
+            toColor: ColorUtils.hsva2QtHsla(root.colorHSVA.x, 0, root.colorHSVA.z, 1)
+            fromColor: ColorUtils.hsva2QtHsla(root.colorHSVA.x, 1, root.colorHSVA.z, 1)
+
+            onUpdatedValue: root.colorChange(ColorUtils.hsva2rgba(Qt.vector4d(root.colorHSVA.x, updatedValue, root.colorHSVA.z, root.colorHSVA.w)))
+            onAccepted: root.accepted()
+        }
+
+        // VALUE
+        Channel {
+            Layout.fillWidth: true
+            Layout.maximumHeight: 40
+
+            caption: "V"
+            value: root.colorHSVA.z
+            toColor: ColorUtils.hsva2QtHsla(root.colorHSVA.x, root.colorHSVA.y, 0, 1)
+            fromColor: ColorUtils.hsva2QtHsla(root.colorHSVA.x, root.colorHSVA.y, 1, 1)
+
+            onUpdatedValue: root.colorChange(ColorUtils.hsva2rgba(Qt.vector4d(root.colorHSVA.x, root.colorHSVA.y, updatedValue, root.colorHSVA.w)))
+            onAccepted: root.accepted()
+        }
+    }
+}

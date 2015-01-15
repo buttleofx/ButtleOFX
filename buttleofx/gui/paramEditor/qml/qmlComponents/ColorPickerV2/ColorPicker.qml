@@ -10,26 +10,40 @@ Item {
 
     // Color value in RGBA with floating point values between 0.0 and 1.0.
     property vector4d colorRGBA: Qt.vector4d(1, 1, 1, 1)
+
+
+    onColorRGBAChanged: {
+        var hsva = ColorUtils.rgba2hsva(root.colorRGBA);
+        // When the color is a grey level color, we must conserve the lost hue and saturation by conversion
+        if (root.colorRGBA.x == root.colorRGBA.y && root.colorRGBA.y == root.colorRGBA.z) {
+            hsva.x = m.colorHSVA.x;
+            hsva.y = m.colorHSVA.y;
+        }
+        m.colorHSVA = hsva;
+    }
+
     QtObject {
         id: m
         // Color value in HSVA with floating point values between 0.0 and 1.0.
-        property vector4d colorHSVA:  ColorUtils.rgba2hsva(root.colorRGBA)
+        // updated when RGBA change
+        property vector4d colorHSVA:  Qt.vector4d(1, 1, 1, 1)
     }
 
-    signal accepted()
+    signal accepted
     onAccepted: console.debug("UPDATE TUTLE")
 
     ColumnLayout {
         anchors.fill: parent
 
         RowLayout {
-            Layout.minimumHeight: 150
 
+            // Display a shape representation as wheel, rainbow...
             ColorRepresentation {
                 id:colorRepresentation
                 Layout.fillWidth: true
                 Layout.fillHeight: true
-                Layout.minimumWidth: 150
+                Layout.minimumWidth: 150                
+                Layout.minimumHeight: 150
 
                 colorRGBA: root.colorRGBA
                 colorHSVA: m.colorHSVA
@@ -43,10 +57,12 @@ Item {
                 onAccepted: root.accepted()
             }
 
+            // Give tool to edit precisely a color or a channel by text input, slider, picker...
             ChannelsEditor {
                 Layout.fillWidth: true
                 Layout.fillHeight: true
-                Layout.minimumWidth: 350
+                Layout.minimumWidth: 150
+                Layout.minimumHeight: 150
                 color: "orange"
 
                 colorRGBA: root.colorRGBA
@@ -60,7 +76,7 @@ Item {
         }
 
         RowLayout {
-
+            // Display the color choosen and her complementary
             ColorVisualisation {
                 Layout.fillWidth: true
                 Layout.fillHeight: true

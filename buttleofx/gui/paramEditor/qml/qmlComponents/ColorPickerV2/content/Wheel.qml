@@ -10,8 +10,8 @@ Item {
     signal hueSaturationChange(var hueSignal, var saturationSignal)
 
     states :
-        // When user is moving the slider
-        State {
+        State {        
+            // When user is moving the slider
             name: "editing"
             PropertyChanges {
                 target: root

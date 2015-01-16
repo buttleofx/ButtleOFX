@@ -37,8 +37,8 @@ ColumnLayout
             anchors.fill: parent
             visible : modelList.model[modelList.currentIndex] === "Wheel"
 
-            hue: colorHSVA.x
-            saturation: colorHSVA.y
+            hue: root.colorHSVA.x
+            saturation: root.colorHSVA.y
 
             onHueSaturationChange:{
                 colorChange(ColorUtils.hsva2rgba(Qt.vector4d(hueSignal, saturationSignal, root.colorHSVA.z, root.colorHSVA.w)))

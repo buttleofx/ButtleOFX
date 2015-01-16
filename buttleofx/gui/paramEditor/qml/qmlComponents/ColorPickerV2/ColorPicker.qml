@@ -25,7 +25,7 @@ Item {
         id: m
         // Color value in HSVA with floating point values between 0.0 and 1.0.
         // updated when RGBA change
-        property vector4d colorHSVA:  Qt.vector4d(1, 1, 1, 1)
+        property vector4d colorHSVA:  Qt.vector4d(0, 0, 1, 1)
     }
 
     signal accepted

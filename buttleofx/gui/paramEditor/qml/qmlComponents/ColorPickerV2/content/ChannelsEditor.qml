@@ -127,7 +127,7 @@ Rectangle {
             Layout.maximumHeight: 40
 
             colorRGB: Qt.vector3d(root.colorRGBA.x, root.colorRGBA.y, root.colorRGBA.z)
-            onUpdatedColor: root.colorChange(Qt.vector4d())
+            onUpdatedColor: root.colorChange(Qt.vector4d(rgb.x, rgb.y, rgb.z, root.colorRGBA.w))
         }
 
     }

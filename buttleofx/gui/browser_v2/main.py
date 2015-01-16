@@ -47,9 +47,6 @@ class Browser(QtCore.QObject):
     title = QtCore.pyqtProperty(str, getTitle, setTitle, notify=titleChange)
 
 
-
-
-
 currentFilePath = os.path.dirname(os.path.abspath(__file__))
 
 if __name__ == '__main__':
@@ -62,9 +59,8 @@ if __name__ == '__main__':
 
     qmlRegisterType(Browser, 'Browser', 1, 0, 'Browser')
 
-#    view.setWindowTitle("Browser")
     qmlFilePath = os.path.join(currentFilePath, "Browser.qml")
-#    print(qmlFilePath)
+    
     view.setSource(QtCore.QUrl(qmlFilePath))
     view.setResizeMode(QtQuick.QQuickView.SizeRootObjectToView)
 

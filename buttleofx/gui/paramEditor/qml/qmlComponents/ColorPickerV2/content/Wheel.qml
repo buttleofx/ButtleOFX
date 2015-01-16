@@ -1,4 +1,5 @@
 import QtQuick 2.0
+import "mathUtils.js" as MathUtils
 
 Item {
     id: root
@@ -123,8 +124,8 @@ Item {
                     cursor.x = Math.max(-pickerCursor.r, Math.min(wheelArea.width, ro*Math.cos(theta)+wheel.width/2)-pickerCursor.r);
                     cursor.y = Math.max(-pickerCursor.r, Math.min(wheelArea.height, wheel.height/2-ro*Math.sin(theta)-pickerCursor.r));
 
-                    hue = Math.ceil((Math.atan2(((cursor.y+pickerCursor.r-wheel.height/2)*(-1)),((cursor.x+pickerCursor.r-wheel.width/2)))/(Math.PI*2)+0.5)*100)/100
-                    saturation = Math.ceil(Math.sqrt(Math.pow(cursor.x+pickerCursor.r-width/2,2)+Math.pow(cursor.y+pickerCursor.r-height/2,2))/wheel.height*2*100)/100;
+                    hue = MathUtils.decimalRound(Math.atan2(((cursor.y+pickerCursor.r-wheel.height/2)*(-1)),((cursor.x+pickerCursor.r-wheel.width/2)))/(Math.PI*2)+0.5, 2)
+                    saturation = MathUtils.decimalRound(Math.sqrt(Math.pow(cursor.x+pickerCursor.r-width/2,2)+Math.pow(cursor.y+pickerCursor.r-height/2,2))/wheel.height*2, 2);
 
                     root.hueSaturationChange(hue, saturation);
                 }

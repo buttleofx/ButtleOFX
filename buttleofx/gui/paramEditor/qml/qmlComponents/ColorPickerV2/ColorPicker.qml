@@ -69,6 +69,7 @@ Item {
                     // rgba comes from signal
                     root.colorRGBA = rgba
                 }
+                onAccepted: root.accepted()
             }
         }
 

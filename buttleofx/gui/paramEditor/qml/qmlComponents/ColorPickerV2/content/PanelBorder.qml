@@ -1,16 +1,22 @@
 import QtQuick 2.0
 
 Rectangle {
-    width : 40; height : 15; radius: 2
-    border.width: 1; border.color: "#FF101010"
+    id: root
+
+    border.width: 1
+    border.color: "#999999"
     color: "transparent"
-    anchors.leftMargin: 1; anchors.topMargin: 3
-    clip: true
+
     Rectangle {
-        anchors.fill: parent; radius: 2
-        anchors.leftMargin: -1; anchors.topMargin: -1
-        anchors.rightMargin: 0; anchors.bottomMargin: 0
-        border.width: 1; border.color: "#FF525255"
+        anchors.fill: parent
+        radius: root.radius
+        anchors.leftMargin: -root.border.width
+        anchors.topMargin: -root.border.width
+        anchors.rightMargin: 0
+        anchors.bottomMargin: 0
+
+        border.width: root.border.width ;
+        border.color: Qt.lighter(root.border.color)
         color: "transparent"
     }
 }

@@ -16,9 +16,8 @@ RowLayout
         Layout.fillWidth: true
         Layout.fillHeight: true
 
-        // TODO: put in NumberBox
-        value: root.value // 5 Decimals
-        decimals: 2
+        value: root.value
+        decimals: 5
         max: 1
         min: 0
         caption: "H"
@@ -30,7 +29,7 @@ RowLayout
     }
 
     Item
-    {
+    {        
         Layout.fillWidth: true
         Layout.fillHeight: true
 
@@ -82,8 +81,6 @@ RowLayout
                 }
             }
         }
-
-
 
         HorizontalSlider
         {

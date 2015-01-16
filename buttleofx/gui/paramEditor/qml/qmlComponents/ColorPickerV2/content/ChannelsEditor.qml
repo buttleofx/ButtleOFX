@@ -121,5 +121,14 @@ Rectangle {
             onUpdatedValue: root.colorChange(Qt.vector4d(root.colorRGBA.x, root.colorRGBA.y, root.colorRGBA.z, updatedValue))
             onAccepted: root.accepted()
         }
+
+        HexaInput {
+            Layout.fillWidth: true
+            Layout.maximumHeight: 40
+
+            colorRGB: Qt.vector3d(root.colorRGBA.x, root.colorRGBA.y, root.colorRGBA.z)
+            onUpdatedColor: root.colorChange(Qt.vector4d())
+        }
+
     }
 }

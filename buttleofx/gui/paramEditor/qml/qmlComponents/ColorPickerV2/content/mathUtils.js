@@ -19,3 +19,8 @@ function projectValue(x, xmin, xmax, ymin, ymax) {
 function clampAndProject(x, xmin, xmax, ymin, ymax) {
     return projectValue(clamp(x, xmin, xmax), xmin, xmax, ymin, ymax)
 }
+
+function decimalRound(number, nbDecimals)
+{
+    return Math.round(number * Math.pow(10, nbDecimals))/ Math.pow(10, nbDecimals)
+}

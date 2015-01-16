@@ -15,12 +15,10 @@ RowLayout
 
     NumberBox {
         id: numberbox
-        Layout.fillWidth: true
         Layout.fillHeight: true
 
-        // TODO: put in NumberBox
-        value: root.value // 5 Decimals
-        decimals: 2
+        value: root.value
+        decimals: 5
         max: 1
         min: 0
         caption: root.caption
@@ -35,6 +33,7 @@ RowLayout
     {
         id: horizontalColorSlider
         Layout.fillWidth: true
+        Layout.minimumWidth: 50
         Layout.fillHeight: true
 
         value: root.value

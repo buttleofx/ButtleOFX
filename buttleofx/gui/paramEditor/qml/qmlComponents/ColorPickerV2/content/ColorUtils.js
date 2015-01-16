@@ -81,8 +81,8 @@ function getChannelStr(clr, channelIdx) {
     return parseInt(clr.toString().substr(channelIdx*2 + 1, 2), 16);
 }
 
-//convert to hexa with nb char
-function intToHexa(val , nb)
+//convert to hexa with nb char min
+function int2hexa(val , nb)
 {
     var hexaTmp = val.toString(16) ;
     var hexa = "";
@@ -97,7 +97,12 @@ function intToHexa(val , nb)
     return hexa + hexaTmp
 }
 
-function hexaFromRGBA(red, green, blue, alpha)
+function rgb2hexa(rgb)
 {
-    return intToHexa(Math.round(red * 255), 2)+intToHexa(Math.round(green * 255), 2)+intToHexa(Math.round(blue * 255), 2);
+    return int2hexa(Math.round(rgb.x * 255), 2)+int2hexa(Math.round(rgb.y * 255), 2)+int2hexa(Math.round(rgb.z * 255), 2);
+}
+
+function rgba2hexa(rgba)
+{
+    return rgb2hexa(rgba)+int2hexa(Math.round(rgba.w * 255), 2);
 }

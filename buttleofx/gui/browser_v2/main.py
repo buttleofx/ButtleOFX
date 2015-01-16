@@ -19,6 +19,9 @@ from PyQt5 import QtWidgets
 from PyQt5 import QtQuick
 from PyQt5.QtQml import qmlRegisterType
 
+# To prevent drivers conflicts between Mesa-utils and NVIDIA drivers on Ubuntu
+from OpenGL import GL
+
 
 class Browser(QtCore.QObject):
 

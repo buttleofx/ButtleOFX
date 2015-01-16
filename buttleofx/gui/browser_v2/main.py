@@ -5,7 +5,7 @@
     ## Add QML2 env. var. to run browser_v2
     export QML2_IMPORT_PATH=$QT_DIR/qml
 
-    ## Run browser_v2 in standalone mode
+    ## Run browser_v2 in standalone mode (comment original run)
     $PYTHONHOME/bin/python $BUTTLE_TOP_DIR/ButtleOFX/buttleofx/gui/browser_v2/main.py
 
 '''
@@ -60,7 +60,7 @@ if __name__ == '__main__':
     qmlRegisterType(Browser, 'Browser', 1, 0, 'Browser')
 
 #    view.setWindowTitle("Browser")
-    qmlFilePath = os.path.join(currentFilePath, "Browser.qml")
+    qmlFilePath = os.path.join(currentFilePath, "qml/Browser.qml")
 #    print(qmlFilePath)
     view.setSource(QtCore.QUrl(qmlFilePath))
     view.setResizeMode(QtQuick.QQuickView.SizeRootObjectToView)

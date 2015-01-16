@@ -5,7 +5,7 @@
     ## Add QML2 env. var. to run browser_v2
     export QML2_IMPORT_PATH=$QT_DIR/qml
 
-    ## Run browser_v2 in standalone mode (remove the )
+    ## Run browser_v2 in standalone mode
     $PYTHONHOME/bin/python $BUTTLE_TOP_DIR/ButtleOFX/buttleofx/gui/browser_v2/main.py
 
 '''

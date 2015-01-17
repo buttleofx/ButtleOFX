@@ -6,9 +6,10 @@ Item {
 
     property real hue: 1
     property real saturation: 1
+    property int precision: 5
 
     signal accepted
-    signal hueSaturationChange(var hueSignal, var saturationSignal)
+    signal hueSaturationChange(var updatedHue, var updatedSaturation)
 
     states :
         State {        
@@ -124,8 +125,8 @@ Item {
                     cursor.x = Math.max(-pickerCursor.r, Math.min(wheelArea.width, ro*Math.cos(theta)+wheel.width/2)-pickerCursor.r);
                     cursor.y = Math.max(-pickerCursor.r, Math.min(wheelArea.height, wheel.height/2-ro*Math.sin(theta)-pickerCursor.r));
 
-                    hue = MathUtils.decimalRound(Math.atan2(((cursor.y+pickerCursor.r-wheel.height/2)*(-1)),((cursor.x+pickerCursor.r-wheel.width/2)))/(Math.PI*2)+0.5, 2)
-                    saturation = MathUtils.decimalRound(Math.sqrt(Math.pow(cursor.x+pickerCursor.r-width/2,2)+Math.pow(cursor.y+pickerCursor.r-height/2,2))/wheel.height*2, 2);
+                    hue = MathUtils.decimalRound(Math.atan2(((cursor.y+pickerCursor.r-wheel.height/2)*(-1)),((cursor.x+pickerCursor.r-wheel.width/2)))/(Math.PI*2)+0.5, root.precision)
+                    saturation = MathUtils.decimalRound(Math.sqrt(Math.pow(cursor.x+pickerCursor.r-width/2,2)+Math.pow(cursor.y+pickerCursor.r-height/2,2))/wheel.height*2, root.precision);
 
                     root.hueSaturationChange(hue, saturation);
                 }

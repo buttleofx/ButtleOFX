@@ -40,17 +40,22 @@ ColumnLayout
             hue: root.colorHSVA.x
             saturation: root.colorHSVA.y
 
-            onHueSaturationChange:{
-                colorChange(ColorUtils.hsva2rgba(Qt.vector4d(hueSignal, saturationSignal, root.colorHSVA.z, root.colorHSVA.w)))
-            }
-            onAccepted: {
-                root.accepted() ;
-            }
+            onHueSaturationChange: colorChange(ColorUtils.hsva2rgba(Qt.vector4d(updatedHue, updatedSaturation, root.colorHSVA.z, root.colorHSVA.w)))
+            onAccepted: root.accepted() ;
         }
 
         Rainbow {
             anchors.fill: parent
             visible : modelList.model[modelList.currentIndex] === "Rainbow"
+
+            hue: root.colorHSVA.x
+            luminance: { return root.colorHSVA.z ; console.debug("change") ; }
+
+            onHueLuminanceChange:{
+                console.debug("signal "+updatedHue+" "+updatedLuminance)
+                colorChange(ColorUtils.hsva2rgba(Qt.vector4d(updatedHue, root.colorHSVA.y, updatedLuminance, root.colorHSVA.w)))
+            }
+            onAccepted: root.accepted() ;
         }
     }
 }

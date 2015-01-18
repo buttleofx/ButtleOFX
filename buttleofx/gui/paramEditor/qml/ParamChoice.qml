@@ -31,27 +31,7 @@ Item {
         spacing: 10
         clip: true
 
-        // Title of the param
-        Text {
-            id: paramChoiceTitle
-            text: paramObject.text + " : "
-            color: "white"
-            y: 5
 
-            // If param has been modified, title in bold font
-            font.bold: paramObject.hasChanged ? true : false
-
-            MouseArea {
-                anchors.fill: parent
-                acceptedButtons: Qt.RightButton
-
-                onClicked: {
-                    paramObject.hasChanged = false
-                    paramObject.value = paramObject.getDefaultValue()
-                    paramObject.pushValue(paramObject.value)
-                }
-            }
-        }
 
         ComboBox {
             id: comboBox

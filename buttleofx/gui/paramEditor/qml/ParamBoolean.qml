@@ -6,7 +6,6 @@ Item {
     implicitHeight: 30
     y: 10
 
-    property alias title: paramBooleanTitle.text
     property variant paramObject: model.object
 
     // Is this param secret?
@@ -16,27 +15,7 @@ Item {
     Row {
         id: paramBoleanInputContainer
         spacing: 10
-
-        // Title of the param
-        Text {
-            id: paramBooleanTitle
-            text: paramObject.text + " : "
-            color: "white"
-            // If param has been modified, title in bold font
-            font.bold: paramObject.hasChanged ? true : false
-
-            MouseArea {
-                anchors.fill: parent
-                acceptedButtons: Qt.RightButton
-
-                onClicked: {
-                    // Reinitialise the value of the param to her default value
-                    paramObject.hasChanged = false
-                    paramObject.value = paramObject.getDefaultValue()
-                    paramObject.pushValue(paramObject.value)
-                }
-            }
-        }
+        clip: true
 
         // Black square we can check
         Rectangle {

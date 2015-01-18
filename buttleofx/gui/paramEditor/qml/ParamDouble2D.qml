@@ -18,28 +18,6 @@ Item {
         id: paramDouble2DInputContainer
         spacing: 10
 
-        // Title of the paramDouble
-        Text {
-            id: paramDouble2DTitle
-            text: paramObject.text + " : "
-            color: "white"
-            // If param has been modified, title in bold font
-            font.bold: (paramObject.value1HasChanged || paramObject.value2HasChanged) ? true : false
-
-            MouseArea {
-                anchors.fill: parent
-                acceptedButtons: Qt.RightButton
-                // Reinitialise the value of the param to its default value
-
-                onClicked: {
-                    paramObject.value1HasChanged = false
-                    paramObject.value2HasChanged = false
-                    paramObject.value1 = paramObject.getDefaultValue1()
-                    paramObject.value2 = paramObject.getDefaultValue2()
-                }
-            }
-        }
-
         // First input
         Rectangle {
             height: 20

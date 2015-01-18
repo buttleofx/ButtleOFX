@@ -27,26 +27,6 @@ Item {
     Row {
         spacing: 10
 
-        // Title of the paramSlider
-        Text {
-            id: paramIntTitle
-            text: paramObject.text + " : "
-            color: "white"
-            font.bold: paramObject.hasChanged ? true : false
-
-            MouseArea {
-                anchors.fill: parent
-                acceptedButtons: Qt.RightButton
-
-                onClicked: {
-                    // Reinitialise the param to its default value
-                    paramObject.hasChanged = false
-                    paramObject.value = paramObject.getDefaultValue()
-                    paramObject.pushValue(paramObject.value)
-                }
-            }
-        }
-
         // The min value (at the beginning of the bar slider)
         Text {
             id: minValue

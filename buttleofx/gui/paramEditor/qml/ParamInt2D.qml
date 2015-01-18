@@ -17,28 +17,6 @@ Item {
         id: paramInt2DInputContainer
         spacing: 10
 
-        // Title of the paramInt
-        Text {
-            id: paramInt2DTitle
-            text: paramObject.text + " : "
-            color: "white"
-            // If param has been modified, set title font to bold
-            font.bold: (paramObject.value1HasChanged || paramObject.value2HasChanged) ? true : false
-
-            MouseArea {
-                anchors.fill: parent
-                acceptedButtons: Qt.RightButton
-
-                // Reinitialise the param to its default value
-                onClicked: {
-                    paramObject.value1HasChanged = false
-                    paramObject.value2HasChanged = false
-                    paramObject.value1 = paramObject.getDefaultValue1()
-                    paramObject.value2 = paramObject.getDefaultValue2()
-                }
-            }
-        }
-
         // First Input
         Rectangle {
             height: 20

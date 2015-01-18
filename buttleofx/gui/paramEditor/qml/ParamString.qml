@@ -29,25 +29,6 @@ Item {
         id: paramStringInputContainer
         spacing: 10
 
-        // Title of the paramString
-        Text {
-            id: paramStringTitle
-            text: paramObject.text + " : "
-            color: "white"
-            elide: Text.ElideRight
-            clip: true
-            // If param has been modified, set the title font to bold
-            font.bold: paramObject.hasChanged ? true : false
-
-            MouseArea {
-                anchors.fill: parent
-                acceptedButtons: Qt.RightButton
-                onClicked: {
-                    paramObject.resetValue()
-                }
-            }
-        }
-
         // Input field limited to 50 characters
         Rectangle {
             id: stringInput

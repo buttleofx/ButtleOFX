@@ -1,9 +1,10 @@
 import QtQuick 2.0
-import QtQuick.Layouts 1.0
+import QtQuick.Layouts 1.1
 import QtQuick.Controls 1.0
 import QtQuick.Controls.Styles 1.0
 import "../../../gui"
 import "qmlComponents"
+
 
 // Parent of the ParamEditor is the Row of the ButtleApp
 Item {
@@ -30,7 +31,8 @@ Item {
 
     Tab {
         id: tabBar
-        name: !_buttleData.currentParamNodeWrapper ? "Parameters" : "Parameters of :    " + _buttleData.currentParamNodeWrapper.nameUser
+        name: !_buttleData.currentParamNodeWrapper ? "Parameters" : "Parameters of :    "
+                                                     + _buttleData.currentParamNodeWrapper.nameUser
         onCloseClicked: paramEditor.buttonCloseClicked(true)
         onFullscreenClicked: paramEditor.buttonFullscreenClicked(true)
     }
@@ -52,6 +54,39 @@ Item {
 
             property string lastGroupParam: "No Group."
 
+            Rectangle {
+                id: header
+
+                Item {
+                    id: columnHeader1
+                    width: resizeBar.x
+                }
+
+                Rectangle {
+                    id: resizeBar
+                    width: 5
+                    height: 15
+                    color: "#343434"
+                    border.width: 1
+                    border.color: "#444"
+                    radius: 3
+                    x: 150
+
+                    MouseArea {
+                        anchors.fill: parent
+                        drag.target: resizeBar
+                        drag.axis: Drag.XAxis
+                        drag.minimumX: 0
+                        drag.maximumX: tuttleParams.width
+                    }
+                }
+
+                Item {
+                    id: columnHeader2
+                    x: resizeBar.width
+                }
+            }
+
             ScrollView {
                 anchors.fill: parent
                 anchors.topMargin: 5
@@ -68,7 +103,7 @@ Item {
                         border.width: 1
                         border.color: "#333"
                     }
-                    decrementControl : Rectangle {
+                    decrementControl: Rectangle {
                         id: scrollLower
                         width: 15
                         height: 15
@@ -79,12 +114,13 @@ Item {
 
                         Image {
                             id: arrow
-                            source: "file:///" + _buttleData.buttlePath + "/gui/img/buttons/params/arrow2.png"
+                            source: "file:///" + _buttleData.buttlePath
+                                    + "/gui/img/buttons/params/arrow2.png"
                             x: 4
                             y: 4
                         }
                     }
-                    incrementControl : Rectangle {
+                    incrementControl: Rectangle {
                         id: scrollHigher
                         width: 15
                         height: 15
@@ -95,13 +131,13 @@ Item {
 
                         Image {
                             id: arrow
-                            source: "file:///" + _buttleData.buttlePath + "/gui/img/buttons/params/arrow.png"
+                            source: "file:///" + _buttleData.buttlePath
+                                    + "/gui/img/buttons/params/arrow.png"
                             x: 4
                             y: 4
                         }
                     }
                 }
-
 
                 // frame: false
                 // frameWidth: 0
@@ -116,35 +152,60 @@ Item {
                     model: params
 
                     delegate: Component {
-                        Loader {
-                            id: param
-                            source: model.object.paramType + ".qml"
-                            width: parent.width
-                            x: 15 // Here is the distance to the left of the listview
-                            z: 0
 
-                            ToolTip {
-                                id: tooltip
-                                visible: false
-                                paramHelp: model.object.doc
-                                z: param.z+1
+                        RowLayout {
+
+                            Text {
+                                id: paramTitle
+                                text: model.object.paramText
+                                color: "white"
+                                Layout.preferredWidth: columnHeader1.width
+                                // If param has been modified, title in bold font
+                                font.bold: model.object.hasChanged ? true : false
+
+                                MouseArea {
+                                    anchors.fill: parent
+                                    acceptedButtons: Qt.RightButton
+
+                                    onClicked: {
+                                        // Reinitialise the value of the param to her default value
+                                        model.object.hasChanged = false
+                                        model.object.value = model.object.getDefaultValue()
+                                        model.object.pushValue(
+                                                    model.object.value)
+                                    }
+                                }
                             }
 
-                            MouseArea {
-                                anchors.fill: parent
-                                acceptedButtons: Qt.RightButton
-                                hoverEnabled:true
+                            Loader {
+                                id: param
+                                source: model.object.paramType + ".qml"
+                                Layout.fillWidth: true
 
-                                onClicked: {
-                                    model.object.hasChanged = false
-                                    model.object.value = model.object.getDefaultValue()
-                                    model.object.pushValue(model.object.value)
+                                ToolTip {
+                                    id: tooltip
+                                    visible: false
+                                    paramHelp: model.object.doc
+                                    z: param.z + 1
                                 }
-                                onEntered: {
-                                    tooltip.visible=true
-                                }
-                                onExited: {
-                                    tooltip.visible=false
+
+                                MouseArea {
+                                    anchors.fill: parent
+                                    acceptedButtons: Qt.RightButton
+                                    hoverEnabled: true
+
+                                    onClicked: {
+                                        model.object.hasChanged = false
+                                        model.object.value = model.object.getDefaultValue()
+                                        model.object.pushValue(
+                                                    model.object.value)
+                                    }
+                                    onEntered: {
+                                        tooltip.visible = true
+                                    }
+                                    onExited: {
+                                        tooltip.visible = false
+                                    }
                                 }
                             }
                         }

@@ -28,10 +28,10 @@ class ParamWrapper(QtCore.QObject):
     def getParamDoc(self):
         return self._param.getParamDoc()
 
-    def getName(self):
+    def getParamName(self):
         return self._param.getName()
 
-    def getText(self):
+    def getParamText(self):
         return self._param.getText()
 
     # ## Others ## #
@@ -50,6 +50,6 @@ class ParamWrapper(QtCore.QObject):
     otherParamOfTheNodeChanged = QtCore.pyqtSignal()
 
     paramType = QtCore.pyqtProperty(str, getParamType, constant=True)
-    text = QtCore.pyqtProperty(str, getText, constant=True)
+    paramText = QtCore.pyqtProperty(str, getParamText, constant=True)
     doc = QtCore.pyqtProperty(str, getParamDoc, constant=True)
     isSecret = QtCore.pyqtProperty(bool, isSecret, notify=otherParamOfTheNodeChanged)

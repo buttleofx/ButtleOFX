@@ -60,7 +60,6 @@ Item {
                 Layout.fillHeight: true
                 Layout.minimumWidth: 150
                 Layout.minimumHeight: 150
-                color: "orange"
 
                 colorRGBA: root.colorRGBA
                 colorHSVA: m.colorHSVA

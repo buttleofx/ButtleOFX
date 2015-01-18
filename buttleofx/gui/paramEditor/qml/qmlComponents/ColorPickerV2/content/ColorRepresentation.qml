@@ -52,8 +52,20 @@ ColumnLayout
             luminance: { return root.colorHSVA.z ; console.debug("change") ; }
 
             onHueLuminanceChange:{
-                console.debug("signal "+updatedHue+" "+updatedLuminance)
                 colorChange(ColorUtils.hsva2rgba(Qt.vector4d(updatedHue, root.colorHSVA.y, updatedLuminance, root.colorHSVA.w)))
+            }
+            onAccepted: root.accepted() ;
+        }
+
+        SquareHuedColors {
+            anchors.fill: parent
+            anchors.margins: 5
+            visible : modelList.model[modelList.currentIndex] === "Square"
+
+            colorHSV: Qt.vector3d(root.colorHSVA.x, root.colorHSVA.y, root.colorHSVA.z)
+
+            onSaturationLuminanceChange:{
+                colorChange(ColorUtils.hsva2rgba(Qt.vector4d(root.colorHSVA.x, updatedSaturation, updatedLuminance, root.colorHSVA.w)))
             }
             onAccepted: root.accepted() ;
         }

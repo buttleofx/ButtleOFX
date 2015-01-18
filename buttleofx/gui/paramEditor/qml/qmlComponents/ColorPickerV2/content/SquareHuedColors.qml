@@ -10,19 +10,6 @@ Item {
     signal saturationLuminanceChange(var updatedSaturation, var updatedLuminance)
     signal accepted
 
-//    states :
-//        State {
-//            // When user is moving the slider
-//            name: "editing"
-//            PropertyChanges {
-//                target: root
-//                // Initialize with the value in the default state.
-//                // Allows to break the link in that state.
-//                saturation: saturation
-//                luminance: luminance
-//            }
-//        }
-
     Rectangle {
         id: squareHued
         anchors.fill: parent
@@ -95,7 +82,6 @@ Item {
 
             // Change to editing state to move the cursor in the squareHued and calcul new hue and luminance
             function modifySaturationLuminance(mouse) {
-//                root.state = 'editing'
                 if (mouse.buttons & Qt.LeftButton) {
                     var saturation = MathUtils.clamp(mouse.x / squareHued.width, 0, 1)
                     var luminance = MathUtils.clampAndProject(mouse.y / squareHued.height, 0, 1, 1, 0)
@@ -106,10 +92,7 @@ Item {
 
             onPositionChanged: modifySaturationLuminance(mouse)
             onPressed: modifySaturationLuminance(mouse)
-            onReleased: {
-//                root.state = '';
-                root.accepted();
-            }
+            onReleased: root.accepted()
         }
     }
 }

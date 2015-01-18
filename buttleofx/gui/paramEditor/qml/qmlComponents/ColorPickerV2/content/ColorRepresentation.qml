@@ -59,7 +59,6 @@ ColumnLayout
 
         SquareHuedColors {
             anchors.fill: parent
-            anchors.margins: 5
             visible : modelList.model[modelList.currentIndex] === "Square"
 
             colorHSV: Qt.vector3d(root.colorHSVA.x, root.colorHSVA.y, root.colorHSVA.z)

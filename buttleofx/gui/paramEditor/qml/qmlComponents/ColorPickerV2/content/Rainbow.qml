@@ -11,19 +11,6 @@ Item {
     signal hueLuminanceChange(var updatedHue, var updatedLuminance)
     signal accepted
 
-    states :
-        State {
-            // When user is moving the slider
-            name: "editing"
-            PropertyChanges {
-                target: root
-                // Initialize with the value in the default state.
-                // Allows to break the link in that state.
-                hue: hue
-                luminance: luminance
-            }
-        }
-
     Rectangle {
         id: rainbow
         anchors.fill: parent
@@ -94,10 +81,9 @@ Item {
 
             // Change to editing state to move the cursor in the rainbow and calcul new hue and luminance
             function modifyHueLuminance(mouse) {
-                root.state = 'editing'
                 if (mouse.buttons & Qt.LeftButton) {
-                    hue = MathUtils.clamp(mouse.x / rainbow.width, 0, 1)
-                    luminance = MathUtils.clampAndProject(mouse.y / rainbow.height, 0, 1, 1, 0)
+                    var hue = MathUtils.clamp(mouse.x / rainbow.width, 0, 1)
+                    var luminance = MathUtils.clampAndProject(mouse.y / rainbow.height, 0, 1, 1, 0)
 
                     root.hueLuminanceChange(hue, luminance);
                 }
@@ -105,10 +91,7 @@ Item {
 
             onPositionChanged: modifyHueLuminance(mouse)
             onPressed: modifyHueLuminance(mouse)
-            onReleased: {
-                root.state = '';
-                root.accepted();
-            }
+            onReleased: root.accepted()
         }
     }
 }

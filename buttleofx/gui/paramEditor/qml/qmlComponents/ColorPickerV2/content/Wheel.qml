@@ -11,19 +11,6 @@ Item {
     signal accepted
     signal hueSaturationChange(var updatedHue, var updatedSaturation)
 
-    states :
-        State {        
-            // When user is moving the slider
-            name: "editing"
-            PropertyChanges {
-                target: root
-                // Initialize with the value in the default state.
-                // Allows to break the link in that state.
-                hue: hue
-                saturation: saturation
-            }
-        }
-
     Rectangle {
         id: wheel
 
@@ -110,7 +97,6 @@ Item {
 
             // Change to editing state to move the cursor in the wheel and calcul new hue and saturation
             function modifyHueSaturation(mouse, wheelArea, wheel) {
-                root.state = 'editing'
                 if (mouse.buttons & Qt.LeftButton) {
                     // cartesian to polar coords
                     var ro = Math.sqrt(Math.pow(mouse.x-wheel.width/2,2)+Math.pow(mouse.y-wheel.height/2,2));
@@ -125,8 +111,8 @@ Item {
                     cursor.x = Math.max(-pickerCursor.r, Math.min(wheelArea.width, ro*Math.cos(theta)+wheel.width/2)-pickerCursor.r);
                     cursor.y = Math.max(-pickerCursor.r, Math.min(wheelArea.height, wheel.height/2-ro*Math.sin(theta)-pickerCursor.r));
 
-                    hue = MathUtils.decimalRound(Math.atan2(((cursor.y+pickerCursor.r-wheel.height/2)*(-1)),((cursor.x+pickerCursor.r-wheel.width/2)))/(Math.PI*2)+0.5, root.precision)
-                    saturation = MathUtils.decimalRound(Math.sqrt(Math.pow(cursor.x+pickerCursor.r-width/2,2)+Math.pow(cursor.y+pickerCursor.r-height/2,2))/wheel.height*2, root.precision);
+                    var hue = MathUtils.decimalRound(Math.atan2(((cursor.y+pickerCursor.r-wheel.height/2)*(-1)),((cursor.x+pickerCursor.r-wheel.width/2)))/(Math.PI*2)+0.5, root.precision)
+                    var saturation = MathUtils.decimalRound(Math.sqrt(Math.pow(cursor.x+pickerCursor.r-width/2,2)+Math.pow(cursor.y+pickerCursor.r-height/2,2))/wheel.height*2, root.precision);
 
                     root.hueSaturationChange(hue, saturation);
                 }
@@ -134,10 +120,7 @@ Item {
 
             onPositionChanged: modifyHueSaturation(mouse, wheelArea,  wheel)
             onPressed: modifyHueSaturation(mouse, wheelArea, wheel)
-            onReleased: {
-                root.state = '';
-                root.accepted();
-            }
+            onReleased: root.accepted()
         }
     }
 

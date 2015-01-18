@@ -57,6 +57,7 @@ Debug
 Release
 Production
 
+
 .bofx
 .project
 .pydevproject
@@ -78,4 +79,3 @@ buttleofx/buttle_perso.files
 buttleofx/buttle_perso.includes
 buttleofx/gui/paramEditor/plop.py
 fontconfig/
-

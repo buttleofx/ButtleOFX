@@ -40,7 +40,7 @@ class BrowserItem(QtCore.QObject):
         elif typeItem == BrowserItem.ItemType.file:
             self._fileExtension = os.path.splitext(nameItem)[1]
             if supported:
-                self._fileImg = 'image://buttleofx/' + self._filepath
+                self._fileImg = 'image://buttleofx/' + self._path
             else:
                 self._fileImg = "../../img/buttons/browser/file-icon.png"
 
@@ -88,8 +88,11 @@ class BrowserItem(QtCore.QObject):
     def getSequence(self):
         return self._sequence
 
-    def getName(self):
+    def getParentPath(self):
         return os.path.dirname(self._path)
+
+    def getName(self):
+        return os.path.basename(self._path)
 
     def isRemoved(self):
         return os.path.exists(self._path)

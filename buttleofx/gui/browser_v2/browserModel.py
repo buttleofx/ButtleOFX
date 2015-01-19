@@ -16,8 +16,8 @@ class BrowserModel(QtCore.QObject):
     rootFolderChanged = QtCore.pyqtSignal()
     ignoreHiddenChanged = QtCore.pyqtSignal()
 
-    def __init__(self):
-        super(BrowserModel, self).__init__()
+    def __init__(self, parent=None):
+        super(BrowserModel, self).__init__(parent)
         self._browserItemsModel = QObjectListModel(self)
 
     def updateItems(self):

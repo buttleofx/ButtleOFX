@@ -31,12 +31,11 @@ Rectangle {
 
     BrowserModel {
         id: browser
-
     }
 
     Text {
          id: helloText
-         text: browser.items
+         text: "Coucou"
      }
 
 

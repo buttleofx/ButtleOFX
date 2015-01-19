@@ -9,7 +9,7 @@ Rectangle
     width: 500
     height: 500
 
-    property string linkedText: "4542"
+    property string linkedText: "42.42"
 
     Rectangle {
         color: "white"

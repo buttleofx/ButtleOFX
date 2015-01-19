@@ -19,9 +19,14 @@ TextInput {
 
         var step = 1
         // Calcul step in function of cursor position if the value is integer, if cursor is before sign - step is just 1
-        if(comaPosition == -1 && !(parseFloat(textInput.text) < 0 && oldCursorPos == 0))
+        if(!(parseFloat(textInput.text) < 0 && oldCursorPos == 0))
         {
-            step = Math.pow(10, text.length - oldCursorPos - 1)
+            if(comaPosition == -1)
+                step = Math.pow(10, text.length - oldCursorPos - 1)
+            else if(oldCursorPos < comaPosition)
+                step = Math.pow(10, comaPosition - oldCursorPos - 1)
+            else if (oldCursorPos > comaPosition)
+                step = Math.pow(10, comaPosition - oldCursorPos)
         }
 
         var newValue = parseFloat(textInput.text) + stepSign * step

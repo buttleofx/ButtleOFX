@@ -1,4 +1,4 @@
-from browserItem import BrowserItem
+from buttleofx.gui.browser_v2.browserItem import BrowserItem
 
 
 class ActionInterface:

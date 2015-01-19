@@ -1,21 +1,24 @@
 import os
-from enum import Enum
 from PyQt5 import QtCore
+from datetime import datetime
+from pwd import getpwuid
 
 
 class BrowserItem(QtCore.QObject):
-    class ItemType(Enum):
+    class ItemType:
         file = 1
         folder = 2
         sequence = 3
 
-    # class Status(Enum):
+    # class Status:
     #    pass
 
     _isSelected = False
     _sequence = None
     _weight = 0.0
     _fileExtension = ""
+    _owner = ""
+    _lastModification = ""
 
     # gui operations, int for the moment
     _actionStatus = 0
@@ -51,6 +54,13 @@ class BrowserItem(QtCore.QObject):
             # waiting sequenceParser
             pass
 
+        if not typeItem == BrowserItem.ItemType.sequence:
+            try:
+                self._lastModification = datetime.fromtimestamp(os.stat(self._path).st_mtime).strftime("%c")
+                self._owner = getpwuid(os.stat(self._path).st_uid).pw_name
+            except:
+                pass
+
     def notifyAddAction(self):
         self._actionStatus += 1
         self.statusChanged.emit()
@@ -83,6 +93,9 @@ class BrowserItem(QtCore.QObject):
 
     def isRemoved(self):
         return os.path.exists(self._path)
+
+    def getLastModification(self):
+        return self._lastModification
 
     # ############################################ Methods exposed to QML ############################################ #
 

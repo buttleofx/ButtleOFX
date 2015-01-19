@@ -1,4 +1,4 @@
-from actionInterface import ActionInterface
+from buttleofx.gui.browser_v2.action.actionInterface import ActionInterface
 from PyQt5 import QtCore
 from quickmamba.patterns import Singleton
 
@@ -29,8 +29,10 @@ class ActionManager(QtCore.QObject):
 
     def clearEndedActions(self):
         self._actionsEnded.clear()
+        self.actionChanged.emit()
 
     # ################################### Methods exposed also to QML ############################### #
+
     @QtCore.pyqtSlot(result=list)
     def getEndedActions(self):
         return self._actionsEnded

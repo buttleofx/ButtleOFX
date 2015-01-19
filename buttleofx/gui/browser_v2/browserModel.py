@@ -1,5 +1,5 @@
 import os
-from browserItem import BrowserItem
+from buttleofx.gui.browser_v2.browserItem import BrowserItem
 from PyQt5 import QtCore
 from quickmamba.models import QObjectListModel
 

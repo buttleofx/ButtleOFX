@@ -7,6 +7,7 @@ RowLayout
 
     property real value
     property real alpha
+    property int precision
 
     signal updatedValue(var updatedValue)
     signal accepted
@@ -17,7 +18,7 @@ RowLayout
         Layout.fillHeight: true
 
         value: root.value
-        decimals: 5
+        decimals: root.precision
         max: 1
         min: 0
         caption: "H"

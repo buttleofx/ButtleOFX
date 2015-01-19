@@ -88,7 +88,7 @@ class BrowserItem(QtCore.QObject):
     def getSequence(self):
         return self._sequence
 
-    def getName(self):
+    def getEnclosingFolder(self):
         return os.path.dirname(self._path)
 
     def isRemoved(self):

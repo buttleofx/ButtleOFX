@@ -91,6 +91,9 @@ class BrowserItem(QtCore.QObject):
     def getEnclosingFolder(self):
         return os.path.dirname(self._path)
 
+    def getName(self):
+        return os.path.basename(self._path)
+
     def isRemoved(self):
         return os.path.exists(self._path)
 

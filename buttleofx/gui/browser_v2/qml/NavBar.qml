@@ -1,4 +1,4 @@
-import QtQuick 2.0
+import QtQuick 2.2
 import QtQuick.Layouts 1.0
 import QtQuick.Controls 1.0
 import QtQuick.Controls.Styles 1.0
@@ -155,7 +155,7 @@ Rectangle {
             TextInput {
                 id: texteditPath
                 y: 5
-                x: 5
+                x: 10
                 height: parent.height
                 width: parent.width - 10
                 clip: true

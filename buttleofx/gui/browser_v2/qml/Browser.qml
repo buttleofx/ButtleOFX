@@ -1,4 +1,4 @@
-import QtQuick 2.0
+import QtQuick 2.2
 import QtQuick.Layouts 1.0
 
 Rectangle {
@@ -17,6 +17,10 @@ Rectangle {
             height : 50
             anchors.top: parent.top
             Layout.fillWidth: true
+        }
+
+        LeftCol{
+
         }
 
 // Main window with files list

@@ -56,21 +56,45 @@ Item {
 
             Rectangle {
                 id: header
+                color: paramEditor.background
+                height: 21
+                width: parent.width
+                z: 20
 
                 Item {
                     id: columnHeader1
                     width: resizeBar.x
+
+                    Text {
+                        text: "Param Title"
+                        color: "white"
+                    }
                 }
 
                 Rectangle {
                     id: resizeBar
-                    width: 5
-                    height: 15
-                    color: "#343434"
-                    border.width: 1
-                    border.color: "#444"
-                    radius: 3
+                    width: 50
+                    height: 20
                     x: 150
+                    color: paramEditor.background
+
+                    Rectangle {
+                        id: dragLeft
+                        width: 2
+                        height: 15
+                        color: "#eee"
+                        radius: 1
+                    }
+
+                    Rectangle {
+                        id: dragRight
+                        width: 2
+                        height: 15
+                        color: "#eee"
+                        anchors.left: dragLeft.right
+                        anchors.margins: 2
+                        radius: 1
+                    }
 
                     MouseArea {
                         anchors.fill: parent
@@ -83,13 +107,24 @@ Item {
 
                 Item {
                     id: columnHeader2
-                    x: resizeBar.width
+                    Layout.fillWidth: true
+                    anchors.left: resizeBar.right
+
+                    Rectangle {
+                        width: header.width
+                        height: header.height
+                        color: paramEditor.background
+                        Text {
+                            text: "Param Value"
+                            color: "white"
+                        }
+                    }
                 }
             }
 
             ScrollView {
                 anchors.fill: parent
-                anchors.topMargin: 5
+                anchors.topMargin: 30
                 anchors.bottomMargin: 15
                 height: 110
                 width: 110
@@ -163,6 +198,13 @@ Item {
                                 // If param has been modified, title in bold font
                                 font.bold: model.object.hasChanged ? true : false
 
+                                ToolTip {
+                                    id: tooltip
+                                    visible: false
+                                    paramHelp: model.object.doc
+                                    z: param.z + 1
+                                }
+
                                 MouseArea {
                                     anchors.fill: parent
                                     acceptedButtons: Qt.RightButton
@@ -182,11 +224,10 @@ Item {
                                 source: model.object.paramType + ".qml"
                                 Layout.fillWidth: true
 
-                                ToolTip {
-                                    id: tooltip
-                                    visible: false
-                                    paramHelp: model.object.doc
-                                    z: param.z + 1
+                                Rectangle {
+                                    width: parent.width
+                                    height: parent.height
+                                    color: paramEditor.background
                                 }
 
                                 MouseArea {

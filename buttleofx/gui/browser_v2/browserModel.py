@@ -6,19 +6,21 @@ from quickmamba.models import QObjectListModel
 
 class BrowserModel(QtCore.QObject):
     # singleton? only one model?
-    _rootFolder = ""
+
+    _currentPath = ""
     _browserItems = []
     _browserItemsModel = None
     _filter = "*"
     _ignoreHiddenItems = True
 
     filterChanged = QtCore.pyqtSignal()
-    rootFolderChanged = QtCore.pyqtSignal()
+    currentPathChanged = QtCore.pyqtSignal()
     ignoreHiddenChanged = QtCore.pyqtSignal()
 
     def __init__(self, parent=None):
         super(BrowserModel, self).__init__(parent)
         self._browserItemsModel = QObjectListModel(self)
+        self.rootFolder = os.path.expanduser("~")
 
     def updateItems(self):
         pass
@@ -31,18 +33,18 @@ class BrowserModel(QtCore.QObject):
         self.updateItems()
         self.filterChanged.emit()
 
-    def getRootFolder(self):
-        return self._rootFolder
+    def getCurrentPath(self):
+        return self._currentPath
 
-    def setRootFolder(self, newRoot):
-        self._rootFolder = newRoot
+    def setCurrentPath(self, newRoot):
+        self._currentPath = newRoot
         self.updateItems()
-        self.rootFolderChanged.emit()
+        self.currentPathChanged.emit()
 
-    def isRootFolderExist(self):
-        return os.path.exists(self._rootFolder)
+    def isCurrentPathExists(self):
+        return os.path.exists(self._currentPath)
 
-    def isIgnoregHidden(self):
+    def isIgnoreHidden(self):
         return self._ignoreHiddenItems
 
     def setIgnoreHidden(self, hide):
@@ -52,23 +54,28 @@ class BrowserModel(QtCore.QObject):
 
     @QtCore.pyqtSlot(result=QtCore.QObject)
     def getItemsSelected(self):
-        selectedList = QObjectListModel(self)
-        for item in self._browserItems:
-            if item.getSelected():
-                selectedList.append(item)
-        return selectedList
+        items = QObjectListModel(self)
+        items.append([item for item in self._browserItems if item.getSelected()])
+        return items
 
     @QtCore.pyqtSlot(result=QtCore.QObject)
     def getItems(self):
         return self._browserItemsModel
 
     @QtCore.pyqtSlot(result=str)
-    def getParentFolder(self):
-        return os.path.dirname(self._rootFolder)
+    def getParentPath(self):
+        return os.path.dirname(self._currentPath)
+
+    @QtCore.pyqtSlot(result=QObjectListModel)
+    def getSplitedRootPath(self):
+        splitedPath = [folder for folder in self._currentPath.split(os.sep) if folder]
+        model = QObjectListModel(self)
+        model.append(splitedPath)
+        return model
 
     # ############################################# Data exposed to QML ############################################# #
 
-    rootFolder = QtCore.pyqtProperty(str, getRootFolder, setRootFolder, notify=rootFolderChanged)
-    exists = QtCore.pyqtProperty(bool, isRootFolderExist, constant=True)
-    fileItems = QtCore.pyqtProperty(QtCore.QObject, getItems, constant=True)
-    parentFolder = QtCore.pyqtProperty(str, getParentFolder, constant=True)
+    currentPath = QtCore.pyqtProperty(str, getCurrentPath, setCurrentPath, notify=currentPathChanged)
+    exists = QtCore.pyqtProperty(bool, isCurrentPathExists, constant=True, notify=currentPathChanged)
+    fileItems = QtCore.pyqtProperty(QtCore.QObject, getItems, constant=True, notify=currentPathChanged)
+    parentFolder = QtCore.pyqtProperty(str, getParentPath, constant=True, notify=currentPathChanged)

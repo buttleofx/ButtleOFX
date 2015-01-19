@@ -34,7 +34,7 @@ if __name__ == '__main__':
     qmlRegisterType(BrowserModel, 'BrowserModel', 1, 0, 'BrowserModel')
 
 #    view.setWindowTitle("Browser")
-    qmlFilePath = os.path.join(currentFilePath, "Browser.qml")
+    qmlFilePath = os.path.join(currentFilePath, "qml/Browser.qml")
 #    print(qmlFilePath)
     view.setSource(QtCore.QUrl(qmlFilePath))
     view.setResizeMode(QtQuick.QQuickView.SizeRootObjectToView)

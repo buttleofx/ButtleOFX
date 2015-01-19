@@ -19,12 +19,14 @@ class BrowserItem(QtCore.QObject):
     _fileExtension = ""
     _owner = ""
     _lastModification = ""
+    _permissions = ""
 
     # gui operations, int for the moment
     _actionStatus = 0
 
     statusChanged = QtCore.pyqtSignal()
     selectedChanged = QtCore.pyqtSignal()
+    fileChanged = QtCore.pyqtSignal()
 
     def __init__(self, dirAbsolutePath, nameItem, typeItem, supported):
         super(BrowserItem, self).__init__()
@@ -100,6 +102,10 @@ class BrowserItem(QtCore.QObject):
     def getLastModification(self):
         return self._lastModification
 
+    def setPath(self, newPath):
+        self._path = newPath
+        self.fileChanged.emit()
+
     # ############################################ Methods exposed to QML ############################################ #
 
     @QtCore.pyqtSlot(result=list)
@@ -119,8 +125,8 @@ class BrowserItem(QtCore.QObject):
     isSelected = QtCore.pyqtProperty(bool, getSelected, setSelected, notify=selectedChanged)
     actionStatus = QtCore.pyqtProperty(list, getActionStatus, notify=statusChanged)
 
-    path = QtCore.pyqtProperty(str, getPath, constant=True)
+    path = QtCore.pyqtProperty(str, getPath, setPath, notify=fileChanged)
     type = QtCore.pyqtProperty(int, getType, constant=True)
     weight = QtCore.pyqtProperty(float, getWeight, constant=True)
     pathImg = QtCore.pyqtProperty(str, getPathImg, constant=True)
-    name = QtCore.pyqtProperty(str, getName, constant=True)
+    name = QtCore.pyqtProperty(str, getName, constant=True, notify=fileChanged)

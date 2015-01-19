@@ -103,7 +103,7 @@ class BrowserItem(QtCore.QObject):
     isSelected = QtCore.pyqtProperty(bool, getSelected, setSelected, notify=selectedChanged)
     actionStatus = QtCore.pyqtProperty(list, getActionStatus, notify=statusChanged)
 
-    path = QtCore.pyqtProperty(str,getPath, constant=True)
+    path = QtCore.pyqtProperty(str, getPath, constant=True)
     type = QtCore.pyqtProperty(int, getType, constant=True)
     weight = QtCore.pyqtProperty(float, getWeight, constant=True)
     pathImg = QtCore.pyqtProperty(str, getPathImg, constant=True)

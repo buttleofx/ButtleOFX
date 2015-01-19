@@ -1,46 +1,26 @@
 import QtQuick 2.0
-import Browser 1.0
+import QtQuick.Layouts 1.0
 
 Rectangle {
+    id: root
 
     width: 800
     height: 600
-    color: "red"
+    color: "#353535"
 
-    MouseArea {
+    ColumnLayout {
         anchors.fill: parent
 
-        onClicked: {
-            console.log("hello")
-            browser.title = "hellllooooo"
+        NavBar {
+            id: navBar
+
+            height : 50
+            anchors.top: parent.top
+            Layout.fillWidth: true
         }
+
+// Main window with files list
+//        FilesWindow{
+//        }
     }
-
-
-    Rectangle {
-        width: 100
-        height: 100
-        color: "blue"
-
-        MouseArea {
-            anchors.fill: parent
-
-            onClicked: {
-                console.log("hello")
-                browser.greeting()
-            }
-        }
-    }
-
-    Browser {
-        id: browser
-        title: "Plopinette"
-    }
-
-    Text {
-         id: helloText
-         text: browser.title
-     }
-
-
 }

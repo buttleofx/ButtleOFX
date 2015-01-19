@@ -1,5 +1,5 @@
 import QtQuick 2.0
-import Browser 1.0
+import BrowserModel 1.0
 
 Rectangle {
 
@@ -12,10 +12,8 @@ Rectangle {
 
         onClicked: {
             console.log("hello")
-            browser.title = "hellllooooo"
         }
     }
-
 
     Rectangle {
         width: 100
@@ -27,19 +25,18 @@ Rectangle {
 
             onClicked: {
                 console.log("hello")
-                browser.greeting()
             }
         }
     }
 
-    Browser {
+    BrowserModel {
         id: browser
-        title: "Plopinette"
+
     }
 
     Text {
          id: helloText
-         text: browser.title
+         text: browser.items
      }
 
 

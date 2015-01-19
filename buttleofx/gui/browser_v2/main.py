@@ -18,33 +18,7 @@ from PyQt5 import QtCore
 from PyQt5 import QtWidgets
 from PyQt5 import QtQuick
 from PyQt5.QtQml import qmlRegisterType
-
-
-class Browser(QtCore.QObject):
-
-    def __init__(self, parent=None):
-        super(Browser, self).__init__(parent)
-        self._title = "Browser standalone"
-        self._counter = 0
-
-    @QtCore.pyqtSlot()
-    def greeting(self, name="world!"):
-        print("Hello " + name)
-
-    # Expose property to QML
-    def getTitle(self):
-        return self._title
-
-    def setTitle(self, title):
-        self._title = title
-        print("Plop")
-        self.titleChange.emit()
-
-    titleChange = QtCore.pyqtSignal()
-    title = QtCore.pyqtProperty(str, getTitle, setTitle, notify=titleChange)
-
-
-
+from browserModel import BrowserModel
 
 
 currentFilePath = os.path.dirname(os.path.abspath(__file__))
@@ -54,10 +28,10 @@ if __name__ == '__main__':
     view = QtQuick.QQuickView()
     rc = view.rootContext()
 
-    b = Browser()
-    rc.setContextProperty("_browser", b)
 
-    qmlRegisterType(Browser, 'Browser', 1, 0, 'Browser')
+    # rc.setContextProperty("_browser", b)
+
+    qmlRegisterType(BrowserModel, 'BrowserModel', 1, 0, 'BrowserModel')
 
 #    view.setWindowTitle("Browser")
     qmlFilePath = os.path.join(currentFilePath, "qml/Browser.qml")

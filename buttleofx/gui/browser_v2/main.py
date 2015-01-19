@@ -1,3 +1,5 @@
+#! /usr/bin/env python3
+
 '''
     # How to run browser_v2 in standalone mode ?
     copy/paste those lines to the run_buttleofx.sh
@@ -10,7 +12,6 @@
 
 '''
 
-
 import os
 import sys
 
@@ -18,8 +19,7 @@ from PyQt5 import QtCore
 from PyQt5 import QtWidgets
 from PyQt5 import QtQuick
 from PyQt5.QtQml import qmlRegisterType
-from browserModel import BrowserModel
-
+from buttleofx.gui.browser_v2.browserModel import BrowserModel
 
 currentFilePath = os.path.dirname(os.path.abspath(__file__))
 
@@ -28,7 +28,7 @@ if __name__ == '__main__':
     view = QtQuick.QQuickView()
     rc = view.rootContext()
 
-
+    browser = BrowserModel()
     # rc.setContextProperty("_browser", b)
 
     qmlRegisterType(BrowserModel, 'BrowserModel', 1, 0, 'BrowserModel')

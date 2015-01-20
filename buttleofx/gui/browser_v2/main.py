@@ -19,6 +19,10 @@ from PyQt5 import QtCore
 from PyQt5 import QtWidgets
 from PyQt5 import QtQuick
 from PyQt5.QtQml import qmlRegisterType
+
+# To prevent drivers conflicts between Mesa-utils and NVIDIA drivers on Ubuntu
+from OpenGL import GL
+
 from buttleofx.gui.browser_v2.browserModel import BrowserModel
 
 currentFilePath = os.path.dirname(os.path.abspath(__file__))
@@ -33,9 +37,8 @@ if __name__ == '__main__':
 
     qmlRegisterType(BrowserModel, 'BrowserModel', 1, 0, 'BrowserModel')
 
-#    view.setWindowTitle("Browser")
     qmlFilePath = os.path.join(currentFilePath, "qml/Browser.qml")
-#    print(qmlFilePath)
+
     view.setSource(QtCore.QUrl(qmlFilePath))
     view.setResizeMode(QtQuick.QQuickView.SizeRootObjectToView)
 

@@ -145,3 +145,4 @@ class BrowserModel(QtCore.QObject):
     listFolderNavBar = QtCore.pyqtProperty(QObjectListModel, getListFolderNavBar, notify=currentPathChanged)
     # TODO: notify signal browser item
     # selectedItems = QtCore.pyqtProperty(QObjectListModel, getSelectedItems, notify=BrowserItem.selectedChanged)
+

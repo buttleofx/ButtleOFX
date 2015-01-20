@@ -5,6 +5,7 @@ Item {
     id: root
 
     property alias textInput: textInput
+
     property string upArrow: "assets/img/arrows/arrow2.png"
     property string upArrowHover: "assets/img/arrows/arrow2_hover.png"
     property string downArrow: "assets/img/arrows/arrow.png"
@@ -105,6 +106,8 @@ Item {
 
                 onEntered: upArrow.source = root.upArrowHover
                 onExited: upArrow.source = root.upArrow
+
+                onClicked: root.updateValue(1)
             }
         }
 
@@ -122,6 +125,8 @@ Item {
 
                 onEntered: downArrow.source = root.downArrowHover
                 onExited: downArrow.source = root.downArrow
+
+                onClicked: root.updateValue(-1)
             }
         }
     }

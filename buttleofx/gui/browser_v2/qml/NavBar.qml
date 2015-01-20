@@ -11,25 +11,22 @@ Rectangle {
 
     color: "transparent"
 
-    // Absolute path model
-    // property alias model:
+    property variant model
 
     Component {
         id: component
 
-        RowLayout {
-            width: folder.width + arrow.width
+        Row {
+            width: folder.width + arrow.width + 10
             height: parent.height
 
             Text {
                 id: folder
 
-                width: 100
-                text: "display" // folder name
+                anchors.verticalCenter: parent.verticalCenter
 
-                anchors.verticalCenterOffset: parent.verticalCenter
-
-                color: "red"
+                text: model.object
+                color: "white"
 
                 MouseArea {
                     anchors.fill: parent
@@ -40,14 +37,18 @@ Rectangle {
             Item {
                 id: arrow
 
-                width: 15
+                width: 10
                 height: parent.height
 
                 Text {
+                    anchors.verticalCenter: parent.verticalCenter
+                    anchors.horizontalCenter: parent.right
                     text: ">"
+                    color: "#00B2A1"
                 }
+
+                visible: (index == (breadCrum.count - 1)) ? false : true
             }
-            // TO DO add mouse area on the arrow to browse folders
         }
     }
 
@@ -160,7 +161,7 @@ Rectangle {
                 width: parent.width - 10
                 clip: true
 
-                text: "Lorem ipsum/Lorem"
+                text: browser.currentPath
 
                 //color: suggestion.exists ? "white" : "red"
                 selectByMouse: true
@@ -216,7 +217,10 @@ Rectangle {
            height: parent.height
            orientation: Qt.Horizontal
 
+           model: root.model.splitedRootPath
+
            visible: true
+           clip: true
 
            delegate: component
 

@@ -25,7 +25,7 @@ class Rename(ActionInterface):
                 oldFileExtension = os.path.splitext(oldFilePath)[1]
                 newFilePath += oldFileExtension
             os.rename(oldFilePath, newFilePath)
-            self.getBrowserItem().updatePath(newFilePath)
+            browserItem.updatePath(newFilePath)
 
 
         # Rename Folder
@@ -35,6 +35,7 @@ class Rename(ActionInterface):
             oldPath = os.path.join(path, browserItem.getName())
             newPath = os.path.join(path, self._newName)
             os.rename(oldPath, newPath)
+            browserItem.updatePath(newPath)
 
         # TODO: Rename sequence
         if browserItem.getType() == BrowserItem.ItemType.sequence:

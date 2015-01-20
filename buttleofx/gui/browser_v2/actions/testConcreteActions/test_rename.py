@@ -59,7 +59,7 @@ class TestRename(unittest.TestCase):
         if not os.path.exists(old_folder_path):
             os.makedirs(old_folder_path)
 
-        bi = BrowserItem(self._path, old_folder_name, 1, True)
+        bi = BrowserItem(self._path, old_folder_name, 2, True)
         re = Rename(bi, new_folder_name)
         re.process()
         new_folder_path = os.path.join(self._path, new_folder_name)

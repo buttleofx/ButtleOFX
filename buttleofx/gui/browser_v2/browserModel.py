@@ -2,28 +2,53 @@ import os
 from buttleofx.gui.browser_v2.browserItem import BrowserItem
 from PyQt5 import QtCore
 from quickmamba.models import QObjectListModel
+from pySequenceParser import sequenceParser
 
 
 class BrowserModel(QtCore.QObject):
     # singleton? only one model?
+    """
+        Model of files based on pySequenceParser. It recognises files, folder and sequences.
+        Possibility to filter the model: sequence, hidden dir/files or not (regexp is coming)
+    """
 
     _currentPath = ""
     _browserItems = []
     _browserItemsModel = None
     _filter = "*"
     _ignoreHiddenItems = True
+    _showSeq = True
 
     filterChanged = QtCore.pyqtSignal()
     currentPathChanged = QtCore.pyqtSignal()
     ignoreHiddenChanged = QtCore.pyqtSignal()
 
     def __init__(self, parent=None):
+        """
+            Build an BrowserModel instance.
+            :param parent: Qt parent
+        """
+
         super(BrowserModel, self).__init__(parent)
         self._browserItemsModel = QObjectListModel(self)
-        self._currentPath = os.path.expanduser("~/")
+        self._currentPath = os.path.expanduser("~")
+        self.updateItems()
 
     def updateItems(self):
-        pass
+        """
+            Update browserItemsModel according model's current path and filter options
+        """
+        self._browserItems.clear()
+        self._browserItemsModel.clear()
+        allItems = sequenceParser.browse(self._currentPath)
+
+        for item in allItems:
+            if not (self._ignoreHiddenItems and item.getFilename().startswith(".")):
+                # TODO: hande regexp + handle supported?
+                self._browserItems.append(BrowserItem(item, True))
+
+        self._browserItems.sort(key=lambda it: (it.getType(), os.path.basename(it.getPath().lower())))
+        self._browserItemsModel.setObjectList(self._browserItems)
 
     def getFilter(self):
         return self._filter
@@ -52,6 +77,15 @@ class BrowserModel(QtCore.QObject):
         self.updateItems()
         self.ignoreHiddenChanged.emit()
 
+    @QtCore.pyqtSlot(bool)
+    def setShowSequence(self, seqBool):
+        self._showSeq = seqBool
+        self.filterChanged.emit()
+
+    @QtCore.pyqtSlot(result=bool)
+    def getShowSequence(self):
+        return self._showSeq
+
     @QtCore.pyqtSlot(result=QtCore.QObject)
     def getItemsSelected(self):
         items = QObjectListModel(self)
@@ -69,7 +103,8 @@ class BrowserModel(QtCore.QObject):
     @QtCore.pyqtSlot(result=QObjectListModel)
     def getSplitedCurrentPath(self):
         """
-        :return: absolute path and dirname for each folder in the current path into a list via QObjectList
+            Use for navbar in qml
+            :return: absolute path and dirname for each folder in the current path into a list via QObjectList
         """
         tmpList = []
         absolutePath = self._currentPath
@@ -84,11 +119,29 @@ class BrowserModel(QtCore.QObject):
         model.append(tmpList)
         return model
 
+    @QtCore.pyqtSlot(result=QObjectListModel)
+    def getListFolderNavBar(self):
+        tmpList = [browserItem for browserItem in self._browserItems if browserItem.isFolder()]
+        model = QObjectListModel(self)
+        model.append(tmpList)
+        return model
+
+    @QtCore.pyqtSlot(result=QObjectListModel)
+    def getSelectedItems(self):
+        model = QObjectListModel(self)
+        model.append([item for item in self._browserItems if item.getSelected])
+        return model
+
     # ############################################# Data exposed to QML ############################################# #
 
     currentPath = QtCore.pyqtProperty(str, getCurrentPath, setCurrentPath, notify=currentPathChanged)
-    exists = QtCore.pyqtProperty(bool, isCurrentPathExists, constant=True, notify=currentPathChanged)
-    fileItems = QtCore.pyqtProperty(QtCore.QObject, getItems, constant=True, notify=currentPathChanged)
-    parentFolder = QtCore.pyqtProperty(str, getParentPath, constant=True, notify=currentPathChanged)
+    exists = QtCore.pyqtProperty(bool, isCurrentPathExists, notify=currentPathChanged)
+    fileItems = QtCore.pyqtProperty(QtCore.QObject, getItems, notify=currentPathChanged)
+    parentFolder = QtCore.pyqtProperty(str, getParentPath, notify=currentPathChanged)
+    showSequence = QtCore.pyqtProperty(bool, getShowSequence, setShowSequence, notify=currentPathChanged)
 
-    splitedCurrentPath = QtCore.pyqtProperty(QObjectListModel, getSplitedCurrentPath, constant=True, notify=currentPathChanged)
+    ignoreHiddenFiles = QtCore.pyqtProperty(bool, isIgnoreHidden, setIgnoreHidden, notify=ignoreHiddenChanged)
+    splitedCurrentPath = QtCore.pyqtProperty(QObjectListModel, getSplitedCurrentPath, notify=currentPathChanged)
+    listFolderNavBar = QtCore.pyqtProperty(QObjectListModel, getListFolderNavBar, notify=currentPathChanged)
+    # TODO: notify signal browser item
+    # selectedItems = QtCore.pyqtProperty(QObjectListModel, getSelectedItems, notify=BrowserItem.selectedChanged)

@@ -67,32 +67,31 @@ Rectangle {
         }
     }
 
+    RowLayout {
+        anchors.fill: parent
+        anchors.margins: root.border.width + 4
+        TextInput {
+            id: textInput
+            selectByMouse: true
 
-    TextInput {
-        id: textInput
-        selectByMouse: true
+            Layout.fillWidth: true
 
-        // Text Input is dynamically aligned with arrows
-        anchors.left: parent.left
-        anchors.right: arrows.left
-        anchors.rightMargin: 2
-        anchors.leftMargin: root.border.width
-        anchors.verticalCenter: parent.verticalCenter
-        horizontalAlignment: TextInput.AlignHCenter
-        clip: true
+            // Text Input is dynamically aligned with arrows
+            horizontalAlignment: TextInput.AlignHCenter
+            clip: true
 
-        validator: DoubleValidator {
-            locale: "en"
-        }
+            validator: DoubleValidator {
+                locale: "en"
+            }
 
-        // Default style
-        color: "white"
-        cursorDelegate: BlinkCursor { }
-        selectionColor: Qt.rgba(1, 1, 1, 0.2)
+            // Default style
+            color: "white"
+            cursorDelegate: BlinkCursor {
+            }
+            selectionColor: Qt.rgba(1, 1, 1, 0.2)
 
-
-        Keys.onPressed: {
-            switch (event.key) {
+            Keys.onPressed: {
+                switch (event.key) {
                 case Qt.Key_Up:
                     root.updateValue(1)
                     event.accepted = true
@@ -101,54 +100,46 @@ Rectangle {
                     root.updateValue(-1)
                     event.accepted = true
                     break
-            }
-        }
-    }
-
-
-    Item {
-        id: arrows
-
-        width:  upArrow.width > downArrow.width ? upArrow.width + 4 : downArrow.width + 4
-        height: parent.height
-        anchors.right: parent.right
-        anchors.rightMargin: 2 + root.border.width
-
-        Image {
-            id: upArrow
-            source: root.upArrow
-
-            anchors.bottom: parent.verticalCenter
-            anchors.bottomMargin: 6
-            anchors.horizontalCenter: parent.horizontalCenter
-
-            MouseArea {
-                anchors.fill: parent
-                hoverEnabled: true
-
-                onEntered: upArrow.source = root.upArrowHover
-                onExited: upArrow.source = root.upArrow
-
-                onClicked: root.updateValue(1)
+                }
             }
         }
 
-        Image {
-            id: downArrow
-            source: root.downArrow
+        ColumnLayout {
+            id: arrows
 
-            anchors.horizontalCenter: parent.horizontalCenter
-            anchors.top: parent.verticalCenter
-            anchors.topMargin: 6
+            // Width of column must be equal to the biggest image width
+            Layout.preferredWidth: upArrow.width > downArrow.width ? upArrow.width : downArrow.width
+            Layout.fillHeight: true
+            spacing: 10
 
-            MouseArea {
-                anchors.fill: parent
-                hoverEnabled: true
+            Image {
+                id: upArrow
+                source: root.upArrow
 
-                onEntered: downArrow.source = root.downArrowHover
-                onExited: downArrow.source = root.downArrow
+                MouseArea {
+                    anchors.fill: parent
+                    hoverEnabled: true
 
-                onClicked: root.updateValue(-1)
+                    onEntered: upArrow.source = root.upArrowHover
+                    onExited: upArrow.source = root.upArrow
+
+                    onClicked: root.updateValue(1)
+                }
+            }
+
+            Image {
+                id: downArrow
+                source: root.downArrow
+
+                MouseArea {
+                    anchors.fill: parent
+                    hoverEnabled: true
+
+                    onEntered: downArrow.source = root.downArrowHover
+                    onExited: downArrow.source = root.downArrow
+
+                    onClicked: root.updateValue(-1)
+                }
             }
         }
     }

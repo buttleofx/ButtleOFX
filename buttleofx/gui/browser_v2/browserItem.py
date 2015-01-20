@@ -2,7 +2,7 @@ import os
 from PyQt5 import QtCore
 from datetime import datetime
 from pwd import getpwuid
-
+from stat import filemode
 
 class BrowserItem(QtCore.QObject):
     class ItemType:
@@ -19,12 +19,14 @@ class BrowserItem(QtCore.QObject):
     _fileExtension = ""
     _owner = ""
     _lastModification = ""
+    _permissions = ""
 
     # gui operations, int for the moment
     _actionStatus = 0
 
     statusChanged = QtCore.pyqtSignal()
     selectedChanged = QtCore.pyqtSignal()
+    fileChanged = QtCore.pyqtSignal()
 
     def __init__(self, dirAbsolutePath, nameItem, typeItem, supported):
         super(BrowserItem, self).__init__()
@@ -57,7 +59,8 @@ class BrowserItem(QtCore.QObject):
         if not typeItem == BrowserItem.ItemType.sequence:
             try:
                 self._lastModification = datetime.fromtimestamp(os.stat(self._path).st_mtime).strftime("%c")
-                self._owner = getpwuid(os.stat(self._path).st_uid).pw_name
+                self._permissions = self.getPermissionsOnFileSystem()
+                self._owner = self.getOwnerOnFileSystem()
             except:
                 pass
 
@@ -100,6 +103,27 @@ class BrowserItem(QtCore.QObject):
     def getLastModification(self):
         return self._lastModification
 
+    def updatePath(self, newPath):
+        self._path = newPath
+        self.fileChanged.emit()
+
+    def updatePermissions(self):
+        try:
+            self._permissions = self.getPermissionsOnFileSystem()
+            self.fileChanged.emit()
+        except:
+            pass
+
+    def updateOwner(self):
+        self._owner = self.getOwnerOnFileSystem()
+        self.fileChanged.emit()
+
+    def getOwnerOnFileSystem(self):
+        return getpwuid(os.stat(self._path).st_uid).pw_name
+
+    def getPermissionsOnFileSystem(self):
+        return filemode(os.stat(self._path).st_mode)
+
     # ############################################ Methods exposed to QML ############################################ #
 
     @QtCore.pyqtSlot(result=list)
@@ -114,13 +138,23 @@ class BrowserItem(QtCore.QObject):
     def getType(self):
         return self._typeItem
 
+    @QtCore.pyqtSlot(result=str)
+    def getPermissions(self):
+        self._permissions
+
+    @QtCore.pyqtSlot(result=str)
+    def getOwner(self):
+        return self._owner
+
     # ################################### Data exposed to QML #################################### #
 
     isSelected = QtCore.pyqtProperty(bool, getSelected, setSelected, notify=selectedChanged)
     actionStatus = QtCore.pyqtProperty(list, getActionStatus, notify=statusChanged)
 
-    path = QtCore.pyqtProperty(str, getPath, constant=True)
+    path = QtCore.pyqtProperty(str, getPath, updatePath, notify=fileChanged)
     type = QtCore.pyqtProperty(int, getType, constant=True)
     weight = QtCore.pyqtProperty(float, getWeight, constant=True)
     pathImg = QtCore.pyqtProperty(str, getPathImg, constant=True)
-    name = QtCore.pyqtProperty(str, getName, constant=True)
+    name = QtCore.pyqtProperty(str, getName, constant=True, notify=fileChanged)
+    permissions = QtCore.pyqtProperty(str, getPermissions, constant=True, notify=fileChanged)
+    owner = QtCore.pyqtProperty(str, getOwner, constant=True, notify=fileChanged)

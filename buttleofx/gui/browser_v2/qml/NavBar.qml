@@ -16,38 +16,59 @@ Rectangle {
     Component {
         id: component
 
-        Row {
+        Button {
+            id: button
+
             width: folder.width + arrow.width + 10
             height: parent.height
+            anchors.verticalCenter: parent.verticalCenter
 
-            Text {
-                id: folder
-
-                anchors.verticalCenter: parent.verticalCenter
-
-                text: model.object[1]
-                color: "white"
-
-                MouseArea {
+            style: ButtonStyle {
+                background: Rectangle {
                     anchors.fill: parent
-                    hoverEnabled: true
+                    color: "transparent"
                 }
             }
 
-            Item {
-                id: arrow
+            MouseArea {
+                anchors.fill: parent
+                onClicked: {
+                    root.model.currentPath = model.object[0]
+                }
+            }
 
-                width: 10
+            RowLayout {
+                width: parent.width
                 height: parent.height
 
                 Text {
-                    anchors.verticalCenter: parent.verticalCenter
-                    anchors.horizontalCenter: parent.right
-                    text: ">"
-                    color: "#00B2A1"
+                    id: folder
+
+                    anchors.left: parent.left
+                    anchors.leftMargin: 5
+
+                    text: model.object[1]
+                    font.pointSize: 12
+                    color: (button.hovered) ? "white" : "#BBBBBB"
                 }
 
-                visible: (index == (breadCrum.count - 1)) ? false : true
+                Item {
+                    id: arrow
+
+                    width: (index == (breadCrum.count - 1) && index !=0 ) ? 0 : 15
+                    height: parent.height
+
+                    Text {
+                        anchors.verticalCenter: parent.verticalCenter
+                        anchors.horizontalCenter: parent.horizontalCenter
+
+                        text: ">"
+                        font.pointSize: 16
+                        font.bold: (button.hovered) ? true : false
+                        color: "#00B2A1"
+                    }
+                    visible: !(index == (breadCrum.count - 1) && index !=0 )
+                }
             }
         }
     }
@@ -167,13 +188,13 @@ Rectangle {
                 selectByMouse: true
                 selectionColor: "#00b2a1"
 
-//                onAccepted: {
-//                    if (acceptableInput) {
-//                        listPrevious.append({"url": headerBar.folder})
-//                        changeFolder(text)
-//                        textEditContainer.forceActiveFocus()
-//                    }
-//                }
+                onAccepted: {
+                    if (acceptableInput) {
+                        listPrevious.append({"url": headerBar.folder})
+                        changeFolder(text)
+                        textEditContainer.forceActiveFocus()
+                    }
+                }
 
 //                onFocusChanged: {
 //                    if (texteditPath.focus) {
@@ -215,6 +236,7 @@ Rectangle {
 
            Layout.fillWidth: true
            height: parent.height
+
            orientation: Qt.Horizontal
 
            model: root.model.splitedCurrentPath
@@ -222,12 +244,10 @@ Rectangle {
            visible: true
            clip: true
 
-           delegate: component
-
            MouseArea {
                anchors.fill: parent
-
-               onClicked: {
+               propagateComposedEvents: true
+               onDoubleClicked: {
                    if (breadCrum.visible)
                        breadCrum.visible = false
 
@@ -235,6 +255,7 @@ Rectangle {
                        textEditContainer.visible = true
                }
            }
+           delegate: component
        }
 
         Button {

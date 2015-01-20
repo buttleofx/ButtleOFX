@@ -20,7 +20,7 @@ class BrowserModel(QtCore.QObject):
     def __init__(self, parent=None):
         super(BrowserModel, self).__init__(parent)
         self._browserItemsModel = QObjectListModel(self)
-        self._currentPath = os.path.expanduser("~/")
+        self._currentPath = os.path.expanduser("~")
 
     def updateItems(self):
         pass
@@ -91,4 +91,4 @@ class BrowserModel(QtCore.QObject):
     fileItems = QtCore.pyqtProperty(QtCore.QObject, getItems, constant=True, notify=currentPathChanged)
     parentFolder = QtCore.pyqtProperty(str, getParentPath, constant=True, notify=currentPathChanged)
 
-    splitedCurrentPath = QtCore.pyqtProperty(QObjectListModel, getSplitedCurrentPath, constant=True, notify=currentPathChanged)
+    splitedCurrentPath = QtCore.pyqtProperty(QObjectListModel, getSplitedCurrentPath, notify=currentPathChanged)

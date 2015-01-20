@@ -1,7 +1,7 @@
 import QtQuick 2.2
 import QtQuick.Layouts 1.1
 
-Item {
+Rectangle {
     id: root
 
     property alias textInput: textInput
@@ -11,7 +11,18 @@ Item {
     property string downArrow: "assets/img/arrows/arrow.png"
     property string downArrowHover: "assets/img/arrows/arrow_hover.png"
 
+    // Default style
+    color: "#212121"
+    border.width: 2
+    border.color: "#333"
+    radius: 3
+
     signal quickUpdate(var text)
+
+    QtObject {
+        id: m
+        property real step: 1
+    }
 
     // stepSign is the factor of step (eg: 1 will increment, -1 will decrement)
     function updateValue(stepSign) {
@@ -65,20 +76,31 @@ Item {
         anchors.left: parent.left
         anchors.right: arrows.left
         anchors.rightMargin: 2
+        anchors.leftMargin: root.border.width
         anchors.verticalCenter: parent.verticalCenter
         horizontalAlignment: TextInput.AlignHCenter
         clip: true
 
+        validator: DoubleValidator {
+            locale: "en"
+        }
+
+        // Default style
+        color: "white"
+        cursorDelegate: BlinkCursor { }
+        selectionColor: Qt.rgba(1, 1, 1, 0.2)
+
+
         Keys.onPressed: {
             switch (event.key) {
-            case Qt.Key_Up:
-                root.updateValue(1)
-                event.accepted = true
-                break
-            case Qt.Key_Down:
-                root.updateValue(-1)
-                event.accepted = true
-                break
+                case Qt.Key_Up:
+                    root.updateValue(1)
+                    event.accepted = true
+                    break
+                case Qt.Key_Down:
+                    root.updateValue(-1)
+                    event.accepted = true
+                    break
             }
         }
     }
@@ -90,7 +112,7 @@ Item {
         width:  upArrow.width > downArrow.width ? upArrow.width + 4 : downArrow.width + 4
         height: parent.height
         anchors.right: parent.right
-        anchors.rightMargin: 2
+        anchors.rightMargin: 2 + root.border.width
 
         Image {
             id: upArrow

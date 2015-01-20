@@ -1,42 +1,30 @@
-import QtQuick 2.0
-import BrowserModel 1.0
+import QtQuick 2.2
+import QtQuick.Layouts 1.0
+
 
 Rectangle {
+    id: root
 
     width: 800
     height: 600
-    color: "red"
 
-    MouseArea {
+    color: "#353535"
+
+    ColumnLayout {
         anchors.fill: parent
 
-        onClicked: {
-            console.log("hello")
+        NavBar {
+            id: navBar
+            height : 50
+            anchors.top: parent.top
+            Layout.fillWidth: true
         }
-    }
 
-    Rectangle {
-        width: 100
-        height: 100
-        color: "blue"
-
-        MouseArea {
-            anchors.fill: parent
-
-            onClicked: {
-                console.log("hello")
-            }
+        LeftCol{
         }
+
+        // Main window with files list
+        // FilesWindow{
+        // }
     }
-
-    BrowserModel {
-        id: browser
-    }
-
-    Text {
-         id: helloText
-         text: "Coucou"
-     }
-
-
 }

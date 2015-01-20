@@ -25,7 +25,7 @@ Rectangle {
 
                 anchors.verticalCenter: parent.verticalCenter
 
-                text: model.object
+                text: model.object[1]
                 color: "white"
 
                 MouseArea {
@@ -217,7 +217,7 @@ Rectangle {
            height: parent.height
            orientation: Qt.Horizontal
 
-           model: root.model.splitedRootPath
+           model: root.model.splitedCurrentPath
 
            visible: true
            clip: true

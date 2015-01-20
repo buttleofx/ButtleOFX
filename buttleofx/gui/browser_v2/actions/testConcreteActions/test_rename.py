@@ -13,7 +13,7 @@ from buttleofx.gui.browser_v2.actions.concreteActions.rename import Rename
 class TestRename(unittest.TestCase):
     # Before tests run
     def setUp(self):
-        self._directory = "buttle_test"
+        self._directory = "buttle_test_rename"
         self._base_path = os.path.expanduser("~")
         self._path = os.path.join(self._base_path, self._directory)
 
@@ -70,7 +70,3 @@ class TestRename(unittest.TestCase):
     def tearDown(self):
         if os.path.exists(self._path):
             shutil.rmtree(self._path)
-
-if __name__ == "__main__":
-    unittest.main()
-

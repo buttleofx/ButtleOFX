@@ -1,7 +1,7 @@
 from buttleofx.gui.browser_v2.browserItem import BrowserItem
 
 
-class ActionInterface:
+class ActionInterface():
     """
         Interface which determines the template comportment for an action on a BrowserItem
         action method must be implemented.

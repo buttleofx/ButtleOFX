@@ -67,7 +67,7 @@ class BrowserModel(QtCore.QObject):
         return os.path.dirname(self._currentPath)
 
     @QtCore.pyqtSlot(result=QObjectListModel)
-    def getSplitedRootPath(self):
+    def getSplitedCurrentPath(self):
         splitedPath = [folder for folder in self._currentPath.split(os.sep) if folder]
         model = QObjectListModel(self)
         model.append(splitedPath)
@@ -79,3 +79,5 @@ class BrowserModel(QtCore.QObject):
     exists = QtCore.pyqtProperty(bool, isCurrentPathExists, constant=True, notify=currentPathChanged)
     fileItems = QtCore.pyqtProperty(QtCore.QObject, getItems, constant=True, notify=currentPathChanged)
     parentFolder = QtCore.pyqtProperty(str, getParentPath, constant=True, notify=currentPathChanged)
+
+    splitedCurrentPath = QtCore.pyqtProperty(QObjectListModel, getSplitedCurrentPath, constant=True, notify=currentPathChanged)

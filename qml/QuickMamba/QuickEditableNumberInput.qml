@@ -1,9 +1,9 @@
 import QtQuick 2.2
 import QtQuick.Layouts 1.1
 
-TextInput {
-    id: textInput
-    selectByMouse: true
+Item {
+    id:root
+    property alias textInput: textInput
 
     signal quickUpdate(var text)
 
@@ -18,7 +18,9 @@ TextInput {
         var comaPosition = text.indexOf(".")
 
         var step = 1
-        // Calcul step in function of cursor position if the value is integer, if cursor is before sign - step is just 1
+
+        // No selection
+        // Calcul step in function of cursor position, if cursor is before sign - step is just 1
         if(!(parseFloat(textInput.text) < 0 && oldCursorPos == 0))
         {
             if(comaPosition == -1)
@@ -34,26 +36,38 @@ TextInput {
         if (newValue >= 0 && parseFloat(textInput.text) < 0)
             oldCursorPos--
 
-        quickUpdate(newValue)
-
+        root.quickUpdate(newValue)
         textInput.cursorPosition = oldCursorPos
     }
 
-    QtObject {
-        id: m
-        property string textUpdated
+    MouseArea {
+        anchors.fill: parent
+
+        onWheel: {
+            if(wheel.angleDelta.y >= 0)
+                root.updateValue(1)
+            else
+                root.updateValue(-1)
+        }
     }
 
-    Keys.onPressed: {
-        switch(event.key) {
-            case Qt.Key_Up :
-                updateValue(1)
-                event.accepted = true
-                break
-            case Qt.Key_Down :
-                updateValue(-1)
-                event.accepted = true
-                break
+    TextInput {
+        id: textInput
+        selectByMouse: true
+        anchors.centerIn: parent
+
+        Keys.onPressed: {
+            switch(event.key) {
+                case Qt.Key_Up:
+                    root.updateValue(1)
+                    event.accepted = true
+                    break
+                case Qt.Key_Down:
+                    root.updateValue(-1)
+                    event.accepted = true
+                    break
+            }
         }
     }
 }
+

@@ -19,12 +19,35 @@ Rectangle
 
         QuickEditableNumberInput {
             id: numberInput
-            anchors.centerIn: parent
+            anchors.fill: parent
 
-            text: root.linkedText
+            // Access to all properties of a classic qml textInput by textInput.<textIntproperty>
+            textInput.text: root.linkedText
+            textInput.color: "red"
 
+            // Must use this signal to unbreak text link
             onQuickUpdate: root.linkedText = text
         }
 
+    }
+
+    // Example how tu add a new behaviour from external
+    Rectangle {
+        color: "red"
+        width:parent.width
+        height:50
+
+        Text {
+            anchors.centerIn: parent
+            text: "Increment first number"
+        }
+
+        MouseArea {
+            anchors.fill: parent
+            onClicked: {
+                numberInput.textInput.cursorPosition = 0
+                numberInput.updateValue(1)
+            }
+        }
     }
 }

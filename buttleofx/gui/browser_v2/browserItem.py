@@ -124,6 +124,15 @@ class BrowserItem(QtCore.QObject):
     def getPermissionsOnFileSystem(self):
         return filemode(os.stat(self._path).st_mode)
 
+    def isFile(self):
+        return self._typeItem == BrowserItem.ItemType.file
+
+    def isFolder(self):
+        return self._typeItem == BrowserItem.ItemType.folder
+
+    def isSequence(self):
+        return self._typeItem == BrowserItem.ItemType.sequence
+
     # ############################################ Methods exposed to QML ############################################ #
 
     @QtCore.pyqtSlot(result=list)
@@ -140,7 +149,7 @@ class BrowserItem(QtCore.QObject):
 
     @QtCore.pyqtSlot(result=str)
     def getPermissions(self):
-        self._permissions
+        return self._permissions
 
     @QtCore.pyqtSlot(result=str)
     def getOwner(self):

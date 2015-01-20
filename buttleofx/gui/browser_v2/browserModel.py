@@ -20,7 +20,7 @@ class BrowserModel(QtCore.QObject):
     def __init__(self, parent=None):
         super(BrowserModel, self).__init__(parent)
         self._browserItemsModel = QObjectListModel(self)
-        self._currentPath = os.path.expanduser("~")
+        self._currentPath = os.path.expanduser("~/")
 
     def updateItems(self):
         pass
@@ -68,10 +68,17 @@ class BrowserModel(QtCore.QObject):
 
     @QtCore.pyqtSlot(result=QObjectListModel)
     def getSplitedCurrentPath(self):
-        # first empty useful for rootPath
-        splitedPath = [folder for folder in self._currentPath.split(os.sep)][:-1]
+        tmpList = []
+        cpt = 1
+        while self._currentPath.rsplit(os.sep, cpt)[0]:
+            absolutePath = self._currentPath.rsplit(os.sep, cpt)[0]
+            tmpList.append([absolutePath, os.path.basename(absolutePath)])
+            cpt += 1
+        if os.sep == "/":
+            tmpList.append(["/", ""])
+
         model = QObjectListModel(self)
-        model.append(splitedPath)
+        model.append(tmpList)
         return model
 
     # ############################################# Data exposed to QML ############################################# #

@@ -11,7 +11,7 @@ class Rename(ActionInterface):
         self._newName = newName
 
     def action(self):
-        browserItem = self.getBrowserItem()
+        browserItem = self._browserItem
         # Rename File
         if browserItem.getType() == BrowserItem.ItemType.file:
             # TODO: Check permission in try catch

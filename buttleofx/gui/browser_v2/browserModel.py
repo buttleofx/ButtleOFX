@@ -68,15 +68,18 @@ class BrowserModel(QtCore.QObject):
 
     @QtCore.pyqtSlot(result=QObjectListModel)
     def getSplitedCurrentPath(self):
+        """
+        :return: absolute path and dirname for each folder in the current path into a list via QObjectList
+        """
         tmpList = []
-        cpt = 1
-        while self._currentPath.rsplit(os.sep, cpt)[0]:
-            absolutePath = self._currentPath.rsplit(os.sep, cpt)[0]
+        absolutePath = self._currentPath
+        while absolutePath != os.path.abspath(os.sep):
             tmpList.append([absolutePath, os.path.basename(absolutePath)])
-            cpt += 1
+            absolutePath = os.path.dirname(absolutePath)
         if os.sep == "/":
             tmpList.append(["/", ""])
 
+        tmpList.reverse()
         model = QObjectListModel(self)
         model.append(tmpList)
         return model

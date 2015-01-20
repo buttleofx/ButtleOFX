@@ -75,7 +75,7 @@ Item {
                     id: resizeBar
                     width: 50
                     height: 20
-                    x: 150
+                    x: 110
                     color: paramEditor.background
 
                     Rectangle {

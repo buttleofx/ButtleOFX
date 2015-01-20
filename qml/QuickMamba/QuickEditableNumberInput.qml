@@ -3,7 +3,12 @@ import QtQuick.Layouts 1.1
 
 Item {
     id: root
+
     property alias textInput: textInput
+    property string upArrow: "assets/img/arrows/arrow2.png"
+    property string upArrowHover: "assets/img/arrows/arrow2_hover.png"
+    property string downArrow: "assets/img/arrows/arrow.png"
+    property string downArrowHover: "assets/img/arrows/arrow_hover.png"
 
     signal quickUpdate(var text)
 
@@ -55,6 +60,7 @@ Item {
         id: textInput
         selectByMouse: true
 
+        // Text Input is dynamically aligned with arrows
         anchors.left: parent.left
         anchors.right: arrows.left
         anchors.rightMargin: 2
@@ -87,20 +93,36 @@ Item {
 
         Image {
             id: upArrow
-            source: "assets/img/arrows/arrow2.png"
+            source: root.upArrow
 
             anchors.bottom: parent.verticalCenter
             anchors.bottomMargin: 6
             anchors.horizontalCenter: parent.horizontalCenter
+
+            MouseArea {
+                anchors.fill: parent
+                hoverEnabled: true
+
+                onEntered: upArrow.source = root.upArrowHover
+                onExited: upArrow.source = root.upArrow
+            }
         }
 
         Image {
             id: downArrow
-            source: "assets/img/arrows/arrow.png"
+            source: root.downArrow
 
             anchors.horizontalCenter: parent.horizontalCenter
             anchors.top: parent.verticalCenter
             anchors.topMargin: 6
+
+            MouseArea {
+                anchors.fill: parent
+                hoverEnabled: true
+
+                onEntered: downArrow.source = root.downArrowHover
+                onExited: downArrow.source = root.downArrow
+            }
         }
     }
 }

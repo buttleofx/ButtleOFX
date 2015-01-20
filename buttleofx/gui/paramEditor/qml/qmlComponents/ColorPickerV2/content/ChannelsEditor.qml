@@ -2,9 +2,8 @@ import QtQuick 2.0
 import "ColorUtils.js" as ColorUtils
 import QtQuick.Layouts 1.1
 
-Rectangle {
+Item {
     id: root
-
     property vector4d colorRGBA
     property vector4d colorHSVA
     property int precision

@@ -14,8 +14,9 @@ RowLayout
 
     NumberBox {
         id: numberbox
-        Layout.fillWidth: true
         Layout.fillHeight: true
+        Layout.maximumWidth: (decimals + 2) * textInput.font.pixelSize
+        Layout.minimumWidth: decimals / 2 * textInput.font.pixelSize
 
         value: root.value
         decimals: root.precision
@@ -31,8 +32,9 @@ RowLayout
 
     Item
     {        
-        Layout.fillWidth: true
         Layout.fillHeight: true
+        Layout.fillWidth: true
+        Layout.minimumWidth: 50
 
         Item {
             anchors.fill: parent

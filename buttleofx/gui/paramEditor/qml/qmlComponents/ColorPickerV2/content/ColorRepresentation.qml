@@ -1,5 +1,4 @@
 import QtQuick 2.0
-import QtQuick.Controls 1.1
 import QtQuick.Layouts 1.1
 import "ColorUtils.js" as ColorUtils
 
@@ -9,25 +8,12 @@ ColumnLayout
 
     property vector4d colorRGBA
     property vector4d colorHSVA
+    property string mode
 
     // Call each time the value change
     signal colorChange(vector4d rgba)
     // Call when the user valids his choice (ex: mouse up)
     signal accepted
-
-    RowLayout {
-        spacing: 5
-        Text {
-            id:textMode
-            text: "Mode :"
-            color: "white"
-        }
-
-        ComboBox {
-            id: modelList
-            model : ["Wheel", "Rainbow", "Square"]
-        }
-    }
 
     Item {
         Layout.fillHeight: true
@@ -35,7 +21,7 @@ ColumnLayout
 
         Wheel {
             anchors.fill: parent
-            visible : modelList.model[modelList.currentIndex] === "Wheel"
+            visible : root.mode === "Wheel"
 
             hue: root.colorHSVA.x
             saturation: root.colorHSVA.y
@@ -46,10 +32,10 @@ ColumnLayout
 
         Rainbow {
             anchors.fill: parent
-            visible : modelList.model[modelList.currentIndex] === "Rainbow"
+            visible : root.mode === "Rainbow"
 
             hue: root.colorHSVA.x
-            luminance: { return root.colorHSVA.z ; console.debug("change") ; }
+            luminance: root.colorHSVA.z ;
 
             onHueLuminanceChange:{
                 colorChange(ColorUtils.hsva2rgba(Qt.vector4d(updatedHue, root.colorHSVA.y, updatedLuminance, root.colorHSVA.w)))
@@ -59,7 +45,7 @@ ColumnLayout
 
         SquareHuedColors {
             anchors.fill: parent
-            visible : modelList.model[modelList.currentIndex] === "Square"
+            visible : root.mode === "Square"
 
             colorHSV: Qt.vector3d(root.colorHSVA.x, root.colorHSVA.y, root.colorHSVA.z)
 

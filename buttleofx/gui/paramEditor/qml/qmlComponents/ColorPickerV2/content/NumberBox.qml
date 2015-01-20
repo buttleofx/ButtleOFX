@@ -6,6 +6,10 @@ import "mathUtils.js" as MathUtils
 RowLayout {
     id: root
 
+    // Alias to configure style of text from external
+    property alias textInput: inputBox
+    property alias text: captionBox
+
     property string caption: ""
     property real value: 0
     property real min: 0
@@ -20,28 +24,18 @@ RowLayout {
         property int forceTextUpdate: 0
     }
 
-    spacing: 5
 
-    // Wrap text by item because text have a bad behaviour in Layout
-    Item {
-        Layout.fillHeight: true
-        Layout.minimumWidth: captionBox.font.pixelSize
-
-        Text {
-            id: captionBox
-            anchors.centerIn: parent
-
-            text: root.caption
-            color: "#AAAAAA"
-            font.pixelSize: parent.height / 2
-            font.bold: true
-        }
+    Text {
+        id: captionBox
+        anchors.left: parent.left
+        text: root.caption
+        color: "#AAAAAA"
+        font.bold: true
     }
-
 
     PanelBorder {
         Layout.fillHeight: true
-        Layout.minimumWidth: (root.max.toString().length + root.decimals + 1) * inputBox.font.pixelSize
+        Layout.fillWidth: true
 
         TextInput {
             id: inputBox
@@ -49,11 +43,7 @@ RowLayout {
             text: m.forceTextUpdate ? MathUtils.decimalRound(root.value, root.decimals) : MathUtils.decimalRound(root.value, root.decimals)
 
             anchors.centerIn: parent
-            color: "#AAAAAA"
-            selectionColor: "#FF7777AA"
-            font.pixelSize: parent.height / 2
-            font.family: "TlwgTypewriter"
-            focus: true
+            width: parent.width
 
             onEditingFinished: {
                 var newText = MathUtils.clamp(parseFloat(inputBox.text), root.min, root.max).toString()

@@ -1,5 +1,5 @@
 import QtQuick 2.2
-import QtQuick.Window 2.0
+import QtQuick.Controls 1.1
 import QtQuick.Layouts 1.1
 import "content"
 import "content/ColorUtils.js" as ColorUtils
@@ -20,7 +20,6 @@ Item {
             hsva.y = m.colorHSVA.y;
         }
         m.colorHSVA = hsva;
-        console.debug(colorRGBA)
     }
 
     QtObject {
@@ -37,6 +36,37 @@ Item {
         anchors.fill: parent
 
         RowLayout {
+            Layout.preferredHeight: 20
+            Layout.fillWidth: true
+
+            Rectangle {
+                Text {
+                    id:textMode
+                    text: "Mode : "
+                    color: "white"
+                }
+
+                ComboBox {
+                    id: modelList
+                    anchors.left: textMode.right
+                    anchors.leftMargin: 5
+                    model : ["Wheel", "Rainbow", "Square"]
+                }
+            }
+
+            NumberBox {
+                id:precisionBox
+                min: 0
+                max: 30
+                decimals: 0
+                value:5
+                caption : "Precision : "
+
+                onAccepted: precisionBox.value = updatedValue
+            }
+        }
+
+        RowLayout {
 
             // Display a shape representation as wheel, rainbow...
             ColorRepresentation {
@@ -48,6 +78,7 @@ Item {
 
                 colorRGBA: root.colorRGBA
                 colorHSVA: m.colorHSVA
+                mode: modelList.currentText
 
                 onColorChange: {
                     // rgba comes from signal
@@ -60,41 +91,29 @@ Item {
                 onAccepted: root.accepted()
             }
 
-            ColumnLayout
-            {
-                NumberBox {
-                    id:precisionBox
-                    min: 0
-                    max: 30
-                    decimals: 0
-                    Layout.minimumHeight: 25
-                    value:5
 
-                    onAccepted: precisionBox.value = updatedValue
+            // Give tool to edit precisely a color or a channel by text input, slider, picker...
+            ChannelsEditor {
+                Layout.fillWidth: true
+                Layout.fillHeight: true
+                Layout.minimumWidth: 150
+                Layout.minimumHeight: 150
+
+                colorRGBA: root.colorRGBA
+                colorHSVA: m.colorHSVA
+                precision: precisionBox.value
+
+                onColorChange: {
+                    // rgba comes from signal
+                    rgba.x = MathUtils.decimalRound(rgba.x, precisionBox.value)
+                    rgba.y = MathUtils.decimalRound(rgba.y, precisionBox.value)
+                    rgba.z = MathUtils.decimalRound(rgba.z, precisionBox.value)
+                    rgba.w = MathUtils.decimalRound(rgba.w, precisionBox.value)
+                    root.colorRGBA = rgba
                 }
-
-                // Give tool to edit precisely a color or a channel by text input, slider, picker...
-                ChannelsEditor {
-                    Layout.fillWidth: true
-                    Layout.fillHeight: true
-                    Layout.minimumWidth: 150
-                    Layout.minimumHeight: 150
-
-                    colorRGBA: root.colorRGBA
-                    colorHSVA: m.colorHSVA
-                    precision: precisionBox.value
-
-                    onColorChange: {
-                        // rgba comes from signal
-                        rgba.x = MathUtils.decimalRound(rgba.x, precisionBox.value)
-                        rgba.y = MathUtils.decimalRound(rgba.y, precisionBox.value)
-                        rgba.z = MathUtils.decimalRound(rgba.z, precisionBox.value)
-                        rgba.w = MathUtils.decimalRound(rgba.w, precisionBox.value)
-                        root.colorRGBA = rgba
-                    }
-                    onAccepted: root.accepted()
-                }
+                onAccepted: root.accepted()
             }
+
         }
 
         RowLayout {

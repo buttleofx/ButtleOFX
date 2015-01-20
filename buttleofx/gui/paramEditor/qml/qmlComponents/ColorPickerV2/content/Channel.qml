@@ -14,9 +14,13 @@ RowLayout
     signal updatedValue(var updatedValue)
     signal accepted
 
+    spacing: 5
+
     NumberBox {
         id: numberbox
         Layout.fillHeight: true
+        Layout.maximumWidth: (decimals + 2) * textInput.font.pixelSize
+        Layout.minimumWidth: decimals / 2 * textInput.font.pixelSize
 
         value: root.value
         decimals: root.precision
@@ -30,12 +34,13 @@ RowLayout
         }
     }
 
+
     HorizontalColorSlider
     {
         id: horizontalColorSlider
+        Layout.fillHeight: true
         Layout.fillWidth: true
         Layout.minimumWidth: 50
-        Layout.fillHeight: true
 
         value: root.value
         fromColor: root.fromColor

@@ -1,7 +1,6 @@
 import unittest
 import tempfile
 import os
-import shutil
 
 from OpenGL import GL
 

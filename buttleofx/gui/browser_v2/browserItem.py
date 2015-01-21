@@ -132,13 +132,14 @@ class BrowserItem(QtCore.QObject):
             return "-"
 
     def getWeight_fileSystem(self):
-        if self.isFolder():
-            return len(sequenceParser.browse(self._path))
-        if self.isFile():
-            try:
+        try:
+            if self.isFolder():
+                return len(sequenceParser.browse(self._path))
+            if self.isFile():
                 return os.stat(self._path).st_size
-            except:
-                return 0
+        except:
+            return 0
+
         if self.isSequence():
             # TODO: compute size of sequence? nb or realSize(on many ... ?)
             pass

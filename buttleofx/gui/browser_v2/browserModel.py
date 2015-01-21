@@ -38,9 +38,15 @@ class BrowserModel(QtCore.QObject):
         """
             Update browserItemsModel according model's current path and filter options
         """
+        allItems = None
+        try:
+            # if no permissions
+            allItems = sequenceParser.browse(self._currentPath)
+        except:
+            return
+
         self._browserItems.clear()
         self._browserItemsModel.clear()
-        allItems = sequenceParser.browse(self._currentPath)
 
         for item in allItems:
             if not (self._ignoreHiddenItems and item.getFilename().startswith(".")):

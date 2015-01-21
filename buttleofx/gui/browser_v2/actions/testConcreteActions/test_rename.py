@@ -22,7 +22,7 @@ class TestRename(unittest.TestCase):
             new_filename = "success" + extension
             new_file_path = os.path.join(path, new_filename)
 
-            # Create old file
+            # Create file
             open(old_file_path, 'a').close()
 
             bi = BrowserItem(path, old_filename, 1, True)
@@ -47,31 +47,52 @@ class TestRename(unittest.TestCase):
         with tempfile.TemporaryDirectory() as path:
             extension = ".jpg"
             old_filename = "plop" + extension
+            old_file_path = os.path.join(path, old_filename)
             new_filename = "no_extension"
+            new_file_path = os.path.join(path, new_filename + extension)
 
-            # Create old file
+            # Create file
             open(os.path.join(path, old_filename), 'a').close()
 
             bi = BrowserItem(path, old_filename, 1, True)
+
+            # Rename file
             re = Rename(bi, new_filename)
             re.process()
-            new_file_path = os.path.join(path, new_filename + extension)
-            self.assertTrue(self, os.path.exists(new_file_path))
+
+            # Old file should not exists
+            self.assertFalse(os.path.exists(old_file_path))
+
+            # New file should exists
+            self.assertTrue(os.path.exists(new_file_path))
+
+            # Browser item's path and new file path should be equal
             self.assertEqual(bi.getPath(), new_file_path)
 
     def test_rename_folder(self):
         with tempfile.TemporaryDirectory() as path:
             old_folder_name = 'rename_me'
-            new_folder_name = 'new_name'
             old_folder_path = os.path.join(path, old_folder_name)
+            new_folder_name = 'new_name'
+            new_folder_path = os.path.join(path, new_folder_name)
+
+            # Create folder
             if not os.path.exists(old_folder_path):
                 os.makedirs(old_folder_path)
 
             bi = BrowserItem(path, old_folder_name, 2, True)
+
+            # Rename folder
             re = Rename(bi, new_folder_name)
             re.process()
-            new_folder_path = os.path.join(path, new_folder_name)
-            self.assertTrue(self, os.path.exists(new_folder_path))
+
+            # Old file should not exists
+            self.assertFalse(os.path.exists(old_folder_path))
+
+            # New file should exists
+            self.assertTrue(os.path.exists(new_folder_path))
+
+            # Browser item's path and new file path should be equal
             self.assertEqual(bi.getPath(), new_folder_path)
 
     # After tests run

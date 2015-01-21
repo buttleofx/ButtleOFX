@@ -29,5 +29,3 @@ class Delete(ActionInterface):
         # TODO: Rename sequence
         if browserItem.isSequence():
             print("TODO: Rename sequence")
-
-

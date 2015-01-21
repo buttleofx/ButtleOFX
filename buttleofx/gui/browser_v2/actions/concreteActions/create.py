@@ -20,17 +20,17 @@ class Create(ActionInterface):
         # Create file
         if newBrowserItem.isFile():
             # TODO: Check parent's permission in try catch
-            parent_path = parent.getPath()
-            file_name = newBrowserItem.getName()
-            new_file_path = os.path.join(parent_path, file_name)
-            if os.path.exists(parent_path):
-                open(new_file_path, 'a').close()
+            parentPath = parent.getPath()
+            fileName = newBrowserItem.getName()
+            newFilePath = os.path.join(parentPath, fileName)
+            if os.path.exists(parentPath):
+                open(newFilePath, 'a').close()
 
         # Create Folder
         if newBrowserItem.isFolder():
             # TODO: Check parent's permission in try catch
-            parent_path = parent.getPath()
-            folder_name = newBrowserItem.getName()
-            folder_path = os.path.join(parent_path, folder_name)
-            if os.path.exists(parent_path):
-                os.makedirs(folder_path)
+            parentPath = parent.getPath()
+            folderName = newBrowserItem.getName()
+            folderPath = os.path.join(parentPath, folderName)
+            if os.path.exists(parentPath):
+                os.makedirs(folderPath)

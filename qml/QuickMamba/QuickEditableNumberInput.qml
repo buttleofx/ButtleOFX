@@ -10,6 +10,7 @@ Rectangle {
     property string upArrowHover: "assets/img/arrows/arrow2_hover.png"
     property string downArrow: "assets/img/arrows/arrow.png"
     property string downArrowHover: "assets/img/arrows/arrow_hover.png"
+    property color cursorColor : "#00B2A1"
 
     // Default style
     color: "#212121"
@@ -17,7 +18,8 @@ Rectangle {
     border.color: "#333"
     radius: 3
 
-    signal quickUpdate(var text)
+    signal quickUpdate(var quickValue)
+    signal editingFinished
 
     QtObject {
         id: m
@@ -32,21 +34,22 @@ Rectangle {
         var oldCursorPos = textInput.cursorPosition
 
         var text = textInput.text
-        var comaPosition = text.indexOf(".")
+        var commaPosition = text.indexOf(".")
 
         var increment = 1
 
         /* Calcul the increment value in function of the right digit to the cursor
          * e.g. 12.2|32 : increment is then 0.01
-         * If cursor is left to coma or negative sign, increment is just default value (1)
+         * If cursor is left to comma or negative sign, increment is just default value (1)
+         * The comma is added if there is not and cursor is top right
         */
         if (!(parseFloat(textInput.text) < 0 && oldCursorPos == 0)) {
-            if (comaPosition == -1)
+            if (commaPosition == -1)
                 increment = Math.pow(10, text.length - oldCursorPos - 1)
-            else if (oldCursorPos < comaPosition)
-                increment = Math.pow(10, comaPosition - oldCursorPos - 1)
-            else if (oldCursorPos > comaPosition)
-                increment = Math.pow(10, comaPosition - oldCursorPos)
+            else if (oldCursorPos < commaPosition)
+                increment = Math.pow(10, commaPosition - oldCursorPos - 1)
+            else if (oldCursorPos > commaPosition)
+                increment = Math.pow(10, commaPosition - oldCursorPos)
         }
 
         var newValue = parseFloat(textInput.text) + stepSign * increment
@@ -90,6 +93,8 @@ Rectangle {
             // Default style
             color: "white"
             cursorDelegate: BlinkCursor {
+                color: root.cursorColor
+                visible: textInput.focus
             }
             selectionColor: Qt.rgba(1, 1, 1, 0.2)
 
@@ -105,6 +110,8 @@ Rectangle {
                     break
                 }
             }
+
+            onEditingFinished: root.editingFinished()
         }
 
         ColumnLayout {

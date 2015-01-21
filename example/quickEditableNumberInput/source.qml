@@ -21,14 +21,19 @@ Rectangle
         textInput.text: root.linkedText
 
         // Must use this signal to unbreak text link
-        onQuickUpdate: root.linkedText = text
+        onQuickUpdate: root.linkedText = quickValue
+
+        onEditingFinished: {
+            //User pressed enter or input focus was lost
+            root.linkedText = textInput.text
+        }
     }
 
     // Example how to add a new behaviour from external
     Rectangle {
         color: "#212121"
         width:parent.width
-        height:150
+        height:50
 
         Text {
             anchors.fill: parent

@@ -4,10 +4,12 @@ import QtQuick.Layouts 1.1
 import "content"
 import "content/ColorUtils.js" as ColorUtils
 import "content/mathUtils.js" as MathUtils
+import "." // Qt-BUG import qmldir to use config singleton
 
 Item {
     id: root
     anchors.fill: parent
+    anchors.margins: parent.width * 0.01
 
     // Color value in RGBA with floating point values between 0.0 and 1.0.
     property vector4d colorRGBA: Qt.vector4d(1, 1, 1, 1)
@@ -36,16 +38,19 @@ Item {
         anchors.fill: parent
 
         RowLayout {
-            Layout.maximumHeight: 20
+            Layout.preferredHeight: 20
             Layout.fillWidth: true
             Layout.alignment: Qt.AlignHCenter
-            spacing: 50
+            spacing: parent.width * 0.1
 
             RowLayout {
                 Text {
                     id:textMode
                     text: "Mode : "
-                    color: "white"
+
+                    font.family: Config.font
+                    font.pixelSize: Config.textSize
+                    color: Config.textColor
                 }
 
                 ComboBox {
@@ -54,15 +59,23 @@ Item {
                 }
             }
 
-            NumberBox {
-                Layout.maximumWidth: 150
-
+            NumberBox {                
                 id:precisionBox
+                Layout.maximumWidth: 150
+                Layout.maximumHeight: 40
                 min: 0
                 max: 30
                 decimals: 0
                 value:5
                 caption : "Precision : "
+
+                textInput.font.family: Config.font
+                textInput.font.pixelSize: Config.textSize
+                textInput.color: Config.textColor
+                textInput.horizontalAlignment: TextInput.AlignHCenter
+                text.font.family: Config.font
+                text.font.pixelSize: Config.textSize
+                text.color: Config.textColor
 
                 onAccepted: precisionBox.value = updatedValue
             }

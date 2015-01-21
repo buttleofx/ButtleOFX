@@ -1,6 +1,7 @@
 import QtQuick 2.2
 import QtQuick.Layouts 1.1
 import "ColorUtils.js" as ColorUtils
+import "../." // Qt-BUG import qmldir to use config singleton
 
 RowLayout {
     id:root
@@ -21,9 +22,10 @@ RowLayout {
             anchors.centerIn: parent
 
             text: "#"
-            color: "#AAAAAA"
-            font.pixelSize: parent.height / 2
-            font.bold: true
+            font.family: Config.font
+            font.pixelSize: Config.textSize
+            font.bold: false
+            color: Config.textColor
         }
     }
 
@@ -35,11 +37,11 @@ RowLayout {
             id: hexaColor
 
             anchors.centerIn: parent
-            color: "#AAAAAA"
-            selectionColor: "#FF7777AA"
-            font.pixelSize: parent.height / 2
+            font.family: Config.font
+            font.pixelSize: Config.textSize
+            font.bold: false
+            color: Config.textColor
             font.capitalization: "AllUppercase"
-            font.family: "TlwgTypewriter"
             selectByMouse: true
             focus: true
 

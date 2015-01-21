@@ -15,8 +15,7 @@ Item
     signal accepted
     signal updatedValue(var updatedValue)
 
-    Item {
-        anchors.fill: parent
+
 
         CheckerBoard {
             anchors.fill: parent
@@ -43,7 +42,7 @@ Item
                }
             }
         }
-    }
+
 
     HorizontalSlider
     {

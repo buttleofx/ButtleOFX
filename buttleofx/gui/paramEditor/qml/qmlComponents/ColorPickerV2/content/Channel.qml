@@ -17,7 +17,7 @@ RowLayout
     signal updatedValue(var updatedValue)
     signal accepted
 
-    spacing: 5
+    spacing: parent.width * 0.02
 
     NumberBox {
         id: numberbox
@@ -32,7 +32,6 @@ RowLayout
         caption: root.caption
         captionWidth: Config.textSize
 
-        text.width: 5
         text.font.family: Config.font
         text.font.pixelSize: Config.textSize
         text.font.bold: false
@@ -40,6 +39,7 @@ RowLayout
         textInput.font.family: Config.font
         textInput.font.pixelSize: Config.textSize
         textInput.color: Config.textColor
+        textInput.horizontalAlignment: TextInput.AlignHCenter
 
         onAccepted: {
             root.updatedValue(updatedValue);

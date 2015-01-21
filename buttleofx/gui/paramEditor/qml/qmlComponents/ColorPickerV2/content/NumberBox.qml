@@ -30,7 +30,6 @@ RowLayout {
         Layout.minimumWidth: captionWidth
         text: root.caption
         color: "#AAAAAA"
-        font.bold: true
     }
 
     PanelBorder {

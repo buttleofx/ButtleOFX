@@ -1,6 +1,4 @@
 import QtQuick 2.0
-import QuickMamba 1.0
-import "qmlComponents/ColorPicker"
 
 Rectangle {
     id: root
@@ -18,7 +16,7 @@ Rectangle {
     MouseArea {
         anchors.fill: parent
         onClicked: {
-            var component = Qt.createComponent("WindowTest.qml")
+            var component = Qt.createComponent("WindowColorWheel.qml")
             win = component.createObject(root)
             win.show()
         }

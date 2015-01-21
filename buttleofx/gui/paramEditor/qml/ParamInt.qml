@@ -1,10 +1,11 @@
 import QtQuick 2.0
+import "../../../../QuickMamba/qml/QuickMamba"
 
 Item {
     id: paramInt
     implicitWidth: 300
-    implicitHeight: 30
-    y: 10
+    implicitHeight: 70
+    y: 40
 
     property variant paramObject: model.object
 
@@ -16,14 +17,13 @@ Item {
     property bool mousePressed: false
 
     function updateXcursor() {
-        return ((sliderInput.text - paramObject.minimum) * barSlider.width) / (paramObject.maximum - paramObject.minimum)
+        return ((sliderInput.textInput.text - paramObject.minimum) * barSlider.width) / (paramObject.maximum - paramObject.minimum)
     }
 
     function updateTextValue() {
         return (cursorSlider.x * (paramObject.maximum - paramObject.minimum)) / barSlider.width + paramObject.minimum
     }
 
-    // Title of the paramSlider
     Row {
         spacing: 10
 
@@ -42,22 +42,26 @@ Item {
             height: parent.height
 
             // Current value
-            TextInput {
+           QuickEditableNumberInput {
                 id: sliderInput
-                width: barSlider.width / 2
+                width: barSlider.width
                 x: barSlider.width / 2 - width / 2
-                y: -10
-                horizontalAlignment: TextInput.AlignHCenter
-                text: paramObject.value
-                font.family: "Helvetica"
-                font.pointSize: 8
-                font.bold: paramObject.hasChanged ? true : false
-                maximumLength: 8
+                y: -30
+                textInput.horizontalAlignment: TextInput.AlignHCenter
+                textInput.text: paramObject.value
+                textInput.font.family: "Helvetica"
+                textInput.font.pointSize: 8
+                textInput.font.bold: paramObject.hasChanged ? true : false
+                textInput.maximumLength: 8
                 color: activeFocus ? "white" : "grey"
                 // activeFocusOnPress: true
-                selectByMouse: true
+               textInput.selectByMouse: true
 
-                validator: IntValidator {
+               onQuickUpdate: textInput.text = quickValue
+
+               onEditingFinished: paramObject.value = textInput.text
+
+                textInput.validator: IntValidator {
                     bottom: paramObject.minimum
                     top: paramObject.maximum
                 }
@@ -66,18 +70,19 @@ Item {
                     cursorSlider.x = updateXcursor()
                 }
 
-                onAccepted: {
+
+                textInput.onAccepted: {
                     // cursorSlider.x = updateXcursor()
                     paramObject.value = updateTextValue()
                     paramObject.pushValue(paramObject.value)
                 }
 
-                onActiveFocusChanged: {
+                textInput.onActiveFocusChanged: {
                     paramObject.value = updateTextValue()
                     paramObject.pushValue(paramObject.value)
                 }
 
-                onTextChanged: {
+                textInput.onTextChanged: {
                     if (!mousePressed) {
                         cursorSlider.x = updateXcursor()
                     }

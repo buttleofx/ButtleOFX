@@ -86,13 +86,13 @@ class TestRename(unittest.TestCase):
             re = Rename(bi, new_folder_name)
             re.process()
 
-            # Old file should not exists
+            # Old folder should not exists
             self.assertFalse(os.path.exists(old_folder_path))
 
-            # New file should exists
+            # New folder should exists
             self.assertTrue(os.path.exists(new_folder_path))
 
-            # Browser item's path and new file path should be equal
+            # Browser item's path and new folder path should be equal
             self.assertEqual(bi.getPath(), new_folder_path)
 
     # After tests run

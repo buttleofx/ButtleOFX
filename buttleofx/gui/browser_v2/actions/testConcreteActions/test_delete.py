@@ -31,10 +31,9 @@ class TestDelete(unittest.TestCase):
             # File should exists
             self.assertTrue(os.path.exists(file_path))
 
-            # Delete file
             bi = BrowserItem(path, filename, 1, True)
 
-            # Delete folder
+            # Delete file
             de = Delete(bi)
             de.process()
 
@@ -58,6 +57,7 @@ class TestDelete(unittest.TestCase):
             self.assertTrue(os.path.exists(folder_path))
 
             bi = BrowserItem(path, folder_name, 2, True)
+
             # Delete folder
             de = Delete(bi)
             de.process()

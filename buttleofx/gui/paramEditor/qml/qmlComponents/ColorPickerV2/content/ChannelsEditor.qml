@@ -90,6 +90,7 @@ Item {
             Layout.maximumHeight: 40
 
             caption: "H"
+
             value: root.colorHSVA.x
             gradient: HueGradient { }
             precision: root.precision

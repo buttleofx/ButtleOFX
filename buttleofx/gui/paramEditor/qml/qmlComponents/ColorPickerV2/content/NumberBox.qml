@@ -11,6 +11,7 @@ RowLayout {
     property alias text: captionBox
 
     property string caption: ""
+    property real captionWidth: captionBox.contentWidth
     property real value: 0
     property real min: 0
     property real max: 255
@@ -24,10 +25,9 @@ RowLayout {
         property int forceTextUpdate: 0
     }
 
-
     Text {
         id: captionBox
-        anchors.left: parent.left
+        Layout.minimumWidth: captionWidth
         text: root.caption
         color: "#AAAAAA"
         font.bold: true

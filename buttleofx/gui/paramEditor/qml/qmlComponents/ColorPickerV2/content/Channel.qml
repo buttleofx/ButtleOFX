@@ -30,7 +30,9 @@ RowLayout
         max: 1
         min: 0
         caption: root.caption
+        captionWidth: Config.textSize
 
+        text.width: 5
         text.font.family: Config.font
         text.font.pixelSize: Config.textSize
         text.font.bold: false

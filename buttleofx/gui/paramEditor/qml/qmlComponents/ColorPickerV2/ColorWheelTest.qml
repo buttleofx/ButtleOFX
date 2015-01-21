@@ -4,7 +4,7 @@ import QtQuick.Layouts 1.1
 Rectangle {
     width: 1000
     height: 620
-    color : "#3C3C3C"
+    color : "#2A2A2A"
 
     ColorPicker {
 

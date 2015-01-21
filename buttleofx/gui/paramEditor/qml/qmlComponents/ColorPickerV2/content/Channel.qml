@@ -22,8 +22,8 @@ RowLayout
     NumberBox {
         id: numberbox
         Layout.fillHeight: true
-        Layout.maximumWidth: (decimals + 2) * textInput.font.pixelSize
-        Layout.minimumWidth: decimals / 2 * textInput.font.pixelSize
+        Layout.maximumWidth: (decimals + 2) * textInput.font.pixelSize + 15
+        Layout.minimumWidth: decimals / 2 * textInput.font.pixelSize + 15
 
         value: root.value
         decimals: root.precision

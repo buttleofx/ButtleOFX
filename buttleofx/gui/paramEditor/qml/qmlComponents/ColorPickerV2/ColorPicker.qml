@@ -63,8 +63,8 @@ Item {
                 id:precisionBox
                 Layout.maximumWidth: 150
                 Layout.maximumHeight: 40
-                min: 0
-                max: 30
+                min: 1
+                max: 15
                 decimals: 0
                 value:5
                 caption : "Precision : "

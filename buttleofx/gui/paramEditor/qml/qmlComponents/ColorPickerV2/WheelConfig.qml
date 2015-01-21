@@ -2,14 +2,14 @@ pragma Singleton
 import QtQuick 2.0
 
 QtObject {
-    // Config path
-    property string quickmambaPath
-
     // Style
     // General colors
-    property color background: "#333"
-    property color accent: "#00B2A1"
-    property color border: Qt.darker(background)
+    property color backgroundColor: "#212121"
+    property color accentColor: "#00B2A1"
+    property color borderColor: "#333"
+
+    property int borderWidth: 2
+    property int radius: 3
 
     // Text
     property color textColor: "white"

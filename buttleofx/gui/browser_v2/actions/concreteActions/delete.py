@@ -2,7 +2,6 @@ import os
 import shutil
 
 from buttleofx.gui.browser_v2.actions.actionInterface import ActionInterface
-from buttleofx.gui.browser_v2.browserItem import BrowserItem
 
 
 class Delete(ActionInterface):

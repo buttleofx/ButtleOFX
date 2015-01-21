@@ -36,10 +36,12 @@ Item {
         anchors.fill: parent
 
         RowLayout {
-            Layout.preferredHeight: 20
+            Layout.maximumHeight: 20
             Layout.fillWidth: true
+            Layout.alignment: Qt.AlignHCenter
+            spacing: 50
 
-            Rectangle {
+            RowLayout {
                 Text {
                     id:textMode
                     text: "Mode : "
@@ -48,13 +50,13 @@ Item {
 
                 ComboBox {
                     id: modelList
-                    anchors.left: textMode.right
-                    anchors.leftMargin: 5
                     model : ["Wheel", "Rainbow", "Square"]
                 }
             }
 
             NumberBox {
+                Layout.maximumWidth: 150
+
                 id:precisionBox
                 min: 0
                 max: 30

@@ -24,14 +24,17 @@ Rectangle
         onQuickUpdate: root.linkedText = text
     }
 
-    // Example how tu add a new behaviour from external
+    // Example how to add a new behaviour from external
     Rectangle {
         color: "#212121"
         width:parent.width
-        height:50
+        height:150
 
         Text {
-            anchors.centerIn: parent
+            anchors.fill: parent
+            horizontalAlignment: Text.AlignHCenter
+            verticalAlignment: Text.AlignVCenter
+
             color: "white"
             text: "Increment first number"
         }

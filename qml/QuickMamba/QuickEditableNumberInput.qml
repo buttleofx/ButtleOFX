@@ -34,21 +34,24 @@ Rectangle {
         var text = textInput.text
         var comaPosition = text.indexOf(".")
 
-        var step = 1
+        var increment = 1
 
-        // No selection
-        // Calcul step in function of cursor position, if cursor is before sign - step is just 1
+        /* Calcul the increment value in function of the right digit to the cursor
+         * e.g. 12.2|32 : increment is then 0.01
+         * If cursor is left to coma or negative sign, increment is just default value (1)
+        */
         if (!(parseFloat(textInput.text) < 0 && oldCursorPos == 0)) {
             if (comaPosition == -1)
-                step = Math.pow(10, text.length - oldCursorPos - 1)
+                increment = Math.pow(10, text.length - oldCursorPos - 1)
             else if (oldCursorPos < comaPosition)
-                step = Math.pow(10, comaPosition - oldCursorPos - 1)
+                increment = Math.pow(10, comaPosition - oldCursorPos - 1)
             else if (oldCursorPos > comaPosition)
-                step = Math.pow(10, comaPosition - oldCursorPos)
+                increment = Math.pow(10, comaPosition - oldCursorPos)
         }
 
-        var newValue = parseFloat(textInput.text) + stepSign * step
-        // Fix problem when changing sign, we must correct cursor position
+        var newValue = parseFloat(textInput.text) + stepSign * increment
+
+        // Adjust cursor position when the old number is negative and the new one is positive
         if (newValue >= 0 && parseFloat(textInput.text) < 0)
             oldCursorPos--
 

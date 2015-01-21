@@ -7,11 +7,11 @@ Item {
     property vector4d colorRGBA
     property vector4d colorHSVA
     property int precision
-
+    signal
     // Call each time the value change
-    signal colorChange(vector4d rgba)
-    // Call when the user valids his choice (ex: mouse up)
-    signal accepted
+    colorChange(vector4d rgba)
+    signal // Call when the user valids his choice (ex: mouse up)
+    accepted
 
     ColumnLayout {
         anchors.fill: parent
@@ -27,11 +27,16 @@ Item {
             caption: "R"
             value: root.colorRGBA.x
             // Change to create the hue gradient
-            toColor: Qt.rgba(0, root.colorRGBA.y, root.colorRGBA.z, root.colorRGBA.w)
-            fromColor: Qt.rgba(1, root.colorRGBA.y, root.colorRGBA.z, root.colorRGBA.w)
+            toColor: Qt.rgba(0, root.colorRGBA.y, root.colorRGBA.z,
+                             root.colorRGBA.w)
+            fromColor: Qt.rgba(1, root.colorRGBA.y, root.colorRGBA.z,
+                               root.colorRGBA.w)
             precision: root.precision
 
-            onUpdatedValue: root.colorChange(Qt.vector4d(updatedValue, root.colorRGBA.y, root.colorRGBA.z, root.colorRGBA.w))
+            onUpdatedValue: root.colorChange(Qt.vector4d(updatedValue,
+                                                         root.colorRGBA.y,
+                                                         root.colorRGBA.z,
+                                                         root.colorRGBA.w))
             onAccepted: root.accepted()
         }
 
@@ -43,11 +48,16 @@ Item {
             caption: "G"
             value: root.colorRGBA.y
             // Change to create the hue gradient
-            toColor: Qt.rgba(root.colorRGBA.x, 0, root.colorRGBA.z, root.colorRGBA.w)
-            fromColor: Qt.rgba(root.colorRGBA.x, 1, root.colorRGBA.z, root.colorRGBA.w)
+            toColor: Qt.rgba(root.colorRGBA.x, 0, root.colorRGBA.z,
+                             root.colorRGBA.w)
+            fromColor: Qt.rgba(root.colorRGBA.x, 1, root.colorRGBA.z,
+                               root.colorRGBA.w)
             precision: root.precision
 
-            onUpdatedValue: root.colorChange(Qt.vector4d(root.colorRGBA.x, updatedValue, root.colorRGBA.z, root.colorRGBA.w))
+            onUpdatedValue: root.colorChange(Qt.vector4d(root.colorRGBA.x,
+                                                         updatedValue,
+                                                         root.colorRGBA.z,
+                                                         root.colorRGBA.w))
             onAccepted: root.accepted()
         }
 
@@ -59,28 +69,36 @@ Item {
             caption: "B"
             value: root.colorRGBA.z
             // Change to create the hue gradient
-            toColor: Qt.rgba(root.colorRGBA.x, root.colorRGBA.y, 0, root.colorRGBA.w)
-            fromColor: Qt.rgba(root.colorRGBA.x, root.colorRGBA.y, 1, root.colorRGBA.w)
+            toColor: Qt.rgba(root.colorRGBA.x, root.colorRGBA.y, 0,
+                             root.colorRGBA.w)
+            fromColor: Qt.rgba(root.colorRGBA.x, root.colorRGBA.y, 1,
+                               root.colorRGBA.w)
             precision: root.precision
 
-            onUpdatedValue: root.colorChange(Qt.vector4d(root.colorRGBA.x, root.colorRGBA.y, updatedValue, root.colorRGBA.w))
+            onUpdatedValue: root.colorChange(Qt.vector4d(root.colorRGBA.x,
+                                                         root.colorRGBA.y,
+                                                         updatedValue,
+                                                         root.colorRGBA.w))
             onAccepted: root.accepted()
         }
-
 
         //*** HSV ***//
 
         // HUE
-        // Work as a standard channel but has a complexe hue gradient
-        HueChannel {
+        Channel {
             Layout.fillWidth: true
             Layout.maximumHeight: 40
 
+            caption: "H"
             value: root.colorHSVA.x
-            alpha: root.colorHSVA.w
+            gradient: HueGradient { }
             precision: root.precision
 
-            onUpdatedValue: root.colorChange(ColorUtils.hsva2rgba(Qt.vector4d(updatedValue, root.colorHSVA.y, root.colorHSVA.z, root.colorHSVA.w)))
+            onUpdatedValue: root.colorChange(ColorUtils.hsva2rgba(
+                                                 Qt.vector4d(updatedValue,
+                                                             root.colorHSVA.y,
+                                                             root.colorHSVA.z,
+                                                             root.colorHSVA.w)))
             onAccepted: root.accepted()
         }
 
@@ -91,11 +109,18 @@ Item {
 
             caption: "S"
             value: root.colorHSVA.y
-            toColor: ColorUtils.hsva2QtHsla(root.colorHSVA.x, 0, root.colorHSVA.z, root.colorHSVA.w)
-            fromColor: ColorUtils.hsva2QtHsla(root.colorHSVA.x, 1, root.colorHSVA.z, root.colorHSVA.w)
+            toColor: ColorUtils.hsva2QtHsla(root.colorHSVA.x, 0,
+                                            root.colorHSVA.z, root.colorHSVA.w)
+            fromColor: ColorUtils.hsva2QtHsla(root.colorHSVA.x, 1,
+                                              root.colorHSVA.z,
+                                              root.colorHSVA.w)
             precision: root.precision
 
-            onUpdatedValue: root.colorChange(ColorUtils.hsva2rgba(Qt.vector4d(root.colorHSVA.x, updatedValue, root.colorHSVA.z, root.colorHSVA.w)))
+            onUpdatedValue: root.colorChange(ColorUtils.hsva2rgba(
+                                                 Qt.vector4d(root.colorHSVA.x,
+                                                             updatedValue,
+                                                             root.colorHSVA.z,
+                                                             root.colorHSVA.w)))
             onAccepted: root.accepted()
         }
 
@@ -106,11 +131,18 @@ Item {
 
             caption: "V"
             value: root.colorHSVA.z
-            toColor: ColorUtils.hsva2QtHsla(root.colorHSVA.x, root.colorHSVA.y, 0, root.colorHSVA.w)
-            fromColor: ColorUtils.hsva2QtHsla(root.colorHSVA.x, root.colorHSVA.y, 1, root.colorHSVA.w)
+            toColor: ColorUtils.hsva2QtHsla(root.colorHSVA.x, root.colorHSVA.y,
+                                            0, root.colorHSVA.w)
+            fromColor: ColorUtils.hsva2QtHsla(root.colorHSVA.x,
+                                              root.colorHSVA.y, 1,
+                                              root.colorHSVA.w)
             precision: root.precision
 
-            onUpdatedValue: root.colorChange(ColorUtils.hsva2rgba(Qt.vector4d(root.colorHSVA.x, root.colorHSVA.y, updatedValue, root.colorHSVA.w)))
+            onUpdatedValue: root.colorChange(ColorUtils.hsva2rgba(
+                                                 Qt.vector4d(root.colorHSVA.x,
+                                                             root.colorHSVA.y,
+                                                             updatedValue,
+                                                             root.colorHSVA.w)))
             onAccepted: root.accepted()
         }
 
@@ -121,11 +153,16 @@ Item {
 
             caption: "A"
             value: root.colorRGBA.w
-            toColor: Qt.rgba(root.colorRGBA.x, root.colorRGBA.y, root.colorRGBA.z, 0)
-            fromColor: Qt.rgba(root.colorRGBA.x, root.colorRGBA.y, root.colorRGBA.z, 1)
+            toColor: Qt.rgba(root.colorRGBA.x, root.colorRGBA.y,
+                             root.colorRGBA.z, 0)
+            fromColor: Qt.rgba(root.colorRGBA.x, root.colorRGBA.y,
+                               root.colorRGBA.z, 1)
             precision: root.precision
 
-            onUpdatedValue: root.colorChange(Qt.vector4d(root.colorRGBA.x, root.colorRGBA.y, root.colorRGBA.z, updatedValue))
+            onUpdatedValue: root.colorChange(Qt.vector4d(root.colorRGBA.x,
+                                                         root.colorRGBA.y,
+                                                         root.colorRGBA.z,
+                                                         updatedValue))
             onAccepted: root.accepted()
         }
 
@@ -133,9 +170,10 @@ Item {
             Layout.fillWidth: true
             Layout.maximumHeight: 40
 
-            colorRGB: Qt.vector3d(root.colorRGBA.x, root.colorRGBA.y, root.colorRGBA.z)
-            onUpdatedColor: root.colorChange(Qt.vector4d(rgb.x, rgb.y, rgb.z, root.colorRGBA.w))
+            colorRGB: Qt.vector3d(root.colorRGBA.x, root.colorRGBA.y,
+                                  root.colorRGBA.z)
+            onUpdatedColor: root.colorChange(Qt.vector4d(rgb.x, rgb.y, rgb.z,
+                                                         root.colorRGBA.w))
         }
-
     }
 }

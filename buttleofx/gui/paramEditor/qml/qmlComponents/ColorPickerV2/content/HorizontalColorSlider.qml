@@ -8,6 +8,9 @@ Item
     // Color for the gradient
     property color fromColor
     property color toColor
+    // Or for other special gradient use :
+    property alias gradient: gradient.gradient
+
 
     signal accepted
     signal updatedValue(var updatedValue)
@@ -21,6 +24,7 @@ Item
 
         Rectangle {
             // 4 lines to have a left-right gradient in spite of top - bottom !
+            id: gradient
             width: parent.height
             height: parent.width
             anchors.centerIn: parent

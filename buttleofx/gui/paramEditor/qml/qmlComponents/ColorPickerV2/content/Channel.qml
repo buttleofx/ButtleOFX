@@ -1,15 +1,18 @@
 import QtQuick 2.0
 import QtQuick.Layouts 1.1
+import "../." // Qt-BUG import qmldir to use config singleton
 
 RowLayout
 {
     id: root
 
     property real value
+    property string caption
+    property int precision    
     property color fromColor
     property color toColor
-    property string caption
-    property int precision
+    // Or for other special gradient use :
+    property alias gradient: horizontalColorSlider.gradient
 
     signal updatedValue(var updatedValue)
     signal accepted
@@ -27,6 +30,14 @@ RowLayout
         max: 1
         min: 0
         caption: root.caption
+
+        text.font.family: Config.font
+        text.font.pixelSize: Config.textSize
+        text.font.bold: false
+        text.color: Config.textColor
+        textInput.font.family: Config.font
+        textInput.font.pixelSize: Config.textSize
+        textInput.color: Config.textColor
 
         onAccepted: {
             root.updatedValue(updatedValue);

@@ -10,6 +10,7 @@ Rectangle {
     property string upArrowHover: "assets/img/arrows/arrow2_hover.png"
     property string downArrow: "assets/img/arrows/arrow.png"
     property string downArrowHover: "assets/img/arrows/arrow_hover.png"
+    property color cursorColor : "#00B2A1"
 
     // Default style
     color: "#212121"
@@ -90,6 +91,8 @@ Rectangle {
             // Default style
             color: "white"
             cursorDelegate: BlinkCursor {
+                color: root.cursorColor
+                visible: textInput.focus
             }
             selectionColor: Qt.rgba(1, 1, 1, 0.2)
 

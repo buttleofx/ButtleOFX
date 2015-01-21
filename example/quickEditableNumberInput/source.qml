@@ -28,7 +28,7 @@ Rectangle
     Rectangle {
         color: "#212121"
         width:parent.width
-        height:150
+        height:50
 
         Text {
             anchors.fill: parent

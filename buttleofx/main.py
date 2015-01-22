@@ -124,7 +124,7 @@ class EventFilter(QtCore.QObject):
         exitDialog = exitDialogComponent.create()
         exitDialog.saveButtonClicked.connect(self.onExitDialogSaveButtonClicked)
         exitDialog.discardButtonClicked.connect(self.onExitDialogDiscardButtonClicked)
-        exitDialog.show()        
+        exitDialog.show()
 
         # Don't call the parent class, so we don't close the application
         return True

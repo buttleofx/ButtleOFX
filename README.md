@@ -6,12 +6,28 @@
 
 It is built on top of the [TuttleOFX](http://tuttleofx.org) framework which relies on the [OpenFX plugin standard](http://openeffects.org).
 
+Website: [http://buttleofx.wordpress.com](http://buttleofx.wordpress.com)
+
 
 Development teams
 -----------------
 
 ButtleOFX is developped within student projects at [IMAC Engineering school](http://imac.alwaysdata.net).
 
+###Team 3.0
+
+Version 3.0 (2014-2015) is currently in progress.   
+
+Tutor :   
+>- [Fabien CASTAN](https://github.com/fabiencastan)   
+>- [Clément CHAMPETIER](https://github.com/cchampet)
+
+Students :   
+>- [Jordi BASTIDE](https://github.com/Jordinaire)
+>- [Maxime ENGEL](https://github.com/MaximeEngel)
+>- [Maxime GILBERT](https://github.com/mxmgilbert)
+>- [Mathias GOYHENECHE](https://github.com/MGoyheneche)
+>- [Alexis OBLET](https://github.com/aoblet)
 
 ###Team 2.0 (2013-2014)
 
@@ -35,11 +51,11 @@ Tutor :
 >- [Fabien CASTAN](https://github.com/fabiencastan)   
 
 Students :   
->- [Clément Champetier](https://github.com/cchampet)
->- [Xochitl Florimont](https://github.com/Xochitl)
->- [Aurélien Graffard](https://github.com/agreffard)
->- [Elisa Prana](https://github.com/eprana)
->- [Arthur Tourneret](https://github.com/artourn)
+>- [Clément CHAMPETIER](https://github.com/cchampet)
+>- [Xochitl FLORIMONT](https://github.com/Xochitl)
+>- [Aurélien GRAFFARD](https://github.com/agreffard)
+>- [Elisa PRANA](https://github.com/eprana)
+>- [Arthur TOURNERET](https://github.com/artourn)
 
 
 Pre-requisites
@@ -88,7 +104,7 @@ More information
 
 **ButtleOFX**
 >- website: [http://buttleofx.wordpress.com](http://buttleofx.wordpress.com)
->- github: [https://github.com/tuttleofx/ButtleOFX](https://github.com/tuttleofx/ButtleOFX)
+>- github: [https://github.com/buttleofx/ButtleOFX](https://github.com/buttleofx/ButtleOFX)
 
 **TuttleOFX**
 >- website: [http://tuttleofx.org](http://tuttleofx.org)

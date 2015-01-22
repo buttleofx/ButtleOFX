@@ -1,5 +1,4 @@
 from PyQt5 import QtCore
-from buttleofx.core.undo_redo.manageTools import UndoableCommand
 from buttleofx.core.undo_redo.commands.node import CmdCreateNode
 
 

@@ -3,9 +3,10 @@ import QtQuick.Controls 1.0
 import QtQuick.Layouts 1.0
 import QtQuick.Controls.Styles 1.0
 
+// TODO Rename file
 // Parent of the ParamEditor is the Row of the ButtleApp
 ApplicationWindow {
-    id: paramEditor
+    id: root
 
     property variant params
     property variant currentParamNode
@@ -30,8 +31,8 @@ ApplicationWindow {
     Rectangle {
         id: buttleParams
         height: 170
-        width: paramEditor.width
-        color: paramEditor.background
+        width: root.width
+        color: root.background
         border.width: 1
         border.color: "#333"
 
@@ -58,7 +59,7 @@ ApplicationWindow {
                         close.source = "file:///" + _buttleData.buttlePath + "/gui/img/icons/close.png"
                     }
                     onClicked: {
-                        editNode = false
+                        root.visible = false
                     }
                 }
             }
@@ -100,9 +101,9 @@ ApplicationWindow {
                             Rectangle {
                                 height: 20
                                 implicitWidth: 200
-                                color: paramEditor.backgroundInput
+                                color: root.backgroundInput
                                 border.width: 1
-                                border.color: paramEditor.borderInput
+                                border.color: root.borderInput
                                 radius: 3
                                 clip: true
 
@@ -235,9 +236,9 @@ ApplicationWindow {
                             Rectangle {
                                 height: 20
                                 implicitWidth: 80
-                                color: paramEditor.backgroundInput
+                                color: root.backgroundInput
                                 border.width: 1
-                                border.color: paramEditor.borderInput
+                                border.color: root.borderInput
                                 radius: 3
                                 clip: true
 
@@ -304,9 +305,9 @@ ApplicationWindow {
                             Rectangle {
                                 height: 20
                                 implicitWidth: 35
-                                color: paramEditor.backgroundInput
+                                color: root.backgroundInput
                                 border.width: 1
-                                border.color: paramEditor.borderInput
+                                border.color: root.borderInput
                                 radius: 3
                                 clip: true
 
@@ -351,9 +352,9 @@ ApplicationWindow {
                             Rectangle {
                                 height: 20
                                 implicitWidth: 35
-                                color: paramEditor.backgroundInput
+                                color: root.backgroundInput
                                 border.width: 1
-                                border.color: paramEditor.borderInput
+                                border.color: root.borderInput
                                 radius: 3
                                 clip: true
 

@@ -7,7 +7,7 @@ import argparse
 
 from pyTuttle import tuttle
 
-from quickmamba.utils import QmlInstantCoding
+from quickmamba.utils import instantcoding
 
 from buttleofx.data import Finder
 from buttleofx.gui.viewer import TimerPlayer
@@ -267,22 +267,27 @@ def main(argv, app):
         mainFilepath = mainFilepath.replace('\\', '/')
 
     component = QtQml.QQmlComponent(engine)
-    component.loadUrl(QtCore.QUrl("file:///" + mainFilepath))
-    topLevel = component.create()
+    qmlFile = QtCore.QUrl("file:///" + mainFilepath)
+    component.loadUrl(qmlFile)
+    topLevelItem = component.create()
     # engine.load(QtCore.QUrl("file:///" + mainFilepath))
-    # topLevel = engine.rootObjects()[0]
+    # topLevelItem = engine.rootObjects()[0]
 
-    if not topLevel:
+    if not topLevelItem:
         print("Errors:")
 
         for error in component.errors():
             print(error.toString())
             return -1
-    topLevel.setIcon(QtGui.QIcon(iconPath))
+    topLevelItem.setIcon(QtGui.QIcon(iconPath))
 
     if DEV_MODE:
         # Declare we are using instant coding tool on this view
-        qic = QmlInstantCoding(topLevel, verbose=True)
+        qic = instantcoding.QmlInstantCoding(
+            engine,
+            instantcoding.ReloadComponent(qmlFile, component, topLevelItem),
+            verbose=True)
+        # qic = instantcoding.QmlInstantCoding(engine, instantcoding.AskQmlItemToReload(topLevelItem), verbose=True)
 
         # Add any source file (.qml and .js by default) in current working directory
         parentDir = os.path.dirname(currentFilePath)
@@ -292,5 +297,5 @@ def main(argv, app):
     aFilter = EventFilter(app, engine)
     app.installEventFilter(aFilter)
 
-    topLevel.show()
+    topLevelItem.show()
     sys.exit(app.exec_())

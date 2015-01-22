@@ -3,15 +3,16 @@ from PyQt5 import QtCore
 from datetime import datetime
 from pwd import getpwuid
 from stat import filemode
+from pySequenceParser import sequenceParser
+from buttleofx.gui.browser_v2.sequenceWrapper import SequenceWrapper
+
 
 class BrowserItem(QtCore.QObject):
+    # even if sequenceParser.eType exists: more flexible if modification
     class ItemType:
-        file = 1
-        folder = 2
-        sequence = 3
-
-    # class Status:
-    #    pass
+        file = sequenceParser.eTypeFile
+        folder = sequenceParser.eTypeFolder
+        sequence = sequenceParser.eTypeSequence
 
     _isSelected = False
     _sequence = None
@@ -28,41 +29,35 @@ class BrowserItem(QtCore.QObject):
     selectedChanged = QtCore.pyqtSignal()
     fileChanged = QtCore.pyqtSignal()
 
-    def __init__(self, dirAbsolutePath, nameItem, typeItem, supported):
+    def __init__(self, sequenceParserItem, supported):
         super(BrowserItem, self).__init__()
 
-        self._path = os.path.join(dirAbsolutePath, nameItem)
-        self._typeItem = typeItem
+        self._path = sequenceParserItem.getAbsoluteFilepath()
+        self._typeItem = sequenceParserItem.getType()
         self._supported = supported
 
-        if typeItem == BrowserItem.ItemType.folder:
+        if self.isRemoved():
+            raise "BrowserItem() no file " + self._path + " existing "
+
+        if self.isFolder():
             # script from qml path: 1 level higher
             self._pathImg = "../../img/buttons/browser/folder-icon.png"
 
-        elif typeItem == BrowserItem.ItemType.file:
-            self._fileExtension = os.path.splitext(nameItem)[1]
+        elif self.isFile():
+            self._fileExtension = os.path.splitext(self._path)[1]
             if supported:
                 self._fileImg = 'image://buttleofx/' + self._path
             else:
                 self._fileImg = "../../img/buttons/browser/file-icon.png"
 
-            # May throw exception on bad symlink
-            try:
-                self._weight = os.stat(self._path).st_size
-            except FileNotFoundError:
-                pass
+        elif self.isSequence():
+            self._sequence = SequenceWrapper(sequenceParser.getSequence(), self._path)
+            self._fileImg = 'image://buttleofx/' + self._sequence.getFirstFilePath()
 
-        elif typeItem == BrowserItem.ItemType.sequence:
-            # waiting sequenceParser
-            pass
-
-        if not typeItem == BrowserItem.ItemType.sequence:
-            try:
-                self._lastModification = datetime.fromtimestamp(os.stat(self._path).st_mtime).strftime("%c")
-                self._permissions = self.getPermissionsOnFileSystem()
-                self._owner = self.getOwnerOnFileSystem()
-            except:
-                pass
+        self._lastModification = self.getLastModification_fileSystem()
+        self._permissions = self.getPermissions_fileSystem()
+        self._owner = self.getOwner_fileSystem()
+        self._weight = self.getWeight_fileSystem()
 
     def notifyAddAction(self):
         self._actionStatus += 1
@@ -98,7 +93,7 @@ class BrowserItem(QtCore.QObject):
         return os.path.basename(self._path)
 
     def isRemoved(self):
-        return os.path.exists(self._path)
+        return not os.path.exists(self._path)
 
     def getLastModification(self):
         return self._lastModification
@@ -108,21 +103,49 @@ class BrowserItem(QtCore.QObject):
         self.fileChanged.emit()
 
     def updatePermissions(self):
-        try:
-            self._permissions = self.getPermissionsOnFileSystem()
-            self.fileChanged.emit()
-        except:
-            pass
-
-    def updateOwner(self):
-        self._owner = self.getOwnerOnFileSystem()
+        self._permissions = self.getPermissions_fileSystem()
         self.fileChanged.emit()
 
-    def getOwnerOnFileSystem(self):
-        return getpwuid(os.stat(self._path).st_uid).pw_name
+    def updateOwner(self):
+        self._owner = self.getOwner_fileSystem()
+        self.fileChanged.emit()
 
-    def getPermissionsOnFileSystem(self):
-        return filemode(os.stat(self._path).st_mode)
+    def getOwner_fileSystem(self):
+        try:
+            path = self._sequence.getFirstFilePath() if self.isSequence() else self._path
+            return getpwuid(os.stat(path).st_uid).pw_name
+        except:
+            return "-"
+
+    def getPermissions_fileSystem(self):
+        try:
+            path = self._sequence.getFirstFilePath() if self.isSequence() else self._path
+            return filemode(os.stat(path).st_mode)
+        except:
+            return "-"
+
+    def getLastModification_fileSystem(self):
+        try:
+            path = self._sequence.getFirstFilePath() if self.isSequence() else self._path
+            return datetime.fromtimestamp(os.stat(path).st_mtime).strftime("%c")
+        except:
+            return "-"
+
+    def getWeight_fileSystem(self):
+        try:
+            if self.isFolder():
+                return len(sequenceParser.browse(self._path))
+            if self.isFile():
+                return os.stat(self._path).st_size
+            # TODO: weight sequence
+        except:
+            return 0
+
+        if self.isSequence():
+            # TODO: compute size of sequence? nb or realSize(on many ... ?)
+            pass
+
+        return 0
 
     def isFile(self):
         return self._typeItem == BrowserItem.ItemType.file
@@ -161,8 +184,8 @@ class BrowserItem(QtCore.QObject):
     actionStatus = QtCore.pyqtProperty(list, getActionStatus, notify=statusChanged)
 
     path = QtCore.pyqtProperty(str, getPath, updatePath, notify=fileChanged)
-    type = QtCore.pyqtProperty(int, getType, constant=True)
-    weight = QtCore.pyqtProperty(float, getWeight, constant=True)
+    type = QtCore.pyqtProperty(int, getType, notify=fileChanged)
+    weight = QtCore.pyqtProperty(float, getWeight, notify=fileChanged)
     pathImg = QtCore.pyqtProperty(str, getPathImg, constant=True)
     name = QtCore.pyqtProperty(str, getName, constant=True, notify=fileChanged)
     permissions = QtCore.pyqtProperty(str, getPermissions, constant=True, notify=fileChanged)

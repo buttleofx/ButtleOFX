@@ -1,10 +1,11 @@
 import QtQuick 2.0
+import "../../../../QuickMamba/qml/QuickMamba"
 
 Item {
     id: paramDouble
     implicitWidth: 300
-    implicitHeight: 30
-    y: 10
+    implicitHeight: 70
+    y: 40
 
     property variant paramObject: model.object
 
@@ -16,7 +17,7 @@ Item {
     property bool mousePressed: false
 
     function updateXcursor() {
-        return ((sliderInput.text - paramObject.minimum) * barSlider.width) / (paramObject.maximum - paramObject.minimum)
+        return ((sliderInput.textInput.text - paramObject.minimum) * barSlider.width) / (paramObject.maximum - paramObject.minimum)
     }
 
     function updateTextValue() {
@@ -42,30 +43,39 @@ Item {
             height: parent.height
 
             // Current value
-            TextInput {
+            QuickEditableNumberInput {
                 id: sliderInput
-                width: barSlider.width / 2
-                x: barSlider.width / 2 - width / 2
-                y: -8
-                horizontalAlignment: TextInput.AlignHCenter
-                text: paramObject.value
-                font.family: "Helvetica"
-                font.pointSize: 8
+                width: barSlider.width
+                y: -30
+                textInput.horizontalAlignment: TextInput.AlignHCenter
+                textInput.text: paramObject.value
+                textInput.font.family: "Helvetica"
+                textInput.font.pointSize: 8
                 // Font bold if param has been modified
-                font.bold: paramObject.hasChanged ? true : false
-                maximumLength: 8
+                textInput.font.bold: paramObject.hasChanged ? true : false
+                textInput.maximumLength: 8
                 color: activeFocus ? "white" : "grey"
-                selectByMouse: true
+                textInput.selectByMouse: true
 
-                /*
-                validator: DoubleValidator {
+
+                textInput.validator: DoubleValidator {
                     bottom: paramObject.minimum
                     top: paramObject.maximum
                 }
-                */
 
-                onAccepted: {
-                    if (sliderInput.text <= paramObject.maximum && sliderInput.text >= paramObject.minimum) {
+
+                onQuickUpdate: {
+                    textInput.text = quickValue
+                    cursorSlider.x = updateXcursor()
+                 }
+
+                onEditingFinished: {
+                    paramObject.value = textInput.text
+
+                }
+
+                textInput.onAccepted: {
+                    if (sliderInput.textInput.text <= paramObject.maximum && sliderInput.textInput.text >= paramObject.minimum) {
                         paramObject.value = updateTextValue()
                         paramObject.pushValue(paramObject.value)
                     } else {
@@ -77,16 +87,16 @@ Item {
                     cursorSlider.x = updateXcursor()
                 }
 
-                onTextChanged: {
+                textInput.onTextChanged: {
                     if (!mousePressed) {
                         // The doubleValidator is not as good as intValidator, so we need this test.
-                        if (sliderInput.text <= paramObject.maximum && sliderInput.text >= paramObject.minimum) {
+                        if (sliderInput.textInput.text <= paramObject.maximum && sliderInput.textInput.text >= paramObject.minimum) {
                             cursorSlider.x = updateXcursor()
                         }
                     }
                 }
-                onActiveFocusChanged: {
-                    if (sliderInput.text <= paramObject.maximum && sliderInput.text >= paramObject.minimum) {
+                textInput.onActiveFocusChanged: {
+                    if (sliderInput.textInput.text <= paramObject.maximum && sliderInput.textInput.text >= paramObject.minimum) {
                         paramObject.value = updateTextValue()
                         paramObject.pushValue(paramObject.value)
                     } else {

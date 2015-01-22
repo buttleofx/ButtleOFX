@@ -6,7 +6,7 @@ from OpenGL import GL
 
 from buttleofx.gui.browser_v2.browserItem import BrowserItem
 from buttleofx.gui.browser_v2.actions.concreteActions.rename import Rename
-
+from pySequenceParser import sequenceParser
 
 class TestRename(unittest.TestCase):
 
@@ -25,7 +25,9 @@ class TestRename(unittest.TestCase):
             # Create file
             open(old_file_path, 'a').close()
 
-            bi = BrowserItem(path, old_filename, 1, True)
+            sp_file = sequenceParser.Item(sequenceParser.eTypeFile,
+                                          old_file_path)
+            bi = BrowserItem(sp_file, True)
 
             # New file should not exists
             self.assertFalse(os.path.exists(new_file_path))
@@ -53,8 +55,9 @@ class TestRename(unittest.TestCase):
 
             # Create file
             open(os.path.join(path, old_filename), 'a').close()
-
-            bi = BrowserItem(path, old_filename, 1, True)
+            sp_file = sequenceParser.Item(sequenceParser.eTypeFile,
+                                          old_file_path)
+            bi = BrowserItem(sp_file, True)
 
             # Rename file
             re = Rename(bi, new_filename)
@@ -80,7 +83,9 @@ class TestRename(unittest.TestCase):
             if not os.path.exists(old_folder_path):
                 os.makedirs(old_folder_path)
 
-            bi = BrowserItem(path, old_folder_name, 2, True)
+            sp_folder = sequenceParser.Item(sequenceParser.eTypeFolder,
+                                            old_folder_path)
+            bi = BrowserItem(sp_folder, True)
 
             # Rename folder
             re = Rename(bi, new_folder_name)

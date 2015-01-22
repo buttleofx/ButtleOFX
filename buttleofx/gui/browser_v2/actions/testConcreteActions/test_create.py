@@ -6,7 +6,7 @@ from OpenGL import GL
 
 from buttleofx.gui.browser_v2.browserItem import BrowserItem
 from buttleofx.gui.browser_v2.actions.concreteActions.create import Create
-
+from pySequenceParser import sequenceParser
 
 class TestCreate(unittest.TestCase):
 
@@ -27,8 +27,12 @@ class TestCreate(unittest.TestCase):
             # File should not exists
             self.assertFalse(os.path.exists(file_path))
 
-            parent = BrowserItem(path, parent_name, 2, True)
-            new_file = BrowserItem(parent_path, filename, 1, True)
+            sp_parent = sequenceParser.Item(sequenceParser.eTypeFolder,
+                                            parent_path)
+            sp_new_file = sequenceParser.Item(sequenceParser.eTypeFile,
+                                              file_path)
+            parent = BrowserItem(sp_parent, True)
+            new_file = BrowserItem(sp_new_file, True)
 
             # Create file
             cr = Create(parent, new_file)
@@ -50,8 +54,12 @@ class TestCreate(unittest.TestCase):
             # Folder should not exists
             self.assertFalse(os.path.exists(folder_path))
 
-            parent = BrowserItem(path, parent_name, 2, True)
-            new_folder = BrowserItem(parent_path, folder_name, 2, True)
+            sp_parent = sequenceParser.Item(sequenceParser.eTypeFolder,
+                                            parent_path)
+            sp_new_folder = sequenceParser.Item(sequenceParser.eTypeFolder,
+                                                folder_path)
+            parent = BrowserItem(sp_parent, True)
+            new_folder = BrowserItem(sp_new_folder, True)
 
             # Create folder
             cr = Create(parent, new_folder)

@@ -3,6 +3,7 @@ from buttleofx.gui.browser_v2.browserItem import BrowserItem
 from PyQt5 import QtCore
 from quickmamba.models import QObjectListModel
 from pySequenceParser import sequenceParser
+from buttleofx.gui.browser_v2.browserSortOn import SortOn
 
 
 class BrowserModel(QtCore.QObject):
@@ -11,15 +12,16 @@ class BrowserModel(QtCore.QObject):
         Model of files based on pySequenceParser. It recognises files, folder and sequences.
         Possibility to filter the model: sequence, hidden dir/files or not (regexp is coming)
     """
-
     _currentPath = ""
     _browserItems = []
     _browserItemsModel = None
     _filter = "*"
     _ignoreHiddenItems = True
     _showSeq = True
+    _sortOn = SortOn()
 
     filterChanged = QtCore.pyqtSignal()
+    sortOnChanged = QtCore.pyqtSignal()
     currentPathChanged = QtCore.pyqtSignal()
     ignoreHiddenChanged = QtCore.pyqtSignal()
 
@@ -38,23 +40,29 @@ class BrowserModel(QtCore.QObject):
         """
             Update browserItemsModel according model's current path and filter options
         """
-        allItems = None
         try:
             # if no permissions
+            self._browserItems.clear()
+            self._browserItemsModel.clear()
             allItems = sequenceParser.browse(self._currentPath)
-        except:
+
+            for item in allItems:
+                # hidden files
+                addItem = not(self._ignoreHiddenItems and item.getFilename().startswith("."))
+
+                # show sequence
+                if addItem and item.getType() == BrowserItem.ItemType.sequence:
+                    addItem = self._showSeq
+
+                if addItem:
+                    # TODO: handle regexp + handle supported?
+                    self._browserItems.append(BrowserItem(item, True))
+
+            self.sortBrowserItems()
+            self._browserItemsModel.setObjectList(self._browserItems)
+        except Exception as e:
+            print(e)
             return
-
-        self._browserItems.clear()
-        self._browserItemsModel.clear()
-
-        for item in allItems:
-            if not (self._ignoreHiddenItems and item.getFilename().startswith(".")):
-                # TODO: hande regexp + handle supported?
-                self._browserItems.append(BrowserItem(item, True))
-
-        self._browserItems.sort(key=lambda it: (it.getType(), os.path.basename(it.getPath().lower())))
-        self._browserItemsModel.setObjectList(self._browserItems)
 
     def getFilter(self):
         return self._filter
@@ -82,6 +90,22 @@ class BrowserModel(QtCore.QObject):
         self._ignoreHiddenItems = hide
         self.updateItems()
         self.ignoreHiddenChanged.emit()
+
+    def getFieldToSort(self):
+        return self._sortOn.getFieldToSort()
+
+    def setFieldToSort(self, newField, reverse=0):
+        self._sortOn.setFieldToSort(newField, reverse)
+        self.sortOnChanged.emit()
+
+    def sortBrowserItems(self):
+        rev = self._sortOn.isReversed()
+
+        if self._sortOn.getFieldToSort() == SortOn.onName:
+            self._browserItems.sort(key=lambda it: (it.getType(), os.path.basename(it.getPath().lower())), reverse=rev)
+
+        if self._sortOn.getFieldToSort() == SortOn.onSize:
+            self._browserItems.sort(key=lambda it: (it.getType(), it.getWeight()), reverse=rev)
 
     @QtCore.pyqtSlot(bool)
     def setShowSequence(self, seqBool):
@@ -149,6 +173,5 @@ class BrowserModel(QtCore.QObject):
     ignoreHiddenFiles = QtCore.pyqtProperty(bool, isIgnoreHidden, setIgnoreHidden, notify=ignoreHiddenChanged)
     splitedCurrentPath = QtCore.pyqtProperty(QObjectListModel, getSplitedCurrentPath, notify=currentPathChanged)
     listFolderNavBar = QtCore.pyqtProperty(QObjectListModel, getListFolderNavBar, notify=currentPathChanged)
-    # TODO: notify signal browser item
-    # selectedItems = QtCore.pyqtProperty(QObjectListModel, getSelectedItems, notify=BrowserItem.selectedChanged)
-
+    selectedItems = QtCore.pyqtProperty(QObjectListModel, getSelectedItems, constant=True)
+    sortOn = QtCore.pyqtProperty(str, getFieldToSort, setFieldToSort, notify=sortOnChanged)

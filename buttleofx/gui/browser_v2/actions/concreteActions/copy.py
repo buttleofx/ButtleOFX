@@ -7,7 +7,7 @@ from buttleofx.gui.browser_v2.actions.actionInterface import ActionInterface
 class Copy(ActionInterface):
 
     def __init__(self, browserItem, destination):
-        # dest must be a directory
+        # destination must be a directory
         if not destination.isFolder():
             raise TypeError
         super().__init__(browserItem)
@@ -20,11 +20,11 @@ class Copy(ActionInterface):
 
         # Copy file
         if browserItem.isFile():
-            # TODO: Check parent's permission in try catch
+            # TODO: Check destination permission in try catch
             if os.path.exists(destinationPath):
                 shutil.copy2(browserItem.getPath(), destinationPath)
 
         # Copy Folder
         if browserItem.isFolder():
-            # TODO: Check parent's permission in try catch
+            # TODO: Check destination permission in try catch
             shutil.copytree(browserItem.getParentPath(), destinationPath)

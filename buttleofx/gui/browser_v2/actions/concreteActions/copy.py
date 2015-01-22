@@ -11,7 +11,6 @@ class Copy(ActionInterface):
         if not destination.isFolder():
             raise TypeError
         super().__init__(browserItem)
-        # TODO: Can a new item be a sequence ?
         self._destination = destination
 
     def action(self):

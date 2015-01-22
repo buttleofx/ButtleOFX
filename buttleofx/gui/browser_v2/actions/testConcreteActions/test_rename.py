@@ -1,8 +1,6 @@
 import unittest
+import tempfile
 import os
-import shutil
-
-import inspect
 
 from OpenGL import GL
 
@@ -11,62 +9,92 @@ from buttleofx.gui.browser_v2.actions.concreteActions.rename import Rename
 
 
 class TestRename(unittest.TestCase):
+
     # Before tests run
     def setUp(self):
-        self._directory = "buttle_test_rename"
-        self._base_path = os.path.expanduser("~")
-        self._path = os.path.join(self._base_path, self._directory)
-
-        if os.path.exists(self._path):
-            shutil.rmtree(self._path)
-        os.makedirs(self._path)
+        pass
 
     def test_rename_file_with_extension(self):
-        extension = ".txt"
-        old_filename = "plop" + extension
-        old_file_path = os.path.join(self._path, old_filename)
-        new_filename = "success" + extension
-        new_file_path = os.path.join(self._path, new_filename)
+        with tempfile.TemporaryDirectory() as path:
+            extension = ".txt"
+            old_filename = "plop" + extension
+            old_file_path = os.path.join(path, old_filename)
+            new_filename = "success" + extension
+            new_file_path = os.path.join(path, new_filename)
 
-        # Create old file
-        open(old_file_path, 'a').close()
+            # Create file
+            open(old_file_path, 'a').close()
 
-        bi = BrowserItem(self._path, old_filename, 1, True)
-        re = Rename(bi, new_filename)
-        re.process()
-        self.assertTrue(os.path.exists(new_file_path))
-        self.assertEqual(bi.getPath(), new_file_path)
+            bi = BrowserItem(path, old_filename, 1, True)
+
+            # New file should not exists
+            self.assertFalse(os.path.exists(new_file_path))
+
+            # Rename file
+            re = Rename(bi, new_filename)
+            re.process()
+
+            # Old file should not exists
+            self.assertFalse(os.path.exists(old_file_path))
+
+            # New file should exists
+            self.assertTrue(os.path.exists(new_file_path))
+
+            # Browser item's path and new file path should be equal
+            self.assertEqual(bi.getPath(), new_file_path)
 
     def test_rename_file_without_extension(self):
-        extension = ".jpg"
-        old_filename = "plop" + extension
-        new_filename = "no_extension"
+        with tempfile.TemporaryDirectory() as path:
+            extension = ".jpg"
+            old_filename = "plop" + extension
+            old_file_path = os.path.join(path, old_filename)
+            new_filename = "no_extension"
+            new_file_path = os.path.join(path, new_filename + extension)
 
-        # Create old file
-        open(os.path.join(self._path, old_filename), 'a').close()
+            # Create file
+            open(os.path.join(path, old_filename), 'a').close()
 
-        bi = BrowserItem(self._path, old_filename, 1, True)
-        re = Rename(bi, new_filename)
-        re.process()
-        new_file_path = os.path.join(self._path, new_filename + extension)
-        self.assertTrue(self, os.path.exists(new_file_path))
-        self.assertEqual(bi.getPath(), new_file_path)
+            bi = BrowserItem(path, old_filename, 1, True)
+
+            # Rename file
+            re = Rename(bi, new_filename)
+            re.process()
+
+            # Old file should not exists
+            self.assertFalse(os.path.exists(old_file_path))
+
+            # New file should exists
+            self.assertTrue(os.path.exists(new_file_path))
+
+            # Browser item's path and new file path should be equal
+            self.assertEqual(bi.getPath(), new_file_path)
 
     def test_rename_folder(self):
-        old_folder_name = 'rename_me'
-        new_folder_name = 'new_name'
-        old_folder_path = os.path.join(self._path, old_folder_name)
-        if not os.path.exists(old_folder_path):
-            os.makedirs(old_folder_path)
+        with tempfile.TemporaryDirectory() as path:
+            old_folder_name = 'rename_me'
+            old_folder_path = os.path.join(path, old_folder_name)
+            new_folder_name = 'new_name'
+            new_folder_path = os.path.join(path, new_folder_name)
 
-        bi = BrowserItem(self._path, old_folder_name, 2, True)
-        re = Rename(bi, new_folder_name)
-        re.process()
-        new_folder_path = os.path.join(self._path, new_folder_name)
-        self.assertTrue(self, os.path.exists(new_folder_path))
-        self.assertEqual(bi.getPath(), new_folder_path)
+            # Create folder
+            if not os.path.exists(old_folder_path):
+                os.makedirs(old_folder_path)
+
+            bi = BrowserItem(path, old_folder_name, 2, True)
+
+            # Rename folder
+            re = Rename(bi, new_folder_name)
+            re.process()
+
+            # Old file should not exists
+            self.assertFalse(os.path.exists(old_folder_path))
+
+            # New file should exists
+            self.assertTrue(os.path.exists(new_folder_path))
+
+            # Browser item's path and new file path should be equal
+            self.assertEqual(bi.getPath(), new_folder_path)
 
     # After tests run
     def tearDown(self):
-        if os.path.exists(self._path):
-            shutil.rmtree(self._path)
+        pass

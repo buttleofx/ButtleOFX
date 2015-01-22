@@ -13,7 +13,7 @@ class Rename(ActionInterface):
     def action(self):
         browserItem = self._browserItem
         # Rename File
-        if browserItem.getType() == BrowserItem.ItemType.file:
+        if browserItem.isFile():
             # TODO: Check permission in try catch
             path = browserItem.getParentPath()
             oldFilePath = os.path.join(path, browserItem.getName())
@@ -29,7 +29,7 @@ class Rename(ActionInterface):
 
 
         # Rename Folder
-        if browserItem.getType() == BrowserItem.ItemType.folder:
+        if browserItem.isFolder():
             # TODO: Check permission in try catch
             path = browserItem.getParentPath()
             oldPath = os.path.join(path, browserItem.getName())
@@ -38,7 +38,7 @@ class Rename(ActionInterface):
             browserItem.updatePath(newPath)
 
         # TODO: Rename sequence
-        if browserItem.getType() == BrowserItem.ItemType.sequence:
+        if browserItem.isSequence():
             print("TODO: Rename sequence")
 
 

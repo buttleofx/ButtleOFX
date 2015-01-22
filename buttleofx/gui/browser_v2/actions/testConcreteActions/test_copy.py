@@ -6,6 +6,7 @@ from OpenGL import GL
 
 from buttleofx.gui.browser_v2.browserItem import BrowserItem
 from buttleofx.gui.browser_v2.actions.concreteActions.copy import Copy
+from pySequenceParser import sequenceParser
 
 
 class TestCopy(unittest.TestCase):
@@ -34,8 +35,12 @@ class TestCopy(unittest.TestCase):
             # File should not exists in destination directory
             self.assertFalse(os.path.exists(dest_file_path))
 
-            dest = BrowserItem(path, dest_folder_name, 2, True)
-            file = BrowserItem(path, src_filename, 1, True)
+            sp_file = sequenceParser.Item(sequenceParser.eTypeFile,
+                                          src_file_path)
+            sp_dest = sequenceParser.Item(sequenceParser.eTypeFolder,
+                                          dest_folder_path)
+            file = BrowserItem(sp_file, True)
+            dest = BrowserItem(sp_dest, True)
 
             # Copy file
             cpy = Copy(file, dest)
@@ -51,9 +56,9 @@ class TestCopy(unittest.TestCase):
         with tempfile.TemporaryDirectory() as path:
             src_folder_name = 'copy_folder'
             src_folder_path = os.path.join(path, src_folder_name)
-            parent_folder_name = 'parent'
-            parent_folder_path = os.path.join(path, parent_folder_name)
-            dest_folder_path = os.path.join(parent_folder_path, src_folder_name)
+            dest_folder_name = 'parent'
+            dest_folder_path = os.path.join(path, dest_folder_name)
+            dest_folder_path = os.path.join(dest_folder_path, src_folder_name)
 
             # Create source folder
             os.makedirs(src_folder_path)
@@ -61,11 +66,15 @@ class TestCopy(unittest.TestCase):
             # Folder should not exists
             self.assertFalse(os.path.exists(dest_folder_path))
 
-            folder = BrowserItem(path, src_folder_name, 2, True)
-            parent = BrowserItem(path, parent_folder_name, 2, True)
+            sp_src = sequenceParser.Item(sequenceParser.eTypeFolder,
+                                         src_folder_path)
+            sp_dest = sequenceParser.Item(sequenceParser.eTypeFolder,
+                                          dest_folder_path)
+            src = BrowserItem(sp_src, True)
+            dest = BrowserItem(sp_dest, True)
 
             # Copy folder
-            cpy = Copy(folder, parent)
+            cpy = Copy(src, dest)
             cpy.process()
 
             # Folder should exists in destination folder

@@ -7,6 +7,7 @@ from OpenGL import GL
 
 from buttleofx.gui.browser_v2.browserItem import BrowserItem
 from buttleofx.gui.browser_v2.actions.concreteActions.delete import Delete
+from pySequenceParser import sequenceParser
 
 
 class TestDelete(unittest.TestCase):
@@ -30,8 +31,9 @@ class TestDelete(unittest.TestCase):
 
             # File should exists
             self.assertTrue(os.path.exists(file_path))
-
-            bi = BrowserItem(path, filename, 1, True)
+            sp_file = sequenceParser.Item(sequenceParser.eTypeFile,
+                                          file_path)
+            bi = BrowserItem(sp_file, True)
 
             # Delete file
             de = Delete(bi)
@@ -55,8 +57,9 @@ class TestDelete(unittest.TestCase):
 
             # Folder should exists
             self.assertTrue(os.path.exists(folder_path))
-
-            bi = BrowserItem(path, folder_name, 2, True)
+            sp_folder = sequenceParser.Item(sequenceParser.eTypeFolder,
+                                            folder_path)
+            bi = BrowserItem(sp_folder, True)
 
             # Delete folder
             de = Delete(bi)

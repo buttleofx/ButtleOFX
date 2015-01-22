@@ -58,6 +58,7 @@ Item {
                // Validator include in QuickEditableNumberInput element
                minValue: paramObject.minimum
                maxValue: paramObject.maximum
+               decimals: 0
 
                onQuickUpdate: {
                    textInput.text = quickValue
@@ -65,47 +66,47 @@ Item {
                 }
 
                onEditingFinished: {
-                   paramObject.value = parseInt(textInput.text)
+                   //parse QtString to Int
+                   paramObject.value = textInput.text
                }
 
-                textInput.validator: IntValidator {
-                    bottom: paramObject.minimum
-                    top: paramObject.maximum
-                }
-
-//                Component.onCompleted: {
-//                    cursorSlider.x = updateXcursor()
-//                }
-
-
-                textInput.onAccepted: {
+               textInput.onAccepted: {
+                   if (sliderInput.textInput.text <= paramObject.maximum && sliderInput.textInput.text >= paramObject.minimum) {
                     cursorSlider.x = updateXcursor()
                     paramObject.value = textInput.text
                     paramObject.pushValue(paramObject.value)
+
+               }}
+
+                Component.onCompleted: {
+                    cursorSlider.x = updateXcursor()
                 }
 
-//                textInput.onActiveFocusChanged: {
-//                    paramObject.value = updateTextValue()
-//                    paramObject.pushValue(paramObject.value)
-//                }
+                textInput.onTextChanged: {
+                    if (!mousePressed) {
+                        if (sliderInput.textInput.text <= paramObject.maximum && sliderInput.textInput.text >= paramObject.minimum) {
+                            cursorSlider.x = updateXcursor()
+                        }
+                }
+                }
 
-//                textInput.onTextChanged: {
-//                    if (!mousePressed) {
-//                        cursorSlider.x = updateXcursor()
-//                    }
-//                }
+                textInput.onActiveFocusChanged: {
+                    paramObject.value = updateTextValue()
+                    paramObject.pushValue(paramObject.value)
 
-//                MouseArea {
-//                    anchors.fill: parent
-//                    acceptedButtons: Qt.RightButton
+                }
 
-//                    onClicked: {
-//                        // Reinitialise the param to its default value
-//                        paramObject.hasChanged = false
-//                        paramObject.value = paramObject.getDefaultValue()
-//                        paramObject.pushValue(paramObject.value)
-//                    }
-//                }
+                MouseArea {
+                    anchors.fill: parent
+                    acceptedButtons: Qt.RightButton
+
+                    onClicked: {
+                        // Reinitialise the param to its default value
+                        paramObject.hasChanged = false
+                        paramObject.value = paramObject.getDefaultValue()
+                        paramObject.pushValue(paramObject.value)
+                    }
+                }
             }
 
             // Bar slider: one grey, one white

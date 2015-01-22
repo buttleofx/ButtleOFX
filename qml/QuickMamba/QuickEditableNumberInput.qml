@@ -38,8 +38,9 @@ Rectangle {
         // Remember cursor position to stay in same place after text update (because we lose it when property text changes)
         var oldCursorPos = textInput.cursorPosition
 
-        var text = textInput.text
-        var pointPosition = text.indexOf(".")
+        var oldValueStr = textInput.text
+        var oldValueFloat = parseFloat(oldValueStr)
+        var pointPosition = oldValueStr.indexOf(".")
 
         var increment = 1
 
@@ -48,19 +49,18 @@ Rectangle {
          * If cursor is left to the point or negative sign, increment is just default value (1)
          * The point is added if there is not and cursor is top right
         */
-        if (!(parseFloat(textInput.text) < 0 && oldCursorPos == 0)) {
+        if (!(oldValueFloat < 0 && oldCursorPos == 0)) {
             if (pointPosition == -1)
-                increment = Math.pow(10, text.length - oldCursorPos - 1)
+                increment = Math.pow(10, oldValueStr.length - oldCursorPos - 1)
             else if (oldCursorPos < pointPosition)
                 increment = Math.pow(10, pointPosition - oldCursorPos - 1)
             else if (oldCursorPos > pointPosition)
                 increment = Math.pow(10, pointPosition - oldCursorPos)
         }
 
-        var newValue = parseFloat(textInput.text) + stepSign * increment
-
+        var newValue = oldValueFloat + stepSign * increment
         // Adjust cursor position when the old number is negative and the new one is positive
-        if (newValue >= 0 && parseFloat(textInput.text) < 0)
+        if (newValue >= 0 && oldValueFloat < 0)
             oldCursorPos--
 
         root.quickUpdate(parseFloat(MathUtils.clamp(newValue, root.minValue, root.maxValue).toFixed(root.decimals)))

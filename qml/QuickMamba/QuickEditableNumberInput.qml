@@ -1,8 +1,13 @@
 import QtQuick 2.2
 import QtQuick.Layouts 1.1
+import "MathUtils.js" as MathUtils
 
 Rectangle {
     id: root
+
+    property real minValue: Number.NEGATIVE_INFINITY
+    property real maxValue: Number.POSITIVE_INFINITY
+    property int decimals: 0
 
     property alias textInput: textInput
 
@@ -33,32 +38,32 @@ Rectangle {
         // Remember cursor position to stay in same place after text update (because we lose it when property text changes)
         var oldCursorPos = textInput.cursorPosition
 
-        var text = textInput.text
-        var commaPosition = text.indexOf(".")
+        var oldValueStr = textInput.text
+        var oldValueFloat = parseFloat(oldValueStr)
+        var pointPosition = oldValueStr.indexOf(".")
 
         var increment = 1
 
         /* Calcul the increment value in function of the right digit to the cursor
          * e.g. 12.2|32 : increment is then 0.01
-         * If cursor is left to comma or negative sign, increment is just default value (1)
-         * The comma is added if there is not and cursor is top right
+         * If cursor is left to the point or negative sign, increment is just default value (1)
+         * The point is added if there is not and cursor is top right
         */
-        if (!(parseFloat(textInput.text) < 0 && oldCursorPos == 0)) {
-            if (commaPosition == -1)
-                increment = Math.pow(10, text.length - oldCursorPos - 1)
-            else if (oldCursorPos < commaPosition)
-                increment = Math.pow(10, commaPosition - oldCursorPos - 1)
-            else if (oldCursorPos > commaPosition)
-                increment = Math.pow(10, commaPosition - oldCursorPos)
+        if (!(oldValueFloat < 0 && oldCursorPos == 0)) {
+            if (pointPosition == -1)
+                increment = Math.pow(10, oldValueStr.length - oldCursorPos - 1)
+            else if (oldCursorPos < pointPosition)
+                increment = Math.pow(10, pointPosition - oldCursorPos - 1)
+            else if (oldCursorPos > pointPosition)
+                increment = Math.pow(10, pointPosition - oldCursorPos)
         }
 
-        var newValue = parseFloat(textInput.text) + stepSign * increment
-
+        var newValue = oldValueFloat + stepSign * increment
         // Adjust cursor position when the old number is negative and the new one is positive
-        if (newValue >= 0 && parseFloat(textInput.text) < 0)
+        if (newValue >= 0 && oldValueFloat < 0)
             oldCursorPos--
 
-        root.quickUpdate(newValue)
+        root.quickUpdate(parseFloat(MathUtils.clamp(newValue, root.minValue, root.maxValue).toFixed(root.decimals)))
         textInput.cursorPosition = oldCursorPos
     }
 
@@ -87,6 +92,10 @@ Rectangle {
             clip: true
 
             validator: DoubleValidator {
+                top: root.maxValue
+                bottom: root.minValue
+                decimals: root.decimals
+                // Force the use of point as decimal separator
                 locale: "en"
             }
 

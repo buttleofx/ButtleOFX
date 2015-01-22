@@ -17,6 +17,10 @@ Rectangle
         height: 50
         anchors.centerIn: parent
 
+        minValue: -25
+        maxValue: 50
+        decimals: 3
+
         // Access to all properties of a classic qml textInput by textInput.<textIntproperty>
         textInput.text: root.linkedText
 

@@ -3,7 +3,7 @@ import QtQuick.Layouts 1.1
 import "ColorUtils.js" as ColorUtils
 import "mathUtils.js" as MathUtils
 import "../." // Qt-BUG import qmldir to use config singleton
-import "../../../../../../../QuickMamba/qml/QuickMamba"
+import "../../../../../../QuickMamba/qml/QuickMamba"
 
 RowLayout {
     id: root

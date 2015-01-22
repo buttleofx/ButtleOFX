@@ -36,8 +36,8 @@ class BrowserItem(QtCore.QObject):
         self._typeItem = sequenceParserItem.getType()
         self._supported = supported
 
-        if self.isRemoved():
-            raise "BrowserItem() no file " + self._path + " existing "
+        # if self.isRemoved():
+        #     raise "BrowserItem() no file " + self._path + " existing "
 
         if self.isFolder():
             # script from qml path: 1 level higher

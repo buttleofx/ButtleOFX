@@ -7,11 +7,12 @@ Item {
     property vector4d colorRGBA
     property vector4d colorHSVA
     property int precision
-    signal
+    property bool hasAlpha
+
     // Call each time the value change
-    colorChange(vector4d rgba)
-    signal // Call when the user valids his choice (ex: mouse up)
-    accepted
+    signal colorChange(vector4d rgba)
+    // Call when the user valids his choice (ex: mouse up)
+    signal accepted
 
     ColumnLayout {
         anchors.fill: parent
@@ -151,6 +152,7 @@ Item {
         Channel {
             Layout.fillWidth: true
             Layout.maximumHeight: 40
+            visible: root.hasAlpha
 
             caption: "A"
             value: root.colorRGBA.w

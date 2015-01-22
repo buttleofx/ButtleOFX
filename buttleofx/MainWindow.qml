@@ -857,7 +857,7 @@ ApplicationWindow {
                     implicitWidth: parent.width
                     implicitHeight: topRightView.visible ? 0.5 * parent.height : parent.height
                     z: -1
-                    visible: !selectedView
+                    visible: selectedView != 3
 
                     children:
                     switch (selectedView) {

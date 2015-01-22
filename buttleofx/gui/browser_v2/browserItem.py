@@ -137,6 +137,7 @@ class BrowserItem(QtCore.QObject):
                 return len(sequenceParser.browse(self._path))
             if self.isFile():
                 return os.stat(self._path).st_size
+            # TODO: weight sequence
         except:
             return 0
 

@@ -19,13 +19,13 @@ RowLayout {
     property real max: 255
     property int decimals: 5
 
-    signal accepted(var updatedValue)
+    signal accepted
+    signal updatedValue(var updatedValue)
 
     function updateValue(newValue)
     {
-        var newText = MathUtils.clamp(newValue, root.min, root.max).toString()
-        if(newText != root.value && newText !== NaN) {
-            root.accepted(MathUtils.decimalRound(newText, root.decimals))
+        if(newValue != root.value && newValue !== NaN) {
+            root.updatedValue(newValue)
         }
         else {
             m.forceTextUpdate = m.forceTextUpdate + 1 // Hack: force update
@@ -52,6 +52,9 @@ RowLayout {
         Layout.fillWidth: true
         // Hack: force update of the text if the value is the same after the clamp.
         textInput.text: m.forceTextUpdate ? MathUtils.decimalRound(root.value, root.decimals) : MathUtils.decimalRound(root.value, root.decimals)
+        minValue: root.min
+        maxValue: root.max
+        decimals: root.decimals
 
         border.width: Config.borderWidth
         border.color: Config.borderColor
@@ -60,7 +63,10 @@ RowLayout {
         cursorColor: Config.accentColor
 
         onQuickUpdate: root.updateValue(quickValue)
-        textInput.onAccepted: root.updateValue(parseFloat(inputBox.textInput.text))
+        onEditingFinished: {
+            root.updateValue(parseFloat(inputBox.textInput.text))
+            root.accepted()
+        }
     }
 }
 

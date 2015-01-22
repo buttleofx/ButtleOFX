@@ -22,5 +22,5 @@ function clampAndProject(x, xmin, xmax, ymin, ymax) {
 
 function decimalRound(number, nbDecimals)
 {
-    return Math.round(number * Math.pow(10, nbDecimals))/ Math.pow(10, nbDecimals)
+    return parseFloat(number.toFixed(nbDecimals))
 }

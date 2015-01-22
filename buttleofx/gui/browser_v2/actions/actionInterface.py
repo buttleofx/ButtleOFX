@@ -10,8 +10,7 @@ class ActionInterface():
         self._browserItem = browserItem
 
     def __del__(self):
-        # print("Action destroyed")
-        pass
+        print("Action destroyed")
 
     def begin(self):
         self._browserItem.notifyAddAction()

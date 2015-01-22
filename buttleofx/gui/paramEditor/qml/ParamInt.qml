@@ -45,60 +45,67 @@ Item {
            QuickEditableNumberInput {
                 id: sliderInput
                 width: barSlider.width
-                x: barSlider.width / 2 - width / 2
                 y: -30
                 textInput.horizontalAlignment: TextInput.AlignHCenter
                 textInput.text: paramObject.value
                 textInput.font.family: "Helvetica"
                 textInput.font.pointSize: 8
                 textInput.font.bold: paramObject.hasChanged ? true : false
-                textInput.maximumLength: 8
                 color: activeFocus ? "white" : "grey"
                 // activeFocusOnPress: true
                textInput.selectByMouse: true
 
-               onQuickUpdate: textInput.text = quickValue
+               // Validator include in QuickEditableNumberInput element
+               minValue: paramObject.minimum
+               maxValue: paramObject.maximum
 
-               onEditingFinished: paramObject.value = textInput.text
+               onQuickUpdate: {
+                   textInput.text = quickValue
+                   cursorSlider.x = updateXcursor()
+                }
+
+               onEditingFinished: {
+                   paramObject.value = parseInt(textInput.text)
+               }
 
                 textInput.validator: IntValidator {
                     bottom: paramObject.minimum
                     top: paramObject.maximum
                 }
 
-                Component.onCompleted: {
-                    cursorSlider.x = updateXcursor()
-                }
+//                Component.onCompleted: {
+//                    cursorSlider.x = updateXcursor()
+//                }
 
 
                 textInput.onAccepted: {
-                    // cursorSlider.x = updateXcursor()
-                    paramObject.value = updateTextValue()
+                    cursorSlider.x = updateXcursor()
+                    paramObject.value = textInput.text
                     paramObject.pushValue(paramObject.value)
                 }
 
-                textInput.onActiveFocusChanged: {
-                    paramObject.value = updateTextValue()
-                    paramObject.pushValue(paramObject.value)
-                }
+//                textInput.onActiveFocusChanged: {
+//                    paramObject.value = updateTextValue()
+//                    paramObject.pushValue(paramObject.value)
+//                }
 
-                textInput.onTextChanged: {
-                    if (!mousePressed) {
-                        cursorSlider.x = updateXcursor()
-                    }
-                }
+//                textInput.onTextChanged: {
+//                    if (!mousePressed) {
+//                        cursorSlider.x = updateXcursor()
+//                    }
+//                }
 
-                MouseArea {
-                    anchors.fill: parent
-                    acceptedButtons: Qt.RightButton
+//                MouseArea {
+//                    anchors.fill: parent
+//                    acceptedButtons: Qt.RightButton
 
-                    onClicked: {
-                        // Reinitialise the param to its default value
-                        paramObject.hasChanged = false
-                        paramObject.value = paramObject.getDefaultValue()
-                        paramObject.pushValue(paramObject.value)
-                    }
-                }
+//                    onClicked: {
+//                        // Reinitialise the param to its default value
+//                        paramObject.hasChanged = false
+//                        paramObject.value = paramObject.getDefaultValue()
+//                        paramObject.pushValue(paramObject.value)
+//                    }
+//                }
             }
 
             // Bar slider: one grey, one white

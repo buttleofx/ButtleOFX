@@ -11,7 +11,7 @@ from buttleofx.gui.browser_v2.threadWrapper import ThreadWrapper
 class BrowserModel(QtCore.QObject):
     # singleton? only one model?
     """
-        Model of files based on pySequenceParser. It recognises files, folder and sequences.
+        Model of files based on pySequenceParser. It recognises files, folders and sequences.
         Possibility to filter the model: sequence, hidden dir/files or not (regexp is coming)
     """
     _currentPath = ""
@@ -50,7 +50,37 @@ class BrowserModel(QtCore.QObject):
         else:
             self.updateItems()
 
-    def pushItems(self, allItems):
+    def updateItems(self):
+        """
+            Update browserItemsModel according model's current path and filter options
+        """
+        if self._asyncMode:
+            self._threadUpdateItem.getLock().acquire()
+
+        # if no permissions fail
+        try:
+            self._browserItems.clear()
+            self._browserItemsModel.clear()
+
+            detectOption = sequenceParser.eDetectionDefault if self._hideDotFiles else sequenceParser.eDetectionDefaultWithDotFile
+            allItems = sequenceParser.browse(self._currentPath, detectOption, self._filter)
+            self.pushBrowserItems(allItems)  # handle async mode
+        except Exception as e:
+            print(e)
+
+        self.sortBrowserItems()
+        self._browserItemsModel.setObjectList(self._browserItems)
+        self.modelChanged.emit()
+
+        if self._asyncMode:
+            self._threadUpdateItem.pop()
+            self._threadUpdateItem.getLock().release()
+
+    def pushBrowserItems(self, allItems):
+        """
+            Handle async mode: possibility to stop thread, and notify view for each adding.
+            :param allItems:
+        """
         # split treatment to avoid 2 useless conditions per pass even if redundant: faster
         if self._asyncMode:
             for item in allItems:
@@ -74,33 +104,7 @@ class BrowserModel(QtCore.QObject):
                 if addItem:
                     self._browserItems.append(BrowserItem(item, False))
 
-        # if asyncMode don't forgive to pop and releaseLock after all process(sort and set model)
-
-    def updateItems(self):
-        """
-            Update browserItemsModel according model's current path and filter options
-        """
-        if self._asyncMode:
-            self._threadUpdateItem.getLock().acquire()
-
-        # if no permissions fail
-        try:
-            self._browserItems.clear()
-            self._browserItemsModel.clear()
-
-            detectOption = sequenceParser.eDetectionDefault if self._hideDotFiles else sequenceParser.eDetectionDefaultWithDotFile
-            allItems = sequenceParser.browse(self._currentPath, detectOption, self._filter)
-            self.pushItems(allItems)
-
-            self.sortBrowserItems()
-            self._browserItemsModel.setObjectList(self._browserItems)
-            self.modelChanged.emit()
-        except Exception as e:
-            print(e)
-
-        if self._asyncMode:
-            self._threadUpdateItem.pop()
-            self._threadUpdateItem.getLock().release()
+        # if asyncMode don't forgive to pop thread and releaseLock after all process(sort and set model)
 
     def getFilter(self):
         return self._filter

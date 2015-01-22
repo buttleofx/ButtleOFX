@@ -106,3 +106,19 @@ function rgba2hexa(rgba)
 {
     return rgb2hexa(rgba)+int2hexa(Math.round(rgba.w * 255), 2);
 }
+
+// COMPLEMENTARY COLORS
+
+// hsv is a vec3 with 0-1 value complementary color base on RGB Model
+function complementaryColorHSV(hsv) {
+    var hue = hsv.x + 0.5
+    if (hue > 1 )
+        hue--
+
+    return Qt.vector3d(hue, hsv.y, hsv.z)
+}
+
+// rgb is a vec3 with 0-1 value complementary color base on RGB Model
+function complementaryColorRGB(rgb){
+    return Qt.vector3d(1 - rgb.x, 1 - rgb.y, 1 - rgb.z)
+}

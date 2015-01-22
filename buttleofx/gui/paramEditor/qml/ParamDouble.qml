@@ -24,7 +24,6 @@ Item {
         return (cursorSlider.x * (paramObject.maximum - paramObject.minimum)) / barSlider.width + paramObject.minimum
     }
 
-    // Title of the paramSlider
     Row {
         spacing: 10
 
@@ -57,21 +56,20 @@ Item {
                 color: activeFocus ? "white" : "grey"
                 textInput.selectByMouse: true
 
-
-                textInput.validator: DoubleValidator {
-                    bottom: paramObject.minimum
-                    top: paramObject.maximum
-                }
-
+                // Validator include in QuickEditableNumberInput element
+                minValue: paramObject.minimum
+                maxValue: paramObject.maximum
+                decimals: 10
 
                 onQuickUpdate: {
                     textInput.text = quickValue
+                    //update value when sliding
                     cursorSlider.x = updateXcursor()
-                 }
+                }
 
                 onEditingFinished: {
-                    paramObject.value = textInput.text
-
+                    //parse QtString to Double
+                    paramObject.value = parseFloat(textInput.text)
                 }
 
                 textInput.onAccepted: {

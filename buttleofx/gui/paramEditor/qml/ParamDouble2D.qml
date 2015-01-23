@@ -1,5 +1,5 @@
 import QtQuick 2.0
-import "../../../../QuickMamba/qml/QuickMamba"
+import QuickMamba 1.0
 
 // ParamDouble2D containts two input field
 Item {

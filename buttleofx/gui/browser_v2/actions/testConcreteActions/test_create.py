@@ -4,6 +4,7 @@ import os
 
 from OpenGL import GL
 
+
 from buttleofx.gui.browser_v2.browserItem import BrowserItem
 from buttleofx.gui.browser_v2.actions.concreteActions.create import Create
 from pySequenceParser import sequenceParser

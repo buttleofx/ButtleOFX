@@ -3,6 +3,7 @@ import QtQuick.Layouts 1.0
 import QtQuick.Controls 1.0
 import QtQuick.Controls.Styles 1.0
 
+// Navbar glogal struct
 Rectangle {
     id: root
 
@@ -11,73 +12,13 @@ Rectangle {
 
     color: "transparent"
 
-    property variant model
-
-    Component {
-        id: component
-
-        Button {
-            id: button
-
-            width: folder.width + arrow.width + 10
-            height: parent.height
-            anchors.verticalCenter: parent.verticalCenter
-
-            style: ButtonStyle {
-                background: Rectangle {
-                    anchors.fill: parent
-                    color: "transparent"
-                }
-            }
-
-            MouseArea {
-                anchors.fill: parent
-                onClicked: {
-                    root.model.currentPath = model.object[0]
-                }
-            }
-
-            RowLayout {
-                width: parent.width
-                height: parent.height
-
-                Text {
-                    id: folder
-
-                    anchors.left: parent.left
-                    anchors.leftMargin: 5
-
-                    text: model.object[1]
-                    font.pointSize: 12
-                    color: (button.hovered) ? "white" : "#BBBBBB"
-                }
-
-                Item {
-                    id: arrow
-
-                    width: (index == (breadCrum.count - 1) && index !=0 ) ? 0 : 15
-                    height: parent.height
-
-                    Text {
-                        anchors.verticalCenter: parent.verticalCenter
-                        anchors.horizontalCenter: parent.horizontalCenter
-
-                        text: ">"
-                        font.pointSize: 16
-                        font.bold: (button.hovered) ? true : false
-                        color: "#00B2A1"
-                    }
-                    visible: !(index == (breadCrum.count - 1) && index !=0 )
-                }
-            }
-        }
-    }
+    property var model
+    property var visitedFolderList
+    property int visitedFolderListIndex: 0
 
     RowLayout {
         spacing: 6
         anchors.fill: parent
-        anchors.leftMargin: spacing
-        anchors.rightMargin: spacing
 
         Button {
             id: previous
@@ -100,13 +41,12 @@ Rectangle {
                 }
             }
 
-//            onClicked: {
-//                if (listPrevious.count > 0) {
-//                    nextList.append({"url": headerBar.folder})
-//                    changeFolder(listPrevious.get(listPrevious.count - 1).url)
-//                    listPrevious.remove(listPrevious.count - 1)
-//                }
-//            }
+            onClicked: {
+                if (visitedFolderList.count > 1 && visitedFolderListIndex !== 0) {
+                    -- visitedFolderListIndex
+                    model.currentPath = visitedFolderList.get(visitedFolderListIndex).url
+                }
+            }
         }
 
         Button {
@@ -132,11 +72,17 @@ Rectangle {
 
 //            onClicked: {
 //                if (nextList.count > 0) {
-//                    listPrevious.append({"url": headerBar.folder})
+//                    visitedFolderList.append({"url": headerBar.folder})
 //                    changeFolder(nextList.get(nextList.count - 1).url)
 //                    nextList.remove(nextList.count - 1)
 //                }
 //            }
+            onClicked: {
+                if (visitedFolderList.count > 1 && visitedFolderListIndex !== (visitedFolderList.count - 1)){
+                    ++ visitedFolderListIndex
+                    model.currentPath = visitedFolderList.get(visitedFolderListIndex).url
+                }
+            }
         }
 
         Button {
@@ -182,7 +128,7 @@ Rectangle {
                 width: parent.width - 10
                 clip: true
 
-                text: browser.currentPath
+                text: root.model.currentPath
 
                 //color: suggestion.exists ? "white" : "red"
                 selectByMouse: true
@@ -190,7 +136,7 @@ Rectangle {
 
                 onAccepted: {
                     if (acceptableInput) {
-                        listPrevious.append({"url": headerBar.folder})
+                        visitedFolderList.append({"url": headerBar.folder})
                         changeFolder(text)
                         textEditContainer.forceActiveFocus()
                     }
@@ -203,7 +149,7 @@ Rectangle {
 //                        }
 //                    } else {
 //                        if (acceptableInput) {
-//                            listPrevious.append({"url": headerBar.folder})
+//                            visitedFolderList.append({"url": headerBar.folder})
 //                            changeFolder(text)
 //                        }
 //                    }
@@ -340,5 +286,73 @@ Rectangle {
 //            }
         }
     }
-}
+    // One breadcrum component struct
+    Component {
+        id: component
 
+        RowLayout {
+            width: folder.width + arrow.width + 10
+            height: parent.height
+
+            Text {
+                id: folder
+
+                anchors.left: parent.left
+                anchors.leftMargin: 5
+
+                text: model.object[1]
+                font.pointSize: 12
+                color: (text_mouseArea.containsMouse) ? "white" : "#BBBBBB"
+
+                MouseArea {
+                    id: text_mouseArea
+                    anchors.fill: parent
+                    hoverEnabled: true
+                    onClicked: {
+                        if (visitedFolderList.count === 0){
+                            // Save path of the current folder
+                            visitedFolderList.append({"url": root.model.currentPath})
+                        }
+
+                        // Test if the clicked path is not the current
+                        if(visitedFolderList.get(visitedFolderListIndex).url !== model.object[0]) {
+
+                            // Save path of the incoming folder
+                            visitedFolderList.append({"url": model.object[0]})
+                            ++ visitedFolderListIndex
+
+                            // Set the new path
+                            root.model.currentPath = model.object[0]
+                        }
+                    }
+                }
+            }
+
+            Item {
+                id: arrow
+
+                width: 15
+                height: parent.height
+
+                Text {
+                    anchors.verticalCenter: parent.verticalCenter
+                    anchors.horizontalCenter: parent.horizontalCenter
+
+                    text: ">"
+                    font.pointSize: 16
+                    font.bold: (arrow_mouseArea.containsMouse) ? true : false
+                    color: "#00B2A1"
+
+                    MouseArea {
+                        id: arrow_mouseArea
+                        anchors.fill: parent
+                        hoverEnabled: true
+                        onClicked: {
+                            console.log("Arrow clicked")
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

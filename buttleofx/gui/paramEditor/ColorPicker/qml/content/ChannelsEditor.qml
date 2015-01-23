@@ -1,6 +1,7 @@
 import QtQuick 2.0
 import "ColorUtils.js" as ColorUtils
 import QtQuick.Layouts 1.1
+import ScreenPicker 1.0
 
 Item {
     id: root
@@ -178,5 +179,33 @@ Item {
             onUpdatedColor: root.colorChange(Qt.vector4d(rgb.x, rgb.y, rgb.z,
                                                          root.colorRGBA.w))
         }
+
+        Rectangle {
+            id: rectPicker
+            Layout.minimumHeight: 40
+            Layout.minimumWidth: 40
+            color: "red"
+
+            MouseArea {
+                anchors.fill: parent
+                onClicked: console.debug(screenPicker.startGrabColor())
+            }
+
+            ScreenPicker {
+                id: screenPicker
+                testColor: "#dsf"
+
+                onTestColorChange : { console.debug("signal qml leve par python"); }
+            }
+        }
     }
+
+//    MouseArea {
+//        anchors.fill: parent
+//        onClicked: {
+//                console.debug("key press")
+//                console.debug(screenPicker.startGrabColor())
+//            }
+
+//    }
 }

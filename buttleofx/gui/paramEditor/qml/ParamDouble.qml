@@ -1,5 +1,5 @@
 import QtQuick 2.0
-import "../../../../QuickMamba/qml/QuickMamba"
+import QuickMamba 1.0
 
 Item {
     id: paramDouble
@@ -52,6 +52,7 @@ Item {
                 textInput.font.pointSize: 8
                 // Font bold if param has been modified
                 textInput.font.bold: paramObject.hasChanged ? true : false
+                textInput.maximumLength: 8
                 color: activeFocus ? "white" : "grey"
                 textInput.selectByMouse: true
 

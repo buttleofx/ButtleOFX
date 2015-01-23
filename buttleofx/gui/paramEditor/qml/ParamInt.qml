@@ -17,11 +17,13 @@ Item {
     property bool mousePressed: false
 
     function updateXcursor() {
-        return ((sliderInput.textInput.text - paramObject.minimum) * barSlider.width) / (paramObject.maximum - paramObject.minimum)
+        return ((sliderInput.textInput.text - paramObject.minimum)
+                * barSlider.width) / (paramObject.maximum - paramObject.minimum)
     }
 
     function updateTextValue() {
-        return (cursorSlider.x * (paramObject.maximum - paramObject.minimum)) / barSlider.width + paramObject.minimum
+        return (cursorSlider.x * (paramObject.maximum - paramObject.minimum))
+                / barSlider.width + paramObject.minimum
     }
 
     Row {
@@ -42,7 +44,7 @@ Item {
             height: parent.height
 
             // Current value
-           QuickEditableNumberInput {
+            QuickEditableNumberInput {
                 id: sliderInput
                 width: barSlider.width
                 y: -30
@@ -53,30 +55,36 @@ Item {
                 textInput.font.bold: paramObject.hasChanged ? true : false
                 color: activeFocus ? "white" : "grey"
                 // activeFocusOnPress: true
-               textInput.selectByMouse: true
+                textInput.selectByMouse: true
 
-               // Validator include in QuickEditableNumberInput element
-               minValue: paramObject.minimum
-               maxValue: paramObject.maximum
-               decimals: 0
+                // Validator include in QuickEditableNumberInput element
+                minValue: paramObject.minimum
+                maxValue: paramObject.maximum
+                decimals: 0
 
-               onQuickUpdate: {
-                   textInput.text = quickValue
-                   cursorSlider.x = updateXcursor()
+                textInput.validator: IntValidator {
+                    bottom: model.object.minimum
+                    top: model.object.maximum
                 }
 
-               onEditingFinished: {
-                   //parse QtString to Int
-                   paramObject.value = textInput.text
-               }
-
-               textInput.onAccepted: {
-                   if (sliderInput.textInput.text <= paramObject.maximum && sliderInput.textInput.text >= paramObject.minimum) {
+                onQuickUpdate: {
+                    textInput.text = quickValue
                     cursorSlider.x = updateXcursor()
-                    paramObject.value = textInput.text
-                    paramObject.pushValue(paramObject.value)
+                }
 
-               }}
+                onEditingFinished: {
+                    //parse QtString to Int
+                    paramObject.value = textInput.text
+                }
+
+                textInput.onAccepted: {
+                    if (sliderInput.textInput.text <= paramObject.maximum
+                            && sliderInput.textInput.text >= paramObject.minimum) {
+                        cursorSlider.x = updateXcursor()
+                        paramObject.value = textInput.text
+                        paramObject.pushValue(paramObject.value)
+                    }
+                }
 
                 Component.onCompleted: {
                     cursorSlider.x = updateXcursor()
@@ -84,16 +92,16 @@ Item {
 
                 textInput.onTextChanged: {
                     if (!mousePressed) {
-                        if (sliderInput.textInput.text <= paramObject.maximum && sliderInput.textInput.text >= paramObject.minimum) {
+                        if (sliderInput.textInput.text <= paramObject.maximum
+                                && sliderInput.textInput.text >= paramObject.minimum) {
                             cursorSlider.x = updateXcursor()
                         }
-                }
+                    }
                 }
 
                 textInput.onActiveFocusChanged: {
                     paramObject.value = updateTextValue()
                     paramObject.pushValue(paramObject.value)
-
                 }
 
                 MouseArea {

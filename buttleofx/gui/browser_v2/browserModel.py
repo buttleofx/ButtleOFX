@@ -56,6 +56,14 @@ class BrowserModel(QtCore.QObject):
             Update browserItemsModel according model's current path and filter options
         """
         if self._asyncMode:
+            # if all threads were stopped, we stop process
+            if not self._threadUpdateItem.getNbJobs():
+                try:
+                    self._threadUpdateItem.getLock().release()
+                except:
+                    pass
+                return
+
             self._threadUpdateItem.getLock().acquire()
 
         # if no permissions fail
@@ -108,9 +116,15 @@ class BrowserModel(QtCore.QObject):
         # if asyncMode don't forgive to pop thread and releaseLock after all process(sort and set model)
 
     def searchRecursiveFromPattern(self, pattern, modelRequester):
+        # if all threads started were stopped, we stop process
         if not modelRequester._threadRecursiveSearch.getNbJobs():
-            # if all threads started were stopped
+            try:
+                modelRequester._threadRecursiveSearch.getLock().release()
+            except:
+                # already released
+                pass
             return
+
         listToBrowse = self._browserItems
 
         if self == modelRequester:

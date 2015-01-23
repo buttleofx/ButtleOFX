@@ -24,3 +24,12 @@ class ThreadWrapper():
 
     def stopAllThreads(self):
         self._jobs.clear()
+
+    def unlock(self):
+        try:
+            self.getLock().release()
+        except:
+            pass
+
+    def lock(self):
+        self.getLock().acquire()

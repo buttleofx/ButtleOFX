@@ -122,6 +122,12 @@ class BrowserModel(QtCore.QObject):
         self.updateItemsWrapperAsync()
         self.currentPathChanged.emit()
 
+    def setCurrentPathHome(self):
+        self.setCurrentPath(self.getHomePath())
+
+    def getHomePath(self):
+        return os.path.expanduser("~")
+
     def isCurrentPathExists(self):
         return os.path.exists(self._currentPath)
 

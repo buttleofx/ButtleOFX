@@ -10,9 +10,6 @@ class ThreadWrapper():
     def getLock(self):
         return self._lock
 
-    def getThread(self):
-        return self._thread
-
     def startThread(self, f):
         if len(self._jobs) > 20:
             return

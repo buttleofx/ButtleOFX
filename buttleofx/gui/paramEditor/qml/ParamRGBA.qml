@@ -1,17 +1,17 @@
 import QtQuick 2.0
+import "qmlComponents/ColorPicker"
 
 Rectangle {
     id: root
 
-    width: 160
-    height: 60
+    width: 50
+    height: 30
+    color: Qt.rgba(model.object.r, model.object.g,model.object.b)
+    border.width: 1
+    border.color: "#333"
+    radius: 3
 
     property variant win // you can hold this as a reference..
-
-    Text {
-        text: "Click here to open new window!"
-        anchors.centerIn: parent
-    }
 
     MouseArea {
         anchors.fill: parent

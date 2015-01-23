@@ -23,9 +23,9 @@ Item {
         Rectangle {
             height: 35
             width: 60
-            color: "#343434"
+            color: "#212121"
             border.width: 1
-            border.color: "#444"
+            border.color: "#333"
             radius: 3
             clip: true
 
@@ -81,9 +81,9 @@ Item {
         Rectangle {
             height: 35
             width: 60
-            color: "#343434"
+            color: "#212121"
             border.width: 1
-            border.color: "#444"
+            border.color: "#333"
             radius: 3
             clip: true
 

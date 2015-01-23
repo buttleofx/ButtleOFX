@@ -77,7 +77,7 @@ Item {
                 text.font.pixelSize: Config.textSize
                 text.color: Config.textColor
 
-                onAccepted: precisionBox.value = updatedValue
+                onUpdatedValue: precisionBox.value = newValue
             }
         }
 
@@ -141,6 +141,5 @@ Item {
                 color: Qt.rgba(root.colorRGBA.x, root.colorRGBA.y, root.colorRGBA.z, root.colorRGBA.w)
             }
         }
-
     }
 }

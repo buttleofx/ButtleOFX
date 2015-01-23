@@ -20,7 +20,7 @@ RowLayout {
     property int decimals: 5
 
     signal accepted
-    signal updatedValue(var updatedValue)
+    signal updatedValue(var newValue)
 
     function updateValue(newValue)
     {

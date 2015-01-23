@@ -41,7 +41,7 @@ RowLayout
         textInput.color: Config.textColor
         textInput.horizontalAlignment: TextInput.AlignHCenter
 
-        onUpdatedValue: root.updatedValue(updatedValue);
+        onUpdatedValue: root.updatedValue(newValue);
 
         onAccepted: {
             root.accepted();

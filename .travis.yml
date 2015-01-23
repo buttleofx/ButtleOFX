@@ -4,9 +4,13 @@ python:
 
 # command to install dependencies
 install:
-  - pip install flake8
+  - which pip
+  - pip --version
+  - which python
+  - python --version
+  - pip install flake8 --upgrade
 
 # command to run tests
 script:
-  - flake8 buttleofx/
+  - python -m flake8 buttleofx/
 

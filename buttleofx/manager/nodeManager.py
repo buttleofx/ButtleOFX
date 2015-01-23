@@ -175,7 +175,7 @@ class NodeManager(QtCore.QObject):
         self.undoRedoChanged()
 
     @QtCore.pyqtSlot(str, int, int)
-    def nodeIsMoving(self, nodeName, newX, newY):
+    def moveNode(self, nodeName, newX, newY):
         """
             This function updates the position of the selected nodes and the connections,
             when one or several nodes are moving.

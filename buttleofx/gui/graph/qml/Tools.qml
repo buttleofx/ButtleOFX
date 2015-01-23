@@ -208,17 +208,27 @@ Rectangle {
                 onClicked: {
                     pluginVisible = false
                     editNode = false
-                    graph.zoomCoeff = _buttleData.graphWrapper.fitInScreenSize(graph.width, graph.height).get(2)
-                    graph.offsetX = (graph.container.width * 0.5 ) -
-                        (_buttleData.graphWrapper.fitInScreenSize(graph.width, graph.height).get(0) * graph.zoomCoeff)
-                    graph.offsetY = (graph.container.height * 0.5 ) -
-                        (_buttleData.graphWrapper.fitInScreenSize(graph.width, graph.height).get(1) * graph.zoomCoeff)
-                    miniGraph.miniOffsetX = 0
-                    miniGraph.miniOffsetY = 0
-                    graph.container.x = ((graph.width * 0.5) - (graph.container.width * 0.5)) + graph.offsetX -
-                        (miniGraph.miniOffsetX / miniGraph.scaleFactor *graph.zoomCoeff)
-                    graph.container.y = ((graph.height * 0.5) - (graph.container.height * 0.5 )) + graph.offsetY -
-                        (miniGraph.miniOffsetY / miniGraph.scaleFactor *graph.zoomCoeff)
+//                    graph.zoomCoeff = _buttleData.graphWrapper.fitInScreenSize(graph.width, graph.height).get(2)
+//                    graph.offsetX = (graph.container.width * 0.5 ) -
+//                        (_buttleData.graphWrapper.fitInScreenSize(graph.width, graph.height).get(0) * graph.zoomCoeff)
+//                    graph.offsetY = (graph.container.height * 0.5 ) -
+//                        (_buttleData.graphWrapper.fitInScreenSize(graph.width, graph.height).get(1) * graph.zoomCoeff)
+//                    miniGraph.miniOffsetX = 0
+//                    miniGraph.miniOffsetY = 0
+//                    graph.container.x = ((graph.width * 0.5) - (graph.container.width * 0.5)) + graph.offsetX -
+//                        (miniGraph.miniOffsetX / miniGraph.scaleFactor *graph.zoomCoeff)
+//                    graph.container.y = ((graph.height * 0.5) - (graph.container.height * 0.5 )) + graph.offsetY -
+//                        (miniGraph.miniOffsetY / miniGraph.scaleFactor *graph.zoomCoeff)
+                    var xMin = _buttleData.graphWrapper.bbox.x
+                    var xMax = _buttleData.graphWrapper.bbox.z
+                    var yMin = _buttleData.graphWrapper.bbox.y
+                    var yMax = _buttleData.graphWrapper.bbox.w
+                    var xCenter = ((xMax - xMin) * 0.5)
+                    var yCenter = ((yMax - yMin) * 0.5)
+                    graph.container.x = -xCenter + graph.width * 0.5
+                    graph.container.y = -yCenter + graph.height* 0.5
+//                    graph.offsetX += graph.container.x
+//                    graph.offsetY += graph.container.y
                 }
             }
         }

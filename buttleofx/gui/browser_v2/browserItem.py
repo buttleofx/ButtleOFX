@@ -51,7 +51,7 @@ class BrowserItem(QtCore.QObject):
                 self._fileImg = "../../img/buttons/browser/file-icon.png"
 
         elif self.isSequence():
-            self._sequence = SequenceWrapper(sequenceParser.getSequence(), self._path)
+            self._sequence = SequenceWrapper(sequenceParserItem.getSequence(), self._path)
             self._fileImg = 'image://buttleofx/' + self._sequence.getFirstFilePath()
 
         self._lastModification = self.getLastModification_fileSystem()
@@ -137,15 +137,29 @@ class BrowserItem(QtCore.QObject):
                 return len(sequenceParser.browse(self._path))
             if self.isFile():
                 return os.stat(self._path).st_size
-            # TODO: weight sequence
+            if self.isSequence():
+                # TODO: compute size of sequence? nb or realSize(on many ... ?)
+                pass
         except:
-            return 0
-
-        if self.isSequence():
-            # TODO: compute size of sequence? nb or realSize(on many ... ?)
             pass
 
         return 0
+
+    def getWeightFormatted(self):
+        if self.isFile():
+            suffix = "B"  # Bytes by default
+            size = float(self._weight)
+            for unit in ["O", "K", "M", "G", "T", " P", "E", "Z"]:
+                if size < 1000:
+                    return "%.3f %s%s" % (size, unit, suffix)  # 3 numbers after comma
+                size /= 1000
+            return "%.3f %s%s" % (size, "Y", suffix)
+
+        elif self.isFolder():
+            formattedReturn = "%d %s" % (self._weight, "File")
+            return "%s%s" % (formattedReturn, 's') if self.getWeight() > 1 else formattedReturn
+        else:
+            return ""
 
     def isFile(self):
         return self._typeItem == BrowserItem.ItemType.file

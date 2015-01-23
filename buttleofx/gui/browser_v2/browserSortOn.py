@@ -5,6 +5,10 @@ class SortOn(QtCore.QObject):
         # enum contains string for easy use from qml
         onName = "onName"
         onSize = "onSize"
+        onType = "onType"
+
+        # list for easy check while setting field sort
+        masks = [onName, onSize, onType]
 
         def __init__(self):
             super(SortOn, self).__init__()
@@ -21,7 +25,13 @@ class SortOn(QtCore.QObject):
 
         @QtCore.pyqtSlot(str, int)
         def setFieldToSort(self, newField, reverse=0):
-            if newField != self.onName and newField != self.onSize:
+            fieldFound = False
+            for field in self.masks:
+                if newField == field:
+                    fieldFound =True
+                    break
+
+            if not fieldFound:
                 raise Exception("Sort on: bad field")
 
             self._fieldToSort = newField

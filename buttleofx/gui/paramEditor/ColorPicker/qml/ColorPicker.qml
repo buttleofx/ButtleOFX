@@ -17,11 +17,6 @@ Item {
 
     onColorRGBAChanged: {
         var hsva = ColorUtils.rgba2hsva(root.colorRGBA);
-        // When the color is a grey level color, we must conserve the lost hue and saturation by conversion
-        if (root.colorRGBA.x == root.colorRGBA.y && root.colorRGBA.y == root.colorRGBA.z) {
-            hsva.x = m.colorHSVA.x;
-            hsva.y = m.colorHSVA.y;
-        }
         m.colorHSVA = hsva;
     }
 
@@ -96,14 +91,18 @@ Item {
                 colorHSVA: m.colorHSVA
                 mode: modelList.currentText
 
-                onColorChange: {
-                    // rgba comes from signal
-                    rgba.x = MathUtils.decimalRound(rgba.x, precisionBox.value)
-                    rgba.y = MathUtils.decimalRound(rgba.y, precisionBox.value)
-                    rgba.z = MathUtils.decimalRound(rgba.z, precisionBox.value)
-                    rgba.w = MathUtils.decimalRound(rgba.w, precisionBox.value)
-                    root.colorRGBA = rgba
+                onColorRGBUpdate: root.colorRGBA = ColorUtils.roundColor4D(rgba,  precisionBox.value)
+
+                onColorHSVUpdate: {
+                    var rgba = ColorUtils.hsva2rgba(hsva)
+                    root.colorRGBA = ColorUtils.roundColor4D(rgba,  precisionBox.value)
+                    // When the color is a grey level color, we must conserve the lost hue and saturation by conversion
+                    if (ColorUtils.isGreyLvlColor(root.colorRGBA)) {
+                        m.colorHSVA.x = hsva.x
+                        m.colorHSVA.y = hsva.y
+                    }
                 }
+
                 onAccepted: root.accepted()
             }
 
@@ -120,14 +119,18 @@ Item {
                 precision: precisionBox.value
                 hasAlpha: root.hasAlpha
 
-                onColorChange: {
-                    // rgba comes from signal
-                    rgba.x = MathUtils.decimalRound(rgba.x, precisionBox.value)
-                    rgba.y = MathUtils.decimalRound(rgba.y, precisionBox.value)
-                    rgba.z = MathUtils.decimalRound(rgba.z, precisionBox.value)
-                    rgba.w = MathUtils.decimalRound(rgba.w, precisionBox.value)
-                    root.colorRGBA = rgba
+                onColorRGBUpdate: root.colorRGBA = ColorUtils.roundColor4D(rgba,  precisionBox.value)
+
+                onColorHSVUpdate: {
+                    var rgba = ColorUtils.hsva2rgba(hsva)
+                    root.colorRGBA = ColorUtils.roundColor4D(rgba,  precisionBox.value)
+                    // When the color is a grey level color, we must conserve the lost hue and saturation by conversion
+                    if (ColorUtils.isGreyLvlColor(root.colorRGBA)) {
+                        m.colorHSVA.x = hsva.x
+                        m.colorHSVA.y = hsva.y
+                    }
                 }
+
                 onAccepted: root.accepted()
             }
 

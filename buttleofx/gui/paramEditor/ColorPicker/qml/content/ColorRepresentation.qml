@@ -11,7 +11,8 @@ ColumnLayout
     property string mode
 
     // Call each time the value change
-    signal colorChange(vector4d rgba)
+    signal colorRGBUpdate(vector4d rgba)
+    signal colorHSVUpdate(vector4d hsva)
     // Call when the user valids his choice (ex: mouse up)
     signal accepted
 
@@ -26,7 +27,7 @@ ColumnLayout
             hue: root.colorHSVA.x
             saturation: root.colorHSVA.y
 
-            onHueSaturationChange: colorChange(ColorUtils.hsva2rgba(Qt.vector4d(updatedHue, updatedSaturation, root.colorHSVA.z, root.colorHSVA.w)))
+            onHueSaturationChange: colorHSVUpdate(Qt.vector4d(updatedHue, updatedSaturation, root.colorHSVA.z, root.colorHSVA.w))
             onAccepted: root.accepted() ;
         }
 
@@ -38,7 +39,7 @@ ColumnLayout
             luminance: root.colorHSVA.z ;
 
             onHueLuminanceChange:{
-                colorChange(ColorUtils.hsva2rgba(Qt.vector4d(updatedHue, root.colorHSVA.y, updatedLuminance, root.colorHSVA.w)))
+                colorHSVUpdate(Qt.vector4d(updatedHue, root.colorHSVA.y, updatedLuminance, root.colorHSVA.w))
             }
             onAccepted: root.accepted() ;
         }
@@ -50,7 +51,7 @@ ColumnLayout
             colorHSV: Qt.vector3d(root.colorHSVA.x, root.colorHSVA.y, root.colorHSVA.z)
 
             onSaturationLuminanceChange:{
-                colorChange(ColorUtils.hsva2rgba(Qt.vector4d(root.colorHSVA.x, updatedSaturation, updatedLuminance, root.colorHSVA.w)))
+                colorHSVUpdate(Qt.vector4d(root.colorHSVA.x, updatedSaturation, updatedLuminance, root.colorHSVA.w))
             }
             onAccepted: root.accepted() ;
         }

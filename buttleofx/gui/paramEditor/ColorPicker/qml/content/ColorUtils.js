@@ -1,3 +1,5 @@
+.pragma library
+
 // creates color value from hue, saturation, valueOf(), alpha
 function hsva2QtHsla(h, s, v, a) {
     var lightness = (2 - s)*v;
@@ -121,4 +123,23 @@ function complementaryColorHSV(hsv) {
 // rgb is a vec3 with 0-1 value complementary color base on RGB Model
 function complementaryColorRGB(rgb){
     return Qt.vector3d(1 - rgb.x, 1 - rgb.y, 1 - rgb.z)
+}
+
+// OTHERS
+function isGreyLvlColor(rgba)
+{
+    return rgba.x === rgba.y && rgba.y === rgba.z
+}
+
+function decimalRound(number, nbDecimals)
+{
+    return parseFloat(number.toFixed(nbDecimals))
+}
+
+function roundColor4D(color4D, precision) {
+    color4D.x = decimalRound(color4D.x, precision)
+    color4D.y = decimalRound(color4D.y, precision)
+    color4D.z = decimalRound(color4D.z, precision)
+    color4D.w = decimalRound(color4D.w, precision)
+    return color4D
 }

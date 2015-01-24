@@ -4,7 +4,7 @@ import shutil
 from buttleofx.gui.browser_v2.actions.actionInterface import ActionInterface
 
 
-class Copy(ActionInterface):
+class Move(ActionInterface):
 
     def __init__(self, browserItem, destination):
         # destination must be a directory
@@ -18,13 +18,7 @@ class Copy(ActionInterface):
         destination = self._destination
         destinationPath = destination.getPath()
 
-        # Copy file
-        if browserItem.isFile():
-            # TODO: Check destination permission in try catch
-            if os.path.exists(destinationPath):
-                shutil.copy2(browserItem.getPath(), destinationPath)
-
-        # Copy Folder
-        if browserItem.isFolder():
-            # TODO: Check destination permission in try catch
-            shutil.copytree(browserItem.getParentPath(), destinationPath)
+        # Move file, folder, and sequence
+        # TODO: Check destination permission in try catch
+        if os.path.exists(destinationPath):
+            shutil.move(browserItem.getPath(), destinationPath)

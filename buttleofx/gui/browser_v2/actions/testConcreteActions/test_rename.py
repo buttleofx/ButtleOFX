@@ -2,7 +2,7 @@ import unittest
 import tempfile
 import os
 
-from OpenGL import GL
+# from OpenGL import GL
 
 from buttleofx.gui.browser_v2.browserItem import BrowserItem
 from buttleofx.gui.browser_v2.actions.concreteActions.rename import Rename

@@ -1,4 +1,4 @@
-from buttleofx.gui.browser_v2.action.actionInterface import ActionInterface
+from buttleofx.gui.browser_v2.actions.actionInterface import ActionInterface
 from PyQt5 import QtCore
 from quickmamba.patterns import Singleton
 

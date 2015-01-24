@@ -6,6 +6,8 @@ from pySequenceParser import sequenceParser
 from buttleofx.gui.browser_v2.browserSortOn import SortOn
 from fnmatch import fnmatch
 from buttleofx.gui.browser_v2.threadWrapper import ThreadWrapper
+from buttleofx.gui.browser_v2.actions.actionManager import ActionManagerSingleton
+import copy
 
 
 class BrowserModel(QtCore.QObject):
@@ -14,16 +16,6 @@ class BrowserModel(QtCore.QObject):
         Model of files based on pySequenceParser. It recognises files, folders and sequences.
         Possibility to filter the model: sequence, hidden dir/files or not (regexp is coming)
     """
-    _currentPath = ""
-    _browserItems = []
-    _browserItemsModel = None
-    _filter = "*"
-    _hideDotFiles = True
-    _showSeq = True
-    _sortOn = SortOn()
-
-    _threadUpdateItem = ThreadWrapper()
-    _threadRecursiveSearch = ThreadWrapper()
 
     filterChanged = QtCore.pyqtSignal()
     sortOnChanged = QtCore.pyqtSignal()
@@ -31,18 +23,29 @@ class BrowserModel(QtCore.QObject):
     hideDotFilesChanged = QtCore.pyqtSignal()
     modelChanged = QtCore.pyqtSignal()
 
-    def __init__(self, asyncMode=True, parent=None):
+    def __init__(self, asyncMode=True, currentPath="", parent=None):
         """
             Build an BrowserModel instance.
             :param parent: Qt parent
         """
         super(BrowserModel, self).__init__(parent)
+        # default values
+        self._currentPath = ""
+        self._browserItems = []
+        self._browserItemsModel = None
+        self._filter = "*"
+        self._hideDotFiles = True
+        self._showSeq = True
+        self._sortOn = SortOn()
+        self._threadUpdateItem = ThreadWrapper()
+        self._threadRecursiveSearch = ThreadWrapper()
+
         self._asyncMode = asyncMode
         self._browserItemsModel = QObjectListModel(self)
-        self._currentPath = os.path.expanduser("~")
-        self.updateItemsWrapperAsync()
 
-    # def recursiveResearch(self, folder):
+        self._actionManager = ActionManagerSingleton().get()  # for locking when updating
+        self._currentPath = currentPath if currentPath and os.path.exists(currentPath) else os.path.expanduser("~")
+        self.updateItemsWrapperAsync()
 
     def updateItemsWrapperAsync(self):
         if self._asyncMode:
@@ -54,8 +57,15 @@ class BrowserModel(QtCore.QObject):
         """
             Update browserItemsModel according model's current path and filter options
         """
+        self._threadRecursiveSearch.stopAllThreads()  # avoid bad comportment
+
         if self._asyncMode:
-            self._threadUpdateItem.getLock().acquire()
+            # if all threads were stopped, we stop process
+            if not self._threadUpdateItem.getNbJobs():
+                self._threadUpdateItem.release()
+                return
+
+            self._threadUpdateItem.lock()
 
         # if no permissions fail
         try:
@@ -74,7 +84,7 @@ class BrowserModel(QtCore.QObject):
 
         if self._asyncMode:
             self._threadUpdateItem.pop()
-            self._threadUpdateItem.getLock().release()
+            self._threadUpdateItem.unlock()
 
     def pushBrowserItems(self, allItems):
         """
@@ -106,6 +116,38 @@ class BrowserModel(QtCore.QObject):
 
         # if asyncMode don't forgive to pop thread and releaseLock after all process(sort and set model)
 
+    def searchRecursiveFromPattern(self, pattern, modelRequester):
+        # if all threads started were stopped, we stop process
+        if not modelRequester._threadRecursiveSearch.getNbJobs():
+            modelRequester._threadRecursiveSearch.unlock()
+            return
+
+        listToBrowse = self._browserItems
+
+        if self == modelRequester:
+            modelRequester._threadRecursiveSearch.lock()
+            listToBrowse = copy.copy(self._browserItems)
+            modelRequester._browserItems.clear()
+            modelRequester._browserItemsModel.clear()
+
+        for bItem in listToBrowse:
+            if modelRequester._threadRecursiveSearch.getNbJobs() != 1:
+                break
+            if pattern in bItem.getName().lower():
+                modelRequester._browserItems.append(bItem)
+                modelRequester._browserItemsModel.setObjectList(modelRequester._browserItems)
+                modelRequester.modelChanged.emit()
+            if bItem.isFolder():
+                BrowserModel(self._asyncMode, bItem.getPath()).searchRecursiveFromPattern(pattern, modelRequester)
+
+        if self == modelRequester:
+            modelRequester._threadRecursiveSearch.pop()
+            modelRequester._threadRecursiveSearch.unlock()
+
+    def doSearchRecursive(self, pattern):
+        pattern = pattern.strip().lower()
+        self._threadRecursiveSearch.startThread(self.searchRecursiveFromPattern, argsParam=(pattern, self))
+
     def getFilter(self):
         return self._filter
 
@@ -121,6 +163,12 @@ class BrowserModel(QtCore.QObject):
         self._currentPath = newCurrentPath
         self.updateItemsWrapperAsync()
         self.currentPathChanged.emit()
+
+    def setCurrentPathHome(self):
+        self.setCurrentPath(self.getHomePath())
+
+    def getHomePath(self):
+        return os.path.expanduser("~")
 
     def isCurrentPathExists(self):
         return os.path.exists(self._currentPath)

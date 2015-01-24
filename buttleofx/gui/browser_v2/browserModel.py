@@ -6,6 +6,7 @@ from pySequenceParser import sequenceParser
 from buttleofx.gui.browser_v2.browserSortOn import SortOn
 from fnmatch import fnmatch
 from buttleofx.gui.browser_v2.threadWrapper import ThreadWrapper
+from buttleofx.gui.browser_v2.actions.actionManager import ActionManagerSingleton
 import copy
 
 
@@ -42,6 +43,7 @@ class BrowserModel(QtCore.QObject):
         self._asyncMode = asyncMode
         self._browserItemsModel = QObjectListModel(self)
 
+        self._actionManager = ActionManagerSingleton().get()  # for locking when updating
         self._currentPath = currentPath if currentPath and os.path.exists(currentPath) else os.path.expanduser("~")
         self.updateItemsWrapperAsync()
 

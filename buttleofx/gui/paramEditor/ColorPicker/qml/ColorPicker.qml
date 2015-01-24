@@ -14,6 +14,7 @@ Item {
     // Color value in RGBA with floating point values between 0.0 and 1.0.
     property vector4d colorRGBA: Qt.vector4d(1, 1, 1, 1)
     property bool hasAlpha: true
+    property int indexMode: 1
 
     onColorRGBAChanged: {
         var hsva = ColorUtils.rgba2hsva(root.colorRGBA);
@@ -52,6 +53,7 @@ Item {
                 ComboBox {
                     id: modelList
                     model : ["Wheel", "Rainbow", "Square"]
+                    currentIndex: root.indexMode
                 }
             }
 

@@ -7,7 +7,7 @@ Item {
     property vector4d colorRGBA
     property vector4d colorHSVA
     property int precision
-    property bool hasAlpha
+    property bool hasAlpha: true
 
     // Call each time the value change
     signal colorChange(vector4d rgba)

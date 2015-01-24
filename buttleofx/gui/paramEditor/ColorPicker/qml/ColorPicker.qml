@@ -13,6 +13,7 @@ Item {
 
     // Color value in RGBA with floating point values between 0.0 and 1.0.
     property vector4d colorRGBA: Qt.vector4d(1, 1, 1, 1)
+    property bool hasAlpha: true
 
     onColorRGBAChanged: {
         var hsva = ColorUtils.rgba2hsva(root.colorRGBA);
@@ -117,6 +118,7 @@ Item {
                 colorRGBA: root.colorRGBA
                 colorHSVA: m.colorHSVA
                 precision: precisionBox.value
+                hasAlpha: root.hasAlpha
 
                 onColorChange: {
                     // rgba comes from signal

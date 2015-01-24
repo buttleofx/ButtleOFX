@@ -67,7 +67,7 @@ Item {
 
                     Text {
                         text: "Param Title"
-                        color: "white"
+                        color: "#333"
                     }
                 }
 
@@ -82,7 +82,7 @@ Item {
                         id: dragLeft
                         width: 2
                         height: 15
-                        color: "#eee"
+                        color: "#343434"
                         radius: 1
                     }
 
@@ -90,7 +90,7 @@ Item {
                         id: dragRight
                         width: 2
                         height: 15
-                        color: "#eee"
+                        color: "#343434"
                         anchors.left: dragLeft.right
                         anchors.margins: 2
                         radius: 1
@@ -102,6 +102,34 @@ Item {
                         drag.axis: Drag.XAxis
                         drag.minimumX: 0
                         drag.maximumX: tuttleParams.width
+                    }
+
+                    //create space beetween Param Title & param Value
+                    Rectangle {
+                        width: 14
+                        height: paramEditor.height - 5
+                        anchors.left: dragLeft.right
+                        color: paramEditor.background
+                        y: tabBar.height + 2
+                    }
+
+                    // bar allow to resize the columns
+                    Rectangle {
+                        width: 1
+                        height: paramEditor.height - 5
+                        anchors.left: dragLeft.right
+                        color: "#343434"
+                        y: tabBar.height + 2
+
+                        MouseArea {
+                            height: parent.height
+                            //larger zone for easier drag
+                            width: parent.width + 5
+                            drag.target: resizeBar
+                            drag.axis: Drag.XAxis
+                            drag.minimumX: 0
+                            drag.maximumX: tuttleParams.width
+                        }
                     }
                 }
 
@@ -116,7 +144,7 @@ Item {
                         color: paramEditor.background
                         Text {
                             text: "Param Value"
-                            color: "white"
+                            color: "#333"
                         }
                     }
                 }
@@ -217,6 +245,10 @@ Item {
                                                     model.object.value)
                                     }
                                 }
+                            }
+
+                            Rectangle {
+                                width: 6
                             }
 
                             Loader {

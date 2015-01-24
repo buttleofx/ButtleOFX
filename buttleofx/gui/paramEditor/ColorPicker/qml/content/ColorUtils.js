@@ -1,4 +1,5 @@
 .pragma library
+Qt.include("mathUtils.js")
 
 // creates color value from hue, saturation, valueOf(), alpha
 function hsva2QtHsla(h, s, v, a) {
@@ -129,11 +130,6 @@ function complementaryColorRGB(rgb){
 function isGreyLvlColor(rgba)
 {
     return rgba.x === rgba.y && rgba.y === rgba.z
-}
-
-function decimalRound(number, nbDecimals)
-{
-    return parseFloat(number.toFixed(nbDecimals))
 }
 
 function roundColor4D(color4D, precision) {

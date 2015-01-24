@@ -15,33 +15,33 @@ Item
     signal accepted
     signal updatedValue(var updatedValue)
 
+    Image {
+        anchors.fill: parent
+        source: "../img/checkerboard.png"
+        fillMode: Image.Tile
+    }
 
+    Rectangle {
+        // 4 lines to have a left-right gradient in spite of top - bottom !
+        id: gradient
+        width: parent.height
+        height: parent.width
+        anchors.centerIn: parent
+        rotation: 90
 
-        CheckerBoard {
-            anchors.fill: parent
+        gradient: Gradient {
+
+           GradientStop {
+               id: brightnessBeginColor
+               position: 0.0
+               color: fromColor
+           }
+           GradientStop {
+               position: 1.0
+               color: toColor
+           }
         }
-
-        Rectangle {
-            // 4 lines to have a left-right gradient in spite of top - bottom !
-            id: gradient
-            width: parent.height
-            height: parent.width
-            anchors.centerIn: parent
-            rotation: 90
-
-            gradient: Gradient {
-
-               GradientStop {
-                   id: brightnessBeginColor
-                   position: 0.0
-                   color: fromColor
-               }
-               GradientStop {
-                   position: 1.0
-                   color: toColor
-               }
-            }
-        }
+    }
 
 
     HorizontalSlider

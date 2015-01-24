@@ -10,7 +10,8 @@ Item {
     property bool hasAlpha: true
 
     // Call each time the value change
-    signal colorChange(vector4d rgba)
+    signal colorRGBUpdate(vector4d rgba)
+    signal colorHSVUpdate(vector4d hsva)
     // Call when the user valids his choice (ex: mouse up)
     signal accepted
 
@@ -34,7 +35,7 @@ Item {
                                root.colorRGBA.w)
             precision: root.precision
 
-            onUpdatedValue: root.colorChange(Qt.vector4d(updatedValue,
+            onUpdatedValue: root.colorRGBUpdate(Qt.vector4d(updatedValue,
                                                          root.colorRGBA.y,
                                                          root.colorRGBA.z,
                                                          root.colorRGBA.w))
@@ -55,7 +56,7 @@ Item {
                                root.colorRGBA.w)
             precision: root.precision
 
-            onUpdatedValue: root.colorChange(Qt.vector4d(root.colorRGBA.x,
+            onUpdatedValue: root.colorRGBUpdate(Qt.vector4d(root.colorRGBA.x,
                                                          updatedValue,
                                                          root.colorRGBA.z,
                                                          root.colorRGBA.w))
@@ -76,7 +77,7 @@ Item {
                                root.colorRGBA.w)
             precision: root.precision
 
-            onUpdatedValue: root.colorChange(Qt.vector4d(root.colorRGBA.x,
+            onUpdatedValue: root.colorRGBUpdate(Qt.vector4d(root.colorRGBA.x,
                                                          root.colorRGBA.y,
                                                          updatedValue,
                                                          root.colorRGBA.w))
@@ -96,11 +97,10 @@ Item {
             gradient: HueGradient { }
             precision: root.precision
 
-            onUpdatedValue: root.colorChange(ColorUtils.hsva2rgba(
-                                                 Qt.vector4d(updatedValue,
+            onUpdatedValue: root.colorHSVUpdate(Qt.vector4d(updatedValue,
                                                              root.colorHSVA.y,
                                                              root.colorHSVA.z,
-                                                             root.colorHSVA.w)))
+                                                             root.colorHSVA.w))
             onAccepted: root.accepted()
         }
 
@@ -118,11 +118,10 @@ Item {
                                               root.colorHSVA.w)
             precision: root.precision
 
-            onUpdatedValue: root.colorChange(ColorUtils.hsva2rgba(
-                                                 Qt.vector4d(root.colorHSVA.x,
+            onUpdatedValue: root.colorHSVUpdate(Qt.vector4d(root.colorHSVA.x,
                                                              updatedValue,
                                                              root.colorHSVA.z,
-                                                             root.colorHSVA.w)))
+                                                             root.colorHSVA.w))
             onAccepted: root.accepted()
         }
 
@@ -140,11 +139,10 @@ Item {
                                               root.colorHSVA.w)
             precision: root.precision
 
-            onUpdatedValue: root.colorChange(ColorUtils.hsva2rgba(
-                                                 Qt.vector4d(root.colorHSVA.x,
+            onUpdatedValue: root.colorHSVUpdate(Qt.vector4d(root.colorHSVA.x,
                                                              root.colorHSVA.y,
                                                              updatedValue,
-                                                             root.colorHSVA.w)))
+                                                             root.colorHSVA.w))
             onAccepted: root.accepted()
         }
 
@@ -162,7 +160,7 @@ Item {
                                root.colorRGBA.z, 1)
             precision: root.precision
 
-            onUpdatedValue: root.colorChange(Qt.vector4d(root.colorRGBA.x,
+            onUpdatedValue: root.colorRGBUpdate(Qt.vector4d(root.colorRGBA.x,
                                                          root.colorRGBA.y,
                                                          root.colorRGBA.z,
                                                          updatedValue))
@@ -175,7 +173,7 @@ Item {
 
             colorRGB: Qt.vector3d(root.colorRGBA.x, root.colorRGBA.y,
                                   root.colorRGBA.z)
-            onUpdatedColor: root.colorChange(Qt.vector4d(rgb.x, rgb.y, rgb.z,
+            onUpdatedColor: root.colorRGBUpdate(Qt.vector4d(rgb.x, rgb.y, rgb.z,
                                                          root.colorRGBA.w))
         }
     }

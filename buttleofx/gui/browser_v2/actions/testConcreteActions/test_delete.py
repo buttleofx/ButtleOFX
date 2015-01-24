@@ -69,15 +69,15 @@ class TestDelete(unittest.TestCase):
             # Folder should not exists
             self.assertFalse(os.path.exists(folder_path))
 
-    def test_sequence_delete(self):
-        with tempfile.TemporaryDirectory() as path:
-            # Create Sequence
-            h.create_sequence(path)
-            # Create BrowserItem sequence
-            sp_seq = sequenceParser.browse(path)[0]
-            print(sp_seq)
-            bi = BrowserItem(sp_seq, True)
-            print(bi.getName())
+    # def test_sequence_delete(self):
+    #     with tempfile.TemporaryDirectory() as path:
+    #         # Create Sequence
+    #         h.create_sequence(path)
+    #         # Create BrowserItem sequence
+    #         sp_seq = sequenceParser.browse(path)[0]
+    #         print(sp_seq)
+    #         bi = BrowserItem(sp_seq, True)
+    #         print(bi.getName())
             # Delete sequence
             # self.assertFalse(True)
     #

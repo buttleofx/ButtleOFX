@@ -90,15 +90,15 @@ class BrowserModel(QtCore.QObject):
         Worker.work()
 
     def isItemInActionManager(self, path):
-        # for actionWrapper in list(self._actionManager.getWaitingActions().queue):
-        #     for action in actionWrapper.getActions():
-        #         if action.getBrowserItem().getPath() == path:
-        #             return action.getBrowserItem()
-        #
-        # for actionWrapper in self._actionManager.getRunningActions():
-        #     for action in actionWrapper.getActions():
-        #         if action.getBrowserItem().getPath() == path:
-        #             return action.getBrowserItem()
+        for actionWrapper in list(self._actionManager.getWaitingActions().queue):
+            for action in actionWrapper.getActions():
+                if action.getBrowserItem().getPath() == path:
+                    return action.getBrowserItem()
+
+        for actionWrapper in self._actionManager.getRunningActions():
+            for action in actionWrapper.getActions():
+                if action.getBrowserItem().getPath() == path:
+                    return action.getBrowserItem()
         return None
 
     def pushBrowserItems(self, allItems):

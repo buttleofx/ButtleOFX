@@ -8,10 +8,6 @@ Item {
 
     property variant paramObject: model.object
 
-    // Is this param secret?
-    visible: !paramObject.isSecret
-    height: paramObject.isSecret ? 0 : implicitHeight
-
     Row {
         id: paramBoleanInputContainer
         spacing: 10

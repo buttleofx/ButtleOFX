@@ -272,7 +272,7 @@ def main(argv, app):
 
         for error in component.errors():
             print(error.toString())
-            return -1
+        return -1
     topLevelItem.setIcon(QtGui.QIcon(iconPath))
 
     if DEV_MODE:

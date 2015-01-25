@@ -7,6 +7,7 @@ from buttleofx.gui.browser_v2.browserSortOn import SortOn
 from fnmatch import fnmatch
 from buttleofx.gui.browser_v2.threadWrapper import ThreadWrapper
 from buttleofx.gui.browser_v2.actions.actionManager import ActionManagerSingleton
+from buttleofx.gui.browser_v2.actions.worker import Worker
 import copy
 
 
@@ -39,11 +40,11 @@ class BrowserModel(QtCore.QObject):
         self._sortOn = SortOn()
         self._threadUpdateItem = ThreadWrapper()
         self._threadRecursiveSearch = ThreadWrapper()
-
-        self._asyncMode = asyncMode
         self._browserItemsModel = QObjectListModel(self)
 
-        self._actionManager = ActionManagerSingleton().get()  # for locking when updating
+        self._asyncMode = asyncMode
+
+        self._actionManager = ActionManagerSingleton().get()  # for locking and search BrowserItem when updating
         self._currentPath = currentPath if currentPath and os.path.exists(currentPath) else os.path.expanduser("~")
         self.updateItemsWrapperAsync()
 
@@ -57,6 +58,7 @@ class BrowserModel(QtCore.QObject):
         """
             Update browserItemsModel according model's current path and filter options
         """
+        Worker.wait()  # lock lists in actionManager
         self._threadRecursiveSearch.stopAllThreads()  # avoid bad comportment
 
         if self._asyncMode:
@@ -85,10 +87,23 @@ class BrowserModel(QtCore.QObject):
         if self._asyncMode:
             self._threadUpdateItem.pop()
             self._threadUpdateItem.unlock()
+        Worker.work()
+
+    def isItemInActionManager(self, path):
+        # for actionWrapper in list(self._actionManager.getWaitingActions().queue):
+        #     for action in actionWrapper.getActions():
+        #         if action.getBrowserItem().getPath() == path:
+        #             return action.getBrowserItem()
+        #
+        # for actionWrapper in self._actionManager.getRunningActions():
+        #     for action in actionWrapper.getActions():
+        #         if action.getBrowserItem().getPath() == path:
+        #             return action.getBrowserItem()
+        return None
 
     def pushBrowserItems(self, allItems):
         """
-            Handle async mode: possibility to stop thread, and notify view for each adding.
+            Handle async mode: possibility to stop thread, and notify view for each addition.
             :param allItems:
         """
         # split treatment to avoid 2 useless conditions per pass even if redundant: faster
@@ -103,7 +118,11 @@ class BrowserModel(QtCore.QObject):
                     addItem = self._showSeq
 
                 if addItem:
-                    self._browserItems.append(BrowserItem(item, False))
+                    itemToAdd = self.isItemInActionManager(item.getAbsoluteFilepath())
+                    if not itemToAdd:
+                        itemToAdd = BrowserItem(item, False)
+
+                    self._browserItems.append(itemToAdd)
                     self._browserItemsModel.setObjectList(self._browserItems)
                     self.modelChanged.emit()
         else:
@@ -112,7 +131,10 @@ class BrowserModel(QtCore.QObject):
                 if addItem and item.getType() == BrowserItem.ItemType.sequence:
                     addItem = self._showSeq
                 if addItem:
-                    self._browserItems.append(BrowserItem(item, False))
+                    itemToAdd = self.isItemInActionManager(item.getAbsoluteFilepath())
+                    if not itemToAdd:
+                        itemToAdd = BrowserItem(item, False)
+                    self._browserItems.append(itemToAdd)
 
         # if asyncMode don't forgive to pop thread and releaseLock after all process(sort and set model)
 

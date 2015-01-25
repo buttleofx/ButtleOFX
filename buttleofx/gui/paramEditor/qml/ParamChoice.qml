@@ -6,63 +6,58 @@ Item {
     id: choiceList
     implicitWidth: 300
     implicitHeight: 30
-    y: 5
 
     property variant paramObject: model.object
     // property variant menuItems: paramObject.listValue
-
-    // Is this param secret?
-    visible: !paramObject.isSecret
-    height: paramObject.isSecret ? 0 : implicitHeight
 
     // Convert the QObjectListmodel into a qml ListModel
     ListModel {
         id: menuItems
     }
-
     Component.onCompleted: {
         for (var i = 0; i < paramObject.listValue.count; i++) {
             menuItems.append( {text: paramObject.listValue.get(i)} )
         }
     }
-
-    Row {
-        id: paramChoiceInputContainer
-        spacing: 10
-        clip: true
-
-
+    Item {
+        anchors.fill: parent
+        anchors.topMargin: 2
+        anchors.bottomMargin: 2
+        anchors.rightMargin: 30
 
         ComboBox {
             id: comboBox
             model: menuItems
-            width: 200
-            height: 30
+            width: parent.width
 
-            style: ComboBoxStyle {
-                background: Rectangle {
-                    id: choiceButton
-                    color: "#212121"
-                    border.width: 1
-                    border.color: "#333"
-                    radius: 3
+            // TODO: RemoveClipping bug when click.
+            //this bug come from the ComboBoxstyle
+//            style: ComboBoxStyle {
+//                background: Rectangle {
+//                    id: choiceButton
+//                    color: "#212121"
+//                    border.width: 1
+//                    border.color: "#333"
+//                    radius: 3
 
-                    Image {
-                        id: arrow
-                        source: "file:///" + _buttleData.buttlePath + "/gui/img/buttons/params/arrow.png"
-                        y: 12
-                        x: 187
-                    }
-                }
-                label: Text {
-                    color: "white"
-                    text: paramObject.value
-                    width: comboBox.width
-                    y: 2
-                    x: -2
-                    elide:Text.ElideRight
-                }
-            }
+//                    Image {
+//                        id: arrow
+//                        source: "file:///" + _buttleData.buttlePath + "/gui/img/buttons/params/arrow.png"
+//                        anchors.right:parent.right
+//                        anchors.rightMargin: 5
+//                        y: 10
+//                    }
+//                }
+//                label: Text {
+//                    color: "white"
+//                    text: paramObject.value
+//                    width: comboBox.width
+//                    y: 2
+//                    x: -2
+//                    elide:Text.ElideRight
+//                }
+//            }
+
 
             // Useful to avoid setting paramObject.value when loaded the comboBox
             property int comboBoxCharged: 0
@@ -79,4 +74,5 @@ Item {
             }
         }
     }
+
 }

@@ -8,12 +8,13 @@ Window {
     width: 700
     height: 600
     color: "#212121"
+    title: "Buttle OFX ColorPicker"
+
+    // colorObject ensures the link between qml and python
+    property variant colorObject: model.object
 
     ColorPicker {
         id: paramRGBA
-
-        // colorObject ensures the link between qml and python
-        property variant colorObject: model.object
 
         Component.onCompleted: {
             colorRGBA.x = colorObject.r
@@ -21,10 +22,6 @@ Window {
             colorRGBA.z = colorObject.b
             colorRGBA.w = colorObject.a
         }
-
-        // Is this param secret?
-        visible: !colorObject.isSecret
-        height: colorObject.isSecret ? 0 : implicitHeight
 
         // Everytime the color is changed, we send the data to Tuttle
         onAccepted: {

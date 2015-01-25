@@ -10,10 +10,10 @@ Item {
         color: "#D8D9CB"
         border.width: 1
         border.color: "#333"
-        radius: 3
-        width: text.contentWidth
-        height: text.contentHeight
-        y: -height+10
+        radius: 2
+        width: text.contentWidth + 4
+        height: text.contentHeight + 4
+        y: -height/2
     }
 
     Text{
@@ -22,7 +22,7 @@ Item {
         text: paramHelp
         width: 250
         wrapMode: Text.Wrap
-        x: rectangle.x
+        x: rectangle.x + 2
         y: rectangle.y
     }
 }

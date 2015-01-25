@@ -47,6 +47,9 @@ class ParamWrapper(QtCore.QObject):
 
     # ############################################# Data exposed to QML ############################################## #
 
+    # Can't inherit signals.
+    # changed = QtCore.pyqtSignal()
+
     otherParamOfTheNodeChanged = QtCore.pyqtSignal()
 
     paramType = QtCore.pyqtProperty(str, getParamType, constant=True)

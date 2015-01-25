@@ -31,58 +31,130 @@ Item {
 
     Tab {
         id: tabBar
-        name: !_buttleData.currentParamNodeWrapper ? "Parameters" : "Parameters of :    "
+        name: !_buttleData.currentParamNodeWrapper ? "Parameters" : "Parameters:    "
                                                      + _buttleData.currentParamNodeWrapper.nameUser
         onCloseClicked: paramEditor.buttonCloseClicked(true)
         onFullscreenClicked: paramEditor.buttonFullscreenClicked(true)
     }
 
+    Component {
+        id: paramComponent
+
+        Rectangle {
+            // TODO: we loose the access to the "model" variable if we use a Loader.
+            // So we use an item with "visible" and "height: 0".
+            property variant modelObject: model.object
+
+            x: 5
+            width: parent.width
+            height: modelObject.isSecret ? 0 : param.height
+            visible: !modelObject.isSecret
+
+            color: paramEditor.background
+
+            Text {
+                id: paramTitle
+                text: modelObject.paramText
+                width: columnHeader1.width
+                height: parent.height
+                // If param has been modified, title in bold font
+                font.bold: Boolean(modelObject.hasChanged)
+
+                color: paramEditor.textColor
+                verticalAlignment: Text.AlignVCenter
+
+                ToolTip {
+                    id: tooltip
+                    visible: false
+                    paramHelp: modelObject.doc
+                    z: param.z + 1
+                }
+
+                // TODO : For the moment we catch an error: "pyqtSignal must be bound to QObject not StringWrapper"
+                // although Stringwrapper inherite from QObject
+                MouseArea {
+                    anchors.fill: parent
+                    acceptedButtons: Qt.RightButton
+
+                    onClicked: {
+                        // Reinitialise the value of the param to her default value
+                        modelObject.hasChanged = false
+                        modelObject.value = modelObject.getDefaultValue()
+                        modelObject.pushValue(modelObject.value)
+                    }
+                }
+            }
+            Rectangle {
+                x: paramTitle.width
+                width: columnHeader2.width
+                height: childrenRect.height
+                color: paramEditor.background
+
+                Loader {
+                    id: param
+                    x: 5
+                    source: modelObject.paramType + ".qml"
+                    width: parent.width
+
+
+                    MouseArea {
+                        anchors.fill: parent
+                        acceptedButtons: Qt.RightButton
+                        hoverEnabled: true
+
+                        onClicked: {
+                            modelObject.hasChanged = false
+                            modelObject.value = modelObject.getDefaultValue()
+                            modelObject.pushValue(modelObject.value)
+                        }
+                        onEntered: tooltip.visible = true
+                        onExited: tooltip.visible = false
+                    }
+                }
+            }
+        }
+    }
+
     // Tuttle params
     Rectangle {
         id: tuttleParams
-        height: parent.height - 5
-        width: parent.width
         y: tabBar.height
+        height: parent.height
+        width: parent.width
+
         color: paramEditor.background
 
         // Params depend on the node type (Tuttle data)
-        Item {
+        Rectangle {
             id: tuttleParamContent
+            y: 5
             height: parent.height
             width: parent.width
-            y: 5
 
-            property string lastGroupParam: "No Group."
+            color: paramEditor.background
 
-            Rectangle {
+            Item {
                 id: header
-                color: paramEditor.background
-                height: 21
+                z: 1
                 width: parent.width
-                z: 20
 
                 Item {
                     id: columnHeader1
                     width: resizeBar.x
-
-                    Text {
-                        text: "Param Title"
-                        color: "#333"
-                    }
                 }
 
                 Rectangle {
                     id: resizeBar
+                    x: 110
                     width: 50
                     height: 20
-                    x: 110
                     color: paramEditor.background
 
                     Rectangle {
                         id: dragLeft
                         width: 2
                         height: 15
-                        color: "#343434"
+                        color: paramEditor.backgroundInput
                         radius: 1
                     }
 
@@ -90,7 +162,7 @@ Item {
                         id: dragRight
                         width: 2
                         height: 15
-                        color: "#343434"
+                        color: paramEditor.backgroundInput
                         anchors.left: dragLeft.right
                         anchors.margins: 2
                         radius: 1
@@ -102,24 +174,17 @@ Item {
                         drag.axis: Drag.XAxis
                         drag.minimumX: 0
                         drag.maximumX: tuttleParams.width
+                        cursorShape: Qt.SplitHCursor
                     }
 
-                    //create space beetween Param Title & param Value
+                    // Allow to resize the columns
                     Rectangle {
-                        width: 14
-                        height: paramEditor.height - 5
-                        anchors.left: dragLeft.right
-                        color: paramEditor.background
                         y: tabBar.height + 2
-                    }
-
-                    // bar allow to resize the columns
-                    Rectangle {
                         width: 1
                         height: paramEditor.height - 5
                         anchors.left: dragLeft.right
-                        color: "#343434"
-                        y: tabBar.height + 2
+
+                        color: paramEditor.backgroundInput
 
                         MouseArea {
                             height: parent.height
@@ -129,24 +194,16 @@ Item {
                             drag.axis: Drag.XAxis
                             drag.minimumX: 0
                             drag.maximumX: tuttleParams.width
+                            cursorShape: Qt.SplitHCursor
                         }
                     }
                 }
 
-                Item {
+                Rectangle {
                     id: columnHeader2
-                    Layout.fillWidth: true
+                    width: header.width - columnHeader1.width
                     anchors.left: resizeBar.right
-
-                    Rectangle {
-                        width: header.width
-                        height: header.height
-                        color: paramEditor.background
-                        Text {
-                            text: "Param Value"
-                            color: "#333"
-                        }
-                    }
+                    color: paramEditor.background
                 }
             }
 
@@ -194,95 +251,24 @@ Item {
 
                         Image {
                             id: arrow
-                            source: "file:///" + _buttleData.buttlePath
-                                    + "/gui/img/buttons/params/arrow.png"
                             x: 4
                             y: 4
+                            source: "file:///" + _buttleData.buttlePath
+                                    + "/gui/img/buttons/params/arrow.png"
                         }
                     }
                 }
 
-                // frame: false
-                // frameWidth: 0
                 ListView {
                     id: tuttleParam
+                    y: 10
+                    width: parent.width
                     height: count ? contentHeight : 0
-                    y: parent.y + 10
                     spacing: 6
-
                     interactive: false
-
                     model: params
 
-                    delegate: Component {
-
-                        RowLayout {
-
-                            Text {
-                                id: paramTitle
-                                text: model.object.paramText
-                                color: "white"
-                                Layout.preferredWidth: columnHeader1.width
-                                // If param has been modified, title in bold font
-                                font.bold: model.object.hasChanged ? true : false
-
-                                ToolTip {
-                                    id: tooltip
-                                    visible: false
-                                    paramHelp: model.object.doc
-                                    z: param.z + 1
-                                }
-
-                                MouseArea {
-                                    anchors.fill: parent
-                                    acceptedButtons: Qt.RightButton
-
-                                    onClicked: {
-                                        // Reinitialise the value of the param to her default value
-                                        model.object.hasChanged = false
-                                        model.object.value = model.object.getDefaultValue()
-                                        model.object.pushValue(
-                                                    model.object.value)
-                                    }
-                                }
-                            }
-
-                            Rectangle {
-                                width: 6
-                            }
-
-                            Loader {
-                                id: param
-                                source: model.object.paramType + ".qml"
-                                Layout.fillWidth: true
-
-                                Rectangle {
-                                    width: parent.width
-                                    height: parent.height
-                                    color: paramEditor.background
-                                }
-
-                                MouseArea {
-                                    anchors.fill: parent
-                                    acceptedButtons: Qt.RightButton
-                                    hoverEnabled: true
-
-                                    onClicked: {
-                                        model.object.hasChanged = false
-                                        model.object.value = model.object.getDefaultValue()
-                                        model.object.pushValue(
-                                                    model.object.value)
-                                    }
-                                    onEntered: {
-                                        tooltip.visible = true
-                                    }
-                                    onExited: {
-                                        tooltip.visible = false
-                                    }
-                                }
-                            }
-                        }
-                    }
+                    delegate: paramComponent
                 }
             }
         }

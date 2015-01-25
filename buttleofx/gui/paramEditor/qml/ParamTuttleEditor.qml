@@ -67,7 +67,7 @@ Item {
                     id: tooltip
                     visible: false
                     paramHelp: modelObject.doc
-                    z: param.z + 1
+                    z: 3
                 }
 
                 // TODO : For the moment we catch an error: "pyqtSignal must be bound to QObject not StringWrapper"

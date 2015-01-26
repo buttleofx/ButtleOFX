@@ -10,7 +10,8 @@ class ActionInterface():
         self._browserItem = browserItem
 
     def __del__(self):
-        print("Action destroyed")
+        # print("Action destroyed")
+        pass
 
     def begin(self):
         self._browserItem.notifyAddAction()
@@ -23,6 +24,9 @@ class ActionInterface():
 
     def action(self):
         raise NotImplementedError("ActionInterface::action() must be implemented")
+
+    def revert(self):
+        raise NotImplementedError("ActionInterface::revert() must be implemented")
 
     def process(self):
         self.begin()

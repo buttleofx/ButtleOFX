@@ -28,4 +28,19 @@ class Delete(ActionInterface):
 
         # Delete sequence
         if browserItem.isSequence():
+            pass
             print("TODO: Delete sequence")
+            # print(dir(browserItem))
+            # print(browserItem.getPath())
+            # print(dir(browserItem.getSequence()._sequence))
+            # print(browserItem.getSequence()._sequence.getFilenameAt(0))
+            # print(browserItem.getSequence()._sequence.getFirstFilename())
+            # print(dir(browserItem.getSequence()._sequence.getFramesIterable()))
+            # print(browserItem.getSequence()._sequence.getFiles())
+            # i = 0
+            # for f in browserItem.getSequence()._sequence.getFramesIterable():
+                # print(i)
+                # print(dir(f))
+            # print(browserItem.getSequence())
+
+

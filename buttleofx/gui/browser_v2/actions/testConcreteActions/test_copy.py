@@ -15,7 +15,7 @@ class TestCopy(unittest.TestCase):
     def setUp(self):
         pass
 
-    def test_file_copy(self):
+    def test_file_copy_execute(self):
         with tempfile.TemporaryDirectory() as path:
             src_filename = 'copy_file.txt'
             src_file_path = os.path.join(path, src_filename)
@@ -52,6 +52,47 @@ class TestCopy(unittest.TestCase):
             # File should exists in destination folder
             self.assertTrue(os.path.exists(dest_file_path))
 
+            # File should have the new path
+            self.assertEqual(file.getPath(), dest_file_path)
+
+    def test_file_copy_revert(self):
+        with tempfile.TemporaryDirectory() as path:
+            src_filename = 'copy_file.txt'
+            src_file_path = os.path.join(path, src_filename)
+            dest_folder_name = 'parent'
+            dest_folder_path = os.path.join(path, dest_folder_name)
+            dest_file_path = os.path.join(dest_folder_path, src_filename)
+
+            # Create original file
+            open(src_file_path, 'a').close()
+
+            # Create parent folder
+            os.makedirs(dest_folder_path)
+
+            # File should exists in original directory
+            self.assertTrue(os.path.exists(src_file_path))
+
+            # File should not exists in destination directory
+            self.assertFalse(os.path.exists(dest_file_path))
+
+            sp_file = sequenceParser.Item(sequenceParser.eTypeFile,
+                                          src_file_path)
+            sp_dest = sequenceParser.Item(sequenceParser.eTypeFolder,
+                                          dest_folder_path)
+            file = BrowserItem(sp_file, True)
+            dest = BrowserItem(sp_dest, True)
+
+            # Copy file
+            cpy = Copy(file, dest)
+            cpy.process()
+
+            # File should exists in source folder
+            self.assertTrue(os.path.exists(src_file_path))
+
+            # File should exists in destination folder
+            self.assertTrue(os.path.exists(dest_file_path))
+
+
     def test_folder_copy(self):
         with tempfile.TemporaryDirectory() as path:
             src_folder_name = 'copy_folder'
@@ -82,6 +123,9 @@ class TestCopy(unittest.TestCase):
 
             # Folder should exists in destination folder
             self.assertTrue(os.path.exists(dest_folder_path))
+
+            # Folder should have the new path
+            self.assertEqual(src.getPath(), dest_folder_path)
 
     # After tests run
     def tearDown(self):

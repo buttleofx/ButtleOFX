@@ -69,41 +69,48 @@ class TestDelete(unittest.TestCase):
             # Folder should not exists
             self.assertFalse(os.path.exists(folder_path))
 
-    # def test_sequence_delete(self):
-    #     with tempfile.TemporaryDirectory() as path:
-    #         # Create Sequence
-    #         h.create_sequence(path)
-    #         # Create BrowserItem sequence
-    #         sp_seq = sequenceParser.browse(path)[0]
-    #         print(sp_seq)
-    #         bi = BrowserItem(sp_seq, True)
-    #         print(bi.getName())
+    def test_sequence_delete(self):
+        with tempfile.TemporaryDirectory() as path:
+            # Create Sequence
+            h.create_sequence(path)
+            # Create BrowserItem sequence
+            sp_seq = sequenceParser.browse(path)[0]
+
+            bi = BrowserItem(sp_seq, True)
+            self.assertIsNotNone(bi.getName())
             # Delete sequence
+            de = Delete(bi)
+            de.process()
+
+            # Sequence should not exists
+            self.assertFalse(True)
+
+
             # self.assertFalse(True)
-    #
-    #         folder_name = ''
-    #         folder_path = os.path.join(path, folder_name)
-    #         if os.path.exists(folder_path):
-    #             shutil.rmtree(folder_path)
-    #
-    #         # Folder should not exists
-    #         self.assertFalse(os.path.exists(folder_path))
-    #
-    #         # Create folder
-    #         os.makedirs(folder_path)
-    #
-    #         # Folder should exists
-    #         self.assertTrue(os.path.exists(folder_path))
-    #         sp_folder = sequenceParser.Item(sequenceParser.eTypeFolder,
-    #                                         folder_path)
-    #         bi = BrowserItem(sp_folder, True)
-    #
-    #         # Delete folder
-    #         de = Delete(bi)
-    #         de.process()
-    #
-    #         # Folder should not exists
-    #         self.assertFalse(os.path.exists(folder_path))
+            #
+            # folder_name = ''
+            # folder_path = os.path.join(path, folder_name)
+            # if os.path.exists(folder_path):
+            #     shutil.rmtree(folder_path)
+            #
+            # # Folder should not exists
+            # self.assertFalse(os.path.exists(folder_path))
+            #
+            # # Create folder
+            # os.makedirs(folder_path)
+            #
+            # # Folder should exists
+            # self.assertTrue(os.path.exists(folder_path))
+            # sp_folder = sequenceParser.Item(sequenceParser.eTypeFolder,
+            #                                 folder_path)
+            # bi = BrowserItem(sp_folder, True)
+            #
+            # # Delete folder
+            # de = Delete(bi)
+            # de.process()
+            #
+            # # Folder should not exists
+            # self.assertFalse(os.path.exists(folder_path))
 
     # After tests run
     def tearDown(self):

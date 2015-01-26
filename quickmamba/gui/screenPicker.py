@@ -2,19 +2,30 @@ from PyQt5 import QtCore
 from PyQt5 import QtWidgets
 from PyQt5 import QtQuick
 from PyQt5 import QtGui
+import sys
+
+
+class ColorPickingEventFilter(QtCore.QObject):
+    def __init__(self, parent = None):
+        QtCore.QObject.__init__(self, parent)
+
+    def eventFilter(self, QObject, QEvent):
+        print(QEvent.type())
+        return False
+
 
 class ScreenPicker(QtQuick.QQuickItem):
     """
-        Define the common methods and fields for paramWrappers.
+        Define the common methods and fields for screenPicker.
     """
 
     def __init__(self, parent = None):
-        QtQuick.QQuickItem.__init__(self, parent)
+        super(ScreenPicker, self).__init__(parent)
         self._currentColor = QtGui.QColor("#FFFFFF")
         self._grabbing = False
         self._desktop = QtWidgets.QDesktopWidget()
         self._cursor = QtGui.QCursor()
-
+        self._colorPickingEventFilter = ColorPickingEventFilter(self)
 
     # ######################################## Methods private to this class ####################################### #
 
@@ -37,20 +48,22 @@ class ScreenPicker(QtQuick.QQuickItem):
         return self._grabbing
 
     def setGrabbing(self, grabbing):
-        self._grabbing = grabbing
-
-    def mousePressEvent(self, QMouseEvent):
-        print("test")
-
+        if(self._grabbing != grabbing):
+            self._grabbing = grabbing
+            if(self._grabbing):
+                self.installEventFilter(self._colorPickingEventFilter)
+                self.grabMouse()
+            else:
+                self.removeEventFilter(self._colorPickingEventFilter)
+            self.grabbingChanged.emit()
 
     # ## Others ## #
 
 
-
-    # ############################################# Data exposed to QML ############################################## #
+# ############################################# Data exposed to QML ############################################## #
 
     currentColorChanged = QtCore.pyqtSignal()
-    testColor = QtCore.pyqtProperty(QtGui.QColor, getCurrentColor, setCurrentColor, notify=currentColorChanged)
+    currentColor = QtCore.pyqtProperty(QtGui.QColor, getCurrentColor, setCurrentColor, notify=currentColorChanged)
 
     grabbingChanged = QtCore.pyqtSignal()
-    grabbing = QtCore.pyqtProperty(QtGui.QColor, isGrabbing, setGrabbing, notify=grabbingChanged)
+    grabbing = QtCore.pyqtProperty(bool, isGrabbing, setGrabbing, notify=grabbingChanged)

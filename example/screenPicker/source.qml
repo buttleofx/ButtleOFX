@@ -9,8 +9,18 @@ Rectangle
     width: 300
     height: 250
 
+    Rectangle {
+        color:screenPicker.currentColor
+        width: 50
+        height: 50
+
+        MouseArea {
+            anchors.fill: parent
+            onPressed: screenPicker.grabbing = true
+        }
+    }
+
     ScreenPicker {
         id:screenPicker
-        anchors.fill: parent
     }
 }

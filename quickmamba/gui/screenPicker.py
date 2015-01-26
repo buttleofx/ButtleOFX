@@ -1,15 +1,15 @@
 from PyQt5 import QtCore
 from PyQt5 import QtWidgets
+from PyQt5 import QtQuick
 from PyQt5 import QtGui
-import random
 
-class ScreenPicker(QtCore.QObject):
+class ScreenPicker(QtQuick.QQuickItem):
     """
         Define the common methods and fields for paramWrappers.
     """
 
     def __init__(self, parent = None):
-        QtCore.QObject.__init__(self, parent)
+        QtQuick.QQuickItem.__init__(self, parent)
         self._currentColor = QtGui.QColor("#FFFFFF")
         self._grabbing = False
         self._desktop = QtWidgets.QDesktopWidget()
@@ -39,7 +39,12 @@ class ScreenPicker(QtCore.QObject):
     def setGrabbing(self, grabbing):
         self._grabbing = grabbing
 
+    def mousePressEvent(self, QMouseEvent):
+        print("test")
+
+
     # ## Others ## #
+
 
 
     # ############################################# Data exposed to QML ############################################## #

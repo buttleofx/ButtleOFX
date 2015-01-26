@@ -106,7 +106,23 @@ Rectangle {
                 }
             }
 
-//            onClicked: changeFolder(parentFolder)
+            onClicked: {
+                if (visitedFolderList.count === 0){
+                    // Save path of the current folder
+                    visitedFolderList.append({"url": model.currentPath})
+                }
+
+                // Test if the clicked path is not the current
+                if(visitedFolderList.get(visitedFolderListIndex).url !== model.parentFolder) {
+
+                    // Save path of the incoming folder
+                    visitedFolderList.append({"url": model.parentFolder})
+                    ++ visitedFolderListIndex
+
+                    // Set the new path
+                    model.currentPath = model.parentFolder
+                }
+            }
         }
 
         Rectangle {

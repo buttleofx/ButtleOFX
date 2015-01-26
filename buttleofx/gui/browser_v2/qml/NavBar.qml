@@ -70,13 +70,6 @@ Rectangle {
                 }
             }
 
-//            onClicked: {
-//                if (nextList.count > 0) {
-//                    visitedFolderList.append({"url": headerBar.folder})
-//                    changeFolder(nextList.get(nextList.count - 1).url)
-//                    nextList.remove(nextList.count - 1)
-//                }
-//            }
             onClicked: {
                 if (visitedFolderList.count > 1 && visitedFolderListIndex !== (visitedFolderList.count - 1)){
                     ++ visitedFolderListIndex
@@ -106,7 +99,23 @@ Rectangle {
                 }
             }
 
-//            onClicked: changeFolder(parentFolder)
+            onClicked: {
+                if (visitedFolderList.count === 0){
+                    // Save path of the current folder
+                    visitedFolderList.append({"url": model.currentPath})
+                }
+
+                // Test if the current path is not root
+                if(visitedFolderList.get(visitedFolderListIndex).url !== "/") {
+
+                    // Save path of the incoming folder
+                    visitedFolderList.append({"url": model.parentFolder})
+                    ++ visitedFolderListIndex
+
+                    // Set the new path
+                    model.currentPath = model.parentFolder
+                }
+            }
         }
 
         Rectangle {
@@ -136,9 +145,21 @@ Rectangle {
 
                 onAccepted: {
                     if (acceptableInput) {
-                        visitedFolderList.append({"url": headerBar.folder})
-                        changeFolder(text)
-                        textEditContainer.forceActiveFocus()
+                        if (visitedFolderList.count === 0){
+                            // Save path of the current folder
+                            visitedFolderList.append({"url": model.currentPath})
+                        }
+
+                        // Test if the current path is not root
+                        if(visitedFolderList.get(visitedFolderListIndex).url !== "/") {
+
+                            // Save path of the incoming folder
+                            visitedFolderList.append({"url": text})
+                            ++ visitedFolderListIndex
+
+                            // Set the new path
+                            model.currentPath = text
+                        }
                     }
                 }
 

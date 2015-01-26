@@ -7,9 +7,6 @@ import QtQuick.Controls.Styles 1.0
 Rectangle {
     id: root
 
-    width: 800
-    height: 600
-
     color: "transparent"
 
     property var model
@@ -17,13 +14,16 @@ Rectangle {
     property int visitedFolderListIndex: 0
 
     RowLayout {
-        spacing: 6
         anchors.fill: parent
+        anchors.margins: 5
+        spacing: 10
 
         Button {
             id: previous
-            width: 15
-            height: 15
+
+            Layout.preferredWidth: 20
+            Layout.preferredHeight: 20
+            Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
 
             tooltip: "Previous"
 
@@ -51,8 +51,10 @@ Rectangle {
 
         Button {
             id: next
-            width: 15
-            height: 15
+
+            Layout.preferredWidth: 20
+            Layout.preferredHeight: 20
+            Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
 
             tooltip: "Next"
 
@@ -80,8 +82,10 @@ Rectangle {
 
         Button {
             id: parent_folder
-            width: 15
-            height: 15
+
+            Layout.preferredWidth: 20
+            Layout.preferredHeight: 20
+            Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
 
             tooltip: "Parent folder"
 
@@ -118,10 +122,39 @@ Rectangle {
             }
         }
 
+        Button {
+            id: refresh
+
+            Layout.preferredWidth: 20
+            Layout.preferredHeight: 20
+            Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+
+            tooltip: "Refresh"
+
+            iconSource:
+            if (hovered)
+                "img/refresh_hover.png"
+            else
+                "img/refresh.png"
+
+            style:
+            ButtonStyle {
+                background: Rectangle {
+                    anchors.fill: parent
+                    color: "transparent"
+                }
+            }
+
+            // onClicked: refreshFolder()
+        }
+
+
         Rectangle {
             id: textEditContainer
-            height: 28
+
+            Layout.preferredHeight: parent.height
             Layout.fillWidth: true
+
             visible: false
 
             color: "#DDDDDD"
@@ -202,7 +235,7 @@ Rectangle {
            id: breadCrum
 
            Layout.fillWidth: true
-           height: parent.height
+           Layout.preferredHeight: parent.height
 
            orientation: Qt.Horizontal
 
@@ -226,33 +259,11 @@ Rectangle {
        }
 
         Button {
-            id: refresh
-            width: 15
-            height: 15
-
-            tooltip: "Refresh"
-
-            iconSource:
-            if (hovered)
-                "img/refresh_hover.png"
-            else
-                "img/refresh.png"
-
-            style:
-            ButtonStyle {
-                background: Rectangle {
-                    anchors.fill: parent
-                    color: "transparent"
-                }
-            }
-
-            // onClicked: refreshFolder()
-        }
-
-        Button {
             id: view
-            width: 15
-            height: 15
+
+            Layout.preferredWidth: 20
+            Layout.preferredHeight: 20
+            Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
 
             tooltip: "List view"
 
@@ -352,7 +363,7 @@ Rectangle {
             Item {
                 id: arrow
 
-                width: 15
+                width: 20
                 height: parent.height
 
                 Text {

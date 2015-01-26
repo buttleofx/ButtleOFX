@@ -2,15 +2,20 @@ from PyQt5 import QtCore
 from PyQt5 import QtWidgets
 from PyQt5 import QtQuick
 from PyQt5 import QtGui
-import sys
-
 
 class ColorPickingEventFilter(QtCore.QObject):
-    def __init__(self, parent = None):
-        QtCore.QObject.__init__(self, parent)
+    def __init__(self, screenpicker):
+        QtCore.QObject.__init__(self, screenpicker)
+        self._screenpicker = screenpicker
 
     def eventFilter(self, QObject, QEvent):
-        print(QEvent.type())
+        if(QEvent.type() == QtCore.QEvent.MouseMove):
+            self._screenpicker._updateCurrentColor()
+        elif(QEvent.type() == QtCore.QEvent.MouseButtonRelease):
+            self._screenpicker.setGrabbing(False)
+            self._screenpicker.accepted.emit()
+
+
         return False
 
 
@@ -33,7 +38,7 @@ class ScreenPicker(QtQuick.QQuickItem):
         pixmap = QtGui.QGuiApplication.screens()[self._desktop.screenNumber()].grabWindow(self._desktop.winId(), self._cursor.pos().x(), self._cursor.pos().y(), 1, 1)
         qImage = pixmap.toImage()
         qColor = QtGui.QColor(qImage.pixel(0, 0))
-        self.setTestColor(qColor)
+        self.setCurrentColor(qColor)
 
     # ## Getters ## #
 
@@ -52,6 +57,8 @@ class ScreenPicker(QtQuick.QQuickItem):
             self._grabbing = grabbing
             if(self._grabbing):
                 self.installEventFilter(self._colorPickingEventFilter)
+                self._cursor.setShape(QtCore.Qt.CrossCursor)
+                self.setCursor(self._cursor)
                 self.grabMouse()
             else:
                 self.removeEventFilter(self._colorPickingEventFilter)
@@ -61,6 +68,8 @@ class ScreenPicker(QtQuick.QQuickItem):
 
 
 # ############################################# Data exposed to QML ############################################## #
+
+    accepted = QtCore.pyqtSignal()
 
     currentColorChanged = QtCore.pyqtSignal()
     currentColor = QtCore.pyqtProperty(QtGui.QColor, getCurrentColor, setCurrentColor, notify=currentColorChanged)

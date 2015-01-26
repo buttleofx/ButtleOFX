@@ -11,6 +11,12 @@ Rectangle {
 
     color: "#353535"
 
+
+    // Recently visited folder stack
+    ListModel {
+        id: visitedFolderList
+    }
+
     BrowserModel {
         id: browser
     }
@@ -25,6 +31,7 @@ Rectangle {
             height : 30
 
             model: browser
+            visitedFolderList: visitedFolderList
 
             anchors.top: parent.top
         }

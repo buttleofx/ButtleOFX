@@ -100,7 +100,7 @@ Item {
 
                 onEditingFinished: paramObject.value2 = parseFloat(textInput.text)
 
-                onAccepted: {
+                textInput.onAccepted: {
                     if (textInput.text <= paramObject.maximum2 && textInput.text >= paramObject.minimum2) {
                         paramObject.value2 = parseFloat(paramDouble3Dinput2.textInput.text)
                     } else {
@@ -108,7 +108,7 @@ Item {
                     }
                 }
 
-                onActiveFocusChanged: {
+                textInput.onActiveFocusChanged: {
                     if (textInput.text <= paramObject.maximum2 && textInput.text >= paramObject.minimum2) {
                         paramObject.value2 = paramDouble3Dinput2.textInput.text
                     } else {

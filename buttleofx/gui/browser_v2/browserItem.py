@@ -46,13 +46,13 @@ class BrowserItem(QtCore.QObject):
         elif self.isFile():
             self._fileExtension = os.path.splitext(self._path)[1]
             if supported:
-                self._fileImg = 'image://buttleofx/' + self._path
+                self._pathImg = 'image://buttleofx/' + self._path
             else:
-                self._fileImg = "../../img/buttons/browser/file-icon.png"
+                self._pathImg = "../../img/buttons/browser/file-icon.png"
 
         elif self.isSequence():
             self._sequence = SequenceWrapper(sequenceParserItem.getSequence(), self._path)
-            self._fileImg = 'image://buttleofx/' + self._sequence.getFirstFilePath()
+            self._pathImg = 'image://buttleofx/' + self._sequence.getFirstFilePath()
 
         self._lastModification = self.getLastModification_fileSystem()
         self._permissions = self.getPermissions_fileSystem()
@@ -149,14 +149,14 @@ class BrowserItem(QtCore.QObject):
         if self.isFile():
             suffix = "B"  # Bytes by default
             size = float(self._weight)
-            for unit in ["O", "K", "M", "G", "T", " P", "E", "Z"]:
+            for unit in ["", "K", "M", "G", "T", " P", "E", "Z"]:
                 if size < 1000:
-                    return "%.3f %s%s" % (size, unit, suffix)  # 3 numbers after comma
+                    return "%d %s%s" % (size, unit, suffix)  # 3 numbers after comma
                 size /= 1000
-            return "%.3f %s%s" % (size, "Y", suffix)
+            return "%d %s%s" % (size, "Y", suffix)
 
         elif self.isFolder():
-            formattedReturn = "%d %s" % (self._weight, "File")
+            formattedReturn = "%d %s" % (self._weight, "Element")
             return "%s%s" % (formattedReturn, 's') if self.getWeight() > 1 else formattedReturn
         else:
             return ""
@@ -199,7 +199,7 @@ class BrowserItem(QtCore.QObject):
 
     path = QtCore.pyqtProperty(str, getPath, updatePath, notify=fileChanged)
     type = QtCore.pyqtProperty(int, getType, notify=fileChanged)
-    weight = QtCore.pyqtProperty(float, getWeight, notify=fileChanged)
+    weight = QtCore.pyqtProperty(float, getWeightFormatted, notify=fileChanged)
     pathImg = QtCore.pyqtProperty(str, getPathImg, constant=True)
     name = QtCore.pyqtProperty(str, getName, constant=True, notify=fileChanged)
     permissions = QtCore.pyqtProperty(str, getPermissions, constant=True, notify=fileChanged)

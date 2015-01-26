@@ -44,7 +44,7 @@ class BrowserModel(QtCore.QObject):
 
         self._asyncMode = asyncMode
 
-        self._actionManager = ActionManagerSingleton().get()  # for locking and search BrowserItem when updating
+        self._actionManager = ActionManagerSingleton.get()  # for locking and search BrowserItem when updating
         self._currentPath = currentPath if currentPath and os.path.exists(currentPath) else os.path.expanduser("~")
         self.updateItemsWrapperAsync()
 

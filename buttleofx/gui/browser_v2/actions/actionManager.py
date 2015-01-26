@@ -16,7 +16,7 @@ class ActionManager(QtCore.QObject):
 
     def __init__(self):
         super(ActionManager, self).__init__()
-        self._waiting = Queue(maxsize=0)  #
+        self._waiting = Queue(maxsize=0)
         self._running = []
         self._ended = []
         self._workers = [Worker(self._waiting, self._running, self._ended, self.actionChanged) for _ in range(self.num_threads_workers)]
@@ -26,8 +26,8 @@ class ActionManager(QtCore.QObject):
         for worker in self._workers:
             worker.start()
 
-    def push(self, action):
-        self._waiting.put(action)
+    def push(self, actionWrapper):
+        self._waiting.put(actionWrapper)
         self.actionChanged.emit()
 
     def clearEndedActions(self):
@@ -56,5 +56,6 @@ class ActionManager(QtCore.QObject):
 class ActionManagerSingleton(Singleton):
     _actionManager = ActionManager()
 
-    def get(self):
-        return self._actionManager
+    @staticmethod
+    def get():
+        return ActionManagerSingleton._actionManager

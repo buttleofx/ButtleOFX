@@ -13,7 +13,7 @@ class ActionWrapper(QtCore.QObject):
 
     def __init__(self, actions):
         super(ActionWrapper, self).__init__()
-        self._actions = actions  # actionInterface objects
+        self._actions = actions  # actionInterface list objects
         self._nbProcessed = 0    # nb of actions processed from self._actions
         self._progress = 0
         self._nbActions = len(actions)

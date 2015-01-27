@@ -2,6 +2,7 @@ import QtQuick 2.0
 import QtQuick.Layouts 1.1
 import QtQuick.Controls 1.0
 import QtQuick.Controls.Styles 1.0
+import QuickMamba 1.0
 import "../../../gui"
 import "qmlComponents"
 
@@ -28,6 +29,10 @@ Item {
 
     implicitWidth: 300
     implicitHeight: 500
+
+    FocusHandler {
+        anchors.fill: parent
+    }
 
     Tab {
         id: tabBar
@@ -63,21 +68,16 @@ Item {
                 color: paramEditor.textColor
                 verticalAlignment: Text.AlignVCenter
 
-                ToolTip {
-                    id: tooltip
-                    visible: false
-                    paramHelp: modelObject.doc
-                    z: 3
-                }
-
-                // TODO : For the moment we catch an error: "pyqtSignal must be bound to QObject not StringWrapper"
-                // although Stringwrapper inherite from QObject
                 MouseArea {
                     anchors.fill: parent
                     acceptedButtons: Qt.RightButton
+                    hoverEnabled: true
+                    onEntered: tooltip.visible = true
+                    onExited: tooltip.visible = false
 
                     onClicked: {
                         // Reinitialise the value of the param to her default value
+                        // TODO : for the moment we catch an error preventing the action.
                         modelObject.hasChanged = false
                         modelObject.value = modelObject.getDefaultValue()
                         modelObject.pushValue(modelObject.value)
@@ -96,6 +96,12 @@ Item {
                     source: modelObject.paramType + ".qml"
                     width: parent.width
 
+                    ToolTip {
+                        z: 1
+                        id: tooltip
+                        visible: false
+                        paramHelp: modelObject.doc
+                    }
 
                     MouseArea {
                         anchors.fill: parent
@@ -107,8 +113,6 @@ Item {
                             modelObject.value = modelObject.getDefaultValue()
                             modelObject.pushValue(modelObject.value)
                         }
-                        onEntered: tooltip.visible = true
-                        onExited: tooltip.visible = false
                     }
                 }
             }
@@ -213,7 +217,6 @@ Item {
                 anchors.bottomMargin: 15
                 height: 110
                 width: 110
-                z: 0
 
                 style: ScrollViewStyle {
                     scrollBarBackground: Rectangle {

@@ -1,6 +1,7 @@
 import QtQuick 2.0
-import QuickMamba 1.0
 import QtQuick.Controls 1.1
+import "../../qml/QuickMamba/." // Qt-BUG import qmldir
+import QtQuick.Layouts 1.1
 
 Rectangle
 {
@@ -9,18 +10,22 @@ Rectangle
     width: 300
     height: 250
 
-    Rectangle {
-        color:screenPicker.currentColor
-        width: 50
-        height: 50
+    RowLayout {
+        anchors.centerIn: parent
+        spacing: 20
 
-        MouseArea {
-            anchors.fill: parent
-            onPressed: screenPicker.grabbing = true
+        ScreenPicker {
+            id:screenPicker
+
+            onGrabbedColor: {colorPreview.color = color; console.debug(color) ; }
         }
-    }
 
-    ScreenPicker {
-        id:screenPicker
+        Rectangle {
+            id:colorPreview
+            color:"white"
+            radius: 3
+            Layout.minimumWidth: 80
+            Layout.minimumHeight: 80
+        }
     }
 }

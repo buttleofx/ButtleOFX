@@ -14,8 +14,7 @@ class ColorPickingEventFilter(QtCore.QObject):
         elif(QEvent.type() == QtCore.QEvent.MouseButtonRelease):
             self._screenpicker.setGrabbing(False)
             self._screenpicker.accepted.emit()
-
-
+            
         return False
 
 
@@ -61,6 +60,7 @@ class ScreenPicker(QtQuick.QQuickItem):
                 self.setCursor(self._cursor)
                 self.grabMouse()
             else:
+                self.ungrabMouse()
                 self.removeEventFilter(self._colorPickingEventFilter)
             self.grabbingChanged.emit()
 

@@ -7,7 +7,7 @@ import QtQuick.Controls.Styles 1.0
 Rectangle {
     id: root
 
-    color: "transparent"
+    color: "#2E2E2E"
 
     property var model
     property var visitedFolderList
@@ -15,10 +15,16 @@ Rectangle {
     signal autoCompleteMode(bool active)
     property bool refreshModel: true
 
+    function pushVisitedFolder(path){
+        if (visitedFolderList.count === 0){
+            // Save path of the current folder
+            visitedFolderList.append({"url": root.model.currentPath})
+        }
 
-    Keys.onTabPressed: {
-        autoCompleteList.show()
+        visitedFolderList.append({"url": path})
+        ++ visitedFolderListIndex
     }
+
 
     onAutoCompleteMode: {
         autoCompleteList.show()
@@ -115,19 +121,8 @@ Rectangle {
             }
 
             onClicked: {
-                if (visitedFolderList.count === 0){
-                    // Save path of the current folder
-                    visitedFolderList.append({"url": model.currentPath})
-                }
-
-                // Test if the current path is not root
                 if(visitedFolderList.get(visitedFolderListIndex).url !== "/") {
-
-                    // Save path of the incoming folder
-                    visitedFolderList.append({"url": model.parentFolder})
-                    ++ visitedFolderListIndex
-
-                    // Set the new path
+                    root.pushVisitedFolder(model.parentFolder)
                     model.currentPath = model.parentFolder
                 }
             }
@@ -163,7 +158,7 @@ Rectangle {
         Rectangle {
             id: textEditContainer
 
-            Layout.preferredHeight: parent.height
+            Layout.preferredHeight: parent.height - 10
             Layout.fillWidth: true
 
             visible: false
@@ -191,7 +186,7 @@ Rectangle {
                 }
 
                 onAccepted: {
-                    model.currentPath = text
+                    root.model.currentPath = text
                     autoCompleteList.show()
                 }
 
@@ -207,7 +202,11 @@ Rectangle {
 
                 Keys.onDownPressed: {
                     autoCompleteList.show()
-                    console.log(autoCompleteList.items[0].checked)
+                }
+
+                Keys.onTabPressed: {
+                    root.model.currentPath = text
+                    autoCompleteList.show()
                 }
 
                 Keys.onPressed: {
@@ -217,13 +216,6 @@ Rectangle {
                             autoCompleteList.items[0].trigger()
                     }
                     else{
-                        if (visitedFolderList.count === 0){
-                            // Save path of the current folder
-                            visitedFolderList.append({"url": model.currentPath})
-                        }
-
-                        visitedFolderList.append({"url": text})
-                        ++ visitedFolderListIndex
                         model.currentPath = text
                     }
                 }
@@ -239,6 +231,7 @@ Rectangle {
                             text: model.object.name
 
                             onTriggered: {
+                                root.pushVisitedFolder( model.object.path)
                                 root.model.currentPath = model.object.path
                             }
                         }
@@ -249,6 +242,8 @@ Rectangle {
 
                     function show() {
                         // Retrieve position instead of cursorRectangle.x
+                        root.model.currentPath = root.model.currentPath
+
                         if(!root.model.listFolderNavBar.count)
                             return
                         var index = root.model.currentPath.length
@@ -371,16 +366,7 @@ Rectangle {
                     anchors.fill: parent
                     hoverEnabled: true
                     onClicked: {
-                        if (visitedFolderList.count === 0){
-                            // Save path of the current folder
-                            visitedFolderList.append({"url": root.model.currentPath})
-                        }
-
-                        // Save path of the incoming folder
-                        visitedFolderList.append({"url": model.object[0]})
-                        ++ visitedFolderListIndex
-                        // Set the new path
-                        root.model.currentPath = model.object[0]
+                        root.pushVisitedFolder(model.object[0])
                     }
                 }
             }
@@ -398,8 +384,9 @@ Rectangle {
                     text: ">"
                     font.pointSize: 16
                     font.bold: (arrow_mouseArea.containsMouse) ? true : false
-                    color: "#00B2A1"
+                    color: "#00b2a1"
                     visible: !(index == (breadCrum.count - 1) && index != 0)
+
                     MouseArea {
                         id: arrow_mouseArea
                         anchors.fill: parent

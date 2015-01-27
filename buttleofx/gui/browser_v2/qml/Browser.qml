@@ -2,7 +2,6 @@ import QtQuick 2.2
 import QtQuick.Layouts 1.1
 import BrowserModel 1.0
 
-
 Rectangle {
     id: root
 
@@ -24,16 +23,26 @@ Rectangle {
 
     ColumnLayout {
         anchors.fill: parent
+        spacing: 0
 
         NavBar {
             id: navBar
 
             Layout.fillWidth: true
-            Layout.preferredHeight: 40
+            Layout.preferredHeight: 50
 
             model: browser
             visitedFolderList: visitedFolderList
             visitedFolderListIndex: visitedFolderListIndex
+        }
+
+        Rectangle {
+            id: separator
+
+            Layout.fillWidth: true
+            Layout.preferredHeight: 1
+
+            color: "#00b2a1"
         }
 
         // Main window with files list

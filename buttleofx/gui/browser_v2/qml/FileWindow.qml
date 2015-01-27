@@ -7,7 +7,7 @@ import QtQuick.Controls.Styles 1.0
 Rectangle {
     id: root
 
-    color: "#343434"
+    color: "transparent"
 
     property var model
     property var visitedFolderList
@@ -19,7 +19,7 @@ Rectangle {
         style: ScrollViewStyle {
             scrollBarBackground: Rectangle {
                 id: scrollBar
-                width: styleData.hovered ? 10 : 2
+                width: styleData.hovered ? 8 : 4
                 color: "transparent"
 
                 Behavior on width { PropertyAnimation { easing.type: Easing.InOutQuad ; duration: 200 } }
@@ -48,8 +48,11 @@ Rectangle {
 
             anchors.fill: parent
 
-            cellWidth: 100
+            cellWidth: 120
             cellHeight: 100
+
+            // displayMarginBeginning: 20 // Available in QtQuick 2.3
+            // displayMarginEnd: 20 // Available in QtQuick 2.3
 
             clip: true
             model: root.model.fileItems
@@ -61,11 +64,15 @@ Rectangle {
     Component {
         id: component
 
-        ColumnLayout {
+        Column {
+            width: grid.cellWidth - 10
+            height: grid.cellHeight - 10
+
             Image {
                 id: icon
 
-                Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+                anchors.horizontalCenter: parent.horizontalCenter
+
                 source: model.object.pathImg
                 sourceSize.width: 50
                 sourceSize.height: 50
@@ -75,15 +82,18 @@ Rectangle {
             Text {
                 id: fileName
 
-                Layout.preferredWidth: grid.cellWidth - 10
+                width: parent.width
+
+                anchors.horizontalCenter: parent.horizontalCenter
                 horizontalAlignment: Text.AlignHCenter
 
                 text: model.object.name
-                color: model.object.isSelected ? "black" : "white"
+                color: (model.object.isSelected) ? "black" : "white"
 
                 font.bold: model.object.isSelected
-                wrapMode: Text.Wrap
-                clip: true
+
+                wrapMode: Text.WrapAnywhere
+                maximumLineCount: (model.object.isSelected) ? contentHeight : 2
             }
 
         }

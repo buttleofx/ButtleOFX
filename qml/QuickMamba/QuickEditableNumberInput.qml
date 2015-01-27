@@ -101,10 +101,6 @@ Rectangle {
 
             // Default style
             color: "white"
-            cursorDelegate: BlinkCursor {
-                color: root.cursorColor
-                visible: textInput.focus
-            }
             selectionColor: Qt.rgba(1, 1, 1, 0.2)
 
             Keys.onPressed: {

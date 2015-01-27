@@ -33,7 +33,7 @@ Rectangle
         onPressed: screenPicker.grabbing = true
     }
 
-    ScreenPicker {
+    ColorPicker {
         id: screenPicker
 
         onAccepted: root.accepted()

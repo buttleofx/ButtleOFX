@@ -17,12 +17,13 @@ Rectangle
         ScreenPicker {
             id:screenPicker
 
-            onGrabbedColor: {colorPreview.color = color; console.debug(color) ; }
+            onGrabbedColor: colorPreview.color = color
         }
 
         Rectangle {
             id:colorPreview
-            color:"white"
+            color:"#00b2a1"
+
             radius: 3
             Layout.minimumWidth: 80
             Layout.minimumHeight: 80

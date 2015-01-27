@@ -14,17 +14,17 @@ class ColorPickingEventFilter(QtCore.QObject):
         elif(QEvent.type() == QtCore.QEvent.MouseButtonRelease):
             self._screenpicker.setGrabbing(False)
             self._screenpicker.accepted.emit()
-            
+
         return False
 
 
-class ScreenPicker(QtQuick.QQuickItem):
+class ColorPicker(QtQuick.QQuickItem):
     """
         Define the common methods and fields for screenPicker.
     """
 
     def __init__(self, parent = None):
-        super(ScreenPicker, self).__init__(parent)
+        super(ColorPicker, self).__init__(parent)
         self._currentColor = QtGui.QColor("#FFFFFF")
         self._grabbing = False
         self._desktop = QtWidgets.QDesktopWidget()

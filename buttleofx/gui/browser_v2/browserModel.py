@@ -12,7 +12,6 @@ import copy
 
 
 class BrowserModel(QtCore.QObject):
-    # singleton? only one model?
     """
         Model of files based on pySequenceParser. It recognises files, folders and sequences.
         Possibility to filter the model: sequence, hidden dir/files or not (regexp is coming)
@@ -24,7 +23,7 @@ class BrowserModel(QtCore.QObject):
     hideDotFilesChanged = QtCore.pyqtSignal()
     modelChanged = QtCore.pyqtSignal()
 
-    def __init__(self, asyncMode=True, currentPath="", parent=None):
+    def __init__(self, asyncMode=False, path="", parent=None):
         """
             Build an BrowserModel instance.
             :param parent: Qt parent
@@ -43,9 +42,9 @@ class BrowserModel(QtCore.QObject):
         self._browserItemsModel = QObjectListModel(self)
 
         self._asyncMode = asyncMode
-
         self._actionManager = ActionManagerSingleton.get()  # for locking and search BrowserItem when updating
-        self._currentPath = currentPath if currentPath and os.path.exists(currentPath) else os.path.expanduser("~")
+        self._currentPath = path.strip() if path.strip() else os.path.expanduser("~/")
+
         self.updateItemsWrapperAsync()
 
     def updateItemsWrapperAsync(self):
@@ -58,6 +57,10 @@ class BrowserModel(QtCore.QObject):
         """
             Update browserItemsModel according model's current path and filter options
         """
+
+        if not os.path.exists(self._currentPath):
+            return
+
         Worker.wait()  # lock lists in actionManager
         self._threadRecursiveSearch.stopAllThreads()  # avoid bad comportment
 
@@ -90,6 +93,7 @@ class BrowserModel(QtCore.QObject):
         Worker.work()
 
     def isItemInActionManager(self, path):
+
         for actionWrapper in list(self._actionManager.getWaitingActions().queue):
             for action in actionWrapper.getActions():
                 if action.getBrowserItem().getPath() == path:
@@ -119,9 +123,9 @@ class BrowserModel(QtCore.QObject):
 
                 if addItem:
                     itemToAdd = self.isItemInActionManager(item.getAbsoluteFilepath())
+
                     if not itemToAdd:
                         itemToAdd = BrowserItem(item, False)
-
                     self._browserItems.append(itemToAdd)
                     self._browserItemsModel.setObjectList(self._browserItems)
                     self.modelChanged.emit()
@@ -181,10 +185,11 @@ class BrowserModel(QtCore.QObject):
     def getCurrentPath(self):
         return self._currentPath
 
+    @QtCore.pyqtSlot(str)
     def setCurrentPath(self, newCurrentPath):
         self._currentPath = newCurrentPath
-        self.updateItemsWrapperAsync()
         self.currentPathChanged.emit()
+        self.updateItemsWrapperAsync()
 
     def setCurrentPathHome(self):
         self.setCurrentPath(self.getHomePath())
@@ -253,17 +258,20 @@ class BrowserModel(QtCore.QObject):
         return os.path.dirname(self._currentPath)
 
     @QtCore.pyqtSlot(result=QObjectListModel)
-    def getSplitedCurrentPath(self):
+    def getSplittedCurrentPath(self):
         """
-            Use for navbar in qml
+            Used into navbar in qml
             :return: absolute path and dirname for each folder in the current path into a list via QObjectList
         """
         tmpList = []
         absolutePath = self._currentPath
+        if not absolutePath:
+            return QObjectListModel(self)
 
         # not absolutePath: for windows
-        while absolutePath != os.path.abspath(os.sep) or not absolutePath:
-            tmpList.append([absolutePath, os.path.basename(absolutePath)])
+        while not absolutePath or absolutePath != os.path.abspath(os.sep):
+            if os.path.exists(absolutePath):
+                tmpList.append([absolutePath, os.path.basename(absolutePath)])
             absolutePath = os.path.dirname(absolutePath)
         if os.sep == "/":
             tmpList.append(["/", ""])
@@ -273,9 +281,23 @@ class BrowserModel(QtCore.QObject):
         model.append(tmpList)
         return model
 
-    @QtCore.pyqtSlot(result=QObjectListModel)
-    def getListFolderNavBar(self):
-        tmpList = [browserItem for browserItem in self._browserItems if browserItem.isFolder()]
+    @QtCore.pyqtSlot(result=QtCore.QObject)
+    def getListFolderNavBar(self, path=""):
+        path = path.strip()
+        path = path if path else self._currentPath
+        nameFiltering = ""
+
+        modelToNav = self
+
+        if not os.path.exists(path):
+            nameFiltering = os.path.basename(path)
+            modelToNav = BrowserModel(asyncMode=False, path=os.path.dirname(path))  # need to be sync
+
+        if nameFiltering:
+            tmpList = [item for item in modelToNav.getItems() if item.isFolder() and nameFiltering in item.getName()]
+        else:
+            tmpList = [item for item in modelToNav.getItems() if item.isFolder()]
+
         model = QObjectListModel(self)
         model.append(tmpList)
         return model
@@ -286,6 +308,10 @@ class BrowserModel(QtCore.QObject):
         model.append([item for item in self._browserItems if item.getSelected()])
         return model
 
+    @QtCore.pyqtSlot()
+    def refresh(self):
+        self.updateItemsWrapperAsync()
+
     # ############################################# Data exposed to QML ############################################# #
 
     currentPath = QtCore.pyqtProperty(str, getCurrentPath, setCurrentPath, notify=currentPathChanged)
@@ -295,7 +321,6 @@ class BrowserModel(QtCore.QObject):
     showSequence = QtCore.pyqtProperty(bool, isShowSequence, setShowSequence, notify=filterChanged)
 
     hideDotFiles = QtCore.pyqtProperty(bool, isHiddenDotFiles, setHideDotFiles, notify=hideDotFilesChanged)
-    splitedCurrentPath = QtCore.pyqtProperty(QObjectListModel, getSplitedCurrentPath, notify=currentPathChanged)
-    listFolderNavBar = QtCore.pyqtProperty(QObjectListModel, getListFolderNavBar, notify=currentPathChanged)
-    selectedItems = QtCore.pyqtProperty(QObjectListModel, getSelectedItems, constant=True)
+    splittedCurrentPath = QtCore.pyqtProperty(QObjectListModel, getSplittedCurrentPath, notify=currentPathChanged)
+    listFolderNavBar = QtCore.pyqtProperty(QtCore.QObject, getListFolderNavBar, notify=currentPathChanged)
     sortOn = QtCore.pyqtProperty(str, getFieldToSort, notify=sortOnChanged)

@@ -7,7 +7,7 @@ import QtQuick.Controls.Styles 1.0
 Rectangle {
     id: root
 
-    color: "transparent"
+    color: "#2E2E2E"
 
     property var model
     property var visitedFolderList
@@ -373,7 +373,7 @@ Rectangle {
                     text: ">"
                     font.pointSize: 16
                     font.bold: (arrow_mouseArea.containsMouse) ? true : false
-                    color: "#00B2A1"
+                    color: "#00b2a1"
 
                     MouseArea {
                         id: arrow_mouseArea

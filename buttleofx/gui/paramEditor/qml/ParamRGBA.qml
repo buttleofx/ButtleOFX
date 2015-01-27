@@ -10,30 +10,29 @@ RowLayout {
     property variant win
 
     Rectangle {
-
-        width: 50
+        width: parent.width / 2
         height: 30
         color: Qt.rgba(model.object.r, model.object.g, model.object.b, 255)
         border.width: 1
         border.color: "#333"
-        radius: 3
     }
 
     Rectangle {
-
-        width: 50
+        width: parent.width / 3
         height: 30
-        color: Qt.rgba(0, 0, 0, model.object.a)
-        border.width: 1
-        border.color: "#333"
-        radius: 0
 
         Image {
-            z: -1
-            width: parent.width - 1
-            height: parent.height - 1
+            anchors.fill: parent
             source:_buttleData.buttlePath + "/gui/img/background/checkerboard.jpg"
             fillMode: Image.Tile
+        }
+
+        Rectangle {
+            anchors.fill: parent
+            color: "black"
+            opacity : model.object.a
+            border.width: 1
+            border.color: "#333"
         }
     }
 

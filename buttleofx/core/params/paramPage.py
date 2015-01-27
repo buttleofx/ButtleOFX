@@ -16,7 +16,7 @@ class ParamPage(Param):
     # ## Getters ## #
 
     def getLabel(self):
-        return self._tuttleParam.getProperties().fetchProperty("OfxPropLabel").getStringValue(0)
+        return self._tuttleParam.getProperties().fetchProperty("OfxPropLabel").getStringValueAt(0)
 
     def getParamDoc(self):
         return self._tuttleParam.getProperties().getStringProperty("OfxParamPropHint")

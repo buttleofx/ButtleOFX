@@ -35,6 +35,7 @@ class BrowserItem(QtCore.QObject):
         self._path = sequenceParserItem.getAbsoluteFilepath()
         self._typeItem = sequenceParserItem.getType()
         self._supported = supported
+        self._pathImg = "../../img/buttons/browser/file-icon.png"
 
         # if self.isRemoved():
         #     raise "BrowserItem() no file " + self._path + " existing "

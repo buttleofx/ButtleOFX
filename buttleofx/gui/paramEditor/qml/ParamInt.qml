@@ -44,6 +44,8 @@ Item {
             height: parent.height
 
             // Current value
+            // TODO : For the moment we catch an error: "pyqtSignal must be bound to QObject not StringWrapper"
+            // although Stringwrapper inherite from QObject
             QuickEditableNumberInput {
                 id: sliderInput
                 width: barSlider.width

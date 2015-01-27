@@ -24,7 +24,7 @@ class ColorPicker(QtQuick.QQuickItem):
     """
 
     def __init__(self, parent = None):
-        super(ColorPicker, self).__init__(parent)
+        QtQuick.QQuickItem.__init__(self, parent)
         self._currentColor = QColor("#FFFFFF")
         self._grabbing = False
         self._desktop = QtWidgets.QDesktopWidget()

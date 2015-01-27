@@ -10,7 +10,7 @@ class ColorPickingEventFilter(QtCore.QObject):
 
     def eventFilter(self, QObject, QEvent):
         if(QEvent.type() == QtCore.QEvent.MouseMove):
-            self._screenpicker._updateCurrentColor()
+            self._screenpicker.updateCurrentColor()
         elif(QEvent.type() == QtCore.QEvent.MouseButtonRelease):
             self._screenpicker.setGrabbing(False)
             self._screenpicker.accepted.emit()
@@ -31,14 +31,6 @@ class ColorPicker(QtQuick.QQuickItem):
         self._colorPickingEventFilter = ColorPickingEventFilter(self)
 
     # ######################################## Methods private to this class ####################################### #
-
-    def _updateCurrentColor(self):
-        cursorPos = QCursor.pos()
-        # Catch the pixel pointed by the mouse on a pixmap
-        pixmap = QGuiApplication.screens()[self._desktop.screenNumber()].grabWindow(self._desktop.winId(), cursorPos.x(), cursorPos.y(), 1, 1)
-        qImage = pixmap.toImage()
-        qColor = QColor(qImage.pixel(0, 0))
-        self.setCurrentColor(qColor)
 
     # ## Getters ## #
 
@@ -67,6 +59,13 @@ class ColorPicker(QtQuick.QQuickItem):
 
     # ## Others ## #
 
+    def updateCurrentColor(self):
+        cursorPos = QCursor.pos()
+        # Catch the pixel pointed by the mouse on a pixmap
+        pixmap = QGuiApplication.screens()[self._desktop.screenNumber()].grabWindow(self._desktop.winId(), cursorPos.x(), cursorPos.y(), 1, 1)
+        qImage = pixmap.toImage()
+        qColor = QColor(qImage.pixel(0, 0))
+        self.setCurrentColor(qColor)
 
 # ############################################# Data exposed to QML ############################################## #
 

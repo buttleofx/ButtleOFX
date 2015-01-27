@@ -12,8 +12,20 @@ Rectangle {
     property var model
     property var visitedFolderList
     property int visitedFolderListIndex: 0
+    signal autoCompleteMode(bool active)
+    property bool refreshModel: true
+
+
+    Keys.onTabPressed: {
+        autoCompleteList.show()
+    }
+
+    onAutoCompleteMode: {
+        autoCompleteList.show()
+    }
 
     RowLayout {
+        id: navBarContainer
         anchors.fill: parent
         anchors.margins: 5
         spacing: 10
@@ -26,7 +38,6 @@ Rectangle {
             Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
 
             tooltip: "Previous"
-
             iconSource:
             if (hovered)
                 "img/previous_hover.png"
@@ -42,7 +53,7 @@ Rectangle {
             }
 
             onClicked: {
-                if (visitedFolderList.count > 1 && visitedFolderListIndex !== 0) {
+                if (visitedFolderList.count > 0 && visitedFolderListIndex > 0) {
                     -- visitedFolderListIndex
                     model.currentPath = visitedFolderList.get(visitedFolderListIndex).url
                 }
@@ -172,62 +183,86 @@ Rectangle {
 
                 text: root.model.currentPath
 
-                //color: suggestion.exists ? "white" : "red"
                 selectByMouse: true
                 selectionColor: "#00b2a1"
 
+                onTextChanged: {
+
+                }
+
                 onAccepted: {
-                    if (acceptableInput) {
+                    model.currentPath = text
+                    autoCompleteList.show()
+                }
+
+                Keys.onEscapePressed: {
+                    if (!breadCrum.visible)
+                        breadCrum.visible = true
+                        breadCrum.forceActiveFocus()
+
+                    if (textEditContainer.visible)
+                        textEditContainer.visible = false
+
+                }
+
+                Keys.onDownPressed: {
+                    autoCompleteList.show()
+                    console.log(autoCompleteList.items[0].checked)
+                }
+
+                Keys.onPressed: {
+                    if ((event.key == Qt.Key_Space) && (event.modifiers & Qt.ControlModifier)){
+                        autoCompleteList.show()
+                        if(autoCompleteList.items.count > 0)
+                            autoCompleteList.items[0].trigger()
+                    }
+                    else{
                         if (visitedFolderList.count === 0){
                             // Save path of the current folder
                             visitedFolderList.append({"url": model.currentPath})
                         }
 
-                        // Test if the current path is not root
-                        if(visitedFolderList.get(visitedFolderListIndex).url !== "/") {
-
-                            // Save path of the incoming folder
-                            visitedFolderList.append({"url": text})
-                            ++ visitedFolderListIndex
-
-                            // Set the new path
-                            model.currentPath = text
-                        }
+                        visitedFolderList.append({"url": text})
+                        ++ visitedFolderListIndex
+                        model.currentPath = text
                     }
                 }
 
-//                onFocusChanged: {
-//                    if (texteditPath.focus) {
-//                        if (!withTab) {
-//                            selectAll()
-//                        }
-//                    } else {
-//                        if (acceptableInput) {
-//                            visitedFolderList.append({"url": headerBar.folder})
-//                            changeFolder(text)
-//                        }
-//                    }
-//                }
-//                onTextChanged: {
-//                    suggestion.folder = texteditPath.getText(0, texteditPath.cursorPosition + 1)
-//                }
-//                onCursorPositionChanged: {
-//                    suggestion.folder = texteditPath.getText(0, texteditPath.cursorPosition + 1)
-//                }
+                Menu {
+                    id: autoCompleteList
+                    Instantiator{
+                        model:root.model.listFolderNavBar
 
-//                validator: RegExpValidator {
-//                    regExp:
-//                    if (!suggestion.isEmpty()) {
-//                            /suggestion.getFilteredFileItems(suggestion.folder).get(0).filepath/
-//                    } else {
-//                            /.*/
-//                    }
-//                }
+                        MenuItem {
 
-//                Keys.onTabPressed: {
-//                    suggestionsMenu.show()
-//                    texteditPath.forceActiveFocus()
-//                }
+                            id: textComponent
+                            text: model.object.name
+
+                            onTriggered: {
+                                root.model.currentPath = model.object.path
+                            }
+                        }
+
+                        onObjectAdded: autoCompleteList.insertItem(index, object)
+                        onObjectRemoved: autoCompleteList.removeItem(object)
+                    }
+
+                    function show() {
+                        // Retrieve position instead of cursorRectangle.x
+                        if(!root.model.listFolderNavBar.count)
+                            return
+                        var index = root.model.currentPath.length
+                        var x = 0
+                        if (index != -1) {
+                            var rect = texteditPath.positionToRectangle(index)
+                            x = rect.x
+                        }
+
+                        var y = texteditPath.height
+                        var tmp = 0
+                        this.__popup(x+textEditContainer.x+12, y)
+                    }
+                }
             }
         }
 
@@ -239,7 +274,7 @@ Rectangle {
 
            orientation: Qt.Horizontal
 
-           model: root.model.splitedCurrentPath
+           model: root.model.splittedCurrentPath
 
            visible: true
            clip: true
@@ -249,10 +284,11 @@ Rectangle {
                propagateComposedEvents: true
                onDoubleClicked: {
                    if (breadCrum.visible)
-                       breadCrum.visible = false
+                        breadCrum.visible = false
 
                    if (!textEditContainer.visible)
-                       textEditContainer.visible = true
+                        textEditContainer.visible = true
+                        texteditPath.forceActiveFocus()
                }
            }
            delegate: component
@@ -310,12 +346,6 @@ Rectangle {
                 }
             }
 
-//            onClicked:
-//            if (isInListView) {
-//                isInListView = false
-//            } else {
-//                isInListView = true
-//            }
         }
     }
     // One breadcrum component struct
@@ -346,16 +376,11 @@ Rectangle {
                             visitedFolderList.append({"url": root.model.currentPath})
                         }
 
-                        // Test if the clicked path is not the current
-                        if(visitedFolderList.get(visitedFolderListIndex).url !== model.object[0]) {
-
-                            // Save path of the incoming folder
-                            visitedFolderList.append({"url": model.object[0]})
-                            ++ visitedFolderListIndex
-
-                            // Set the new path
-                            root.model.currentPath = model.object[0]
-                        }
+                        // Save path of the incoming folder
+                        visitedFolderList.append({"url": model.object[0]})
+                        ++ visitedFolderListIndex
+                        // Set the new path
+                        root.model.currentPath = model.object[0]
                     }
                 }
             }
@@ -374,13 +399,15 @@ Rectangle {
                     font.pointSize: 16
                     font.bold: (arrow_mouseArea.containsMouse) ? true : false
                     color: "#00B2A1"
-
+                    visible: !(index == (breadCrum.count - 1) && index != 0)
                     MouseArea {
                         id: arrow_mouseArea
                         anchors.fill: parent
                         hoverEnabled: true
                         onClicked: {
                             console.log("Arrow clicked")
+                            console.log(root)
+                            root.model.currentPath = model.object[0]
                         }
                     }
                 }

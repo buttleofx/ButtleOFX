@@ -1,7 +1,7 @@
 import QtQuick 2.0
 import "ColorUtils.js" as ColorUtils
 import QtQuick.Layouts 1.1
-import ScreenPicker 1.0
+import QuickMamba 1.0
 
 Item {
     id: root
@@ -18,6 +18,30 @@ Item {
     ColumnLayout {
         anchors.fill: parent
         anchors.margins: 8
+
+        RowLayout {
+            Layout.minimumHeight: 44
+            Layout.maximumHeight: 60
+            Layout.alignment: Layout.Center
+
+            HexaInput {
+                Layout.fillHeight: true
+
+                colorRGB: Qt.vector3d(root.colorRGBA.x, root.colorRGBA.y,
+                                      root.colorRGBA.z)
+                onUpdatedColor: root.colorChange(Qt.vector4d(rgb.x, rgb.y, rgb.z,
+                                                             root.colorRGBA.w))
+            }
+
+            ScreenPicker {
+                Layout.fillHeight: true
+                onAccepted: root.accepted()
+                onGrabbedColor: {
+                    var rgbColor = ColorUtils.hexa2rgb(color)
+                    root.colorChange(Qt.vector4d(rgbColor.x, rgbColor.y, rgbColor.z, root.colorRGBA.w))
+                }
+            }
+        }
 
         //*** RGB ***//
 
@@ -169,43 +193,7 @@ Item {
                                                          updatedValue))
             onAccepted: root.accepted()
         }
-
-        HexaInput {
-            Layout.fillWidth: true
-            Layout.maximumHeight: 40
-
-            colorRGB: Qt.vector3d(root.colorRGBA.x, root.colorRGBA.y,
-                                  root.colorRGBA.z)
-            onUpdatedColor: root.colorChange(Qt.vector4d(rgb.x, rgb.y, rgb.z,
-                                                         root.colorRGBA.w))
-        }
-
-        Rectangle {
-            id: rectPicker
-            Layout.minimumHeight: 40
-            Layout.minimumWidth: 40
-            color: "red"
-
-            MouseArea {
-                anchors.fill: parent
-                onClicked: console.debug(screenPicker.startGrabColor())
-            }
-
-            ScreenPicker {
-                id: screenPicker
-                testColor: "#dsf"
-
-                onTestColorChange : { console.debug("signal qml leve par python"); }
-            }
-        }
     }
 
-//    MouseArea {
-//        anchors.fill: parent
-//        onClicked: {
-//                console.debug("key press")
-//                console.debug(screenPicker.startGrabColor())
-//            }
 
-//    }
 }

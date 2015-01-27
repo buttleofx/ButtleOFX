@@ -48,7 +48,7 @@ Rectangle {
 
             anchors.fill: parent
 
-            cellWidth: 120
+            cellWidth: 150
             cellHeight: 100
 
             // displayMarginBeginning: 20 // Available in QtQuick 2.3
@@ -64,38 +64,73 @@ Rectangle {
     Component {
         id: component
 
-        Column {
-            width: grid.cellWidth - 10
-            height: grid.cellHeight - 10
+        Rectangle {
+            width: grid.cellWidth - 50
+            height: grid.cellHeight - 30
 
-            Image {
-                id: icon
+            color: (model.object.isSelected) ? "#22FFFFFF" : "transparent"
+            radius: 2
 
-                anchors.horizontalCenter: parent.horizontalCenter
+            Column {
+                anchors.fill: parent
 
-                source: model.object.pathImg
-                sourceSize.width: 50
-                sourceSize.height: 50
-                fillMode: Image.PreserveAspectFit
+                Image {
+                    id: icon
+
+                    anchors.horizontalCenter: parent.horizontalCenter
+
+                    source: model.object.pathImg
+                    sourceSize.width: 50
+                    sourceSize.height: 50
+                    fillMode: Image.PreserveAspectFit
+
+                    opacity: ((icon_mouseArea.containsMouse || text_mouseArea.containsMouse) ^ model.object.isSelected) ? 1 : 0.6
+
+                    MouseArea {
+                        id: icon_mouseArea
+                        anchors.fill: parent
+
+                        hoverEnabled: true
+
+                        onClicked: {
+                            if (!model.object.isSelected)
+                                model.object.isSelected = true
+                        }
+                    }
+                }
+
+                Text {
+                    id: fileName
+
+                    width: parent.width
+
+                    elide: Text.ElideLeft
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    horizontalAlignment: Text.AlignHCenter
+
+                    text: model.object.name
+                    color: ((icon_mouseArea.containsMouse || text_mouseArea.containsMouse) ^ model.object.isSelected) ? "white" : "#BBBBBB"
+
+                    wrapMode: Text.WrapAnywhere
+                    maximumLineCount: (model.object.isSelected) ? contentHeight : 2
+
+                    MouseArea {
+                        id: text_mouseArea
+                        anchors.fill: parent
+
+                        hoverEnabled: true
+
+                        onClicked: {
+                            if (!model.object.isSelected)
+                                model.object.isSelected = true
+                        }
+                    }
+                }
+
+                Component.onCompleted: {
+                    fileName.width = fileName.paintedWidth
+                }
             }
-
-            Text {
-                id: fileName
-
-                width: parent.width
-
-                anchors.horizontalCenter: parent.horizontalCenter
-                horizontalAlignment: Text.AlignHCenter
-
-                text: model.object.name
-                color: (model.object.isSelected) ? "black" : "white"
-
-                font.bold: model.object.isSelected
-
-                wrapMode: Text.WrapAnywhere
-                maximumLineCount: (model.object.isSelected) ? contentHeight : 2
-            }
-
         }
     }
 

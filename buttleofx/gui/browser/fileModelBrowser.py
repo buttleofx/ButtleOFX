@@ -277,6 +277,9 @@ class FileModelBrowser(QtQuick.QQuickItem):
 
     @QtCore.pyqtSlot(str)
     def updateFileItems(self, folder):
+        if not folder:
+            return
+
         self._fileItems = []
         self._fileItemsModel.clear()
         allDirs = []
@@ -284,9 +287,9 @@ class FileModelBrowser(QtQuick.QQuickItem):
         allSeqs = []
 
         items = sequenceParser.browse(folder)
-        dirs = [item._filename for item in items if item._type == sequenceParser.eTypeFolder]
-        seqs = [item._sequence for item in items if item._type == sequenceParser.eTypeSequence]
-        files = [item._filename for item in items if item._type == sequenceParser.eTypeFile]
+        dirs = [item.getFilename() for item in items if item.getType() == sequenceParser.eTypeFolder]
+        seqs = [item.getSequence() for item in items if item.getType() == sequenceParser.eTypeSequence]
+        files = [item.getFilename() for item in items if item.getType() == sequenceParser.eTypeFile]
 
         for d in dirs:
             if d.startswith("."):

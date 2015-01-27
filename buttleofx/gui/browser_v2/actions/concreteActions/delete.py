@@ -9,7 +9,7 @@ class Delete(ActionInterface):
     def __init__(self, browserItem):
         super().__init__(browserItem)
 
-    def action(self):
+    def execute(self):
         browserItem = self.getBrowserItem()
 
         # Delete file

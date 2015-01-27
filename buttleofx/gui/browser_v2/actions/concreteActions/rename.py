@@ -9,7 +9,7 @@ class Rename(ActionInterface):
         super().__init__(browserItem)
         self._newName = newName
 
-    def action(self):
+    def execute(self):
         browserItem = self._browserItem
         # Rename File
         if browserItem.isFile():

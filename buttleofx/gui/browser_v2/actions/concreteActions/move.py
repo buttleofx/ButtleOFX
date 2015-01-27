@@ -13,7 +13,7 @@ class Move(ActionInterface):
         super().__init__(browserItem)
         self._destination = destination
 
-    def action(self):
+    def execute(self):
         browserItem = self.getBrowserItem()
         destination = self._destination
         destinationPath = destination.getPath()

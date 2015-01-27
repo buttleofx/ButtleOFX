@@ -12,31 +12,35 @@ class Copy(ActionInterface):
         if not destination.isFolder():
             raise TypeError
         super().__init__(browserItem)
-        self._source = copy.deepcopy(browserItem)
-        self._destination = destination
+        self._srcPath = browserItem.getParentPath()
+        self._destPath = destination.getPath()
 
-    def action(self):
+    def execute(self):
         browserItem = self.getBrowserItem()
-        destination = self._destination
-        destinationPath = destination.getPath()
+        destPath = self._destPath
 
         # Copy file
         if browserItem.isFile():
             # TODO: Check destination permission in try catch
-            if os.path.exists(destinationPath):
-                shutil.copy2(browserItem.getPath(), destinationPath)
-                filename = browserItem.getName()
-                browserItem.updatePath(os.path.join(destinationPath, filename))
+            if os.path.exists(destPath):
+                shutil.copy2(browserItem.getPath(), destPath)
+                # filename = browserItem.getName()
+                # browserItem.updatePath(os.path.join(destPath, filename))
                 # self.processed = True or browserItem.processed = True
 
         # Copy Folder
         if browserItem.isFolder():
             # TODO: Check destination permission in try catch
-            shutil.copytree(browserItem.getParentPath(), destinationPath)
-            browserItem.updatePath(destinationPath)
+            shutil.copytree(browserItem.getParentPath(), destPath)
+            # browserItem.updatePath(destPath)
 
     def revert(self):
-        browserItem = self._source
+        browserItem = self.getBrowserItem()
+        browserItemName = browserItem.getName()
+        destPath = self._destPath
 
         if browserItem.isFile():
-            pass
+            os.remove(os.path.join(destPath, browserItem.getName()))
+
+        if browserItem.isFolder():
+            shutil.rmtree(destPath)

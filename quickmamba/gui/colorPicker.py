@@ -1,7 +1,7 @@
 from PyQt5 import QtCore
 from PyQt5 import QtWidgets
 from PyQt5 import QtQuick
-from PyQt5 import QtGui
+from PyQt5.QtGui import QCursor, QColor, QGuiApplication
 
 class ColorPickingEventFilter(QtCore.QObject):
     def __init__(self, screenpicker):
@@ -25,18 +25,19 @@ class ColorPicker(QtQuick.QQuickItem):
 
     def __init__(self, parent = None):
         super(ColorPicker, self).__init__(parent)
-        self._currentColor = QtGui.QColor("#FFFFFF")
+        self._currentColor = QColor("#FFFFFF")
         self._grabbing = False
         self._desktop = QtWidgets.QDesktopWidget()
-        self._cursor = QtGui.QCursor()
         self._colorPickingEventFilter = ColorPickingEventFilter(self)
 
     # ######################################## Methods private to this class ####################################### #
 
     def _updateCurrentColor(self):
-        pixmap = QtGui.QGuiApplication.screens()[self._desktop.screenNumber()].grabWindow(self._desktop.winId(), self._cursor.pos().x(), self._cursor.pos().y(), 1, 1)
+        cursorPos = QCursor.pos()
+        # Catch the pixel pointed by the mouse on a pixmap
+        pixmap = QGuiApplication.screens()[self._desktop.screenNumber()].grabWindow(self._desktop.winId(), cursorPos.x(), cursorPos.y(), 1, 1)
         qImage = pixmap.toImage()
-        qColor = QtGui.QColor(qImage.pixel(0, 0))
+        qColor = QColor(qImage.pixel(0, 0))
         self.setCurrentColor(qColor)
 
     # ## Getters ## #
@@ -56,12 +57,12 @@ class ColorPicker(QtQuick.QQuickItem):
             self._grabbing = grabbing
             if(self._grabbing):
                 self.installEventFilter(self._colorPickingEventFilter)
-                self._cursor.setShape(QtCore.Qt.CrossCursor)
-                self.setCursor(self._cursor)
+                QGuiApplication.setOverrideCursor(QCursor(QtCore.Qt.CrossCursor))
                 self.grabMouse()
             else:
                 self.ungrabMouse()
                 self.removeEventFilter(self._colorPickingEventFilter)
+                QGuiApplication.restoreOverrideCursor()
             self.grabbingChanged.emit()
 
     # ## Others ## #
@@ -72,7 +73,7 @@ class ColorPicker(QtQuick.QQuickItem):
     accepted = QtCore.pyqtSignal()
 
     currentColorChanged = QtCore.pyqtSignal()
-    currentColor = QtCore.pyqtProperty(QtGui.QColor, getCurrentColor, setCurrentColor, notify=currentColorChanged)
+    currentColor = QtCore.pyqtProperty(QColor, getCurrentColor, setCurrentColor, notify=currentColorChanged)
 
     grabbingChanged = QtCore.pyqtSignal()
     grabbing = QtCore.pyqtProperty(bool, isGrabbing, setGrabbing, notify=grabbingChanged)

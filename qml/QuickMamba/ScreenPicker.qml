@@ -31,6 +31,7 @@ Rectangle
         onExited: pickerImg.source = root.pickerImg
 
         onPressed: screenPicker.grabbing = true
+        cursorShape: Qt.OpenHandCursor
     }
 
     ColorPicker {

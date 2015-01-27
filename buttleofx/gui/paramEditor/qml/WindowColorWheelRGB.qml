@@ -22,9 +22,7 @@ Window {
             colorRGBA.x = colorObject.r
             colorRGBA.y = colorObject.g
             colorRGBA.z = colorObject.b
-            defaultValueAlpaha = 1.0
-
-            console.debug("signal on completed paramRGB")
+            colorRGBA.w = 1
         }
 
         // Everytime the color is changed, we send the data to Tuttle
@@ -33,10 +31,8 @@ Window {
                 colorObject.r = colorRGBA.x
                 colorObject.g = colorRGBA.y
                 colorObject.b = colorRGBA.z
-
                 // setValue is given from python in rgbWrapper.py
                 // colorObject.setValue(mainCurrentColor.red, mainCurrentColor.green, mainCurrentColor.blue)
-                console.debug("signal onAccepted paramRGB")
             }
         }
     }

@@ -1,6 +1,7 @@
 import QtQuick 2.0
 import "ColorUtils.js" as ColorUtils
 import QtQuick.Layouts 1.1
+import QuickMamba 1.0
 
 Item {
     id: root
@@ -18,6 +19,30 @@ Item {
     ColumnLayout {
         anchors.fill: parent
         anchors.margins: 8
+
+        RowLayout {
+            Layout.minimumHeight: 44
+            Layout.maximumHeight: 60
+            Layout.alignment: Layout.Center
+
+            HexaInput {
+                Layout.fillHeight: true
+
+                colorRGB: Qt.vector3d(root.colorRGBA.x, root.colorRGBA.y,
+                                      root.colorRGBA.z)
+                onUpdatedColor: root.colorRGBUpdate(Qt.vector4d(rgb.x, rgb.y, rgb.z,
+                                                             root.colorRGBA.w))
+            }
+
+            ScreenPicker {
+                Layout.fillHeight: true
+                onAccepted: root.accepted()
+                onGrabbedColor: {
+                    var rgbColor = ColorUtils.hexa2rgb(color)
+                    root.colorRGBUpdate(Qt.vector4d(rgbColor.x, rgbColor.y, rgbColor.z, root.colorRGBA.w))
+                }
+            }
+        }
 
         //*** RGB ***//
 
@@ -165,16 +190,6 @@ Item {
                                                          root.colorRGBA.z,
                                                          updatedValue))
             onAccepted: root.accepted()
-        }
-
-        HexaInput {
-            Layout.fillWidth: true
-            Layout.maximumHeight: 40
-
-            colorRGB: Qt.vector3d(root.colorRGBA.x, root.colorRGBA.y,
-                                  root.colorRGBA.z)
-            onUpdatedColor: root.colorRGBUpdate(Qt.vector4d(rgb.x, rgb.y, rgb.z,
-                                                         root.colorRGBA.w))
         }
     }
 }

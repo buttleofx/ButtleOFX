@@ -110,6 +110,12 @@ function rgba2hexa(rgba)
     return rgb2hexa(rgba)+int2hexa(Math.round(rgba.w * 255), 2);
 }
 
+function hexa2rgb(hexa)
+{
+   var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hexa)
+   return Qt.vector3d(parseInt(result[1], 16)/255, parseInt(result[2], 16)/255,parseInt(result[3], 16)/255)
+}
+
 // COMPLEMENTARY COLORS
 
 // hsv is a vec3 with 0-1 value complementary color base on RGB Model

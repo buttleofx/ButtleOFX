@@ -35,63 +35,18 @@ Item {
         anchors.fill: parent
 
         RowLayout {
-            Layout.preferredHeight: 20
-            Layout.fillWidth: true
-            Layout.alignment: Qt.AlignHCenter
-            spacing: parent.width * 0.1
-
-            RowLayout {
-                Text {
-                    id:textMode
-                    text: "Mode : "
-
-                    font.family: Config.font
-                    font.pixelSize: Config.textSize
-                    color: Config.textColor
-                }
-
-                ComboBox {
-                    id: modelList
-                    model : ["Wheel", "Rainbow", "Square"]
-                    currentIndex: root.indexMode
-                }
-            }
-
-            NumberBox {                
-                id:precisionBox
-                Layout.maximumWidth: 150
-                Layout.maximumHeight: 40
-                min: 1
-                max: 15
-                decimals: 0
-                value:5
-                caption : "Precision : "
-
-                textInput.font.family: Config.font
-                textInput.font.pixelSize: Config.textSize
-                textInput.color: Config.textColor
-                textInput.horizontalAlignment: TextInput.AlignHCenter
-                text.font.family: Config.font
-                text.font.pixelSize: Config.textSize
-                text.color: Config.textColor
-
-                onUpdatedValue: precisionBox.value = newValue
-            }
-        }
-
-        RowLayout {
 
             // Display a shape representation as wheel, rainbow...
             ColorRepresentation {
                 id:colorRepresentation
                 Layout.fillWidth: true
                 Layout.fillHeight: true
-                Layout.minimumWidth: 150                
+                Layout.minimumWidth: 150
+                Layout.maximumWidth:  MathUtils.clamp(root.width / 2, 150, Number.POSITIVE_INFINITY)
                 Layout.minimumHeight: 150
 
                 colorRGBA: root.colorRGBA
                 colorHSVA: m.colorHSVA
-                mode: modelList.currentText
 
                 onColorRGBUpdate: root.colorRGBA = ColorUtils.roundColor4D(rgba,  precisionBox.value)
 
@@ -108,34 +63,56 @@ Item {
                 onAccepted: root.accepted()
             }
 
-
-            // Give tool to edit precisely a color or a channel by text input, slider, picker...
-            ChannelsEditor {
+            ColumnLayout
+            {
                 Layout.fillWidth: true
                 Layout.fillHeight: true
-                Layout.minimumWidth: 150
-                Layout.minimumHeight: 150
 
-                colorRGBA: root.colorRGBA
-                colorHSVA: m.colorHSVA
-                precision: precisionBox.value
-                hasAlpha: root.hasAlpha
+                NumberBox {
+                    id:precisionBox
+                    Layout.fillWidth: true
+                    Layout.maximumHeight: 40
+                    min: 1
+                    max: 15
+                    decimals: 0
+                    value:5
+                    caption : "Precision : "
 
-                onColorRGBUpdate: root.colorRGBA = ColorUtils.roundColor4D(rgba,  precisionBox.value)
+                    textInput.font.family: Config.font
+                    textInput.font.pixelSize: Config.textSize
+                    textInput.color: Config.textColor
+                    textInput.horizontalAlignment: TextInput.AlignHCenter
+                    text.font.family: Config.font
+                    text.font.pixelSize: Config.textSize
+                    text.color: Config.textColor
 
-                onColorHSVUpdate: {
-                    var rgba = ColorUtils.hsva2rgba(hsva)
-                    root.colorRGBA = ColorUtils.roundColor4D(rgba,  precisionBox.value)
-                    // When the color is a grey level color, we must conserve the lost hue and saturation by conversion
-                    if (ColorUtils.isGreyLvlColor(root.colorRGBA)) {
-                        m.colorHSVA.x = hsva.x
-                        m.colorHSVA.y = hsva.y
-                    }
+                    onUpdatedValue: precisionBox.value = newValue
                 }
 
-                onAccepted: root.accepted()
-            }
+                // Give tool to edit precisely a color or a channel by text input, slider, picker...
+                ChannelsEditor {
+                    Layout.fillWidth: true
+                    Layout.fillHeight: true
 
+                    colorRGBA: root.colorRGBA
+                    colorHSVA: m.colorHSVA
+                    precision: precisionBox.value
+                    hasAlpha: root.hasAlpha
+
+                    onColorRGBUpdate: root.colorRGBA = ColorUtils.roundColor4D(rgba,  precisionBox.value)
+
+                    onColorHSVUpdate: {
+                        var rgba = ColorUtils.hsva2rgba(hsva)
+                        root.colorRGBA = ColorUtils.roundColor4D(rgba,  precisionBox.value)
+                        // When the color is a grey level color, we must conserve the lost hue and saturation by conversion
+                        if (ColorUtils.isGreyLvlColor(root.colorRGBA)) {
+                            m.colorHSVA.x = hsva.x
+                            m.colorHSVA.y = hsva.y
+                        }
+                    }
+                    onAccepted: root.accepted()
+                }
+            }
         }
 
         RowLayout {

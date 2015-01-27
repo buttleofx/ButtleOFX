@@ -1,11 +1,13 @@
 import QtQuick 2.0
 import QtQuick.Layouts 1.1
 import "ColorUtils.js" as ColorUtils
+import QtQuick.Controls 1.1
+import QtQuick.Controls.Styles 1.1
+import "../." // Qt-BUG import qmldir to use config singleton
 
-ColumnLayout
-{
+TabView {
     id: root
-
+    anchors.margins: 20
     property vector4d colorRGBA
     property vector4d colorHSVA
     property string mode
@@ -16,44 +18,69 @@ ColumnLayout
     // Call when the user valids his choice (ex: mouse up)
     signal accepted
 
-    Item {
-        Layout.fillHeight: true
-        Layout.fillWidth: true
-
-        Wheel {
-            anchors.fill: parent
-            visible : root.mode === "Wheel"
-
-            hue: root.colorHSVA.x
-            saturation: root.colorHSVA.y
-
-            onHueSaturationChange: colorHSVUpdate(Qt.vector4d(updatedHue, updatedSaturation, root.colorHSVA.z, root.colorHSVA.w))
-            onAccepted: root.accepted() ;
+    style: TabViewStyle {
+        frameOverlap: 1
+        frame: Rectangle {
+            color: Config.backgroundColor
+            border.width: Config.borderWidth
+            border.color: Config.borderColor
         }
+    }
 
-        Rainbow {
+    Tab {
+        title: "Wheel"
+        Item
+        {
             anchors.fill: parent
-            visible : root.mode === "Rainbow"
+            anchors.margins: 15
+            Wheel {
+                anchors.fill: parent
 
-            hue: root.colorHSVA.x
-            luminance: root.colorHSVA.z ;
+                hue: root.colorHSVA.x
+                saturation: root.colorHSVA.y
 
-            onHueLuminanceChange:{
-                colorHSVUpdate(Qt.vector4d(updatedHue, root.colorHSVA.y, updatedLuminance, root.colorHSVA.w))
+                onHueSaturationChange: colorHSVUpdate(Qt.vector4d(updatedHue, updatedSaturation, root.colorHSVA.z, root.colorHSVA.w))
+                onAccepted: root.accepted() ;
             }
-            onAccepted: root.accepted() ;
         }
+    }
 
-        SquareHuedColors {
+    Tab {
+        title: "Rainbow"
+        Item
+        {
             anchors.fill: parent
-            visible : root.mode === "Square"
+            anchors.margins: 15
+            Rainbow {
+                anchors.fill: parent
 
-            colorHSV: Qt.vector3d(root.colorHSVA.x, root.colorHSVA.y, root.colorHSVA.z)
+                hue: root.colorHSVA.x
+                luminance: root.colorHSVA.z ;
 
-            onSaturationLuminanceChange:{
-                colorHSVUpdate(Qt.vector4d(root.colorHSVA.x, updatedSaturation, updatedLuminance, root.colorHSVA.w))
+                onHueLuminanceChange:{
+                    colorHSVUpdate(Qt.vector4d(updatedHue, root.colorHSVA.y, updatedLuminance, root.colorHSVA.w))
+                }
+                onAccepted: root.accepted() ;
             }
-            onAccepted: root.accepted() ;
+        }
+    }
+
+    Tab {
+        title: "Square"
+        Item
+        {
+            anchors.fill: parent
+            anchors.margins: 15
+            SquareHuedColors {
+                anchors.fill: parent
+
+                colorHSV: Qt.vector3d(root.colorHSVA.x, root.colorHSVA.y, root.colorHSVA.z)
+
+                onSaturationLuminanceChange:{
+                    colorHSVUpdate(Qt.vector4d(root.colorHSVA.x, updatedSaturation, updatedLuminance, root.colorHSVA.w))
+                }
+                onAccepted: root.accepted() ;
+            }
         }
     }
 }

@@ -2,7 +2,6 @@ import QtQuick 2.2
 import QtQuick.Layouts 1.1
 import BrowserModel 1.0
 
-
 Rectangle {
     id: root
 

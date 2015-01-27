@@ -152,7 +152,7 @@ Rectangle {
         Rectangle {
             id: textEditContainer
 
-            Layout.preferredHeight: parent.height
+            Layout.preferredHeight: parent.height - 10
             Layout.fillWidth: true
 
             visible: false

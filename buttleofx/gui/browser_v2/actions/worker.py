@@ -28,6 +28,7 @@ class Worker(threading.Thread):
 
         for action in actionWrapper.getActions():
             action.process()
+            actionWrapper.upProcessed()
             self._notify.emit()
 
         # lock when model check into inProgressList while loading
@@ -41,9 +42,9 @@ class Worker(threading.Thread):
         Worker.lockInProgress.release()
 
     def getIndexFromList(self, list, idItem):
-        for i, val in list:
-            if idItem == id(list[i]):
-                return i
+        for idx, el in enumerate(list):
+            if idItem == id(el):
+                return idx
         return -1
 
     def run(self):

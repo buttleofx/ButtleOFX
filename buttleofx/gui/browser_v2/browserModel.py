@@ -44,7 +44,7 @@ class BrowserModel(QtCore.QObject):
 
         self._asyncMode = asyncMode
         self._actionManager = ActionManagerSingleton.get()  # for locking and search BrowserItem when updating
-        self._currentPath = path.strip() if path.strip() else os.path.expanduser("~/")
+        self._currentPath = path.strip() if path.strip() else os.path.expanduser("~")
 
         self.updateItemsWrapperAsync()
 
@@ -316,6 +316,12 @@ class BrowserModel(QtCore.QObject):
     @QtCore.pyqtSlot()
     def refresh(self):
         self.updateItemsWrapperAsync()
+
+    @QtCore.pyqtSlot()
+    def unselectAllItems(self):
+        for bItem in self._browserItems:
+            bItem.setSelected(False)
+        self._browserItemsModel.setObjectList(self._browserItems)
 
     # ############################################# Data exposed to QML ############################################# #
 

@@ -9,9 +9,6 @@ Rectangle {
 
     color: "#2E2E2E"
 
-    property var model
-    property var visitedFolderList
-    property int visitedFolderListIndex: 0
     signal autoCompleteMode(bool active)
     property bool refreshModel: true
 
@@ -24,7 +21,6 @@ Rectangle {
         visitedFolderList.append({"url": path})
         ++ visitedFolderListIndex
     }
-
 
     onAutoCompleteMode: {
         autoCompleteList.show()
@@ -367,6 +363,7 @@ Rectangle {
                     hoverEnabled: true
                     onClicked: {
                         root.pushVisitedFolder(model.object[0])
+                        root.model.currentPath = model.object[0]
                     }
                 }
             }

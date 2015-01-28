@@ -10,9 +10,15 @@ Rectangle {
 
     color: "transparent"
 
-    property var model
-    property var visitedFolderList
-    property int visitedFolderListIndex
+    function pushVisitedFolder(path){
+        if (visitedFolderList.count === 0){
+            // Save path of the current folder
+            visitedFolderList.append({"url": root.model.currentPath})
+        }
+
+        visitedFolderList.append({"url": path})
+        ++ visitedFolderListIndex
+    }
 
     ScrollView {
         anchors.fill: parent
@@ -104,18 +110,7 @@ Rectangle {
 
                         onDoubleClicked: {
                             if (model.object.type === 1) { // Folder
-
-                                if (visitedFolderList.count === 0){
-                                    // Save path of the current folder
-                                    visitedFolderList.append({"url": root.model.currentPath})
-                                }
-
-                                // Save path of the incoming folder
-                                visitedFolderList.append({"url": model.object.path})
-                                ++ visitedFolderListIndex
-
-                                // Set the new path
-
+                                root.pushVisitedFolder(model.object.path)
                                 root.model.currentPath = model.object.path
                             }
                         }
@@ -150,17 +145,7 @@ Rectangle {
 
                         onDoubleClicked: {
                             if (model.object.type === 1) { // Folder
-
-                                if (visitedFolderList.count === 0){
-                                    // Save path of the current folder
-                                    visitedFolderList.append({"url": root.model.currentPath})
-                                }
-
-                                // Save path of the incoming folder
-                                visitedFolderList.append({"url": model.object.path})
-                                ++ visitedFolderListIndex
-
-                                // Set the new path
+                                root.pushVisitedFolder(model.object.path)
                                 root.model.currentPath = model.object.path
                             }
                         }

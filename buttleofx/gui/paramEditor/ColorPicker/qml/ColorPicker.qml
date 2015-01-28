@@ -18,8 +18,8 @@ Item {
     property int indexMode: 1
 
     onColorRGBAChanged: {
-        var hsva = ColorUtils.rgba2hsva(root.colorRGBA);
-        m.colorHSVA = hsva;
+        var hsva = ColorUtils.rgba2hsva(root.colorRGBA)
+        m.colorHSVA = hsva
     }
 
     QtObject {
@@ -42,7 +42,6 @@ Item {
     }
 
     signal accepted
-    onAccepted: console.debug("UPDATE TUTLE")
 
     ColumnLayout {
         anchors.fill: parent

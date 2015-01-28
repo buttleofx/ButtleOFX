@@ -1,7 +1,6 @@
 import QtQuick 2.2
-import QtQuick.Layouts 1.0
+import QtQuick.Layouts 1.1
 import BrowserModel 1.0
-
 
 Rectangle {
     id: root
@@ -11,26 +10,56 @@ Rectangle {
 
     color: "#353535"
 
+    property int visitedFolderListIndex: 0
+
+    // Recently visited folder stack
+    ListModel {
+        id: visitedFolderList
+    }
+
     BrowserModel {
         id: browser
     }
 
     ColumnLayout {
         anchors.fill: parent
+        spacing: 0
 
         NavBar {
             id: navBar
-
             Layout.fillWidth: true
-            height : 30
+            Layout.preferredHeight: 50
 
             model: browser
+            visitedFolderList: visitedFolderList
+            visitedFolderListIndex: visitedFolderListIndex
+//            MouseArea{
+//                //hack for breadcum
+//                id: mouseAreaNavBar
+//                anchors.fill: parent
+//                propagateComposedEvents: true
+//            }
+        }
 
-            anchors.top: parent.top
+        Rectangle {
+            id: separator
+
+            Layout.fillWidth: true
+            Layout.preferredHeight: 1
+
+            color: "#00b2a1"
         }
 
         // Main window with files list
-        // FilesWindow{
-        // }
+         FileWindow{
+             id: fileWindow
+
+             Layout.fillWidth: true
+             Layout.fillHeight: true
+
+             model: browser
+             visitedFolderList: visitedFolderList
+             visitedFolderListIndex: visitedFolderListIndex
+         }
     }
 }

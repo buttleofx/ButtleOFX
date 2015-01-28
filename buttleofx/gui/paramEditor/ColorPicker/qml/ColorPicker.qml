@@ -38,7 +38,7 @@ Item {
         RowLayout {
 
             // Display a shape representation as wheel, rainbow...
-            ColorRepresentation {
+            ColorMode {
                 id:colorRepresentation
                 Layout.fillWidth: true
                 Layout.fillHeight: true
@@ -170,7 +170,7 @@ Item {
         }
 
         // Display the color choosen and her complementary
-        ColorVisualisation {
+        ColorExpose {
             Layout.fillWidth: true
             Layout.fillHeight: true
             Layout.minimumHeight: 50

@@ -35,8 +35,9 @@ Rectangle {
 
             Rectangle {
                 anchors.fill: parent
+                opacity: root.colorRGBA.w
                 color: Qt.rgba(root.colorRGBA.x, root.colorRGBA.y,
-                               root.colorRGBA.z, root.colorRGBA.w)
+                               root.colorRGBA.z, 1)
             }
         }
     }

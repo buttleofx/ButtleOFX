@@ -27,6 +27,18 @@ Item {
         // Color value in HSVA with floating point values between 0.0 and 1.0.
         // updated when RGBA change
         property vector4d colorHSVA:  Qt.vector4d(0, 0, 1, 1)
+
+        function updateByHSVA(hsva) {
+            var rgba = ColorUtils.hsva2rgba(hsva)
+            root.colorRGBA = ColorUtils.roundColor4D(rgba,  params.precision)
+            // When the color is a grey level color, we must conserve the lost hue and saturation by conversion
+            if (ColorUtils.isGreyLvlColor(root.colorRGBA)) {
+                m.colorHSVA.x = hsva.x
+                m.colorHSVA.y = hsva.y
+            }
+            if (hsva.x == 1)
+                m.colorHSVA.x = 1
+        }
     }
 
     signal accepted
@@ -51,15 +63,7 @@ Item {
 
                 onColorRGBUpdate: root.colorRGBA = ColorUtils.roundColor4D(rgba,  params.precision)
 
-                onColorHSVUpdate: {
-                    var rgba = ColorUtils.hsva2rgba(hsva)
-                    root.colorRGBA = ColorUtils.roundColor4D(rgba,  params.precision)
-                    // When the color is a grey level color, we must conserve the lost hue and saturation by conversion
-                    if (ColorUtils.isGreyLvlColor(root.colorRGBA)) {
-                        m.colorHSVA.x = hsva.x
-                        m.colorHSVA.y = hsva.y
-                    }
-                }
+                onColorHSVUpdate: m.updateByHSVA(hsva)
 
                 onAccepted: root.accepted()
             }
@@ -155,15 +159,7 @@ Item {
 
                     onColorRGBUpdate: root.colorRGBA = ColorUtils.roundColor4D(rgba,  params.precision)
 
-                    onColorHSVUpdate: {
-                        var rgba = ColorUtils.hsva2rgba(hsva)
-                        root.colorRGBA = ColorUtils.roundColor4D(rgba,  params.precision)
-                        // When the color is a grey level color, we must conserve the lost hue and saturation by conversion
-                        if (ColorUtils.isGreyLvlColor(root.colorRGBA)) {
-                            m.colorHSVA.x = hsva.x
-                            m.colorHSVA.y = hsva.y
-                        }
-                    }
+                    onColorHSVUpdate: m.updateByHSVA(hsva)
                     onAccepted: root.accepted()
                 }
             }

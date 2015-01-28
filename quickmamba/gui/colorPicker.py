@@ -8,7 +8,7 @@ class ColorPickingEventFilter(QtCore.QObject):
         QtCore.QObject.__init__(self, screenpicker)
         self._screenpicker = screenpicker
 
-    def eventFilter(self, object, event):
+    def eventFilter(self, obj, event):
         if(event.type() == QtCore.QEvent.MouseMove):
             self._screenpicker.updateCurrentColor()
         elif(event.type() == QtCore.QEvent.MouseButtonRelease):

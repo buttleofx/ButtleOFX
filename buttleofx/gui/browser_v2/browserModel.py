@@ -9,6 +9,7 @@ from buttleofx.gui.browser_v2.threadWrapper import ThreadWrapper
 from buttleofx.gui.browser_v2.actions.actionManager import ActionManagerSingleton
 from buttleofx.gui.browser_v2.actions.worker import Worker
 import copy
+from pyTuttle import tuttle
 
 
 class BrowserModel(QtCore.QObject):
@@ -57,7 +58,6 @@ class BrowserModel(QtCore.QObject):
         """
             Update browserItemsModel according model's current path and filter options
         """
-
         if not os.path.exists(self._currentPath):
             return
 
@@ -69,11 +69,10 @@ class BrowserModel(QtCore.QObject):
             if not self._threadUpdateItem.getNbJobs():
                 self._threadUpdateItem.release()
                 return
-
             self._threadUpdateItem.lock()
 
-        # if no permissions fail
         try:
+            # if no permissions fail
             self._browserItems.clear()
             self._browserItemsModel.clear()
 
@@ -113,7 +112,6 @@ class BrowserModel(QtCore.QObject):
         # split treatment to avoid 2 useless conditions per pass even if redundant: faster
         if self._asyncMode:
             for item in allItems:
-                # TODO:handle supported
                 if self._threadUpdateItem.getNbJobs() != 1:
                     break
 
@@ -160,6 +158,8 @@ class BrowserModel(QtCore.QObject):
         for bItem in listToBrowse:
             # if modelRequester._threadRecursiveSearch.getNbJobs() != 1:
             #     break
+            # cancel util
+
             if pattern in bItem.getName().lower():
                 modelRequester._browserItems.append(bItem)
                 modelRequester._browserItemsModel.setObjectList(modelRequester._browserItems)
@@ -175,6 +175,7 @@ class BrowserModel(QtCore.QObject):
         #     modelRequester._threadRecursiveSearch.unlock()
 
     @QtCore.pyqtSlot(str)
+    # function to call, ensure async
     def doSearchRecursive(self, pattern):
         pattern = pattern.strip().lower()
         self.searchRecursiveFromPattern(pattern, self)
@@ -225,11 +226,11 @@ class BrowserModel(QtCore.QObject):
 
         if self._sortOn.getFieldToSort() == SortOn.onName:
             self._browserItems.sort(key=lambda it: (it.getType(), os.path.basename(it.getPath().lower())), reverse=rev)
-            self._browserItems.sort(key=lambda it: (it.getType()))
 
         elif self._sortOn.getFieldToSort() == SortOn.onSize:
             self._browserItems.sort(key=lambda it: (it.getType(), it.getWeight()), reverse=rev)
-            self._browserItems.sort(key=lambda it: (it.getType()))
+
+        self._browserItems.sort(key=lambda it: (it.getType()))
 
     # ################################### Methods exposed to QML ############################### #
 
@@ -293,16 +294,14 @@ class BrowserModel(QtCore.QObject):
         path = path if path else self._currentPath
         nameFiltering = ""
 
-        modelToNav = self
-
         if not os.path.exists(path):
             nameFiltering = os.path.basename(path)
-            modelToNav = BrowserModel(asyncMode=False, path=os.path.dirname(path))  # need to be sync
 
+        # get dirs with filtering if exists
         if nameFiltering:
-            tmpList = [item for item in modelToNav.getItems() if item.isFolder() and nameFiltering in item.getName()]
+            tmpList = [item for item in self.getItems() if item.isFolder() and nameFiltering in item.getName()]
         else:
-            tmpList = [item for item in modelToNav.getItems() if item.isFolder()]
+            tmpList = [item for item in self.getItems() if item.isFolder()]
 
         model = QObjectListModel(self)
         model.append(tmpList)
@@ -330,3 +329,4 @@ class BrowserModel(QtCore.QObject):
     splittedCurrentPath = QtCore.pyqtProperty(QObjectListModel, getSplittedCurrentPath, notify=currentPathChanged)
     listFolderNavBar = QtCore.pyqtProperty(QtCore.QObject, getListFolderNavBar, notify=currentPathChanged)
     sortOn = QtCore.pyqtProperty(str, getFieldToSort, notify=sortOnChanged)
+    selectedItems = QtCore.pyqtProperty(QObjectListModel, getSelectedItems, notify=modelChanged)

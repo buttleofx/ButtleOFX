@@ -286,6 +286,30 @@ Rectangle {
        }
 
         Button {
+            id: search
+
+            Layout.preferredWidth: 20
+            Layout.preferredHeight: 20
+            Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+
+            tooltip: "Research"
+
+            iconSource:
+            if (hovered)
+                "img/find_hover.png"
+            else
+                "img/find.png"
+
+            style:
+            ButtonStyle {
+                background: Rectangle {
+                    anchors.fill: parent
+                    color: "transparent"
+                }
+            }
+        }
+
+        Button {
             id: view
 
             Layout.preferredWidth: 20

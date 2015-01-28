@@ -9,10 +9,11 @@ RowLayout
     property real value
     property string caption
     property int precision    
-    property color fromColor
-    property color toColor
+    property vector4d fromColor: Qt.vector4d(0, 0, 0, 1)
+    property vector4d toColor: Qt.vector4d(0, 0, 0, 1)
     // Or for other special gradient use :
     property alias gradient: horizontalColorSlider.gradient
+    property bool gradientAlpha: false
 
     signal updatedValue(var updatedValue)
     signal accepted
@@ -59,6 +60,7 @@ RowLayout
         value: root.value
         fromColor: root.fromColor
         toColor: root.toColor
+        gradientAlpha: root.gradientAlpha
 
         onUpdatedValue: root.updatedValue(updatedValue)
         onAccepted: root.accepted()

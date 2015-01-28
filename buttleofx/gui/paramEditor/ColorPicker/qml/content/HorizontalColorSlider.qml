@@ -6,10 +6,12 @@ Item
 
     property real value
     // Color for the gradient
-    property color fromColor
-    property color toColor
+    property vector4d fromColor
+    property vector4d toColor
     // Or for other special gradient use :
     property alias gradient: gradient.gradient
+    // If no gradient alpha alpha is set by opacity because gradient alpha is not stable
+    property bool gradientAlpha: false
 
 
     signal accepted
@@ -28,17 +30,18 @@ Item
         height: parent.width
         anchors.centerIn: parent
         rotation: 90
+        opacity: gradientAlpha ? 1 : root.fromColor.w
 
         gradient: Gradient {
 
            GradientStop {
                id: brightnessBeginColor
                position: 0.0
-               color: fromColor
+               color: Qt.rgba(root.fromColor.x, root.fromColor.y, root.fromColor.z, gradientAlpha ? root.fromColor.w : 1)
            }
            GradientStop {
                position: 1.0
-               color: toColor
+               color: Qt.rgba(root.toColor.x, root.toColor.y, root.toColor.z, gradientAlpha ? root.toColor.w : 1)
            }
         }
     }

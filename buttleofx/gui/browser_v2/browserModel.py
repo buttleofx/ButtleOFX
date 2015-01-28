@@ -143,22 +143,23 @@ class BrowserModel(QtCore.QObject):
         # if asyncMode don't forgive to pop thread and releaseLock after all process(sort and set model)
 
     def searchRecursiveFromPattern(self, pattern, modelRequester):
-        # if all threads started were stopped, we stop process
-        if not modelRequester._threadRecursiveSearch.getNbJobs():
-            modelRequester._threadRecursiveSearch.unlock()
-            return
+        # # if all threads started were stopped, we stop process
+        # if not modelRequester._threadRecursiveSearch.getNbJobs():
+        #     modelRequester._threadRecursiveSearch.unlock()
+        #     return
 
         listToBrowse = self._browserItems
 
         if self == modelRequester:
-            modelRequester._threadRecursiveSearch.lock()
-            listToBrowse = copy.copy(self._browserItems)
+            # modelRequester._threadRecursiveSearch.lock()
+            listToBrowse = BrowserModel(False, modelRequester._currentPath)._browserItems
             modelRequester._browserItems.clear()
             modelRequester._browserItemsModel.clear()
+            modelRequester.modelChanged.emit()
 
         for bItem in listToBrowse:
-            if modelRequester._threadRecursiveSearch.getNbJobs() != 1:
-                break
+            # if modelRequester._threadRecursiveSearch.getNbJobs() != 1:
+            #     break
             if pattern in bItem.getName().lower():
                 modelRequester._browserItems.append(bItem)
                 modelRequester._browserItemsModel.setObjectList(modelRequester._browserItems)
@@ -167,12 +168,17 @@ class BrowserModel(QtCore.QObject):
                 BrowserModel(self._asyncMode, bItem.getPath()).searchRecursiveFromPattern(pattern, modelRequester)
 
         if self == modelRequester:
-            modelRequester._threadRecursiveSearch.pop()
-            modelRequester._threadRecursiveSearch.unlock()
+            modelRequester._browserItemsModel.setObjectList(modelRequester._browserItems)  # force notify ...
+            modelRequester.modelChanged.emit()
+            self.modelChanged.emit()
+        #     modelRequester._threadRecursiveSearch.pop()
+        #     modelRequester._threadRecursiveSearch.unlock()
 
+    @QtCore.pyqtSlot(str)
     def doSearchRecursive(self, pattern):
         pattern = pattern.strip().lower()
-        self._threadRecursiveSearch.startThread(self.searchRecursiveFromPattern, argsParam=(pattern, self))
+        self.searchRecursiveFromPattern(pattern, self)
+        # self._threadRecursiveSearch.startThread(self.searchRecursiveFromPattern, argsParam=(pattern, self))
 
     def getFilter(self):
         return self._filter

@@ -1,7 +1,6 @@
 import os
 
 from buttleofx.gui.browser_v2.actions.actionInterface import ActionInterface
-from buttleofx.gui.browser_v2.browserItem import BrowserItem
 
 
 class Rename(ActionInterface):
@@ -40,5 +39,3 @@ class Rename(ActionInterface):
         # TODO: Rename sequence
         if browserItem.isSequence():
             print("TODO: Rename sequence")
-
-

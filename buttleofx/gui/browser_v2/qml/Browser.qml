@@ -27,13 +27,18 @@ Rectangle {
 
         NavBar {
             id: navBar
-
             Layout.fillWidth: true
             Layout.preferredHeight: 50
 
             model: browser
             visitedFolderList: visitedFolderList
             visitedFolderListIndex: visitedFolderListIndex
+//            MouseArea{
+//                //hack for breadcum
+//                id: mouseAreaNavBar
+//                anchors.fill: parent
+//                propagateComposedEvents: true
+//            }
         }
 
         Rectangle {

@@ -127,10 +127,8 @@ Rectangle {
                     }
 
                     onClicked: {
-                        if(visitedFolderList.count > 1 && visitedFolderList.get(visitedFolderListIndex).url !== "/") {
-                            root.pushVisitedFolder(model.parentFolder)
-                        }
-                        model.currentPath = model.parentFolder
+                        if(model.currentPath !== "/" && model.currentPath.trim() !== "")
+                            model.currentPath = model.parentFolder
                     }
                 }
 

@@ -60,7 +60,7 @@ class ParamDouble2D(Param):
         return "ParamDouble2D"
 
     def getParent(self):
-        return self._tuttleParam.getProperties().fetchProperty("OfxParamPropParent").getStringValue(0)
+        return self._tuttleParam.getProperties().fetchProperty("OfxParamPropParent").getStringValueAt(0)
 
     def getValue(self):
         return (self.getValue1(), self.getValue2())

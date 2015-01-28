@@ -1,6 +1,7 @@
 import QtQuick 2.0
 import "ColorUtils.js" as ColorUtils
 import QtQuick.Layouts 1.1
+import QuickMamba 1.0
 
 Item {
     id: root
@@ -29,9 +30,9 @@ Item {
             caption: "R"
             value: root.colorRGBA.x
             // Change to create the hue gradient
-            toColor: Qt.rgba(0, root.colorRGBA.y, root.colorRGBA.z,
+            toColor: Qt.vector4d(0, root.colorRGBA.y, root.colorRGBA.z,
                              root.colorRGBA.w)
-            fromColor: Qt.rgba(1, root.colorRGBA.y, root.colorRGBA.z,
+            fromColor: Qt.vector4d(1, root.colorRGBA.y, root.colorRGBA.z,
                                root.colorRGBA.w)
             precision: root.precision
 
@@ -50,9 +51,9 @@ Item {
             caption: "G"
             value: root.colorRGBA.y
             // Change to create the hue gradient
-            toColor: Qt.rgba(root.colorRGBA.x, 0, root.colorRGBA.z,
+            toColor: Qt.vector4d(root.colorRGBA.x, 0, root.colorRGBA.z,
                              root.colorRGBA.w)
-            fromColor: Qt.rgba(root.colorRGBA.x, 1, root.colorRGBA.z,
+            fromColor: Qt.vector4d(root.colorRGBA.x, 1, root.colorRGBA.z,
                                root.colorRGBA.w)
             precision: root.precision
 
@@ -71,9 +72,9 @@ Item {
             caption: "B"
             value: root.colorRGBA.z
             // Change to create the hue gradient
-            toColor: Qt.rgba(root.colorRGBA.x, root.colorRGBA.y, 0,
+            toColor: Qt.vector4d(root.colorRGBA.x, root.colorRGBA.y, 0,
                              root.colorRGBA.w)
-            fromColor: Qt.rgba(root.colorRGBA.x, root.colorRGBA.y, 1,
+            fromColor: Qt.vector4d(root.colorRGBA.x, root.colorRGBA.y, 1,
                                root.colorRGBA.w)
             precision: root.precision
 
@@ -94,7 +95,8 @@ Item {
             caption: "H"
 
             value: root.colorHSVA.x
-            gradient: HueGradient { }
+
+            gradient: HueGradient { opacity: root.colorHSVA.w }
             precision: root.precision
 
             onUpdatedValue: root.colorHSVUpdate(Qt.vector4d(updatedValue,
@@ -111,11 +113,11 @@ Item {
 
             caption: "S"
             value: root.colorHSVA.y
-            toColor: ColorUtils.hsva2QtHsla(root.colorHSVA.x, 0,
-                                            root.colorHSVA.z, root.colorHSVA.w)
-            fromColor: ColorUtils.hsva2QtHsla(root.colorHSVA.x, 1,
+            toColor: ColorUtils.hsva2rgba(Qt.vector4d(root.colorHSVA.x, 0,
+                                            root.colorHSVA.z, root.colorHSVA.w))
+            fromColor: ColorUtils.hsva2rgba(Qt.vector4d(root.colorHSVA.x, 1,
                                               root.colorHSVA.z,
-                                              root.colorHSVA.w)
+                                              root.colorHSVA.w))
             precision: root.precision
 
             onUpdatedValue: root.colorHSVUpdate(Qt.vector4d(root.colorHSVA.x,
@@ -132,11 +134,11 @@ Item {
 
             caption: "V"
             value: root.colorHSVA.z
-            toColor: ColorUtils.hsva2QtHsla(root.colorHSVA.x, root.colorHSVA.y,
-                                            0, root.colorHSVA.w)
-            fromColor: ColorUtils.hsva2QtHsla(root.colorHSVA.x,
+            toColor: ColorUtils.hsva2rgba(Qt.vector4d(root.colorHSVA.x, root.colorHSVA.y,
+                                            0, root.colorHSVA.w))
+            fromColor: ColorUtils.hsva2rgba(Qt.vector4d(root.colorHSVA.x,
                                               root.colorHSVA.y, 1,
-                                              root.colorHSVA.w)
+                                              root.colorHSVA.w))
             precision: root.precision
 
             onUpdatedValue: root.colorHSVUpdate(Qt.vector4d(root.colorHSVA.x,
@@ -154,10 +156,11 @@ Item {
 
             caption: "A"
             value: root.colorRGBA.w
-            toColor: Qt.rgba(root.colorRGBA.x, root.colorRGBA.y,
+            toColor: Qt.vector4d(root.colorRGBA.x, root.colorRGBA.y,
                              root.colorRGBA.z, 0)
-            fromColor: Qt.rgba(root.colorRGBA.x, root.colorRGBA.y,
+            fromColor: Qt.vector4d(root.colorRGBA.x, root.colorRGBA.y,
                                root.colorRGBA.z, 1)
+            gradientAlpha: true
             precision: root.precision
 
             onUpdatedValue: root.colorRGBUpdate(Qt.vector4d(root.colorRGBA.x,
@@ -165,16 +168,6 @@ Item {
                                                          root.colorRGBA.z,
                                                          updatedValue))
             onAccepted: root.accepted()
-        }
-
-        HexaInput {
-            Layout.fillWidth: true
-            Layout.maximumHeight: 40
-
-            colorRGB: Qt.vector3d(root.colorRGBA.x, root.colorRGBA.y,
-                                  root.colorRGBA.z)
-            onUpdatedColor: root.colorRGBUpdate(Qt.vector4d(rgb.x, rgb.y, rgb.z,
-                                                         root.colorRGBA.w))
         }
     }
 }

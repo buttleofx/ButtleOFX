@@ -1,4 +1,3 @@
-
 import os
 import sys
 
@@ -7,13 +6,9 @@ from PyQt5 import QtWidgets
 from PyQt5 import QtQuick
 from OpenGL import GL
 
-
-
-
 currentFilePath = os.path.dirname(os.path.abspath(__file__))
 quickmambaPath = os.path.join(currentFilePath, '../../../../QuickMamba')
 sys.path.append(quickmambaPath)
-
 
 import quickmamba
 

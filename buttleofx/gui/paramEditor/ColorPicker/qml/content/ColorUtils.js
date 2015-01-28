@@ -1,4 +1,5 @@
 .pragma library
+Qt.include("mathUtils.js")
 
 // creates color value from hue, saturation, valueOf(), alpha
 function hsva2QtHsla(h, s, v, a) {
@@ -109,31 +110,123 @@ function rgba2hexa(rgba)
     return rgb2hexa(rgba)+int2hexa(Math.round(rgba.w * 255), 2);
 }
 
+function hexa2rgb(hexa)
+{
+   var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hexa)
+   return Qt.vector3d(parseInt(result[1], 16)/255, parseInt(result[2], 16)/255,parseInt(result[3], 16)/255)
+}
+
+// RYB -- RGB
+
+function rgba2ryba(rgba) {
+    var r = rgba.x, g = rgba.y, b = rgba.z;
+    // Remove the whiteness from the color.
+    var w = Math.min(r, g, b);
+    r -= w;
+    g -= w;
+    b -= w;
+
+    var mg = Math.max(r, g, b);
+
+    // Get the yellow out of the red+green.
+    var y = Math.min(r, g);
+    r -= y;
+    g -= y;
+
+    // If this unfortunate conversion combines blue and green, then cut each in
+    // half to preserve the value's maximum range.
+    if (b && g) {
+        b /= 2.0;
+        g /= 2.0;
+    }
+
+    // Redistribute the remaining green.
+    y += g;
+    b += g;
+
+    // Normalize to values.
+    var my = Math.max(r, y, b);
+    if (my) {
+        var n = mg / my;
+        r *= n;
+        y *= n;
+        b *= n;
+    }
+
+    // Add the white back in.
+    r += w;
+    y += w;
+    b += w;
+
+    // And return back the ryb typed accordingly.
+    return Qt.vector4d(r, y, b, rgba.w)
+}
+
+/**
+ * Convert a red-yellow-blue system to a red-green-blue system.
+ */
+function ryba2rgba(ryba) {
+    var r = ryba.x, y = ryba.y, b = ryba.z;
+    // Remove the whiteness from the color.
+    var w = Math.min(r, y, b);
+    r -= w;
+    y -= w;
+    b -= w;
+
+    var my = Math.max(r, y, b);
+
+    // Get the green out of the yellow and blue
+    var g = Math.min(y, b);
+    y -= g;
+    b -= g;
+
+    if (b && g) {
+        b *= 2.0;
+        g *= 2.0;
+    }
+
+    // Redistribute the remaining yellow.
+    r += y;
+    g += y;
+
+    // Normalize to values.
+    var mg = Math.max(r, g, b);
+    if (mg) {
+        var n = my / mg;
+        r *= n;
+        g *= n;
+        b *= n;
+    }
+
+    // Add the white back in.
+    r += w;
+    g += w;
+    b += w;
+
+    // And return back the ryb typed accordingly.
+    return Qt.vector4d(r, g, b, ryba.w)
+}
+
 // COMPLEMENTARY COLORS
 
 // hsv is a vec3 with 0-1 value complementary color base on RGB Model
-function complementaryColorHSV(hsv) {
+function complementaryColorHSVA(hsva) {
     var hue = hsv.x + 0.5
     if (hue > 1 )
         hue--
 
-    return Qt.vector3d(hue, hsv.y, hsv.z)
+    return Qt.vector4d(hue, hsva.y, hsva.z, hsva.w)
 }
 
 // rgb is a vec3 with 0-1 value complementary color base on RGB Model
-function complementaryColorRGB(rgb){
-    return Qt.vector3d(1 - rgb.x, 1 - rgb.y, 1 - rgb.z)
+function complementaryColorRGBA(rgba){
+    return Qt.vector4d(1 - rgba.x, 1 - rgba.y, 1 - rgba.z, rgba.w)
 }
 
 // OTHERS
 function isGreyLvlColor(rgba)
 {
     return rgba.x === rgba.y && rgba.y === rgba.z
-}
-
-function decimalRound(number, nbDecimals)
-{
-    return parseFloat(number.toFixed(nbDecimals))
 }
 
 function roundColor4D(color4D, precision) {

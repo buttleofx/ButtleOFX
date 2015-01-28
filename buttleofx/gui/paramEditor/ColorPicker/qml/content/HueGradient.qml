@@ -1,32 +1,35 @@
 import QtQuick 2.0
 
 Gradient {
+    id:root
+    property real opacity: 1
+
     GradientStop {
         position: 0
-        color: "#ff0000"
+        color: Qt.rgba(1, 0, 0, root.opacity)
     }
     GradientStop {
         position: 0.17
-        color: "#ff00ff"
+        color: Qt.rgba(1, 0, 1, root.opacity)
     }
     GradientStop {
         position: 0.34
-        color: "#0000ff"
+        color: Qt.rgba(0, 0, 1, root.opacity)
     }
     GradientStop {
         position: 0.5
-        color: "#00ffff"
+        color: Qt.rgba(0, 1, 1, root.opacity)
     }
     GradientStop {
         position: 0.66
-        color: "#00ff00"
+        color: Qt.rgba(0, 1, 0, root.opacity)
     }
     GradientStop {
         position: 0.82
-        color: "#ffff00"
+        color: Qt.rgba(1, 1, 0, root.opacity)
     }
     GradientStop {
         position: 1
-        color: "#ff0000"
+        color: Qt.rgba(1, 0, 0, root.opacity)
     }
 }

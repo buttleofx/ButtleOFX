@@ -127,7 +127,7 @@ Rectangle {
                     }
 
                     onClicked: {
-                        if(visitedFolderList.count > 1 && get(visitedFolderListIndex).url !== "/") {
+                        if(visitedFolderList.count > 1 && visitedFolderList.get(visitedFolderListIndex).url !== "/") {
                             root.pushVisitedFolder(model.parentFolder)
                         }
                         model.currentPath = model.parentFolder

@@ -73,6 +73,7 @@ Item {
                     Layout.minimumHeight: 44
                     Layout.maximumHeight: 60
                     Layout.alignment: Layout.Center
+                    spacing: 15
 
                     HexaInput {
                         Layout.fillHeight: true
@@ -99,13 +100,29 @@ Item {
                         radius: Config.radius
                         color: Config.backgroundColor
                         Layout.fillHeight: true
-                        Layout.minimumWidth: 50
+                        Layout.minimumWidth: 60
+
+                        function paramsHover() {
+                            params.visible = true
+                            paramsIcon.source = "img/gearHover.png"
+                        }
+
+                        function paramsExit() {
+                            params.visible = false
+                            paramsIcon.source = "img/gear.png"
+                        }
+
+                        Image {
+                            id: paramsIcon
+                            anchors.centerIn: parent
+                            source: "img/gear.png"
+                        }
 
                         MouseArea {
                             anchors.fill: parent
                             hoverEnabled: true
-                            onEntered: params.visible = true
-                            onExited: params.visible = false
+                            onEntered:  paramsButton.paramsHover()
+                            onExited: paramsButton.paramsExit()
                         }
 
                         Params
@@ -115,9 +132,12 @@ Item {
                             height: 60
                             width: 200
                             anchors.top: paramsButton.bottom
+                            anchors.topMargin: -5
                             anchors.horizontalCenter: paramsButton.horizontalCenter
 
                             visible: false
+                            onEntered:  paramsButton.paramsHover()
+                            onExited: paramsButton.paramsExit()
                         }
                     }
                 }

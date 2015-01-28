@@ -9,13 +9,15 @@ Rectangle {
     radius: Config.radius
     color: Config.backgroundColor
     signal updatePrecision(var precision)
+    signal entered()
+    signal exited()
 
     property int precision : precisionBox.value
     MouseArea {
         anchors.fill: root
         hoverEnabled: true
-        onEntered: root.visible = true
-        onExited: root.visible = false
+        onEntered: root.entered()
+        onExited: root.exited()
     }
 
     ColumnLayout {

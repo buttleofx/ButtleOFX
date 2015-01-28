@@ -152,18 +152,18 @@ class BrowserItem(QtCore.QObject):
 
     def getRealPathImg(self):
         if self.isFolder():
-            return "../../img/buttons/browser/folder-icon.png"  # default
+            return "img/folder-icon.png"  # default
 
         if self.isFile():
             if bool(tuttle.getReaders(self.getName())):
                 return 'image://buttleofx/' + self._path
-            return "../../img/buttons/browser/file-icon.png"
+            return "img/file-icon.png"
 
         if self.isSequence():
             if bool(tuttle.getReaders(self._sequence.getFirstFilePath())):
                 return 'image://buttleofx/' + self._sequence.getFirstFilePath()
 
-        return "../../img/buttons/browser/file-icon.png"  # default
+        return "img/file-icon.png"  # default
 
     def isFile(self):
         return self._typeItem == BrowserItem.ItemType.file

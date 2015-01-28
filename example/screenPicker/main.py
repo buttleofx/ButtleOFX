@@ -1,6 +1,8 @@
 import sys
 from PyQt5 import QtCore, QtWidgets, QtQuick
-from OpenGL import GL #Fix execution shader bug
+#Fix execution shader bug
+from OpenGL import GL
+
 
 import os
 

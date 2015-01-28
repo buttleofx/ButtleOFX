@@ -28,11 +28,10 @@ Rectangle {
         NavBar {
             id: navBar
             Layout.fillWidth: true
-            Layout.preferredHeight: 50
 
-            model: browser
-            visitedFolderList: visitedFolderList
-            visitedFolderListIndex: visitedFolderListIndex
+            property alias model: browser
+            property alias visitedFolderList: visitedFolderList
+            property alias visitedFolderListIndex: root.visitedFolderListIndex
 //            MouseArea{
 //                //hack for breadcum
 //                id: mouseAreaNavBar
@@ -57,9 +56,9 @@ Rectangle {
              Layout.fillWidth: true
              Layout.fillHeight: true
 
-             model: browser
-             visitedFolderList: visitedFolderList
-             visitedFolderListIndex: visitedFolderListIndex
+             property alias model: browser
+             property alias visitedFolderList: visitedFolderList
+             property alias visitedFolderListIndex: root.visitedFolderListIndex
          }
     }
 }

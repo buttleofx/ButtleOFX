@@ -4,14 +4,21 @@ import QtQuick.Dialogs 1.0
 import QtQuick.Layouts 1.0
 import QtQuick.Controls.Styles 1.0
 
+
 Rectangle {
     id: root
 
     color: "transparent"
 
-    property var model
-    property var visitedFolderList
-    property int visitedFolderListIndex
+    function pushVisitedFolder(path){
+        if (visitedFolderList.count === 0){
+            // Save path of the current folder
+            visitedFolderList.append({"url": root.model.currentPath})
+        }
+
+        visitedFolderList.append({"url": path})
+        ++ visitedFolderListIndex
+    }
 
     ScrollView {
         anchors.fill: parent
@@ -48,7 +55,7 @@ Rectangle {
 
             anchors.fill: parent
 
-            cellWidth: 120
+            cellWidth: 150
             cellHeight: 100
 
             // displayMarginBeginning: 20 // Available in QtQuick 2.3
@@ -58,44 +65,130 @@ Rectangle {
             model: root.model.fileItems
 
             delegate: component
+
+            boundsBehavior: Flickable.StopAtBounds
+            focus: true
         }
+
     }
 
     Component {
         id: component
 
-        Column {
-            width: grid.cellWidth - 10
-            height: grid.cellHeight - 10
+        Rectangle {
+            id: component_container
 
-            Image {
-                id: icon
+            width: grid.cellWidth - 20
+            height: icon.height + fileName.height
 
-                anchors.horizontalCenter: parent.horizontalCenter
+            color: (model.object.isSelected) ? "#666666" : "transparent"
+            radius: 2
 
-                source: model.object.pathImg
-                sourceSize.width: 50
-                sourceSize.height: 50
-                fillMode: Image.PreserveAspectFit
+            Column {
+                anchors.fill: parent
+
+                Image {
+                    id: loading
+
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    height: 50
+                    width: parent.width
+
+                    source: "img/refresh_hover.png"
+                    sourceSize.width: 20
+                    sourceSize.height: 20
+                    asynchronous: true
+
+                    fillMode: Image.Pad
+
+                    visible: !(model.object.type === 1) && icon.status === Image.Loading
+
+                    NumberAnimation on rotation {
+                        from: 0
+                        to: 360
+                        running: loading.visible
+                        loops: Animation.Infinite
+                        duration: 1000
+                    }
+                }
+
+                Image {
+                    id: icon
+
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    height: 50
+                    width: parent.width - 20
+
+                    source: model.object.pathImg
+                    sourceSize.width: 50
+                    sourceSize.height: 50
+                    asynchronous: true
+
+                    fillMode: Image.PreserveAspectFit
+
+                    opacity: ((icon_mouseArea.containsMouse || text_mouseArea.containsMouse) ^ model.object.isSelected) ? 1 : 0.7
+
+                    visible: !loading.visible
+
+                    MouseArea {
+                        id: icon_mouseArea
+                        anchors.fill: parent
+
+                        hoverEnabled: true
+
+                        onClicked: {
+                            if (!model.object.isSelected)
+                                model.object.isSelected = true
+                        }
+
+                        onDoubleClicked: {
+                            if (model.object.type === 1) { // Folder
+                                root.pushVisitedFolder(model.object.path)
+                                root.model.currentPath = model.object.path
+                            }
+                        }
+                    }
+                }
+
+                Text {
+                    id: fileName
+
+                    width: parent.width
+                    height: paintedHeight
+
+                    elide: (model.object.isSelected) ? Text.ElideNone : Text.ElideRight
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    horizontalAlignment: Text.AlignHCenter
+
+                    text: model.object.name
+                    color: ((icon_mouseArea.containsMouse || text_mouseArea.containsMouse) ^ model.object.isSelected) ? "white" : "#BBBBBB"
+
+                    wrapMode: Text.WrapAnywhere
+
+                    MouseArea {
+                        id: text_mouseArea
+                        anchors.fill: parent
+
+                        hoverEnabled: true
+
+                        onClicked: {
+                            if (!model.object.isSelected)
+                                model.object.isSelected = true
+                        }
+
+                        onDoubleClicked: {
+                            if (model.object.type === 1) { // Folder
+                                root.pushVisitedFolder(model.object.path)
+                                root.model.currentPath = model.object.path
+                            }
+                        }
+                    }
+                }
+
+                Component.onCompleted: {
+                    fileName.width = fileName.contentWidth
+                }
             }
-
-            Text {
-                id: fileName
-
-                width: parent.width
-
-                anchors.horizontalCenter: parent.horizontalCenter
-                horizontalAlignment: Text.AlignHCenter
-
-                text: model.object.name
-                color: (model.object.isSelected) ? "black" : "white"
-
-                font.bold: model.object.isSelected
-
-                wrapMode: Text.WrapAnywhere
-                maximumLineCount: (model.object.isSelected) ? contentHeight : 2
-            }
-
         }
     }
 

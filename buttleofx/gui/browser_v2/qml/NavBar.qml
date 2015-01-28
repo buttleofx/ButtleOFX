@@ -9,11 +9,8 @@ Rectangle {
 
     color: "#2E2E2E"
 
-    property var model
-    property var visitedFolderList
-    property int visitedFolderListIndex: 0
     signal autoCompleteMode(bool active)
-    property bool refreshModel: true
+    Layout.preferredHeight: searchLayoutRectangle.height+ navBarContainer.height
 
     function pushVisitedFolder(path){
         if (visitedFolderList.count === 0){
@@ -25,324 +22,402 @@ Rectangle {
         ++ visitedFolderListIndex
     }
 
-
     onAutoCompleteMode: {
         autoCompleteList.show()
     }
 
-    RowLayout {
-        id: navBarContainer
+    ColumnLayout{
         anchors.fill: parent
-        anchors.margins: 5
-        spacing: 10
+        spacing: 0
 
-        Button {
-            id: previous
-
-            Layout.preferredWidth: 20
-            Layout.preferredHeight: 20
-            Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
-
-            tooltip: "Previous"
-            iconSource:
-            if (hovered)
-                "img/previous_hover.png"
-            else
-                "img/previous.png"
-
-            style:
-            ButtonStyle {
-                background: Rectangle {
-                    anchors.fill: parent
-                    color: "transparent"
-                }
-            }
-
-            onClicked: {
-                if (visitedFolderList.count > 0 && visitedFolderListIndex > 0) {
-                    -- visitedFolderListIndex
-                    model.currentPath = visitedFolderList.get(visitedFolderListIndex).url
-                }
-            }
-        }
-
-        Button {
-            id: next
-
-            Layout.preferredWidth: 20
-            Layout.preferredHeight: 20
-            Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
-
-            tooltip: "Next"
-
-            iconSource:
-            if (hovered)
-                "img/next_hover.png"
-            else
-                "img/next.png"
-
-            style:
-            ButtonStyle {
-                background: Rectangle {
-                    anchors.fill: parent
-                    color: "transparent"
-                }
-            }
-
-            onClicked: {
-                if (visitedFolderList.count > 1 && visitedFolderListIndex !== (visitedFolderList.count - 1)){
-                    ++ visitedFolderListIndex
-                    model.currentPath = visitedFolderList.get(visitedFolderListIndex).url
-                }
-            }
-        }
-
-        Button {
-            id: parent_folder
-
-            Layout.preferredWidth: 20
-            Layout.preferredHeight: 20
-            Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
-
-            tooltip: "Parent folder"
-
-            iconSource:
-            if (hovered)
-                "img/parent_hover.png"
-            else
-                "img/parent.png"
-
-            style:
-            ButtonStyle {
-                background: Rectangle {
-                    anchors.fill: parent
-                    color: "transparent"
-                }
-            }
-
-            onClicked: {
-                if(visitedFolderList.get(visitedFolderListIndex).url !== "/") {
-                    root.pushVisitedFolder(model.parentFolder)
-                    model.currentPath = model.parentFolder
-                }
-            }
-        }
-
-        Button {
-            id: refresh
-
-            Layout.preferredWidth: 20
-            Layout.preferredHeight: 20
-            Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
-
-            tooltip: "Refresh"
-
-            iconSource:
-            if (hovered)
-                "img/refresh_hover.png"
-            else
-                "img/refresh.png"
-
-            style:
-            ButtonStyle {
-                background: Rectangle {
-                    anchors.fill: parent
-                    color: "transparent"
-                }
-            }
-
-            // onClicked: refreshFolder()
-        }
-
-
-        Rectangle {
-            id: textEditContainer
-
-            Layout.preferredHeight: parent.height - 10
+        Rectangle{
+            Layout.alignment: Qt.AlignTop
+            id: navBarContainer
             Layout.fillWidth: true
+            color: "transparent"
+            Layout.preferredHeight: 50
 
-            visible: false
+            RowLayout {
+                anchors.fill: parent
+                anchors.margins: 5
+                spacing: 10
 
-            color: "#DDDDDD"
-            border.color: "#00B2A1"
-            border.width: 2
-            radius: 3
+                Button {
+                    id: previous
 
-            TextInput {
-                id: texteditPath
-                y: 5
-                x: 10
-                height: parent.height
-                width: parent.width - 10
-                clip: true
+                    Layout.preferredWidth: 20
+                    Layout.preferredHeight: 20
+                    Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
 
-                text: root.model.currentPath
+                    tooltip: "Previous"
+                    iconSource:
+                    if (hovered)
+                        "img/previous_hover.png"
+                    else
+                        "img/previous.png"
 
-                selectByMouse: true
-                selectionColor: "#00b2a1"
-
-                onTextChanged: {
-
-                }
-
-                onAccepted: {
-                    root.model.currentPath = text
-                    autoCompleteList.show()
-                }
-
-                Keys.onEscapePressed: {
-                    if (!breadCrum.visible)
-                        breadCrum.visible = true
-                        breadCrum.forceActiveFocus()
-
-                    if (textEditContainer.visible)
-                        textEditContainer.visible = false
-
-                }
-
-                Keys.onDownPressed: {
-                    autoCompleteList.show()
-                }
-
-                Keys.onTabPressed: {
-                    root.model.currentPath = text
-                    autoCompleteList.show()
-                }
-
-                Keys.onPressed: {
-                    if ((event.key == Qt.Key_Space) && (event.modifiers & Qt.ControlModifier)){
-                        autoCompleteList.show()
-                        if(autoCompleteList.items.count > 0)
-                            autoCompleteList.items[0].trigger()
+                    style:
+                    ButtonStyle {
+                        background: Rectangle {
+                            anchors.fill: parent
+                            color: "transparent"
+                        }
                     }
-                    else{
-                        model.currentPath = text
+
+                    onClicked: {
+                        if (visitedFolderList.count > 0 && visitedFolderListIndex > 0) {
+                            -- visitedFolderListIndex
+                            model.currentPath = visitedFolderList.get(visitedFolderListIndex).url
+                        }
                     }
                 }
 
-                Menu {
-                    id: autoCompleteList
-                    Instantiator{
-                        model:root.model.listFolderNavBar
+                Button {
+                    id: next
 
-                        MenuItem {
+                    Layout.preferredWidth: 20
+                    Layout.preferredHeight: 20
+                    Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
 
-                            id: textComponent
-                            text: model.object.name
+                    tooltip: "Next"
 
-                            onTriggered: {
-                                root.pushVisitedFolder( model.object.path)
-                                root.model.currentPath = model.object.path
+                    iconSource:
+                    if (hovered)
+                        "img/next_hover.png"
+                    else
+                        "img/next.png"
+
+                    style:
+                    ButtonStyle {
+                        background: Rectangle {
+                            anchors.fill: parent
+                            color: "transparent"
+                        }
+                    }
+
+                    onClicked: {
+                        if (visitedFolderList.count > 1 && visitedFolderListIndex !== (visitedFolderList.count - 1)){
+                            ++ visitedFolderListIndex
+                            model.currentPath = visitedFolderList.get(visitedFolderListIndex).url
+                        }
+                    }
+                }
+
+                Button {
+                    id: parent_folder
+
+                    Layout.preferredWidth: 20
+                    Layout.preferredHeight: 20
+                    Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+
+                    tooltip: "Parent folder"
+
+                    iconSource:
+                    if (hovered)
+                        "img/parent_hover.png"
+                    else
+                        "img/parent.png"
+
+                    style:
+                    ButtonStyle {
+                        background: Rectangle {
+                            anchors.fill: parent
+                            color: "transparent"
+                        }
+                    }
+
+                    onClicked: {
+                        if(visitedFolderList.get(visitedFolderListIndex).url !== "/") {
+                            root.pushVisitedFolder(model.parentFolder)
+                            model.currentPath = model.parentFolder
+                        }
+                    }
+                }
+
+                Button {
+                    id: refresh
+
+                    Layout.preferredWidth: 20
+                    Layout.preferredHeight: 20
+                    Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+
+                    tooltip: "Refresh"
+
+                    iconSource:
+                    if (hovered)
+                        "img/refresh_hover.png"
+                    else
+                        "img/refresh.png"
+
+                    style:
+                    ButtonStyle {
+                        background: Rectangle {
+                            anchors.fill: parent
+                            color: "transparent"
+                        }
+                    }
+
+                    onClicked: root.model.refresh()
+                }
+
+
+                Rectangle {
+                    id: textEditContainer
+
+                    Layout.preferredHeight: parent.height - 10
+                    Layout.fillWidth: true
+
+                    visible: false
+
+                    color: "#DDDDDD"
+                    border.color: "#00B2A1"
+                    border.width: 2
+                    radius: 3
+
+                    TextInput {
+                        id: texteditPath
+                        y: 5
+                        x: 10
+                        height: parent.height
+                        width: parent.width - 10
+                        clip: true
+
+                        text: root.model.currentPath
+
+                        selectByMouse: true
+                        selectionColor: "#00b2a1"
+
+                        onTextChanged: {
+
+                        }
+
+                        onAccepted: {
+                            root.model.currentPath = text
+                            autoCompleteList.show()
+                        }
+
+                        Keys.onEscapePressed: {
+                            if (!breadCrum.visible)
+                                breadCrum.visible = true
+                                breadCrum.forceActiveFocus()
+
+                            if (textEditContainer.visible)
+                                textEditContainer.visible = false
+
+                        }
+
+                        Keys.onDownPressed: {
+                            autoCompleteList.show()
+                        }
+
+                        Keys.onTabPressed: {
+                            root.model.currentPath = text
+                            autoCompleteList.show()
+                        }
+
+                        Keys.onPressed: {
+                            if ((event.key == Qt.Key_Space) && (event.modifiers & Qt.ControlModifier)){
+                                autoCompleteList.show()
+                                if(autoCompleteList.items.count > 0)
+                                    autoCompleteList.items[0].trigger()
+                            }
+                            else{
+                                model.currentPath = text
                             }
                         }
 
-                        onObjectAdded: autoCompleteList.insertItem(index, object)
-                        onObjectRemoved: autoCompleteList.removeItem(object)
-                    }
+                        Menu {
+                            id: autoCompleteList
+                            Instantiator{
+                                model:root.model.listFolderNavBar
 
-                    function show() {
-                        // Retrieve position instead of cursorRectangle.x
-                        root.model.currentPath = root.model.currentPath
+                                MenuItem {
 
-                        if(!root.model.listFolderNavBar.count)
-                            return
-                        var index = root.model.currentPath.length
-                        var x = 0
-                        if (index != -1) {
-                            var rect = texteditPath.positionToRectangle(index)
-                            x = rect.x
+                                    id: textComponent
+                                    text: model.object.name
+
+                                    onTriggered: {
+                                        root.pushVisitedFolder( model.object.path)
+                                        root.model.currentPath = model.object.path
+                                    }
+                                }
+
+                                onObjectAdded: autoCompleteList.insertItem(index, object)
+                                onObjectRemoved: autoCompleteList.removeItem(object)
+                            }
+
+                            function show() {
+                                // Retrieve position instead of cursorRectangle.x
+                                root.model.currentPath = root.model.currentPath
+
+                                if(!root.model.listFolderNavBar.count)
+                                    return
+
+                                var index = root.model.currentPath.length
+                                var x = 0
+                                var y = texteditPath.height
+
+                                if (index != -1) {
+                                    var rect = texteditPath.positionToRectangle(index)
+                                    x = rect.x
+                                }
+                                this.__popup(x+textEditContainer.x+12, y)
+                            }
                         }
-
-                        var y = texteditPath.height
-                        var tmp = 0
-                        this.__popup(x+textEditContainer.x+12, y)
                     }
                 }
+
+                ListView {
+                   id: breadCrum
+
+                   Layout.fillWidth: true
+                   Layout.preferredHeight: parent.height
+
+                   orientation: Qt.Horizontal
+
+                   model: root.model.splittedCurrentPath
+
+                   visible: true
+                   clip: true
+
+                   MouseArea {
+                       anchors.fill: parent
+                       propagateComposedEvents: true
+                       onDoubleClicked: {
+                           if (breadCrum.visible)
+                                breadCrum.visible = false
+
+                           if (!textEditContainer.visible)
+                                textEditContainer.visible = true
+                                texteditPath.forceActiveFocus()
+                       }
+                   }
+                   delegate: component
+                }
+
+                Button {
+                    id: search
+
+                    Layout.preferredWidth: 20
+                    Layout.preferredHeight: 20
+                    Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+
+                    tooltip: "Search recursively"
+
+                    iconSource:
+                    if (hovered)
+                        "img/find_hover.png"
+                    else
+                        "img/find.png"
+
+                    style:
+                    ButtonStyle {
+                        background: Rectangle {
+                            anchors.fill: parent
+                            color: "transparent"
+                        }
+                    }
+                    onClicked: {
+                        searchLayoutRectangle.visible = !searchLayoutRectangle.visible
+                        searchEdit.forceActiveFocus()
+                    }
+
+                }
+
+//                Button {
+//                    id: view
+
+//                    Layout.preferredWidth: 20
+//                    Layout.preferredHeight: 20
+//                    Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+
+//                    tooltip: "List view"
+
+//                    iconSource:
+//                    if (hovered)
+//                        "img/listview_hover.png"
+//                    else
+//                        "img/listview.png"
+
+//                    states: [
+//                        State {
+//                            name: "gridview"
+//                            PropertyChanges {
+//                                target: view
+//                                tooltip: "List view"
+//                                iconSource:
+//                                if (hovered)
+//                                    "img/gridview_hover.png"
+//                                else
+//                                    "img/gridview.png"
+//                            }
+//                        },
+//                        State {
+//                            name: "listview"
+//                            PropertyChanges {
+//                                target: view
+//                                tooltip: "Grid view"
+//                                iconSource:
+//                                if (hovered)
+//                                    "img/listview_hover.png"
+//                                else
+//                                    "img/listview.png"
+//                            }
+//                        }
+//                    ]
+
+//                    style:
+//                    ButtonStyle {
+//                        background: Rectangle {
+//                            anchors.fill: parent
+//                            color: "transparent"
+//                        }
+//                    }
+
+//                }
             }
+
         }
+        Rectangle{
+            id: searchLayoutRectangle
+            Layout.fillWidth: true
+            height: visible ? 35: 0
+            color: "transparent"
+            visible: false
 
-        ListView {
-           id: breadCrum
+            RowLayout{
+                id: searchLayout
+                anchors.fill: parent
 
-           Layout.fillWidth: true
-           Layout.preferredHeight: parent.height
+                Rectangle {
+                    id: searchContainer
+                    Layout.fillWidth: true
+                    Layout.fillHeight: true
+                    visible: parent.visible
+                    color: "#DDDDDD"
+                    border.color: "#00B2A1"
+                    border.width: 2
+                    radius: 3
 
-           orientation: Qt.Horizontal
+                    TextInput {
+                        id: searchEdit
+                        y: 5
+                        x: 10
+                        height: parent.height
+                        width: parent.width - 10
+                        clip: true
+                        selectByMouse: true
+                        selectionColor: "#00b2a1"
 
-           model: root.model.splittedCurrentPath
-
-           visible: true
-           clip: true
-
-           MouseArea {
-               anchors.fill: parent
-               propagateComposedEvents: true
-               onDoubleClicked: {
-                   if (breadCrum.visible)
-                        breadCrum.visible = false
-
-                   if (!textEditContainer.visible)
-                        textEditContainer.visible = true
-                        texteditPath.forceActiveFocus()
-               }
-           }
-           delegate: component
-       }
-
-        Button {
-            id: view
-
-            Layout.preferredWidth: 20
-            Layout.preferredHeight: 20
-            Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
-
-            tooltip: "List view"
-
-            iconSource:
-            if (hovered)
-                "img/listview_hover.png"
-            else
-                "img/listview.png"
-
-            states: [
-                State {
-                    name: "gridview"
-//                    when: headerBar.isInListView == true
-                    PropertyChanges {
-                        target: view
-                        tooltip: "List view"
-                        iconSource:
-                        if (hovered)
-                            "img/gridview_hover.png"
-                        else
-                            "img/gridview.png"
+                        onAccepted: {
+                            browser.doSearchRecursive(text)
+                        }
                     }
-                },
-                State {
-                    name: "listview"
-//                    when: headerBar.isInListView == false
-                    PropertyChanges {
-                        target: view
-                        tooltip: "Grid view"
-                        iconSource:
-                        if (hovered)
-                            "img/listview_hover.png"
-                        else
-                            "img/listview.png"
-                    }
-                }
-            ]
-
-            style:
-            ButtonStyle {
-                background: Rectangle {
-                    anchors.fill: parent
-                    color: "transparent"
                 }
             }
-
         }
     }
+
     // One breadcrum component struct
     Component {
         id: component
@@ -367,6 +442,7 @@ Rectangle {
                     hoverEnabled: true
                     onClicked: {
                         root.pushVisitedFolder(model.object[0])
+                        root.model.currentPath = model.object[0]
                     }
                 }
             }
@@ -392,8 +468,6 @@ Rectangle {
                         anchors.fill: parent
                         hoverEnabled: true
                         onClicked: {
-                            console.log("Arrow clicked")
-                            console.log(root)
                             root.model.currentPath = model.object[0]
                         }
                     }

@@ -119,17 +119,17 @@ function hexa2rgb(hexa)
 // COMPLEMENTARY COLORS
 
 // hsv is a vec3 with 0-1 value complementary color base on RGB Model
-function complementaryColorHSV(hsv) {
+function complementaryColorHSVA(hsva) {
     var hue = hsv.x + 0.5
     if (hue > 1 )
         hue--
 
-    return Qt.vector3d(hue, hsv.y, hsv.z)
+    return Qt.vector4d(hue, hsva.y, hsva.z, hsva.w)
 }
 
 // rgb is a vec3 with 0-1 value complementary color base on RGB Model
-function complementaryColorRGB(rgb){
-    return Qt.vector3d(1 - rgb.x, 1 - rgb.y, 1 - rgb.z)
+function complementaryColorRGBA(rgba){
+    return Qt.vector4d(1 - rgba.x, 1 - rgba.y, 1 - rgba.z, rgba.w)
 }
 
 // OTHERS

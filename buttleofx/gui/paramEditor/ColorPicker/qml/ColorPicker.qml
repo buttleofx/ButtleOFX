@@ -169,16 +169,20 @@ Item {
             }
         }
 
-        RowLayout {
-            // Display the color choosen and her complementary
-            ColorVisualisation {
-                Layout.fillWidth: true
-                Layout.fillHeight: true
-                Layout.minimumHeight: 50
-                Layout.minimumWidth: 150
-                color: Qt.rgba(root.colorRGBA.x, root.colorRGBA.y, root.colorRGBA.z, root.colorRGBA.w)
+        // Display the color choosen and her complementary
+        ColorVisualisation {
+            Layout.fillWidth: true
+            Layout.fillHeight: true
+            Layout.minimumHeight: 50
+            Layout.minimumWidth: 150
+
+            colorRGBA: root.colorRGBA
+            onUpdatedRGBA: {
+                root.colorRGBA = rgba
+                root.accepted()
             }
         }
+
     }
 
 }

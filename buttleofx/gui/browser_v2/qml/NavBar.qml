@@ -127,10 +127,10 @@ Rectangle {
                     }
 
                     onClicked: {
-                        if(visitedFolderList.get(visitedFolderListIndex).url !== "/") {
+                        if(visitedFolderList.count > 1 && get(visitedFolderListIndex).url !== "/") {
                             root.pushVisitedFolder(model.parentFolder)
-                            model.currentPath = model.parentFolder
                         }
+                        model.currentPath = model.parentFolder
                     }
                 }
 
@@ -410,7 +410,8 @@ Rectangle {
                         selectionColor: "#00b2a1"
 
                         onAccepted: {
-                            browser.doSearchRecursive(text)
+                            if(text.trim())
+                                browser.doSearchRecursive(text.trim())
                         }
                     }
                 }

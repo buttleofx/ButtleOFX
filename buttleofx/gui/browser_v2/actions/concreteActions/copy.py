@@ -40,7 +40,7 @@ class Copy(ActionInterface):
         destPath = self._destPath
 
         if browserItem.isFile():
-            os.remove(os.path.join(destPath, browserItem.getName()))
+            os.remove(os.path.join(destPath, browserItemName))
 
         if browserItem.isFolder():
             shutil.rmtree(destPath)

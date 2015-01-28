@@ -7,6 +7,7 @@ QtObject {
     property color backgroundColor: "#212121"
     property color accentColor: "#00B2A1"
     property color borderColor: "#333"
+    property color windowColor: "#2A2A2A"
 
     property int borderWidth: 2
     property int radius: 3

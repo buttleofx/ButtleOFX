@@ -23,25 +23,31 @@ RowLayout {
 
         Image {
             anchors.fill: parent
-            source:_buttleData.buttlePath + "/gui/img/background/checkerboard.jpg"
+            source: _buttleData.buttlePath + "/gui/img/background/checkerboard.jpg"
             fillMode: Image.Tile
         }
 
         Rectangle {
             anchors.fill: parent
             color: "black"
-            opacity : model.object.a
+            opacity: model.object.a
             border.width: 1
             border.color: "#333"
         }
     }
 
     MouseArea {
+        id: openWindowRGBA
+        property bool isOpen: false
+
         anchors.fill: parent
         onClicked: {
             var component = Qt.createComponent("WindowColorWheelRGBA.qml")
-            win = component.createObject(root)
-            win.show()
+            if (!isOpen) {
+                win = component.createObject(root)
+                win.show()
+                isOpen = true
+            }
         }
     }
 }

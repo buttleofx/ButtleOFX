@@ -36,4 +36,7 @@ Window {
             }
         }
     }
+    onClosing: {
+        openWindowRGB.isOpen = false
+    }
 }

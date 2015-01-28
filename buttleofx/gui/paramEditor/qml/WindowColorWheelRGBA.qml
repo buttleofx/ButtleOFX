@@ -35,4 +35,8 @@ Window {
             }
         }
     }
+
+    onClosing: {
+        openWindowRGBA.isOpen = false
+    }
 }

@@ -28,10 +28,7 @@ currentFilePath = os.path.dirname(os.path.abspath(__file__))
 if __name__ == '__main__':
 
     tuttle.core().preload()
-    b = sequenceParser.browse("/home/alex/Bureau/tmp/")
-    b = BrowserModel(path="/home/alex/Bureau/tmp")
-    for a in b.getItems():
-        print(a.getPath(), a.getWeightFormatted())
+
     app = QtWidgets.QApplication(sys.argv)
     engine = QtQml.QQmlEngine(app)
     engine.quit.connect(app.quit)

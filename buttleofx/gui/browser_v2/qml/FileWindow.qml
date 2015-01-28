@@ -4,6 +4,7 @@ import QtQuick.Dialogs 1.0
 import QtQuick.Layouts 1.0
 import QtQuick.Controls.Styles 1.0
 
+
 Rectangle {
     id: root
 
@@ -58,14 +59,18 @@ Rectangle {
             model: root.model.fileItems
 
             delegate: component
+
+            boundsBehavior: Flickable.StopAtBounds
+            focus: true
         }
+
     }
 
     Component {
         id: component
 
         Rectangle {
-            width: grid.cellWidth - 50
+            width: grid.cellWidth - 10
             height: grid.cellHeight - 30
 
             color: (model.object.isSelected) ? "#22FFFFFF" : "transparent"
@@ -84,7 +89,7 @@ Rectangle {
                     sourceSize.height: 50
                     fillMode: Image.PreserveAspectFit
 
-                    opacity: ((icon_mouseArea.containsMouse || text_mouseArea.containsMouse) ^ model.object.isSelected) ? 1 : 0.6
+                    opacity: ((icon_mouseArea.containsMouse || text_mouseArea.containsMouse) ^ model.object.isSelected) ? 1 : 0.7
 
                     MouseArea {
                         id: icon_mouseArea
@@ -95,6 +100,24 @@ Rectangle {
                         onClicked: {
                             if (!model.object.isSelected)
                                 model.object.isSelected = true
+                        }
+
+                        onDoubleClicked: {
+                            if (model.object.type === 1) { // Folder
+
+                                if (visitedFolderList.count === 0){
+                                    // Save path of the current folder
+                                    visitedFolderList.append({"url": root.model.currentPath})
+                                }
+
+                                // Save path of the incoming folder
+                                visitedFolderList.append({"url": model.object.path})
+                                ++ visitedFolderListIndex
+
+                                // Set the new path
+
+                                root.model.currentPath = model.object.path
+                            }
                         }
                     }
                 }
@@ -123,6 +146,23 @@ Rectangle {
                         onClicked: {
                             if (!model.object.isSelected)
                                 model.object.isSelected = true
+                        }
+
+                        onDoubleClicked: {
+                            if (model.object.type === 1) { // Folder
+
+                                if (visitedFolderList.count === 0){
+                                    // Save path of the current folder
+                                    visitedFolderList.append({"url": root.model.currentPath})
+                                }
+
+                                // Save path of the incoming folder
+                                visitedFolderList.append({"url": model.object.path})
+                                ++ visitedFolderListIndex
+
+                                // Set the new path
+                                root.model.currentPath = model.object.path
+                            }
                         }
                     }
                 }

@@ -1,10 +1,12 @@
 import QtQuick 2.2
 import QtQuick.Layouts 1.1
 import BrowserModel 1.0
+import "../../../gui"
 
 Rectangle {
     id: root
-
+    signal buttonCloseClicked(bool clicked)
+    signal buttonFullscreenClicked(bool clicked)
     width: 800
     height: 600
 
@@ -21,7 +23,15 @@ Rectangle {
         id: browser
     }
 
+
     ColumnLayout {
+        Tab {
+            Layout.fillWidth: true
+            id: tabBar
+            name: "Browser"
+            onCloseClicked: root.buttonCloseClicked(true)
+            onFullscreenClicked: root.buttonFullscreenClicked(true)
+        }
         anchors.fill: parent
         spacing: 0
 

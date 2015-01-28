@@ -127,8 +127,11 @@ Rectangle {
                     }
 
                     onClicked: {
-                        if(model.currentPath !== "/" && model.currentPath.trim() !== "")
+                        if(model.currentPath !== "/" && model.currentPath.trim() !== ""){
+                            root.pushVisitedFolder(model.parentFolder)
                             model.currentPath = model.parentFolder
+                        }
+
                     }
                 }
 
@@ -179,18 +182,15 @@ Rectangle {
                         height: parent.height
                         width: parent.width - 10
                         clip: true
-
                         text: root.model.currentPath
 
                         selectByMouse: true
                         selectionColor: "#00b2a1"
-
-                        onTextChanged: {
-
+                        validator: RegExpValidator{
+                            regExp: /^\/{1}[A-Za-z/]{1,}$/
                         }
 
                         onAccepted: {
-                            root.model.currentPath = text
                             autoCompleteList.show()
                         }
 
@@ -209,23 +209,32 @@ Rectangle {
                         }
 
                         Keys.onTabPressed: {
-                            root.model.currentPath = text
                             autoCompleteList.show()
                         }
 
                         Keys.onPressed: {
+                            if(event.key == Qt.Key_Space)
+                                return false
+                        }
+
+                        Keys.onReleased: {
+
                             if ((event.key == Qt.Key_Space) && (event.modifiers & Qt.ControlModifier)){
-                                autoCompleteList.show()
-                                if(autoCompleteList.items.count > 0)
+                                root.model.currentPath = texteditPath.text
+
+                                if(autoCompleteList.items.length == 1)
                                     autoCompleteList.items[0].trigger()
+                                else
+                                    autoCompleteList.show()
                             }
-                            else{
-                                model.currentPath = text
-                            }
+                            if(event.key == Qt.Key_Tab || event.key == Qt.Key_Enter || event.key == Qt.Key_Down)
+                                autoCompleteList.show()
                         }
 
                         Menu {
                             id: autoCompleteList
+                            __visualItem: textEditContainer //simulate container for popup
+
                             Instantiator{
                                 model:root.model.listFolderNavBar
 
@@ -238,6 +247,7 @@ Rectangle {
                                         root.pushVisitedFolder( model.object.path)
                                         root.model.currentPath = model.object.path
                                     }
+
                                 }
 
                                 onObjectAdded: autoCompleteList.insertItem(index, object)
@@ -245,21 +255,13 @@ Rectangle {
                             }
 
                             function show() {
-                                // Retrieve position instead of cursorRectangle.x
-                                root.model.currentPath = root.model.currentPath
-
-                                if(!root.model.listFolderNavBar.count)
+                                if(!root.model.listFolderNavBar.count || autoCompleteList.__popupVisible)
                                     return
-
-                                var index = root.model.currentPath.length
-                                var x = 0
-                                var y = texteditPath.height
-
-                                if (index != -1) {
-                                    var rect = texteditPath.positionToRectangle(index)
-                                    x = rect.x
-                                }
-                                this.__popup(x+textEditContainer.x+12, y)
+                                root.model.currentPath = texteditPath.text
+                                var indexPosition = root.model.currentPath.length
+                                var positionToShow = Qt.vector2d(0, texteditPath.height)
+                                positionToShow.x = texteditPath.positionToRectangle(indexPosition).x
+                                this.__popup(positionToShow.x+12, positionToShow.y)
                             }
                         }
                     }
@@ -267,14 +269,10 @@ Rectangle {
 
                 ListView {
                    id: breadCrum
-
                    Layout.fillWidth: true
                    Layout.preferredHeight: parent.height
-
                    orientation: Qt.Horizontal
-
                    model: root.model.splittedCurrentPath
-
                    visible: true
                    clip: true
 
@@ -295,26 +293,18 @@ Rectangle {
 
                 Button {
                     id: search
-
                     Layout.preferredWidth: 20
                     Layout.preferredHeight: 20
                     Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
-
                     tooltip: "Search recursively"
-
-                    iconSource:
-                    if (hovered)
-                        "img/find_hover.png"
-                    else
-                        "img/find.png"
-
+                    iconSource: hovered ?"img/find_hover.png" : "img/find.png"
                     style:
-                    ButtonStyle {
-                        background: Rectangle {
-                            anchors.fill: parent
-                            color: "transparent"
+                        ButtonStyle {
+                            background: Rectangle {
+                                anchors.fill: parent
+                                color: "transparent"
+                            }
                         }
-                    }
                     onClicked: {
                         searchLayoutRectangle.visible = !searchLayoutRectangle.visible
                         searchEdit.forceActiveFocus()
@@ -379,7 +369,7 @@ Rectangle {
         Rectangle{
             id: searchLayoutRectangle
             Layout.fillWidth: true
-            height: visible ? 35: 0
+            height: visible ? 30: 0
             color: "transparent"
             visible: false
 
@@ -391,7 +381,6 @@ Rectangle {
                     id: searchContainer
                     Layout.fillWidth: true
                     Layout.fillHeight: true
-                    visible: parent.visible
                     color: "#DDDDDD"
                     border.color: "#00B2A1"
                     border.width: 2
@@ -402,6 +391,7 @@ Rectangle {
                         y: 5
                         x: 10
                         height: parent.height
+
                         width: parent.width - 10
                         clip: true
                         selectByMouse: true

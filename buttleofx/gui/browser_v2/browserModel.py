@@ -10,6 +10,8 @@ from buttleofx.gui.browser_v2.actions.actionManager import ActionManagerSingleto
 from buttleofx.gui.browser_v2.actions.worker import Worker
 import copy
 from pyTuttle import tuttle
+from quickmamba.patterns import Singleton
+
 
 
 class BrowserModel(QtCore.QObject):
@@ -194,7 +196,7 @@ class BrowserModel(QtCore.QObject):
 
     @QtCore.pyqtSlot(str)
     def setCurrentPath(self, newCurrentPath):
-        self._currentPath = newCurrentPath
+        self._currentPath = newCurrentPath.strip()
         self.currentPathChanged.emit()
         self.updateItemsWrapperAsync()
 
@@ -293,15 +295,17 @@ class BrowserModel(QtCore.QObject):
         path = path.strip()
         path = path if path else self._currentPath
         nameFiltering = ""
+        modelToNav = self
 
         if not os.path.exists(path):
             nameFiltering = os.path.basename(path)
+            modelToNav = BrowserModel(asyncMode=False, path=os.path.dirname(path))  # need to be sync
 
         # get dirs with filtering if exists
         if nameFiltering:
-            tmpList = [item for item in self.getItems() if item.isFolder() and nameFiltering in item.getName()]
+            tmpList = [item for item in modelToNav.getItems() if item.isFolder() and nameFiltering in item.getName()]
         else:
-            tmpList = [item for item in self.getItems() if item.isFolder()]
+            tmpList = [item for item in modelToNav.getItems() if item.isFolder()]
 
         model = QObjectListModel(self)
         model.append(tmpList)
@@ -336,3 +340,11 @@ class BrowserModel(QtCore.QObject):
     listFolderNavBar = QtCore.pyqtProperty(QtCore.QObject, getListFolderNavBar, notify=currentPathChanged)
     sortOn = QtCore.pyqtProperty(str, getFieldToSort, notify=sortOnChanged)
     selectedItems = QtCore.pyqtProperty(QObjectListModel, getSelectedItems, notify=modelChanged)
+
+
+class BrowserModelSingleton(Singleton):
+    _browserModel = BrowserModel()
+
+    @staticmethod
+    def get():
+        return BrowserModelSingleton._browserModel

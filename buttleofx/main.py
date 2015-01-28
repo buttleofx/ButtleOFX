@@ -16,6 +16,7 @@ from buttleofx.event import ButtleEventSingleton
 from buttleofx.manager import ButtleManagerSingleton
 from buttleofx.core.undo_redo.manageTools import CommandManager
 from buttleofx.gui.browser import FileModelBrowser, FileModelBrowserSingleton
+from buttleofx.gui.browser_v2.browserModel import BrowserModel, BrowserModelSingleton
 
 from PyQt5 import QtCore, QtGui, QtQml, QtQuick, QtWidgets
 
@@ -76,7 +77,7 @@ signal.signal(signal.SIGINT, signal.SIG_DFL)
 class EventFilter(QtCore.QObject):
     def eventFilter(self, receiver, event):
         buttleData = ButtleDataSingleton().get()
-        browser = FileModelBrowserSingleton().get()
+        browser = BrowserModelSingleton.get()
 
         if event.type() == QtCore.QEvent.KeyPress:
             # If alt f4 event ignored
@@ -205,8 +206,8 @@ def main(argv, app):
 
     # Give to QML acces to TimerPlayer defined in buttleofx/gui/viewer
     QtQml.qmlRegisterType(TimerPlayer, "TimerPlayer", 1, 0, "TimerPlayer")
-    # Give to QML access to FileModelBrowser defined in buttleofx/gui/browser
-    QtQml.qmlRegisterType(FileModelBrowser, "ButtleFileModel", 1, 0, "FileModelBrowser")
+    # Give to QML access to BrowserModel defined in buttleofx/gui/browser
+    QtQml.qmlRegisterType(BrowserModel, "BrowserModel", 1, 0, "BrowserModel")
     # Add new QML type
     QtQml.qmlRegisterType(Finder, "FolderListViewItem", 1, 0, "FolderListView")
 
@@ -229,7 +230,7 @@ def main(argv, app):
     # Event
     buttleEvent = ButtleEventSingleton().get()
     # fileModelBrowser
-    browser = FileModelBrowserSingleton().get()
+    browser = BrowserModelSingleton.get()
 
     parser = argparse.ArgumentParser(description=('A command line to execute ButtleOFX, an opensource compositing '
                                                   'software. If you pass a folder as an argument, ButtleOFX will '
@@ -237,12 +238,6 @@ def main(argv, app):
     parser.add_argument('folder', nargs='?', help='Folder to browse')
     args = parser.parse_args()
 
-    if args.folder:
-        inputFolder = os.path.abspath(args.folder)
-        browser.setFirstFolder(inputFolder)
-    else:
-        inputFolder = os.path.expanduser("~")
-        browser.setFirstFolder(inputFolder)
 
     # Expose data to QML
     rc = engine.rootContext()

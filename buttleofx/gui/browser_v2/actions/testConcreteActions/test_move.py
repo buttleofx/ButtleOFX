@@ -181,10 +181,10 @@ class TestMove(unittest.TestCase):
             mv.revert()
 
             # Source folder should exists
-            self.assertFalse(os.path.exists(src_folder_path))
+            self.assertTrue(os.path.exists(src_folder_path))
 
             # Source folder should not exists in destination folder
-            self.assertTrue(os.path.exists(folder_moved_path))
+            self.assertFalse(os.path.exists(folder_moved_path))
 
 
     # After tests run

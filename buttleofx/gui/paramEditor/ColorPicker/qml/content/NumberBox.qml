@@ -60,7 +60,10 @@ RowLayout {
         border.color: Config.borderColor
         radius: Config.radius
         color: Config.backgroundColor
-        cursorColor: Config.accentColor
+        textInput.cursorDelegate: BlinkCursor {
+            color: Config.accentColor
+            visible: textInput.focus
+        }
 
         onQuickUpdate: root.updateValue(quickValue)
         onEditingFinished: {

@@ -17,7 +17,7 @@ Item
 
     Image {
         anchors.fill: parent
-        source: "../img/checkerboard.png"
+        source: "../img/checkerboard.jpg"
         fillMode: Image.Tile
     }
 

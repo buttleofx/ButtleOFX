@@ -5,3 +5,4 @@ WheelArea 1.0 WheelArea.qml
 ExternDropArea 1.0 ExternDropArea.qml
 QuickEditableNumberInput 1.0 QuickEditableNumberInput.qml
 BlinkCursor 1.0 BlinkCursor.qml
+ScreenPicker 1.0 ScreenPicker.qml

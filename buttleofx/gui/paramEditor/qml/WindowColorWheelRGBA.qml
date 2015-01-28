@@ -5,8 +5,8 @@ import "../ColorPicker/qml"
 
 Window {
 
-    width: 700
-    height: 600
+    width: 900
+    height: 550
     color: "#212121"
     title: "Buttle OFX ColorPicker"
 

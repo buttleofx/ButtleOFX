@@ -14,9 +14,10 @@ class Copy(ActionInterface):
         super().__init__(browserItem)
         self._srcPath = browserItem.getParentPath()
         self._destPath = destination.getPath()
+        self._framesPaths = []
 
     def execute(self):
-        browserItem = self.getBrowserItem()
+        browserItem = self._browserItem
         destPath = self._destPath
 
         # Copy file
@@ -34,6 +35,22 @@ class Copy(ActionInterface):
             shutil.copytree(browserItem.getParentPath(), destPath)
             # browserItem.updatePath(destPath)
 
+        if browserItem.isSequence():
+            seqParsed = browserItem.getSequence().getSequenceParsed()
+            frames = seqParsed.getFramesIterable()
+
+            for f in frames:
+                # print(f)
+                filename = seqParsed.getFilenameAt(f)
+                # print(filename)
+                filePath = os.path.join(browserItem.getParentPath(), filename)
+                # print(file_path)
+                if os.path.exists(destPath):
+                    shutil.copy2(filePath, destPath)
+                    self._framesPaths.append(os.path.join(destPath, filename))
+
+            # browserItem.
+
     def revert(self):
         browserItem = self.getBrowserItem()
         browserItemName = browserItem.getName()
@@ -44,3 +61,7 @@ class Copy(ActionInterface):
 
         if browserItem.isFolder():
             shutil.rmtree(destPath)
+
+        if browserItem.isSequence():
+            for f in self._framesPaths:
+                os.remove(f)

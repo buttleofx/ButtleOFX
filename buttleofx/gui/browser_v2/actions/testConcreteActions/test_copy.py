@@ -8,6 +8,7 @@ from buttleofx.gui.browser_v2.browserItem import BrowserItem
 from buttleofx.gui.browser_v2.actions.concreteActions.copy import Copy
 from pySequenceParser import sequenceParser
 
+import buttleofx.gui.browser_v2.actions.testConcreteActions.helper as h
 
 class TestCopy(unittest.TestCase):
 
@@ -135,7 +136,6 @@ class TestCopy(unittest.TestCase):
             # Folder should have the new path
             # self.assertEqual(src.getPath(), dest_folder_path)
 
-
     def test_folder_copy_revert(self):
         with tempfile.TemporaryDirectory() as path:
             src_folder_name = 'copy_folder'
@@ -177,6 +177,72 @@ class TestCopy(unittest.TestCase):
 
             # Folder should not exists in destination folder
             self.assertFalse(os.path.exists(dest_folder_path))
+
+    def test_sequence_copy(self):
+        with tempfile.TemporaryDirectory() as path:
+            dest_folder_name = 'dest'
+            dest_folder_path = os.path.join(path, dest_folder_name)
+
+            os.makedirs(dest_folder_path)
+
+            # Create Sequence
+            h.create_sequence(path)
+            # Create BrowserItem sequence
+            sp_seq = sequenceParser.browse(path)[1]
+            sp_dest = sequenceParser.browse(path)[0]
+
+            src_seq = BrowserItem(sp_seq, True)
+            dest_folder = BrowserItem(sp_dest, True)
+
+            self.assertIsNotNone(src_seq.getName())
+            self.assertEqual(dest_folder.getName(), dest_folder_name)
+
+            # Delete sequence
+            cpy = Copy(src_seq, dest_folder)
+            cpy.process()
+
+            sp_dest_seq = sequenceParser.browse(dest_folder_path)[0]
+            dest_seq = BrowserItem(sp_dest_seq, True)
+
+            self.assertEqual(dest_seq.getParentPath(), dest_folder_path)
+            self.assertEqual(dest_seq.getName(), src_seq.getName())
+
+
+    def test_sequence_copy_revert(self):
+        with tempfile.TemporaryDirectory() as path:
+            dest_folder_name = 'dest'
+            dest_folder_path = os.path.join(path, dest_folder_name)
+
+            os.makedirs(dest_folder_path)
+
+            # Create Sequence
+            h.create_sequence(path)
+            # Create BrowserItem sequence
+            sp_seq = sequenceParser.browse(path)[1]
+            sp_dest = sequenceParser.browse(path)[0]
+
+            src_seq = BrowserItem(sp_seq, True)
+            dest_folder = BrowserItem(sp_dest, True)
+
+            self.assertIsNotNone(src_seq.getName())
+            self.assertEqual(dest_folder.getName(), dest_folder_name)
+
+            # Delete sequence
+            cpy = Copy(src_seq, dest_folder)
+            cpy.process()
+
+            sp_dest_seq = sequenceParser.browse(dest_folder_path)[0]
+            dest_seq = BrowserItem(sp_dest_seq, True)
+
+            self.assertEqual(dest_seq.getParentPath(), dest_folder_path)
+            self.assertEqual(dest_seq.getName(), src_seq.getName())
+
+            cpy.revert()
+
+            self.assertEqual(len(sequenceParser.browse(dest_folder_path)), 0)
+            self.assertEqual(len(sequenceParser.browse(path)), 2)
+            self.assertIsNotNone(sequenceParser.browse(path)[1])
+
 
     # After tests run
     def tearDown(self):

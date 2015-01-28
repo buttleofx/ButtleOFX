@@ -9,9 +9,6 @@ Rectangle {
 
     color: "#2E2E2E"
 
-    property var model
-    property var visitedFolderList
-    property int visitedFolderListIndex: 0
     signal autoCompleteMode(bool active)
     Layout.preferredHeight: searchLayoutRectangle.height+ navBarContainer.height
 
@@ -24,7 +21,6 @@ Rectangle {
         visitedFolderList.append({"url": path})
         ++ visitedFolderListIndex
     }
-
 
     onAutoCompleteMode: {
         autoCompleteList.show()
@@ -310,9 +306,9 @@ Rectangle {
 
                     iconSource:
                     if (hovered)
-                        "img/refresh_hover.png"
+                        "img/find_hover.png"
                     else
-                        "img/refresh.png"
+                        "img/find.png"
 
                     style:
                     ButtonStyle {
@@ -328,61 +324,60 @@ Rectangle {
 
                 }
 
-                Button {
-                    id: view
+//                Button {
+//                    id: view
 
-                    Layout.preferredWidth: 20
-                    Layout.preferredHeight: 20
-                    Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+//                    Layout.preferredWidth: 20
+//                    Layout.preferredHeight: 20
+//                    Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
 
-                    tooltip: "List view"
+//                    tooltip: "List view"
 
-                    iconSource:
-                    if (hovered)
-                        "img/listview_hover.png"
-                    else
-                        "img/listview.png"
+//                    iconSource:
+//                    if (hovered)
+//                        "img/listview_hover.png"
+//                    else
+//                        "img/listview.png"
 
-                    states: [
-                        State {
-                            name: "gridview"
-                            PropertyChanges {
-                                target: view
-                                tooltip: "List view"
-                                iconSource:
-                                if (hovered)
-                                    "img/gridview_hover.png"
-                                else
-                                    "img/gridview.png"
-                            }
-                        },
-                        State {
-                            name: "listview"
-                            PropertyChanges {
-                                target: view
-                                tooltip: "Grid view"
-                                iconSource:
-                                if (hovered)
-                                    "img/listview_hover.png"
-                                else
-                                    "img/listview.png"
-                            }
-                        }
-                    ]
+//                    states: [
+//                        State {
+//                            name: "gridview"
+//                            PropertyChanges {
+//                                target: view
+//                                tooltip: "List view"
+//                                iconSource:
+//                                if (hovered)
+//                                    "img/gridview_hover.png"
+//                                else
+//                                    "img/gridview.png"
+//                            }
+//                        },
+//                        State {
+//                            name: "listview"
+//                            PropertyChanges {
+//                                target: view
+//                                tooltip: "Grid view"
+//                                iconSource:
+//                                if (hovered)
+//                                    "img/listview_hover.png"
+//                                else
+//                                    "img/listview.png"
+//                            }
+//                        }
+//                    ]
 
-                    style:
-                    ButtonStyle {
-                        background: Rectangle {
-                            anchors.fill: parent
-                            color: "transparent"
-                        }
-                    }
+//                    style:
+//                    ButtonStyle {
+//                        background: Rectangle {
+//                            anchors.fill: parent
+//                            color: "transparent"
+//                        }
+//                    }
 
-                }
+//                }
             }
 
         }
-
         Rectangle{
             id: searchLayoutRectangle
             Layout.fillWidth: true
@@ -420,10 +415,7 @@ Rectangle {
                     }
                 }
             }
-
         }
-
-
     }
 
     // One breadcrum component struct
@@ -451,7 +443,6 @@ Rectangle {
                     onClicked: {
                         root.pushVisitedFolder(model.object[0])
                         root.model.currentPath = model.object[0]
-
                     }
                 }
             }

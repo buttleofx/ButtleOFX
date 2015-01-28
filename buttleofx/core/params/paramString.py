@@ -23,7 +23,7 @@ class ParamString(Param):
     # ## Getters ## #
 
     def getDefaultValue(self):
-        return self._tuttleParam.getProperties().fetchProperty("OfxParamPropDefault").getStringValue(0)
+        return self._tuttleParam.getProperties().fetchProperty("OfxParamPropDefault").getStringValueAt(0)
 
     def getHasChanged(self):
         return self._hasChanged
@@ -41,7 +41,7 @@ class ParamString(Param):
         return self._tuttleParam.getProperties().getIntProperty("OfxParamPropStringFilePathExists")
 
     def getStringType(self):
-        return self._tuttleParam.getProperties().fetchProperty("OfxParamPropStringMode").getStringValue(0)
+        return self._tuttleParam.getProperties().fetchProperty("OfxParamPropStringMode").getStringValueAt(0)
 
     def getValue(self):
         return self._tuttleParam.getStringValue()

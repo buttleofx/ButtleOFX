@@ -76,26 +76,59 @@ Rectangle {
         id: component
 
         Rectangle {
-            width: grid.cellWidth - 10
-            height: grid.cellHeight - 30
+            id: component_container
 
-            color: (model.object.isSelected) ? "#22FFFFFF" : "transparent"
+            width: grid.cellWidth - 20
+            height: icon.height + fileName.height
+
+            color: (model.object.isSelected) ? "#666666" : "transparent"
             radius: 2
 
             Column {
                 anchors.fill: parent
 
                 Image {
+                    id: loading
+
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    height: 50
+                    width: parent.width
+
+                    source: "img/refresh_hover.png"
+                    sourceSize.width: 20
+                    sourceSize.height: 20
+                    asynchronous: true
+
+                    fillMode: Image.Pad
+
+                    visible: !(model.object.type === 1) && icon.status === Image.Loading
+
+                    NumberAnimation on rotation {
+                        from: 0
+                        to: 360
+                        running: loading.visible
+                        loops: Animation.Infinite
+                        duration: 1000
+                    }
+                }
+
+                Image {
                     id: icon
 
                     anchors.horizontalCenter: parent.horizontalCenter
+                    height: 50
+                    width: parent.width - 20
 
                     source: model.object.pathImg
                     sourceSize.width: 50
                     sourceSize.height: 50
+                    asynchronous: true
+
                     fillMode: Image.PreserveAspectFit
 
                     opacity: ((icon_mouseArea.containsMouse || text_mouseArea.containsMouse) ^ model.object.isSelected) ? 1 : 0.7
+
+                    visible: !loading.visible
 
                     MouseArea {
                         id: icon_mouseArea
@@ -121,8 +154,9 @@ Rectangle {
                     id: fileName
 
                     width: parent.width
+                    height: paintedHeight
 
-                    elide: Text.ElideLeft
+                    elide: (model.object.isSelected) ? Text.ElideNone : Text.ElideRight
                     anchors.horizontalCenter: parent.horizontalCenter
                     horizontalAlignment: Text.AlignHCenter
 
@@ -130,7 +164,6 @@ Rectangle {
                     color: ((icon_mouseArea.containsMouse || text_mouseArea.containsMouse) ^ model.object.isSelected) ? "white" : "#BBBBBB"
 
                     wrapMode: Text.WrapAnywhere
-                    maximumLineCount: (model.object.isSelected) ? contentHeight : 2
 
                     MouseArea {
                         id: text_mouseArea
@@ -153,7 +186,7 @@ Rectangle {
                 }
 
                 Component.onCompleted: {
-                    fileName.width = fileName.paintedWidth
+                    fileName.width = fileName.contentWidth
                 }
             }
         }

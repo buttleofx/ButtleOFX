@@ -328,6 +328,7 @@ class BrowserModel(QtCore.QObject):
 
     @QtCore.pyqtSlot(int)
     def selectItem(self, index):
+        self.unselectAllItems()
         if index in range(len(self._browserItems)):
             self._browserItems[index].setSelected(True)
 

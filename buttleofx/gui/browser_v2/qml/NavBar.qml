@@ -187,7 +187,7 @@ Rectangle {
                         selectByMouse: true
                         selectionColor: "#00b2a1"
                         validator: RegExpValidator{
-                            regExp: /^\/{1}[A-Za-z/]{1,}$/
+                            regExp: /^\/{1}[A-Za-záàâäãåçéèêëíìîïñóòôöõúùûüýÿæœÁÀÂÄÃÅÇÉÈÊËÍÌÎÏÑÓÒÔÖÕÚÙÛÜÝŸÆŒ._\s-/]{1,}$/
                         }
 
                         Keys.onEscapePressed: {

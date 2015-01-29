@@ -19,11 +19,6 @@ Rectangle {
         id: visitedFolderList
     }
 
-    BrowserModel {
-        id: browser
-    }
-
-
     ColumnLayout {
         Tab {
             Layout.fillWidth: true
@@ -39,7 +34,7 @@ Rectangle {
             id: navBar
             Layout.fillWidth: true
 
-            property alias model: browser
+            property var model: _browser
             property alias visitedFolderList: visitedFolderList
             property alias visitedFolderListIndex: root.visitedFolderListIndex
 //            MouseArea{
@@ -66,7 +61,7 @@ Rectangle {
              Layout.fillWidth: true
              Layout.fillHeight: true
 
-             property alias model: browser
+             property var model: _browser
              property alias visitedFolderList: visitedFolderList
              property alias visitedFolderListIndex: root.visitedFolderListIndex
          }

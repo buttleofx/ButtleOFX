@@ -386,7 +386,7 @@ Rectangle {
 
                         onAccepted: {
                             if(text.trim())
-                                browser.doSearchRecursive(text.trim())
+                                _browser.doSearchRecursive(text.trim())
                         }
                     }
                 }

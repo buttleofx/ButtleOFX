@@ -17,6 +17,7 @@ from buttleofx.manager import ButtleManagerSingleton
 from buttleofx.core.undo_redo.manageTools import CommandManager
 from buttleofx.gui.browser import FileModelBrowser, FileModelBrowserSingleton
 from buttleofx.gui.browser_v2.browserModel import BrowserModel, BrowserModelSingleton
+from buttleofx.gui.browser_v2.actions.browserAction import BrowserActionSingleton
 
 from PyQt5 import QtCore, QtGui, QtQml, QtQuick, QtWidgets
 
@@ -231,6 +232,7 @@ def main(argv, app):
     buttleEvent = ButtleEventSingleton().get()
     # fileModelBrowser
     browser = BrowserModelSingleton.get()
+    browserAction = BrowserActionSingleton().get()
 
     parser = argparse.ArgumentParser(description=('A command line to execute ButtleOFX, an opensource compositing '
                                                   'software. If you pass a folder as an argument, ButtleOFX will '
@@ -246,6 +248,7 @@ def main(argv, app):
     rc.setContextProperty("_buttleManager", buttleManager)
     rc.setContextProperty("_buttleEvent", buttleEvent)
     rc.setContextProperty("_browser", browser)
+    rc.setContextProperty("_browserAction", browserAction)
 
     iconPath = os.path.join(currentFilePath, "../blackMosquito.png")
     # iconPath = QtCore.QUrl("file:///" + iconPath)

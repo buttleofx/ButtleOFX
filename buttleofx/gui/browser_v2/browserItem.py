@@ -172,16 +172,19 @@ class BrowserItem(QtCore.QObject):
 
         return "img/file-icon.png"  # default
 
+    # ############################################ Methods exposed to QML ############################################ #
+
+    @QtCore.pyqtSlot(result=bool)
     def isFile(self):
         return self._typeItem == BrowserItem.ItemType.file
 
+    @QtCore.pyqtSlot(result=bool)
     def isFolder(self):
         return self._typeItem == BrowserItem.ItemType.folder
 
+    @QtCore.pyqtSlot(result=bool)
     def isSequence(self):
         return self._typeItem == BrowserItem.ItemType.sequence
-
-    # ############################################ Methods exposed to QML ############################################ #
 
     @QtCore.pyqtSlot(result=list)
     def getActionStatus(self):

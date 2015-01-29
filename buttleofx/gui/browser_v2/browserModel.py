@@ -325,6 +325,31 @@ class BrowserModel(QtCore.QObject):
     def unselectAllItems(self):
         for bItem in self._browserItems:
             bItem.setSelected(False)
+
+    @QtCore.pyqtSlot(int)
+    def selectItem(self, index):
+        if index in range(len(self._browserItems)):
+            self._browserItems[index].setSelected(True)
+
+    @QtCore.pyqtSlot(int)
+    def selectItemTo(self, index):
+        if not len(self._browserItems) or index < 0 or index > len(self._browserItems)-1:
+            return
+        firstSelected = 0
+        for i, bItem in enumerate(self._browserItems):
+            if bItem.getSelected():
+                firstSelected = i
+                break
+
+        crescentLoop = 1
+        index = index +1
+
+        if firstSelected > index:
+            index = index -2
+            crescentLoop = -1
+
+        for i in range(firstSelected, index, crescentLoop):
+            self._browserItems[i].setSelected(True)
         self._browserItemsModel.setObjectList(self._browserItems)
 
     # ############################################# Data exposed to QML ############################################# #

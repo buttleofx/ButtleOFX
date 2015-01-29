@@ -9,12 +9,15 @@ class Copy(ActionInterface):
 
     def __init__(self, browserItem, destination):
         # destination must be a directory
-        if not destination.isFolder():
-            raise TypeError
+        # if not destination.isFolder():
+        #     raise TypeError
         super().__init__(browserItem)
         self._srcPath = browserItem.getParentPath()
-        self._destPath = destination.getPath()
+        self._destPath = ""
         self._framesPaths = []
+
+    def setDestinationPath(self, newPath):
+        self._destPath = newPath.strip()
 
     def execute(self):
         browserItem = self._browserItem
@@ -32,7 +35,7 @@ class Copy(ActionInterface):
         # Copy Folder
         if browserItem.isFolder():
             # TODO: Check destination permission in try catch
-            shutil.copytree(browserItem.getParentPath(), destPath)
+            shutil.copytree(browserItem.getPath(), os.path.join(destPath, browserItem.getName()))
             # browserItem.updatePath(destPath)
 
         if browserItem.isSequence():

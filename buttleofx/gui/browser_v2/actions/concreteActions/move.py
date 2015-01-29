@@ -6,19 +6,20 @@ from buttleofx.gui.browser_v2.actions.actionInterface import ActionInterface
 
 class Move(ActionInterface):
 
-    def __init__(self, browserItem, destination):
+    def __init__(self, browserItem):
         # destination must be a directory
-        if not destination.isFolder():
-            raise TypeError
+        # if not destination.isFolder():
+        #     raise TypeError
         super().__init__(browserItem)
-        self._destination = destination
         self._srcPath = browserItem.getParentPath()
-        self._destPath = destination.getPath()
+        self._destPath = ""
+
+    def setDestinationPath(self, newPath):
+        self._destPath = newPath.strip()
 
     def execute(self):
         browserItem = self._browserItem
-        destination = self._destination
-        destinationPath = destination.getPath()
+        destinationPath = self._destPath
 
         # Move file, folder, and sequence
         # TODO: Check destination permission in try catch

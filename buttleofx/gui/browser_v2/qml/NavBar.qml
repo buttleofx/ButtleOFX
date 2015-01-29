@@ -8,6 +8,7 @@ Rectangle {
     id: root
 
     color: "#2E2E2E"
+    clip: true
 
     signal autoCompleteMode(bool active)
     Layout.preferredHeight: searchLayoutRectangle.height+ navBarContainer.height
@@ -35,7 +36,7 @@ Rectangle {
             id: navBarContainer
             Layout.fillWidth: true
             color: "transparent"
-            Layout.preferredHeight: 50
+            Layout.preferredHeight: 40
 
             RowLayout {
                 anchors.fill: parent
@@ -165,7 +166,7 @@ Rectangle {
                 Rectangle {
                     id: textEditContainer
 
-                    Layout.preferredHeight: parent.height - 10
+                    Layout.preferredHeight: parent.height - 2
                     Layout.fillWidth: true
 
                     visible: false
@@ -295,7 +296,7 @@ Rectangle {
                             }
                         }
                     onClicked: {
-                        searchLayoutRectangle.visible = !searchLayoutRectangle.visible
+                        searchLayoutRectangle.enabled = !searchLayoutRectangle.enabled
                         searchEdit.forceActiveFocus()
                     }
 
@@ -357,10 +358,14 @@ Rectangle {
         }
         Rectangle{
             id: searchLayoutRectangle
+
+            property bool enabled: true
+
             Layout.fillWidth: true
-            height: visible ? 30: 0
+            height: enabled ? 30 : 0
             color: "transparent"
-            visible: false
+
+            Behavior on height { PropertyAnimation { easing.type: Easing.InOutQuad ; duration: 300 } }
 
             RowLayout{
                 id: searchLayout
@@ -370,21 +375,26 @@ Rectangle {
                     id: searchContainer
                     Layout.fillWidth: true
                     Layout.fillHeight: true
-                    color: "#DDDDDD"
-                    border.color: "#00B2A1"
-                    border.width: 2
-                    radius: 3
 
-                    TextInput {
+                    color: "transparent"
+
+                    TextField {
                         id: searchEdit
-                        y: 5
-                        x: 10
-                        height: parent.height
 
-                        width: parent.width - 10
-                        clip: true
-                        selectByMouse: true
-                        selectionColor: "#00b2a1"
+                        anchors.fill: parent
+                        anchors.margins: 2
+
+                        placeholderText: "Enter yout research ..."
+
+                        style: TextFieldStyle {
+                                selectionColor: "#00b2a1"
+                                textColor: "#2E2E2E"
+                                background: Rectangle {
+                                    color: "#DDDDDD"
+                                    border.color: "#00b2a1"
+                                    border.width: 1
+                                }
+                            }
 
                         onAccepted: {
                             if(text.trim())
@@ -393,6 +403,7 @@ Rectangle {
                     }
                 }
             }
+            Component.onCompleted: enabled = false
         }
     }
 
@@ -437,7 +448,7 @@ Rectangle {
 
                     text: ">"
                     font.pointSize: 16
-                    font.bold: (arrow_mouseArea.containsMouse) ? true : false
+                    font.bold: arrow_mouseArea.containsMouse
                     color: "#00b2a1"
                     visible: !(index == (breadCrum.count - 1) && index != 0)
 

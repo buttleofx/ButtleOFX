@@ -132,7 +132,6 @@ Rectangle {
                             root.pushVisitedFolder(model.parentFolder)
                             model.currentPath = model.parentFolder
                         }
-
                     }
                 }
 
@@ -142,7 +141,6 @@ Rectangle {
                     Layout.preferredWidth: 20
                     Layout.preferredHeight: 20
                     Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
-
                     tooltip: "Refresh"
 
                     iconSource:
@@ -158,7 +156,6 @@ Rectangle {
                             color: "transparent"
                         }
                     }
-
                     onClicked: root.model.refresh()
                 }
 
@@ -168,7 +165,6 @@ Rectangle {
 
                     Layout.preferredHeight: parent.height - 2
                     Layout.fillWidth: true
-
                     visible: false
 
                     color: "#DDDDDD"
@@ -200,20 +196,20 @@ Rectangle {
                                 textEditContainer.visible = false
                         }
 
-                        Keys.onTabPressed: {
-                            autoCompleteList.show()
-
+                        Keys.onTabPressed:{
+                            if(autoCompleteList.items.length == 1)
+                                autoCompleteList.items[0].trigger()
+                            else
+                                autoCompleteList.show()
                         }
 
                         Keys.onReleased: {
                             root.model.currentPath = texteditPath.text
-
-                            if ((event.key == Qt.Key_Space) && (event.modifiers & Qt.ControlModifier)){
-
+                            if (((event.key == Qt.Key_Space) && (event.modifiers & Qt.ControlModifier))){
                                 if(autoCompleteList.items.length == 1)
                                     autoCompleteList.items[0].trigger()
                             }
-                            if(event.key == Qt.Key_Tab || event.key == Qt.Key_Enter || event.key == Qt.Key_Return || event.key == Qt.Key_Down || (event.key == Qt.Key_Space))
+                            if(event.key == Qt.Key_Enter || event.key == Qt.Key_Return || event.key == Qt.Key_Down || (event.key == Qt.Key_Space))
                                 autoCompleteList.show()
                         }
 
@@ -233,7 +229,6 @@ Rectangle {
                                         root.pushVisitedFolder( model.object.path)
                                         root.model.currentPath = model.object.path
                                     }
-
                                 }
 
                                 onObjectAdded: autoCompleteList.insertItem(index, object)

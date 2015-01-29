@@ -1,6 +1,5 @@
 import QtQuick 2.2
 import QtQuick.Layouts 1.1
-import BrowserModel 1.0
 import "../../../gui"
 
 Rectangle {
@@ -37,12 +36,6 @@ Rectangle {
             property var model: _browser
             property alias visitedFolderList: visitedFolderList
             property alias visitedFolderListIndex: root.visitedFolderListIndex
-//            MouseArea{
-//                //hack for breadcum
-//                id: mouseAreaNavBar
-//                anchors.fill: parent
-//                propagateComposedEvents: true
-//            }
         }
 
         Rectangle {

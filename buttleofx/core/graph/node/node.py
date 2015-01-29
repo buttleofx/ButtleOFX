@@ -73,7 +73,7 @@ class Node(object):
         for param in range(self._tuttleNode.asImageEffectNode().getNbParams()):
             tuttleParam = self._tuttleNode.asImageEffectNode().getParam(param)
             self._params.append(mapTuttleParamToButtleParam[
-                tuttleParam.getProperties().fetchProperty("OfxParamPropType").getStringValue(0)](tuttleParam))
+                tuttleParam.getProperties().fetchProperty("OfxParamPropType").getStringValueAt()](tuttleParam))
 
         # Signals
         self.nodeLookChanged = Signal()

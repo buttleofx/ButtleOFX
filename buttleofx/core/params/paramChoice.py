@@ -20,7 +20,7 @@ class ParamChoice(Param):
         self._listValue = []
         for choice in range(tuttleParam.getProperties().fetchProperty("OfxParamPropChoiceOption").getDimension()):
             self._listValue.append(tuttleParam.getProperties().fetchProperty("OfxParamPropChoiceOption").
-                                   getStringValue(choice))
+                                   getStringValueAt(choice))
 
         self._hasChanged = False
 

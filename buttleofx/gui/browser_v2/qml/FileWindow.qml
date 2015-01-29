@@ -7,7 +7,6 @@ import QtQuick.Controls.Styles 1.0
 
 Rectangle {
     id: root
-
     color: "transparent"
 
     function pushVisitedFolder(path){
@@ -51,11 +50,13 @@ Rectangle {
         _buttleManager.nodeManager.dropFile(pathImg, 10, 10)
     }
 
+
     MouseArea {
         anchors.fill: parent
         acceptedButtons: Qt.LeftButton | Qt.RightButton
 
         onClicked:{
+            root.forceActiveFocus()
             if(mouse.button == Qt.RightButton)
                 actionsMenu.popup()
             if(mouse.button == Qt.LeftButton)
@@ -66,30 +67,77 @@ Rectangle {
     Menu{
         //TODO: REDO architecture
         id:actionsMenu
+        MenuItem{
+            text:"Refresh"
+            iconName: "reload"
+            shortcut: StandardKey.Refresh
+            onTriggered: {
+                _browser.refresh()
+            }
+        }
+
+        MenuSeparator{}
+        MenuItem{
+            text:"Select All"
+            iconName: "edit-select-all"
+            shortcut: StandardKey.SelectAll
+            onTriggered: {
+                _browser.selectAllItems()
+            }
+        }
+
+        MenuItem{
+            text:"New folder"
+            iconName: "folder-new"
+            shortcut: StandardKey.New
+            onTriggered: {
+                _browserAction.handleNew("Folder")
+            }
+        }
+        MenuItem{
+            text:"New file"
+            iconName: "document-new"
+            shortcut: StandardKey.UnknownKey
+            onTriggered: {
+                _browserAction.handleNew("File")
+            }
+        }
+        MenuSeparator{}
 
         MenuItem{
             text:"Copy"
+            shortcut: StandardKey.Copy
+            iconName: "edit-copy"
             onTriggered: {
                 _browserAction.handleCopy()
             }
         }
         MenuItem{
             text:"Cut"
+            iconName: "edit-cut"
+            shortcut: StandardKey.Cut
             onTriggered: {
                 _browserAction.handleMove()
             }
         }
 
         MenuItem{
+            iconName: "edit-paste"
             text:"Paste"
+            shortcut: StandardKey.Paste
             onTriggered: {
                 _browserAction.handlePaste()
+                _browser.refresh()
             }
         }
+
         MenuItem{
             text:"Delete"
+            iconName: "edit-delete"
+            shortcut: StandardKey.Delete
             onTriggered: {
                 _browserAction.handleDelete()
+                _browser.refresh()
             }
         }
     }
@@ -181,6 +229,8 @@ Rectangle {
                     }
                 }
 
+
+
                 Image {
                     id: icon
 
@@ -204,35 +254,6 @@ Rectangle {
                         anchors.fill: parent
                         acceptedButtons: Qt.LeftButton | Qt.RightButton
                         hoverEnabled: true
-
-                        onClicked: {
-                            if(mouse.button == Qt.RightButton){
-                                actionsMenu.popup()
-                                return
-                            }
-
-                            if(!model.object.isFolder()){
-                                if (model.object.isSupported())
-                                    handleGraphViewerClick(model.object.path)
-                            }
-                            if ((mouse.modifiers & Qt.ShiftModifier))
-                                root.model.selectItemTo(index)
-                            else if ((mouse.modifiers & Qt.ControlModifier))
-                                model.object.isSelected = !model.object.isSelected
-                            else
-                                root.model.selectItem(index)
-                        }
-
-                        onDoubleClicked: {
-                            if (model.object.isFolder()) {
-                                root.pushVisitedFolder(model.object.path)
-                                root.model.currentPath = model.object.path
-                            }
-
-                            // If it's an image, we create a node
-                            else if (model.object.isSupported())
-                                handleGraphViewerDoubleClick(model.object.path)
-                        }
                     }
                 }
 
@@ -254,38 +275,51 @@ Rectangle {
                     MouseArea {
                         id: text_mouseArea
                         anchors.fill: parent
-
                         hoverEnabled: true
-
-                        onClicked: {
-                            if(!model.object.isFolder()){
-                                if (model.object.isSupported())
-                                    handleGraphViewerClick(model.object.path)
-                            }
-
-                            if ((mouse.modifiers & Qt.ShiftModifier))
-                                root.model.selectItemTo(index)
-                            else if ((mouse.modifiers & Qt.ControlModifier))
-                                model.object.isSelected = !model.object.isSelected
-                            else
-                                root.model.selectItem(index)
-                        }
-
-                        onDoubleClicked: {
-                            if (model.object.type === 1) { // Folder
-                                root.pushVisitedFolder(model.object.path)
-                                root.model.currentPath = model.object.path
-                            }
-                            else if (model.object.isSupported())
-                                handleGraphViewerDoubleClick(model.object.path)
-                        }
                     }
                 }
+
+
 
                 Component.onCompleted: {
                     fileName.width = fileName.contentWidth
                 }
             }
+
+            MouseArea{
+                anchors.fill: parent
+                acceptedButtons: Qt.LeftButton | Qt.RightButton
+
+                onClicked: {
+                    if(mouse.button == Qt.RightButton){
+                        actionsMenu.popup()
+                        return
+                    }
+
+                    if(!model.object.isFolder()){
+                        if (model.object.isSupported())
+                            handleGraphViewerClick(model.object.path)
+                    }
+                    if ((mouse.modifiers & Qt.ShiftModifier))
+                        root.model.selectItemTo(index)
+                    else if ((mouse.modifiers & Qt.ControlModifier))
+                        model.object.isSelected = !model.object.isSelected
+                    else
+                        root.model.selectItem(index)
+                }
+
+                onDoubleClicked: {
+                    if (model.object.isFolder()) {
+                        root.pushVisitedFolder(model.object.path)
+                        root.model.currentPath = model.object.path
+                    }
+
+                    // If it's an image, we create a node
+                    else if (model.object.isSupported())
+                        handleGraphViewerDoubleClick(model.object.path)
+                }
+            }
+
         }
     }
 

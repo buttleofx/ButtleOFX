@@ -20,6 +20,37 @@ Rectangle {
         ++ visitedFolderListIndex
     }
 
+    function handleGraphViewerClick(pathImg){
+        player.changeViewer(11) // We come to the temporary viewer
+        // We save the last node wrapper of the last view
+        var nodeWrapper
+        player.lastNodeWrapper = _buttleData.getNodeWrapperByViewerIndex(player.lastView)
+        nodeWrapper = _buttleData.nodeReaderWrapperForBrowser(pathImg)
+        _buttleData.currentGraphIsGraphBrowser()
+        _buttleData.currentGraphWrapper = _buttleData.graphBrowserWrapper
+        _buttleData.currentViewerNodeWrapper = nodeWrapper
+        _buttleData.currentViewerFrame = 0
+        // We assign the node to the viewer, at the frame 0
+        _buttleData.assignNodeToViewerIndex(nodeWrapper, 10)
+        _buttleData.currentViewerIndex = 10 // We assign to the viewer the 10th view
+        _buttleEvent.emitViewerChangedSignal()
+    }
+
+    function handleGraphViewerDoubleClick(pathImg){
+        _buttleData.currentGraphWrapper = _buttleData.graphWrapper
+        _buttleData.currentGraphIsGraph()
+
+        // If before the viewer was showing an image from the browser, we change the currentView
+        if (_buttleData.currentViewerIndex > 9){
+            _buttleData.currentViewerIndex = player.lastView
+
+            if (player.lastNodeWrapper != undefined)
+                _buttleData.currentViewerNodeWrapper = player.lastNodeWrapper
+            player.changeViewer(player.lastView)
+        }
+        _buttleManager.nodeManager.dropFile(pathImg, 10, 10)
+    }
+
     MouseArea {
         anchors.fill: parent
 
@@ -139,40 +170,25 @@ Rectangle {
                     MouseArea {
                         id: icon_mouseArea
                         anchors.fill: parent
-
+                        acceptedButtons: Qt.LeftButton | Qt.RightButton
                         hoverEnabled: true
 
                         onClicked: {
+                            if(mouse.button == Qt.RightButton){
+                                actionsMenu.popup()
+                                return
+                            }
+
                             if(!model.object.isFolder()){
-
-                                if (model.object.isSupported()) {
-                                    player.changeViewer(11) // We come to the temporary viewer
-                                    // We save the last node wrapper of the last view
-                                    var nodeWrapper
-                                    player.lastNodeWrapper = _buttleData.getNodeWrapperByViewerIndex(player.lastView)
-                                    nodeWrapper = _buttleData.nodeReaderWrapperForBrowser(model.object.path)
-                                    _buttleData.currentGraphIsGraphBrowser()
-                                    _buttleData.currentGraphWrapper = _buttleData.graphBrowserWrapper
-                                    _buttleData.currentViewerNodeWrapper = nodeWrapper
-                                    _buttleData.currentViewerFrame = 0
-                                    // We assign the node to the viewer, at the frame 0
-                                    _buttleData.assignNodeToViewerIndex(nodeWrapper, 10)
-                                    _buttleData.currentViewerIndex = 10 // We assign to the viewer the 10th view
-                                    _buttleEvent.emitViewerChangedSignal()
-                                }
+                                if (model.object.isSupported())
+                                    handleGraphViewerClick(model.object.path)
                             }
-
-                            if ((mouse.modifiers & Qt.ShiftModifier)){
+                            if ((mouse.modifiers & Qt.ShiftModifier))
                                 root.model.selectItemTo(index)
-                            }
                             else if ((mouse.modifiers & Qt.ControlModifier))
                                 model.object.isSelected = !model.object.isSelected
-                            else{
-                                console.log("normal")
+                            else
                                 root.model.selectItem(index)
-                            }
-
-
                         }
 
                         onDoubleClicked: {
@@ -182,19 +198,31 @@ Rectangle {
                             }
 
                             // If it's an image, we create a node
-                            else if (model.object.isSupported()) {
-                                _buttleData.currentGraphWrapper = _buttleData.graphWrapper
-                                _buttleData.currentGraphIsGraph()
+                            else if (model.object.isSupported())
+                                handleGraphViewerDoubleClick(model.object.path)
+                        }
+                    }
 
-                                // If before the viewer was showing an image from the browser, we change the currentView
-                                if (_buttleData.currentViewerIndex > 9){
-                                    _buttleData.currentViewerIndex = player.lastView
+                    Menu{
+                        //TODO: REDO architecture
+                        id:actionsMenu
 
-                                    if (player.lastNodeWrapper != undefined)
-                                        _buttleData.currentViewerNodeWrapper = player.lastNodeWrapper
-                                    player.changeViewer(player.lastView)
-                                }
-                                _buttleManager.nodeManager.dropFile(model.object.path, 10, 10)
+                        MenuItem{
+                            text:"Copy"
+                            onTriggered: {
+
+                            }
+                        }
+                        MenuItem{
+                            text:"Paste"
+                            onTriggered: {
+
+                            }
+                        }
+                        MenuItem{
+                            text:"Delete"
+                            onTriggered: {
+
                             }
                         }
                     }
@@ -222,8 +250,17 @@ Rectangle {
                         hoverEnabled: true
 
                         onClicked: {
-                            if (!model.object.isSelected)
-                                model.object.isSelected = true
+                            if(!model.object.isFolder()){
+                                if (model.object.isSupported())
+                                    handleGraphViewerClick(model.object.path)
+                            }
+
+                            if ((mouse.modifiers & Qt.ShiftModifier))
+                                root.model.selectItemTo(index)
+                            else if ((mouse.modifiers & Qt.ControlModifier))
+                                model.object.isSelected = !model.object.isSelected
+                            else
+                                root.model.selectItem(index)
                         }
 
                         onDoubleClicked: {
@@ -231,6 +268,8 @@ Rectangle {
                                 root.pushVisitedFolder(model.object.path)
                                 root.model.currentPath = model.object.path
                             }
+                            else if (model.object.isSupported())
+                                handleGraphViewerDoubleClick(model.object.path)
                         }
                     }
                 }

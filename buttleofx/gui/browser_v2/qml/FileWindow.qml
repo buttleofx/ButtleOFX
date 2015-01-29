@@ -123,19 +123,15 @@ Rectangle {
             }
         }
 
-
         GridView {
             id: grid
 
             anchors.fill: parent
+            anchors.topMargin: 20
 
             cellWidth: 150
             cellHeight: 100
 
-            // displayMarginBeginning: 20 // Available in QtQuick 2.3
-            // displayMarginEnd: 20 // Available in QtQuick 2.3
-
-            clip: true
             model: root.model.fileItems
 
             delegate: component
@@ -143,7 +139,6 @@ Rectangle {
             boundsBehavior: Flickable.StopAtBounds
             focus: true
         }
-
     }
 
     Component {

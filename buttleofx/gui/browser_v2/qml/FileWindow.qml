@@ -20,7 +20,9 @@ Rectangle {
     }
 
     function handleGraphViewerClick(pathImg){
-        player.changeViewer(11) // We come to the temporary viewer
+        // We come to the temporary viewer
+        player.changeViewer(11)
+
         // We save the last node wrapper of the last view
         var nodeWrapper
         player.lastNodeWrapper = _buttleData.getNodeWrapperByViewerIndex(player.lastView)
@@ -29,6 +31,7 @@ Rectangle {
         _buttleData.currentGraphWrapper = _buttleData.graphBrowserWrapper
         _buttleData.currentViewerNodeWrapper = nodeWrapper
         _buttleData.currentViewerFrame = 0
+
         // We assign the node to the viewer, at the frame 0
         _buttleData.assignNodeToViewerIndex(nodeWrapper, 10)
         _buttleData.currentViewerIndex = 10 // We assign to the viewer the 10th view

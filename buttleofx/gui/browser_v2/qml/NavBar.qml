@@ -211,8 +211,6 @@ Rectangle {
 
                                 if(autoCompleteList.items.length == 1)
                                     autoCompleteList.items[0].trigger()
-                                else
-                                    autoCompleteList.show()
                             }
                             if(event.key == Qt.Key_Tab || event.key == Qt.Key_Enter || event.key == Qt.Key_Return || event.key == Qt.Key_Down || (event.key == Qt.Key_Space))
                                 autoCompleteList.show()

@@ -324,6 +324,11 @@ class BrowserModel(QtCore.QObject):
         for bItem in self._browserItems:
             bItem.setSelected(False)
 
+    @QtCore.pyqtSlot()
+    def selectAllItems(self):
+        for bItem in self._browserItems:
+            bItem.setSelected(True)
+
     @QtCore.pyqtSlot(int)
     def selectItem(self, index):
         self.unselectAllItems()

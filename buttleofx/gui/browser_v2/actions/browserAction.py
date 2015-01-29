@@ -3,7 +3,9 @@ from buttleofx.gui.browser_v2.actions.actionManager import ActionManagerSingleto
 from buttleofx.gui.browser_v2.actions.actionWrapper import ActionWrapper
 from quickmamba.patterns.singleton import Singleton
 from buttleofx.gui.browser_v2.browserModel import BrowserModelSingleton
+from buttleofx.gui.browser_v2.browserItem import BrowserItem
 from buttleofx.gui.browser_v2.actions.concreteActions import *
+from pySequenceParser import sequenceParser
 import os
 
 class BrowserAction(QtCore.QObject):
@@ -63,6 +65,18 @@ class BrowserAction(QtCore.QObject):
         for item in [bItem for bItem in self._browserModel.getItems() if bItem.getSelected()]:
             listActions.append(Delete(item))
         self.pushToActionManager(ActionWrapper(listActions))
+
+    @QtCore.pyqtSlot(str)
+    def handleNew(self, type):
+        if type == "Folder":
+            new = BrowserItem(sequenceParser.Item(sequenceParser.eTypeFolder, "New Document"), True)
+        elif type == "File":
+            new = BrowserItem(sequenceParser.Item(sequenceParser.eTypeFile, "NewDocument.txt"), True)
+        else:
+            return
+
+        parent = BrowserItem(sequenceParser.Item(sequenceParser.eTypeFolder, self._browserModel.getCurrentPath()), False)
+        self.pushToActionManager(ActionWrapper([Create(parent, new)]))
 
 
 class BrowserActionSingleton(Singleton):

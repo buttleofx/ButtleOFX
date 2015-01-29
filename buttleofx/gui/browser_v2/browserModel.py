@@ -13,7 +13,6 @@ from pyTuttle import tuttle
 from quickmamba.patterns import Singleton
 
 
-
 class BrowserModel(QtCore.QObject):
     """
         Model of files based on pySequenceParser. It recognises files, folders and sequences.
@@ -47,7 +46,6 @@ class BrowserModel(QtCore.QObject):
         self._asyncMode = asyncMode
         self._actionManager = ActionManagerSingleton.get()  # for locking and search BrowserItem when updating
         self._currentPath = path.strip() if path.strip() else os.path.expanduser("~")
-
         self.updateItemsWrapperAsync()
 
     def updateItemsWrapperAsync(self):

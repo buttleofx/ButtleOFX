@@ -53,8 +53,45 @@ Rectangle {
 
     MouseArea {
         anchors.fill: parent
+        acceptedButtons: Qt.LeftButton | Qt.RightButton
 
-        onClicked: root.model.unselectAllItems()
+        onClicked:{
+            if(mouse.button == Qt.RightButton)
+                actionsMenu.popup()
+            if(mouse.button == Qt.LeftButton)
+                root.model.unselectAllItems()
+        }
+    }
+
+    Menu{
+        //TODO: REDO architecture
+        id:actionsMenu
+
+        MenuItem{
+            text:"Copy"
+            onTriggered: {
+                _browserAction.handleCopy()
+            }
+        }
+        MenuItem{
+            text:"Cut"
+            onTriggered: {
+                _browserAction.handleMove()
+            }
+        }
+
+        MenuItem{
+            text:"Paste"
+            onTriggered: {
+                _browserAction.handlePaste()
+            }
+        }
+        MenuItem{
+            text:"Delete"
+            onTriggered: {
+                _browserAction.handleDelete()
+            }
+        }
     }
 
     ScrollView {
@@ -200,30 +237,6 @@ Rectangle {
                             // If it's an image, we create a node
                             else if (model.object.isSupported())
                                 handleGraphViewerDoubleClick(model.object.path)
-                        }
-                    }
-
-                    Menu{
-                        //TODO: REDO architecture
-                        id:actionsMenu
-
-                        MenuItem{
-                            text:"Copy"
-                            onTriggered: {
-
-                            }
-                        }
-                        MenuItem{
-                            text:"Paste"
-                            onTriggered: {
-
-                            }
-                        }
-                        MenuItem{
-                            text:"Delete"
-                            onTriggered: {
-
-                            }
                         }
                     }
                 }

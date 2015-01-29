@@ -20,6 +20,12 @@ Rectangle {
         ++ visitedFolderListIndex
     }
 
+    MouseArea {
+        anchors.fill: parent
+
+        onClicked: root.model.unselectAllItems()
+    }
+
     ScrollView {
         anchors.fill: parent
 

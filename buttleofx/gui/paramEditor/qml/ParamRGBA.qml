@@ -1,44 +1,53 @@
 import QtQuick 2.0
-import QuickMamba 1.0
-import "qmlComponents/ColorPicker"
+import "../ColorPicker/qml"
+import "../../../gui"
+import QtQuick.Layouts 1.1
 
-ColorPicker {
-    id: paramRGBA
+RowLayout {
+    id: root
 
-    // colorObject ensures the link between qml and python
-    property variant colorObject: model.object
+    // you can hold this as a reference
+    property variant win
 
-    Component.onCompleted: {
-        defaultValueRed = colorObject.r
-        defaultValueGreen = colorObject.g
-        defaultValueBlue = colorObject.b
-        defaultValueAlpha = colorObject.a
+    Rectangle {
+        width: parent.width / 2
+        height: 30
+        color: Qt.rgba(model.object.r, model.object.g, model.object.b, 255)
+        border.width: 1
+        border.color: "#333"
     }
 
-    title: colorObject.text
+    Rectangle {
+        width: parent.width / 3
+        height: 30
 
-    // Is this param secret?
-    visible: !colorObject.isSecret
-    height: colorObject.isSecret ? 0 : implicitHeight
+        Image {
+            anchors.fill: parent
+            source: _buttleData.buttlePath + "/gui/img/background/checkerboard.jpg"
+            fillMode: Image.Tile
+        }
 
-    /* We can't directly write selectedColor.alpha because selectedColor
-      is a color which is not the object colorExtended, so for the moment we do
-      this trick and declare a colorExtended in paramRGBA too */
-    ColorExtended {
-        id: mainCurrentColor
-        // currentColor is a property of ColorPicker.qml
-        entireColor: currentColor // entireColor is a QColor exposed in colorExtended from Quickmamba
+        Rectangle {
+            anchors.fill: parent
+            color: "black"
+            opacity: model.object.a
+            border.width: 1
+            border.color: "#333"
+        }
     }
 
-    // Everytime the color is changed, we send the data to Tuttle
-    onMainColorChanged: {
-        if (colorObject) {
-            colorObject.r = mainCurrentColor.red
-            colorObject.g = mainCurrentColor.green
-            colorObject.b = mainCurrentColor.blue
-            colorObject.a = mainCurrentColor.alpha
-            // setValue is given from python in rgbaWrapper.py
-            // colorObject.setValue(mainCurrentColor.red, mainCurrentColor.green, mainCurrentColor.blue, mainCurrentColor.alpha)
+    MouseArea {
+        id: openWindowRGBA
+        property bool isOpen: false
+
+        anchors.fill: parent
+        onClicked: {
+            var component = Qt.createComponent("WindowColorWheelRGBA.qml")
+            if (!isOpen) {
+                win = component.createObject(root)
+                win.show()
+                isOpen = true
+            }
         }
     }
 }

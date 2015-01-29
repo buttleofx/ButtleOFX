@@ -256,7 +256,11 @@ class NodeWrapper(QtCore.QObject):
     isHighlighted = QtCore.pyqtProperty(bool, isHighlighted, setIsHighlighted, notify=nodeLookChanged)
 
     # Params (wrappers)
-    params = QtCore.pyqtProperty(QtCore.QObject, getParams, notify=nodeContentChanged)
+    # Currently there is no support for dynamic parameters in OpenFX.
+    # So, here, the list of Parameters is declared constant. Only the content and
+    # visibility (isSecret) properties could change.
+    # To support dynamic parameter, we should move to "notify=nodeContentChanged".
+    params = QtCore.pyqtProperty(QtCore.QObject, getParams, constant=True)
 
     # Video
     fps = QtCore.pyqtProperty(float, getFPS, constant=True)

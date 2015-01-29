@@ -1,10 +1,11 @@
 import QtQuick 2.0
+import QuickMamba 1.0
 
 // ParamDouble3D containts two input field
 Item {
     id: containerParamDouble3D
     implicitWidth: 300
-    implicitHeight: 30
+    implicitHeight: 60
     y: 10
 
     property variant paramObject: model.object
@@ -18,74 +19,43 @@ Item {
         id: paramDouble3DInputContainer
         spacing: 10
 
-        // Title of the paramDouble
-        Text {
-            id: paramDouble3DTitle
-            text: paramObject.text + " : "
-            color: "white"
-            // If param has been modified, title in bold font
-            font.bold: (paramObject.value1HasChanged || paramObject.value2HasChanged || paramObject.value3HasChanged) ? true : false
-
-            MouseArea {
-                anchors.fill: parent
-                acceptedButtons: Qt.RightButton
-                // Reinitialise the values of the params
-
-                onClicked: {
-                    paramObject.value1HasChanged = false
-                    paramObject.value2HasChanged = false
-                    paramObject.value3HasChanged = false
-                    paramObject.value1 = paramObject.getDefaultValue1()
-                    paramObject.value2 = paramObject.getDefaultValue2()
-                    paramObject.value3 = paramObject.getDefaultValue3()
-                }
-            }
-        }
-
         // First input
         Rectangle {
-            height: 20
-            width: 40
+            height: 35
+            width: 60
             color: "#343434"
             border.width: 1
             border.color: "#444"
             radius: 3
             clip: true
 
-            TextInput {
+            QuickEditableNumberInput {
                 id: paramDouble3Dinput1
-                text: paramObject.value1
-                width: parent.width - 2
-                anchors.left: parent.left
-                anchors.leftMargin: 2
-                anchors.rightMargin: 2
-                anchors.verticalCenter: parent.verticalCenter
-                font.bold: paramObject.value1HasChanged ? true : false
+                textInput.text: paramObject.value1
+                width: parent.width
+                textInput.font.bold: paramObject.value1HasChanged ? true : false
                 color: activeFocus ? "white" : "grey"
-                selectByMouse: true
+                textInput.selectByMouse: true
 
-                onAccepted: {
-                    if (text <= paramObject.maximum1 && text >= paramObject.minimum1) {
-                        paramObject.value1 = paramDouble3Dinput1.text
+                minValue: paramObject.minimum1
+                maxValue: paramObject.maximum1
+                decimals: 5
+
+                textInput.onAccepted: {
+                    if (textInput.text <= paramObject.maximum1 && textInput.text >= paramObject.minimum1) {
+                        paramObject.value1 = parseFloat(paramDouble3Dinput1.textInput.text)
                     } else {
-                        text = paramObject.value1
+                        textInput.text = paramObject.value1
                     }
                 }
 
-                onActiveFocusChanged: {
-                    if (text <= paramObject.maximum1 && text >= paramObject.minimum1) {
-                        paramObject.value1 = paramDouble3Dinput1.text
+                textInput.onActiveFocusChanged: {
+                    if (textInput.text <= paramObject.maximum1 && textInput.text >= paramObject.minimum1) {
+                        paramObject.value1 = paramDouble3Dinput1.textInput.text
                     } else {
-                        text = paramObject.value1
+                        textInput.text = paramObject.value1
                     }
                 }
-
-                /*
-                validator: DoubleValidator{
-                    bottom: paramObject.minimum1
-                    top:  paramObject.maximum1
-                }
-                */
 
                 KeyNavigation.backtab: paramDouble3Dinput3
                 KeyNavigation.tab: paramDouble3Dinput2
@@ -105,49 +75,46 @@ Item {
 
         // Second input
         Rectangle {
-            height: 20
-            width: 40
+            height: 35
+            width: 60
             color: "#343434"
             border.width: 1
             border.color: "#444"
             radius: 3
             clip: true
 
-            TextInput {
+            QuickEditableNumberInput {
                 id: paramDouble3Dinput2
-                text: paramObject.value2
-                width: parent.width - 2
-                anchors.left: parent.left
-                anchors.leftMargin: 2
-                anchors.rightMargin: 2
-                anchors.verticalCenter: parent.verticalCenter
-                font.bold: paramObject.value2HasChanged ? true : false
+                textInput.text: paramObject.value2
+                width: parent.width
+                textInput.font.bold: paramObject.value2HasChanged ? true : false
                 color: activeFocus ? "white" : "grey"
-                activeFocusOnPress: true
-                selectByMouse: true
+                textInput.activeFocusOnPress: true
+                textInput.selectByMouse: true
 
-                onAccepted: {
-                    if (text <= paramObject.maximum2 && text >= paramObject.minimum2) {
-                        paramObject.value2 = paramDouble3Dinput2.text
+                minValue: paramObject.minimum2
+                maxValue: paramObject.maximum2
+                decimals: 5
+
+                onQuickUpdate: textInput.text = quickValue
+
+                onEditingFinished: paramObject.value2 = parseFloat(textInput.text)
+
+                textInput.onAccepted: {
+                    if (textInput.text <= paramObject.maximum2 && textInput.text >= paramObject.minimum2) {
+                        paramObject.value2 = parseFloat(paramDouble3Dinput2.textInput.text)
                     } else {
-                        text = paramObject.value2
+                        textInput.text = paramObject.value2
                     }
                 }
 
-                onActiveFocusChanged: {
-                    if (text <= paramObject.maximum2 && text >= paramObject.minimum2) {
-                        paramObject.value2 = paramDouble3Dinput2.text
+                textInput.onActiveFocusChanged: {
+                    if (textInput.text <= paramObject.maximum2 && textInput.text >= paramObject.minimum2) {
+                        paramObject.value2 = paramDouble3Dinput2.textInput.text
                     } else {
-                        text = paramObject.value2
+                        textInput.text = paramObject.value2
                     }
                 }
-
-                /*
-                validator: DoubleValidator{
-                    bottom: paramObject.minimum2
-                    top: paramObject.maximum2
-                }
-                */
 
                 KeyNavigation.backtab: paramDouble3Dinput1
                 KeyNavigation.tab: paramDouble3Dinput3
@@ -167,49 +134,46 @@ Item {
 
         // Third input
         Rectangle {
-            height: 20
-            width: 40
+            height: 35
+            width: 60
             color: "#343434"
             border.width: 1
             border.color: "#444"
             radius: 3
             clip: true
 
-            TextInput {
+            QuickEditableNumberInput {
                 id: paramDouble3Dinput3
-                text: paramObject.value3
-                width: parent.width - 2
-                anchors.left: parent.left
-                anchors.leftMargin: 2
-                anchors.rightMargin: 2
-                anchors.verticalCenter: parent.verticalCenter
-                font.bold: paramObject.value3HasChanged ? true : false
+                textInput.text: paramObject.value3
+                width: parent.width
+                textInput.font.bold: paramObject.value3HasChanged ? true : false
                 color: activeFocus ? "white" : "grey"
-                activeFocusOnPress: true
-                selectByMouse: true
+                textInput.activeFocusOnPress: true
+                textInput.selectByMouse: true
 
-                onAccepted: {
-                    if (text <= paramObject.maximum3 && text >= paramObject.minimum3) {
-                        paramObject.value3 = paramDouble3Dinput3.text
+                minValue: paramObject.minimum3
+                maxValue: paramObject.maximum3
+                decimals: 5
+
+                onQuickUpdate: textInput.text = quickValue
+
+                onEditingFinished: paramObject.value3 = parseFloat(textInput.text)
+
+                textInput.onAccepted: {
+                    if (textInput.text <= paramObject.maximum3 && textInput.text >= paramObject.minimum3) {
+                        paramObject.value3 = parseFloat(paramDouble3Dinput3.textInput.text)
                     } else {
-                        text = paramObject.value3
+                        textInput.text = paramObject.value3
                     }
                 }
 
-                onActiveFocusChanged: {
-                    if (text <= paramObject.maximum3 && text >= paramObject.minimum3) {
-                        paramObject.value3 = paramDouble3Dinput3.text
+                textInput.onActiveFocusChanged: {
+                    if (textInput.text <= paramObject.maximum3 && textInput.text >= paramObject.minimum3) {
+                        paramObject.value3 = paramDouble3Dinput3.textInput.text
                     } else {
-                        text = paramObject.value3
+                        textInput.text = paramObject.value3
                     }
                 }
-
-                /*
-                validator: DoubleValidator{
-                    bottom: paramObject.minimum3
-                    top: paramObject.maximum3
-                }
-                */
 
                 KeyNavigation.backtab: paramDouble3Dinput2
                 KeyNavigation.tab: paramDouble3Dinput1

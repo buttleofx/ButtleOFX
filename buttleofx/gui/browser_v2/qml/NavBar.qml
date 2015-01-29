@@ -212,11 +212,6 @@ Rectangle {
                             autoCompleteList.show()
                         }
 
-                        Keys.onPressed: {
-                            if(event.key == Qt.Key_Space)
-                                return false
-                        }
-
                         Keys.onReleased: {
 
                             if ((event.key == Qt.Key_Space) && (event.modifiers & Qt.ControlModifier)){
@@ -255,9 +250,11 @@ Rectangle {
                             }
 
                             function show() {
-                                if(!root.model.listFolderNavBar.count || autoCompleteList.__popupVisible)
-                                    return
                                 root.model.currentPath = texteditPath.text
+
+                                if(!root.model.listFolderNavBar.count)
+                                    return
+
                                 var indexPosition = root.model.currentPath.length
                                 var positionToShow = Qt.vector2d(0, texteditPath.height)
                                 positionToShow.x = texteditPath.positionToRectangle(indexPosition).x

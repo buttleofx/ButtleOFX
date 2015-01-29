@@ -7,6 +7,7 @@ class ActionInterface(QtCore.QObject):
         Interface which determines the template comportment for an action on a BrowserItem
         execute and revert methods must be implemented.
     """
+
     def __init__(self, browserItem):
         super(ActionInterface, self).__init__()
         self._browserItem = browserItem
@@ -14,10 +15,10 @@ class ActionInterface(QtCore.QObject):
         # required for abort processing
         self._abortFlag = False      # if action have been aborted
         self._progress = 0.0         # progression of action between 0 and 1,will be used with Tuttle process in execute
-        self._progressChanged = QtCore.pyqtSignal()  # used to reporting in actionWrapper(via connectProgression)
 
     def __del__(self):
-        print("Action destroyed")
+        # print("Action destroyed")
+        pass
 
     def begin(self):
         if self._browserItem:
@@ -63,3 +64,6 @@ class ActionInterface(QtCore.QObject):
 
     def getProgressSignal(self):
         return self._progressChanged
+
+
+    _progressChanged = QtCore.pyqtSignal()  # used to reporting in actionWrapper(via connectProgression)

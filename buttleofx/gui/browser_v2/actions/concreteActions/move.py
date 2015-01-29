@@ -12,13 +12,26 @@ class Move(ActionInterface):
             raise TypeError
         super().__init__(browserItem)
         self._destination = destination
+        self._srcPath = browserItem.getParentPath()
+        self._destPath = destination.getPath()
 
-    def action(self):
-        browserItem = self.getBrowserItem()
+    def execute(self):
+        browserItem = self._browserItem
         destination = self._destination
         destinationPath = destination.getPath()
 
         # Move file, folder, and sequence
         # TODO: Check destination permission in try catch
-        if os.path.exists(destinationPath):
-            shutil.move(browserItem.getPath(), destinationPath)
+        if browserItem.isFile() or browserItem.isFolder():
+            if os.path.exists(destinationPath):
+                shutil.move(browserItem.getPath(), destinationPath)
+
+    def revert(self):
+        browserItem = self._browserItem
+        srcPath = self._srcPath
+        destPath = self._destination.getPath()
+        destItemPath = os.path.join(destPath, browserItem.getName())
+
+        if browserItem.isFile() or browserItem.isFolder():
+            if os.path.exists(srcPath):
+                shutil.move(destItemPath, srcPath)

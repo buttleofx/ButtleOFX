@@ -13,7 +13,7 @@ class Create(ActionInterface):
         # TODO: Can a new item be a sequence ?
         self._newBrowserItem = newBrowserItem
 
-    def action(self):
+    def execute(self):
         parent = self.getBrowserItem()
         newBrowserItem = self._newBrowserItem
 

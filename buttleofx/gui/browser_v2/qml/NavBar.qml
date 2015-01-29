@@ -190,10 +190,6 @@ Rectangle {
                             regExp: /^\/{1}[A-Za-z/]{1,}$/
                         }
 
-                        onAccepted: {
-                            autoCompleteList.show()
-                        }
-
                         Keys.onEscapePressed: {
                             if (!breadCrum.visible)
                                 breadCrum.visible = true
@@ -201,28 +197,24 @@ Rectangle {
 
                             if (textEditContainer.visible)
                                 textEditContainer.visible = false
-
-                        }
-
-                        Keys.onDownPressed: {
-                            autoCompleteList.show()
                         }
 
                         Keys.onTabPressed: {
                             autoCompleteList.show()
+
                         }
 
                         Keys.onReleased: {
+                            root.model.currentPath = texteditPath.text
 
                             if ((event.key == Qt.Key_Space) && (event.modifiers & Qt.ControlModifier)){
-                                root.model.currentPath = texteditPath.text
 
                                 if(autoCompleteList.items.length == 1)
                                     autoCompleteList.items[0].trigger()
                                 else
                                     autoCompleteList.show()
                             }
-                            if(event.key == Qt.Key_Tab || event.key == Qt.Key_Enter || event.key == Qt.Key_Down)
+                            if(event.key == Qt.Key_Tab || event.key == Qt.Key_Enter || event.key == Qt.Key_Return || event.key == Qt.Key_Down || (event.key == Qt.Key_Space))
                                 autoCompleteList.show()
                         }
 

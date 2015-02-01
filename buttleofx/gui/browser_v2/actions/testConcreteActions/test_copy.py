@@ -7,8 +7,8 @@ import os
 from buttleofx.gui.browser_v2.browserItem import BrowserItem
 from buttleofx.gui.browser_v2.actions.concreteActions.copy import Copy
 from pySequenceParser import sequenceParser
-
 import buttleofx.gui.browser_v2.actions.testConcreteActions.helper as h
+
 
 class TestCopy(unittest.TestCase):
 

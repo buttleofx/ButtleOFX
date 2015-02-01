@@ -346,7 +346,7 @@ class BrowserModel(QtCore.QObject):
                 break
 
         crescentLoop = 1
-        index = index +1
+        index = index + 1
 
         if firstSelected > index:
             index = index -2

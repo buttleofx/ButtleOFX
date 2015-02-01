@@ -1,11 +1,9 @@
 #! /usr/bin/env python3
 import os
-import sys
 import numpy
 import logging
 from pyTuttle import tuttle
-from PyQt5 import QtCore, QtGui, QtQml, QtQuick, QtWidgets
-from PyQt5.QtQml import qmlRegisterType
+from PyQt5 import QtGui, QtQuick
 
 gray_color_table = [QtGui.qRgb(i, i, i) for i in range(256)]
 

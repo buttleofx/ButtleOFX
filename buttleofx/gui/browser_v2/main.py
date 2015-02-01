@@ -15,13 +15,11 @@
 import os
 import sys
 from PyQt5.QtQml import qmlRegisterType
-
 from pyTuttle import tuttle
 from buttleofx.gui.browser_v2.browserModel import BrowserModel
 from buttleofx.gui.browser_v2.standaloneUtils import *
 # To prevent drivers conflicts between Mesa-utils and NVIDIA drivers on Ubuntu
 from OpenGL import GL
-from pySequenceParser import sequenceParser
 
 currentFilePath = os.path.dirname(os.path.abspath(__file__))
 

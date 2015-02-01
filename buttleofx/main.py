@@ -230,9 +230,9 @@ def main(argv, app):
     buttleManager = ButtleManagerSingleton().get().init()
     # Event
     buttleEvent = ButtleEventSingleton().get()
-    # fileModelBrowser
+    # browserModel
     browser = BrowserModelSingleton.get()
-    browserAction = BrowserActionSingleton().get()
+    browserAction = BrowserActionSingleton.get()
 
     parser = argparse.ArgumentParser(description=('A command line to execute ButtleOFX, an opensource compositing '
                                                   'software. If you pass a folder as an argument, ButtleOFX will '

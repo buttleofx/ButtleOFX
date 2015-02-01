@@ -1,3 +1,4 @@
+import os
 from PyQt5 import QtCore
 from buttleofx.gui.browser_v2.actions.actionManager import ActionManagerSingleton
 from buttleofx.gui.browser_v2.actions.actionWrapper import ActionWrapper
@@ -6,23 +7,28 @@ from buttleofx.gui.browser_v2.browserModel import BrowserModelSingleton
 from buttleofx.gui.browser_v2.browserItem import BrowserItem
 from buttleofx.gui.browser_v2.actions.concreteActions import *
 from pySequenceParser import sequenceParser
-import os
+
 
 class BrowserAction(QtCore.QObject):
     """
         Controller of browser for actions
     """
+    cacheChanged = QtCore.pyqtSignal()
+
     def __init__(self):
         super(BrowserAction, self).__init__()
         self._cacheActions = None  # for copy, move actions
         self._browserModel = BrowserModelSingleton().get()
 
+    def pushCache(self, listActions):
+        self._cacheActions = ActionWrapper(listActions)
+
+    def isEmptyCache(self):
+        return bool(self._cacheActions)
+
     @QtCore.pyqtSlot(QtCore.QObject)
     def getCache(self):
         return self._cacheActions
-
-    def pushCache(self, listActions):
-        self._cacheActions = ActionWrapper(listActions)
 
     @QtCore.pyqtSlot(QtCore.QObject)
     def pushToActionManager(self, actionWrapper=None):
@@ -31,7 +37,6 @@ class BrowserAction(QtCore.QObject):
         else:
             if self._cacheActions:
                 ActionManagerSingleton.get().push(self._cacheActions)
-            self._cacheActions = None
 
     @QtCore.pyqtSlot()
     def handleCopy(self):
@@ -41,6 +46,7 @@ class BrowserAction(QtCore.QObject):
             if bItem.getSelected():
                 listActions.append(Copy(bItem, None))
         self.pushCache(listActions)
+        self.cacheChanged.emit()
 
     @QtCore.pyqtSlot()
     def handleMove(self):
@@ -50,6 +56,7 @@ class BrowserAction(QtCore.QObject):
             if bItem.getSelected():
                 listActions.append(Move(bItem))
         self.pushCache(listActions)
+        self.cacheChanged.emit()
 
     @QtCore.pyqtSlot()
     def handlePaste(self):
@@ -69,7 +76,7 @@ class BrowserAction(QtCore.QObject):
     @QtCore.pyqtSlot(str)
     def handleNew(self, type):
         if type == "Folder":
-            new = BrowserItem(sequenceParser.Item(sequenceParser.eTypeFolder, "New Document"), True)
+            new = BrowserItem(sequenceParser.Item(sequenceParser.eTypeFolder, "New_Folder"), True)
         elif type == "File":
             new = BrowserItem(sequenceParser.Item(sequenceParser.eTypeFile, "NewDocument.txt"), True)
         else:
@@ -77,6 +84,9 @@ class BrowserAction(QtCore.QObject):
 
         parent = BrowserItem(sequenceParser.Item(sequenceParser.eTypeFolder, self._browserModel.getCurrentPath()), False)
         self.pushToActionManager(ActionWrapper([Create(parent, new)]))
+
+    # cache empty ?
+    isCache = QtCore.pyqtProperty(bool, isEmptyCache, notify=cacheChanged)
 
 
 class BrowserActionSingleton(Singleton):

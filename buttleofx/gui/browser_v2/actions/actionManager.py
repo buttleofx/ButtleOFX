@@ -22,6 +22,11 @@ class ActionManager(QtCore.QObject):
         self._workers = [Worker(self._waiting, self._running, self._ended, self.actionChanged) for _ in range(self.num_threads_workers)]
         self.startWorkers()
 
+    def stopWorkers(self):
+        Worker.destroy()
+        for _ in self._workers:
+            self._waiting.put(None)
+
     def startWorkers(self):
         for worker in self._workers:
             worker.start()
@@ -59,3 +64,4 @@ class ActionManagerSingleton(Singleton):
     @staticmethod
     def get():
         return ActionManagerSingleton._actionManager
+

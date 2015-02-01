@@ -24,6 +24,8 @@ class Worker(threading.Thread):
         Worker.lockWhileWaiting()
 
         actionWrapper = self._queue.get()
+        if actionWrapper == None:
+            return
         self._inProgress.append(actionWrapper)
 
         for action in actionWrapper.getActions():

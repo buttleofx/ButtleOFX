@@ -444,6 +444,7 @@ Rectangle {
                         anchors.fill: parent
                         hoverEnabled: true
                         onClicked: {
+                            pushVisitedFolder(model.object[0])
                             root.model.currentPath = model.object[0]
                         }
                     }

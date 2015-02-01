@@ -6,34 +6,18 @@ import QtQuick.Controls.Styles 1.0
 // Navbar glogal struct
 Rectangle {
     id: root
-
     color: "#2E2E2E"
     clip: true
-
-    signal autoCompleteMode(bool active)
     Layout.preferredHeight: searchLayoutRectangle.height+ navBarContainer.height
-
-    function pushVisitedFolder(path){
-        if (visitedFolderList.count === 0){
-            // Save path of the current folder
-            visitedFolderList.append({"url": root.model.currentPath})
-        }
-
-        visitedFolderList.append({"url": path})
-        ++ visitedFolderListIndex
-    }
-
-    onAutoCompleteMode: {
-        autoCompleteList.show()
-    }
+    signal pushVisitedFolder(string path)
 
     ColumnLayout{
         anchors.fill: parent
         spacing: 0
 
         Rectangle{
-            Layout.alignment: Qt.AlignTop
             id: navBarContainer
+            Layout.alignment: Qt.AlignTop
             Layout.fillWidth: true
             color: "transparent"
             Layout.preferredHeight: 40
@@ -129,7 +113,7 @@ Rectangle {
 
                     onClicked: {
                         if(model.currentPath !== "/" && model.currentPath.trim() !== ""){
-                            root.pushVisitedFolder(model.parentFolder)
+                            pushVisitedFolder(model.parentFolder)
                             model.currentPath = model.parentFolder
                         }
                     }
@@ -172,28 +156,32 @@ Rectangle {
                     border.width: 2
                     radius: 3
 
+                    function hide(){
+                        textEditContainer.visible = false
+                        breadCrum.visible = true
+                        breadCrum.forceActiveFocus()
+                    }
+
                     TextInput {
                         id: texteditPath
-                        y: 5
-                        x: 10
                         height: parent.height
                         width: parent.width - 10
+                        x: 10
+                        y: 5
+
                         clip: true
                         text: root.model.currentPath
 
                         selectByMouse: true
                         selectionColor: "#00b2a1"
+
+                        //address not empty at the beginning
                         validator: RegExpValidator{
-                            regExp: /^\/{1}[A-Za-záàâäãåçéèêëíìîïñóòôöõúùûüýÿæœÁÀÂÄÃÅÇÉÈÊËÍÌÎÏÑÓÒÔÖÕÚÙÛÜÝŸÆŒ._\s-/]{1,}$/
+                            regExp: /^[^\s]$/
                         }
 
                         Keys.onEscapePressed: {
-                            if (!breadCrum.visible)
-                                breadCrum.visible = true
-                                breadCrum.forceActiveFocus()
-
-                            if (textEditContainer.visible)
-                                textEditContainer.visible = false
+                            textEditContainer.hide()
                         }
 
                         Keys.onTabPressed:{
@@ -213,6 +201,11 @@ Rectangle {
                                 autoCompleteList.show()
                         }
 
+                        onFocusChanged: {
+                            if(!focus)
+                                textEditContainer.hide()
+                        }
+
                         Menu {
                             id: autoCompleteList
                             __visualItem: textEditContainer //simulate container for popup
@@ -226,7 +219,7 @@ Rectangle {
                                     text: model.object.name
 
                                     onTriggered: {
-                                        root.pushVisitedFolder( model.object.path)
+                                        pushVisitedFolder( model.object.path)
                                         root.model.currentPath = model.object.path
                                     }
                                 }
@@ -368,7 +361,6 @@ Rectangle {
                     id: searchContainer
                     Layout.fillWidth: true
                     Layout.fillHeight: true
-
                     color: "transparent"
 
                     TextField {
@@ -376,8 +368,7 @@ Rectangle {
 
                         anchors.fill: parent
                         anchors.margins: 2
-
-                        placeholderText: "Enter yout research ..."
+                        placeholderText: "Enter your search ..."
 
                         style: TextFieldStyle {
                                 selectionColor: "#00b2a1"
@@ -388,10 +379,14 @@ Rectangle {
                                     border.width: 1
                                 }
                             }
-
                         onAccepted: {
                             if(text.trim())
                                 _browser.doSearchRecursive(text.trim())
+                        }
+
+                        onFocusChanged: {
+                            if(!focus)
+                                searchLayoutRectangle.enabled = false
                         }
                     }
                 }
@@ -410,7 +405,6 @@ Rectangle {
 
             Text {
                 id: folder
-
                 anchors.left: parent.left
                 anchors.leftMargin: 5
 
@@ -423,7 +417,7 @@ Rectangle {
                     anchors.fill: parent
                     hoverEnabled: true
                     onClicked: {
-                        root.pushVisitedFolder(model.object[0])
+                        pushVisitedFolder(model.object[0])
                         root.model.currentPath = model.object[0]
                     }
                 }

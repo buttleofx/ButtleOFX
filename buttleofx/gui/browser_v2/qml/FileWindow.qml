@@ -4,21 +4,11 @@ import QtQuick.Dialogs 1.0
 import QtQuick.Layouts 1.0
 import QtQuick.Controls.Styles 1.0
 
-
 Rectangle {
     id: root
     color: "transparent"
 
-    function pushVisitedFolder(path){
-        if (visitedFolderList.count === 0){
-            // Save path of the current folder
-            visitedFolderList.append({"url": root.model.currentPath})
-        }
-
-        visitedFolderList.append({"url": path})
-        ++ visitedFolderListIndex
-    }
-
+    //TODO: think about standalone
     function handleGraphViewerClick(pathImg){
         // We come to the temporary viewer
         player.changeViewer(11)
@@ -37,7 +27,6 @@ Rectangle {
         _buttleData.currentViewerIndex = 10 // We assign to the viewer the 10th view
         _buttleEvent.emitViewerChangedSignal()
     }
-
     function handleGraphViewerDoubleClick(pathImg){
         _buttleData.currentGraphWrapper = _buttleData.graphWrapper
         _buttleData.currentGraphIsGraph()
@@ -53,6 +42,8 @@ Rectangle {
         _buttleManager.nodeManager.dropFile(pathImg, 10, 10)
     }
 
+    signal pushVisitedFolder(string path)
+    Keys.onEscapePressed: root.model.unselectAllItems()
 
     MouseArea {
         anchors.fill: parent
@@ -60,6 +51,8 @@ Rectangle {
 
         onClicked:{
             root.forceActiveFocus()
+            root.model.unselectAllItems()
+            actionsMenu.showItemActions = false
             if(mouse.button == Qt.RightButton)
                 actionsMenu.popup()
             if(mouse.button == Qt.LeftButton)
@@ -70,6 +63,8 @@ Rectangle {
     Menu{
         //TODO: REDO architecture
         id:actionsMenu
+        property bool showItemActions: false
+
         MenuItem{
             text:"Refresh"
             iconName: "reload"
@@ -78,7 +73,6 @@ Rectangle {
                 _browser.refresh()
             }
         }
-
         MenuSeparator{}
         MenuItem{
             text:"Select All"
@@ -88,9 +82,9 @@ Rectangle {
                 _browser.selectAllItems()
             }
         }
-
         MenuItem{
             text:"New folder"
+            visible:!actionsMenu.showItemActions
             iconName: "folder-new"
             shortcut: StandardKey.New
             onTriggered: {
@@ -99,6 +93,7 @@ Rectangle {
         }
         MenuItem{
             text:"New file"
+            visible:!actionsMenu.showItemActions
             iconName: "document-new"
             shortcut: StandardKey.UnknownKey
             onTriggered: {
@@ -106,9 +101,9 @@ Rectangle {
             }
         }
         MenuSeparator{}
-
         MenuItem{
             text:"Copy"
+            visible:actionsMenu.showItemActions
             shortcut: StandardKey.Copy
             iconName: "edit-copy"
             onTriggered: {
@@ -117,31 +112,35 @@ Rectangle {
         }
         MenuItem{
             text:"Cut"
+            visible:actionsMenu.showItemActions
             iconName: "edit-cut"
             shortcut: StandardKey.Cut
             onTriggered: {
                 _browserAction.handleMove()
             }
         }
-
         MenuItem{
-            iconName: "edit-paste"
             text:"Paste"
+            iconName: "edit-paste"
             shortcut: StandardKey.Paste
+            enabled: _browserAction.isCache
             onTriggered: {
                 _browserAction.handlePaste()
-                _browser.refresh()
             }
         }
-
         MenuItem{
             text:"Delete"
+            visible:actionsMenu.showItemActions
             iconName: "edit-delete"
-            shortcut: StandardKey.Delete
+            shortcut: StandardKey.Deletes
             onTriggered: {
                 _browserAction.handleDelete()
                 _browser.refresh()
             }
+        }
+
+        Menu{
+            title:"Tuttle preset"
         }
     }
 
@@ -184,7 +183,6 @@ Rectangle {
             cellHeight: 100
 
             model: root.model.fileItems
-
             delegate: component
 
             boundsBehavior: Flickable.StopAtBounds
@@ -232,8 +230,6 @@ Rectangle {
                     }
                 }
 
-
-
                 Image {
                     id: icon
 
@@ -249,7 +245,6 @@ Rectangle {
                     fillMode: Image.PreserveAspectFit
 
                     opacity: ((icon_mouseArea.containsMouse || text_mouseArea.containsMouse) ^ model.object.isSelected) ? 1 : 0.7
-
                     visible: !loading.visible
 
                     MouseArea {
@@ -272,7 +267,6 @@ Rectangle {
 
                     text: model.object.name
                     color: ((icon_mouseArea.containsMouse || text_mouseArea.containsMouse) ^ model.object.isSelected) ? "white" : "#BBBBBB"
-
                     wrapMode: Text.WrapAnywhere
 
                     MouseArea {
@@ -281,8 +275,6 @@ Rectangle {
                         hoverEnabled: true
                     }
                 }
-
-
 
                 Component.onCompleted: {
                     fileName.width = fileName.contentWidth
@@ -294,26 +286,32 @@ Rectangle {
                 acceptedButtons: Qt.LeftButton | Qt.RightButton
 
                 onClicked: {
+                    root.forceActiveFocus()
+
                     if(mouse.button == Qt.RightButton){
+                        if(!root.model.selectedItems.count)
+                            root.model.selectItem(index)
+                        actionsMenu.showItemActions = true
                         actionsMenu.popup()
-                        return
                     }
 
-                    if(!model.object.isFolder()){
-                        if (model.object.isSupported())
-                            handleGraphViewerClick(model.object.path)
+                    else if(mouse.button == Qt.LeftButton){
+                        if(!model.object.isFolder()){
+                            if (model.object.isSupported())
+                                handleGraphViewerClick(model.object.path)
+                        }
+
+                        if ((mouse.modifiers & Qt.ShiftModifier))
+                            root.model.selectItemTo(index)
+                        else if ((mouse.modifiers & Qt.ControlModifier))
+                            model.object.isSelected = !model.object.isSelected
+                        else
+                            root.model.selectItem(index)
                     }
-                    if ((mouse.modifiers & Qt.ShiftModifier))
-                        root.model.selectItemTo(index)
-                    else if ((mouse.modifiers & Qt.ControlModifier))
-                        model.object.isSelected = !model.object.isSelected
-                    else
-                        root.model.selectItem(index)
                 }
-
                 onDoubleClicked: {
                     if (model.object.isFolder()) {
-                        root.pushVisitedFolder(model.object.path)
+                        pushVisitedFolder(model.object.path)
                         root.model.currentPath = model.object.path
                     }
 

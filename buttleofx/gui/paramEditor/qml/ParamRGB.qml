@@ -1,44 +1,33 @@
 import QtQuick 2.0
-import QuickMamba 1.0
-import "qmlComponents/ColorPicker"
+import QtQuick.Layouts 1.1
+import "../ColorPicker/qml"
 
-ColorPicker {
-    id: paramRGBA
+RowLayout {
 
-    // colorObject ensures the link between qml and python
-    property variant colorObject: model.object
-    hasAlpha: false
+    property variant win
 
-    Component.onCompleted: {
-        defaultValueRed = colorObject.r
-        defaultValueGreen = colorObject.g
-        defaultValueBlue = colorObject.b
-        defaultValueAlpha = 1.0
+    // you can hold this as a reference..
+    Rectangle {
+        id: root
+        width: parent.width / 2
+        height: 30
+        color: Qt.rgba(model.object.r, model.object.g, model.object.b, 255)
+        border.width: 1
+        border.color: "#333"
+        radius: 3
     }
+    MouseArea {
+        id: openWindowRGB
+        property bool isOpen: false
 
-    title: colorObject.text
-
-    // Is this param secret?
-    visible: !colorObject.isSecret
-    height: colorObject.isSecret ? 0 : implicitHeight
-
-    /* We can't directly write selectedColor.alpha because selectedColor
-      is a color which is not the object colorExtended, so for the moment we do
-      this trick and declare a colorExtended in paramRGBA too */
-    ColorExtended {
-        id: mainCurrentColor
-        // currentColor is a property of ColorPicker.qml
-        entireColor: currentColor // entireColor is a QColor exposed in colorExtended from Quickmamba
-    }
-
-    // Everytime the color is changed, we send the data to Tuttle
-    onMainColorChanged: {
-        if (colorObject) {
-            colorObject.r = mainCurrentColor.red
-            colorObject.g = mainCurrentColor.green
-            colorObject.b = mainCurrentColor.blue
-            // setValue is given from python in rgbaWrapper.py
-            // colorObject.setValue(mainCurrentColor.red, mainCurrentColor.green, mainCurrentColor.blue, mainCurrentColor.alpha)
+        anchors.fill: parent
+        onClicked: {
+            var component = Qt.createComponent("WindowColorWheelRGB.qml")
+            if (!isOpen) {
+                win = component.createObject(root)
+                win.show()
+                isOpen = true
+            }
         }
     }
 }

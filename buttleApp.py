@@ -9,11 +9,11 @@ sys.path.append(os.path.join(currentFilePath,'QuickMamba'))
 #----------------------------------------
 
 import quickmamba
-import buttleofx
+import buttleofx.main
 
 if __name__ == '__main__':
     quickmamba.qmlRegister()
 
-    app = buttleofx.ButtleApp(sys.argv)
-    buttleofx.main(sys.argv, app)
+    app = buttleofx.main.ButtleApp(sys.argv)
+    buttleofx.main.main(sys.argv, app)
     app.exec_()

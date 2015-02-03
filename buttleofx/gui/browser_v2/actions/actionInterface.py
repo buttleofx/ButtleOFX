@@ -1,4 +1,3 @@
-from buttleofx.gui.browser_v2.browserItem import BrowserItem
 from PyQt5 import QtCore
 
 

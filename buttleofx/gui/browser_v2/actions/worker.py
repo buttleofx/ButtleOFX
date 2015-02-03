@@ -68,4 +68,3 @@ class Worker(threading.Thread):
     @staticmethod
     def destroy():
         Worker.isDestroyed = True
-

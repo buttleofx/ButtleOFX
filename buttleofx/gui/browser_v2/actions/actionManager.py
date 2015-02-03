@@ -64,4 +64,3 @@ class ActionManagerSingleton(Singleton):
     @staticmethod
     def get():
         return ActionManagerSingleton._actionManager
-

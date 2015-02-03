@@ -4,7 +4,10 @@ from buttleofx.gui.browser_v2.actions.actionWrapper import ActionWrapper
 from quickmamba.patterns.singleton import Singleton
 from buttleofx.gui.browser_v2.browserModel import BrowserModelSingleton
 from buttleofx.gui.browser_v2.browserItem import BrowserItem
-from buttleofx.gui.browser_v2.actions.concreteActions import *
+from buttleofx.gui.browser_v2.actions.concreteActions.copy import Copy
+from buttleofx.gui.browser_v2.actions.concreteActions.move import Move
+from buttleofx.gui.browser_v2.actions.concreteActions.create import Create
+from buttleofx.gui.browser_v2.actions.concreteActions.delete import Delete
 from pySequenceParser import sequenceParser
 
 

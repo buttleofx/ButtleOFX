@@ -17,7 +17,6 @@ from buttleofx.manager import ButtleManagerSingleton
 from buttleofx.core.undo_redo.manageTools import CommandManager
 from buttleofx.gui.browser_v2.browserModel import BrowserModel, BrowserModelSingleton
 from buttleofx.gui.browser_v2.actions.browserAction import BrowserActionSingleton
-from buttleofx.gui.browser_v2.actions.actionManager import ActionManagerSingleton
 
 from PyQt5 import QtCore, QtGui, QtQml, QtQuick, QtWidgets
 

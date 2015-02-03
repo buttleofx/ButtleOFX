@@ -16,7 +16,7 @@ if __name__ == '__main__':
 
     rc = view.rootContext()
 
-    #view.setWindowTitle("Browser")
+    # view.setWindowTitle("Browser")
     view.setSource(QtCore.QUrl(os.path.join(currentFilePath, "qml/Browser.qml")))
     view.setResizeMode(QtQuick.QQuickView.SizeRootObjectToView)
 

@@ -1,4 +1,3 @@
-from buttleofx.gui.browser_v2.actions.actionInterface import ActionInterface
 from buttleofx.gui.browser_v2.actions.worker import Worker
 from quickmamba.patterns import Singleton
 from PyQt5 import QtCore
@@ -23,6 +22,7 @@ class ActionManager(QtCore.QObject):
         self.startWorkers()
 
     def stopWorkers(self):
+        print("STOP")
         Worker.destroy()
         for _ in self._workers:
             self._waiting.put(None)

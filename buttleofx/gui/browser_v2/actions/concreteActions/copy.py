@@ -1,6 +1,5 @@
 import os
 import shutil
-import copy
 
 from buttleofx.gui.browser_v2.actions.actionInterface import ActionInterface
 

@@ -8,6 +8,7 @@ from buttleofx.gui.browser_v2.browserItem import BrowserItem
 from buttleofx.gui.browser_v2.actions.concreteActions.rename import Rename
 from pySequenceParser import sequenceParser
 
+
 class TestRename(unittest.TestCase):
 
     # Before tests run
@@ -150,7 +151,6 @@ class TestRename(unittest.TestCase):
 
             # Browser item's path and old file path should be equal
             self.assertEqual(bi.getPath(), old_file_path)
-
 
     def test_rename_folder(self):
         with tempfile.TemporaryDirectory() as path:

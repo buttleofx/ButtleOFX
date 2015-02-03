@@ -207,7 +207,6 @@ class TestCopy(unittest.TestCase):
             self.assertEqual(dest_seq.getParentPath(), dest_folder_path)
             self.assertEqual(dest_seq.getName(), src_seq.getName())
 
-
     def test_sequence_copy_revert(self):
         with tempfile.TemporaryDirectory() as path:
             dest_folder_name = 'dest'
@@ -242,7 +241,6 @@ class TestCopy(unittest.TestCase):
             self.assertEqual(len(sequenceParser.browse(dest_folder_path)), 0)
             self.assertEqual(len(sequenceParser.browse(path)), 2)
             self.assertIsNotNone(sequenceParser.browse(path)[1])
-
 
     # After tests run
     def tearDown(self):

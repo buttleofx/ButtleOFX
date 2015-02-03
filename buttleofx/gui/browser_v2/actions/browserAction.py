@@ -17,7 +17,7 @@ class BrowserAction(QtCore.QObject):
     def __init__(self):
         super(BrowserAction, self).__init__()
         self._cacheActions = None  # for copy, move actions
-        self._browserModel = BrowserModelSingleton().get()
+        self._browserModel = BrowserModelSingleton.get()
 
     def pushCache(self, listActions):
         self._cacheActions = ActionWrapper(listActions)

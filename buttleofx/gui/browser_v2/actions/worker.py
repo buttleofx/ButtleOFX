@@ -1,5 +1,4 @@
 import threading
-import queue
 
 
 class Worker(threading.Thread):

@@ -1,5 +1,4 @@
 import os
-
 from buttleofx.gui.browser_v2.actions.actionInterface import ActionInterface
 
 
@@ -31,7 +30,6 @@ class Rename(ActionInterface):
                           newFileName)
             # os.rename(oldFilePath, newFilePath)
             # browserItem.updatePath(newFilePath)
-
 
         # Rename Folder
         if browserItem.isFolder():
@@ -66,7 +64,6 @@ class Rename(ActionInterface):
             # newPath = os.path.join(path, self._oldName)
             # os.rename(oldPath, newPath)
             # browserItem.updatePath(newPath)
-
 
     # Private Methods
     def __rename(self, basePath, oldName, newName):

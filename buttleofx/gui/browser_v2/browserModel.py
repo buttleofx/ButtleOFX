@@ -8,8 +8,6 @@ from fnmatch import fnmatch
 from buttleofx.gui.browser_v2.threadWrapper import ThreadWrapper
 from buttleofx.gui.browser_v2.actions.actionManager import ActionManagerSingleton
 from buttleofx.gui.browser_v2.actions.worker import Worker
-import copy
-from pyTuttle import tuttle
 from quickmamba.patterns import Singleton
 
 
@@ -349,7 +347,7 @@ class BrowserModel(QtCore.QObject):
         index = index + 1
 
         if firstSelected > index:
-            index = index -2
+            index = index - 2
             crescentLoop = -1
 
         for i in range(firstSelected, index, crescentLoop):

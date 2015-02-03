@@ -18,6 +18,7 @@ from PyQt5.QtQml import qmlRegisterType
 from pyTuttle import tuttle
 from buttleofx.gui.browser_v2.browserModel import BrowserModel
 from buttleofx.gui.browser_v2.standaloneUtils import *
+from PyQt5 import QtWidgets, QtQml, QtCore
 # To prevent drivers conflicts between Mesa-utils and NVIDIA drivers on Ubuntu
 from OpenGL import GL
 

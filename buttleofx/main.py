@@ -15,9 +15,9 @@ from buttleofx.data import ButtleDataSingleton
 from buttleofx.event import ButtleEventSingleton
 from buttleofx.manager import ButtleManagerSingleton
 from buttleofx.core.undo_redo.manageTools import CommandManager
-from buttleofx.gui.browser import FileModelBrowser, FileModelBrowserSingleton
 from buttleofx.gui.browser_v2.browserModel import BrowserModel, BrowserModelSingleton
 from buttleofx.gui.browser_v2.actions.browserAction import BrowserActionSingleton
+from buttleofx.gui.browser_v2.actions.actionManager import ActionManagerSingleton
 
 from PyQt5 import QtCore, QtGui, QtQml, QtQuick, QtWidgets
 
@@ -78,7 +78,7 @@ signal.signal(signal.SIGINT, signal.SIG_DFL)
 class EventFilter(QtCore.QObject):
     def eventFilter(self, receiver, event):
         buttleData = ButtleDataSingleton().get()
-        browser = BrowserModelSingleton.get()
+        # browser = BrowserModelSingleton.get()
 
         if event.type() == QtCore.QEvent.KeyPress:
             # If alt f4 event ignored
@@ -239,7 +239,6 @@ def main(argv, app):
                                                   'start at this path.'))
     parser.add_argument('folder', nargs='?', help='Folder to browse')
     args = parser.parse_args()
-
 
     # Expose data to QML
     rc = engine.rootContext()

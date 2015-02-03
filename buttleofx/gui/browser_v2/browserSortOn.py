@@ -28,7 +28,7 @@ class SortOn(QtCore.QObject):
             fieldFound = False
             for field in self.masks:
                 if newField == field:
-                    fieldFound =True
+                    fieldFound = True
                     break
 
             if not fieldFound:

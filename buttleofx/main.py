@@ -239,6 +239,9 @@ def main(argv, app):
     parser.add_argument('folder', nargs='?', help='Folder to browse')
     args = parser.parse_args()
 
+    if args.folder:
+        browser.setCurrentPath(os.path.abspath(args.folder))
+
     # Expose data to QML
     rc = engine.rootContext()
     rc.setContextProperty("_buttleApp", app)

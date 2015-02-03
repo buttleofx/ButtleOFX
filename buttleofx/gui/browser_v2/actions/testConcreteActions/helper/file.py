@@ -1,4 +1,3 @@
-
 def touch(file_path):
     # try:
     #     if os.path.exists(file_path):

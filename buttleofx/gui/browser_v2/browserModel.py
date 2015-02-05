@@ -186,12 +186,15 @@ class BrowserModel(QtCore.QObject):
         self._filter = newFilter
         self.updateItemsWrapperAsync()
         self.filterChanged.emit()
+        self.modelChanged.emit()
 
     def getCurrentPath(self):
         return self._currentPath
 
     @QtCore.pyqtSlot(str)
     def setCurrentPath(self, newCurrentPath):
+        if not newCurrentPath.strip():
+            return
         self._currentPath = newCurrentPath.strip()
         self.currentPathChanged.emit()
         self.updateItemsWrapperAsync()
@@ -270,7 +273,8 @@ class BrowserModel(QtCore.QObject):
         """
         tmpList = []
         absolutePath = self._currentPath
-        if not absolutePath:
+
+        if not absolutePath or not ("/" in absolutePath):
             return QObjectListModel(self)
 
         # not absolutePath: for windows
@@ -293,13 +297,16 @@ class BrowserModel(QtCore.QObject):
         nameFiltering = ""
         modelToNav = self
 
+        if not os.path.exists(path) and not os.path.exists(os.path.dirname(path)):
+            return QObjectListModel(self)
+
         if not os.path.exists(path):
-            nameFiltering = os.path.basename(path)
+            nameFiltering = os.path.basename(path).lower()
             modelToNav = BrowserModel(asyncMode=False, path=os.path.dirname(path))  # need to be sync
 
         # get dirs with filtering if exists
         if nameFiltering:
-            tmpList = [item for item in modelToNav.getItems() if item.isFolder() and nameFiltering in item.getName()]
+            tmpList = [item for item in modelToNav.getItems() if item.isFolder() and nameFiltering in item.getName().lower()]
         else:
             tmpList = [item for item in modelToNav.getItems() if item.isFolder()]
 
@@ -361,6 +368,7 @@ class BrowserModel(QtCore.QObject):
     fileItems = QtCore.pyqtProperty(QtCore.QObject, getItems, notify=modelChanged)
     parentFolder = QtCore.pyqtProperty(str, getParentPath, notify=currentPathChanged)
     showSequence = QtCore.pyqtProperty(bool, isShowSequence, setShowSequence, notify=filterChanged)
+    filter = QtCore.pyqtProperty(str, getFilter, setFilter, notify=filterChanged)
 
     hideDotFiles = QtCore.pyqtProperty(bool, isHiddenDotFiles, setHideDotFiles, notify=hideDotFilesChanged)
     splittedCurrentPath = QtCore.pyqtProperty(QObjectListModel, getSplittedCurrentPath, notify=currentPathChanged)

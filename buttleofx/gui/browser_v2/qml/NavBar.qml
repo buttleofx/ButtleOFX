@@ -175,9 +175,48 @@ Rectangle {
                         selectByMouse: true
                         selectionColor: "#00b2a1"
 
+                        //hack for position of graySuggestion: doesn't replace while typing
+                        onCursorPositionChanged: {
+                            graySuggestion.x = texteditPath.positionToRectangle(texteditPath.length).x
+                        }
+                        function handleFilter(){
+                            var lastSlash = root.model.currentPath.lastIndexOf("/")
+                            var indexOfWildcard = root.model.currentPath.indexOf("*")
+                            if(indexOfWildcard && indexOfWildcard>lastSlash){
+                                var filter=root.model.currentPath.substr(lastSlash+1)
+                                root.model.currentPath = root.model.currentPath.substr(0,lastSlash)
+                                root.model.filter =  filter
+                            }
+                            else
+                                root.model.filter = "*"
+                        }
+
+                        Text{
+                            id:graySuggestion
+                            color:"gray"
+                            Behavior on x {
+                                PropertyAnimation {
+                                    easing.type: Easing.InOutQuad;
+                                    duration: (graySuggestion.text.length)? 1 : 300
+                                }
+                            }
+
+                            function setFormatted(name){
+                                //more readable
+                                var lastSlash = root.model.currentPath.lastIndexOf("/")
+                                var lengthCurrentPath = root.model.currentPath.length
+
+                                graySuggestion.text = name.substr((lengthCurrentPath -1 )- lastSlash)
+                            }
+
+                            function clear(){
+                                this.text = ""
+                            }
+                        }
+
                         //address not empty at the beginning
                         validator: RegExpValidator{
-                            regExp: /^[^\s]$/
+                            regExp: /^[^\s]{1,}/
                         }
 
                         Keys.onEscapePressed: {
@@ -185,25 +224,37 @@ Rectangle {
                         }
 
                         Keys.onTabPressed:{
+                            graySuggestion.clear()
+
                             if(autoCompleteList.items.length == 1)
                                 autoCompleteList.items[0].trigger()
                             else
                                 autoCompleteList.show()
                         }
 
+                        onAccepted: {
+                        }
+
                         Keys.onReleased: {
                             root.model.currentPath = texteditPath.text
-                            if (((event.key == Qt.Key_Space) && (event.modifiers & Qt.ControlModifier))){
-                                if(autoCompleteList.items.length == 1)
-                                    autoCompleteList.items[0].trigger()
-                            }
-                            if(event.key == Qt.Key_Enter || event.key == Qt.Key_Return || event.key == Qt.Key_Down || (event.key == Qt.Key_Space))
+
+                            if(root.model.listFolderNavBar.count === 1)
+                                graySuggestion.setFormatted(root.model.listFolderNavBar.get(0).name)
+                            else
+                                graySuggestion.clear()
+
+                            if(event.key == Qt.Key_Enter || event.key == Qt.Key_Return || event.key == Qt.Key_Down || event.key == Qt.Key_Space){
+                                texteditPath.handleFilter()
                                 autoCompleteList.show()
+                            }
+
                         }
 
                         onFocusChanged: {
-                            if(!focus)
+                            if(!focus){
+                                graySuggestion.clear()
                                 textEditContainer.hide()
+                            }
                         }
 
                         Menu {
@@ -220,7 +271,7 @@ Rectangle {
 
                                     onTriggered: {
                                         pushVisitedFolder( model.object.path)
-                                        root.model.currentPath = model.object.path
+                                        root.model.currentPath = model.object.path+"/"
                                     }
                                 }
 
@@ -259,9 +310,10 @@ Rectangle {
                            if (breadCrum.visible)
                                 breadCrum.visible = false
 
-                           if (!textEditContainer.visible)
-                                textEditContainer.visible = true
-                                texteditPath.forceActiveFocus()
+                           if (!textEditContainer.visible){
+                               textEditContainer.visible = true
+                               texteditPath.forceActiveFocus()
+                           }
                        }
                    }
                    delegate: component

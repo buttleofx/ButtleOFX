@@ -14,25 +14,10 @@ Item {
         spacing: 10
 
         Rectangle {
-            width: 100
+            width: 200
             height: 1
             color: "grey"
-            y: 8
-        }
-
-        // Title of the param
-        Text {
-            id: paramGroupTitle
-            text: paramObject.label
-            color: "white"
-            font.pointSize: 11
-        }
-
-        Rectangle {
-            width: 100
-            height: 1
-            color: "grey"
-            y: 8
+            y: 15
         }
     }
 }

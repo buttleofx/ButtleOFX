@@ -25,6 +25,7 @@ class Param:
             Virtual function.
             Returns the default value(s) of the param.
         """
+        raise NotImplementedError()
 
     def getName(self):
         return self._tuttleParam.getName()
@@ -34,18 +35,20 @@ class Param:
             Virtual function.
             Returns the doc of the param.
         """
+        raise NotImplementedError()
 
     def getParamType(self):
         """
             Virtual function.
             Returns the type of the param.
         """
+        raise NotImplementedError()
 
     def getText(self):
         """
             Same as getName, but with the first letter in capital.
         """
-        return self._tuttleParam.getName()[0].capitalize() + self._tuttleParam.getName()[1:]
+        return self._tuttleParam.getLabel()
 
     def getTuttleParam(self):
         return self._tuttleParam
@@ -55,12 +58,14 @@ class Param:
             Virtual function.
             Returns the value(s) of the param.
         """
+        raise NotImplementedError()
 
     def setValue(self, values):
         """
             Virtual function.
             Set the tuttle value(s) of the param (but do not push a command in the CommandManager.
         """
+        raise NotImplementedError()
 
     # ## Others ## #
 

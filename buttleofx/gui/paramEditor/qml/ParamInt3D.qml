@@ -18,30 +18,6 @@ Item {
         id: paramDouble3DInputContainer
         spacing: 10
 
-        // Title of the paramDouble
-        Text {
-            id: paramDouble3DTitle
-            text: paramObject.text + " : "
-            color: "white"
-            // If param has been modified, set the title font to bold
-            font.bold: (paramObject.value1HasChanged || paramObject.value2HasChanged || paramObject.value3HasChanged) ? true : false
-
-            MouseArea {
-                anchors.fill: parent
-                acceptedButtons: Qt.RightButton
-
-                // Reinitialise the values of the params
-                onClicked: {
-                    paramObject.value1HasChanged = false
-                    paramObject.value2HasChanged = false
-                    paramObject.value3HasChanged = false
-                    paramObject.value1 = paramObject.getDefaultValue1()
-                    paramObject.value2 = paramObject.getDefaultValue2()
-                    paramObject.value3 = paramObject.getDefaultValue3()
-                }
-            }
-        }
-
         // First input
         Rectangle {
             height: 20

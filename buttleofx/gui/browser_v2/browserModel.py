@@ -192,6 +192,8 @@ class BrowserModel(QtCore.QObject):
 
     @QtCore.pyqtSlot(str)
     def setCurrentPath(self, newCurrentPath):
+        if not newCurrentPath.strip():
+            return
         self._currentPath = newCurrentPath.strip()
         self.currentPathChanged.emit()
         self.updateItemsWrapperAsync()
@@ -270,7 +272,8 @@ class BrowserModel(QtCore.QObject):
         """
         tmpList = []
         absolutePath = self._currentPath
-        if not absolutePath:
+
+        if not absolutePath or not ("/" in absolutePath):
             return QObjectListModel(self)
 
         # not absolutePath: for windows
@@ -292,6 +295,9 @@ class BrowserModel(QtCore.QObject):
         path = path if path else self._currentPath
         nameFiltering = ""
         modelToNav = self
+
+        if not os.path.exists(path) and not os.path.exists(os.path.dirname(path)):
+            return QObjectListModel(self)
 
         if not os.path.exists(path):
             nameFiltering = os.path.basename(path)

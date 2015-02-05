@@ -274,6 +274,10 @@ Rectangle {
                         anchors.fill: parent
                         hoverEnabled: true
                     }
+
+                    onElideChanged: {
+                        fileName.height = (elide == Text.ElideRight ? 20 : paintedHeight) //force good heigt after unselect
+                    }
                 }
 
                 Component.onCompleted: {

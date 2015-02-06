@@ -9,6 +9,7 @@ Item {
     property vector4d colorHSVA
     property int precision
     property bool hasAlpha: true
+    property bool zeroOneInterval: true
 
     // Call each time the value change
     signal colorRGBUpdate(vector4d rgba)
@@ -29,8 +30,7 @@ Item {
 
             caption: "R"
             value: root.colorRGBA.x
-            min: 0
-            max: 255
+            max: root.zeroOneInterval ? 1 : 255
             // Change to create the hue gradient
             toColor: Qt.vector4d(0, root.colorRGBA.y, root.colorRGBA.z,
                              root.colorRGBA.w)
@@ -52,6 +52,7 @@ Item {
 
             caption: "G"
             value: root.colorRGBA.y
+            max: root.zeroOneInterval ? 1 : 255
             // Change to create the hue gradient
             toColor: Qt.vector4d(root.colorRGBA.x, 0, root.colorRGBA.z,
                              root.colorRGBA.w)
@@ -73,6 +74,7 @@ Item {
 
             caption: "B"
             value: root.colorRGBA.z
+            max: root.zeroOneInterval ? 1 : 255
             // Change to create the hue gradient
             toColor: Qt.vector4d(root.colorRGBA.x, root.colorRGBA.y, 0,
                              root.colorRGBA.w)
@@ -97,6 +99,7 @@ Item {
             caption: "H"
 
             value: root.colorHSVA.x
+            max: root.zeroOneInterval ? 1 : 360
 
             gradient: HueGradient { opacity: root.colorHSVA.w }
             precision: root.precision
@@ -115,6 +118,7 @@ Item {
 
             caption: "S"
             value: root.colorHSVA.y
+            max: root.zeroOneInterval ? 1 : 100
             toColor: ColorUtils.hsva2rgba(Qt.vector4d(root.colorHSVA.x, 0,
                                             root.colorHSVA.z, root.colorHSVA.w))
             fromColor: ColorUtils.hsva2rgba(Qt.vector4d(root.colorHSVA.x, 1,
@@ -136,6 +140,7 @@ Item {
 
             caption: "V"
             value: root.colorHSVA.z
+            max: root.zeroOneInterval ? 1 : 100
             toColor: ColorUtils.hsva2rgba(Qt.vector4d(root.colorHSVA.x, root.colorHSVA.y,
                                             0, root.colorHSVA.w))
             fromColor: ColorUtils.hsva2rgba(Qt.vector4d(root.colorHSVA.x,
@@ -158,6 +163,7 @@ Item {
 
             caption: "A"
             value: root.colorRGBA.w
+            max: root.zeroOneInterval ? 1 : 100
             toColor: Qt.vector4d(root.colorRGBA.x, root.colorRGBA.y,
                              root.colorRGBA.z, 0)
             fromColor: Qt.vector4d(root.colorRGBA.x, root.colorRGBA.y,

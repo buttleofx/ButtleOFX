@@ -3,6 +3,7 @@ import QtQuick.Controls 1.1
 import QtQuick.Dialogs 1.0
 import QtQuick.Layouts 1.0
 import QtQuick.Controls.Styles 1.0
+import QtQuick.Dialogs 1.1
 
 Rectangle {
     id: root
@@ -75,11 +76,11 @@ Rectangle {
         }
         MenuSeparator{}
         MenuItem{
-            text:"Select All"
-            iconName: "edit-select-all"
-            shortcut: StandardKey.SelectAll
+            text:"Find"
+            iconName: "edit-find"
+            shortcut: StandardKey.Find
             onTriggered: {
-                _browser.selectAllItems()
+                navBar.searchLayout.show()
             }
         }
         MenuItem{

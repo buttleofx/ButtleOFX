@@ -10,6 +10,7 @@ Rectangle {
     clip: true
     Layout.preferredHeight: searchLayoutRectangle.height+ navBarContainer.height
     signal pushVisitedFolder(string path)
+    property alias searchLayout: searchLayoutRectangle
 
     ColumnLayout{
         anchors.fill: parent
@@ -232,9 +233,6 @@ Rectangle {
                                 autoCompleteList.show()
                         }
 
-                        onAccepted: {
-                        }
-
                         Keys.onReleased: {
                             root.model.currentPath = texteditPath.text
 
@@ -402,6 +400,11 @@ Rectangle {
             Layout.fillWidth: true
             height: enabled ? 30 : 0
             color: "transparent"
+
+            function show(){
+                this.enabled = true
+                this.forceActiveFocus()
+            }
 
             Behavior on height { PropertyAnimation { easing.type: Easing.InOutQuad ; duration: 300 } }
 

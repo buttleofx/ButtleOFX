@@ -28,11 +28,12 @@ RowLayout
     NumberBox {
         id: numberbox
         Layout.fillHeight: true
-        Layout.maximumWidth: (decimals + 2) * textInput.font.pixelSize + 15
-        Layout.minimumWidth: decimals / 2 * textInput.font.pixelSize + 15
+        Layout.maximumWidth: (decimals + 4) * textInput.font.pixelSize + 15
+        Layout.minimumWidth: (decimals + 4) / 2 * textInput.font.pixelSize + 15
 
         value: MathUtils.clampAndProject(root.value, 0, 1, root.min, root.max)
-        decimals: root.precision
+        //If interval is not 0-1 so no precision needed
+        decimals: root.max > 1 ? 0 : root.precision
         max: root.max
         min: root.min
         caption: root.caption

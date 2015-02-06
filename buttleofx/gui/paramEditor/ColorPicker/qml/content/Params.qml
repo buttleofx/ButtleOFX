@@ -9,11 +9,14 @@ Rectangle {
     border.color: Config.borderColor
     radius: Config.radius
     color: Config.backgroundColor
+
     signal updatePrecision(var precision)
     signal entered()
     signal exited()
 
-    property int precision : precisionBox.value
+    property int precision: precisionBox.value
+    property bool isZeroOneRange: rangeValue.currentText == "0-1"
+
     MouseArea {
         anchors.fill: root
         hoverEnabled: true
@@ -29,12 +32,13 @@ Rectangle {
             id:precisionBox
             Layout.fillWidth: true
             Layout.maximumHeight: 40
-            min: 1
+            min:0
             max: 15
             decimals: 0
-            value:5
+            value: 5
             caption : "Precision : "
 
+            textInput.readOnly: !isZeroOneRange
             textInput.font.family: Config.font
             textInput.font.pixelSize: Config.textSize
             textInput.color: Config.textColor
@@ -56,19 +60,22 @@ Rectangle {
             }
 
             ComboBox {
-                id: intervalChoice
+                id: rangeValue
                 model: ListModel {
                     ListElement { text: "0-1" }
                     ListElement { text: "0-255" }
                 }
                 // Hack because exit root area is triggered when enter on this comboBox
                 onHoveredChanged: root.entered()
+
+                onCurrentTextChanged: {
+                    if (currentText == "0-1")
+                        return precisionBox.value = 5;
+                    else
+                        // 0-255 int range need no more precision than 3 digits for final RGB value
+                        return precisionBox.value = 3;
+                }
             }
         }
     }
-
-
-
-
-
 }

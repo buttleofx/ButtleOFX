@@ -155,7 +155,7 @@ Item {
                     colorHSVA: m.colorHSVA
                     precision: params.precision
                     hasAlpha: root.hasAlpha
-                    zeroOneInterval: false
+                    zeroOneInterval: params.isZeroOneRange
 
                     onColorRGBUpdate: root.colorRGBA = ColorUtils.roundColor4D(rgba,  params.precision)
 

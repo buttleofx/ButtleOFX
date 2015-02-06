@@ -29,6 +29,8 @@ Item {
 
             caption: "R"
             value: root.colorRGBA.x
+            min: 0
+            max: 255
             // Change to create the hue gradient
             toColor: Qt.vector4d(0, root.colorRGBA.y, root.colorRGBA.z,
                              root.colorRGBA.w)

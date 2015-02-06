@@ -132,7 +132,7 @@ Item {
                         {
                             id:params
                             color: Config.windowColor
-                            height: 60
+                            height: 120
                             width: 200
                             anchors.top: paramsButton.bottom
                             anchors.topMargin: -5

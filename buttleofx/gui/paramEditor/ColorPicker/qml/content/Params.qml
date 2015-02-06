@@ -1,5 +1,6 @@
 import QtQuick 2.0
 import QtQuick.Layouts 1.1
+import QtQuick.Controls 1.1
 import "../." // Qt-BUG import qmldir to use config singleton
 
 Rectangle {
@@ -43,6 +44,26 @@ Rectangle {
             text.color: Config.textColor
 
             onUpdatedValue: precisionBox.value = newValue
+        }
+
+        RowLayout {
+
+            Text {
+                text: "Value : "
+                font.family: Config.font
+                font.pixelSize: Config.textSize
+                color: Config.textColor
+            }
+
+            ComboBox {
+                id: intervalChoice
+                model: ListModel {
+                    ListElement { text: "0-1" }
+                    ListElement { text: "0-255" }
+                }
+                // Hack because exit root area is triggered when enter on this comboBox
+                onHoveredChanged: root.entered()
+            }
         }
     }
 

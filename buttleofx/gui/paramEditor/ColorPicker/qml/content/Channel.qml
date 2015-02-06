@@ -6,6 +6,8 @@ RowLayout
 {
     id: root
 
+    property real min : 0
+    property real max : 1
     property real value
     property string caption
     property int precision    
@@ -28,8 +30,8 @@ RowLayout
 
         value: root.value
         decimals: root.precision
-        max: 1
-        min: 0
+        max: root.max
+        min: root.min
         caption: root.caption
         captionWidth: Config.textSize
 

@@ -38,7 +38,7 @@ Rectangle {
             value: 5
             caption : "Precision : "
 
-            textInput.readOnly: !isZeroOneRange
+            textInput.readOnly: !root.isZeroOneRange
             textInput.font.family: Config.font
             textInput.font.pixelSize: Config.textSize
             textInput.color: Config.textColor

@@ -213,6 +213,15 @@ Rectangle {
                             function clear(){
                                 this.text = ""
                             }
+
+                            function handleInteraction(){
+                                this.clear()
+
+                                if(autoCompleteList.items.length == 1)
+                                    autoCompleteList.items[0].trigger()
+                                else
+                                    autoCompleteList.show()
+                            }
                         }
 
                         //address not empty at the beginning
@@ -224,19 +233,20 @@ Rectangle {
                             textEditContainer.hide()
                         }
 
+                        //need this event and not Keys.onPressed: have good behavior with tab key(which loose focus otherwise even if propagation stopped)
                         Keys.onTabPressed:{
-                            graySuggestion.clear()
+                            graySuggestion.handleInteraction()
+                        }
 
-                            if(autoCompleteList.items.length == 1)
-                                autoCompleteList.items[0].trigger()
-                            else
-                                autoCompleteList.show()
+                        Keys.onRightPressed: {
+                            graySuggestion.handleInteraction()
                         }
 
                         Keys.onReleased: {
                             root.model.currentPath = texteditPath.text
+                            graySuggestion.clear()
 
-                            if(root.model.listFolderNavBar.count === 1)
+                            if(root.model.listFolderNavBar.count === 1 && texteditPath.text.trim())
                                 graySuggestion.setFormatted(root.model.listFolderNavBar.get(0).name)
                             else
                                 graySuggestion.clear()

@@ -266,7 +266,7 @@ Rectangle {
                     width: parent.width
                     height: paintedHeight
 
-                    elide: (model.object.isSelected) ? Text.ElideNone : Text.ElideRight
+                    elide: (model.object.isSelected || text_mouseArea.containsMouse || icon_mouseArea.containsMouse) ? Text.ElideNone : Text.ElideRight
                     anchors.horizontalCenter: parent.horizontalCenter
                     horizontalAlignment: Text.AlignHCenter
 

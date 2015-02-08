@@ -403,7 +403,7 @@ Rectangle {
 
             function show(){
                 this.enabled = true
-                this.forceActiveFocus()
+                searchEdit.forceActiveFocus()
             }
 
             Behavior on height { PropertyAnimation { easing.type: Easing.InOutQuad ; duration: 300 } }

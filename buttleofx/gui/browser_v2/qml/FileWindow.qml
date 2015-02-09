@@ -61,10 +61,24 @@ Rectangle {
         }
     }
 
+    Keys.onPressed: {
+        //TODO: temporary shortcut menu: overload ambiguous
+    }
+
     Menu{
         //TODO: REDO architecture
         id:actionsMenu
         property bool showActionOnItem: false
+
+        MenuItem{
+            id: select
+            text:"Select all"
+            iconName: "edit-select-all"
+            shortcut: StandardKey.SelectAll
+            onTriggered: {
+                _browser.selectAllItems()
+            }
+        }
 
         MenuItem{
             text:"Refresh"

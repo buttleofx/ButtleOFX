@@ -296,7 +296,7 @@ Rectangle {
                                 var indexPosition = root.model.currentPath.length
                                 var positionToShow = Qt.vector2d(0, texteditPath.height)
                                 positionToShow.x = texteditPath.positionToRectangle(indexPosition).x
-                                this.__popup(positionToShow.x+12, positionToShow.y)
+                                this.__popup(positionToShow.x+12, positionToShow.y) //12 magic
                             }
                         }
                     }

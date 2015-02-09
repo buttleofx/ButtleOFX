@@ -309,7 +309,8 @@ class BrowserModel(QtCore.QObject):
 
         # get dirs with filtering if exists
         if nameFiltering:
-            tmpList = [item for item in modelToNav.getItems() if item.isFolder() and item.getName().lower().startswith(nameFiltering)]
+            tmpList = [item for item in modelToNav.getItems() if item.isFolder()
+                       and item.getName().lower().startswith(nameFiltering)]
         else:
             tmpList = [item for item in modelToNav.getItems() if item.isFolder()]
 

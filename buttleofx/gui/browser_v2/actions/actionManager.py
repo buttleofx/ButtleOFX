@@ -18,7 +18,8 @@ class ActionManager(QtCore.QObject):
         self._waiting = Queue(maxsize=0)
         self._running = []
         self._ended = []
-        self._workers = [Worker(self._waiting, self._running, self._ended, self.actionChanged) for _ in range(self.num_threads_workers)]
+        self._workers = [Worker(self._waiting, self._running, self._ended, self.actionChanged)
+                         for _ in range(self.num_threads_workers)]
         self.startWorkers()
 
     def stopWorkers(self):

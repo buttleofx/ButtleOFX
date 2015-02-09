@@ -3,6 +3,7 @@ import QtQuick.Controls 1.1
 import QtQuick.Dialogs 1.0
 import QtQuick.Layouts 1.0
 import QtQuick.Controls.Styles 1.0
+import QtQuick.Dialogs 1.1
 
 Rectangle {
     id: root
@@ -52,7 +53,7 @@ Rectangle {
         onClicked:{
             root.forceActiveFocus()
             root.model.unselectAllItems()
-            actionsMenu.showItemActions = false
+            actionsMenu.showActionOnItem = false
             if(mouse.button == Qt.RightButton)
                 actionsMenu.popup()
             if(mouse.button == Qt.LeftButton)
@@ -60,10 +61,24 @@ Rectangle {
         }
     }
 
+    Keys.onPressed: {
+        //TODO: temporary shortcut menu: overload ambiguous
+    }
+
     Menu{
         //TODO: REDO architecture
         id:actionsMenu
-        property bool showItemActions: false
+        property bool showActionOnItem: false
+
+        MenuItem{
+            id: select
+            text:"Select all"
+            iconName: "edit-select-all"
+            shortcut: StandardKey.SelectAll
+            onTriggered: {
+                _browser.selectAllItems()
+            }
+        }
 
         MenuItem{
             text:"Refresh"
@@ -75,16 +90,16 @@ Rectangle {
         }
         MenuSeparator{}
         MenuItem{
-            text:"Select All"
-            iconName: "edit-select-all"
-            shortcut: StandardKey.SelectAll
+            text:"Find"
+            iconName: "edit-find"
+            shortcut: StandardKey.Find
             onTriggered: {
-                _browser.selectAllItems()
+                navBar.searchLayout.show()
             }
         }
         MenuItem{
             text:"New folder"
-            visible:!actionsMenu.showItemActions
+            visible:!actionsMenu.showActionOnItem
             iconName: "folder-new"
             shortcut: StandardKey.New
             onTriggered: {
@@ -93,7 +108,7 @@ Rectangle {
         }
         MenuItem{
             text:"New file"
-            visible:!actionsMenu.showItemActions
+            visible:!actionsMenu.showActionOnItem
             iconName: "document-new"
             shortcut: StandardKey.UnknownKey
             onTriggered: {
@@ -103,7 +118,7 @@ Rectangle {
         MenuSeparator{}
         MenuItem{
             text:"Copy"
-            visible:actionsMenu.showItemActions
+            visible:actionsMenu.showActionOnItem
             shortcut: StandardKey.Copy
             iconName: "edit-copy"
             onTriggered: {
@@ -112,7 +127,7 @@ Rectangle {
         }
         MenuItem{
             text:"Cut"
-            visible:actionsMenu.showItemActions
+            visible:actionsMenu.showActionOnItem
             iconName: "edit-cut"
             shortcut: StandardKey.Cut
             onTriggered: {
@@ -125,12 +140,16 @@ Rectangle {
             shortcut: StandardKey.Paste
             enabled: _browserAction.isCache
             onTriggered: {
-                _browserAction.handlePaste()
+                var destination=""
+                if(_browser.selectedItems.count == 1 && _browser.selectedItems.get(0).isFolder())
+                    destination = _browser.selectedItems.get(0).path
+
+                _browserAction.handlePaste(destination)
             }
         }
         MenuItem{
             text:"Delete"
-            visible:actionsMenu.showItemActions
+            visible:actionsMenu.showActionOnItem
             iconName: "edit-delete"
             shortcut: StandardKey.Deletes
             onTriggered: {
@@ -261,7 +280,7 @@ Rectangle {
                     width: parent.width
                     height: paintedHeight
 
-                    elide: (model.object.isSelected) ? Text.ElideNone : Text.ElideRight
+                    elide: (model.object.isSelected || text_mouseArea.containsMouse || icon_mouseArea.containsMouse) ? Text.ElideNone : Text.ElideRight
                     anchors.horizontalCenter: parent.horizontalCenter
                     horizontalAlignment: Text.AlignHCenter
 
@@ -295,7 +314,7 @@ Rectangle {
                     if(mouse.button == Qt.RightButton){
                         if(!root.model.selectedItems.count)
                             root.model.selectItem(index)
-                        actionsMenu.showItemActions = true
+                        actionsMenu.showActionOnItem = true
                         actionsMenu.popup()
                     }
 

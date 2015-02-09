@@ -9,6 +9,7 @@ from buttleofx.gui.browser_v2.actions.concreteActions.move import Move
 from buttleofx.gui.browser_v2.actions.concreteActions.create import Create
 from buttleofx.gui.browser_v2.actions.concreteActions.delete import Delete
 from pySequenceParser import sequenceParser
+import os
 
 
 class BrowserAction(QtCore.QObject):
@@ -60,12 +61,14 @@ class BrowserAction(QtCore.QObject):
         self.pushCache(listActions)
         self.cacheChanged.emit()
 
-    @QtCore.pyqtSlot()
-    def handlePaste(self):
-        if not self._cacheActions:
+    @QtCore.pyqtSlot(str)
+    def handlePaste(self, destination):
+        destination = destination.strip() if destination.strip() else self._browserModel.getCurrentPath()
+        if not self._cacheActions or not destination or not os.path.exists(destination):
             return
+
         for action in self._cacheActions.getActions():
-            action.setDestinationPath(self._browserModel.getCurrentPath())
+            action.setDestinationPath(destination)
         self.pushToActionManager()
 
     @QtCore.pyqtSlot()

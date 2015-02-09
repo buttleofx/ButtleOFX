@@ -10,6 +10,7 @@ Rectangle {
     clip: true
     Layout.preferredHeight: searchLayoutRectangle.height+ navBarContainer.height
     signal pushVisitedFolder(string path)
+    property alias searchLayout: searchLayoutRectangle
 
     ColumnLayout{
         anchors.fill: parent
@@ -179,13 +180,16 @@ Rectangle {
                         onCursorPositionChanged: {
                             graySuggestion.x = texteditPath.positionToRectangle(texteditPath.length).x
                         }
+
                         function handleFilter(){
                             var lastSlash = root.model.currentPath.lastIndexOf("/")
                             var indexOfWildcard = root.model.currentPath.indexOf("*")
+
                             if(indexOfWildcard && indexOfWildcard>lastSlash){
                                 var filter=root.model.currentPath.substr(lastSlash+1)
                                 root.model.currentPath = root.model.currentPath.substr(0,lastSlash)
                                 root.model.filter =  filter
+                                texteditPath.text = root.model.currentPath + "/" + filter //force good Behavior on display
                             }
                             else
                                 root.model.filter = "*"
@@ -212,6 +216,15 @@ Rectangle {
                             function clear(){
                                 this.text = ""
                             }
+
+                            function handleInteraction(){
+                                this.clear()
+
+                                if(autoCompleteList.items.length == 1)
+                                    autoCompleteList.items[0].trigger()
+                                else
+                                    autoCompleteList.show()
+                            }
                         }
 
                         //address not empty at the beginning
@@ -223,27 +236,24 @@ Rectangle {
                             textEditContainer.hide()
                         }
 
+                        //need this event and not Keys.onPressed: have good behavior with tab key(which loose focus otherwise even if propagation stopped)
                         Keys.onTabPressed:{
-                            graySuggestion.clear()
-
-                            if(autoCompleteList.items.length == 1)
-                                autoCompleteList.items[0].trigger()
-                            else
-                                autoCompleteList.show()
+                            graySuggestion.handleInteraction()
                         }
 
-                        onAccepted: {
+                        Keys.onPressed: {
+                            if(event.key == Qt.Key_Right || ((event.modifiers & Qt.ControlModifier) && event.key == Qt.Key_Space))
+                            graySuggestion.handleInteraction()
                         }
 
                         Keys.onReleased: {
                             root.model.currentPath = texteditPath.text
+                            graySuggestion.clear()
 
-                            if(root.model.listFolderNavBar.count === 1)
+                            if(root.model.listFolderNavBar.count === 1 && texteditPath.text.trim())
                                 graySuggestion.setFormatted(root.model.listFolderNavBar.get(0).name)
-                            else
-                                graySuggestion.clear()
 
-                            if(event.key == Qt.Key_Enter || event.key == Qt.Key_Return || event.key == Qt.Key_Down || event.key == Qt.Key_Space){
+                            if(event.key == Qt.Key_Enter || event.key == Qt.Key_Return || event.key == Qt.Key_Down){
                                 texteditPath.handleFilter()
                                 autoCompleteList.show()
                             }
@@ -270,6 +280,7 @@ Rectangle {
                                     text: model.object.name
 
                                     onTriggered: {
+                                        graySuggestion.clear()
                                         pushVisitedFolder( model.object.path)
                                         root.model.currentPath = model.object.path+"/"
                                     }
@@ -288,7 +299,7 @@ Rectangle {
                                 var indexPosition = root.model.currentPath.length
                                 var positionToShow = Qt.vector2d(0, texteditPath.height)
                                 positionToShow.x = texteditPath.positionToRectangle(indexPosition).x
-                                this.__popup(positionToShow.x+12, positionToShow.y)
+                                this.__popup(positionToShow.x+12, positionToShow.y) //12 magic
                             }
                         }
                     }
@@ -402,6 +413,11 @@ Rectangle {
             Layout.fillWidth: true
             height: enabled ? 30 : 0
             color: "transparent"
+
+            function show(){
+                this.enabled = true
+                searchEdit.forceActiveFocus()
+            }
 
             Behavior on height { PropertyAnimation { easing.type: Easing.InOutQuad ; duration: 300 } }
 

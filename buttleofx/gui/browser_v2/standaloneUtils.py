@@ -32,7 +32,8 @@ class ImageProvider(QtQuick.QQuickImageProvider):
     def __init__(self):
         QtQuick.QQuickImageProvider.__init__(self, QtQuick.QQuickImageProvider.Image)
         self.thumbnailCache = tuttle.ThumbnailDiskCache()
-        self.thumbnailCache.setRootDir(os.path.join(tuttle.core().getPreferences().getTuttleHomeStr(), "thumbnails_cache"))
+        self.thumbnailCache.setRootDir(os.path.join(tuttle.core().getPreferences().getTuttleHomeStr(),
+                                                    "thumbnails_cache"))
 
     def requestImage(self, id, size):
         """

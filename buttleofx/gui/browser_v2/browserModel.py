@@ -74,7 +74,10 @@ class BrowserModel(QtCore.QObject):
             self._browserItems.clear()
             self._browserItemsModel.clear()
 
-            detectOption = sequenceParser.eDetectionDefault if self._hideDotFiles else sequenceParser.eDetectionDefaultWithDotFile
+            detectOption = sequenceParser.eDetectionDefault
+            if not self._hideDotFiles:
+                detectOption = sequenceParser.eDetectionDefaultWithDotFile
+
             allItems = sequenceParser.browse(self._currentPath, detectOption, self._filter)
             self.pushBrowserItems(allItems)  # handle async mode
         except Exception as e:
@@ -306,7 +309,8 @@ class BrowserModel(QtCore.QObject):
 
         # get dirs with filtering if exists
         if nameFiltering:
-            tmpList = [item for item in modelToNav.getItems() if item.isFolder() and nameFiltering in item.getName().lower()]
+            tmpList = [item for item in modelToNav.getItems() if item.isFolder()
+                       and item.getName().lower().startswith(nameFiltering)]
         else:
             tmpList = [item for item in modelToNav.getItems() if item.isFolder()]
 

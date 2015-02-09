@@ -180,13 +180,16 @@ Rectangle {
                         onCursorPositionChanged: {
                             graySuggestion.x = texteditPath.positionToRectangle(texteditPath.length).x
                         }
+
                         function handleFilter(){
                             var lastSlash = root.model.currentPath.lastIndexOf("/")
                             var indexOfWildcard = root.model.currentPath.indexOf("*")
+
                             if(indexOfWildcard && indexOfWildcard>lastSlash){
                                 var filter=root.model.currentPath.substr(lastSlash+1)
                                 root.model.currentPath = root.model.currentPath.substr(0,lastSlash)
                                 root.model.filter =  filter
+                                texteditPath.text = root.model.currentPath + "/" + filter //force good Behavior on display
                             }
                             else
                                 root.model.filter = "*"

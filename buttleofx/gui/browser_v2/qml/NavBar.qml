@@ -238,7 +238,8 @@ Rectangle {
                             graySuggestion.handleInteraction()
                         }
 
-                        Keys.onRightPressed: {
+                        Keys.onPressed: {
+                            if(event.key == Qt.Key_Right || ((event.modifiers & Qt.ControlModifier) && event.key == Qt.Key_Space))
                             graySuggestion.handleInteraction()
                         }
 
@@ -248,10 +249,8 @@ Rectangle {
 
                             if(root.model.listFolderNavBar.count === 1 && texteditPath.text.trim())
                                 graySuggestion.setFormatted(root.model.listFolderNavBar.get(0).name)
-                            else
-                                graySuggestion.clear()
 
-                            if(event.key == Qt.Key_Enter || event.key == Qt.Key_Return || event.key == Qt.Key_Down || event.key == Qt.Key_Space){
+                            if(event.key == Qt.Key_Enter || event.key == Qt.Key_Return || event.key == Qt.Key_Down){
                                 texteditPath.handleFilter()
                                 autoCompleteList.show()
                             }
@@ -278,6 +277,7 @@ Rectangle {
                                     text: model.object.name
 
                                     onTriggered: {
+                                        graySuggestion.clear()
                                         pushVisitedFolder( model.object.path)
                                         root.model.currentPath = model.object.path+"/"
                                     }

@@ -97,7 +97,6 @@ class TestMove(unittest.TestCase):
             # File should not exists in destination folder
             self.assertFalse(os.path.exists(dest_file_path))
 
-
     def test_folder_move(self):
         with tempfile.TemporaryDirectory() as path:
             src_folder_name = 'new_folder'
@@ -185,7 +184,6 @@ class TestMove(unittest.TestCase):
 
             # Source folder should not exists in destination folder
             self.assertFalse(os.path.exists(folder_moved_path))
-
 
     # After tests run
     def tearDown(self):

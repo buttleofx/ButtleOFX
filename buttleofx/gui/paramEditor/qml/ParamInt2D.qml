@@ -1,9 +1,10 @@
 import QtQuick 2.0
+import QuickMamba 1.0
 
 Item {
     id: containerParamInt2D
     implicitWidth: 300
-    implicitHeight: 30
+    implicitHeight: 60
     y: 10
 
     property variant paramObject: model.object
@@ -17,62 +18,45 @@ Item {
         id: paramInt2DInputContainer
         spacing: 10
 
-        // Title of the paramInt
-        Text {
-            id: paramInt2DTitle
-            text: paramObject.text + " : "
-            color: "white"
-            // If param has been modified, set title font to bold
-            font.bold: (paramObject.value1HasChanged || paramObject.value2HasChanged) ? true : false
-
-            MouseArea {
-                anchors.fill: parent
-                acceptedButtons: Qt.RightButton
-
-                // Reinitialise the param to its default value
-                onClicked: {
-                    paramObject.value1HasChanged = false
-                    paramObject.value2HasChanged = false
-                    paramObject.value1 = paramObject.getDefaultValue1()
-                    paramObject.value2 = paramObject.getDefaultValue2()
-                }
-            }
-        }
-
         // First Input
         Rectangle {
-            height: 20
-            width: 40
-            color: "#343434"
+            height: 35
+            width: 60
+            color: "#212121"
             border.width: 1
-            border.color: "#444"
+            border.color: "#333"
             radius: 3
             clip: true
 
-            TextInput {
+            QuickEditableNumberInput {
                 id: paramInt2DInput1
-                text: paramObject.value1
-                anchors.left: parent.left
-                anchors.leftMargin: 5
-                maximumLength: 3
-                font.bold: paramObject.value1HasChanged ? true : false
+                textInput.text: paramObject.value1
+                textInput.font.bold: paramObject.value1HasChanged ? true : false
                 color: activeFocus ? "white" : "grey"
-                width: 40
-                selectByMouse: true
+                width: parent.width
+                textInput.selectByMouse: true
 
-                onAccepted: {
-                    if (acceptableInput) {
-                        paramObject.value1 = paramInt2DInput1.text
+                minValue: paramObject.minimum1
+                maxValue: paramObject.maximum1
+                decimals: 0
+
+                onQuickUpdate: textInput.text = quickValue
+
+                onEditingFinished: paramObject.value1 = parseInt(textInput.text)
+
+                textInput.onAccepted: {
+                    if (textInput.text <= maxValue && textInput.text >= minValue) {
+                        paramObject.value1 = parseInt(paramInt2DInput1.textInput.text)
                     }
                 }
 
-                onActiveFocusChanged: {
-                    if (acceptableInput) {
-                        paramObject.value1 = paramInt2DInput1.text
+                textInput.onActiveFocusChanged: {
+                    if (textInput.text <= maxValue && textInput.text >= minValue) {
+                        paramObject.value1 = paramInt2DInput1.textInput.text
                     }
                 }
 
-                validator: IntValidator {
+                textInput.validator: IntValidator {
                     bottom: model.object.minimum1
                     top:  model.object.maximum1
                 }
@@ -95,38 +79,44 @@ Item {
 
         // Second Input
         Rectangle {
-            height: 20
-            width: 40
-            color: "#343434"
+            height: 35
+            width: 60
+            color: "#212121"
             border.width: 1
-            border.color: "#444"
+            border.color: "#333"
             radius: 3
             clip: true
 
-            TextInput {
+            QuickEditableNumberInput {
                 id: paramInt2DInput2
-                text: paramObject.value2
-                anchors.left: parent.left
-                anchors.leftMargin: 5
-                maximumLength: 3
-                font.bold: paramObject.value2HasChanged ? true : false
+                textInput.text: paramObject.value2
+//                textInput.maximumLength: 3
+                textInput.font.bold: paramObject.value2HasChanged ? true : false
                 color: activeFocus ? "white" : "grey"
-                width: 40
-                selectByMouse: true
+                width: parent.width
+                textInput.selectByMouse: true
 
-                onAccepted: {
-                    if (acceptableInput) {
-                        paramObject.value2 = paramInt2DInput2.text
+                minValue: paramObject.minimum2
+                maxValue: paramObject.maximum2
+                decimals: 0
+
+                onQuickUpdate: textInput.text = quickValue
+
+                onEditingFinished: paramObject.value2 = parseInt(textInput.text)
+
+                textInput.onAccepted: {
+                    if (textInput.text <= maxValue && textInput.text >= minValue) {
+                        paramObject.value2 = parseInt(paramInt2DInput2.textInput.text)
                     }
                 }
 
-                onActiveFocusChanged: {
-                    if (acceptableInput) {
-                        paramObject.value2 = paramInt2DInput2.text
+                textInput.onActiveFocusChanged: {
+                    if (textInput.text <= maxValue && textInput.text >= minValue) {
+                        paramObject.value2 = paramInt2DInput2.textInput.text
                     }
                 }
 
-                validator: IntValidator {
+                textInput.validator: IntValidator {
                     bottom: model.object.minimum2
                     top:  model.object.maximum2
                 }

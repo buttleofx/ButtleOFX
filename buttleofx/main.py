@@ -15,7 +15,8 @@ from buttleofx.data import ButtleDataSingleton
 from buttleofx.event import ButtleEventSingleton
 from buttleofx.manager import ButtleManagerSingleton
 from buttleofx.core.undo_redo.manageTools import CommandManager
-from buttleofx.gui.browser import FileModelBrowser, FileModelBrowserSingleton
+from buttleofx.gui.browser_v2.browserModel import BrowserModel, BrowserModelSingleton
+from buttleofx.gui.browser_v2.actions.browserAction import BrowserActionSingleton
 
 from PyQt5 import QtCore, QtGui, QtQml, QtQuick, QtWidgets
 
@@ -76,7 +77,7 @@ signal.signal(signal.SIGINT, signal.SIG_DFL)
 class EventFilter(QtCore.QObject):
     def eventFilter(self, receiver, event):
         buttleData = ButtleDataSingleton().get()
-        browser = FileModelBrowserSingleton().get()
+        # browser = BrowserModelSingleton.get()
 
         if event.type() == QtCore.QEvent.KeyPress:
             # If alt f4 event ignored
@@ -108,7 +109,7 @@ class EventFilter(QtCore.QObject):
 
             # This project has never been saved, so ask the user on which file to save.
             dialog = QtWidgets.QFileDialog()
-            fileToSave = dialog.getSaveFileName(None, "Save the graph", browser.getFirstFolder())[0]
+            fileToSave = dialog.getSaveFileName(None, "Save the graph", os.path.expanduser("~"))[0]
             if not (fileToSave.endswith(".bofx")):
                 fileToSave += ".bofx"
             buttleData.urlOfFileToSave = fileToSave
@@ -205,8 +206,8 @@ def main(argv, app):
 
     # Give to QML acces to TimerPlayer defined in buttleofx/gui/viewer
     QtQml.qmlRegisterType(TimerPlayer, "TimerPlayer", 1, 0, "TimerPlayer")
-    # Give to QML access to FileModelBrowser defined in buttleofx/gui/browser
-    QtQml.qmlRegisterType(FileModelBrowser, "ButtleFileModel", 1, 0, "FileModelBrowser")
+    # Give to QML access to BrowserModel defined in buttleofx/gui/browser
+    QtQml.qmlRegisterType(BrowserModel, "BrowserModel", 1, 0, "BrowserModel")
     # Add new QML type
     QtQml.qmlRegisterType(Finder, "FolderListViewItem", 1, 0, "FolderListView")
 
@@ -228,8 +229,9 @@ def main(argv, app):
     buttleManager = ButtleManagerSingleton().get().init()
     # Event
     buttleEvent = ButtleEventSingleton().get()
-    # fileModelBrowser
-    browser = FileModelBrowserSingleton().get()
+    # browserModel
+    browser = BrowserModelSingleton.get()
+    browserAction = BrowserActionSingleton.get()
 
     parser = argparse.ArgumentParser(description=('A command line to execute ButtleOFX, an opensource compositing '
                                                   'software. If you pass a folder as an argument, ButtleOFX will '
@@ -238,11 +240,7 @@ def main(argv, app):
     args = parser.parse_args()
 
     if args.folder:
-        inputFolder = os.path.abspath(args.folder)
-        browser.setFirstFolder(inputFolder)
-    else:
-        inputFolder = os.path.expanduser("~")
-        browser.setFirstFolder(inputFolder)
+        browser.setCurrentPath(os.path.abspath(args.folder))
 
     # Expose data to QML
     rc = engine.rootContext()
@@ -251,6 +249,7 @@ def main(argv, app):
     rc.setContextProperty("_buttleManager", buttleManager)
     rc.setContextProperty("_buttleEvent", buttleEvent)
     rc.setContextProperty("_browser", browser)
+    rc.setContextProperty("_browserAction", browserAction)
 
     iconPath = os.path.join(currentFilePath, "../blackMosquito.png")
     # iconPath = QtCore.QUrl("file:///" + iconPath)
@@ -272,7 +271,7 @@ def main(argv, app):
 
         for error in component.errors():
             print(error.toString())
-            return -1
+        return -1
     topLevelItem.setIcon(QtGui.QIcon(iconPath))
 
     if DEV_MODE:

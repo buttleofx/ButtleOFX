@@ -1,7 +1,6 @@
 import os
 import shutil
 import tempfile
-
 from buttleofx.gui.browser_v2.actions.actionInterface import ActionInterface
 
 
@@ -17,10 +16,10 @@ class Delete(ActionInterface):
 
         # Delete file
         # if browserItem.isFile():
-            # TODO: Check permission in try catch
-            # browserItemPath = browserItem.getPath()
-            # if os.path.exists(browserItemPath):
-                # os.remove(browserItemPath)
+        # TODO: Check permission in try catch
+        # browserItemPath = browserItem.getPath()
+        # if os.path.exists(browserItemPath):
+        # os.remove(browserItemPath)
 
         # Delete folder
         if browserItem.isFile() or browserItem.isFolder():
@@ -52,7 +51,6 @@ class Delete(ActionInterface):
         if browserItem.isSequence():
             for item in self._destItems:
                 shutil.move(item, browserItem.getParentPath())
-
 
     def __del__(self):
         self._tmp.cleanup()

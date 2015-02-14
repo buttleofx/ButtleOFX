@@ -8,13 +8,14 @@ from buttleofx.gui.browser_v2.browserItem import BrowserItem
 from buttleofx.gui.browser_v2.actions.concreteActions.rename import Rename
 from pySequenceParser import sequenceParser
 
+
 class TestRename(unittest.TestCase):
 
     # Before tests run
     def setUp(self):
         pass
 
-    def test_rename_file_with_extension(self):
+    def test_rename_file_with_extension_execute(self):
         with tempfile.TemporaryDirectory() as path:
             extension = ".txt"
             old_filename = "plop" + extension
@@ -86,7 +87,7 @@ class TestRename(unittest.TestCase):
             # Browser item's path and old file path should be equal
             self.assertEqual(bi.getPath(), old_file_path)
 
-    def test_rename_file_without_extension(self):
+    def test_rename_file_without_extension_execute(self):
         with tempfile.TemporaryDirectory() as path:
             extension = ".jpg"
             old_filename = "plop" + extension
@@ -151,8 +152,7 @@ class TestRename(unittest.TestCase):
             # Browser item's path and old file path should be equal
             self.assertEqual(bi.getPath(), old_file_path)
 
-
-    def test_rename_folder(self):
+    def test_rename_folder_execute(self):
         with tempfile.TemporaryDirectory() as path:
             old_folder_name = 'rename_me'
             old_folder_path = os.path.join(path, old_folder_name)

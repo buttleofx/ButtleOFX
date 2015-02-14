@@ -1,7 +1,9 @@
 import os
 
+
 def touch(file_path):
     open(file_path, 'a').close()
+
 
 def create_sequence(path, seq_name='seq', seq_length=3, sep='_',
                     extension='.jpg'):
@@ -10,4 +12,3 @@ def create_sequence(path, seq_name='seq', seq_length=3, sep='_',
         filename = seq_name + sep + '00' + str(i+5) + extension
         file_path = os.path.join(path, filename)
         touch(file_path)
-

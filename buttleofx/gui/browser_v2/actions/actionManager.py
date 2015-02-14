@@ -1,4 +1,3 @@
-from buttleofx.gui.browser_v2.actions.actionInterface import ActionInterface
 from buttleofx.gui.browser_v2.actions.worker import Worker
 from quickmamba.patterns import Singleton
 from PyQt5 import QtCore
@@ -19,8 +18,15 @@ class ActionManager(QtCore.QObject):
         self._waiting = Queue(maxsize=0)
         self._running = []
         self._ended = []
-        self._workers = [Worker(self._waiting, self._running, self._ended, self.actionChanged) for _ in range(self.num_threads_workers)]
+        self._workers = [Worker(self._waiting, self._running, self._ended, self.actionChanged)
+                         for _ in range(self.num_threads_workers)]
         self.startWorkers()
+
+    def stopWorkers(self):
+        print("STOP")
+        Worker.destroy()
+        for _ in self._workers:
+            self._waiting.put(None)
 
     def startWorkers(self):
         for worker in self._workers:

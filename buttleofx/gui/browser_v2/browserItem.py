@@ -22,6 +22,7 @@ class BrowserItem(QtCore.QObject):
     _owner = ""
     _lastModification = ""
     _permissions = ""
+    _isSupported = False
 
     # gui operations, int for the moment
     _actionStatus = 0
@@ -42,6 +43,7 @@ class BrowserItem(QtCore.QObject):
         elif self.isSequence():
             self._sequence = SequenceWrapper(sequenceParserItem, self._path)
 
+        self._isSupported = self.isSupportedFromTuttle()
         self._pathImg = self.getRealPathImg()
         self._lastModification = self.getLastModification_fileSystem()
         self._permissions = self.getPermissions_fileSystem()
@@ -150,31 +152,39 @@ class BrowserItem(QtCore.QObject):
         else:
             return ""
 
+    def isSupportedFromTuttle(self):
+        if self.isFile() or self.isSequence():
+            return bool(tuttle.getReaders(self.getName()))
+        return False
+
     def getRealPathImg(self):
         if self.isFolder():
-            return "../../img/buttons/browser/folder-icon.png"  # default
+            return "img/folder-icon.png"  # default
 
         if self.isFile():
-            if bool(tuttle.getReaders(self.getName())):
+            if self.isSupported():
                 return 'image://buttleofx/' + self._path
-            return "../../img/buttons/browser/file-icon.png"
+            return "img/file-icon.png"
 
         if self.isSequence():
-            if bool(tuttle.getReaders(self._sequence.getFirstFilePath())):
+            if self.isSupported():
                 return 'image://buttleofx/' + self._sequence.getFirstFilePath()
 
-        return "../../img/buttons/browser/file-icon.png"  # default
+        return "img/file-icon.png"  # default
 
+    # ############################################ Methods exposed to QML ############################################ #
+
+    @QtCore.pyqtSlot(result=bool)
     def isFile(self):
         return self._typeItem == BrowserItem.ItemType.file
 
+    @QtCore.pyqtSlot(result=bool)
     def isFolder(self):
         return self._typeItem == BrowserItem.ItemType.folder
 
+    @QtCore.pyqtSlot(result=bool)
     def isSequence(self):
         return self._typeItem == BrowserItem.ItemType.sequence
-
-    # ############################################ Methods exposed to QML ############################################ #
 
     @QtCore.pyqtSlot(result=list)
     def getActionStatus(self):
@@ -195,6 +205,10 @@ class BrowserItem(QtCore.QObject):
     @QtCore.pyqtSlot(result=str)
     def getOwner(self):
         return self._owner
+
+    @QtCore.pyqtSlot(result=bool)
+    def isSupported(self):
+        return self._isSupported
 
     # ################################### Data exposed to QML #################################### #
 

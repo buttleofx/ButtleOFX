@@ -1,4 +1,3 @@
-from buttleofx.gui.browser_v2.browserItem import BrowserItem
 from PyQt5 import QtCore
 
 
@@ -7,6 +6,7 @@ class ActionInterface(QtCore.QObject):
         Interface which determines the template comportment for an action on a BrowserItem
         execute and revert methods must be implemented.
     """
+    _progressChanged = QtCore.pyqtSignal()  # used to reporting in actionWrapper(via connectProgression)
 
     def __init__(self, browserItem):
         super(ActionInterface, self).__init__()
@@ -64,6 +64,3 @@ class ActionInterface(QtCore.QObject):
 
     def getProgressSignal(self):
         return self._progressChanged
-
-
-    _progressChanged = QtCore.pyqtSignal()  # used to reporting in actionWrapper(via connectProgression)

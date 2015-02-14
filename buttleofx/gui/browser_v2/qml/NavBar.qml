@@ -198,6 +198,9 @@ Rectangle {
                         Text{
                             id:graySuggestion
                             color:"gray"
+                            property var listenerCurrentPath: root.model.currentPath
+                            onListenerCurrentPathChanged: this.clear()
+
                             Behavior on x {
                                 PropertyAnimation {
                                     easing.type: Easing.InOutQuad;
@@ -213,17 +216,15 @@ Rectangle {
                                 graySuggestion.text = name.substr((lengthCurrentPath -1 )- lastSlash)
                             }
 
-                            function clear(){
-                                this.text = ""
+                            function fill(){
+                                this.clear()
+                                if(root.model.listFolderNavBar.count === 1 && texteditPath.text.trim())
+                                    this.setFormatted(root.model.listFolderNavBar.get(0).name)
+
                             }
 
-                            function handleInteraction(){
-                                this.clear()
-
-                                if(autoCompleteList.items.length == 1)
-                                    autoCompleteList.items[0].trigger()
-                                else
-                                    autoCompleteList.show()
+                            function clear(){
+                                this.text = ""
                             }
                         }
 
@@ -238,26 +239,27 @@ Rectangle {
 
                         //need this event and not Keys.onPressed: have good behavior with tab key(which loose focus otherwise even if propagation stopped)
                         Keys.onTabPressed:{
-                            graySuggestion.handleInteraction()
+                            autoCompleteList.handleInteraction()
                         }
 
                         Keys.onPressed: {
-                            if(event.key == Qt.Key_Right || ((event.modifiers & Qt.ControlModifier) && event.key == Qt.Key_Space))
-                            graySuggestion.handleInteraction()
+                            if((this.cursorPosition == this.text.length && event.key == Qt.Key_Right) ||
+                               ((event.modifiers & Qt.ControlModifier)  && event.key == Qt.Key_Space))
+                                autoCompleteList.handleInteraction()
                         }
 
                         Keys.onReleased: {
                             root.model.currentPath = texteditPath.text
-                            graySuggestion.clear()
-
-                            if(root.model.listFolderNavBar.count === 1 && texteditPath.text.trim())
-                                graySuggestion.setFormatted(root.model.listFolderNavBar.get(0).name)
+                            graySuggestion.fill()
 
                             if(event.key == Qt.Key_Enter || event.key == Qt.Key_Return || event.key == Qt.Key_Down){
                                 texteditPath.handleFilter()
-                                autoCompleteList.show()
+                                autoCompleteList.handleInteraction() //if isEnterTriggered, handled here
                             }
 
+                            //enter key is now not triggered at the end of release if was performed
+                            if(autoCompleteList.isEnterTriggered)
+                                autoCompleteList.isEnterTriggered = false
                         }
 
                         onFocusChanged: {
@@ -269,7 +271,10 @@ Rectangle {
 
                         Menu {
                             id: autoCompleteList
-                            __visualItem: textEditContainer //simulate container for popup
+                            __visualItem: textEditContainer       //simulate container for popup
+                            property bool isEnterTriggered: false /*solution when release enter on suggestion:
+                                                                    avoid trigger && RECALL trigger of first element if only one folder..
+                                                                    (yes, it goes on onReleased even if we're not in textinput)*/
 
                             Instantiator{
                                 model:root.model.listFolderNavBar
@@ -278,21 +283,35 @@ Rectangle {
 
                                     id: textComponent
                                     text: model.object.name
-
+                                    property var path: model.object.path
                                     onTriggered: {
+                                        console.log("triggered: " + textComponent.path )
+                                        autoCompleteList.isEnterTriggered = true
+                                        pushVisitedFolder(textComponent.path)
                                         graySuggestion.clear()
-                                        pushVisitedFolder( model.object.path)
-                                        root.model.currentPath = model.object.path+"/"
+                                        root.model.currentPath = textComponent.path+"/"
                                     }
                                 }
-
                                 onObjectAdded: autoCompleteList.insertItem(index, object)
                                 onObjectRemoved: autoCompleteList.removeItem(object)
                             }
 
-                            function show() {
-                                root.model.currentPath = texteditPath.text
+                            function handleInteraction(){
+                                graySuggestion.clear()
 
+                                if(autoCompleteList.items.length === 1){
+                                    if(autoCompleteList.isEnterTriggered)
+                                        graySuggestion.fill()
+                                    else
+                                        autoCompleteList.items[0].trigger()
+                                }
+                                else
+                                    autoCompleteList.show()
+
+                                graySuggestion.fill()
+                            }
+
+                            function show() {
                                 if(!root.model.listFolderNavBar.count)
                                     return
 

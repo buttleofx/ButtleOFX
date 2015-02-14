@@ -43,7 +43,7 @@ class BrowserModel(QtCore.QObject):
 
         self._asyncMode = asyncMode
         self._actionManager = ActionManagerSingleton.get()  # for locking and search BrowserItem when updating
-        self._currentPath = path.strip() if path.strip() else os.path.expanduser("~")
+        self._currentPath = path.strip() if path.strip() else os.path.expanduser("~/")
         self.updateItemsWrapperAsync()
 
     def updateItemsWrapperAsync(self):
@@ -199,8 +199,8 @@ class BrowserModel(QtCore.QObject):
         if not newCurrentPath.strip():
             return
         self._currentPath = newCurrentPath.strip()
-        self.currentPathChanged.emit()
         self.updateItemsWrapperAsync()
+        self.currentPathChanged.emit()
 
     def setCurrentPathHome(self):
         self.setCurrentPath(self.getHomePath())
@@ -266,7 +266,11 @@ class BrowserModel(QtCore.QObject):
 
     @QtCore.pyqtSlot(result=str)
     def getParentPath(self):
-        return os.path.dirname(self._currentPath)
+        tmp = os.path.dirname(self.currentPath)
+        # if path ended by // or simply / we repeat process to get real parent
+        if self._currentPath.rfind("/") == len(self._currentPath)-1:
+            tmp = os.path.dirname(tmp)
+        return tmp + ("/" if tmp != "/" else "")
 
     @QtCore.pyqtSlot(result=QObjectListModel)
     def getSplittedCurrentPath(self):

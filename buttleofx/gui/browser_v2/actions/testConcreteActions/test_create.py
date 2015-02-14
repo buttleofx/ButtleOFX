@@ -5,7 +5,6 @@ import os
 from buttleofx.gui.browser_v2.browserItem import BrowserItem
 from buttleofx.gui.browser_v2.actions.concreteActions.create import Create
 from pySequenceParser import sequenceParser
-# from OpenGL import GL
 
 
 class TestCreate(unittest.TestCase):
@@ -14,7 +13,7 @@ class TestCreate(unittest.TestCase):
     def setUp(self):
         pass
 
-    def test_file_create(self):
+    def test_file_create_execute(self):
         with tempfile.TemporaryDirectory() as path:
             filename = 'new_file.txt'
             parent_name = 'parent'
@@ -41,7 +40,34 @@ class TestCreate(unittest.TestCase):
             # File should not exists
             self.assertTrue(os.path.exists(file_path))
 
-    def test_folder_create(self):
+    def test_file_create_execute(self):
+        with tempfile.TemporaryDirectory() as path:
+            filename = 'new_file.txt'
+            parent_name = 'parent'
+            parent_path = os.path.join(path, parent_name)
+            file_path = os.path.join(parent_path, filename)
+
+            # Create parent folder
+            os.makedirs(parent_path)
+
+            # File should not exists
+            self.assertFalse(os.path.exists(file_path))
+
+            sp_parent = sequenceParser.Item(sequenceParser.eTypeFolder,
+                                            parent_path)
+            sp_new_file = sequenceParser.Item(sequenceParser.eTypeFile,
+                                              file_path)
+            parent = BrowserItem(sp_parent, True)
+            new_file = BrowserItem(sp_new_file, True)
+
+            # Create file
+            cr = Create(parent, new_file)
+            cr.process()
+
+            # File should not exists
+            self.assertTrue(os.path.exists(file_path))
+
+    def test_folder_create_execute(self):
         with tempfile.TemporaryDirectory() as path:
             folder_name = 'new_folder'
             parent_name = 'parent'

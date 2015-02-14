@@ -113,7 +113,7 @@ class TestRename(unittest.TestCase):
             # Browser item's path and new file path should be equal
             self.assertEqual(bi.getPath(), new_file_path)
 
-    def test_rename_file_without_extension(self):
+    def test_rename_file_without_extension_revert(self):
         with tempfile.TemporaryDirectory() as path:
             extension = ".jpg"
             old_filename = "plop" + extension

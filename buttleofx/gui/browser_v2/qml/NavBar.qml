@@ -7,21 +7,28 @@ import QtQuick.Controls.Styles 1.0
 Rectangle {
     id: root
     color: "#2E2E2E"
+
     clip: true
-    Layout.preferredHeight: searchLayoutRectangle.height+ navBarContainer.height
+
     signal pushVisitedFolder(string path)
     property alias searchLayout: searchLayoutRectangle
 
-    ColumnLayout{
-        anchors.fill: parent
-        spacing: 0
+    QtObject {
+        id: m;
+        property bool searchEnabled: false
+    }
+
+    Column{
+        height: childrenRect.height
 
         Rectangle{
             id: navBarContainer
-            Layout.alignment: Qt.AlignTop
-            Layout.fillWidth: true
+
+            width: root.width
+            height: 40
+
             color: "transparent"
-            Layout.preferredHeight: 40
+
 
             RowLayout {
                 anchors.fill: parent
@@ -351,20 +358,24 @@ Rectangle {
 
                 Button {
                     id: search
-                    Layout.preferredWidth: 20
-                    Layout.preferredHeight: 20
+                    Layout.preferredWidth: 30
+                    Layout.preferredHeight: 30
+
                     Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+
                     tooltip: "Search recursively"
                     iconSource: hovered ?"img/find_hover.png" : "img/find.png"
+
                     style:
                         ButtonStyle {
                             background: Rectangle {
                                 anchors.fill: parent
-                                color: "transparent"
+                                radius: 2
+                                color: m.searchEnabled ? "#222222" : "transparent"
                             }
                         }
                     onClicked: {
-                        searchLayoutRectangle.enabled = !searchLayoutRectangle.enabled
+                        m.searchEnabled = !m.searchEnabled
                         searchEdit.forceActiveFocus()
                     }
 
@@ -427,18 +438,20 @@ Rectangle {
         Rectangle{
             id: searchLayoutRectangle
 
-            property bool enabled: true
+            width: root.width
+            height: m.searchEnabled ? 30 : 0
 
-            Layout.fillWidth: true
-            height: enabled ? 30 : 0
+            visible: m.searchEnabled
+
             color: "transparent"
 
             function show(){
-                this.enabled = true
+                m.searchEnabled = true
                 searchEdit.forceActiveFocus()
             }
 
-            Behavior on height { PropertyAnimation { easing.type: Easing.InOutQuad ; duration: 300 } }
+            Behavior on height { PropertyAnimation { easing.type: Easing.InOutQuad ; duration: 100 } }
+            Behavior on visible { PropertyAnimation { easing.type: Easing.InOutQuad ; duration: 50 } }
 
             RowLayout{
                 id: searchLayout
@@ -473,12 +486,11 @@ Rectangle {
 
                         onFocusChanged: {
                             if(!focus)
-                                searchLayoutRectangle.enabled = false
+                                m.searchEnabled = false
                         }
                     }
                 }
             }
-            Component.onCompleted: enabled = false
         }
     }
 

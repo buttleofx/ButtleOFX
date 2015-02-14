@@ -15,7 +15,7 @@ class TestMove(unittest.TestCase):
     def setUp(self):
         pass
 
-    def test_file_move(self):
+    def test_file_move_execute(self):
         with tempfile.TemporaryDirectory() as path:
             filename = 'new_file.txt'
             dest_folder_name = 'parent'
@@ -43,7 +43,8 @@ class TestMove(unittest.TestCase):
             file = BrowserItem(sp_file, True)
 
             # Move file
-            mv = Move(file, dest)
+            mv = Move(file)
+            mv.setDestinationPath(dest_folder_path)
             mv.process()
 
             # File should not exists in source folder
@@ -80,7 +81,8 @@ class TestMove(unittest.TestCase):
             file = BrowserItem(sp_file, True)
 
             # Move file
-            mv = Move(file, dest)
+            mv = Move(file)
+            mv.setDestinationPath(dest_folder_path)
             mv.process()
 
             # File should not exists in source folder
@@ -97,7 +99,7 @@ class TestMove(unittest.TestCase):
             # File should not exists in destination folder
             self.assertFalse(os.path.exists(dest_file_path))
 
-    def test_folder_move(self):
+    def test_folder_move_execute(self):
         with tempfile.TemporaryDirectory() as path:
             src_folder_name = 'new_folder'
             src_folder_path = os.path.join(path, src_folder_name)
@@ -128,7 +130,8 @@ class TestMove(unittest.TestCase):
             src_folder = BrowserItem(sp_src_folder, True)
 
             # Move folder
-            mv = Move(src_folder, dest_folder)
+            mv = Move(src_folder)
+            mv.setDestinationPath(dest_folder_path)
             mv.process()
 
             # Source folder should not exists
@@ -168,7 +171,8 @@ class TestMove(unittest.TestCase):
             src_folder = BrowserItem(sp_src_folder, True)
 
             # Move folder
-            mv = Move(src_folder, dest_folder)
+            mv = Move(src_folder)
+            mv.setDestinationPath(dest_folder_path)
             mv.process()
 
             # Source folder should not exists

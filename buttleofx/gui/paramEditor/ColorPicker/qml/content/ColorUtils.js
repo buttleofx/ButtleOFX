@@ -230,9 +230,9 @@ function isGreyLvlColor(rgba)
 }
 
 function roundColor4D(color4D, precision) {
-    color4D.x = decimalRound(color4D.x, precision)
-    color4D.y = decimalRound(color4D.y, precision)
-    color4D.z = decimalRound(color4D.z, precision)
-    color4D.w = decimalRound(color4D.w, precision)
-    return color4D
+    return Qt.vector4d( decimalRound(color4D.x, precision),
+                        decimalRound(color4D.y, precision),
+                        decimalRound(color4D.z, precision),
+                        decimalRound(color4D.w, precision))
+
 }

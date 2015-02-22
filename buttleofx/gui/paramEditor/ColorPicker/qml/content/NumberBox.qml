@@ -55,6 +55,8 @@ RowLayout {
         minValue: root.min
         maxValue: root.max
         decimals: root.decimals
+        defaultIncrement: root.decimals == 0 ? 1 : 0.1
+
 
         border.width: Config.borderWidth
         border.color: Config.borderColor

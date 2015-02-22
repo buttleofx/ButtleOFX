@@ -17,13 +17,6 @@ Rectangle {
     property int precision: precisionBox.value
     property bool isZeroOneRange: rangeValue.currentText == "0-1"
 
-    MouseArea {
-        anchors.fill: root
-        hoverEnabled: true
-        onEntered: root.entered()
-        onExited: root.exited()
-    }
-
     ColumnLayout {
         anchors.fill: parent
         anchors.margins: 5 + root.border.width * 2

@@ -105,7 +105,7 @@ Item {
                         Layout.fillHeight: true
                         Layout.minimumWidth: 60
 
-                        function paramsHover() {
+                        function paramsOpen() {
                             params.visible = true
                             paramsIcon.source = "img/gearHover.png"
                         }
@@ -121,13 +121,6 @@ Item {
                             source: "img/gear.png"
                         }
 
-                        MouseArea {
-                            anchors.fill: parent
-                            hoverEnabled: true
-                            onEntered:  paramsButton.paramsHover()
-                            onExited: paramsButton.paramsExit()
-                        }
-
                         Params
                         {
                             id:params
@@ -139,8 +132,17 @@ Item {
                             anchors.horizontalCenter: paramsButton.horizontalCenter
 
                             visible: false
-                            onEntered:  paramsButton.paramsHover()
-                            onExited: paramsButton.paramsExit()
+                        }
+                    }
+
+                    MouseArea {
+                        anchors.fill: paramsButton
+                        hoverEnabled: true
+                        onClicked: params.visible ? paramsButton.paramsExit() : paramsButton.paramsOpen()
+                        onEntered: paramsIcon.source = "img/gearHover.png"
+                        onExited: {
+                            if (!params.visible)
+                                paramsIcon.source = "img/gear.png"
                         }
                     }
                 }

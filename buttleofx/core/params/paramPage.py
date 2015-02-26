@@ -23,3 +23,11 @@ class ParamPage(Param):
 
     def getParamType(self):
         return "ParamPage"
+
+    def getValue(self):
+        "Fix for saving graph because need to call getValue and getDefaultValue to save"
+        return "ParamPage"
+
+    def getDefaultValue(self):
+        "Fix for saving graph because need to call getValue and getDefaultValue to save"
+        return "ParamPage"

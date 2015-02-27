@@ -15,7 +15,7 @@ class TestMove(unittest.TestCase):
     def setUp(self):
         pass
 
-    def test_file_move_execute(self):
+    def test_move_file_execute(self):
         with tempfile.TemporaryDirectory() as path:
             filename = 'new_file.txt'
             dest_folder_name = 'parent'
@@ -53,7 +53,7 @@ class TestMove(unittest.TestCase):
             # File should exists in destination folder
             self.assertTrue(os.path.exists(dest_file_path))
 
-    def test_file_move_revert(self):
+    def test_move_file_revert(self):
         with tempfile.TemporaryDirectory() as path:
             filename = 'new_file.txt'
             dest_folder_name = 'parent'
@@ -99,7 +99,7 @@ class TestMove(unittest.TestCase):
             # File should not exists in destination folder
             self.assertFalse(os.path.exists(dest_file_path))
 
-    def test_folder_move_execute(self):
+    def test_move_folder_execute(self):
         with tempfile.TemporaryDirectory() as path:
             src_folder_name = 'new_folder'
             src_folder_path = os.path.join(path, src_folder_name)
@@ -140,7 +140,7 @@ class TestMove(unittest.TestCase):
             # Source folder should exists in destination folder
             self.assertTrue(os.path.exists(folder_moved_path))
 
-    def test_folder_move_revert(self):
+    def test_move_folder_revert(self):
         with tempfile.TemporaryDirectory() as path:
             src_folder_name = 'new_folder'
             src_folder_path = os.path.join(path, src_folder_name)

@@ -16,7 +16,7 @@ class TestCopy(unittest.TestCase):
     def setUp(self):
         pass
 
-    def test_file_copy_execute(self):
+    def test_copy_file_execute(self):
         with tempfile.TemporaryDirectory() as path:
             src_filename = 'copy_file.txt'
             src_file_path = os.path.join(path, src_filename)
@@ -57,7 +57,7 @@ class TestCopy(unittest.TestCase):
             # File should have the new path ? Maybe not
             # self.assertEqual(file.getPath(), dest_file_path)
 
-    def test_file_copy_revert(self):
+    def test_copy_file_revert(self):
         with tempfile.TemporaryDirectory() as path:
             src_filename = 'copy_file.txt'
             src_file_path = os.path.join(path, src_filename)
@@ -104,7 +104,7 @@ class TestCopy(unittest.TestCase):
             # File should not exists in destination folder
             self.assertFalse(os.path.exists(dest_file_path))
 
-    def test_folder_copy_execute(self):
+    def test_copy_folder_execute(self):
         with tempfile.TemporaryDirectory() as path:
             src_folder_name = 'copy_folder'
             src_folder_path = os.path.join(path, src_folder_name)
@@ -139,7 +139,7 @@ class TestCopy(unittest.TestCase):
             # Folder should have the new path
             # self.assertEqual(src.getPath(), dest_folder_path)
 
-    def test_folder_copy_revert(self):
+    def test_copy_folder_revert(self):
         with tempfile.TemporaryDirectory() as path:
             src_folder_name = 'copy_folder'
             src_folder_path = os.path.join(path, src_folder_name)
@@ -182,7 +182,7 @@ class TestCopy(unittest.TestCase):
             # Folder should not exists in destination folder
             self.assertFalse(os.path.exists(dest_folder_path))
 
-    def test_sequence_copy_execute(self):
+    def test_copy_sequence_execute(self):
         with tempfile.TemporaryDirectory() as path:
             dest_folder_name = 'dest'
             dest_folder_path = os.path.join(path, dest_folder_name)
@@ -212,7 +212,7 @@ class TestCopy(unittest.TestCase):
             self.assertEqual(dest_seq.getParentPath(), dest_folder_path)
             self.assertEqual(dest_seq.getName(), src_seq.getName())
 
-    def test_sequence_copy_revert(self):
+    def test_copy_sequence_revert(self):
         with tempfile.TemporaryDirectory() as path:
             dest_folder_name = 'dest'
             dest_folder_path = os.path.join(path, dest_folder_name)

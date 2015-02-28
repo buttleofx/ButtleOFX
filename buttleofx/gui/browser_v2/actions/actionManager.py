@@ -58,6 +58,23 @@ class ActionManager(QtCore.QObject):
     def getWaitingActions(self):
         return self._waiting
 
+    def searchItemInList(self, listBrowse, path):
+        for actionWrapper in list(listBrowse):
+            for action in actionWrapper.getActions():
+                if action.getBrowserItem().getPath() == path:
+                    return action.getBrowserItem()
+        return None
+
+    def searchItem(self, path):
+        """
+        :param path:
+        :return: First BrowserItem instance found with a given path into running and waiting lists
+        """
+        bItem = self.searchItemInList(self._waiting.queue, path)
+        if bItem:
+            return bItem
+        return self.searchItemInList(self._running, path)
+
 
 class ActionManagerSingleton(Singleton):
     _actionManager = ActionManager()

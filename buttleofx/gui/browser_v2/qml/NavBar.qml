@@ -303,7 +303,7 @@ Rectangle {
                                 var positionToShow = Qt.vector2d(0, texteditPath.height)
                                 positionToShow.x = texteditPath.positionToRectangle(indexPosition).x
                                 this.__popup(positionToShow.x+12, positionToShow.y) //12 magic
-                            }
+                                }
                         }
                     }
                 }
@@ -352,6 +352,30 @@ Rectangle {
                         searchEdit.forceActiveFocus()
                     }
 
+                }
+
+                Image {
+                    id: modelLoading
+
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    height: 50
+                    width: parent.width
+
+                    source: "img/refresh_hover.png"
+                    sourceSize.width: 20
+                    sourceSize.height: 20
+                    asynchronous: true
+
+                    fillMode: Image.Pad
+                    visible: model.loading
+
+                    NumberAnimation on rotation {
+                        from: 0
+                        to: 360
+                        running: modelLoading.visible
+                        loops: Animation.Infinite
+                        duration: 1000
+                    }
                 }
 
 //                Button {
@@ -451,8 +475,7 @@ Rectangle {
                                 }
                             }
                         onAccepted: {
-                            if(text.trim())
-                                _browser.doSearchRecursive(text.trim())
+                            _browser.loadData(text.trim())
                         }
 
                         onFocusChanged: {

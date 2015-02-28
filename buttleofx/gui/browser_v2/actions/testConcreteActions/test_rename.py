@@ -231,12 +231,38 @@ class TestRename(unittest.TestCase):
             bi = BrowserItem(sp_seq, True)
             self.assertIsNotNone(bi.getName())
             # Delete sequence
-            de = Rename(bi, new_sequence_name)
-            de.process()
+            re = Rename(bi, new_sequence_name)
+            re.process()
 
             bi = BrowserItem(sequenceParser.browse(path)[0], True)
             # Sequence should be renamed
             self.assertEqual(bi.getSequence().getSequenceParsed().getPrefix(), new_sequence_name)
+
+    def test_rename_sequence_revert(self):
+        with tempfile.TemporaryDirectory() as path:
+            new_sequence_name = 'renamed_'
+
+            # Create Sequence
+            h.create_sequence(path)
+            # Create BrowserItem sequence
+            sp_seq = sequenceParser.browse(path)[0]
+
+            bi = BrowserItem(sp_seq, True)
+            self.assertIsNotNone(bi.getName())
+            # Delete sequence
+            re = Rename(bi, new_sequence_name)
+            re.process()
+
+            bi = BrowserItem(sequenceParser.browse(path)[0], True)
+            # Sequence should be renamed
+            self.assertEqual(bi.getSequence().getSequenceParsed().getPrefix(), new_sequence_name)
+
+            re.revert()
+            bi = BrowserItem(sequenceParser.browse(path)[0], True)
+            # Sequence should be renamed
+            self.assertEqual(bi.getSequence().getSequenceParsed().getPrefix(), 'seq_')
+
+
 
     # After tests run
     def tearDown(self):

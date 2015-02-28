@@ -45,15 +45,10 @@ class Rename(ActionInterface):
 
         # TODO: Rename sequence
         if browserItem.isSequence():
-            print("TODO: Rename sequence")
             seqParsed = browserItem.getSequence().getSequenceParsed()
             frames = seqParsed.getFramesIterable()
 
             for f in frames:
-                filename = seqParsed.getFilenameAt(f)
-                print(filename)
-                print(dir(seqParsed.getFilenameAt(f)))
-                print(seqParsed.getPrefix())
                 newFrameName = seqParsed.getFilenameAt(f)\
                                         .replace(seqParsed.getPrefix(),
                                                  self._newName)
@@ -70,15 +65,21 @@ class Rename(ActionInterface):
                           self._oldName)
 
         if browserItem.isFolder():
-            # path = browserItem.getParentPath()
             self.__rename(browserItem.getParentPath(),
                           browserItem.getName(),
                           self._oldName)
-            # oldPath = os.path.join(path, browserItem.getName())
-            # newPath = os.path.join(path, self._oldName)
-            # os.rename(oldPath, newPath)
-            # browserItem.updatePath(newPath)
 
+        if browserItem.isSequence():
+            seqParsed = browserItem.getSequence().getSequenceParsed()
+            frames = seqParsed.getFramesIterable()
+
+            for f in frames:
+                newFrameName = seqParsed.getFilenameAt(f) \
+                               .replace(seqParsed.getPrefix(),
+                                        self._newName)
+                self.__rename(browserItem.getParentPath(),
+                              newFrameName,
+                              seqParsed.getFilenameAt(f))
     # Private Methods
     def __rename(self, basePath, oldName, newName):
         oldPath = os.path.join(basePath, oldName)

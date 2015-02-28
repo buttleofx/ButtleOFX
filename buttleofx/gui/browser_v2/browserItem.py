@@ -154,6 +154,10 @@ class BrowserItem(QtCore.QObject):
 
     def isSupportedFromTuttle(self):
         if self.isFile() or self.isSequence():
+            try:
+                tuttle.getFileExtension(self._path)
+            except:
+                return False
             return bool(tuttle.getReaders(self.getName()))
         return False
 

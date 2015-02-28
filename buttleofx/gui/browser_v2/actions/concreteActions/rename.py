@@ -46,6 +46,20 @@ class Rename(ActionInterface):
         # TODO: Rename sequence
         if browserItem.isSequence():
             print("TODO: Rename sequence")
+            seqParsed = browserItem.getSequence().getSequenceParsed()
+            frames = seqParsed.getFramesIterable()
+
+            for f in frames:
+                filename = seqParsed.getFilenameAt(f)
+                print(filename)
+                print(dir(seqParsed.getFilenameAt(f)))
+                print(seqParsed.getPrefix())
+                newFrameName = seqParsed.getFilenameAt(f)\
+                                        .replace(seqParsed.getPrefix(),
+                                                 self._newName)
+                self.__rename(browserItem.getParentPath(),
+                              seqParsed.getFilenameAt(f),
+                              newFrameName)
 
     def revert(self):
         browserItem = self._browserItem

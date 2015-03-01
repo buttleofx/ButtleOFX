@@ -23,11 +23,3 @@ class ParamGroup(Param):
 
     def getParamType(self):
         return "ParamGroup"
-
-    def getValue(self):
-        "Fix for save graph because need to call getValue and getDefaultValue to save"
-        return "ParamGroup"
-    
-    def getDefaultValue(self):
-        "Fix for save graph because need to call getValue and getDefaultValue to save"
-        return "ParamGroup"

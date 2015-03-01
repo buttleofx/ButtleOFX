@@ -83,6 +83,7 @@ class Param:
             Convert the param to a dictionary of his representation.
             We do not save param which had not been changed.
         """
+        print(self.getParamType())
         if self.getValue() == self.getDefaultValue():
             return None
         param = {

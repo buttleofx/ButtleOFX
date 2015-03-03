@@ -23,10 +23,11 @@ class Worker(threading.Thread):
         Worker.lockWhileWaiting()
 
         actionWrapper = self._queue.get()
+        # if we stop: queue.put(None)
         if not actionWrapper:
             return
-        self._inProgress.append(actionWrapper)
 
+        self._inProgress.append(actionWrapper)
         for action in actionWrapper.getActions():
             action.process()
             actionWrapper.upProcessed()
@@ -68,3 +69,4 @@ class Worker(threading.Thread):
     @staticmethod
     def destroy():
         Worker.isDestroyed = True
+

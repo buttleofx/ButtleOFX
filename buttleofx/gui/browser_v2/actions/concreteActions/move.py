@@ -30,7 +30,7 @@ class Move(ActionInterface):
     def revert(self):
         browserItem = self._browserItem
         srcPath = self._srcPath
-        destPath = self._destination.getPath()
+        destPath = self._destPath
         destItemPath = os.path.join(destPath, browserItem.getName())
 
         if browserItem.isFile() or browserItem.isFolder():

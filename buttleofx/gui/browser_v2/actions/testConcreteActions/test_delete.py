@@ -17,7 +17,7 @@ class TestDelete(unittest.TestCase):
     def setUp(self):
         pass
 
-    def test_file_delete(self):
+    def test_delete_file_execute(self):
         with tempfile.TemporaryDirectory() as path:
             filename = 'delete_me.txt'
             file_path = os.path.join(path, filename)
@@ -43,7 +43,7 @@ class TestDelete(unittest.TestCase):
             # File should not exists
             self.assertFalse(os.path.exists(file_path))
 
-    def test_file_delete_revert(self):
+    def test_delete_file_revert(self):
         with tempfile.TemporaryDirectory() as path:
             filename = 'delete_me.txt'
             file_path = os.path.join(path, filename)
@@ -73,7 +73,7 @@ class TestDelete(unittest.TestCase):
 
             self.assertEqual(len(sequenceParser.browse(path)), 1)
 
-    def test_folder_delete(self):
+    def test_delete_folder_execute(self):
         with tempfile.TemporaryDirectory() as path:
             folder_name = 'delete_me'
             folder_path = os.path.join(path, folder_name)
@@ -99,7 +99,7 @@ class TestDelete(unittest.TestCase):
             # Folder should not exists
             self.assertFalse(os.path.exists(folder_path))
 
-    def test_folder_delete_revert(self):
+    def test_delete_folder_revert(self):
         with tempfile.TemporaryDirectory() as path:
             folder_name = 'delete_me'
             folder_path = os.path.join(path, folder_name)
@@ -129,7 +129,7 @@ class TestDelete(unittest.TestCase):
 
             self.assertEqual(len(sequenceParser.browse(path)), 1)
 
-    def test_sequence_delete(self):
+    def test_delete_sequence_execute(self):
         with tempfile.TemporaryDirectory() as path:
             # Create Sequence
             h.create_sequence(path)
@@ -145,7 +145,7 @@ class TestDelete(unittest.TestCase):
             # Sequence should not exists
             self.assertEqual(len(sequenceParser.browse(path)), 0)
 
-    def test_sequence_delete_revert(self):
+    def test_delete_sequence_revert(self):
         with tempfile.TemporaryDirectory() as path:
             # Create Sequence
             h.create_sequence(path)

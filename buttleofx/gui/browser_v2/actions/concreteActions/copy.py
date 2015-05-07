@@ -6,7 +6,7 @@ from buttleofx.gui.browser_v2.actions.actionInterface import ActionInterface
 
 class Copy(ActionInterface):
 
-    def __init__(self, browserItem, destination):
+    def __init__(self, browserItem):
         # destination must be a directory
         # if not destination.isFolder():
         #     raise TypeError

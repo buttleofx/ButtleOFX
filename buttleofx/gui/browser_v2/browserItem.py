@@ -154,7 +154,10 @@ class BrowserItem(QtCore.QObject):
 
     def isSupportedFromTuttle(self):
         if self.isFile() or self.isSequence():
-            return bool(tuttle.getReaders(self.getName()))
+            try:
+                return bool(tuttle.getReaders(self.getName()))
+            except:
+                pass
         return False
 
     def getRealPathImg(self):

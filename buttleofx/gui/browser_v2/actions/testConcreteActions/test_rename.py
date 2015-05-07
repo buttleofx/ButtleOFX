@@ -7,7 +7,7 @@ import os
 from buttleofx.gui.browser_v2.browserItem import BrowserItem
 from buttleofx.gui.browser_v2.actions.concreteActions.rename import Rename
 from pySequenceParser import sequenceParser
-
+import buttleofx.gui.browser_v2.actions.testConcreteActions.helper as h
 
 class TestRename(unittest.TestCase):
 
@@ -15,7 +15,7 @@ class TestRename(unittest.TestCase):
     def setUp(self):
         pass
 
-    def test_rename_file_with_extension(self):
+    def test_rename_file_with_extension_execute(self):
         with tempfile.TemporaryDirectory() as path:
             extension = ".txt"
             old_filename = "plop" + extension
@@ -87,7 +87,7 @@ class TestRename(unittest.TestCase):
             # Browser item's path and old file path should be equal
             self.assertEqual(bi.getPath(), old_file_path)
 
-    def test_rename_file_without_extension(self):
+    def test_rename_file_without_extension_execute(self):
         with tempfile.TemporaryDirectory() as path:
             extension = ".jpg"
             old_filename = "plop" + extension
@@ -114,7 +114,7 @@ class TestRename(unittest.TestCase):
             # Browser item's path and new file path should be equal
             self.assertEqual(bi.getPath(), new_file_path)
 
-    def test_rename_file_without_extensionRevert(self):
+    def test_rename_file_without_extension_revert(self):
         with tempfile.TemporaryDirectory() as path:
             extension = ".jpg"
             old_filename = "plop" + extension
@@ -152,7 +152,7 @@ class TestRename(unittest.TestCase):
             # Browser item's path and old file path should be equal
             self.assertEqual(bi.getPath(), old_file_path)
 
-    def test_rename_folder(self):
+    def test_rename_folder_execute(self):
         with tempfile.TemporaryDirectory() as path:
             old_folder_name = 'rename_me'
             old_folder_path = os.path.join(path, old_folder_name)
@@ -218,6 +218,51 @@ class TestRename(unittest.TestCase):
 
             # Browser item's path and old folder path should be equal
             self.assertEqual(bi.getPath(), old_folder_path)
+
+    def test_rename_sequence_execute(self):
+        with tempfile.TemporaryDirectory() as path:
+            new_sequence_name = 'renamed_'
+
+            # Create Sequence
+            h.create_sequence(path)
+            # Create BrowserItem sequence
+            sp_seq = sequenceParser.browse(path)[0]
+
+            bi = BrowserItem(sp_seq, True)
+            self.assertIsNotNone(bi.getName())
+            # Delete sequence
+            re = Rename(bi, new_sequence_name)
+            re.process()
+
+            bi = BrowserItem(sequenceParser.browse(path)[0], True)
+            # Sequence should be renamed
+            self.assertEqual(bi.getSequence().getSequenceParsed().getPrefix(), new_sequence_name)
+
+    def test_rename_sequence_revert(self):
+        with tempfile.TemporaryDirectory() as path:
+            new_sequence_name = 'renamed_'
+
+            # Create Sequence
+            h.create_sequence(path)
+            # Create BrowserItem sequence
+            sp_seq = sequenceParser.browse(path)[0]
+
+            bi = BrowserItem(sp_seq, True)
+            self.assertIsNotNone(bi.getName())
+            # Delete sequence
+            re = Rename(bi, new_sequence_name)
+            re.process()
+
+            bi = BrowserItem(sequenceParser.browse(path)[0], True)
+            # Sequence should be renamed
+            self.assertEqual(bi.getSequence().getSequenceParsed().getPrefix(), new_sequence_name)
+
+            re.revert()
+            bi = BrowserItem(sequenceParser.browse(path)[0], True)
+            # Sequence should be renamed
+            self.assertEqual(bi.getSequence().getSequenceParsed().getPrefix(), 'seq_')
+
+
 
     # After tests run
     def tearDown(self):

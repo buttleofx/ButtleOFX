@@ -1,4 +1,5 @@
 import os
+import shutil
 
 from buttleofx.gui.browser_v2.actions.actionInterface import ActionInterface
 
@@ -34,3 +35,14 @@ class Create(ActionInterface):
             folderPath = os.path.join(parentPath, folderName)
             if os.path.exists(parentPath):
                 os.makedirs(folderPath)
+
+    def revert(self):
+        browserItem = self._newBrowserItem
+        browserItemPath = self._newBrowserItem.getPath()
+
+        if browserItem.isFile():
+            os.remove(browserItemPath)
+
+        if browserItem.isFolder():
+            shutil.rmtree(browserItemPath)
+

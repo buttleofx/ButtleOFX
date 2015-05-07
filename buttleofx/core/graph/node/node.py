@@ -173,10 +173,13 @@ class Node(object):
             "params": []
         }
 
+
+        unsavable = ("ParamGroup", "ParamPage", "ParamPushButton")
         for param in self.getParams():
-            paramDict = param.object_to_dict()
-            if paramDict is not None:
-                node["params"].append(paramDict)
+            if param.getParamType() not in unsavable:
+                paramDict = param.object_to_dict()
+                if paramDict is not None:
+                    node["params"].append(paramDict)
         return node
 
     def dict_to_object(self, nodeData):

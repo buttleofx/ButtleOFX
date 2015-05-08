@@ -226,11 +226,11 @@ class BrowserModel(QtCore.QObject):
         :param bItem: BrowserItem
         :return: Index of bItem in self._browserItems
         """
-        cpt = 0
+        index = 0
         for item in self._browserItems:
             if item == bItem:
-                return cpt
-            cpt += 1
+                return index
+            index += 1
         return -1
 
     # ################################### Methods exposed to QML ############################### #

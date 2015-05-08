@@ -59,45 +59,16 @@ Students :
 >- [Arthur TOURNERET](https://github.com/artourn)
 
 
-Pre-requisites
---------------
-
-- python 3
-- PyQt 5.2 (QtQuick 2)
-- TuttleOFX
-
-
-Getting the source
-------------------
-
-```
-git clone git://github.com/buttleofx/ButtleOFX.git
-cd ButtleOFX
-git submodule update -i --recursive
-```
-
-Run
+Install/Run
 ---
 
-```
-export TUTTLEOFX_ROOT=/path/to/TuttleOFX/install
-export PYTHONPATH=$TUTTLEOFX_ROOT/python
-export OFX_PLUGIN_PATH=$TUTTLEOFX_ROOT/plugin
-python3 buttleApp.py
-```
-
-Errors
-------
-
-If you encounter errors to see plugins, you may need to clear the plugins cache:  
-`rm -rf ~/.tuttleofx`
-
+>see [INSTALL.md](./INSTALL.md)
 
 License
 -------
 
 Follows the TuttleOFX license.
->see [**TuttleOFX/COPYING.md**](http://github.com/tuttleofx/TuttleOFX/blob/master/COPYING.md)
+>see [**TuttleOFX/COPYING.md**]((https://raw.github.com/tuttleofx/TuttleOFX/develop/COPYING.md)
 
 
 More information 

@@ -1,4 +1,5 @@
 from PyQt5 import QtCore
+import logging
 
 
 class WorkerThread(QtCore.QThread):
@@ -14,19 +15,14 @@ class WorkerThread(QtCore.QThread):
 class ThreadPool(QtCore.QObject):
     def __init__(self):
         super(ThreadPool, self).__init__(None)
-        self._debugMode = False
         self._threadList = []
         self._mutex = QtCore.QMutex(QtCore.QMutex.Recursive)
         self._activeWorker = None  # more readable
         self._stopFlag = False
 
     def __del__(self):
-        self.debug("STOP THREAD WRAPPER", self)
+        logging.debug("STOP THREAD WRAPPER", self)
         self.stop()
-
-    def debug(self, *output):
-        if self._debugMode:
-            print(*output)
 
     def getActiveWorker(self):
         return self._activeWorker
@@ -67,22 +63,22 @@ class ThreadPool(QtCore.QObject):
             self._activeWorker = None if not self._threadList else self._threadList[0]
 
     def join(self):
-        self.debug("join threadPool")
-        self.debug("size pool", self.getPoolSize())
+        logging.debug("join threadPool")
+        logging.debug("size pool", self.getPoolSize())
 
         if self._activeWorker:
-            self.debug("worker present")
-            self.debug("size pool", self.getPoolSize())
+            logging.debug("worker present")
+            logging.debug("size pool", self.getPoolSize())
             
             self._activeWorker.wait()
-        self.debug("end join")
+        logging.debug("end join")
 
     def lock(self):
-        self.debug("Lock", self._mutex)
+        logging.debug("Lock", self._mutex)
         self._mutex.lock()
 
     def unlock(self):
-        self.debug("Unlock", self._mutex)
+        logging.debug("Unlock", self._mutex)
         self._mutex.unlock()
 
     def getPoolSize(self):

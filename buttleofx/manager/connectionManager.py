@@ -1,5 +1,9 @@
+import logging
+
 from PyQt5 import QtCore
+
 from quickmamba.patterns import Signal
+
 from buttleofx.data import ButtleDataSingleton
 from buttleofx.core.graph.connection import IdClip
 
@@ -71,7 +75,7 @@ class ConnectionManager(QtCore.QObject):
         """
         # buttleData = ButtleDataSingleton().get()
 
-        print("-----------------------------------------------------------------------")
+        logging.debug("-----------------------------------------------------------------------")
         # We split the data of the tmpClip (from mimeData) to find needed informations about this clip.
         # infosTmpClip = dataTmpClip.split("/")
 
@@ -188,7 +192,7 @@ class ConnectionManager(QtCore.QObject):
 
     @QtCore.pyqtSlot(QtCore.QObject, QtCore.QObject)
     def connectWrappers(self, clipOut, clipIn):
-        # print("connectWrappers:", clipOut, clipIn)
+        # logging.debug("connectWrappers:", clipOut, clipIn)
         id_clipOut = IdClip(clipOut.getNodeName(), clipOut.getClipName())
         id_clipIn = IdClip(clipIn.getNodeName(), clipIn.getClipName())
 

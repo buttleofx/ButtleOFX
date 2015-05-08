@@ -1,8 +1,11 @@
 import sys
 sys.path.append("../..")
 
-from PyQt5 import QtCore, QtWidgets, QtQuick
+import logging
+
 from quickmamba.models import QObjectListModel
+
+from PyQt5 import QtCore, QtWidgets, QtQuick
 
 
 class ClipWrapper(QtCore.QObject):
@@ -41,21 +44,21 @@ class MainWrapper(QtCore.QObject):
 
     @QtCore.pyqtSlot(int)
     def remove(self, index):
-        print("Python : start removing element at index %s" % index)
+        logging.debug("Python : start removing element at index %s" % index)
         self._clips.removeAt(index)
-        print("Python : end removing element at index %s" % index)
+        logging.debug("Python : end removing element at index %s" % index)
 
     @QtCore.pyqtSlot()
     def add(self):
-        print("Python : start adding element")
+        logging.debug("Python : start adding element")
         self._clips.append(ClipWrapper(self._qtParent, "ClipDynamic", 2.2) )
-        print("Python : end adding element")
+        logging.debug("Python : end adding element")
 
     @QtCore.pyqtSlot(int)
     def insertAt(self, index):
-        print("Python : start insertAt %s element" % index)
+        logging.debug("Python : start insertAt %s element" % index)
         self._clips.insert(index, ClipWrapper(self._qtParent, "ClipDynamic", 2.2) )
-        print("Python : end insertAt element")
+        logging.debug("Python : end insertAt element")
 
     modelChanged = QtCore.pyqtSignal()
     clips = QtCore.pyqtProperty(QtCore.QObject, getClips, notify=modelChanged)

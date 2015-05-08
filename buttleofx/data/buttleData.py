@@ -1,6 +1,7 @@
 import os
 import io
 import json
+import logging
 from datetime import datetime
 
 from PyQt5 import QtCore
@@ -846,7 +847,7 @@ class ButtleData(QtCore.QObject):
         pluginCache = tuttle.core().getImageEffectPluginCache()
         plugins = pluginCache.getPlugins()
         plugins = sorted(plugins, key=lambda plugin: plugin.getIdentifier().upper())
-        print("getPluginsIdentifiers => nb plugins:", len(plugins))
+        logging.debug("getPluginsIdentifiers => nb plugins:", len(plugins))
 
         pluginsIds = [plugin.getIdentifier() for plugin in plugins]
         pluginsIdsModel = QObjectListModel(self)
@@ -967,10 +968,10 @@ class ButtleData(QtCore.QObject):
         else:
             self._currentViewerNodeName = nodeWrapper.getName()
         # Emit signal
-        # print ("setCurrentViewerId buttleData.getCurrentGraphWrapper()", self.getCurrentGraphWrapper())
-        # print ("setCurrentViewerId nodeWrapper.getName()", nodeWrapper.getName())
+        # logging.debug ("setCurrentViewerId buttleData.getCurrentGraphWrapper()", self.getCurrentGraphWrapper())
+        # logging.debug ("setCurrentViewerId nodeWrapper.getName()", nodeWrapper.getName())
 
-        # print ("setCurrentViewerId self._graphBrowser._graphTuttle", self._graphBrowser._graphTuttle)
+        # logging.debug ("setCurrentViewerId self._graphBrowser._graphTuttle", self._graphBrowser._graphTuttle)
 
         self.currentViewerNodeChanged.emit()
 

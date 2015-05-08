@@ -71,13 +71,13 @@ class GLViewport_tuttleofx(GLViewport):
             self.tuttleOverlay.draw(pixelScale)
 
     def loadImage(self):
-        # print("glviewport_tuttleofx.loadImage")
+        # logging.debug("glviewport_tuttleofx.loadImage")
         self.img_data = None
         self.tex = None
 
         try:
             self.loadImage_tuttle()
-            # print('Tuttle img_data:', self.img_data)
+            # logging.debug('Tuttle img_data:', self.img_data)
         except Exception as e:
             logging.debug('Error while loading image file.\nError: "%s"' % str(e))
             self.img_data = None

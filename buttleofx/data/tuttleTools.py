@@ -1,3 +1,5 @@
+import logging
+
 from pyTuttle import tuttle
 
 
@@ -52,7 +54,7 @@ def getPluginsIdentifiersAsDictionary():
     pluginCache = tuttle.core().getImageEffectPluginCache()
     plugins = pluginCache.getPlugins()
 
-    print("nb plugins:", len(plugins))
+    logging.debug("nb plugins:", len(plugins))
     # Creation of the dictionary
     pluginsIdentifiersAsDictionary = dict()
 

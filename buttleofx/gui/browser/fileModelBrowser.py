@@ -1,4 +1,5 @@
 import os
+import logging
 
 from pyTuttle import tuttle
 
@@ -83,7 +84,7 @@ class FileItem(QtCore.QObject):
     @QtCore.pyqtSlot(result=QtCore.QSizeF)
     def getImageSize(self):
         g = tuttle.Graph()
-        node = g.createNode(tuttle.getBestReader(self._fileExtension), self._fileImg).asImageEffectNode()
+        node = g.createNode(tuttle.getReaders(self._fileExtension)[0], self._fileImg).asImageEffectNode()
         g.setup()
         timeMin = self.getFileTime().min
         g.setupAtTime(timeMin)
@@ -111,7 +112,7 @@ class FileItem(QtCore.QObject):
 
     def getFileTime(self):
         g = tuttle.Graph()
-        node = g.createNode(tuttle.getBestReader(self._fileExtension), self._filepath).asImageEffectNode()
+        node = g.createNode(tuttle.getReaders(self._fileExtension)[0], self._filepath).asImageEffectNode()
         g.setup()
         time = node.getTimeDomain()
         return time
@@ -277,6 +278,7 @@ class FileModelBrowser(QtQuick.QQuickItem):
 
     @QtCore.pyqtSlot(str)
     def updateFileItems(self, folder):
+        logging.debug('updateFileItems: ', folder)
         if not folder:
             return
 
@@ -306,6 +308,7 @@ class FileModelBrowser(QtQuick.QQuickItem):
                     # TODO: need an option for that
                     continue
                 readers = tuttle.getReaders(sPath)
+                logging.debug('SEQ readers: ', readers)
                 supported = bool(readers)
                 if not supported and self._nameFilter != "*":
                     continue
@@ -317,6 +320,7 @@ class FileModelBrowser(QtQuick.QQuickItem):
                 # TODO: need an option for that
                 continue
             readers = tuttle.getReaders(f)
+            logging.debug('FILE readers: ', readers)
             supported = bool(readers)
             if not supported and self._nameFilter != "*":
                 continue

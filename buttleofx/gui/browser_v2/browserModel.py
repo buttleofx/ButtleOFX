@@ -9,6 +9,7 @@ from buttleofx.gui.browser_v2.actions.worker import Worker
 from buttleofx.gui.browser_v2.actions.actionManager import ActionManagerSingleton
 from quickmamba.models import QObjectListModel
 from quickmamba.patterns import Singleton
+import logging
 import copy
 import re
 
@@ -35,8 +36,7 @@ class BrowserModel(QtCore.QObject):
             :param parent: Qt parent
         """
         super(BrowserModel, self).__init__(parent)
-        self._debugMode = False
-        self.debug("MODEL BUILDING")
+        logging.debug("MODEL BUILDING")
         self._currentPath = ""
         self._browserItems = []
         self._browserItemsModel = QObjectListModel(self)
@@ -50,10 +50,6 @@ class BrowserModel(QtCore.QObject):
         self._isLoading = False
         self.initSlotConnection(sync)
         self.loadData(recursivePattern)
-
-    def debug(self, *output):
-        if self._debugMode:
-            print(*output)
 
     def initSlotConnection(self, isSync):
         typeConnection = QtCore.Qt.DirectConnection
@@ -75,7 +71,7 @@ class BrowserModel(QtCore.QObject):
             Update browserItemsModel according model's current path and filter options
         """
         self._threadPool.lock()
-        self.debug("LOAD: ", self._currentPath)
+        logging.debug("LOAD: ", self._currentPath)
         self.setLoading(True)
 
         if not os.path.exists(self._currentPath):
@@ -104,9 +100,9 @@ class BrowserModel(QtCore.QObject):
 
             if recursivePattern.strip():
                 self.searchRecursively(recursivePattern, self)
-                self.debug("after recurse", self._threadPool)
+                logging.debug("after recurse", self._threadPool)
         except Exception as e:
-            print(e)
+            logging.info(e)
 
         if not self._threadPool.isStopped():
             self._threadPool.pop()
@@ -116,7 +112,7 @@ class BrowserModel(QtCore.QObject):
         self._threadPool.unlock()
 
     def pushBrowserItems(self, allItems):
-        self.debug("push data: size all items", len(allItems))
+        logging.debug("push data: size all items", len(allItems))
         for item in allItems:
             # if the process was canceled, we stop
             if self._threadPool.isStopped():
@@ -133,11 +129,11 @@ class BrowserModel(QtCore.QObject):
 
     @QtCore.pyqtSlot(object)
     def onAddItemSync(self, bItem):
-        self.debug("Add item: ", bItem.getPath())
+        logging.debug("Add item: ", bItem.getPath())
         self._browserItems.append(bItem)
         self.sortBrowserItems.emit()  # sync
         self._browserItemsModel.insert(self.searchIndexItem(bItem), bItem)
-        self.debug(self._browserItemsModel.count)
+        logging.debug(self._browserItemsModel.count)
 
     @QtCore.pyqtSlot()
     def onClearItemsSync(self):
@@ -147,7 +143,7 @@ class BrowserModel(QtCore.QObject):
 
     @QtCore.pyqtSlot(str, object)
     def searchRecursively(self, pattern, modelRequester):
-        self.debug("Start recursive search:", self._currentPath)
+        logging.debug("Start recursive search:", self._currentPath)
         if modelRequester.getThreadPool().isStopped():
             return
 
@@ -156,17 +152,17 @@ class BrowserModel(QtCore.QObject):
             listToBrowse = self._browserItems.copy()  # copy: _browserItems deleted line after
             modelRequester.clearItemsSync.emit()
         for bItem in listToBrowse:
-            self.debug("processing", bItem.getPath())
+            logging.debug("processing", bItem.getPath())
             if bItem.getName().lower().startswith(pattern.lower()):
                 bItem.moveToThread(modelRequester.thread())
                 modelRequester.addItemSync.emit(bItem)
-                self.debug("add items recurseSearch")
+                logging.debug("add items recurseSearch")
             if bItem.isFolder():
-                self.debug("folder:", bItem.getPath())
+                logging.debug("folder:", bItem.getPath())
                 recursiveModel = BrowserModel(bItem.getPath(), True, "", self._showSeq, self._hideDotFiles, self._filter)
                 recursiveModel.getThreadPool().join()
                 recursiveModel.searchRecursively(pattern.lower(), modelRequester)
-        self.debug("end recurse...", self._currentPath)
+        logging.debug("end recurse...", self._currentPath)
 
     def getFilter(self):
         return self._filter
@@ -267,7 +263,7 @@ class BrowserModel(QtCore.QObject):
 
     @QtCore.pyqtSlot(result=QtCore.QObject)
     def getItems(self):
-        self.debug("getItems()*******************************", len(self._browserItemsModel))
+        logging.debug("getItems()*******************************", len(self._browserItemsModel))
         return self._browserItemsModel
 
     @QtCore.pyqtSlot(result=str)
@@ -284,7 +280,7 @@ class BrowserModel(QtCore.QObject):
             Used into qml navbar
             :return: absolute path and dirname for each folder in the current path into a list via QObjectList
         """
-        self.debug("BEGIN SPLITTED PATH")
+        logging.debug("BEGIN SPLITTED PATH")
         tmpList = []
         absolutePath = self._currentPath
 
@@ -301,7 +297,7 @@ class BrowserModel(QtCore.QObject):
         tmpList.reverse()
         model = QObjectListModel(self)
         model.append(tmpList)
-        self.debug("END SPLITTED PATH")
+        logging.debug("END SPLITTED PATH")
         return model
 
     @QtCore.pyqtSlot(result=QtCore.QObject)

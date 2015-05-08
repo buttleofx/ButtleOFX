@@ -268,10 +268,10 @@ def main(argv, app):
     # topLevelItem = engine.rootObjects()[0]
 
     if not topLevelItem:
-        print("Errors:")
+        logging.error("Errors while loading QML file:")
 
         for error in component.errors():
-            print(error.toString())
+            logging.error(error.toString())
         return -1
     topLevelItem.setIcon(QtGui.QIcon(iconPath))
 
@@ -285,7 +285,7 @@ def main(argv, app):
 
         # Add any source file (.qml and .js by default) in current working directory
         parentDir = os.path.dirname(currentFilePath)
-        print("Watch directory:", parentDir)
+        logging.debug("Watch directory:", parentDir)
         qic.addFilesFromDirectory(parentDir, recursive=True)
 
     aFilter = EventFilter()

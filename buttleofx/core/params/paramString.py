@@ -1,4 +1,7 @@
+import logging
+
 from PyQt5 import QtCore
+
 from buttleofx.core.params import Param
 from buttleofx.core.undo_redo.manageTools import CommandManager
 from buttleofx.core.undo_redo.commands.params import CmdSetParamString
@@ -66,9 +69,9 @@ class ParamString(Param):
     def pushValue(self, newValue):
         # If it's an url, conversion to local url
         if self.getStringType() == "OfxParamStringIsFilePath":
-            print(newValue)
+            logging.debug(newValue)
             newValue = QtCore.QUrl(newValue).toLocalFile()
-            print(newValue)
+            logging.debug(newValue)
         if newValue != self.getOldValue():
             # Push the command
             cmdUpdate = CmdSetParamString(self, str(newValue))

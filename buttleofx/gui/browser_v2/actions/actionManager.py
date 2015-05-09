@@ -15,6 +15,7 @@ class ActionManager(QtCore.QObject):
 
     def __init__(self):
         super(ActionManager, self).__init__()
+        # lists of ActionWrapper
         self._waiting = Queue(maxsize=0)
         self._running = []
         self._ended = []
@@ -73,6 +74,13 @@ class ActionManager(QtCore.QObject):
         if bItem:
             return bItem
         return self.searchItemInList(self._running, path)
+
+    @QtCore.pyqtSlot()
+    def abortAll(self):
+        for a in self._waiting:
+            a.abort()
+        for a in self._running:
+            a.abort()
 
 
 class ActionManagerSingleton(Singleton):

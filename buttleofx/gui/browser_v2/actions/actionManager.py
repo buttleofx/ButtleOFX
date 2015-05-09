@@ -75,7 +75,7 @@ class ActionManager(QtCore.QObject):
 
     @QtCore.pyqtSlot(int)
     def removeEndedActionFromId(self, id):
-        for idx, el in self._ended:
+        for idx, el in enumerate(self._ended):
             if id(el) == id:
                 self._ended.pop(idx)
                 self.actionChanged.emit()
@@ -108,7 +108,6 @@ class ActionManager(QtCore.QObject):
     endedActions = QtCore.pyqtProperty(QObjectListModel, getEndedActionsModel, notify=actionChanged)
     runningActions = QtCore.pyqtProperty(QObjectListModel, getRunningActionsModel, notify=actionChanged)
     waitingActions = QtCore.pyqtProperty(QObjectListModel, getWaitingActionsModel, notify=actionChanged)
-
 
 
 class ActionManagerSingleton(Singleton):

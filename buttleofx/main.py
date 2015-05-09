@@ -11,13 +11,13 @@ from quickmamba.utils import instantcoding
 
 from buttleofx.data import Finder
 from buttleofx.gui.viewer import TimerPlayer
-from buttleofx.data import ButtleDataSingleton
-from buttleofx.event import ButtleEventSingleton
-from buttleofx.manager import ButtleManagerSingleton
-from buttleofx.core.undo_redo.manageTools import CommandManager
-from buttleofx.gui.browser_v2.browserModel import BrowserModel, BrowserModelSingleton
-from buttleofx.gui.browser_v2.actions.browserAction import BrowserActionSingleton
-from buttleofx.gui.browser_v2.actions.browserAction import ActionManagerSingleton
+from buttleofx.data import globalButtleData
+from buttleofx.event import globalButtleEvent
+from buttleofx.manager import globalButtleManager
+from buttleofx.core.undo_redo.manageTools import globalCommandManager
+from buttleofx.gui.browser_v2.browserModel import BrowserModel, globalBrowserModel
+from buttleofx.gui.browser_v2.actions.browserAction import globalBrowserAction
+from buttleofx.gui.browser_v2.actions.browserAction import globalActionManager
 
 from PyQt5 import QtCore, QtGui, QtQml, QtQuick, QtWidgets
 
@@ -77,9 +77,6 @@ signal.signal(signal.SIGINT, signal.SIG_DFL)
 
 class EventFilter(QtCore.QObject):
     def eventFilter(self, receiver, event):
-        buttleData = ButtleDataSingleton().get()
-        # browser = BrowserModelSingleton.get()
-
         if event.type() == QtCore.QEvent.KeyPress:
             # If alt f4 event ignored
             if event.modifiers() == QtCore.Qt.AltModifier and event.key() == QtCore.Qt.Key_F4:
@@ -88,7 +85,7 @@ class EventFilter(QtCore.QObject):
             return super(EventFilter, self).eventFilter(receiver, event)
         if not isinstance(receiver, QtQuick.QQuickWindow) or not receiver.title() == "ButtleOFX":
             return False
-        if not buttleData.graphCanBeSaved:
+        if not globalButtleData.graphCanBeSaved:
             return False
 
         msgBox = QtWidgets.QMessageBox()
@@ -102,9 +99,9 @@ class EventFilter(QtCore.QObject):
         ret = msgBox.exec_()
 
         if ret == QtWidgets.QMessageBox.Save:
-            if buttleData.urlOfFileToSave:
+            if globalButtleData.urlOfFileToSave:
                 # Save on the already existing file
-                buttleData.saveData(buttleData.urlOfFileToSave)
+                globalButtleData.saveData(globalButtleData.urlOfFileToSave)
                 # Close the application
                 return super(EventFilter, self).eventFilter(receiver, event)
 
@@ -113,8 +110,8 @@ class EventFilter(QtCore.QObject):
             fileToSave = dialog.getSaveFileName(None, "Save the graph", os.path.expanduser("~"))[0]
             if not (fileToSave.endswith(".bofx")):
                 fileToSave += ".bofx"
-            buttleData.urlOfFileToSave = fileToSave
-            buttleData.saveData(fileToSave)
+            globalButtleData.urlOfFileToSave = fileToSave
+            globalButtleData.saveData(fileToSave)
             # Close the application
             return super(EventFilter, self).eventFilter(receiver, event)
 
@@ -215,7 +212,7 @@ def main(argv, app):
     QtQml.qmlRegisterType(GLViewportImpl, "Viewport", 1, 0, "GLViewport")
 
     # Init undo_redo contexts
-    cmdManager = CommandManager()
+    cmdManager = globalCommandManager
     cmdManager.setActive()
     cmdManager.clean()
 
@@ -225,14 +222,9 @@ def main(argv, app):
     engine.addImageProvider("buttleofx", ImageProvider())
 
     # Data
-    buttleData = ButtleDataSingleton().get().init(engine, currentFilePath)
+    globalButtleData.init(engine, currentFilePath)
     # Manager
-    buttleManager = ButtleManagerSingleton().get().init()
-    # Event
-    buttleEvent = ButtleEventSingleton().get()
-    # browserModel
-    browser = BrowserModelSingleton.get()
-    browserAction = BrowserActionSingleton.get()
+    buttleManager = globalButtleManager.init()
 
     parser = argparse.ArgumentParser(description=('A command line to execute ButtleOFX, an opensource compositing '
                                                   'software. If you pass a folder as an argument, ButtleOFX will '
@@ -240,17 +232,16 @@ def main(argv, app):
     parser.add_argument('folder', nargs='?', help='Folder to browse')
     args = parser.parse_args()
 
-    if args.folder:
-        browser.setCurrentPath(os.path.abspath(args.folder))
+    globalBrowserModel.setCurrentPath(os.path.abspath(args.folder) if args.folder else globalBrowserModel.getHomePath())
 
     # Expose data to QML
     rc = engine.rootContext()
     rc.setContextProperty("_buttleApp", app)
-    rc.setContextProperty("_buttleData", buttleData)
+    rc.setContextProperty("_buttleData", globalButtleData)
     rc.setContextProperty("_buttleManager", buttleManager)
-    rc.setContextProperty("_buttleEvent", buttleEvent)
-    rc.setContextProperty("_browser", browser)
-    rc.setContextProperty("_browserAction", browserAction)
+    rc.setContextProperty("_buttleEvent", globalButtleEvent)
+    rc.setContextProperty("_browser", globalBrowserModel)
+    rc.setContextProperty("_browserAction", globalBrowserAction)
 
     iconPath = os.path.join(currentFilePath, "../blackMosquito.png")
     # iconPath = QtCore.QUrl("file:///" + iconPath)
@@ -285,16 +276,15 @@ def main(argv, app):
 
         # Add any source file (.qml and .js by default) in current working directory
         parentDir = os.path.dirname(currentFilePath)
-        logging.debug("Watch directory:", parentDir)
+        logging.debug("Watch directory: %s" % parentDir)
         qic.addFilesFromDirectory(parentDir, recursive=True)
 
     aFilter = EventFilter()
     app.installEventFilter(aFilter)
 
-    topLevelItem.show()
+    with globalActionManager:
+        topLevelItem.show()
 
-    exitCode = app.exec_()
-    # clean everything
-    ActionManagerSingleton.get().stopWorkers()
+        exitCode = app.exec_()
 
-    sys.exit(exitCode)
+        sys.exit(exitCode)

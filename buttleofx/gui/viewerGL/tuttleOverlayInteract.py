@@ -7,7 +7,7 @@ class TuttleOverlayInteract(tuttle.OverlayInteract):
 
     def __init__(self, glviewport, graph, node):
         logging.debug("TuttleOverlayInteract.__init__")
-        logging.debug("TuttleOverlayInteract node:", node.asImageEffectNode())
+        logging.debug("TuttleOverlayInteract node: %s" % node.asImageEffectNode())
 
         super(TuttleOverlayInteract, self).__init__(graph, node.asImageEffectNode())
         self.glviewport = glviewport

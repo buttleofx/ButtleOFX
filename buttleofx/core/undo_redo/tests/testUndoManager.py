@@ -2,12 +2,12 @@ from Vec2d import Vec2d
 from Vec2d.commands import CmdChangeVec2d
 from Vec2d.commands import CmdAdditionVec2d
 
-from core.undo_redo.ManageTools import CommandManager
+from core.undo_redo.ManageTools import globalCommandManager
 from core.undo_redo.ManageTools import GroupUndoableCommands
 
 
 def testVec2DCmds():
-    cmdManager = CommandManager.CommandManager()
+    cmdManager = globalCommandManager.globalCommandManager
     cmdManager.setActive()
     cmdManager.clean()
 

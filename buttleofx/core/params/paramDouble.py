@@ -1,5 +1,5 @@
 from buttleofx.core.params import Param
-from buttleofx.core.undo_redo.manageTools import CommandManager
+from buttleofx.core.undo_redo.manageTools import globalCommandManager
 from buttleofx.core.undo_redo.commands.params import CmdSetParamDouble
 
 
@@ -67,5 +67,5 @@ class ParamDouble(Param):
         if newValue != self.getOldValue():
             # Push the command
             cmdUpdate = CmdSetParamDouble(self, float(newValue))
-            cmdManager = CommandManager()
+            cmdManager = globalCommandManager
             cmdManager.push(cmdUpdate)

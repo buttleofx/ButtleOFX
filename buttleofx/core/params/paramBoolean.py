@@ -1,5 +1,5 @@
 from buttleofx.core.params import Param
-from buttleofx.core.undo_redo.manageTools import CommandManager
+from buttleofx.core.undo_redo.manageTools import globalCommandManager
 from buttleofx.core.undo_redo.commands.params import CmdSetParamBoolean
 
 
@@ -50,5 +50,5 @@ class ParamBoolean(Param):
     def pushValue(self, value):
         # Push the command
         cmdUpdate = CmdSetParamBoolean(self, value)
-        cmdManager = CommandManager()
+        cmdManager = globalCommandManager
         cmdManager.push(cmdUpdate)

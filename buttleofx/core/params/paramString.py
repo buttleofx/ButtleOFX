@@ -3,7 +3,7 @@ import logging
 from PyQt5 import QtCore
 
 from buttleofx.core.params import Param
-from buttleofx.core.undo_redo.manageTools import CommandManager
+from buttleofx.core.undo_redo.manageTools import globalCommandManager
 from buttleofx.core.undo_redo.commands.params import CmdSetParamString
 
 
@@ -75,5 +75,5 @@ class ParamString(Param):
         if newValue != self.getOldValue():
             # Push the command
             cmdUpdate = CmdSetParamString(self, str(newValue))
-            cmdManager = CommandManager()
+            cmdManager = globalCommandManager
             cmdManager.push(cmdUpdate)

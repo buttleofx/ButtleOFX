@@ -278,7 +278,7 @@ class FileModelBrowser(QtQuick.QQuickItem):
 
     @QtCore.pyqtSlot(str)
     def updateFileItems(self, folder):
-        logging.debug('updateFileItems: ', folder)
+        logging.debug('updateFileItems: %s' % folder)
         if not folder:
             return
 
@@ -308,7 +308,7 @@ class FileModelBrowser(QtQuick.QQuickItem):
                     # TODO: need an option for that
                     continue
                 readers = tuttle.getReaders(sPath)
-                logging.debug('SEQ readers: ', readers)
+                logging.debug('SEQ readers: %s' % readers)
                 supported = bool(readers)
                 if not supported and self._nameFilter != "*":
                     continue
@@ -320,7 +320,7 @@ class FileModelBrowser(QtQuick.QQuickItem):
                 # TODO: need an option for that
                 continue
             readers = tuttle.getReaders(f)
-            logging.debug('FILE readers: ', readers)
+            logging.debug('FILE readers: %s' % readers)
             supported = bool(readers)
             if not supported and self._nameFilter != "*":
                 continue
@@ -363,6 +363,7 @@ class FileModelBrowser(QtQuick.QQuickItem):
         self.nameFilterChange.emit()
 
     def setFolder(self, folder):
+        logging.debug('fileModelBrowser.setFolder("%s")' % folder)
         self._folder = folder
         self.updateFileItems(folder)
         self.folderChanged.emit()

@@ -3,7 +3,7 @@ import os
 from buttleofx.datas import ButtleData
 from PyQt5 import QtCore, QtWidgets, QtQuick, QtQml
 from buttleofx.gui.graph.connection import LineItem
-from buttleofx.core.undo_redo.manageTools import CommandManager
+from buttleofx.core.undo_redo.manageTools import globalCommandManager
 
 
 currentFilePath = os.path.dirname(os.path.abspath(__file__))
@@ -17,15 +17,15 @@ if __name__ == '__main__':
     rc = view.rootContext()
 
     # Create undo-redo context
-    cmdManager = CommandManager()
+    cmdManager = globalCommandManager
     cmdManager.setActive()
     cmdManager.clean()
 
     # Data
-    buttleData = ButtleData().init(view)
+    globalButtleData.init(view)
 
     # Expose to QML
-    rc.setContextProperty("_buttleData", buttleData)
+    rc.setContextProperty("_buttleData", globalButtleData)
 
     view.setWindowTitle("Graph editor")
     view.setSource(QtCore.QUrl(os.path.join(currentFilePath, "qml/GraphEditor.qml")))

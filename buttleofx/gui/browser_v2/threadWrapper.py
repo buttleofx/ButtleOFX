@@ -12,13 +12,15 @@ class WorkerThread(QtCore.QThread):
         self._target(*self._param)
 
 
-class ThreadPool(QtCore.QObject):
+class ThreadWrapper(QtCore.QObject):
     def __init__(self):
-        super(ThreadPool, self).__init__(None)
+        logging.debug("ThreadWrapper begin constructor")
+        super(ThreadWrapper, self).__init__(None)
         self._threadList = []
         self._mutex = QtCore.QMutex(QtCore.QMutex.Recursive)
         self._activeWorker = None  # more readable
         self._stopFlag = False
+        logging.debug("ThreadWrapper end constructor")
 
     def __del__(self):
         logging.debug("STOP THREAD WRAPPER", self)
@@ -64,22 +66,14 @@ class ThreadPool(QtCore.QObject):
 
     def join(self):
         logging.debug("join threadPool")
-        logging.debug("size pool", self.getPoolSize())
+        logging.debug("size pool %s" % self.getPoolSize())
 
         if self._activeWorker:
             logging.debug("worker present")
-            logging.debug("size pool", self.getPoolSize())
+            logging.debug("size pool %s" % self.getPoolSize())
             
             self._activeWorker.wait()
         logging.debug("end join")
-
-    def lock(self):
-        logging.debug("Lock", self._mutex)
-        self._mutex.lock()
-
-    def unlock(self):
-        logging.debug("Unlock", self._mutex)
-        self._mutex.unlock()
 
     def getPoolSize(self):
         return len(self._threadList)

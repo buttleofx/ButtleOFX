@@ -62,7 +62,7 @@ class Copy(ActionInterface):
             os.remove(os.path.join(destPath, browserItemName))
 
         if browserItem.isFolder():
-            shutil.rmtree(destPath)
+            shutil.rmtree(os.path.join(destPath, browserItemName))
 
         if browserItem.isSequence():
             for f in self._framesPaths:

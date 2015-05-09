@@ -356,23 +356,19 @@ class BrowserModel(QtCore.QObject):
 
     @QtCore.pyqtSlot(int)
     def selectItemTo(self, index):
-        print(index)
         if not len(self._browserItems) or index < 0 or index > len(self._browserItems)-1:
             return
+        
         firstSelected = 0
         for i, bItem in enumerate(self._browserItems):
             if bItem.getSelected():
                 firstSelected = i
                 break
 
-        crescentLoop = 1
-        index += 1
-
         if firstSelected > index:
-            index -= 2
-            crescentLoop = -1
+            firstSelected, index = index, firstSelected
 
-        for i in range(firstSelected, index, crescentLoop):
+        for i in range(firstSelected, index+1):
             self._browserItems[i].setSelected(True)
 
     # ############################################# Data exposed to QML ############################################# #

@@ -6,6 +6,8 @@
 *.flc
 \#*\#
 .\#*
+# xemacs
+*.flc
 # MacOS
 .DS_Store
 # Windows
@@ -78,3 +80,9 @@ buttleofx/buttle_perso.creator.user
 buttleofx/buttle_perso.files
 buttleofx/buttle_perso.includes
 fontconfig/
+
+ButtleOFX.config
+ButtleOFX.creator
+ButtleOFX.creator.user
+ButtleOFX.files
+ButtleOFX.includes

@@ -83,10 +83,15 @@ class Param:
             Convert the param to a dictionary of his representation.
             We do not save param which had not been changed.
         """
-        if self.getValue() == self.getDefaultValue():
+        try:
+            value = self.getValue()
+            if value == self.getDefaultValue():
+                return None
+            param = {
+                "name": self.getName(),
+                "value": value
+            }
+            return param
+        except:
+            print("WARNING: param '%s' not saved." % self.getName())
             return None
-        param = {
-            "name": self.getName(),
-            "value": self.getValue()
-        }
-        return param

@@ -113,3 +113,14 @@ More information
 **OpenFX**
 >- website: [http://openeffects.org](http://openeffects.org)
 >- github: [http://github.com/ofxa/openfx](http://github.com/ofxa/openfx)
+
+QuickMamba
+
+QtQuick tools
+
+
+Links
+-----
+[google style guide](http://google-styleguide.googlecode.com/svn/trunk/pyguide.html)
+
+

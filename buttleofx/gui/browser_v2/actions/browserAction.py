@@ -47,7 +47,7 @@ class BrowserAction(QtCore.QObject):
         listActions = []
         for bItem in self._browserModel.getItems():
             if bItem.getSelected():
-                listActions.append(Copy(bItem, None))
+                listActions.append(Copy(bItem))
         self.pushCache(listActions)
         self.cacheChanged.emit()
 

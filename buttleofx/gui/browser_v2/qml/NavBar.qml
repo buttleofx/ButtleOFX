@@ -196,7 +196,7 @@ Rectangle {
                                 var filter=root.model.currentPath.substr(lastSlash+1)
                                 root.model.currentPath = root.model.currentPath.substr(0,lastSlash)
                                 root.model.filter =  filter
-                                texteditPath.text = root.model.currentPath + "/" + filter //force good Behavior on display
+                                root.model.currentPath += "/" + filter
                             }
                             else
                                 root.model.filter = "*"
@@ -261,12 +261,9 @@ Rectangle {
 
                             if(event.key == Qt.Key_Enter || event.key == Qt.Key_Return || event.key == Qt.Key_Down){
                                 texteditPath.handleFilter()
-                                autoCompleteList.handleInteraction() //if isEnterTriggered, handled here
+                                if(autoCompleteList.items.length > 1)
+                                    autoCompleteList.show()
                             }
-
-                            //enter key is now not triggered at the end of release if was performed
-                            if(autoCompleteList.isEnterTriggered)
-                                autoCompleteList.isEnterTriggered = false
                         }
 
                         onFocusChanged: {
@@ -279,21 +276,16 @@ Rectangle {
                         Menu {
                             id: autoCompleteList
                             __visualItem: textEditContainer       //simulate container for popup
-                            property bool isEnterTriggered: false /*solution when release enter on suggestion:
-                                                                    avoid trigger && RECALL trigger of first element if only one folder..
-                                                                    (yes, it goes on onReleased even if we're not in textinput)*/
 
                             Instantiator{
                                 model:root.model.listFolderNavBar
 
                                 MenuItem {
-
                                     id: textComponent
                                     text: model.object.name
                                     property var path: model.object.path
+
                                     onTriggered: {
-                                        console.log("triggered: " + textComponent.path )
-                                        autoCompleteList.isEnterTriggered = true
                                         pushVisitedFolder(textComponent.path)
                                         graySuggestion.clear()
                                         root.model.currentPath = textComponent.path+"/"
@@ -304,18 +296,10 @@ Rectangle {
                             }
 
                             function handleInteraction(){
-                                graySuggestion.clear()
-
-                                if(autoCompleteList.items.length === 1){
-                                    if(autoCompleteList.isEnterTriggered)
-                                        graySuggestion.fill()
-                                    else
-                                        autoCompleteList.items[0].trigger()
-                                }
+                                if(autoCompleteList.items.length === 1)
+                                      autoCompleteList.items[0].trigger()
                                 else
                                     autoCompleteList.show()
-
-                                graySuggestion.fill()
                             }
 
                             function show() {
@@ -326,7 +310,7 @@ Rectangle {
                                 var positionToShow = Qt.vector2d(0, texteditPath.height)
                                 positionToShow.x = texteditPath.positionToRectangle(indexPosition).x
                                 this.__popup(positionToShow.x+12, positionToShow.y) //12 magic
-                            }
+                                }
                         }
                     }
                 }
@@ -379,6 +363,30 @@ Rectangle {
                         searchEdit.forceActiveFocus()
                     }
 
+                }
+
+                Image {
+                    id: modelLoading
+
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    height: 50
+                    width: parent.width
+
+                    source: "img/refresh_hover.png"
+                    sourceSize.width: 20
+                    sourceSize.height: 20
+                    asynchronous: true
+
+                    fillMode: Image.Pad
+                    visible: model.loading
+
+                    NumberAnimation on rotation {
+                        from: 0
+                        to: 360
+                        running: modelLoading.visible
+                        loops: Animation.Infinite
+                        duration: 1000
+                    }
                 }
 
 //                Button {
@@ -480,8 +488,7 @@ Rectangle {
                                 }
                             }
                         onAccepted: {
-                            if(text.trim())
-                                _browser.doSearchRecursive(text.trim())
+                            _browser.loadData(text.trim())
                         }
 
                         onFocusChanged: {

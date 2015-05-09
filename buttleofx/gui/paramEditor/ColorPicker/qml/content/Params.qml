@@ -1,5 +1,6 @@
 import QtQuick 2.0
 import QtQuick.Layouts 1.1
+import QtQuick.Controls 1.1
 import "../." // Qt-BUG import qmldir to use config singleton
 
 Rectangle {
@@ -8,17 +9,13 @@ Rectangle {
     border.color: Config.borderColor
     radius: Config.radius
     color: Config.backgroundColor
+
     signal updatePrecision(var precision)
     signal entered()
     signal exited()
 
-    property int precision : precisionBox.value
-    MouseArea {
-        anchors.fill: root
-        hoverEnabled: true
-        onEntered: root.entered()
-        onExited: root.exited()
-    }
+    property int precision: precisionBox.value
+    property bool isZeroOneRange: rangeValue.currentText == "0-1"
 
     ColumnLayout {
         anchors.fill: parent
@@ -28,12 +25,13 @@ Rectangle {
             id:precisionBox
             Layout.fillWidth: true
             Layout.maximumHeight: 40
-            min: 1
+            min:0
             max: 15
             decimals: 0
-            value:5
+            value: 5
             caption : "Precision : "
 
+            textInput.readOnly: !root.isZeroOneRange
             textInput.font.family: Config.font
             textInput.font.pixelSize: Config.textSize
             textInput.color: Config.textColor
@@ -44,10 +42,33 @@ Rectangle {
 
             onUpdatedValue: precisionBox.value = newValue
         }
+
+        RowLayout {
+
+            Text {
+                text: "Value : "
+                font.family: Config.font
+                font.pixelSize: Config.textSize
+                color: Config.textColor
+            }
+
+            ComboBox {
+                id: rangeValue
+                model: ListModel {
+                    ListElement { text: "0-1" }
+                    ListElement { text: "0-255" }
+                }
+                // Hack because exit root area is triggered when enter on this comboBox
+                onHoveredChanged: root.entered()
+
+                onCurrentTextChanged: {
+                    if (currentText == "0-1")
+                        return precisionBox.value = 5;
+                    else
+                        // 0-255 int range need no more precision than 3 digits for final RGB value
+                        return precisionBox.value = 3;
+                }
+            }
+        }
     }
-
-
-
-
-
 }

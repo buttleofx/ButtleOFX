@@ -1,14 +1,19 @@
 import QtQuick 2.0
 import QtQuick.Layouts 1.1
+import "mathUtils.js" as MathUtils
 import "../." // Qt-BUG import qmldir to use config singleton
 
 RowLayout
 {
     id: root
 
+    property real min : 0
+    property real max : 1
+    property int precision
+    // Value should always be in [0 - 1]
     property real value
+
     property string caption
-    property int precision    
     property vector4d fromColor: Qt.vector4d(0, 0, 0, 1)
     property vector4d toColor: Qt.vector4d(0, 0, 0, 1)
     // Or for other special gradient use :
@@ -23,13 +28,14 @@ RowLayout
     NumberBox {
         id: numberbox
         Layout.fillHeight: true
-        Layout.maximumWidth: (decimals + 2) * textInput.font.pixelSize + 15
-        Layout.minimumWidth: decimals / 2 * textInput.font.pixelSize + 15
+        Layout.maximumWidth: (decimals + 4) * textInput.font.pixelSize + 15
+        Layout.minimumWidth: (decimals + 4) / 2 * textInput.font.pixelSize + 15
 
-        value: root.value
-        decimals: root.precision
-        max: 1
-        min: 0
+        value: MathUtils.clampAndProject(root.value, 0, 1, root.min, root.max)
+        //If interval is not 0-1 so no precision needed
+        decimals: root.max > 1 ? 0 : root.precision
+        max: root.max
+        min: root.min
         caption: root.caption
         captionWidth: Config.textSize
 
@@ -42,7 +48,7 @@ RowLayout
         textInput.color: Config.textColor
         textInput.horizontalAlignment: TextInput.AlignHCenter
 
-        onUpdatedValue: root.updatedValue(newValue);
+        onUpdatedValue: root.updatedValue(MathUtils.clampAndProject(newValue, root.min, root.max, 0, 1));
 
         onAccepted: {
             root.accepted();

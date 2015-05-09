@@ -70,7 +70,6 @@ class ActionWrapper(QtCore.QObject):
     def getNbTotalActions(self):
         return len(self._actions)
 
-    @QtCore.pyqtSlot(result=int)
     def getIdObject(self):
         return id(self)
 

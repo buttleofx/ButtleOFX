@@ -45,8 +45,6 @@ class ActionManager(QtCore.QObject):
         self._running.clear()
         self.actionChanged.emit()
 
-    # ################################### Methods exposed also to QML ############################### #
-
     def getEndedActions(self):
         return self._ended
 
@@ -61,6 +59,8 @@ class ActionManager(QtCore.QObject):
         model.append(list)
         return model
 
+    # ################################### Methods exposed also to QML ############################### #
+
     @QtCore.pyqtSlot(result=QtCore.QObject)
     def getEndedActionsModel(self):
         return self.getModelFromList(self._ended)
@@ -72,7 +72,7 @@ class ActionManager(QtCore.QObject):
     @QtCore.pyqtSlot(result=QtCore.QObject)
     def getWaitingActionsModel(self):
         return self.getModelFromList(self._waiting)
-    
+
 
     def searchItemInList(self, listBrowse, path):
         for actionWrapper in list(listBrowse):
@@ -97,6 +97,11 @@ class ActionManager(QtCore.QObject):
             a.abort()
         for a in self._running:
             a.abort()
+
+    endedActions = QtCore.pyqtProperty(str, getEndedActionsModel, notify=actionChanged)
+    runningActions = QtCore.pyqtProperty(str, getRunningActionsModel, notify=actionChanged)
+    waitingActions = QtCore.pyqtProperty(str, getWaitingActionsModel, notify=actionChanged)
+
 
 
 class ActionManagerSingleton(Singleton):

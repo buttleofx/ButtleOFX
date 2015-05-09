@@ -341,6 +341,36 @@ Rectangle {
                 }
 
                 Button {
+                    id: action_button
+                    property bool isOpen: false
+
+                    Layout.preferredWidth: 20
+                    Layout.preferredHeight: 20
+                    Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+
+                    tooltip: "Actions"
+
+                    iconSource: "img/listview_hover.png"
+
+                    style:
+                    ButtonStyle {
+                        background: Rectangle {
+                            anchors.fill: parent
+                            color: "transparent"
+                        }
+                    }
+
+                    onClicked: {
+                        if (!isOpen) {
+                            var component = Qt.createComponent("ActionManager.qml")
+                            var window    = component.createObject(root)
+                            window.show()
+                            isOpen = true
+                        }
+                    }
+                }
+
+                Button {
                     id: search
                     Layout.preferredWidth: 30
                     Layout.preferredHeight: 30

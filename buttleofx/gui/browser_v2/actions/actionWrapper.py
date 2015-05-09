@@ -36,6 +36,10 @@ class ActionWrapper(QtCore.QObject):
     def getNbProcessed(self):
         return self._nbProcessed
 
+    @QtCore.pyqtSlot(result=str)
+    def getName(self):
+        return self._actions[0].__class__.__name__ if self._actions and len(self._actions) > 0 else "Action"
+
     @QtCore.pyqtSlot()
     def emitProgressChanged(self):
         self.progressChanged.emit()

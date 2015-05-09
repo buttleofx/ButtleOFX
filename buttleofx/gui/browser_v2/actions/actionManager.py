@@ -1,5 +1,6 @@
 from buttleofx.gui.browser_v2.actions.worker import Worker
 from quickmamba.patterns import Singleton
+from quickmamba.models import QObjectListModel
 from PyQt5 import QtCore
 from queue import Queue
 
@@ -46,17 +47,32 @@ class ActionManager(QtCore.QObject):
 
     # ################################### Methods exposed also to QML ############################### #
 
-    @QtCore.pyqtSlot(result=list)
     def getEndedActions(self):
         return self._ended
 
-    @QtCore.pyqtSlot(result=list)
     def getRunningActions(self):
         return self._running
 
-    @QtCore.pyqtSlot(result=list)
     def getWaitingActions(self):
         return self._waiting
+
+    def getModelFromList(self, list):
+        model = QObjectListModel(self)
+        model.append(list)
+        return model
+
+    @QtCore.pyqtSlot(result=QtCore.QObject)
+    def getEndedActionsModel(self):
+        return self.getModelFromList(self._ended)
+
+    @QtCore.pyqtSlot(result=QtCore.QObject)
+    def getRunningActionsModel(self):
+        return self.getModelFromList(self._running)
+
+    @QtCore.pyqtSlot(result=QtCore.QObject)
+    def getWaitingActionsModel(self):
+        return self.getModelFromList(self._waiting)
+    
 
     def searchItemInList(self, listBrowse, path):
         for actionWrapper in list(listBrowse):

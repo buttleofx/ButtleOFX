@@ -33,8 +33,11 @@ Window {
                         Layout.preferredHeight: parent.height
                         color: "#FF0000"
 
+
                         Text {
                             id: task_name
+                            anchors.fill: parent
+                            verticalAlignment: Text.AlignVCenter
                             text: qsTr("Action titre")
                         }
                     }
@@ -108,16 +111,12 @@ Window {
             }
         }
 
-//        Item {
-//            id: action
+        ListView {
+            anchors.fill: parent
 
-
-
-//        }
-
-//        ListView {
-//            anchors.fill: parent
-//        }
+            model: _actionManager.getEndedActions()
+            delegate: action
+        }
     }
 
     onClosing:{

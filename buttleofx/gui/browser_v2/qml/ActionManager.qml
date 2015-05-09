@@ -68,7 +68,7 @@ Window {
 
                     tooltip: "Delete task from history"
 
-                    iconSource:"img/refresh_hover.png"
+                    iconSource:"img/del.png"
 
                     style:
                     ButtonStyle {
@@ -131,7 +131,7 @@ Window {
 
                         tooltip: "Abort and reverse task"
 
-                        iconSource:"img/refresh_hover.png"
+                        iconSource:"img/abort.png"
 
                         style:
                         ButtonStyle {
@@ -216,6 +216,7 @@ Window {
                 id: actions_running
                 Layout.fillWidth: true
                 Layout.preferredHeight: count * 60
+                verticalLayoutDirection: ListView.BottomToTop
 
                 model: _actionManager.runningActions
                 delegate: action_running
@@ -225,6 +226,7 @@ Window {
                 id: actions_ended
                 Layout.fillWidth: true
                 Layout.preferredHeight: count * 40
+                verticalLayoutDirection: ListView.BottomToTop
 
                 model: _actionManager.endedActions
                 delegate: action_ended

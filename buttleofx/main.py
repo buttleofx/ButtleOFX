@@ -1,8 +1,33 @@
 import os
 import sys
+import logging
+
+DEV_MODE = os.environ.get("BUTTLEOFX_DEV", False)
+
+logFormat = 'Buttle - %(levelname)s - %(message)s'
+if DEV_MODE:
+    # Print in console
+    logging.basicConfig(format=logFormat, level=logging.DEBUG)
+else:
+    # Need to set a global level, to allow to use
+    # multiple log levels in multiple output handlers.
+    logging.getLogger().setLevel(logging.DEBUG)
+
+    streamHandler = logging.StreamHandler()
+    streamHandler.setLevel(logging.WARNING)
+    fileFormatter = logging.Formatter(logFormat)
+    streamHandler.setFormatter(fileFormatter)
+    logging.getLogger().addHandler(streamHandler)
+
+    fileHandler = logging.FileHandler('buttle.log')
+    fileHandler.setLevel(logging.DEBUG)
+    fileFormatter = logging.Formatter('Buttle - %(levelname)s - %(asctime)-15s - %(message)s')
+    fileHandler.setFormatter(fileFormatter)
+    logging.getLogger().addHandler(fileHandler)
+
+
 import numpy
 import signal
-import logging
 import argparse
 
 from pyTuttle import tuttle
@@ -20,28 +45,6 @@ from buttleofx.gui.browser_v2.actions.browserAction import globalBrowserAction
 from buttleofx.gui.browser_v2.actions.browserAction import globalActionManager
 
 from PyQt5 import QtCore, QtGui, QtQml, QtQuick, QtWidgets
-
-# PyCheck
-# import pychecker.checker
-
-# Fix throw to display our info
-# From the lowest to the highest level : DEBUG - INFO - WARNING - ERROR - CRITICAL (default = WARNING)
-# To use it:
-# logging.debug("debug message")
-# logging.info("info message")
-# logging.warning("warning message")
-# logging.error("error message")
-# logging.critical("critical message")
-
-DEV_MODE = os.environ.get("BUTTLEOFX_DEV", False)
-
-if DEV_MODE:
-    # Print in console
-    logging.basicConfig(format='Buttle - %(levelname)s - %(message)s', level=logging.DEBUG)
-else:
-    # Print in a file
-    logging.basicConfig(format='Buttle - %(levelname)s - %(asctime)-15s - %(message)s',
-                        filename='console.log', filemode='w', level=logging.DEBUG)
 
 # For glViewport
 tuttleofx_installed = False

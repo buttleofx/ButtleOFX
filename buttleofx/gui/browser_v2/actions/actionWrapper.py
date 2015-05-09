@@ -63,8 +63,12 @@ class ActionWrapper(QtCore.QObject):
         for action in self._actions:
             action.getProgressSignal().connect(self.emitProgressChanged)
 
+    def getNbTotalActions(self):
+        return len(self._actions)
+
     # ################################## Data exposed to QML ###################################### #
 
     aborted = QtCore.pyqtProperty(bool, isAborted, setAbort, notify=abortNotified)
     progress = QtCore.pyqtProperty(float, getProgress, notify=progressChanged)
     nbProcessed = QtCore.pyqtProperty(int, getNbProcessed, notify=nbProcessedChanged)
+    nbTotalActions = QtCore.pyqtProperty(int, getNbTotalActions)

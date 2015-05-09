@@ -233,6 +233,7 @@ def main(argv, app):
     # browserModel
     browser = BrowserModelSingleton.get()
     browserAction = BrowserActionSingleton.get()
+    actionManager = ActionManagerSingleton.get()
 
     parser = argparse.ArgumentParser(description=('A command line to execute ButtleOFX, an opensource compositing '
                                                   'software. If you pass a folder as an argument, ButtleOFX will '
@@ -251,6 +252,7 @@ def main(argv, app):
     rc.setContextProperty("_buttleEvent", buttleEvent)
     rc.setContextProperty("_browser", browser)
     rc.setContextProperty("_browserAction", browserAction)
+    rc.setContextProperty("_actionManager", actionManager)
 
     iconPath = os.path.join(currentFilePath, "../blackMosquito.png")
     # iconPath = QtCore.QUrl("file:///" + iconPath)

@@ -6,7 +6,7 @@ class ActionInterface(QtCore.QObject):
         Interface which determines the template comportment for an action on a BrowserItem
         execute and revert methods must be implemented.
     """
-    _progressChanged = QtCore.pyqtSignal()  # used to reporting in actionWrapper(via connectProgression)
+    progressChanged = QtCore.pyqtSignal()  # used to reporting in actionWrapper(via connectProgression)
 
     def __init__(self, browserItem):
         super(ActionInterface, self).__init__()
@@ -51,7 +51,7 @@ class ActionInterface(QtCore.QObject):
         self.execute()
         self.end()
         self._progress = 1
-        self._progressChanged.emit()
+        self.progressChanged.emit()
 
     def getBrowserItem(self):
         return self._browserItem
@@ -63,4 +63,4 @@ class ActionInterface(QtCore.QObject):
         return self._progress
 
     def getProgressSignal(self):
-        return self._progressChanged
+        return self.progressChanged

@@ -1,7 +1,8 @@
-import threading
+from PyQt5 import QtCore
 
 
-class Worker(threading.Thread):
+
+class Worker(QtCore.QThread):
     """
         Specific class for ActionManager. Can't be used somewhere else.
         It's not generic.
@@ -9,7 +10,7 @@ class Worker(threading.Thread):
     """
     isWaiting = False
     isDestroyed = False
-    lockInProgress = threading.Lock()
+    mutexInProgress = QtCore.QMutex(QtCore.QMutex.Recursive)
 
     def __init__(self, queue, inProgress, done, notify):
         super(Worker, self).__init__()
@@ -37,11 +38,11 @@ class Worker(threading.Thread):
         Worker.lockWhileWaiting()
 
         # search in progressList the index to push into doneList
-        Worker.lockInProgress.acquire()
+        Worker.mutexInProgress.lock()
         indexTaskDone = self.getIndexFromList(self._inProgress, id(actionWrapper))
         if indexTaskDone > -1:
             self._done.append(self._inProgress.pop(indexTaskDone))
-        Worker.lockInProgress.release()
+        Worker.mutexInProgress.unlock()
 
     def getIndexFromList(self, list, idItem):
         for idx, el in enumerate(list):

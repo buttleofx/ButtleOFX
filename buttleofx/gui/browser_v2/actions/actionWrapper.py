@@ -70,6 +70,11 @@ class ActionWrapper(QtCore.QObject):
     def getNbTotalActions(self):
         return len(self._actions)
 
+    @QtCore.pyqtSlot(result=int)
+    def getIdObject(self):
+        return id(self)
+
+
     # ################################## Data exposed to QML ###################################### #
 
     aborted = QtCore.pyqtProperty(bool, isAborted, setAbort, notify=abortNotified)

@@ -73,6 +73,13 @@ class ActionManager(QtCore.QObject):
     def getWaitingActionsModel(self):
         return self.getModelFromList(self._waiting)
 
+    @QtCore.pyqtSlot(int)
+    def removeEndedActionFromId(self, id):
+        for idx, el in self._ended:
+            if id(el) == id:
+                self._ended.pop(idx)
+                self.actionChanged.emit()
+                break
 
     def searchItemInList(self, listBrowse, path):
         for actionWrapper in list(listBrowse):

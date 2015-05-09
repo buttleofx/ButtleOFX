@@ -98,9 +98,9 @@ class ActionManager(QtCore.QObject):
         for a in self._running:
             a.abort()
 
-    endedActions = QtCore.pyqtProperty(str, getEndedActionsModel, notify=actionChanged)
-    runningActions = QtCore.pyqtProperty(str, getRunningActionsModel, notify=actionChanged)
-    waitingActions = QtCore.pyqtProperty(str, getWaitingActionsModel, notify=actionChanged)
+    endedActions = QtCore.pyqtProperty(QObjectListModel, getEndedActionsModel, notify=actionChanged)
+    runningActions = QtCore.pyqtProperty(QObjectListModel, getRunningActionsModel, notify=actionChanged)
+    waitingActions = QtCore.pyqtProperty(QObjectListModel, getWaitingActionsModel, notify=actionChanged)
 
 
 

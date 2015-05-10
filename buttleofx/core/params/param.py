@@ -93,5 +93,5 @@ class Param:
             }
             return param
         except:
-            print("WARNING: param '%s' not saved." % self.getName())
+            logging.warning("Param '%s' not saved." % self.getName())
             return None

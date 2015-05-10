@@ -1,16 +1,48 @@
 import os
-from PyQt5 import QtCore
+import logging
+import copy
+import re
 from fnmatch import fnmatch
+
+from PyQt5 import QtCore
+
 from pySequenceParser import sequenceParser
+
+from quickmamba.models import QObjectListModel
+from quickmamba.patterns import Singleton
+
 from buttleofx.gui.browser_v2.browserItem import BrowserItem
 from buttleofx.gui.browser_v2.browserSortOn import SortOn
 from buttleofx.gui.browser_v2.threadWrapper import ThreadWrapper
-from buttleofx.gui.browser_v2.actions.worker import Worker
-from buttleofx.gui.browser_v2.actions.actionManager import ActionManagerSingleton
-from quickmamba.models import QObjectListModel
-from quickmamba.patterns import Singleton
-import copy
-import re
+from buttleofx.gui.browser_v2.actions.actionWorker import ActionWorker
+from buttleofx.gui.browser_v2.actions.actionManager import globalActionManager
+
+
+class WithBool:
+    def __init__(self, value = False):
+        self.value = value
+    
+    def __bool__(self):
+        return self.value
+    
+    def __enter__(self):
+        self.value = True
+        return self
+    
+    def __exit__(self, type, value, traceback):
+        self.value = False
+
+
+class WithMutex:
+    def __init__(self, mutex):
+        self.mutex = mutex
+    
+    def __enter__(self):
+        self.mutex.lock()
+        return self
+    
+    def __exit__(self, type, value, traceback):
+        self.mutex.unlock()
 
 
 class BrowserModel(QtCore.QObject):
@@ -29,31 +61,25 @@ class BrowserModel(QtCore.QObject):
     sortBrowserItems = QtCore.pyqtSignal()
     loadingChanged = QtCore.pyqtSignal()
 
-    def __init__(self, path="", sync=False, recursivePattern="", showSeq=True, hideDotFiles=True, filter="*", parent=None):
+    def __init__(self, currentPath="", sync=False, recursivePattern="", showSeq=True, hideDotFiles=True, filter="*", parent=None):
         """
             Build an BrowserModel instance.
             :param parent: Qt parent
         """
         super(BrowserModel, self).__init__(parent)
-        self._debugMode = False
-        self.debug("MODEL BUILDING")
-        self._currentPath = ""
+        logging.debug("MODEL BUILDING")
+        self._currentPath = currentPath
         self._browserItems = []
         self._browserItemsModel = QObjectListModel(self)
         self._filter = filter
         self._hideDotFiles = hideDotFiles
         self._showSeq = showSeq
         self._sortOn = SortOn()
-        self._threadLoading = ThreadWrapper()
-        self._actionManager = ActionManagerSingleton.get()  # locking and search BrowserItem when updating
-        self._currentPath = path.strip() if path.strip() else os.path.expanduser("~/")
-        self._isLoading = False
+        self._threadWrapper = ThreadWrapper()
+        self._actionManager = globalActionManager  # locking and search BrowserItem when updating
+        self._isLoading = WithBool(False)
         self.initSlotConnection(sync)
-        self.loadData(recursivePattern)
-
-    def debug(self, *output):
-        if self._debugMode:
-            print(*output)
+        # self.loadData(recursivePattern)
 
     def initSlotConnection(self, isSync):
         typeConnection = QtCore.Qt.DirectConnection
@@ -63,63 +89,53 @@ class BrowserModel(QtCore.QObject):
         self.addItemSync.connect(self.onAddItemSync, typeConnection)
         self.clearItemsSync.connect(self.onClearItemsSync, typeConnection)
 
-    def getThreadWrapperLoading(self):
-        return self._threadLoading
+    def getThreadWrapper(self):
+        return self._threadWrapper
 
     @QtCore.pyqtSlot(str)
     def loadData(self, recursivePattern=""):
-        self._threadLoading.start(self.updateItems, argsParam=(recursivePattern,))
+        self._threadWrapper.start(self.updateItems, argsParam=(recursivePattern,))
 
     def updateItems(self, recursivePattern):
         """
             Update browserItemsModel according model's current path and filter options
         """
-        self._threadLoading.lock()
-        self.debug("LOAD: ", self._currentPath)
-        self.setLoading(True)
-
-        if not os.path.exists(self._currentPath):
-            self.setLoading(False)
-            return
-        Worker.wait()  # lock lists in actionManager
-
-        # update threading process
-        if self._threadLoading.isStopped():
-            if self._threadLoading.getPoolSize() > 0:
-                self._threadLoading.setStopFlag(False)
-            else:
-                self.setLoading(False)
-                Worker.work()
-                self._threadLoading.unlock()
+        with WithMutex(self._threadWrapper.getMutex()), self._isLoading:
+            logging.debug("LOAD: %s" % self._currentPath)
+            if not os.path.exists(self._currentPath):
                 return
 
-        # if no permission: try
-        try:
-            self.clearItemsSync.emit()
-            detectOption = sequenceParser.eDetectionDefaultWithDotFile
-            if self._hideDotFiles:
-                detectOption = sequenceParser.eDetectionDefault
-            allItems = sequenceParser.browse(self._currentPath, detectOption, self._filter)
-            self.pushBrowserItems(allItems)
+            # update threading process
+            #if self._threadWrapper.isStopped():
+            #    if self._threadWrapper.getPoolSize() > 0:
+            #        self._threadWrapper.setStopFlag(False)
+            #    else:
+            #        ActionWorker.work()
+            #             return
 
-            if recursivePattern.strip():
-                self.searchRecursively(recursivePattern, self)
-                self.debug("after recurse", self._threadLoading)
-        except Exception as e:
-            print(e)
+            # if no permission: try
+            try:
+                self.clearItemsSync.emit()
+                detectOption = sequenceParser.eDetectionDefaultWithDotFile
+                if self._hideDotFiles:
+                    detectOption = sequenceParser.eDetectionDefault
+                allItems = sequenceParser.browse(self._currentPath, detectOption, self._filter)
+                self.pushBrowserItems(allItems)
 
-        if not self._threadLoading.isStopped():
-            self._threadLoading.pop()
+                if recursivePattern.strip():
+                    self.searchRecursively(recursivePattern, self)
+                    logging.debug("after recurse: %s" % self._threadWrapper)
+            except Exception as e:
+                logging.info(str(e))
 
-        self.setLoading(False)
-        Worker.work()
-        self._threadLoading.unlock()
+            if not self._threadWrapper.isStopped():
+                self._threadWrapper.pop()
 
     def pushBrowserItems(self, allItems):
-        self.debug("push data: size all items", len(allItems))
+        logging.debug("push data: size all items %s" % len(allItems))
         for item in allItems:
             # if the process was canceled, we stop
-            if self._threadLoading.isStopped():
+            if self._threadWrapper.isStopped():
                 break
             addItem = fnmatch(item.getFilename(), self._filter)
             if addItem and item.getType() == BrowserItem.ItemType.sequence:
@@ -127,17 +143,17 @@ class BrowserModel(QtCore.QObject):
             if addItem:
                 itemToAdd = self._actionManager.searchItem(item.getAbsoluteFilepath())
                 if not itemToAdd:
-                    itemToAdd = BrowserItem(copy.copy(item), False)
+                    itemToAdd = BrowserItem(copy.copy(item))
                 itemToAdd.moveToThread(self.thread())
                 self.addItemSync.emit(itemToAdd)
 
     @QtCore.pyqtSlot(object)
     def onAddItemSync(self, bItem):
-        self.debug("Add item: ", bItem.getPath())
+        # logging.debug("Add item: %s" % bItem.getPath())
         self._browserItems.append(bItem)
         self.sortBrowserItems.emit()  # sync
         self._browserItemsModel.insert(self.searchIndexItem(bItem), bItem)
-        self.debug(self._browserItemsModel.count)
+        # logging.debug(self._browserItemsModel.count)
 
     @QtCore.pyqtSlot()
     def onClearItemsSync(self):
@@ -147,8 +163,8 @@ class BrowserModel(QtCore.QObject):
 
     @QtCore.pyqtSlot(str, object)
     def searchRecursively(self, pattern, modelRequester):
-        self.debug("Start recursive search:", self._currentPath)
-        if modelRequester.getThreadWrapperLoading().isStopped():
+        logging.debug("Start recursive search: %s" % self._currentPath)
+        if modelRequester.getThreadWrapper().isStopped():
             return
 
         listToBrowse = self._browserItems
@@ -156,17 +172,17 @@ class BrowserModel(QtCore.QObject):
             listToBrowse = self._browserItems.copy()  # copy: _browserItems deleted line after
             modelRequester.clearItemsSync.emit()
         for bItem in listToBrowse:
-            self.debug("processing", bItem.getPath())
+            logging.debug("processing %s" % bItem.getPath())
             if bItem.getName().lower().startswith(pattern.lower()):
                 bItem.moveToThread(modelRequester.thread())
                 modelRequester.addItemSync.emit(bItem)
-                self.debug("add items recurseSearch")
+                logging.debug("add items recurseSearch")
             if bItem.isFolder():
-                self.debug("folder:", bItem.getPath())
+                logging.debug("folder: %s" % bItem.getPath())
                 recursiveModel = BrowserModel(bItem.getPath(), True, "", self._showSeq, self._hideDotFiles, self._filter)
-                recursiveModel.getThreadWrapperLoading().join()
+                recursiveModel.getThreadWrapper().join()
                 recursiveModel.searchRecursively(pattern.lower(), modelRequester)
-        self.debug("end recurse...", self._currentPath)
+        logging.debug("end recurse... %s" % self._currentPath)
 
     def getFilter(self):
         return self._filter
@@ -181,9 +197,12 @@ class BrowserModel(QtCore.QObject):
 
     @QtCore.pyqtSlot(str)
     def setCurrentPath(self, newCurrentPath):
-        if not newCurrentPath.strip():
+        logging.debug('browserModel.setCurrentPath("%s")' % newCurrentPath)
+        # strip path: remove spaces at the begenning and at the end
+        newCurrentPathStrip = newCurrentPath.strip()
+        if not newCurrentPathStrip:
             return
-        self._currentPath = newCurrentPath.strip()
+        self._currentPath = newCurrentPathStrip
         self.loadData()
         self.currentPathChanged.emit()
 
@@ -226,11 +245,11 @@ class BrowserModel(QtCore.QObject):
         :param bItem: BrowserItem
         :return: Index of bItem in self._browserItems
         """
-        cpt = 0
+        index = 0
         for item in self._browserItems:
             if item == bItem:
-                return cpt
-            cpt += 1
+                return index
+            index += 1
         return -1
 
     # ################################### Methods exposed to QML ############################### #
@@ -253,10 +272,10 @@ class BrowserModel(QtCore.QObject):
 
     @QtCore.pyqtSlot(result=bool)
     def isLoading(self):
-        return self._isLoading
+        return self._isLoading.value
 
     def setLoading(self, loading):
-        self._isLoading = loading
+        self._isLoading.value = loading
         self.loadingChanged.emit()
 
     @QtCore.pyqtSlot(result=QtCore.QObject)
@@ -267,12 +286,13 @@ class BrowserModel(QtCore.QObject):
 
     @QtCore.pyqtSlot(result=QtCore.QObject)
     def getItems(self):
-        self.debug("getItems()*******************************", len(self._browserItemsModel))
+        logging.debug("getItems()******************************* %s" % len(self._browserItemsModel))
         return self._browserItemsModel
 
     @QtCore.pyqtSlot(result=str)
     def getParentPath(self):
         tmp = os.path.dirname(self.currentPath)
+        # TODO: use rstrip('/') intead
         # if path ended by // or simply / we repeat process to get real parent
         if self._currentPath.rfind("/") == len(self._currentPath)-1:
             tmp = os.path.dirname(tmp)
@@ -284,7 +304,7 @@ class BrowserModel(QtCore.QObject):
             Used into qml navbar
             :return: absolute path and dirname for each folder in the current path into a list via QObjectList
         """
-        self.debug("BEGIN SPLITTED PATH")
+        logging.debug("BEGIN SPLITTED PATH")
         tmpList = []
         absolutePath = self._currentPath
 
@@ -301,7 +321,7 @@ class BrowserModel(QtCore.QObject):
         tmpList.reverse()
         model = QObjectListModel(self)
         model.append(tmpList)
-        self.debug("END SPLITTED PATH")
+        logging.debug("END SPLITTED PATH")
         return model
 
     @QtCore.pyqtSlot(result=QtCore.QObject)
@@ -392,9 +412,4 @@ class BrowserModel(QtCore.QObject):
     loading = QtCore.pyqtProperty(bool, isLoading, notify=loadingChanged)
 
 
-class BrowserModelSingleton(Singleton):
-    _browserModel = BrowserModel()
-
-    @staticmethod
-    def get():
-        return BrowserModelSingleton._browserModel
+globalBrowserModel = BrowserModel()

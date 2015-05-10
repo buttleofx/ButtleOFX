@@ -4,7 +4,7 @@ from pyTuttle import tuttle
 
 from PyQt5 import QtCore, QtQuick
 
-from buttleofx.data import ButtleDataSingleton
+from buttleofx.data import globalButtleData
 
 
 class TimerPlayer(QtQuick.QQuickItem):
@@ -29,11 +29,10 @@ class TimerPlayer(QtQuick.QQuickItem):
 
     @QtCore.pyqtSlot()
     def launchProcessGraph(self):
-        buttleData = ButtleDataSingleton().get()
         # Get the name of the currentNode of the viewer
-        node = buttleData.getCurrentViewerNodeName()
+        node = globalButtleData.getCurrentViewerNodeName()
         # Initialization of the process graph
-        graph = buttleData.getCurrentGraph().getGraphTuttle()
+        graph = globalButtleData.getCurrentGraph().getGraphTuttle()
 
         # timeRange between the frames of beginning and end (first frame, last frame, step)
         timeRange = tuttle.TimeRange(self._frame, self._nbFrames, 1)
@@ -43,33 +42,31 @@ class TimerPlayer(QtQuick.QQuickItem):
         processGraph.setup()
         processGraph.beginSequence(timeRange)
 
-        # Communicate processGraph to buttleData
-        buttleData.setProcessGraph(processGraph)
+        # Communicate processGraph to globalButtleData
+        globalButtleData.setProcessGraph(processGraph)
 
-        buttleData.setVideoIsPlaying(True)
+        globalButtleData.setVideoIsPlaying(True)
 
     @QtCore.pyqtSlot()
     def pause(self):
         logging.debug("--------------pause-------------")
         self._timer.stop()
-        buttleData = ButtleDataSingleton().get()
 
-        if buttleData.getVideoIsPlaying():
-            buttleData.setVideoIsPlaying(False)
+        if globalButtleData.getVideoIsPlaying():
+            globalButtleData.setVideoIsPlaying(False)
             # Close processGraph and delete it
-            buttleData.getProcessGraph().endSequence()
-            buttleData.setProcessGraph(None)
+            globalButtleData.getProcessGraph().endSequence()
+            globalButtleData.setProcessGraph(None)
 
         self.framePlayerChanged.emit()
 
     @QtCore.pyqtSlot()
     def play(self):
         logging.debug("--------------playing-------------")
-        buttleData = ButtleDataSingleton().get()
         # Get the name of the currentNode of the viewer
-        node = buttleData.getCurrentViewerNodeName()
+        node = globalButtleData.getCurrentViewerNodeName()
         # Initialization of the process graph
-        graph = buttleData.getCurrentGraph().getGraphTuttle()
+        graph = globalButtleData.getCurrentGraph().getGraphTuttle()
 
         # timeRange between the frames of beginning and end (first frame, last frame, step)
         timeRange = tuttle.TimeRange(self._frame, self._nbFrames, 1)
@@ -79,9 +76,9 @@ class TimerPlayer(QtQuick.QQuickItem):
         processGraph.setup()
         processGraph.beginSequence(timeRange)
 
-        # Communicate processGraph to buttleData
-        buttleData.setProcessGraph(processGraph)
-        buttleData.setVideoIsPlaying(True)
+        # Communicate processGraph to globalButtleData
+        globalButtleData.setProcessGraph(processGraph)
+        globalButtleData.setVideoIsPlaying(True)
 
         self._speed = 1000 / self._fps
         self._timer.start(self._speed)
@@ -98,14 +95,13 @@ class TimerPlayer(QtQuick.QQuickItem):
     def stop(self):
         logging.debug("--------------stop-------------")
         self._timer.stop()
-        buttleData = ButtleDataSingleton().get()
 
         # If a video is reading, we need to close the processGraph
-        if buttleData.getVideoIsPlaying():
-            buttleData.setVideoIsPlaying(False)
+        if globalButtleData.getVideoIsPlaying():
+            globalButtleData.setVideoIsPlaying(False)
             # Close processGraph and delete it
-            buttleData.getProcessGraph().endSequence()
-            buttleData.setProcessGraph(None)
+            globalButtleData.getProcessGraph().endSequence()
+            globalButtleData.setProcessGraph(None)
 
         # Return to the beginning of the video
         self._frame = 0

@@ -1,11 +1,16 @@
 import os
-from PyQt5 import QtCore
+import logging
 from datetime import datetime
 from pwd import getpwuid
 from stat import filemode
+
+from PyQt5 import QtCore
+
 from pySequenceParser import sequenceParser
-from buttleofx.gui.browser_v2.sequenceWrapper import SequenceWrapper
+
 from pyTuttle import tuttle
+
+from buttleofx.gui.browser_v2.sequenceWrapper import SequenceWrapper
 
 
 class BrowserItem(QtCore.QObject):
@@ -31,12 +36,13 @@ class BrowserItem(QtCore.QObject):
     selectedChanged = QtCore.pyqtSignal()
     fileChanged = QtCore.pyqtSignal()
 
-    def __init__(self, sequenceParserItem, supported):
+    def __init__(self, sequenceParserItem):
         super(BrowserItem, self).__init__()
 
+        
         self._path = sequenceParserItem.getAbsoluteFilepath()
         self._typeItem = sequenceParserItem.getType()
-        self._supported = supported
+        logging.debug('BrowserItem constructor - file:%s, type:%s' % (self._path, self._typeItem))
 
         if self.isFile():
             self._fileExtension = os.path.splitext(self._path)[1]
@@ -130,8 +136,8 @@ class BrowserItem(QtCore.QObject):
                 return os.stat(self._path).st_size
             if self.isSequence():
                 return self._sequence.getWeight()
-        except:
-            pass
+        except Exception as e:
+            logging.debug('BrowserItem.getWeight_fileSystem: %s, %s' % (self.getPath(), str(e)))
 
         return 0
 
@@ -155,25 +161,26 @@ class BrowserItem(QtCore.QObject):
     def isSupportedFromTuttle(self):
         if self.isFile() or self.isSequence():
             try:
-                return bool(tuttle.getReaders(self.getName()))
-            except:
+                tuttleReaders = tuttle.getReaders(self.getName())
+                logging.debug('BrowserItem.isSupportedFromTuttle - %s => %s' % (self.getPath(), str(tuttleReaders)))
+                return bool(tuttleReaders)
+            except Exception as e:
+                logging.debug('BrowserItem.isSupportedFromTuttle - %s => %s' % (self.getPath(), str(e)))
                 pass
         return False
 
     def getRealPathImg(self):
+        if self.isSupported():
+            return 'image://buttleofx/' + self._path
+
         if self.isFolder():
             return "img/folder-icon.png"  # default
-
-        if self.isFile():
-            if self.isSupported():
-                return 'image://buttleofx/' + self._path
-            return "img/file-icon.png"
-
         if self.isSequence():
-            if self.isSupported():
-                return 'image://buttleofx/' + self._sequence.getFirstFilePath()
+            return "img/file-icon.png"  # TODO: seq icon
+        if self.isFile():
+            return "img/file-icon.png"
+        return "img/file-icon.png"  # TODO: err
 
-        return "img/file-icon.png"  # default
 
     # ############################################ Methods exposed to QML ############################################ #
 

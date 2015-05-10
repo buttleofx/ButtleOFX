@@ -2,7 +2,7 @@ import os
 import logging
 from pyTuttle import tuttle
 from quickmamba.patterns import Signal
-from buttleofx.core.undo_redo.manageTools import CommandManager, GroupUndoableCommands
+from buttleofx.core.undo_redo.manageTools import globalCommandManager, GroupUndoableCommands
 from buttleofx.core.undo_redo.commands.connection import CmdCreateConnection, CmdDeleteConnection
 from buttleofx.core.undo_redo.commands.node import CmdCreateNode, CmdDeleteNodes, CmdCreateReaderNode, CmdSetCoord
 
@@ -92,7 +92,7 @@ class Graph(object):
             Pushes a command in the CommandManager.
         """
         cmdCreateConnection = CmdCreateConnection(self, clipOut, clipIn)
-        cmdManager = CommandManager()
+        cmdManager = globalCommandManager
         return cmdManager.push(cmdCreateConnection)
 
     def createNode(self, nodeType, x=20, y=20):
@@ -100,7 +100,7 @@ class Graph(object):
             Adds a node from the node list when a node is created.
         """
         cmdCreateNode = CmdCreateNode(self, nodeType, x, y)
-        cmdManager = CommandManager()
+        cmdManager = globalCommandManager
         return cmdManager.push(cmdCreateNode)
 
     def createReaderNode(self, url, x, y):
@@ -120,7 +120,7 @@ class Graph(object):
         # creates a new node and set its value with the correct url.
         # See the definition of the class CmdCreateReaderNode.
         cmdCreateReaderNode = CmdCreateReaderNode(self, nodeType, x, y, url)
-        cmdManager = CommandManager()
+        cmdManager = globalCommandManager
         return cmdManager.push(cmdCreateReaderNode)
 
     def deleteConnection(self, connection):
@@ -129,7 +129,7 @@ class Graph(object):
             Pushes a command in the CommandManager.
         """
         cmdDeleteConnection = CmdDeleteConnection(self, connection)
-        cmdManager = CommandManager()
+        cmdManager = globalCommandManager
         cmdManager.push(cmdDeleteConnection)
 
     def deleteNodeConnections(self, nodeName):
@@ -147,7 +147,7 @@ class Graph(object):
             Pushes a command in the CommandManager.
         """
         cmdDeleteNodes = CmdDeleteNodes(self, nodes)
-        cmdManager = CommandManager()
+        cmdManager = globalCommandManager
         cmdManager.push(cmdDeleteNodes)
 
     # ## Others ## #
@@ -176,12 +176,12 @@ class Graph(object):
 
     def nodeMoved(self, nodeName, newX, newY):
         """
-            This function pushes a cmdMoved in the CommandManager.
+            This function pushes a cmdMoved in the globalCommandManager.
         """
-
-        from buttleofx.data import ButtleDataSingleton
-        buttleData = ButtleDataSingleton().get()
-        node = buttleData.getCurrentGraph().getNode(nodeName)
+        from buttleofx.data import globalButtleData
+        node = globalButtleData.getCurrentGraph().getNode(nodeName)
+        if not node:
+            logging.debug("nodeMoved -- graph : %s" % globalButtleData.getCurrentGraph())
 
         # What is the value of the movement (compared to the old position)?
         oldX, oldY = node.getOldCoord()
@@ -195,7 +195,7 @@ class Graph(object):
         commands = []
 
         # We create a GroupUndoableCommands of CmdSetCoord for each selected node
-        for selectedNodeWrapper in buttleData.getCurrentSelectedNodeWrappers():
+        for selectedNodeWrapper in globalButtleData.getCurrentSelectedNodeWrappers():
             # We get the needed informations for this node
             selectedNode = selectedNodeWrapper.getNode()
             selectedNodeName = selectedNode.getName()
@@ -207,7 +207,7 @@ class Graph(object):
             commands.append(cmdMoved)
 
         # Then we push the group of commands
-        CommandManager().push(GroupUndoableCommands(commands, "Move nodes"))
+        globalCommandManager.push(GroupUndoableCommands(commands, "Move nodes"))
 
     def object_to_dict(self):
         """

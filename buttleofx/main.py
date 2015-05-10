@@ -196,7 +196,7 @@ class TuttleImageProvider(QtQuick.QQuickImageProvider):
             return qtImage.copy(), qtImage.size()
 
         except Exception as e:
-            logging.debug("TuttleImageProvider: file='%s' => error: {0}".format(id, str(e)))
+            logging.debug("TuttleImageProvider: file='{file}' => error: {error}".format(file=id, error=str(e)))
             qtImage = QtGui.QImage()
             return qtImage, qtImage.size()
 

@@ -387,11 +387,3 @@ class FileModelBrowser(QtQuick.QQuickItem):
     showSeqChanged = QtCore.pyqtSignal()
     showSeq = QtCore.pyqtProperty(bool, getShowSeq, setShowSeq, notify=showSeqChanged)
 
-
-# This class exists just because there are problems when a class extends 2 other classes (Singleton and QObject)
-class FileModelBrowserSingleton(Singleton):
-
-    _fileModelBrowser = FileModelBrowser()
-
-    def get(self):
-        return self._fileModelBrowser

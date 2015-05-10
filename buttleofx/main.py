@@ -168,8 +168,9 @@ def toQImage(im):
 count_thumbnail = 0
 
 
-class ImageProvider(QtQuick.QQuickImageProvider):
+class TuttleImageProvider(QtQuick.QQuickImageProvider):
     def __init__(self):
+        logging.debug("TuttleImageProvider constructor")
         QtQuick.QQuickImageProvider.__init__(self, QtQuick.QQuickImageProvider.Image)
         self.thumbnailCache = tuttle.ThumbnailDiskCache()
         self.thumbnailCache.setRootDir(os.path.join(tuttle.core().getPreferences().getTuttleHomeStr(),
@@ -179,7 +180,7 @@ class ImageProvider(QtQuick.QQuickImageProvider):
         """
         Compute the image using TuttleOFX
         """
-        logging.debug("Tuttle ImageProvider: file='%s'" % id)
+        logging.debug("TuttleImageProvider: file='%s'" % id)
         try:
             img = self.thumbnailCache.getThumbnail(id)
             numpyImage = img.getNumpyArray()
@@ -195,7 +196,7 @@ class ImageProvider(QtQuick.QQuickImageProvider):
             return qtImage.copy(), qtImage.size()
 
         except Exception as e:
-            logging.debug("Tuttle ImageProvider: file='%s' => error: {0}".format(id, str(e)))
+            logging.debug("TuttleImageProvider: file='%s' => error: {0}".format(id, str(e)))
             qtImage = QtGui.QImage()
             return qtImage, qtImage.size()
 
@@ -222,7 +223,7 @@ def main(argv, app):
     # Create the QML engine
     engine = QtQml.QQmlEngine(app)
     engine.quit.connect(app.quit)
-    engine.addImageProvider("buttleofx", ImageProvider())
+    engine.addImageProvider("buttleofx", TuttleImageProvider())
 
     # Data
     globalButtleData.init(engine, currentFilePath)

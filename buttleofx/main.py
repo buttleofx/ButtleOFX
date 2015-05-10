@@ -30,8 +30,6 @@ import numpy
 import signal
 import argparse
 
-from pyTuttle import tuttle
-
 from quickmamba.utils import instantcoding
 
 from buttleofx.data import Finder
@@ -49,9 +47,11 @@ from PyQt5 import QtCore, QtGui, QtQml, QtQuick, QtWidgets
 # For glViewport
 tuttleofx_installed = False
 try:
-    import pyTuttle  # noqa
+    from pyTuttle import tuttle
     tuttleofx_installed = True
     logging.debug('Use TuttleOFX.')
+    # if DEV_MODE:
+    tuttle.core().getFormatter().setLogLevel_int(0)
 except:
     logging.debug('TuttleFX not installed, use Python Image Library instead.')
 

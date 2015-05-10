@@ -204,7 +204,8 @@ class TuttleImageProvider(QtQuick.QQuickImageProvider):
 def main(argv, app):
 
     # Preload Tuttle
-    tuttle.core().preload()
+    # Don't use the Plugin cache, to avoid multithreading troubles.
+    tuttle.core().preload(False)
 
     # Give to QML acces to TimerPlayer defined in buttleofx/gui/viewer
     QtQml.qmlRegisterType(TimerPlayer, "TimerPlayer", 1, 0, "TimerPlayer")

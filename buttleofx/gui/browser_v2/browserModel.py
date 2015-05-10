@@ -61,14 +61,14 @@ class BrowserModel(QtCore.QObject):
     sortBrowserItems = QtCore.pyqtSignal()
     loadingChanged = QtCore.pyqtSignal()
 
-    def __init__(self, path=os.path.expanduser("~/"), sync=False, recursivePattern="", showSeq=True, hideDotFiles=True, filter="*", parent=None):
+    def __init__(self, currentPath="", sync=False, recursivePattern="", showSeq=True, hideDotFiles=True, filter="*", parent=None):
         """
             Build an BrowserModel instance.
             :param parent: Qt parent
         """
         super(BrowserModel, self).__init__(parent)
         logging.debug("MODEL BUILDING")
-        self._currentPath = path
+        self._currentPath = currentPath
         self._browserItems = []
         self._browserItemsModel = QObjectListModel(self)
         self._filter = filter
@@ -126,7 +126,7 @@ class BrowserModel(QtCore.QObject):
                     self.searchRecursively(recursivePattern, self)
                     logging.debug("after recurse: %s" % self._threadWrapper)
             except Exception as e:
-                logging.info(e)
+                logging.info(str(e))
 
             if not self._threadWrapper.isStopped():
                 self._threadWrapper.pop()
@@ -143,17 +143,17 @@ class BrowserModel(QtCore.QObject):
             if addItem:
                 itemToAdd = self._actionManager.searchItem(item.getAbsoluteFilepath())
                 if not itemToAdd:
-                    itemToAdd = BrowserItem(copy.copy(item), False)
+                    itemToAdd = BrowserItem(copy.copy(item))
                 itemToAdd.moveToThread(self.thread())
                 self.addItemSync.emit(itemToAdd)
 
     @QtCore.pyqtSlot(object)
     def onAddItemSync(self, bItem):
-        logging.debug("Add item: %s" % bItem.getPath())
+        # logging.debug("Add item: %s" % bItem.getPath())
         self._browserItems.append(bItem)
         self.sortBrowserItems.emit()  # sync
         self._browserItemsModel.insert(self.searchIndexItem(bItem), bItem)
-        logging.debug(self._browserItemsModel.count)
+        # logging.debug(self._browserItemsModel.count)
 
     @QtCore.pyqtSlot()
     def onClearItemsSync(self):

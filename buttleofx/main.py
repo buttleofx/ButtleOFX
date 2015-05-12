@@ -247,6 +247,7 @@ def main(argv, app):
     rc.setContextProperty("_buttleEvent", globalButtleEvent)
     rc.setContextProperty("_browser", globalBrowserModel)
     rc.setContextProperty("_browserAction", globalBrowserAction)
+    rc.setContextProperty("_actionManager", globalActionManager)
 
     iconPath = os.path.join(currentFilePath, "../blackMosquito.png")
     # iconPath = QtCore.QUrl("file:///" + iconPath)

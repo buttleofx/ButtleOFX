@@ -1,4 +1,5 @@
 from PyQt5 import QtCore
+import logging
 
 
 class WorkerThread(QtCore.QThread):
@@ -10,22 +11,20 @@ class WorkerThread(QtCore.QThread):
     def run(self):
         self._target(*self._param)
 
-    def __del__(self):
-        self.wait()
-
 
 class ThreadWrapper(QtCore.QObject):
     def __init__(self):
+        logging.debug("ThreadWrapper begin constructor")
         super(ThreadWrapper, self).__init__(None)
-        self._debugMode = False
-        self._threadPool = []
+        self._threadList = []
         self._mutex = QtCore.QMutex(QtCore.QMutex.Recursive)
         self._activeWorker = None  # more readable
         self._stopFlag = False
+        logging.debug("ThreadWrapper end constructor")
 
-    def debug(self, *output):
-        if self._debugMode:
-            print(*output)
+    def __del__(self):
+        logging.debug("STOP THREAD WRAPPER", self)
+        self.stop()
 
     def getActiveWorker(self):
         return self._activeWorker
@@ -35,11 +34,13 @@ class ThreadWrapper(QtCore.QObject):
 
     def isWorking(self):
         """ if len(workers) > 1 : considered as not working, another worker is querying job """
-        return len(self._threadPool) == 1
+        return len(self._threadList) == 1
 
     def stop(self):
         self._stopFlag = True
-        self._threadPool.clear()
+        for threadItem in self._threadList:
+            threadItem.wait()
+        self._threadList.clear()
         self._activeWorker = None
 
     def isStopped(self):
@@ -55,35 +56,24 @@ class ThreadWrapper(QtCore.QObject):
         worker = WorkerThread(target, argsParam)
         if not self._activeWorker:
             self._activeWorker = worker
-        self._threadPool.append(worker)
+        self._threadList.append(worker)
         worker.start()
 
     def pop(self):
-        if len(self._threadPool) > 0:
-            self._threadPool.pop(0)
-            self._activeWorker = None if not self._threadPool else self._threadPool[0]
+        if self._threadList:
+            self._threadList.pop(0)
+            self._activeWorker = None if not self._threadList else self._threadList[0]
 
     def join(self):
-        self.debug("join threadWrapper")
-        self.debug("size pool", self.getPoolSize())
+        logging.debug("join threadPool")
+        logging.debug("size pool %s" % self.getPoolSize())
 
         if self._activeWorker:
-            self.debug("worker present")
-            self.debug("size pool", self.getPoolSize())
+            logging.debug("worker present")
+            logging.debug("size pool %s" % self.getPoolSize())
+            
             self._activeWorker.wait()
-        self.debug("end join")
-
-    def lock(self):
-        self.debug("Lock", self._mutex)
-        self._mutex.lock()
-
-    def unlock(self):
-        self.debug("Unlock", self._mutex)
-        self._mutex.unlock()
+        logging.debug("end join")
 
     def getPoolSize(self):
-        return len(self._threadPool)
-
-    def __del__(self):
-        self.debug("STOP THREAD WRAPPER", self)
-        self.stop()
+        return len(self._threadList)

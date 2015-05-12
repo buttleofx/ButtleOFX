@@ -1,34 +1,36 @@
+import logging
+
 from pyTuttle import tuttle
 
 
 class TuttleOverlayInteract(tuttle.OverlayInteract):
 
     def __init__(self, glviewport, graph, node):
-        print("TuttleOverlayInteract.__init__")
-        print("TuttleOverlayInteract node:", node.asImageEffectNode())
+        logging.debug("TuttleOverlayInteract.__init__")
+        logging.debug("TuttleOverlayInteract node: %s" % node.asImageEffectNode())
 
         super(TuttleOverlayInteract, self).__init__(graph, node.asImageEffectNode())
         self.glviewport = glviewport
 
     def getViewportSize(self):
-        print("TuttleOverlayInteract.getViewportSize")
+        logging.debug("TuttleOverlayInteract.getViewportSize")
         return (float(self.glviewport.width()), float(self.glviewport.height()))
 
     def getPixelScale(self):
-        print("TuttleOverlayInteract.getPixelScale")
+        logging.debug("TuttleOverlayInteract.getPixelScale")
         scale = float(self.glviewport.getScale())
         return (scale, scale)
 
     def getBackgroundColour(self):
-        print("TuttleOverlayInteract.getBackgroundColour")
+        logging.debug("TuttleOverlayInteract.getBackgroundColour")
         return (float(self.glviewport.getBgColor().red()),
                 float(self.glviewport.getBgColor().green()),
                 float(self.glviewport.getBgColor().blue()))
 
     def swapBuffers(self):
-        print("ButtleOverlayInteract.swapBuffers")
+        logging.debug("ButtleOverlayInteract.swapBuffers")
         self.glviewport.swapBuffers()
 
     def redraw(self):
-        print("ButtleOverlayInteract.redraw")
+        logging.debug("ButtleOverlayInteract.redraw")
         self.glviewport.redraw()

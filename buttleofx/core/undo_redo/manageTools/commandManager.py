@@ -1,7 +1,6 @@
-from quickmamba.patterns import Singleton
 
 
-class CommandManager(Singleton):
+class CommandManager:
     """
     Manages a list of commands.
     """
@@ -121,8 +120,8 @@ class CommandManager(Singleton):
             This function will update the property graphCanBeSaved of ButtleData and will change
             the display of the "Save Graph" icon.
         """
-        from buttleofx.data import ButtleDataSingleton
-        ButtleDataSingleton().get().setGraphCanBeSaved(self.savedGraphIndex != self.index)
+        from buttleofx.data import globalButtleData
+        globalButtleData.setGraphCanBeSaved(self.savedGraphIndex != self.index)
 
     def isActive(self):
         """
@@ -184,3 +183,6 @@ class CommandManager(Singleton):
 
             # We update buttleData to indicates that the graph just changed
             self.graphHadChanged()
+
+
+globalCommandManager = CommandManager()

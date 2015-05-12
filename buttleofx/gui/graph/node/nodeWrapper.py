@@ -17,7 +17,7 @@ class NodeWrapper(QtCore.QObject):
     """
 
     def __init__(self, node, view):
-        # print("NodeWrapper constructor")
+        # logging.debug("NodeWrapper constructor")
 
         super(NodeWrapper, self).__init__(view)
 
@@ -135,10 +135,9 @@ class NodeWrapper(QtCore.QObject):
             Returns the FPS of this node.
         """
         # Import which needs to be changed in the future
-        from buttleofx.data import ButtleDataSingleton
-        buttleData = ButtleDataSingleton().get()
+        from buttleofx.data import globalButtleData
 
-        graph = buttleData.getCurrentGraph().getGraphTuttle()
+        graph = globalButtleData.getCurrentGraph().getGraphTuttle()
         node = self._node.getTuttleNode().asImageEffectNode()
         try:
             self.setFpsError("")
@@ -150,7 +149,7 @@ class NodeWrapper(QtCore.QObject):
             raise
 
         framerate = node.getOutputFrameRate()
-        # print("framerate: ", framerate)
+        # logging.debug("framerate: ", framerate)
         return framerate
 
     def getFpsError(self):
@@ -164,9 +163,9 @@ class NodeWrapper(QtCore.QObject):
             Returns the number of frames of this node.
         """
         # Import which needs to be changed in the future
-        from buttleofx.data import ButtleDataSingleton
-        buttleData = ButtleDataSingleton().get()
-        graph = buttleData.getCurrentGraph().getGraphTuttle()
+        from buttleofx.data import globalButtleData
+        
+        graph = globalButtleData.getCurrentGraph().getGraphTuttle()
         node = self._node.getTuttleNode().asImageEffectNode()
 
         try:
@@ -184,7 +183,7 @@ class NodeWrapper(QtCore.QObject):
         # Not very elegant, but allows us to avoid a problem if an image returns a lot of frames
         if nbFrames > 100000000 or nbFrames < 0:
             nbFrames = 1
-        # print("nbFrames: ", nbFrames)
+        # logging.debug("nbFrames: %s" % nbFrames)
         return nbFrames
 
     def getFrameError(self):

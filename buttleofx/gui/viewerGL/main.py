@@ -1,5 +1,6 @@
 import os
 import logging
+
 from PyQt5 import QtCore, QtWidgets, QtQuick, QtQml, QtOpenGL
 
 tuttleofx_installed = False
@@ -24,10 +25,10 @@ class ButtleApp(QtWidgets.QApplication):
 
     def notify(self, receiver, event):
         try:
-            # print("QApp notify")
+            # logging.debug("QApp notify")
             return QtWidgets.QApplication.notify(self, receiver, event)
         except Exception as e:
-            print("QApp notify exception: " + str(e))
+            logging.warning("QApp notify exception: " + str(e))
             import traceback
             traceback.print_exc()
             return False

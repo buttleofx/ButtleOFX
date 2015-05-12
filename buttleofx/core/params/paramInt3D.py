@@ -1,5 +1,5 @@
 from buttleofx.core.params import Param
-from buttleofx.core.undo_redo.manageTools import CommandManager
+from buttleofx.core.undo_redo.manageTools import globalCommandManager
 from buttleofx.core.undo_redo.commands.params import CmdSetParamND
 
 
@@ -116,7 +116,7 @@ class ParamInt3D(Param):
         if value != self.getValue1():
             # Push the command
             cmdUpdate = CmdSetParamND(self, (value, self.getValue2(), self.getValue3()))
-            cmdManager = CommandManager()
+            cmdManager = globalCommandManager
             cmdManager.push(cmdUpdate)
 
     def setValue1HasChanged(self, changed):
@@ -128,7 +128,7 @@ class ParamInt3D(Param):
         if value != self.getValue2():
             # Push the command
             cmdUpdate = CmdSetParamND(self, (self.getValue1(), value, self.getValue3()))
-            cmdManager = CommandManager()
+            cmdManager = globalCommandManager
             cmdManager.push(cmdUpdate)
 
     def setValue2HasChanged(self, changed):
@@ -141,7 +141,7 @@ class ParamInt3D(Param):
         if value != self.getValue3():
             # Push the command
             cmdUpdate = CmdSetParamND(self, (self.getValue1(), self.getValue2(), value))
-            cmdManager = CommandManager()
+            cmdManager = globalCommandManager
             cmdManager.push(cmdUpdate)
 
     def setValue3HasChanged(self, changed):

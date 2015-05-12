@@ -1,8 +1,9 @@
-from buttleofx.gui.browser_v2.actions.worker import Worker
-from quickmamba.patterns import Singleton
-from quickmamba.models import QObjectListModel
+import logging
+import queue
+
 from PyQt5 import QtCore
-from queue import Queue
+
+from buttleofx.gui.browser_v2.actions.actionWorker import ActionWorker
 
 
 class ActionManager(QtCore.QObject):
@@ -12,49 +13,65 @@ class ActionManager(QtCore.QObject):
     """
 
     actionChanged = QtCore.pyqtSignal()
-    num_threads_workers = 5
 
     def __init__(self):
+        logging.debug('ActionManager constructor')
         super(ActionManager, self).__init__()
-        # lists of ActionWrapper
-        self._waiting = Queue(maxsize=0)
-        self._running = []
-        self._ended = []
-        self._workers = [Worker(self._waiting, self._running, self._ended, self.actionChanged)
-                         for _ in range(self.num_threads_workers)]
-        self.startWorkers()
+        self._waitingActionsQueue = queue.Queue(maxsize=0)
+        self._runningActions = []
+        self._endedActions = []
+        self._workers = []
 
-    def stopWorkers(self):
-        Worker.destroy()
-        for _ in self._workers:
-            self._waiting.put(None)
+    def __enter__(self):
+        self.startWorkers()
+        return self
+    
+    def __exit__(self, type, value, traceback):
+        self.stopWorkers()
+
+    def __del__(self):
+        logging.debug('ActionManager destructor')
+        self.stopWorkers()
+
+    def createWorkers(self, numWorkerThreads=5):
+        # Create all workers
+        self._workers = [ActionWorker(self)
+                         for _ in range(numWorkerThreads)]
 
     def startWorkers(self):
+        logging.debug('ActionManager startWorkers')
+        if not self._workers:
+            self.createWorkers()
         for worker in self._workers:
             worker.start()
 
+    def stopWorkers(self):
+        for _ in self._workers:
+            self._waitingActionsQueue.put(None)  # add end-of-queue markers
+        # Blocks until all items in the queue have been gotten and processed.
+        for worker in self._workers:
+            worker.join()
+        del self._workers[:]  # clear the list
+
     def push(self, actionWrapper):
-        self._waiting.put(actionWrapper)
+        self._waitingActionsQueue.put(actionWrapper)
         self.actionChanged.emit()
 
     def clearEndedActions(self):
-        self._ended.clear()
+        self._endedActions.clear()
         self.actionChanged.emit()
 
     def clearRunningActions(self):
-        self._running.clear()
+        self._runningActions.clear()
         self.actionChanged.emit()
 
     def getEndedActions(self):
-        return self._ended
+        return self._endedActions
 
     def getRunningActions(self):
-        return self._running
+        return self._runningActions
 
-    def getWaitingActions(self):
-        return self._waiting
-
-    def getModelFromList(self, list):
+    def listToModel(self, list):
         model = QObjectListModel(self)
         model.append(list)
         return model
@@ -63,20 +80,20 @@ class ActionManager(QtCore.QObject):
 
     @QtCore.pyqtSlot(result=QtCore.QObject)
     def getEndedActionsModel(self):
-        return self.getModelFromList(self._ended)
+        return self.listToModel(self._ended)
 
     @QtCore.pyqtSlot(result=QtCore.QObject)
     def getRunningActionsModel(self):
-        return self.getModelFromList(self._running)
+        return self.listToModel(self._running)
 
     @QtCore.pyqtSlot(result=QtCore.QObject)
     def getWaitingActionsModel(self):
-        return self.getModelFromList(self._waiting)
+        return self.listToModel(self._waiting)
 
     @QtCore.pyqtSlot(QtCore.QObject)
-    def removeEndedActionFromId(self, obj):
+    def removeEndedActionFromId(self, actionWrapper):
         for idx, el in enumerate(self._ended):
-            if id(el) == obj.getIdObject():
+            if id(el) == id(actionWrapper):
                 self._ended.pop(idx)
                 self.actionChanged.emit()
                 break
@@ -93,26 +110,10 @@ class ActionManager(QtCore.QObject):
         :param path:
         :return: First BrowserItem instance found with a given path into running and waiting lists
         """
-        bItem = self.searchItemInList(self._waiting.queue, path)
+        bItem = self.searchItemInList(self._waitingActionsQueue.queue, path)
         if bItem:
             return bItem
-        return self.searchItemInList(self._running, path)
-
-    @QtCore.pyqtSlot()
-    def abortAll(self):
-        for a in self._waiting:
-            a.abort()
-        for a in self._running:
-            a.abort()
-
-    endedActions = QtCore.pyqtProperty(QObjectListModel, getEndedActionsModel, notify=actionChanged)
-    runningActions = QtCore.pyqtProperty(QObjectListModel, getRunningActionsModel, notify=actionChanged)
-    waitingActions = QtCore.pyqtProperty(QObjectListModel, getWaitingActionsModel, notify=actionChanged)
+        return self.searchItemInList(self._runningActions, path)
 
 
-class ActionManagerSingleton(Singleton):
-    _actionManager = ActionManager()
-
-    @staticmethod
-    def get():
-        return ActionManagerSingleton._actionManager
+globalActionManager = ActionManager()

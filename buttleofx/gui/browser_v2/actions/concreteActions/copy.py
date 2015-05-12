@@ -42,11 +42,11 @@ class Copy(ActionInterface):
             frames = seqParsed.getFramesIterable()
 
             for f in frames:
-                # print(f)
+                # logging.debug(f)
                 filename = seqParsed.getFilenameAt(f)
-                # print(filename)
+                # logging.debug(filename)
                 filePath = os.path.join(browserItem.getParentPath(), filename)
-                # print(file_path)
+                # logging.debug(file_path)
                 if os.path.exists(destPath):
                     shutil.copy2(filePath, destPath)
                     self._framesPaths.append(os.path.join(destPath, filename))

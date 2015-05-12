@@ -2,7 +2,7 @@ import logging
 
 from quickmamba.patterns import Signal
 
-from buttleofx.event import ButtleEventSingleton
+from buttleofx.event import globalButtleEvent
 from buttleofx.core.params import (ParamInt, ParamInt2D, ParamInt3D, ParamString, ParamDouble, ParamDouble2D,
                                    ParamBoolean, ParamDouble3D, ParamChoice, ParamPushButton, ParamRGBA, ParamRGB,
                                    ParamGroup, ParamPage)
@@ -200,17 +200,15 @@ class Node(object):
 
     def emitNodeContentChanged(self):
         """
-            If necessary, call emitOneParamChangedSignal, to warn buttleEvent that a param just
+            If necessary, call emitOneParamChangedSignal, to warn globalButtleEvent that a param just
             changed (to update the viewer). Also emit nodeContentChanged signal, to warn the node
             wrapper that a param just changed (for properties of other params for example!)
         """
-        from buttleofx.data import ButtleDataSingleton
-        buttleData = ButtleDataSingleton().get()
+        from buttleofx.data import globalButtleData
 
-        if self._name == buttleData.getCurrentViewerNodeName():
-            # To buttleEvent
-            buttleEvent = ButtleEventSingleton().get()
-            buttleEvent.emitOneParamChangedSignal()
+        if self._name == globalButtleData.getCurrentViewerNodeName():
+            # To globalButtleEvent
+            globalButtleEvent.emitOneParamChangedSignal()
 
         # To the node wrapper
         self.nodeContentChanged()

@@ -1,7 +1,10 @@
 import logging
+
 from PyQt5 import QtCore
 from PyQt5 import QtGui
+
 from quickmamba.models import QObjectListModel
+
 from buttleofx.gui.graph.node import NodeWrapper
 from buttleofx.gui.graph.connection import ConnectionWrapper
 
@@ -24,7 +27,6 @@ class GraphWrapper(QtCore.QObject):
         super(GraphWrapper, self).__init__(view)
 
         self._view = view
-        print("view", view)
 
         self._nodeWrappers = QObjectListModel(self)
         self._connectionWrappers = QObjectListModel(self)
@@ -63,8 +65,8 @@ class GraphWrapper(QtCore.QObject):
                 if clipConnected_input and clipConnected_output:
                     clips.append(clipConnected_input)
                     clips.append(clipConnected_output)
-                    print(clipConnected_input.getNodeName())
-                    print(clipConnected_output.getNodeName())
+                    logging.debug(clipConnected_input.getNodeName())
+                    logging.debug(clipConnected_output.getNodeName())
 
                 self._graph.deleteNodes([nodeWrapper.getNode()])
 
@@ -191,7 +193,7 @@ class GraphWrapper(QtCore.QObject):
 
     @QtCore.pyqtSlot(result=QtGui.QVector4D)
     def getBBox(self):
-        print("getBBox")
+        logging.debug("getBBox")
         bbox = QtGui.QVector4D()
         if not self._nodeWrappers:
             return bbox

@@ -5,7 +5,7 @@ from buttleofx.gui.graph import GraphWrapper
 from PyQt5 import QtCore, QtWidgets, QtQuick
 from buttleofx.gui.paramEditor.params import ParamInt
 from buttleofx.gui.paramEditor.params import ParamString
-from buttleofx.core.undo_redo.manageTools import CommandManager
+from buttleofx.core.undo_redo.manageTools import globalCommandManager
 from buttleofx.gui.paramEditor.wrappers import ParamEditorWrapper
 
 
@@ -25,7 +25,7 @@ if __name__ == '__main__':
     ]
 
     # Create undo-redo context
-    cmdManager = CommandManager()
+    cmdManager = globalCommandManager
     cmdManager.setActive()
     cmdManager.clean()
 

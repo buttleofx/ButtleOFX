@@ -33,10 +33,5 @@ class ButtleEvent(QtCore.QObject):
         self.oneParamChangedSignal()
 
 
-# This class exists just because thre are problems when a class extends 2 other class (Singleton and QObject)
-class ButtleEventSingleton(Singleton):
+globalButtleEvent = ButtleEvent()
 
-    _buttleEvent = ButtleEvent()
-
-    def get(self):
-        return self._buttleEvent

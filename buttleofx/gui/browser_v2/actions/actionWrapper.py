@@ -1,3 +1,4 @@
+import time
 from PyQt5 import QtCore
 
 
@@ -9,6 +10,7 @@ class ActionWrapper(QtCore.QObject):
     nbProcessedChanged = QtCore.pyqtSignal()
     abortNotified = QtCore.pyqtSignal()
     progressChanged = QtCore.pyqtSignal()
+    timeProcessChange = QtCore.pyqtSignal()
 
     def __init__(self, actions):
         super(ActionWrapper, self).__init__()
@@ -17,7 +19,23 @@ class ActionWrapper(QtCore.QObject):
         self._progress = 0
         self._nbActions = len(actions)
         self._abortFlag = False
+        self._timeProcess = ""
+        self.updateTimeProcess()
         self.connectProgressionToActions()
+
+    def updateTimeProcess(self):
+        self._timeProcess = time.strftime("%X", time.localtime())
+        self.timeProcessChange.emit()
+
+    def getTimeProcess(self):
+        return self._timeProcess
+
+    def executeActions(self):
+        self.updateTimeProcess()
+        for action in self._actions:
+            action.process()
+            self.upProcessed()
+        self.updateTimeProcess()
 
     def abort(self):
         for action in self._actions:
@@ -79,4 +97,5 @@ class ActionWrapper(QtCore.QObject):
     aborted = QtCore.pyqtProperty(bool, isAborted, setAbort, notify=abortNotified)
     progress = QtCore.pyqtProperty(float, getProgress, notify=progressChanged)
     nbProcessed = QtCore.pyqtProperty(int, getNbProcessed, notify=nbProcessedChanged)
-    nbTotalActions = QtCore.pyqtProperty(int, getNbTotalActions)
+    timeProcess = QtCore.pyqtProperty(str, getTimeProcess, notify=timeProcessChange)
+    nbTotalActions = QtCore.pyqtProperty(int, getNbTotalActions, constant=True)

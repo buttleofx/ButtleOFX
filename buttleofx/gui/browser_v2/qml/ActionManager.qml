@@ -47,6 +47,17 @@ Window {
                         }
 
                         Text {
+                            id: task_time
+
+                            verticalAlignment: Text.AlignVCenter
+                            clip: true
+                            font.pointSize: 11
+                            color: "gray"
+
+                            text: qsTr(model.object.timeProcess)
+                        }
+
+                        Text {
                             visible: model.object.aborted
 
                             verticalAlignment: Text.AlignVCenter
@@ -58,6 +69,31 @@ Window {
                         }
                     }
                 }
+
+//                Button {
+//                    id: abort_ended
+
+//                    visible: !model.object.aborted
+//                    Layout.preferredWidth: parent.width * 0.2
+//                    Layout.preferredHeight: parent.height
+//                    Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+
+//                    tooltip: "Abort and reverse task"
+
+//                    iconSource:"img/abort.png"
+
+//                    style:
+//                    ButtonStyle {
+//                        background: Rectangle {
+//                            anchors.fill: parent
+//                            color: "transparent"
+//                        }
+//                    }
+
+//                    onClicked: {
+//                        model.object.aborted = true
+//                    }
+//                }
 
                 Button {
                     id: del
@@ -238,3 +274,4 @@ Window {
         action_button.isOpen = false
     }
 }
+

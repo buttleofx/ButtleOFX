@@ -3,6 +3,8 @@ import queue
 
 from PyQt5 import QtCore
 
+from quickmamba.models import QObjectListModel
+
 from buttleofx.gui.browser_v2.actions.actionWorker import ActionWorker
 
 
@@ -65,36 +67,35 @@ class ActionManager(QtCore.QObject):
         self._runningActions.clear()
         self.actionChanged.emit()
 
+    def getWaitingActionsQueue(self):
+        return self._waitingActionsQueue
+
     def getEndedActions(self):
         return self._endedActions
 
     def getRunningActions(self):
         return self._runningActions
 
-    def listToModel(self, list):
+    def listToModel(self, listActions):
         model = QObjectListModel(self)
-        model.append(list)
+        model.append(listActions)
         return model
 
     # ################################### Methods exposed also to QML ############################### #
 
     @QtCore.pyqtSlot(result=QtCore.QObject)
     def getEndedActionsModel(self):
-        return self.listToModel(self._ended)
+        return self.listToModel(self._endedActions)
 
     @QtCore.pyqtSlot(result=QtCore.QObject)
     def getRunningActionsModel(self):
-        return self.listToModel(self._running)
-
-    @QtCore.pyqtSlot(result=QtCore.QObject)
-    def getWaitingActionsModel(self):
-        return self.listToModel(self._waiting)
+        return self.listToModel(self._runningActions)
 
     @QtCore.pyqtSlot(QtCore.QObject)
     def removeEndedActionFromId(self, actionWrapper):
-        for idx, el in enumerate(self._ended):
+        for idx, el in enumerate(self._endedActions):
             if id(el) == id(actionWrapper):
-                self._ended.pop(idx)
+                self._endedActions.pop(idx)
                 self.actionChanged.emit()
                 break
 
@@ -115,5 +116,7 @@ class ActionManager(QtCore.QObject):
             return bItem
         return self.searchItemInList(self._runningActions, path)
 
+    endedActions = QtCore.pyqtProperty(QObjectListModel, getEndedActionsModel, notify=actionChanged)
+    runningActions = QtCore.pyqtProperty(QObjectListModel, getRunningActionsModel, notify=actionChanged)
 
 globalActionManager = ActionManager()

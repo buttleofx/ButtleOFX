@@ -17,28 +17,23 @@ class ActionWorker(threading.Thread):
     def __del__(self):
         logging.debug('ActionWorker destructor')
 
-    def executeAction(self, actionWrapper):
-
-        self._actionManager._runningActions.append(actionWrapper)
-        for action in actionWrapper.getActions():
-            action.process()
-            actionWrapper.upProcessed()
-            self._actionManager.actionChanged.emit()
-
-        # search in progressList the index to push into doneList
-        self._actionManager._runningActions.remove(actionWrapper)
-        self._actionManager._endedActions.append(actionWrapper)
+    def executeActionWrapper(self, actionWrapper):
+        self._actionManager.getRunningActions().append(actionWrapper)
+        self._actionManager.actionChanged.emit()
+        actionWrapper.executeActions()
+        self._actionManager.getRunningActions().remove(actionWrapper)
+        self._actionManager.getEndedActions().append(actionWrapper)
 
     def run(self):
         while True:
             try:
                 # logging.debug('ActionWorker queue get')
-                actionWrapper = self._actionManager._waitingActionsQueue.get(timeout=1)
+                actionWrapper = self._actionManager.getWaitingActionsQueue().get(timeout=1)
                 # stop the worker if we meet an end-of-queue markers
                 if not actionWrapper:
                     logging.debug('ActionWorker end-of-queue markers')
                     return
-                self.executeAction(actionWrapper)
+                self.executeActionWrapper(actionWrapper)
             except queue.Empty:
                 # logging.debug('ActionWorker queue empty')
                 pass

@@ -30,8 +30,8 @@ class TestCreate(unittest.TestCase):
                                             parent_path)
             sp_new_file = sequenceParser.Item(sequenceParser.eTypeFile,
                                               file_path)
-            parent = BrowserItem(sp_parent, True)
-            new_file = BrowserItem(sp_new_file, True)
+            parent = BrowserItem(sp_parent)
+            new_file = BrowserItem(sp_new_file)
 
             # Create file
             cr = Create(parent, new_file)
@@ -57,8 +57,8 @@ class TestCreate(unittest.TestCase):
                                             parent_path)
             sp_new_file = sequenceParser.Item(sequenceParser.eTypeFile,
                                               file_path)
-            parent = BrowserItem(sp_parent, True)
-            new_file = BrowserItem(sp_new_file, True)
+            parent = BrowserItem(sp_parent)
+            new_file = BrowserItem(sp_new_file)
 
             # Create file
             cr = Create(parent, new_file)
@@ -90,8 +90,8 @@ class TestCreate(unittest.TestCase):
                                             parent_path)
             sp_new_folder = sequenceParser.Item(sequenceParser.eTypeFolder,
                                                 folder_path)
-            parent = BrowserItem(sp_parent, True)
-            new_folder = BrowserItem(sp_new_folder, True)
+            parent = BrowserItem(sp_parent)
+            new_folder = BrowserItem(sp_new_folder)
 
             # Create folder
             cr = Create(parent, new_folder)
@@ -117,8 +117,8 @@ class TestCreate(unittest.TestCase):
                                             parent_path)
             sp_new_folder = sequenceParser.Item(sequenceParser.eTypeFolder,
                                                 folder_path)
-            parent = BrowserItem(sp_parent, True)
-            new_folder = BrowserItem(sp_new_folder, True)
+            parent = BrowserItem(sp_parent)
+            new_folder = BrowserItem(sp_new_folder)
 
             # Create folder
             cr = Create(parent, new_folder)

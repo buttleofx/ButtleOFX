@@ -19,7 +19,7 @@ class ActionWorker(threading.Thread):
 
     def executeAction(self, actionWrapper):
 
-        self._inProgress.append(actionWrapper)
+        self._actionManager._runningActions.append(actionWrapper)
         for action in actionWrapper.getActions():
             action.process()
             actionWrapper.upProcessed()

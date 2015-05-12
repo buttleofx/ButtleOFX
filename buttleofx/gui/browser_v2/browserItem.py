@@ -39,7 +39,6 @@ class BrowserItem(QtCore.QObject):
     def __init__(self, sequenceParserItem):
         super(BrowserItem, self).__init__()
 
-        
         self._path = sequenceParserItem.getAbsoluteFilepath()
         self._typeItem = sequenceParserItem.getType()
         logging.debug('BrowserItem constructor - file:%s, type:%s' % (self._path, self._typeItem))

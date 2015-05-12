@@ -88,13 +88,13 @@ class BrowserAction(QtCore.QObject):
     @QtCore.pyqtSlot(str)
     def handleNew(self, type):
         if type == "Folder":
-            new = BrowserItem(sequenceParser.Item(sequenceParser.eTypeFolder, "New_Folder"), True)
+            new = BrowserItem(sequenceParser.Item(sequenceParser.eTypeFolder, "New_Folder"))
         elif type == "File":
-            new = BrowserItem(sequenceParser.Item(sequenceParser.eTypeFile, "NewDocument.txt"), True)
+            new = BrowserItem(sequenceParser.Item(sequenceParser.eTypeFile, "NewDocument.txt"))
         else:
             return
 
-        parent = BrowserItem(sequenceParser.Item(sequenceParser.eTypeFolder, self._browserModel.getCurrentPath()), False)
+        parent = BrowserItem(sequenceParser.Item(sequenceParser.eTypeFolder, self._browserModel.getCurrentPath()))
         self.pushToActionManager(ActionWrapper([Create(parent, new)]))
 
     # cache empty ?

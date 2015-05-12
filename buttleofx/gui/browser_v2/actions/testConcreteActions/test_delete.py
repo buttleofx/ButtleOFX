@@ -34,7 +34,7 @@ class TestDelete(unittest.TestCase):
             self.assertTrue(os.path.exists(file_path))
             sp_file = sequenceParser.Item(sequenceParser.eTypeFile,
                                           file_path)
-            bi = BrowserItem(sp_file, True)
+            bi = BrowserItem(sp_file)
 
             # Delete file
             de = Delete(bi)
@@ -60,7 +60,7 @@ class TestDelete(unittest.TestCase):
             self.assertTrue(os.path.exists(file_path))
             sp_file = sequenceParser.Item(sequenceParser.eTypeFile,
                                           file_path)
-            bi = BrowserItem(sp_file, True)
+            bi = BrowserItem(sp_file)
 
             # Delete file
             de = Delete(bi)
@@ -90,7 +90,7 @@ class TestDelete(unittest.TestCase):
             self.assertTrue(os.path.exists(folder_path))
             sp_folder = sequenceParser.Item(sequenceParser.eTypeFolder,
                                             folder_path)
-            bi = BrowserItem(sp_folder, True)
+            bi = BrowserItem(sp_folder)
 
             # Delete folder
             de = Delete(bi)
@@ -116,7 +116,7 @@ class TestDelete(unittest.TestCase):
             self.assertTrue(os.path.exists(folder_path))
             sp_folder = sequenceParser.Item(sequenceParser.eTypeFolder,
                                             folder_path)
-            bi = BrowserItem(sp_folder, True)
+            bi = BrowserItem(sp_folder)
 
             # Delete folder
             de = Delete(bi)
@@ -136,7 +136,7 @@ class TestDelete(unittest.TestCase):
             # Create BrowserItem sequence
             sp_seq = sequenceParser.browse(path)[0]
 
-            bi = BrowserItem(sp_seq, True)
+            bi = BrowserItem(sp_seq)
             self.assertIsNotNone(bi.getName())
             # Delete sequence
             de = Delete(bi)
@@ -152,7 +152,7 @@ class TestDelete(unittest.TestCase):
             # Create BrowserItem sequence
             sp_seq = sequenceParser.browse(path)[0]
 
-            bi = BrowserItem(sp_seq, True)
+            bi = BrowserItem(sp_seq)
             self.assertIsNotNone(bi.getName())
             # Delete sequence
             de = Delete(bi)

@@ -275,7 +275,9 @@ Rectangle {
 
                         Menu {
                             id: autoCompleteList
-                            __visualItem: textEditContainer       //simulate container for popup
+                            __visualItem: texteditPath
+                            __xOffset: texteditPath.positionToRectangle(root.model.currentPath.length).x
+                            __yOffset: texteditPath.height-8
 
                             Instantiator{
                                 model:root.model.listFolderNavBar
@@ -305,12 +307,8 @@ Rectangle {
                             function show() {
                                 if(!root.model.listFolderNavBar.count)
                                     return
-
-                                var indexPosition = root.model.currentPath.length
-                                var positionToShow = Qt.vector2d(0, texteditPath.height)
-                                positionToShow.x = texteditPath.positionToRectangle(indexPosition).x
-                                this.__popup(positionToShow.x+12, positionToShow.y) //12 magic
-                                }
+                                this.__popup(0, 0)
+                            }
                         }
                     }
                 }

@@ -162,7 +162,6 @@ class BrowserModel(QtCore.QObject):
 
         listToBrowse = self._browserItems
         if self == modelRequester:
-            modelRequester.getThreadParallel().join()
             listToBrowse = self._browserItems.copy()  # copy: _browserItems deleted line after
             modelRequester.clearItemsSync.emit()
 

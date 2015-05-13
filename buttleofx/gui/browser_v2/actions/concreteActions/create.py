@@ -28,7 +28,7 @@ class Create(ActionInterface):
 
         if os.path.exists(filePath):
             if newBrowserItem.isFile():
-                filePathTmp = filePath.rstrip(newBrowserItem.getFileExtension())+'_'
+                filePathTmp = filePath[:-len(newBrowserItem.getFileExtension())]+'_'
                 extension = newBrowserItem.getFileExtension()
                 cpt = 1
                 while cpt < 1000:
@@ -36,7 +36,6 @@ class Create(ActionInterface):
                         filePath = filePathTmp+str(cpt)+extension
                         break
                     cpt += 1
-                open(filePath, 'a').close()
 
             elif newBrowserItem.isFolder():
                 cpt = 1
@@ -45,13 +44,20 @@ class Create(ActionInterface):
                         filePath = filePath+'_'+str(cpt)
                         break
                     cpt += 1
-                os.makedirs(filePath)
+        logging.debug(newBrowserItem.getFileExtension())
+        if newBrowserItem.isFile():
+            open(filePath, 'a').close()
+        if newBrowserItem.isFolder():
+            os.makedirs(filePath)
 
         self._newBrowserItem.updatePath(filePath)
 
     def revert(self):
         browserItem = self._newBrowserItem
         browserItemPath = self._newBrowserItem.getPath()
+
+        if not os.path.exists(browserItemPath):
+            return
 
         if browserItem.isFile():
             os.remove(browserItemPath)

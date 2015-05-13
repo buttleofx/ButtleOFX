@@ -21,6 +21,7 @@ class ActionWorker(threading.Thread):
         self._actionManager.getRunningActions().append(actionWrapper)
         self._actionManager.actionChanged.emit()
         actionWrapper.executeActions()
+        self._actionManager.actionChanged.emit()
         self._actionManager.getRunningActions().remove(actionWrapper)
         self._actionManager.getEndedActions().append(actionWrapper)
 

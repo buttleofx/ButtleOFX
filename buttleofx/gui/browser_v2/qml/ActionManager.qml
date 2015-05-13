@@ -25,7 +25,7 @@ Window {
                 anchors.fill: parent
 
                 Rectangle {
-                    Layout.preferredWidth: parent.width * 0.8
+                    Layout.preferredWidth: parent.width * 0.7
                     Layout.preferredHeight: parent.height
 
                     color: "transparent"
@@ -43,7 +43,11 @@ Window {
                             font.pointSize: 11
                             color: "white"
 
-                            text: qsTr(model.object.getName() + " of " + model.object.nbTotalActions + " element(s)")
+                            text:{
+                                var tmp =  model.object.getName() + " of " + model.object.nbTotalActions + " element"
+                                tmp += model.object.nbTotalActions > 1 ? "s" : ""
+                                return qsTr(tmp)
+                            }
                         }
 
                         Text {
@@ -70,30 +74,30 @@ Window {
                     }
                 }
 
-//                Button {
-//                    id: abort_ended
+                Button {
+                    id: abort_ended
 
-//                    visible: !model.object.aborted
-//                    Layout.preferredWidth: parent.width * 0.2
-//                    Layout.preferredHeight: parent.height
-//                    Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+                    visible: !model.object.aborted
+                    Layout.preferredWidth: parent.width * 0.1
+                    Layout.preferredHeight: parent.height
+                    Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
 
-//                    tooltip: "Abort and reverse task"
+                    tooltip: "Abort and reverse task"
 
-//                    iconSource:"img/abort.png"
+                    iconSource:"img/abort.png"
 
-//                    style:
-//                    ButtonStyle {
-//                        background: Rectangle {
-//                            anchors.fill: parent
-//                            color: "transparent"
-//                        }
-//                    }
+                    style:
+                    ButtonStyle {
+                        background: Rectangle {
+                            anchors.fill: parent
+                            color: "transparent"
+                        }
+                    }
 
-//                    onClicked: {
-//                        model.object.aborted = true
-//                    }
-//                }
+                    onClicked: {
+                        model.object.aborted = true
+                    }
+                }
 
                 Button {
                     id: del
@@ -154,7 +158,13 @@ Window {
                             font.pointSize: 12
                             color: "white"
 
-                            text: qsTr(model.object.getName() + " of " + model.object.nbTotalActions + " file(s)")
+                            text:{
+                                var tmp =  model.object.getName() + " of "
+                                tmp += model.object.nbProcessed != model.object.nbTotalActions ? model.object.nbProcessed +1 : model.object.nbProcessed
+                                tmp += " on " +model.object.nbTotalActions +" element"
+                                tmp += model.object.nbTotalActions > 1 ? "s" : ""
+                                qsTr(tmp)
+                            }
                         }
                     }
 

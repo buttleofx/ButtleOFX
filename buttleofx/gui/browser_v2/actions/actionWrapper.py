@@ -35,8 +35,8 @@ class ActionWrapper(QtCore.QObject):
         self.updateTimeProcess()
         for action in self._actions:
             action.process()
+            self.updateTimeProcess()
             self.upProcessed()
-        self.updateTimeProcess()
 
     def abort(self):
         for action in self._actions:

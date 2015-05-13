@@ -169,13 +169,15 @@ class BrowserItem(QtCore.QObject):
         return False
 
     def getRealPathImg(self):
-        if self.isSupported():
+        if self.getFileExtension() ==".html":
+            return "img/file-icon.png"
+        if self.isSupported() and not self.isSequence():
             return 'image://buttleofx/' + self._path
 
         if self.isFolder():
             return "img/folder-icon.png"  # default
         if self.isSequence():
-            return "img/file-icon.png"  # TODO: seq icon
+            return self._sequence.getFirstFilePath()  # TODO: seq icon
         if self.isFile():
             return "img/file-icon.png"
         return "img/file-icon.png"  # TODO: err

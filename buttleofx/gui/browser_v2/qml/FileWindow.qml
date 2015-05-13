@@ -104,6 +104,7 @@ Rectangle {
             shortcut: StandardKey.New
             onTriggered: {
                 _browserAction.handleNew("Folder")
+                _browser.refresh()
             }
         }
         MenuItem{
@@ -113,6 +114,7 @@ Rectangle {
             shortcut: StandardKey.UnknownKey
             onTriggered: {
                 _browserAction.handleNew("File")
+                _browser.refresh()
             }
         }
         MenuSeparator{}
@@ -123,6 +125,8 @@ Rectangle {
             iconName: "edit-copy"
             onTriggered: {
                 _browserAction.handleCopy()
+                _browser.refresh()
+
             }
         }
         MenuItem{
@@ -132,6 +136,8 @@ Rectangle {
             shortcut: StandardKey.Cut
             onTriggered: {
                 _browserAction.handleMove()
+                _browser.refresh()
+
             }
         }
         MenuItem{
@@ -145,6 +151,8 @@ Rectangle {
                     destination = _browser.selectedItems.get(0).path
 
                 _browserAction.handlePaste(destination)
+                _browser.refresh()
+
             }
         }
         MenuItem{
@@ -320,8 +328,13 @@ Rectangle {
 
                     else if(mouse.button == Qt.LeftButton){
                         if(!model.object.isFolder()){
-                            if (model.object.isSupported())
-                                handleGraphViewerClick(model.object.path)
+                            if (model.object.isSupported()){
+                                if (model.object.isSequence())
+                                    handleGraphViewerClick(model.object.pathImg)
+                                else
+                                    handleGraphViewerClick(model.object.path)
+
+                            }
                         }
 
                         if ((mouse.modifiers & Qt.ShiftModifier))

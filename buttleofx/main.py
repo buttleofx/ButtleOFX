@@ -159,7 +159,7 @@ def toQImage(im):
                 qim = QtGui.QImage(im.data, im.shape[1], im.shape[0], im.strides[0], QtGui.QImage.Format_RGB888)
                 return qim
             elif im.shape[2] == 4:
-                qim = QtGui.QImage(im.data, im.shape[1], im.shape[0], im.strides[0], QtGui.QImage.Format_ARGB32)
+                qim = QtGui.QImage(im.data, im.shape[1], im.shape[0], im.strides[0], QtGui.QImage.Format_RGBA8888) #Format_RGBA32))
                 return qim
 
     raise ValueError("toQImage: case not implemented.")

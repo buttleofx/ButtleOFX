@@ -40,10 +40,7 @@ Rectangle {
                 _buttleData.currentViewerNodeWrapper = player.lastNodeWrapper
             player.changeViewer(player.lastView)
         }
-        if(browserItem.isSequence())
-            _buttleManager.nodeManager.dropFile(browserItem.sequence.firstFilePath, 10, 10)
-        else
-            _buttleManager.nodeManager.dropFile(browserItem.path, 10, 10)
+          _buttleManager.nodeManager.dropFile(browserItem.path, 10, 10)
     }
 
     signal pushVisitedFolder(string path)
@@ -332,11 +329,7 @@ Rectangle {
                     else if(mouse.button == Qt.LeftButton){
                         if(!model.object.isFolder()){
                             if (model.object.isSupported()){
-                                if (model.object.isSequence())
-                                    handleGraphViewerClick(model.object.pathImg)
-                                else
-                                    handleGraphViewerClick(model.object.path)
-
+                                handleGraphViewerClick(model.object.path)
                             }
                         }
 

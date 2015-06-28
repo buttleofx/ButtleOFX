@@ -178,7 +178,7 @@ class TuttleImageProvider(QtQuick.QQuickImageProvider):
 
     def requestImage(self, id, size):
         """
-        Compute the image using TuttleOFX
+        Compute the image using TuttleOFX: old way. Now the thumbnail build is wrapped inside a python process
         """
         logging.debug("TuttleImageProvider: file='%s'" % id)
         try:
@@ -290,7 +290,5 @@ def main(argv, app):
 
     with globalActionManager:
         topLevelItem.show()
-
         exitCode = app.exec_()
-
         sys.exit(exitCode)

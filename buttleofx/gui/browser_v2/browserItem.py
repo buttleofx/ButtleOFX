@@ -3,6 +3,9 @@ import logging
 from datetime import datetime
 from pwd import getpwuid
 from stat import filemode
+from multiprocessing import Process, Pool, Manager, Queue
+from queue import Empty
+import sys
 
 from PyQt5 import QtCore
 
@@ -11,6 +14,8 @@ from pySequenceParser import sequenceParser
 from pyTuttle import tuttle
 
 from buttleofx.gui.browser_v2.sequenceWrapper import SequenceWrapper
+from buttleofx.gui.browser_v2.thumbnailUtil import ThumbnailUtil
+from buttleofx.gui.browser_v2.parallelThread import *
 
 
 class BrowserItem(QtCore.QObject):
@@ -20,28 +25,32 @@ class BrowserItem(QtCore.QObject):
         folder = sequenceParser.eTypeFolder
         sequence = sequenceParser.eTypeSequence
 
-    _isSelected = False
-    _sequence = None
-    _weight = 0.0
-    _fileExtension = ""
-    _owner = ""
-    _lastModification = ""
-    _permissions = ""
-    _isSupported = False
+    class ThumbnailState:
+        loading = "loading"
+        built = "built"
+        loadFailed = "loadFailed"
+        loadCrashed = "loadCrashed"
+        notSupported = "notSupported"
 
-    # gui operations, int for the moment
-    _actionStatus = 0
+    thumbnailUtil = ThumbnailUtil()
 
     statusChanged = QtCore.pyqtSignal()
     selectedChanged = QtCore.pyqtSignal()
     fileChanged = QtCore.pyqtSignal()
+    thumbnailChanged = QtCore.pyqtSignal()
 
-    def __init__(self, sequenceParserItem):
+    imgFileThumbnailDefault = 'img/file-icon.png'
+    imgFolderThumbnailDefault = 'img/folder-icon.png'
+    imgErrorThumbnail = 'img/folder-icon.png'
+
+    def __init__(self, sequenceParserItem, isBuildThumbnail=True):
         super(BrowserItem, self).__init__()
-
         self._path = sequenceParserItem.getAbsoluteFilepath()
         self._typeItem = sequenceParserItem.getType()
-        logging.debug('BrowserItem constructor - file:%s, type:%s' % (self._path, self._typeItem))
+        self._actionStatus = 0  # gui operations(ActionManager), int for the moment
+        self._isSelected = False
+        self._sequence = None
+        self._fileExtension = ''
 
         if self.isFile():
             self._fileExtension = os.path.splitext(self._path)[1]
@@ -49,11 +58,36 @@ class BrowserItem(QtCore.QObject):
             self._sequence = SequenceWrapper(sequenceParserItem, self._path)
 
         self._isSupported = self.isSupportedFromTuttle()
-        self._pathImg = self.getRealPathImg()
         self._lastModification = self.getLastModification_fileSystem()
         self._permissions = self.getPermissions_fileSystem()
         self._owner = self.getOwner_fileSystem()
         self._weight = self.getWeight_fileSystem()
+        self._imgPath = self.getRealImgPath()
+
+        # we need to share some data between process while computing thumbnail
+        # process inside a thread: parallel thread for control on the process result + kill process if needed
+        self._isBuildThumbnail = isBuildThumbnail
+        self._thumbnailData = Manager().dict()
+        self._thumbnailData['path'] = ''
+        self._thumbnailData['state'] = BrowserItem.ThumbnailState.loading
+        self._thumbnailProcess = Process(target=self.buildThumbnailProcess, args=(self._imgPath,))
+        self._thumbnailThread = ParallelThread()
+        self._queueThumbnailBuildResult = Queue()
+        if isBuildThumbnail:
+            self.startBuildThumbnail()
+
+        logging.debug('BrowserItem constructor - file:%s, type:%s' % (self._path, self._typeItem))
+
+    def __del__(self):
+        if self._isBuildThumbnail:
+            if self._thumbnailThread.getWorkerThread():
+                self._thumbnailThread.getWorkerThread().terminate()
+            logging.debug("thumbnail process terminated")
+
+    def startBuildThumbnail(self):
+        self._isBuildThumbnail = True
+        if not self._thumbnailProcess.is_alive():
+            self._thumbnailThread.start(self.buildThumbnailParallel)
 
     def notifyAddAction(self):
         self._actionStatus += 1
@@ -76,8 +110,8 @@ class BrowserItem(QtCore.QObject):
     def getFileExtension(self):
         return self._fileExtension
 
-    def getPathImg(self):
-        return self._pathImg
+    def getThumbnailPath(self):
+        return self._thumbnailData["path"]
 
     def getSequence(self):
         return self._sequence
@@ -110,21 +144,24 @@ class BrowserItem(QtCore.QObject):
         try:
             path = self._sequence.getFirstFilePath() if self.isSequence() else self._path
             return getpwuid(os.stat(path).st_uid).pw_name
-        except:
+        except Exception as e:
+            logging.debug(e)
             return "-"
 
     def getPermissions_fileSystem(self):
         try:
             path = self._sequence.getFirstFilePath() if self.isSequence() else self._path
             return filemode(os.stat(path).st_mode)
-        except:
+        except Exception as e:
+            logging.debug(e)
             return "-"
 
     def getLastModification_fileSystem(self):
         try:
             path = self._sequence.getFirstFilePath() if self.isSequence() else self._path
             return datetime.fromtimestamp(os.stat(path).st_mtime).strftime("%c")
-        except:
+        except Exception as e:
+            logging.debug(e)
             return "-"
 
     def getWeight_fileSystem(self):
@@ -165,23 +202,16 @@ class BrowserItem(QtCore.QObject):
                 return bool(tuttleReaders)
             except Exception as e:
                 logging.debug('BrowserItem.isSupportedFromTuttle - %s => %s' % (self.getPath(), str(e)))
-                pass
         return False
 
-    def getRealPathImg(self):
-        if self.getFileExtension() ==".html":
-            return "img/file-icon.png"
-        if self.isSupported() and not self.isSequence():
-            return 'image://buttleofx/' + self._path
-
+    def getRealImgPath(self):
         if self.isFolder():
-            return "img/folder-icon.png"  # default
+            return BrowserItem.imgFolderThumbnailDefault
         if self.isSequence():
-            return self._sequence.getFirstFilePath()  # TODO: seq icon
-        if self.isFile():
-            return "img/file-icon.png"
-        return "img/file-icon.png"  # TODO: err
-
+            return self._sequence.getFirstFilePath()
+        if self.isSupportedFromTuttle():
+            return self._path
+        return BrowserItem.imgFileThumbnailDefault
 
     # ############################################ Methods exposed to QML ############################################ #
 
@@ -221,6 +251,81 @@ class BrowserItem(QtCore.QObject):
     def isSupported(self):
         return self._isSupported
 
+    def updateThumbnailState(self, state):
+        # setter used inside the parallel thread
+        self._thumbnailData["state"] = state
+
+        if self.isFolder():
+            self._thumbnailData["path"] = BrowserItem.imgFolderThumbnailDefault
+        else:
+            if state == BrowserItem.ThumbnailState.notSupported:
+                self._thumbnailData["path"] = BrowserItem.imgFileThumbnailDefault
+            elif state == BrowserItem.ThumbnailState.loadCrashed:
+                self._thumbnailData["path"] = BrowserItem.imgFileThumbnailDefault
+            elif state == BrowserItem.ThumbnailState.loadFailed:
+                self._thumbnailData["path"] = "img/parent_hover.png"
+            elif state == BrowserItem.ThumbnailState.loading:
+                self._thumbnailData["path"] = "img/refresh_hover.png"
+            elif state == BrowserItem.ThumbnailState.built:
+                try:
+                    self._thumbnailData["path"] = BrowserItem.thumbnailUtil.getThumbnailPath(self._imgPath)
+                except Exception as e:
+                    logging.debug(str(e))
+                    self._thumbnailData["path"] = BrowserItem.imgFileThumbnailDefault
+        self.thumbnailChanged.emit()
+
+    def getThumbnailState(self):
+        return self._thumbnailData["state"]
+
+    def buildThumbnailParallel(self):
+        """
+            Method launched inside the parallel thread
+        """
+        if self.isFolder():
+            self.updateThumbnailState(BrowserItem.ThumbnailState.built)
+            return
+        if not self.isSupported():
+            self.updateThumbnailState(BrowserItem.ThumbnailState.notSupported)
+            logging.debug("Thumbnail not supported for %s" % self.path)
+            return
+
+        # thumbnail already exists ?
+        try:
+            if os.path.exists(BrowserItem.thumbnailUtil.getThumbnailPath(self._imgPath)):
+                self.updateThumbnailState(BrowserItem.ThumbnailState.built)
+                return
+        except Exception as e:
+            logging.debug(str(e))
+
+        self.updateThumbnailState(BrowserItem.ThumbnailState.loading)
+        self._thumbnailProcess.start()
+        self._thumbnailProcess.join(timeout=10)
+
+        if self._thumbnailProcess.exitcode != 0:
+            logging.debug("Thumbnail crash for %s" % self.path)
+            self.updateThumbnailState(BrowserItem.ThumbnailState.loadCrashed)
+        else:
+            try:
+                resultBuild = self._queueThumbnailBuildResult.get(timeout=1)
+            except Empty as e:
+                logging.debug(str(e))
+                return
+
+            self.updateThumbnailState(resultBuild)
+
+    def buildThumbnailProcess(self, imgPath):
+        """
+            Method launched inside the process wrapped into the parallel thread
+        """
+        try:
+            self.thumbnailUtil.getThumbnail(imgPath)
+            self._queueThumbnailBuildResult.put(BrowserItem.ThumbnailState.built)
+            logging.debug("Thumbnail built for %s" % self.path)
+        except Exception as e:
+            self._queueThumbnailBuildResult.put(BrowserItem.ThumbnailState.loadFailed)
+            logging.debug("Thumbnail failed for %s" % self.path)
+            logging.debug(str(e))
+
     # ################################### Data exposed to QML #################################### #
 
     isSelected = QtCore.pyqtProperty(bool, getSelected, setSelected, notify=selectedChanged)
@@ -229,7 +334,9 @@ class BrowserItem(QtCore.QObject):
     path = QtCore.pyqtProperty(str, getPath, updatePath, notify=fileChanged)
     type = QtCore.pyqtProperty(int, getType, notify=fileChanged)
     weight = QtCore.pyqtProperty(float, getWeightFormatted, notify=fileChanged)
-    pathImg = QtCore.pyqtProperty(str, getPathImg, constant=True)
+    pathImg = QtCore.pyqtProperty(str, getThumbnailPath, notify=thumbnailChanged)
     name = QtCore.pyqtProperty(str, getName, notify=fileChanged)
     permissions = QtCore.pyqtProperty(str, getPermissions, notify=fileChanged)
     owner = QtCore.pyqtProperty(str, getOwner, notify=fileChanged)
+    thumbnailState = QtCore.pyqtProperty(str, getThumbnailState, notify=thumbnailChanged)
+    sequence = QtCore.pyqtProperty(QtCore.QObject, getSequence, notify=fileChanged)

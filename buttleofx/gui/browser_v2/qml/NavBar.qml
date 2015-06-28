@@ -196,7 +196,6 @@ Rectangle {
                                 var filter=root.model.currentPath.substr(lastSlash+1)
                                 root.model.currentPath = root.model.currentPath.substr(0,lastSlash)
                                 root.model.filter =  filter
-                                root.model.currentPath += "/" + filter
                             }
                             else
                                 root.model.filter = "*"
@@ -226,7 +225,7 @@ Rectangle {
                             function fill(){
                                 this.clear()
                                 if(root.model.listFolderNavBar.count === 1 && texteditPath.text.trim())
-                                    this.setFormatted(root.model.listFolderNavBar.get(0).name)
+                                    this.setFormatted(root.model.listFolderNavBar.get(0)[0])
 
                             }
 
@@ -256,14 +255,16 @@ Rectangle {
                         }
 
                         Keys.onReleased: {
+                            if(event.key === Qt.Key_Shift || event.key === Qt.Key_Alt)
+                                return
                             root.model.currentPath = texteditPath.text
                             graySuggestion.fill()
 
-                            if(event.key == Qt.Key_Enter || event.key == Qt.Key_Return || event.key == Qt.Key_Down){
+                            if(event.key === Qt.Key_Enter || event.key === Qt.Key_Return)
                                 texteditPath.handleFilter()
-                                if(autoCompleteList.items.length > 1)
-                                    autoCompleteList.show()
-                            }
+
+                            if(event.key == Qt.Key_Down)
+                                autoCompleteList.handleInteraction()
                         }
 
                         onFocusChanged: {
@@ -284,8 +285,8 @@ Rectangle {
 
                                 MenuItem {
                                     id: textComponent
-                                    text: model.object.name
-                                    property var path: model.object.path
+                                    text: model.object[0]
+                                    property var path: model.object[1]
 
                                     onTriggered: {
                                         pushVisitedFolder(textComponent.path)
@@ -305,6 +306,7 @@ Rectangle {
                             }
 
                             function show() {
+                                console.log(root.model.listFolderNavBar.count)
                                 if(!root.model.listFolderNavBar.count)
                                     return
                                 this.__popup(0, 0)

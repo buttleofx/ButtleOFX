@@ -28,7 +28,7 @@ Rectangle {
         _buttleData.currentViewerIndex = 10 // We assign to the viewer the 10th view
         _buttleEvent.emitViewerChangedSignal()
     }
-    function handleGraphViewerDoubleClick(pathImg){
+    function handleGraphViewerDoubleClick(browserItem){
         _buttleData.currentGraphWrapper = _buttleData.graphWrapper
         _buttleData.currentGraphIsGraph()
 
@@ -40,7 +40,10 @@ Rectangle {
                 _buttleData.currentViewerNodeWrapper = player.lastNodeWrapper
             player.changeViewer(player.lastView)
         }
-        _buttleManager.nodeManager.dropFile(pathImg, 10, 10)
+        if(browserItem.isSequence())
+            _buttleManager.nodeManager.dropFile(browserItem.sequence.firstFilePath, 10, 10)
+        else
+            _buttleManager.nodeManager.dropFile(browserItem.path, 10, 10)
     }
 
     signal pushVisitedFolder(string path)
@@ -246,14 +249,14 @@ Rectangle {
 
                     fillMode: Image.Pad
 
-                    visible: !(model.object.type === 1) && icon.status === Image.Loading
+                    visible: !(model.object.type === 1) && (icon.status === Image.Loading || model.object.thumbnailState === "loading")
 
                     NumberAnimation on rotation {
                         from: 0
                         to: 360
                         running: loading.visible
                         loops: Animation.Infinite
-                        duration: 1000
+                        duration: 2000
                     }
                 }
 
@@ -353,7 +356,7 @@ Rectangle {
 
                     // If it's an image, we create a node
                     else if (model.object.isSupported())
-                        handleGraphViewerDoubleClick(model.object.path)
+                        handleGraphViewerDoubleClick(model.object)
                 }
             }
 

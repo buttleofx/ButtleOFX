@@ -128,6 +128,8 @@ class BrowserModel(QtCore.QObject):
 
     @QtCore.pyqtSlot()
     def onClearItemsSync(self):
+        for bItem in self._browserItems:
+            bItem.killThumbnailProcess()
         self._browserItems.clear()
         self._browserItemsModel.clear()
         self.modelChanged.emit()

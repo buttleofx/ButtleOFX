@@ -78,16 +78,19 @@ class BrowserItem(QtCore.QObject):
 
         logging.debug('BrowserItem constructor - file:%s, type:%s' % (self._path, self._typeItem))
 
-    def __del__(self):
-        if self._isBuildThumbnail:
-            if self._thumbnailThread.getWorkerThread():
-                self._thumbnailThread.getWorkerThread().terminate()
-            logging.debug("thumbnail process terminated")
+    def killThumbnailProcess(self):
+        try:
+            if self._thumbnailProcess.is_alive():
+                self._thumbnailProcess.terminate()
+                logging.debug('process for %s terminated' % self.path)
+        except Exception as e:
+            logging.debug('__exit__ Browser Item: %s' % str(e))
 
     def startBuildThumbnail(self):
         self._isBuildThumbnail = True
         if not self._thumbnailProcess.is_alive():
-            self._thumbnailThread.start(self.buildThumbnailParallel)
+            with WithMutex(self._thumbnailThread.getMutex()):
+                self._thumbnailThread.start(self.buildThumbnailParallel)
 
     def notifyAddAction(self):
         self._actionStatus += 1
@@ -261,9 +264,9 @@ class BrowserItem(QtCore.QObject):
             if state == BrowserItem.ThumbnailState.notSupported:
                 self._thumbnailData["path"] = BrowserItem.imgFileThumbnailDefault
             elif state == BrowserItem.ThumbnailState.loadCrashed:
-                self._thumbnailData["path"] = BrowserItem.imgFileThumbnailDefault
+                self._thumbnailData["path"] = 'img/del.png'
             elif state == BrowserItem.ThumbnailState.loadFailed:
-                self._thumbnailData["path"] = "img/parent_hover.png"
+                self._thumbnailData["path"] = "img/del.png"
             elif state == BrowserItem.ThumbnailState.loading:
                 self._thumbnailData["path"] = "img/refresh_hover.png"
             elif state == BrowserItem.ThumbnailState.built:

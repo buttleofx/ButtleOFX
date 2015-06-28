@@ -238,7 +238,6 @@ def main(argv, app):
     args = parser.parse_args()
 
     globalBrowserModel.setCurrentPath(os.path.abspath(args.folder) if args.folder else globalBrowserModel.getHomePath())
-
     # Expose data to QML
     rc = engine.rootContext()
     rc.setContextProperty("_buttleApp", app)
@@ -287,6 +286,7 @@ def main(argv, app):
 
     aFilter = EventFilter()
     app.installEventFilter(aFilter)
+    globalBrowserModel.loadData()
 
     with globalActionManager:
         topLevelItem.show()

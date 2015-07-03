@@ -246,7 +246,7 @@ Rectangle {
 
                     fillMode: Image.Pad
 
-                    visible: !(model.object.type === 1) && (icon.status === Image.Loading || model.object.thumbnailState === "loading")
+                    visible: !model.object.folder && (icon.status === Image.Loading || model.object.thumbnailState === "loading")
 
                     NumberAnimation on rotation {
                         from: 0

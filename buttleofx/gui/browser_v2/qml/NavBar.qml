@@ -105,19 +105,15 @@ Rectangle {
 
                     tooltip: "Parent folder"
 
-                    iconSource:
-                    if (hovered)
-                        "img/parent_hover.png"
-                    else
-                        "img/parent.png"
+                    iconSource: hovered ? "img/parent_hover.png" : "img/parent.png"
 
                     style:
-                    ButtonStyle {
-                        background: Rectangle {
-                            anchors.fill: parent
-                            color: "transparent"
+                        ButtonStyle {
+                            background: Rectangle {
+                                anchors.fill: parent
+                                color: "transparent"
+                            }
                         }
-                    }
 
                     onClicked: {
                         if(model.currentPath !== "/" && model.currentPath.trim() !== ""){
@@ -127,30 +123,39 @@ Rectangle {
                     }
                 }
 
-                Button {
+                Rectangle {
                     id: refresh
 
-                    Layout.preferredWidth: 20
-                    Layout.preferredHeight: 20
+                    Layout.preferredWidth: 14
+                    Layout.preferredHeight: 14
                     Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
-                    tooltip: "Refresh"
+                    color: 'transparent'
 
-                    iconSource:
-                    if (hovered)
-                        "img/refresh_hover.png"
-                    else
-                        "img/refresh.png"
+                    MouseArea{
+                        id: refreshMouse
+                        anchors.fill: parent
+                        hoverEnabled: true
+                        onClicked: root.model.refresh()
+                    }
 
-                    style:
-                    ButtonStyle {
-                        background: Rectangle {
-                            anchors.fill: parent
-                            color: "transparent"
+                    Image {
+                        id: modelLoading
+                        anchors.fill: parent
+                        source: refreshMouse.containsMouse || refreshRotation.running ? "img/refresh_hover.png" : 'img/refresh.png'
+                        asynchronous: true
+
+                        NumberAnimation on rotation {
+                            id: refreshRotation
+                            from: 0
+                            to: 360
+                            running: root.model.loading
+                            loops: Animation.Infinite
+                            duration: 1000
+                            alwaysRunToEnd: true
                         }
                     }
-                    onClicked: root.model.refresh()
-                }
 
+                }
 
                 Rectangle {
                     id: textEditContainer
@@ -210,7 +215,7 @@ Rectangle {
                             Behavior on x {
                                 PropertyAnimation {
                                     easing.type: Easing.InOutQuad;
-                                    duration: (graySuggestion.text.length)? 1 : 300
+                                    duration: (graySuggestion.text.length)? 10:500
                                 }
                             }
 
@@ -393,30 +398,6 @@ Rectangle {
                         searchEdit.forceActiveFocus()
                     }
 
-                }
-
-                Image {
-                    id: modelLoading
-
-                    anchors.horizontalCenter: parent.horizontalCenter
-                    height: 50
-                    width: parent.width
-
-                    source: "img/refresh_hover.png"
-                    sourceSize.width: 20
-                    sourceSize.height: 20
-                    asynchronous: true
-
-                    fillMode: Image.Pad
-                    visible: model.loading
-
-                    NumberAnimation on rotation {
-                        from: 0
-                        to: 360
-                        running: modelLoading.visible
-                        loops: Animation.Infinite
-                        duration: 1000
-                    }
                 }
 
 //                Button {

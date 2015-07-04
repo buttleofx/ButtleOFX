@@ -1,4 +1,5 @@
 from quickmamba.patterns import Signal
+import logging
 
 
 class Param:

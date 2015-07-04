@@ -62,7 +62,7 @@ class GLViewport_tuttleofx(GLViewport):
         buttleEvent.oneParamChangedSignal.connect(self.loadImage)
 
     def internPaintGL(self):
-        super(GLViewport_tuttleofx, self).internPaintGL()
+        GLViewport.internPaintGL(self)
         pixelScale = tuttle.OfxPointD()
         pixelScale.x = self.getScale()
         pixelScale.y = pixelScale.x

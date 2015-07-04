@@ -85,7 +85,7 @@ class EventFilter(QtCore.QObject):
             if event.modifiers() == QtCore.Qt.AltModifier and event.key() == QtCore.Qt.Key_F4:
                 event.ignore()
         if event.type() != QtCore.QEvent.Close:
-            return super(EventFilter, self).eventFilter(receiver, event)
+            return QtCore.QObject.eventFilter(self, receiver, event)
         if not isinstance(receiver, QtQuick.QQuickWindow) or not receiver.title() == "ButtleOFX":
             return False
         if not globalButtleData.graphCanBeSaved:
@@ -106,7 +106,7 @@ class EventFilter(QtCore.QObject):
                 # Save on the already existing file
                 globalButtleData.saveData(globalButtleData.urlOfFileToSave)
                 # Close the application
-                return super(EventFilter, self).eventFilter(receiver, event)
+                return QtCore.QObject.eventFilter(self, receiver, event)
 
             # This project has never been saved, so ask the user on which file to save.
             dialog = QtWidgets.QFileDialog()
@@ -116,11 +116,11 @@ class EventFilter(QtCore.QObject):
             globalButtleData.urlOfFileToSave = fileToSave
             globalButtleData.saveData(fileToSave)
             # Close the application
-            return super(EventFilter, self).eventFilter(receiver, event)
+            return QtCore.QObject.eventFilter(self, receiver, event)
 
         if ret == QtWidgets.QMessageBox.Discard:
             # Close the application
-            return super(EventFilter, self).eventFilter(receiver, event)
+            return QtCore.QObject.eventFilter(self, receiver, event)
 
         # Don't call the parent class, so we don't close the application
         return True
@@ -128,7 +128,7 @@ class EventFilter(QtCore.QObject):
 
 class ButtleApp(QtWidgets.QApplication):
     def __init__(self, argv):
-        super(ButtleApp, self).__init__(argv)
+        QtWidgets.QApplication.__init__(self, argv)
 
 #    def notify(self, receiver, event):
 #        try:

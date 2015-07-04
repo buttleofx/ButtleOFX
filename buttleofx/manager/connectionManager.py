@@ -150,13 +150,13 @@ class ConnectionManager(QtCore.QObject):
 
         # We find the position of this tmpClip to be able to create a IdClip object.
         positionTmpClip = globalButtleData.getGraphWrapper().getPositionClip(tmpClipNodeName, tmpClipName, tmpClipIndex)
-        tmpClip = IdClip(tmpClipNodeName, tmpClipName, clipIndex, positionTmpClip)
+        tmpClip = IdClip(tmpClipNodeName, tmpClipName)
 
         if tmpClip:
             # Idem, for the "dropped" clip = newClip
             positionNewClip = globalButtleData.getGraphWrapper().getPositionClip(clip.getNodeName(), clip.getClipName(),
                                                                            clipIndex)
-            newClip = IdClip(clip.getNodeName(), clip.getClipName(), clipIndex, positionNewClip)
+            newClip = IdClip(clip.getNodeName(), clip.getClipName())
 
             # A connection must be created from the ouput clip to the input clip (the order of
             # the arguments is important!)

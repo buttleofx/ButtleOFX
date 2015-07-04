@@ -24,7 +24,7 @@ class GraphWrapper(QtCore.QObject):
     _resize = False
 
     def __init__(self, graph, view):
-        super(GraphWrapper, self).__init__(view)
+        QtCore.QObject.__init__(self, view)
 
         self._view = view
 

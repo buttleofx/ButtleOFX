@@ -14,7 +14,7 @@ class ActionWrapper(QtCore.QObject):
     timeProcessChanged = QtCore.pyqtSignal()
 
     def __init__(self, actions):
-        super(ActionWrapper, self).__init__()
+        QtCore.QObject.__init__(self)
         self._actions = actions  # actionInterface list objects
         self._nbProcessed = 0    # nb of actions processed from self._actions
         self._progress = 0

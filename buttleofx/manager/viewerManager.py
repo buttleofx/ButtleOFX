@@ -11,7 +11,7 @@ class ViewerManager(QtCore.QObject):
     """
 
     def __init__(self):
-        super(ViewerManager, self).__init__()
+        QtCore.QObject.__init__(self)
 
         self._tuttleImageCache = None
         self._computedImage = None

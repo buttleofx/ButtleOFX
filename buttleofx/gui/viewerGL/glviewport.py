@@ -80,7 +80,7 @@ class GLViewport(QtQuick.QQuickPaintedItem):
     _glGeometry = QtCore.QRect()
 
     def __init__(self, parent=None):
-        super(GLViewport, self).__init__(parent)
+        QtQuick.QQuickPaintedItem.__init__(self, parent)
 
         self.img_data = None
         self.tex = None

@@ -25,7 +25,7 @@ class BrowserAction(QtCore.QObject):
 
     def __init__(self):
         logging.debug('BrowserAction begin constructor')
-        super(BrowserAction, self).__init__()
+        QtCore.QObject.__init__(self)
         self._cacheActions = None  # for copy, move actions
         self._browserModel = globalBrowserModel
         logging.debug('BrowserAction end constructor')

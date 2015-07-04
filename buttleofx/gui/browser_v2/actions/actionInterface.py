@@ -11,7 +11,7 @@ class ActionInterface(QtCore.QObject):
     progressChanged = QtCore.pyqtSignal()  # used to reporting in actionWrapper(via connectProgression)
 
     def __init__(self, browserItem):
-        super(ActionInterface, self).__init__()
+        QtCore.QObject.__init__(self)
         self._browserItem = browserItem
 
         # required for abort processing

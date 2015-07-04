@@ -10,7 +10,7 @@ class Copy(ActionInterface):
         # destination must be a directory
         # if not destination.isFolder():
         #     raise TypeError
-        super().__init__(browserItem)
+        ActionInterface.__init__(self, browserItem)
         self._srcPath = browserItem.getParentPath()
         self._destPath = ""
         self._framesPaths = []

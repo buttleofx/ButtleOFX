@@ -11,7 +11,7 @@ class SortOn(QtCore.QObject):
         masks = [onName, onSize, onType]
 
         def __init__(self):
-            super(SortOn, self).__init__()
+            QtCore.QObject.__init__(self)
             self._fieldToSort = self.onName
             self._reverse = False
 

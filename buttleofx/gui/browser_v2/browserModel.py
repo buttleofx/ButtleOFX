@@ -40,7 +40,7 @@ class BrowserModel(QtCore.QObject):
             Engine of browser user interaction with browserUI
             :param parent: Qt parent
         """
-        super(BrowserModel, self).__init__(parent)
+        QtCore.QObject.__init__(self, parent)
         self._currentPath = path
         self._browserItems = []  # used only in python side
         self._browserItemsModel = QObjectListModel(self)  # used for UI

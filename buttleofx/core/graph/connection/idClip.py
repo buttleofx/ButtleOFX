@@ -7,7 +7,7 @@ class IdClip(object):
     """
 
     def __init__(self, nodeName, clipName):
-        super(IdClip, self).__init__()
+        object.__init__(self)
 
         self._id = nodeName + clipName
         self._nodeName = nodeName

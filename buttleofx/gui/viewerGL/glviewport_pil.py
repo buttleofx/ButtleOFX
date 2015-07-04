@@ -11,7 +11,7 @@ from glviewport import GLViewport
 class GLViewport_pil(GLViewport):
 
     def __init__(self, parent=None):
-        super(GLViewport_pil, self).__init__(parent)
+        GLViewport.__init__(self, parent)
 
     # ######################################## Methods private to this class ####################################### #
 

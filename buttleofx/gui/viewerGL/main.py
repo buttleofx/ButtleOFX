@@ -21,7 +21,7 @@ currentFilePath = os.path.dirname(os.path.abspath(__file__))
 
 class ButtleApp(QtWidgets.QApplication):
     def __init__(self, argv):
-        super(ButtleApp, self).__init__(argv)
+        QtWidgets.QApplication.__init__(self, argv)
 
     def notify(self, receiver, event):
         try:

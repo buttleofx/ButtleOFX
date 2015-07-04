@@ -10,7 +10,7 @@ class ClipWrapper(QtCore.QObject):
 
     def __init__(self, clipName, nodeName, view):
         # logging.debug("ClipWrapper constructor")
-        super(ClipWrapper, self).__init__(view)
+        QtCore.QObject.__init__(self, view)
         self._nodeName = nodeName
         self._clipName = clipName
 

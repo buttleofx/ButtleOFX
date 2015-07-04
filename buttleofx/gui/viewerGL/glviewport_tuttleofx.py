@@ -10,7 +10,7 @@ from buttleofx.manager import globalButtleManager
 
 class GLViewport_tuttleofx(GLViewport):
     def __init__(self, parent=None):
-        super(GLViewport_tuttleofx, self).__init__(parent)
+        GLViewport.__init__(self, parent)
 
         self.tuttleOverlay = None
         self.recomputeOverlay = False

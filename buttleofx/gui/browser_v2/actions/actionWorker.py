@@ -11,7 +11,7 @@ class ActionWorker(threading.Thread):
 
     def __init__(self, actionManager):
         logging.debug('ActionWorker constructor')
-        super(ActionWorker, self).__init__()
+        threading.Thread.__init__(self)
         self._actionManager = actionManager
 
     def __del__(self):

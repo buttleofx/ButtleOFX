@@ -9,7 +9,7 @@ class NodeManager(QtCore.QObject):
     """
 
     def __init__(self):
-        super(NodeManager, self).__init__()
+        QtCore.QObject.__init__(self)
 
         self.undoRedoChanged = Signal()
 

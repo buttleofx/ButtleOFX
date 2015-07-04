@@ -11,7 +11,7 @@ class Create(ActionInterface):
         # Parent must be a directory
         if not parentBrowserItem.isFolder():
             raise TypeError
-        super().__init__(parentBrowserItem)
+        ActionInterface.__init__(self, parentBrowserItem)
         # TODO: Can a new item be a sequence ?
         self._newBrowserItem = newBrowserItem
 

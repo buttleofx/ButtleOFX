@@ -14,7 +14,7 @@ class ConnectionManager(QtCore.QObject):
     """
 
     def __init__(self):
-        super(ConnectionManager, self).__init__()
+        QtCore.QObject.__init__(self)
 
         self.undoRedoChanged = Signal()
 

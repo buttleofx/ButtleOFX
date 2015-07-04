@@ -5,7 +5,7 @@ from buttleofx.gui.browser_v2.actions.actionInterface import ActionInterface
 class Rename(ActionInterface):
 
     def __init__(self, browserItem, newName):
-        super().__init__(browserItem)
+        ActionInterface.__init__(self, browserItem)
         self._newName = newName
         self._oldName = browserItem.getName()
 

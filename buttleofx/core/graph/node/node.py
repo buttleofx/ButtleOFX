@@ -52,7 +52,7 @@ class Node(object):
     """
 
     def __init__(self, nodeName, nodeType, nodeCoord, tuttleNode):
-        super(Node, self).__init__()
+        object.__init__(self)
 
         # Tuttle node
         self._tuttleNode = tuttleNode

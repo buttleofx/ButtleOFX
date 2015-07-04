@@ -18,8 +18,7 @@ class NodeWrapper(QtCore.QObject):
 
     def __init__(self, node, view):
         # logging.debug("NodeWrapper constructor")
-
-        super(NodeWrapper, self).__init__(view)
+        QtCore.QObject.__init__(self, view)
 
         self._node = node
         self._view = view

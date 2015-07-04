@@ -17,12 +17,12 @@ class ActionManager(QtCore.QObject):
     actionChanged = QtCore.pyqtSignal()
 
     def __init__(self):
-        logging.debug('ActionManager constructor')
-        super(ActionManager, self).__init__()
+        QtCore.QObject.__init__(self)
         self._waitingActionsQueue = queue.Queue(maxsize=0)
         self._runningActions = []
         self._endedActions = []
         self._workers = []
+        logging.debug('ActionManager constructed')
 
     def __enter__(self):
         self.startWorkers()

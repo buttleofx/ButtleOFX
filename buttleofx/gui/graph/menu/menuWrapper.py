@@ -39,7 +39,7 @@ class MenuWrapper(QtCore.QObject):
     """
     # Initialize the MenuWrapper with the parentName of the menu
     def __init__(self, parentName, check, view, app):
-        super(MenuWrapper, self).__init__(view)
+        QtCore.QObject.__init__(self, view)
         self._view = view
         self._menu = QtGui.QMenu()  # QtGui.QMenu(view)
         self._menu.setTitle(parentName)

@@ -20,7 +20,7 @@ class Connection(object):
     """
 
     def __init__(self, clipOut, clipIn, tuttleConnection):
-        super(Connection, self).__init__()
+        object.__init__(self)
 
         # Tuttle connection
         self._tuttleConnection = tuttleConnection

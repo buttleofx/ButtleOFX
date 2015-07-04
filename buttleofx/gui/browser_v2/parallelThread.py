@@ -42,7 +42,7 @@ class WithMutex:
 
 class WorkerThread(QtCore.QThread):
     def __init__(self, target, param):
-        super(WorkerThread, self).__init__()
+        QtCore.QThread.__init__(self)
         self._target = target
         self._param = param
         logging.debug('__init__ ParallelThread WorkerThread: %s' % self)
@@ -61,7 +61,7 @@ class ParallelThread(QtCore.QObject):
     """
 
     def __init__(self):
-        super(ParallelThread, self).__init__(None)
+        QtCore.QObject.__init__(self, None)
         self._mutex = QtCore.QMutex(QtCore.QMutex.Recursive)
         self._workerThread = None
         self._isStopped = True

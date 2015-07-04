@@ -7,7 +7,7 @@ from buttleofx.gui.browser_v2.actions.actionInterface import ActionInterface
 class Delete(ActionInterface):
 
     def __init__(self, browserItem):
-        super().__init__(browserItem)
+        ActionInterface.__init__(self, browserItem)
         self._tmp = tempfile.TemporaryDirectory()
         self._destItems = []
 

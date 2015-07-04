@@ -46,7 +46,7 @@ class BrowserItem(QtCore.QObject):
     imgErrorThumbnail = 'img/folder-icon.png'
 
     def __init__(self, sequenceParserItem, isBuildThumbnail=True):
-        super(BrowserItem, self).__init__()
+        QtCore.QObject.__init__(self)
         self._path = sequenceParserItem.getAbsoluteFilepath()
         self._typeItem = sequenceParserItem.getType()
         self._actionStatus = 0  # gui operations(ActionManager), int for the moment

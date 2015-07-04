@@ -49,7 +49,7 @@ class BrowserItem(QtCore.QObject):
         QtCore.QObject.__init__(self)
         self._path = sequenceParserItem.getAbsoluteFilepath()
         self._typeItem = sequenceParserItem.getType()
-        self._actionStatus = 0  # gui operations(ActionManager), int for the moment
+        self._actionStatus = 0  # gui operations(ActionManager) on this browser item, int for the moment
         self._isSelected = False
         self._sequence = SequenceWrapper(sequenceParserItem, self._path) if self.isSequence() else None
         self._fileExtension = os.path.splitext(self._path)[1] if self.isFile() else ''
@@ -62,17 +62,29 @@ class BrowserItem(QtCore.QObject):
         self._imgPath = self.getRealImgPath()
 
         self._isBuildThumbnail = isBuildThumbnail
-        self._thumbnailPath = BrowserItem.imgFolderThumbnailDefault if self.isFolder() else ''
-        self._thumbnailState = ThumbnailState.built if self.isFolder() else ThumbnailState.loading
+        self._thumbnailPath = ''
+        self._thumbnailState = ThumbnailState.loading
         self._thumbnailProcess = Process(target=self.buildThumbnailProcess, args=(self._imgPath,))
         self._thumbnailHash = BrowserItem.thumbnailUtil.getThumbnailPath(self._imgPath) if not self.isFolder() else ''
         self._thumbnailMutex = Lock()
         self._killThumbnailFlag = False
+        self.initThumbnailData()
 
-        if not self.isFolder() and isBuildThumbnail:
+        if not self.isFolder() and self._isSupported and isBuildThumbnail:
             thumbnailPool.apply_async(self.startBuildThumbnail)
 
         logging.debug('BrowserItem constructor - file:%s, type:%s' % (self._path, self._typeItem))
+
+    def initThumbnailData(self):
+        """
+        Init thumbnail data according type and is supported from tuttle
+        """
+        if self.isFolder():
+            self._thumbnailPath = BrowserItem.imgFolderThumbnailDefault
+            self._thumbnailState = ThumbnailState.built
+        elif not self._isSupported:
+            self._thumbnailPath = BrowserItem.imgFileThumbnailDefault
+            self._thumbnailState = ThumbnailState.built
 
     def killThumbnailProcess(self):
         if self._killThumbnailFlag:
@@ -80,6 +92,7 @@ class BrowserItem(QtCore.QObject):
 
         self._killThumbnailFlag = True
         if not self._thumbnailProcess.is_alive():
+            logging.debug('killThumbnail process not alive %s' % self.path)
             return
         try:
             self._thumbnailProcess.terminate()

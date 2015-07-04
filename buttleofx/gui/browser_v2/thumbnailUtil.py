@@ -1,6 +1,7 @@
 import os
 from pyTuttle import tuttle
 from multiprocessing.pool import ThreadPool
+import logging
 
 
 class ThumbnailUtil:
@@ -21,4 +22,9 @@ class ThumbnailUtil:
 
 # Concentrates in one point every compute process for thumbnail:
 # Limits the thread and processes used for thumbnail processes
-thumbnailPool = ThreadPool(processes=2)
+
+totalCpu = os.cpu_count()
+useCpu = totalCpu - 2 if totalCpu > 3 else 1
+logging.debug('%d cpu used fot thumbnail creation')
+
+thumbnailPool = ThreadPool(processes=useCpu)

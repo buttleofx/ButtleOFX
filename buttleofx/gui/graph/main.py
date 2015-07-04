@@ -1,6 +1,6 @@
 import sys
 import os
-from buttleofx.data import ButtleData, globalButtleData
+from buttleofx.data import globalButtleData
 from PyQt5 import QtCore, QtWidgets, QtQuick, QtQml
 from buttleofx.gui.graph.connection import LineItem
 from buttleofx.core.undo_redo.manageTools import globalCommandManager

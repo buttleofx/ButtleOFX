@@ -1,7 +1,6 @@
 from PyQt5 import QtCore
 from .nodeManager import NodeManager
 from .viewerManager import ViewerManager
-from quickmamba.patterns import Singleton
 from buttleofx.data import globalButtleData
 from quickmamba.models import QObjectListModel
 from .connectionManager import ConnectionManager
@@ -94,7 +93,7 @@ class ButtleManager(QtCore.QObject):
             Calls the cmdManager to redo n commands.
         """
         cmdManager = globalCommandManager
-        for i in range(n + 1):
+        for _ in range(n + 1):
             cmdManager.redo()
 
         # Emit undo/redo display
@@ -130,7 +129,7 @@ class ButtleManager(QtCore.QObject):
             Calls the cmdManager to undo n commands.
         """
         cmdManager = globalCommandManager
-        for i in range(n - 1):
+        for _ in range(n - 1):
             cmdManager.undo()
 
         # Emit undo/redo display

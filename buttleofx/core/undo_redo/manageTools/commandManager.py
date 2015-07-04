@@ -1,6 +1,6 @@
 
 
-class CommandManager:
+class CommandManager(object):
     """
     Manages a list of commands.
     """

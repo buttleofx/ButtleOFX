@@ -54,4 +54,3 @@ class Delete(ActionInterface):
 
     def __del__(self):
         self._tmp.cleanup()
-        pass

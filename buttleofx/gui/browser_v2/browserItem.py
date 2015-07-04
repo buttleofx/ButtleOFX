@@ -3,7 +3,7 @@ import logging
 from datetime import datetime
 from pwd import getpwuid
 from stat import filemode
-from multiprocessing import Process, Pool, Manager, Queue, ProcessError
+from multiprocessing import Process, ProcessError
 from threading import Lock
 
 from PyQt5 import QtCore
@@ -16,7 +16,7 @@ from buttleofx.gui.browser_v2.sequenceWrapper import SequenceWrapper
 from buttleofx.gui.browser_v2.thumbnailUtil import ThumbnailUtil, thumbnailPool
 
 
-class ItemType:
+class ItemType(object):
     """
     Even if sequenceParser.eType exists: more flexible if modification
     """
@@ -25,7 +25,7 @@ class ItemType:
     sequence = sequenceParser.eTypeSequence
 
 
-class ThumbnailState:
+class ThumbnailState(object):
     loading = "loading"
     built = "built"
     loadFailed = "loadFailed"

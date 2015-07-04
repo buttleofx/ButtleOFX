@@ -72,8 +72,8 @@ class Finder(QtQuick.QQuickItem):
         self._message = msg
         self.changed.emit()
 
-    def setType(self, type):
-        self._type = type
+    def setType(self, typeFile):
+        self._type = typeFile
         self.changed.emit()
 
     # ############################################# Data exposed to QML ############################################## #

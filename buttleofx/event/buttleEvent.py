@@ -1,5 +1,5 @@
 from PyQt5 import QtCore
-from quickmamba.patterns import Singleton, Signal
+from quickmamba.patterns import Signal
 
 
 class ButtleEvent(QtCore.QObject):

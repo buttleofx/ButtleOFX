@@ -34,7 +34,7 @@ class BrowserModel(QtCore.QObject):
     sortBrowserItems = QtCore.pyqtSignal()
     loadingChanged = QtCore.pyqtSignal()
 
-    def __init__(self, path=op.expanduser("~/"), sync=False, showSeq=True, hideDotFiles=True, filter="*",
+    def __init__(self, path=op.expanduser("~/"), sync=False, showSeq=True, hideDotFiles=True, filterFiles="*",
                  parent=None, buildThumbnail=True):
         """
             Engine of browser user interaction with browserUI
@@ -44,7 +44,7 @@ class BrowserModel(QtCore.QObject):
         self._currentPath = path
         self._browserItems = []  # used only in python side
         self._browserItemsModel = QObjectListModel(self)  # used for UI
-        self._filter = filter
+        self._filter = filterFiles
         self._hideDotFiles = hideDotFiles
         self._showSeq = showSeq
         self._sortOn = SortOn()

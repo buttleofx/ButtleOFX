@@ -145,7 +145,6 @@ class NodeWrapper(QtCore.QObject):
             logging.debug("Can't get fps of the node %s", self._node.getName())
             self.setFpsError(str(e))
             return 1
-            raise
 
         framerate = node.getOutputFrameRate()
         # logging.debug("framerate: ", framerate)
@@ -174,7 +173,6 @@ class NodeWrapper(QtCore.QObject):
             logging.debug("can't get nbFrames of the node %s", self._node.getName())
             self.setFrameError(str(e))
             return 0
-            raise
 
         timeDomain = node.getTimeDomain()  # getTimeDomain() returns the first and last frames
         nbFrames = timeDomain.max - timeDomain.min

@@ -6,10 +6,10 @@ from buttleofx.manager import globalButtleManager
 
 
 def createMenu(parentMenu, parentName, view):
+    """
+        TODO : Need to be documented.
+    """
     for menuItem in globalButtleData.getQObjectPluginsIdentifiersByParentPath(parentName):
-        """
-            TODO : Need to be documented.
-        """
         # menuItem is a tuple : see getPluginsIdentifiersAsDictionary() is data/tuttleTools.py
         pluginParent, pluginId = menuItem  # If the item is not a plugin, pluginId = ""
 

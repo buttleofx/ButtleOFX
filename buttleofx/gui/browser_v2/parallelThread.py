@@ -2,7 +2,7 @@ from PyQt5 import QtCore
 import logging
 
 
-class WithBool:
+class WithBool(object):
     """
         Helper class
     """
@@ -25,7 +25,7 @@ class WithBool:
             self.notifyChange.emit()
 
 
-class WithMutex:
+class WithMutex(object):
     """
         Helper class
     """

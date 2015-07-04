@@ -2,7 +2,7 @@ from quickmamba.patterns import Signal
 import logging
 
 
-class Param:
+class Param(object):
     """
     Define the common methods and fields for all params.
     Containts field :
@@ -93,6 +93,7 @@ class Param:
                 "value": value
             }
             return param
-        except:
-            logging.warning("Param '%s' not saved." % self.getName())
+        except Exception as e:
+            logging.debug(str(e))
+            logging.warning("Param '%s' not saved.", self.getName())
             return None

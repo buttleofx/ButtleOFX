@@ -52,7 +52,8 @@ try:
     logging.debug('Use TuttleOFX.')
     # if DEV_MODE:
     tuttle.core().getFormatter().setLogLevel_int(0)
-except:
+except Exception as e:
+    logging.debug(str(e))
     logging.debug('TuttleFX not installed, use Python Image Library instead.')
 
 if tuttleofx_installed:
@@ -176,13 +177,13 @@ class TuttleImageProvider(QtQuick.QQuickImageProvider):
         self.thumbnailCache.setRootDir(os.path.join(tuttle.core().getPreferences().getTuttleHomeStr(),
                                                     "thumbnails_cache"))
 
-    def requestImage(self, id, size):
+    def requestImage(self, idImg, size):
         """
         Compute the image using TuttleOFX: old way. Now the thumbnail build is wrapped inside a python process
         """
-        logging.debug("TuttleImageProvider: file='%s'", id)
+        logging.debug("TuttleImageProvider: file='%s'", idImg)
         try:
-            img = self.thumbnailCache.getThumbnail(id)
+            img = self.thumbnailCache.getThumbnail(idImg)
             numpyImage = img.getNumpyArray()
 
             # Convert numpyImage to QImage
@@ -194,9 +195,8 @@ class TuttleImageProvider(QtQuick.QQuickImageProvider):
             # count_thumbnail += 1
 
             return qtImage.copy(), qtImage.size()
-
         except Exception as e:
-            logging.debug("TuttleImageProvider: file='{file}' => error: {error}".format(file=id, error=str(e)))
+            logging.debug("TuttleImageProvider: file='{file}' => error: {error}".format(file=idImg, error=str(e)))
             qtImage = QtGui.QImage()
             return qtImage, qtImage.size()
 

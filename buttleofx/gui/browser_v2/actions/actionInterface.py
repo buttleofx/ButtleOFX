@@ -19,7 +19,7 @@ class ActionInterface(QtCore.QObject):
         self._progress = 0.0         # progression of action between 0 and 1,will be used with Tuttle process in execute
 
     def __del__(self):
-        # logging.debug("Action destroyed")
+        logging.debug("Action destroyed")
         pass
 
     def begin(self):

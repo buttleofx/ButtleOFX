@@ -168,28 +168,28 @@ class GraphWrapper(QtCore.QObject):
         """
             Browse all the nodes to calculate a height based on the extreme coordinates
         """
-        max = height
-        min = 0
+        _max = height
+        _min = 0
         for nodeWrapper in self._nodeWrappers:
-            if max < nodeWrapper.yCoord:
-                max = nodeWrapper.yCoord
-            if min > nodeWrapper.yCoord:
-                min = nodeWrapper.yCoord
-        return max - min
+            if _max < nodeWrapper.yCoord:
+                _max = nodeWrapper.yCoord
+            if _min > nodeWrapper.yCoord:
+                _min = nodeWrapper.yCoord
+        return _max - _min
 
     @QtCore.pyqtSlot(int, result=float)
     def maxWidth(self, width):
         """
             Browse all the nodes to calculate a width based on the extreme coordinates
         """
-        max = width
-        min = 0
+        _max = width
+        _min = 0
         for nodeWrapper in self._nodeWrappers:
-            if max < nodeWrapper.xCoord:
-                max = nodeWrapper.xCoord
-            if min > nodeWrapper.xCoord:
-                min = nodeWrapper.xCoord
-        return max - min
+            if _max < nodeWrapper.xCoord:
+                _max = nodeWrapper.xCoord
+            if _min > nodeWrapper.xCoord:
+                _min = nodeWrapper.xCoord
+        return _max - _min
 
     @QtCore.pyqtSlot(result=QtGui.QVector4D)
     def getBBox(self):

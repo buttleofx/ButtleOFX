@@ -21,7 +21,7 @@ class ConnectionManager(QtCore.QObject):
     # ############################################ Methods exposed to QML ############################################ #
 
     @QtCore.pyqtSlot(QtCore.QObject, QtCore.QObject, bool, result=bool)
-    def canConnect(self, clip1, clip2, connected):
+    def canConnect(self, clip1, clip2, connected=False):
         """
             Returns True if the connection between the nodes is possible, else False.
             A connection is possible if the clip isn't already taken, and if the clips
@@ -149,7 +149,7 @@ class ConnectionManager(QtCore.QObject):
             tmpClipNodeName, tmpClipName, tmpClipIndex = infosTmpClip[1], infosTmpClip[2], int(infosTmpClip[3])
 
         # We find the position of this tmpClip to be able to create a IdClip object.
-        positionTmpClip = globalButtleData.getGraphWrapper().getPositionClip(tmpClipNodeName, tmpClipName, tmpClipIndex)
+        # positionTmpClip = globalButtleData.getGraphWrapper().getPositionClip(tmpClipNodeName, tmpClipName, tmpClipIndex)
         tmpClip = IdClip(tmpClipNodeName, tmpClipName)
 
         if tmpClip:
@@ -206,14 +206,14 @@ class ConnectionManager(QtCore.QObject):
                 cpt = 0
                 saveConnection = False
 
-                for input in inputs:
-                    testConnection = self.connectionExists(input)
+                for _input in inputs:
+                    testConnection = self.connectionExists(_input)
 
                     if testConnection:
                         copyConnection.update({"inputNodeName": node.getNode().getName()})
-                        copyConnection.update({"input"+str(cpt): input.getClipName()})
+                        copyConnection.update({"input"+str(cpt): _input.getClipName()})
 
-                    connectedClip = globalButtleData.graphWrapper.getConnectedClipWrapper(input, False)
+                    connectedClip = globalButtleData.graphWrapper.getConnectedClipWrapper(_input, False)
 
                     if connectedClip:
                         connectedNode = globalButtleData.getGraphWrapper().getNodeWrapper(connectedClip.getNodeName())
@@ -263,7 +263,7 @@ class ConnectionManager(QtCore.QObject):
 
                 copiedNodeInName = globalButtleData.getCurrentCopiedNodesInfo()[globalButtleData.getCurrentCopiedConnectionsInfo()
                                                                           [connection]["inputNodeName"]]
-                [globalButtleData.getCurrentCopiedConnectionsInfo()[connection]["inputNodeName"]]
+                # [globalButtleData.getCurrentCopiedConnectionsInfo()[connection]["inputNodeName"]]
 
                 copiedNodeIn = globalButtleData.getGraphWrapper().getNodeWrapper(copiedNodeInName)
 
@@ -279,17 +279,17 @@ class ConnectionManager(QtCore.QObject):
                         copiedOutputName = globalButtleData.getCurrentCopiedConnectionsInfo()[connection]["output"+str(i)]
                         copiedOutput = copiedNodeOut.getClip(copiedOutputName)
                         self.connectWrappers(copiedOutput, copiedInput)
-                    else:
-                        copiedNodeOutName = globalButtleData.getCurrentCopiedNodesInfo()[
-                            globalButtleData.getCurrentCopiedConnectionsInfo()[connection]["outputNodeName0"]][
-                            globalButtleData.getCurrentCopiedConnectionsInfo()[connection]["outputNodeName0"]]
+                else:
+                    copiedNodeOutName = globalButtleData.getCurrentCopiedNodesInfo()[
+                        globalButtleData.getCurrentCopiedConnectionsInfo()[connection]["outputNodeName0"]][
+                        globalButtleData.getCurrentCopiedConnectionsInfo()[connection]["outputNodeName0"]]
 
-                        copiedNodeOut = globalButtleData.getGraphWrapper().getNodeWrapper(copiedNodeOutName)
-                        copiedInputName = globalButtleData.getCurrentCopiedConnectionsInfo()[connection]["input0"]
-                        copiedInput = copiedNodeIn.getClip(copiedInputName)
-                        copiedOutputName = globalButtleData.getCurrentCopiedConnectionsInfo()[connection]["output0"]
-                        copiedOutput = copiedNodeOut.getClip(copiedOutputName)
-                        self.connectWrappers(copiedOutput, copiedInput)
+                    copiedNodeOut = globalButtleData.getGraphWrapper().getNodeWrapper(copiedNodeOutName)
+                    copiedInputName = globalButtleData.getCurrentCopiedConnectionsInfo()[connection]["input0"]
+                    copiedInput = copiedNodeIn.getClip(copiedInputName)
+                    copiedOutputName = globalButtleData.getCurrentCopiedConnectionsInfo()[connection]["output0"]
+                    copiedOutput = copiedNodeOut.getClip(copiedOutputName)
+                    self.connectWrappers(copiedOutput, copiedInput)
 
         self.undoRedoChanged()
 

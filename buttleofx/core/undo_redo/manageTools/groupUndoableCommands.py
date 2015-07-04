@@ -1,4 +1,4 @@
-class GroupUndoableCommands:
+class GroupUndoableCommands(object):
     """
     Group of objects saved in the Command Manager.
     """

@@ -118,14 +118,14 @@ class ViewerManager(QtCore.QObject):
             Computes the node at the frame indicated if the frame has changed (if the time has changed).
         """
         # Get the name of the currentNode of the viewer
-        nodeName = globalButtleData.getCurrentViewerNodeName()
+        node = globalButtleData.getCurrentViewerNodeName()
 
         try:
             # Get the global node hash ID
-            if nodeName is not None:
+            if node is not None:
                 hashMap = tuttle.NodeHashContainer()
                 globalButtleData.getCurrentGraph().getGraphTuttle().computeGlobalHashAtTime(hashMap, frame, [node])
-                node_hashCode = hashMap.getHash(nodeName, frame)
+                node_hashCode = hashMap.getHash(node, frame)
             # Get the buttle latest images map
             mapNodeToImage = globalButtleData.getMapNodeNameToComputedImage()
 
@@ -137,9 +137,9 @@ class ViewerManager(QtCore.QObject):
                     return mapNodeToImage.get(node_hashCode)
             # If it is not
             # logging.debug("**************************Image is not already calculated**********************")
-            return self.computeNode(nodeName, frame)
+            return self.computeNode(node, frame)
         except Exception as e:
-            logging.debug("Can't display node : %s", nodeName)
+            logging.debug("Can't display node : " + node)
             self.setNodeError(str(e))
             raise
 

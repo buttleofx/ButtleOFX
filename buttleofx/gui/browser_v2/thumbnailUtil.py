@@ -4,7 +4,7 @@ from multiprocessing.pool import ThreadPool
 import logging
 
 
-class ThumbnailUtil:
+class ThumbnailUtil(object):
     """
     Helper class used to link buttle with tuttle for thumbnail functions
     """
@@ -13,11 +13,11 @@ class ThumbnailUtil:
         self._thumbnailCache = tuttle.ThumbnailDiskCache()
         self._thumbnailCache.setRootDir(os.path.join(tuttle.core().getPreferences().getTuttleHomeStr(), "thumbnails_cache"))
 
-    def getThumbnail(self, id):
-        return self._thumbnailCache.getThumbnail(id)
+    def getThumbnail(self, idPath):
+        return self._thumbnailCache.getThumbnail(idPath)
 
-    def getThumbnailPath(self, id):
-        return self._thumbnailCache.getThumbnailPath(id)
+    def getThumbnailPath(self, idPath):
+        return self._thumbnailCache.getThumbnailPath(idPath)
 
 
 # Concentrates in one point every compute process for thumbnail:

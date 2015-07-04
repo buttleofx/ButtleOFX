@@ -3,8 +3,6 @@ import logging
 
 from PyQt5 import QtCore
 
-from quickmamba.patterns.singleton import Singleton
-
 from pySequenceParser import sequenceParser
 
 from buttleofx.gui.browser_v2.actions.actionManager import globalActionManager
@@ -86,10 +84,10 @@ class BrowserAction(QtCore.QObject):
         self.pushToActionManager(ActionWrapper(listActions))
 
     @QtCore.pyqtSlot(str)
-    def handleNew(self, type):
-        if type == "Folder":
+    def handleNew(self, typeItem):
+        if typeItem == "Folder":
             new = BrowserItem(sequenceParser.Item(sequenceParser.eTypeFolder, "New_Folder"))
-        elif type == "File":
+        elif typeItem == "File":
             new = BrowserItem(sequenceParser.Item(sequenceParser.eTypeFile, "NewDocument.txt"))
         else:
             return

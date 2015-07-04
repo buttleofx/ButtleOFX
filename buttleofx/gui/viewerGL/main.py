@@ -8,8 +8,10 @@ try:
     import pyTuttle  # noqa
     tuttleofx_installed = True
     logging.debug('Use TuttleOFX.')
-except:
+except Exception as e:
+    logging.debug(str(e))
     logging.debug('TuttleFX not installed, use Python Image Library instead.')
+
 if tuttleofx_installed:
     from glviewport_tuttleofx import GLViewport_tuttleofx
 else:
@@ -28,7 +30,7 @@ class ButtleApp(QtWidgets.QApplication):
             # logging.debug("QApp notify")
             return QtWidgets.QApplication.notify(self, receiver, event)
         except Exception as e:
-            logging.warning("QApp notify exception: " + str(e))
+            logging.warning("QApp notify exception: %s", str(e))
             import traceback
             traceback.print_exc()
             return False

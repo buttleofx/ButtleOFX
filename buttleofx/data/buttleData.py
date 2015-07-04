@@ -86,7 +86,7 @@ class ButtleData(QtCore.QObject):
 
     _urlOfFileToSave = ""
 
-    def init(self, view, filePath):
+    def init(self, view, filePath=''):
         self._graph = Graph()
         self._graphWrapper = GraphWrapper(self._graph, view)
 
@@ -334,7 +334,7 @@ class ButtleData(QtCore.QObject):
             if path.count("/") >= nb:
 
                 # Withdraw one submenu per loop from the path
-                for i in range(nb):
+                for _ in range(nb):
                     listOfPath = path.split("/")
                     path = path.replace(listOfPath[0] + "/", "")
 
@@ -414,7 +414,7 @@ class ButtleData(QtCore.QObject):
             while len(visited) != 0:
                 listOfParents.append(visited.pop())
 
-            for i in range(len(listOfParents)):
+            for _ in range(len(listOfParents)):
                 if len(listOfNodes) > 0:
                     currentNode = listOfNodes[len(listOfNodes) - 1]
                     currentNodeOutputClip = currentNode.getOutputClip()
@@ -561,8 +561,6 @@ class ButtleData(QtCore.QObject):
             #     self.setCurrentViewerFrame(frame)
             # ButtleEvent().emitViewerChangedSignal()
 
-        f.closed
-
         self.urlOfFileToSave = filepath
 
     @QtCore.pyqtSlot()
@@ -700,7 +698,6 @@ class ButtleData(QtCore.QObject):
 
             # Write dictJson in a file
             f.write(str(json.dumps(dictJson, sort_keys=True, indent=2, ensure_ascii=False)))
-        f.closed
 
         # Finally we update the savedGraphIndex of the CommandManager : it must be equal to the current index
         globalCommandManager.setSavedGraphIndex(globalCommandManager.getIndex())

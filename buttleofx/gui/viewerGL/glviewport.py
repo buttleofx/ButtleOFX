@@ -39,7 +39,7 @@ def load_texture(array, width, height):
 
     if array.ndim == 2:
         # Linear array of pixels
-        size, channels = array.shape
+        _, channels = array.shape
         # logging.debug('size:%d, channels:%d', size, channels)
         array_channelGL = nbChannelsToGlPixelType(channels)
         return GL.glTexImage2D(GL.GL_TEXTURE_2D, 0, GL.GL_RGBA, width, height, 0, array_channelGL, array_type, array)

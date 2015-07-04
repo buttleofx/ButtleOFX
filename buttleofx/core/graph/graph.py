@@ -181,12 +181,15 @@ class Graph(object):
         from buttleofx.data import globalButtleData
         node = globalButtleData.getCurrentGraph().getNode(nodeName)
         if not node:
-            logging.debug("nodeMoved -- graph : %s", globalButtleData.getCurrentGraph())
+            logging.debug("no nodes nodeMoved -- graph : %s", globalButtleData.getCurrentGraph())
 
         # What is the value of the movement (compared to the old position)?
         oldX, oldY = node.getOldCoord()
         xMovement = newX - oldX
         yMovement = newY - oldY
+
+        print(oldX, oldY)
+        print(newX, newY)
 
         # If the node didn't really move, nothing is done
         if (xMovement, xMovement) == (0, 0):

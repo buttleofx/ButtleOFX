@@ -44,20 +44,20 @@ class MainWrapper(QtCore.QObject):
 
     @QtCore.pyqtSlot(int)
     def remove(self, index):
-        logging.debug("Python : start removing element at index %s" % index)
+        logging.debug("Python : start removing element at index %d", index)
         self._clips.removeAt(index)
-        logging.debug("Python : end removing element at index %s" % index)
+        logging.debug("Python : end removing element at index %d", index)
 
     @QtCore.pyqtSlot()
     def add(self):
         logging.debug("Python : start adding element")
-        self._clips.append(ClipWrapper(self._qtParent, "ClipDynamic", 2.2) )
+        self._clips.append(ClipWrapper(self._qtParent, "ClipDynamic", 2.2))
         logging.debug("Python : end adding element")
 
     @QtCore.pyqtSlot(int)
     def insertAt(self, index):
-        logging.debug("Python : start insertAt %s element" % index)
-        self._clips.insert(index, ClipWrapper(self._qtParent, "ClipDynamic", 2.2) )
+        logging.debug("Python : start insertAt %d element", index)
+        self._clips.insert(index, ClipWrapper(self._qtParent, "ClipDynamic", 2.2))
         logging.debug("Python : end insertAt element")
 
     modelChanged = QtCore.pyqtSignal()

@@ -45,13 +45,13 @@ class WorkerThread(QtCore.QThread):
         QtCore.QThread.__init__(self)
         self._target = target
         self._param = param
-        logging.debug('__init__ ParallelThread WorkerThread: %s' % self)
+        logging.debug('__init__ ParallelThread WorkerThread: %s', self)
 
     def run(self):
         self._target(*self._param)
 
     def __del__(self):
-        logging.debug('__del__ ParallelThread WorkerThread: %s' % self)
+        logging.debug('__del__ ParallelThread WorkerThread: %s', self)
 
 
 class ParallelThread(QtCore.QObject):

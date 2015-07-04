@@ -62,22 +62,22 @@ class ParamRGBA(Param):
     def setValueR(self, value1):
         self._tuttleParam.setValueAtIndex(0, value1)
         self.paramChanged()
-        # logging.debug("Red : %s" % self.getValueR())
+        # logging.debug("Red : %s", self.getValueR())
 
     def setValueG(self, value2):
         self._tuttleParam.setValueAtIndex(1, value2)
         self.paramChanged()
-        # logging.debug("Green : %s" % self.getValueG())
+        # logging.debug("Green : %s", self.getValueG())
 
     def setValueB(self, value3):
         self._tuttleParam.setValueAtIndex(2, value3)
         self.paramChanged()
-        # logging.debug("Blue : %s" % self.getValueB())
+        # logging.debug("Blue : %s", self.getValueB())
 
     def setValueA(self, value4):
         self._tuttleParam.setValueAtIndex(3, value4)
         self.paramChanged()
-        # logging.debug("Alpha : ", self.getValueA())
+        # logging.debug("Alpha : %s", self.getValueA())
 
     # setValue on RGBA doesn't work?
     # def setValue(self, r, g, b, a):

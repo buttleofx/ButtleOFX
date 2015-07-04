@@ -107,11 +107,11 @@ class Graph(object):
         """
             Creates a reader node when an image has been dropped in the graph.
         """
-        (shortname, extension) = os.path.splitext(url)
+        (_, extension) = os.path.splitext(url)
         try:
             nodeType = tuttle.getBestReader(extension)
         except Exception:
-            logging.debug("Unknown format. Can't create the reader node for extension '%s'." % extension)
+            logging.debug("Unknown format. Can't create the reader node for extension '%s'.", extension)
             return
 
         # We create the node.
@@ -181,7 +181,7 @@ class Graph(object):
         from buttleofx.data import globalButtleData
         node = globalButtleData.getCurrentGraph().getNode(nodeName)
         if not node:
-            logging.debug("nodeMoved -- graph : %s" % globalButtleData.getCurrentGraph())
+            logging.debug("nodeMoved -- graph : %s", globalButtleData.getCurrentGraph())
 
         # What is the value of the movement (compared to the old position)?
         oldX, oldY = node.getOldCoord()

@@ -73,7 +73,7 @@ class BrowserItem(QtCore.QObject):
         if not self.isFolder() and self._isSupported and isBuildThumbnail:
             thumbnailPool.apply_async(self.startBuildThumbnail)
 
-        logging.debug('BrowserItem constructor - file:%s, type:%s' % (self._path, self._typeItem))
+        logging.debug('BrowserItem constructor - file:%s, type:%s', self._path, self._typeItem)
 
     def initThumbnailData(self):
         """
@@ -92,13 +92,13 @@ class BrowserItem(QtCore.QObject):
 
         self._killThumbnailFlag = True
         if not self._thumbnailProcess.is_alive():
-            logging.debug('killThumbnail process not alive %s' % self.path)
+            logging.debug('killThumbnail process not alive %s', self.path)
             return
         try:
             self._thumbnailProcess.terminate()
         except ProcessError as e:
             logging.debug(str(e))
-        logging.debug('process for %s terminated' % self.path)
+        logging.debug('process for %s terminated', self.path)
 
     def startBuildThumbnail(self):
         self._thumbnailMutex.acquire()
@@ -194,7 +194,7 @@ class BrowserItem(QtCore.QObject):
             if self.isSequence():
                 return self._sequence.getWeight()
         except Exception as e:
-            logging.debug('BrowserItem.getWeight_fileSystem: %s, %s' % (self.getPath(), str(e)))
+            logging.debug('BrowserItem.getWeight_fileSystem: %s, %s', self.getPath(), str(e))
 
         return 0
 
@@ -219,10 +219,10 @@ class BrowserItem(QtCore.QObject):
         if self.isFile() or self.isSequence():
             try:
                 tuttleReaders = tuttle.getReaders(self.getName())
-                logging.debug('BrowserItem.isSupportedFromTuttle - %s => %s' % (self.getPath(), str(tuttleReaders)))
+                logging.debug('BrowserItem.isSupportedFromTuttle - %s => %s', self.getPath(), str(tuttleReaders))
                 return bool(tuttleReaders)
             except Exception as e:
-                logging.debug('BrowserItem.isSupportedFromTuttle - %s => %s' % (self.getPath(), str(e)))
+                logging.debug('BrowserItem.isSupportedFromTuttle - %s => %s', self.getPath(), str(e))
         return False
 
     def getRealImgPath(self):
@@ -296,7 +296,7 @@ class BrowserItem(QtCore.QObject):
         """
         if not self.isSupported():
             self.updateThumbnailState(ThumbnailState.notSupported)
-            logging.debug("Thumbnail not supported for %s" % self.path)
+            logging.debug("Thumbnail not supported for %s", self.path)
             return
 
         # thumbnail already exists ?
@@ -313,7 +313,7 @@ class BrowserItem(QtCore.QObject):
         self._thumbnailProcess.join(timeout=10)
 
         if self._thumbnailProcess.exitcode != 0:
-            logging.debug("Thumbnail crash or exceed the max timeout for %s" % self.path)
+            logging.debug("Thumbnail crash or exceed the max timeout for %s", self.path)
             self.updateThumbnailState(ThumbnailState.loadCrashed)
         else:
             if os.path.exists(self._thumbnailHash):
@@ -329,7 +329,7 @@ class BrowserItem(QtCore.QObject):
         """
         try:
             BrowserItem.thumbnailUtil.getThumbnail(imgPath)
-            logging.debug("Thumbnail built for %s" % self.path)
+            logging.debug("Thumbnail built for %s", self.path)
         except Exception as e:
             logging.debug(str(e))
 

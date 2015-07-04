@@ -846,7 +846,7 @@ class ButtleData(QtCore.QObject):
         pluginCache = tuttle.core().getImageEffectPluginCache()
         plugins = pluginCache.getPlugins()
         plugins = sorted(plugins, key=lambda plugin: plugin.getIdentifier().upper())
-        logging.debug("getPluginsIdentifiers => nb plugins: %s" % len(plugins))
+        logging.debug("getPluginsIdentifiers => nb plugins: %d", len(plugins))
 
         pluginsIds = [plugin.getIdentifier() for plugin in plugins]
         pluginsIdsModel = QObjectListModel(self)
@@ -967,10 +967,10 @@ class ButtleData(QtCore.QObject):
         else:
             self._currentViewerNodeName = nodeWrapper.getName()
         # Emit signal
-        # logging.debug ("setCurrentViewerId globalButtleData.getCurrentGraphWrapper(): %s" % self.getCurrentGraphWrapper())
-        # logging.debug ("setCurrentViewerId nodeWrapper.getName(): %s" % nodeWrapper.getName())
+        # logging.debug("setCurrentViewerId globalButtleData.getCurrentGraphWrapper(): %s",self.getCurrentGraphWrapper())
+        # logging.debug("setCurrentViewerId nodeWrapper.getName(): %s", nodeWrapper.getName())
 
-        # logging.debug ("setCurrentViewerId self._graphBrowser._graphTuttle: " % self._graphBrowser._graphTuttle)
+        # logging.debug("setCurrentViewerId self._graphBrowser._graphTuttle: ", self._graphBrowser._graphTuttle)
 
         self.currentViewerNodeChanged.emit()
 

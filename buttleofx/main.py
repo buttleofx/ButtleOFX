@@ -180,7 +180,7 @@ class TuttleImageProvider(QtQuick.QQuickImageProvider):
         """
         Compute the image using TuttleOFX: old way. Now the thumbnail build is wrapped inside a python process
         """
-        logging.debug("TuttleImageProvider: file='%s'" % id)
+        logging.debug("TuttleImageProvider: file='%s'", id)
         try:
             img = self.thumbnailCache.getThumbnail(id)
             numpyImage = img.getNumpyArray()
@@ -281,7 +281,7 @@ def main(argv, app):
 
         # Add any source file (.qml and .js by default) in current working directory
         parentDir = os.path.dirname(currentFilePath)
-        logging.debug("Watch directory: %s" % parentDir)
+        logging.debug("Watch directory: %s", parentDir)
         qic.addFilesFromDirectory(parentDir, recursive=True)
 
     aFilter = EventFilter()

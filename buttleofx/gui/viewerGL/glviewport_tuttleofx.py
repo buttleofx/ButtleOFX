@@ -76,9 +76,9 @@ class GLViewport_tuttleofx(GLViewport):
 
         try:
             self.loadImage_tuttle()
-            # logging.debug('Tuttle img_data: %s' % self.img_data)
+            # logging.debug('Tuttle img_data: %s', self.img_data)
         except Exception as e:
-            logging.debug('Error while loading image file.\nError: "%s"' % str(e))
+            logging.debug('Error while loading image file.\nError: "%s"', str(e))
             self.img_data = None
             self.setImageBounds(QtCore.QRect())
             # raise

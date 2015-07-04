@@ -109,7 +109,7 @@ class BrowserModel(QtCore.QObject):
         Add item into bItem list (and to model if toModel)
         :param toModel: if recurse process: useless to add into QobjectListModel
         """
-        logging.debug('BrowserModel: push to model %s items' % len(allItems))
+        logging.debug('BrowserModel: push to model %d items', len(allItems))
         for item in allItems:
             # if the process was canceled, we stop
             if not self._isSync and self._parallelThread.isStopped():
@@ -149,7 +149,7 @@ class BrowserModel(QtCore.QObject):
         """
         Process a recursive search. Disable thumbnail build for sub BrowserModel
         """
-        logging.debug("Start recursive search: %s" % self._currentPath)
+        logging.debug("Start recursive search: %s", self._currentPath)
         if modelRequester.getParallelThread().isStopped():
             return
 
@@ -190,7 +190,7 @@ class BrowserModel(QtCore.QObject):
         if not newCurrentPath:
             return
 
-        logging.debug('browserModel.setCurrentPath("%s")' % newCurrentPath)
+        logging.debug('browserModel.setCurrentPath("%s")', newCurrentPath)
         self._currentPath = newCurrentPath
         self.loadData()
         self.refresh_listFolderNavbar()

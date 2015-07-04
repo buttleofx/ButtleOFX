@@ -31,22 +31,22 @@ def numpyValueTypeToGlType(valueType):
 
 def load_texture(array, width, height):
     # logging.debug('loading texture')
-    # logging.debug('shape: %s' % array.shape)
-    # logging.debug('array.ndim %s' % array.ndim)
-    # logging.debug('array.dtype %s' % array.dtype)
+    # logging.debug('shape: %s', array.shape)
+    # logging.debug('array.ndim %s', array.ndim)
+    # logging.debug('array.dtype %s', array.dtype)
 
     array_type = numpyValueTypeToGlType(array.dtype)
 
     if array.ndim == 2:
         # Linear array of pixels
         size, channels = array.shape
-        # logging.debug('size:%d, channels:%d' % (size, channels))
+        # logging.debug('size:%d, channels:%d', size, channels)
         array_channelGL = nbChannelsToGlPixelType(channels)
         return GL.glTexImage2D(GL.GL_TEXTURE_2D, 0, GL.GL_RGBA, width, height, 0, array_channelGL, array_type, array)
     elif array.ndim == 3:
         # 2D array of pixels
         array_height, array_width, channels = array.shape
-        # logging.debug('width:%d, height:%d, channels:%d' % (width, height, channels))
+        # logging.debug('width:%d, height:%d, channels:%d', width, height, channels)
         array_channelGL = nbChannelsToGlPixelType(channels)
         return GL.glTexImage2D(GL.GL_TEXTURE_2D, 0, GL.GL_RGBA, array_width, array_height,
                                0, array_channelGL, array_type, array)
@@ -138,8 +138,8 @@ class GLViewport(QtQuick.QQuickPaintedItem):
 
     def drawImage(self):
         # logging.debug("GLViewport.drawImage")
-        # logging.debug("widget size: %sx%s", (self.width(), self.height()))
-        # logging.debug("image size: %sx%s", (self.getImageBounds().width(), self.getImageBounds().height()))
+        # logging.debug("widget size: %sx%s", self.width(), self.height())
+        # logging.debug("image size: %sx%s", self.getImageBounds().width(), self.getImageBounds().height())
 
         if self.img_data is not None and self.tex is None:
             self.updateTextureFromImage()
@@ -181,7 +181,7 @@ class GLViewport(QtQuick.QQuickPaintedItem):
         # self.tuttleReaderNode
 
     def internPaintGL(self):
-        # logging.debug("GLViewport.internPaintGL: %s" % self.img_data)
+        # logging.debug("GLViewport.internPaintGL: %s", self.img_data)
         if self.img_data is not None:
             self.prepareGL()
             self.drawImage()
@@ -219,8 +219,8 @@ class GLViewport(QtQuick.QQuickPaintedItem):
 
     def geometryChanged(self, new, old):
         # logging.debug("GLViewport.geometryChanged")
-        # logging.debug("new: %s, %s, %s, %s", (new.x(), new.y(), new.width(), new.height()))
-        # logging.debug("old: %s, %s, %s, %s", (old.x(), old.y(), old.width(), old.height()))
+        # logging.debug("new: %s, %s, %s, %s", new.x(), new.y(), new.width(), new.height())
+        # logging.debug("old: %s, %s, %s, %s", old.x(), old.y(), old.width(), old.height())
 
         self._localGeometry = new
         self._glGeometry = new  # self.sceneTransform().mapRect(new)
@@ -291,7 +291,7 @@ class GLViewport(QtQuick.QQuickPaintedItem):
         return self._offsetValue
 
     def setOffset(self, offset):
-        # logging.debug("setOffset: %s" % offset)
+        # logging.debug("setOffset: %s", offset)
         self._offsetValue = offset
         self.update()
         self.offsetChanged.emit()
@@ -307,7 +307,7 @@ class GLViewport(QtQuick.QQuickPaintedItem):
         return self._scaleValue
 
     def setScale(self, scale):
-        # logging.debug("setScale: %s => %s" % (self._scaleValue, scale))
+        # logging.debug("setScale: %s => %s", self._scaleValue, scale)
         minValue = 0.001
         self._scaleValue = scale if scale > minValue else minValue
         self.update()

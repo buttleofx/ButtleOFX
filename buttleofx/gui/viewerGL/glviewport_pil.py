@@ -21,10 +21,10 @@ class GLViewport_pil(GLViewport):
         self.setImageBounds(QtCore.QRect(0, 0, self.img.size[0], self.img.size[1]))
         self.tuttleOverlay = None
         self.recomputeOverlay = False
-        logging.debug("image size: %sx%s" % (self._imageBoundsValue.width(), self._imageBoundsValue.height()))
+        logging.debug("image size: %sx%s", self._imageBoundsValue.width(), self._imageBoundsValue.height())
 
     def loadImageFile(self, filename):
-        logging.debug("loadImageFile: %s" % filename)
+        logging.debug("loadImageFile: %s", filename)
         self.img_data = None
         self.tex = None
 
@@ -32,7 +32,7 @@ class GLViewport_pil(GLViewport):
             self.loadImageFile_pil(filename)
             logging.debug('PIL img_data: %s' % self.img_data)
         except Exception as e:
-            logging.warning('Error while loading image file "%s".\n"%s"' % (filename, str(e)))
+            logging.warning('Error while loading image file "%s".\n"%s"', filename, str(e))
             self.img_data = None
             self.setImageBounds(QtCore.QRect())
 

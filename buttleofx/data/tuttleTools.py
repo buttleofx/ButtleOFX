@@ -54,7 +54,7 @@ def getPluginsIdentifiersAsDictionary():
     pluginCache = tuttle.core().getImageEffectPluginCache()
     plugins = pluginCache.getPlugins()
 
-    logging.debug("nb plugins: %s" % len(plugins))
+    logging.debug("nb plugins: %d", len(plugins))
     # Creation of the dictionary
     pluginsIdentifiersAsDictionary = dict()
 

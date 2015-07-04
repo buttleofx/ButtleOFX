@@ -26,7 +26,7 @@ class View(object):
         model.changed.connect(self.model_changed)
 
     def model_changed(self):
-        logging.debug('New value: %s' % self.model.get_value())
+        logging.debug('New value: %s', self.model.get_value())
 
 
 model = Model(10)

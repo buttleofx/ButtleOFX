@@ -183,7 +183,7 @@ class ConnectionManager(QtCore.QObject):
 
     @QtCore.pyqtSlot(QtCore.QObject, QtCore.QObject)
     def connectWrappers(self, clipOut, clipIn):
-        # logging.debug("connectWrappers: %s => %s" % (clipOut, clipIn))
+        # logging.debug("connectWrappers: %s => %s", clipOut, clipIn)
         id_clipOut = IdClip(clipOut.getNodeName(), clipOut.getClipName())
         id_clipIn = IdClip(clipIn.getNodeName(), clipIn.getClipName())
 

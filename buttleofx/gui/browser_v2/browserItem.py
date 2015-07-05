@@ -92,7 +92,6 @@ class BrowserItem(QtCore.QObject):
 
         self._killThumbnailFlag = True
         if not self._thumbnailProcess.is_alive():
-            logging.debug('killThumbnail process not alive %s', self.path)
             return
         try:
             self._thumbnailProcess.terminate()

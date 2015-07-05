@@ -138,7 +138,7 @@ class BrowserModel(QtCore.QObject):
 
     @QtCore.pyqtSlot()
     def onClearItemsSync(self):
-        for bItem in filter(lambda item: not item.isFolder(), self._browserItems):
+        for bItem in filter(lambda item: item.isSupported(), self._browserItems):
             bItem.killThumbnailProcess()
         self._browserItems.clear()
         self._browserItemsModel.clear()

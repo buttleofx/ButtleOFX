@@ -25,6 +25,6 @@ class ThumbnailUtil(object):
 
 totalCpu = os.cpu_count()
 useCpu = totalCpu - 2 if totalCpu > 3 else 1
-logging.debug('%d cpu used fot thumbnail creation', useCpu)
+logging.info('%d cpu used fot thumbnail creation', useCpu)
 
 thumbnailPool = ThreadPool(processes=useCpu)

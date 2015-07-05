@@ -47,6 +47,10 @@ class WorkerThread(QtCore.QThread):
         self._param = param
         logging.debug('__init__ ParallelThread WorkerThread: %s', self)
 
+    def update(self, target, param):
+        self._target = target
+        self._param = param
+
     def run(self):
         self._target(*self._param)
 
@@ -63,7 +67,7 @@ class ParallelThread(QtCore.QObject):
     def __init__(self):
         QtCore.QObject.__init__(self, None)
         self._mutex = QtCore.QMutex(QtCore.QMutex.Recursive)
-        self._workerThread = None
+        self._workerThread = WorkerThread(None, None)
         self._isStopped = True
 
     def __del__(self):
@@ -77,24 +81,20 @@ class ParallelThread(QtCore.QObject):
 
     def stop(self):
         self._isStopped = True
-        if self._workerThread:
-            if self._workerThread.isRunning():
-                self._workerThread.wait()
-                self._workerThread.terminate()
-            self._workerThread = None
+        if self._workerThread.isRunning():
+            self._workerThread.wait()
+            self._workerThread.terminate()
 
     def start(self, target, argsParam=()):
-        if self._workerThread:
-            self.stop()
-
+        self.stop()
         self._isStopped = False
-        self._workerThread = WorkerThread(target, argsParam)
+        self._workerThread.update(target, argsParam)
         self._workerThread.start()
 
     def getWorkerThread(self):
         return self._workerThread
 
     def join(self):
-        if self._workerThread and self._workerThread.isRunning():
+        if self._workerThread.isRunning():
             self._workerThread.wait()
             self._workerThread.terminate()

@@ -346,6 +346,32 @@ Rectangle {
                 }
 
                 Button {
+                    id: show_seq
+
+                    Layout.preferredWidth: 20
+                    Layout.preferredHeight: 20
+                    Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+                    implicitHeight: 20
+                    implicitWidth: 20
+
+                    tooltip: "Toggle sequence mode"
+                    iconSource: root.model.showSequence ? "img/gridview.png" : "img/gridview_hover.png"
+
+                    style:
+                    ButtonStyle {
+                        background: Rectangle {
+                            anchors.fill: parent
+                            color: "transparent"
+                        }
+                    }
+
+                    onClicked: {
+                        root.model.setShowSequence(!root.model.showSequence)
+                    }
+                }
+
+
+                Button {
                     id: action_button
                     property bool isOpen: false
 
@@ -355,7 +381,7 @@ Rectangle {
 
                     tooltip: "Actions"
 
-                    iconSource: "img/listview_hover.png"
+                    iconSource: hovered ? "img/listview_hover.png" : "img/listview.png"
 
                     style:
                     ButtonStyle {

@@ -87,8 +87,15 @@ class BrowserModel(QtCore.QObject):
             Update browserItemsModel according model's current path and filter options
         """
         with WithMutex(self._parallelThread.getMutex()), self._isLoading:
+            filtersName = ''
+            rootPath = self._currentPath
+
+            # filtersName detect
             if not op.exists(self._currentPath):
-                return
+                filtersName = op.basename(self._currentPath).lower()
+                rootPath = op.dirname(self._currentPath)
+                if not op.exists(op.dirname(self._currentPath)):
+                    return
 
             self.clearItemsSync.emit()
             detectOption = sequenceParser.eDetectionDefaultWithDotFile
@@ -97,12 +104,22 @@ class BrowserModel(QtCore.QObject):
 
             try:
                 # sequence parser excep: no permission on file ?
-                allItems = sequenceParser.browse(self._currentPath, detectOption, self._filter)
+                allItems = list(sequenceParser.browse(rootPath, detectOption, self._filter))
+                if filtersName:
+                    allItems = list(filter(lambda item: item.getFilename().lower().startswith(filtersName), allItems))
                 self.pushBrowserItems(allItems, not bool(recursivePattern))
             except Exception as e:
                 logging.debug(str(e))
             if recursivePattern.strip():
                 self.searchRecursively(recursivePattern, self)
+
+    def seqToItems(self, itemSeq):
+        items = []
+        seq = itemSeq.getSequence()
+        for f in seq.getFramesIterable():
+            filePath = op.join(op.dirname(itemSeq.getAbsoluteFilepath()), seq.getFilenameAt(f))
+            items.append(sequenceParser.Item(sequenceParser.eTypeFile, filePath))
+        return items
 
     def pushBrowserItems(self, allItems, toModel=True):
         """
@@ -110,14 +127,18 @@ class BrowserModel(QtCore.QObject):
         :param toModel: if recurse process: useless to add into QobjectListModel
         """
         logging.debug('BrowserModel: push to model %d items', len(allItems))
-        for item in allItems:
+        for idx, item in enumerate(allItems):
             # if the process was canceled, we stop
             if not self._isSync and self._parallelThread.isStopped():
                 break
 
+            # if sequence and showSeq not activated: convert seq to files and add them
+            if item.getType() == ItemType.sequence and not self._showSeq:
+                allItems.pop(idx)
+                allItems[idx:idx] = self.seqToItems(item)  # inject files in all items
+                item = allItems[idx]
+
             addItem = fnmatch(item.getFilename(), self._filter)
-            if addItem and item.getType() == ItemType.sequence:
-                addItem = self._showSeq
             if addItem:
                 itemToAdd = self._actionManager.searchItem(item.getAbsoluteFilepath())
                 if not itemToAdd:
@@ -248,12 +269,13 @@ class BrowserModel(QtCore.QObject):
         self._sortOn.setFieldToSort(newField, reverse)
         self.onSortBrowserItems()
         self.sortOnChanged.emit()
-        self.modelChanged.emit()  # refresh view
+        self.loadData()
 
     @QtCore.pyqtSlot(bool)
     def setShowSequence(self, seqBool):
         self._showSeq = seqBool
         self.filterChanged.emit()
+        self.loadData()
 
     @QtCore.pyqtSlot(result=bool)
     def isShownSequence(self):
@@ -295,7 +317,7 @@ class BrowserModel(QtCore.QObject):
             return QObjectListModel(self)
 
         # if op.dirname('///') -> '///'=> regex
-        while not re.search('^/+$', absolutePath):
+        while not re.search('^/+$', absolutePath) and absolutePath:
             if op.exists(absolutePath):
                 tmpList.insert(-(len(tmpList) + 1), [absolutePath, op.basename(absolutePath)])
             absolutePath = op.dirname(absolutePath)

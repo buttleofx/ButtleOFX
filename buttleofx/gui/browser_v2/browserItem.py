@@ -309,16 +309,16 @@ class BrowserItem(QtCore.QObject):
 
         self.updateThumbnailState(ThumbnailState.loading)
         self._thumbnailProcess.start()
-        self._thumbnailProcess.join(timeout=10)
+        self._thumbnailProcess.join(timeout=6)
 
-        if self._thumbnailProcess.exitcode != 0:
+        if os.path.exists(self._thumbnailHash):
+            self.updateThumbnailState(ThumbnailState.built)
+        elif self._thumbnailProcess.exitcode != 0:
             logging.debug("Thumbnail crash or exceed the max timeout for %s", self.path)
             self.updateThumbnailState(ThumbnailState.loadCrashed)
         else:
-            if os.path.exists(self._thumbnailHash):
-                self.updateThumbnailState(ThumbnailState.built)
-            else:
-                self.updateThumbnailState(ThumbnailState.loadFailed)
+            self.updateThumbnailState(ThumbnailState.loadFailed)
+
         if self._thumbnailProcess.is_alive():
             self._thumbnailProcess.terminate()
 

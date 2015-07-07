@@ -11,7 +11,7 @@ Website: [http://buttleofx.wordpress.com](http://buttleofx.wordpress.com)
 
 Documentation
 -------------
-[http://buttleofx.readthedocs.org/]
+http://buttleofx.readthedocs.org/
 
 Development teams
 -----------------

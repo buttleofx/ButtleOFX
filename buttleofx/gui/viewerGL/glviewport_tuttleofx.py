@@ -2,15 +2,15 @@ import logging
 from PyQt5 import QtCore
 from pyTuttle import tuttle
 from .glviewport import GLViewport
-from buttleofx.data import ButtleDataSingleton
-from buttleofx.event import ButtleEventSingleton
-from buttleofx.manager import ButtleManagerSingleton
+from buttleofx.data import globalButtleData
+from buttleofx.event import globalButtleEvent
+from buttleofx.manager import globalButtleManager
 # from .tuttleOverlayInteract import TuttleOverlayInteract
 
 
 class GLViewport_tuttleofx(GLViewport):
     def __init__(self, parent=None):
-        super(GLViewport_tuttleofx, self).__init__(parent)
+        GLViewport.__init__(self, parent)
 
         self.tuttleOverlay = None
         self.recomputeOverlay = False
@@ -26,7 +26,7 @@ class GLViewport_tuttleofx(GLViewport):
 
     @QtCore.pyqtSlot()
     def unconnectToButtleEvent(self):
-        buttleEvent = ButtleEventSingleton().get()
+        buttleEvent = globalButtleEvent
         # disconnect : load image when the viewer changed
         buttleEvent.viewerChangedSignal.disconnect(self.loadImage)
         # disconnect : load image when one param changed
@@ -52,18 +52,17 @@ class GLViewport_tuttleofx(GLViewport):
     # ## Others ## #
 
     def clearMapOfImageAlreadyCalculated(self):
-        buttleData = ButtleDataSingleton().get()
-        buttleData._mapNodeNameToComputedImage.clear()
+        globalButtleData._mapNodeNameToComputedImage.clear()
 
     def connectToButtleEvent(self):
-        buttleEvent = ButtleEventSingleton().get()
+        buttleEvent = globalButtleEvent
         # connect : load image when the viewer changed
         buttleEvent.viewerChangedSignal.connect(self.loadImage)
         # connect : load image when one param changed
         buttleEvent.oneParamChangedSignal.connect(self.loadImage)
 
     def internPaintGL(self):
-        super(GLViewport_tuttleofx, self).internPaintGL()
+        GLViewport.internPaintGL(self)
         pixelScale = tuttle.OfxPointD()
         pixelScale.x = self.getScale()
         pixelScale.y = pixelScale.x
@@ -71,15 +70,15 @@ class GLViewport_tuttleofx(GLViewport):
             self.tuttleOverlay.draw(pixelScale)
 
     def loadImage(self):
-        # print("glviewport_tuttleofx.loadImage")
+        # logging.debug("glviewport_tuttleofx.loadImage")
         self.img_data = None
         self.tex = None
 
         try:
             self.loadImage_tuttle()
-            # print('Tuttle img_data:', self.img_data)
+            # logging.debug('Tuttle img_data: %s', self.img_data)
         except Exception as e:
-            logging.debug('Error while loading image file.\nError: "%s"' % str(e))
+            logging.debug('Error while loading image file.\nError: "%s"', str(e))
             self.img_data = None
             self.setImageBounds(QtCore.QRect())
             # raise
@@ -88,7 +87,7 @@ class GLViewport_tuttleofx(GLViewport):
             self.fitImage()
 
     def loadImage_tuttle(self):
-        buttleManager = ButtleManagerSingleton().get()
+        buttleManager = globalButtleManager
         logging.debug("retrieveImage start")
         imgRes = buttleManager.getViewerManager().retrieveImage(self._frame, self._frameHasChanged)
         logging.debug("retrieveImage end")

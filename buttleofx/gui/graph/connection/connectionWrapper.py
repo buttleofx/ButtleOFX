@@ -11,8 +11,8 @@ class ConnectionWrapper(QtCore.QObject):
     _enabled = True
 
     def __init__(self, connection, view):
-        # print("ConnectionWrapper constructor")
-        super(ConnectionWrapper, self).__init__(view)
+        # logging.debug("ConnectionWrapper constructor")
+        QtCore.QObject.__init__(self, view)
 
         self._connection = connection
 

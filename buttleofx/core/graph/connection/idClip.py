@@ -7,7 +7,7 @@ class IdClip(object):
     """
 
     def __init__(self, nodeName, clipName):
-        super(IdClip, self).__init__()
+        object.__init__(self)
 
         self._id = nodeName + clipName
         self._nodeName = nodeName
@@ -53,7 +53,7 @@ class IdClip(object):
         """
             Overloads the operator ==
         """
-        return (self._nodeName == otherClip._nodeName and self._clipName == otherClip._clipName)
+        return self._nodeName == otherClip._nodeName and self._clipName == otherClip._clipName
 
     def __str__(self):
-        return 'Node  "%s" , Clip "%s" (index %d)' % (self._nodeName, self._clipName)
+        return 'Node  "%s" , Clip "%s" (index %d)' % (self._nodeName, self._clipName, self._id)

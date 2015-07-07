@@ -1,15 +1,18 @@
+import os
+import logging
+
 from PyQt5 import QtCore
-from buttleofx.gui.browser_v2.actions.actionManager import ActionManagerSingleton
+
+from pySequenceParser import sequenceParser
+
+from buttleofx.gui.browser_v2.actions.actionManager import globalActionManager
 from buttleofx.gui.browser_v2.actions.actionWrapper import ActionWrapper
-from quickmamba.patterns.singleton import Singleton
-from buttleofx.gui.browser_v2.browserModel import BrowserModelSingleton
+from buttleofx.gui.browser_v2.browserModel import globalBrowserModel
 from buttleofx.gui.browser_v2.browserItem import BrowserItem
 from buttleofx.gui.browser_v2.actions.concreteActions.copy import Copy
 from buttleofx.gui.browser_v2.actions.concreteActions.move import Move
 from buttleofx.gui.browser_v2.actions.concreteActions.create import Create
 from buttleofx.gui.browser_v2.actions.concreteActions.delete import Delete
-from pySequenceParser import sequenceParser
-import os
 
 
 class BrowserAction(QtCore.QObject):
@@ -19,9 +22,11 @@ class BrowserAction(QtCore.QObject):
     cacheChanged = QtCore.pyqtSignal()
 
     def __init__(self):
-        super(BrowserAction, self).__init__()
+        logging.debug('BrowserAction begin constructor')
+        QtCore.QObject.__init__(self)
         self._cacheActions = None  # for copy, move actions
-        self._browserModel = BrowserModelSingleton.get()
+        self._browserModel = globalBrowserModel
+        logging.debug('BrowserAction end constructor')
 
     def pushCache(self, listActions):
         self._cacheActions = ActionWrapper(listActions)
@@ -36,10 +41,10 @@ class BrowserAction(QtCore.QObject):
     @QtCore.pyqtSlot(QtCore.QObject)
     def pushToActionManager(self, actionWrapper=None):
         if actionWrapper:
-            ActionManagerSingleton.get().push(actionWrapper)
+            globalActionManager.push(actionWrapper)
         else:
             if self._cacheActions:
-                ActionManagerSingleton.get().push(self._cacheActions)
+                globalActionManager.push(self._cacheActions)
 
     @QtCore.pyqtSlot()
     def handleCopy(self):
@@ -79,24 +84,19 @@ class BrowserAction(QtCore.QObject):
         self.pushToActionManager(ActionWrapper(listActions))
 
     @QtCore.pyqtSlot(str)
-    def handleNew(self, type):
-        if type == "Folder":
-            new = BrowserItem(sequenceParser.Item(sequenceParser.eTypeFolder, "New_Folder"), True)
-        elif type == "File":
-            new = BrowserItem(sequenceParser.Item(sequenceParser.eTypeFile, "NewDocument.txt"), True)
+    def handleNew(self, typeItem):
+        if typeItem == "Folder":
+            new = BrowserItem(sequenceParser.Item(sequenceParser.eTypeFolder, "New_Folder"))
+        elif typeItem == "File":
+            new = BrowserItem(sequenceParser.Item(sequenceParser.eTypeFile, "NewDocument.txt"))
         else:
             return
 
-        parent = BrowserItem(sequenceParser.Item(sequenceParser.eTypeFolder, self._browserModel.getCurrentPath()), False)
+        parent = BrowserItem(sequenceParser.Item(sequenceParser.eTypeFolder, self._browserModel.getCurrentPath()))
         self.pushToActionManager(ActionWrapper([Create(parent, new)]))
 
     # cache empty ?
     isCache = QtCore.pyqtProperty(bool, isEmptyCache, notify=cacheChanged)
 
 
-class BrowserActionSingleton(Singleton):
-    _bAction = BrowserAction()
-
-    @staticmethod
-    def get():
-        return BrowserActionSingleton._bAction
+globalBrowserAction = BrowserAction()

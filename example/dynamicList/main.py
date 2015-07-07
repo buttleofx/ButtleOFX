@@ -8,7 +8,7 @@ from PyQt5 import QtCore, QtWidgets, QtQuick
 
 class ClipWrapper(QtCore.QObject):
     def __init__(self, parent, name, duration):
-        super(ClipWrapper, self).__init__(parent)
+        QtCore.QObject.__init__(self, parent)
         self._name = name
         self._duration = duration
 
@@ -26,7 +26,7 @@ class ClipWrapper(QtCore.QObject):
 
 class MainWrapper(QtCore.QObject):
     def __init__(self, parent):
-        super(MainWrapper, self).__init__(parent)
+        QtCore.QObject.__init__(self, parent)
         self._clips = QObjectListModel(self)
         self._clips.setObjectList([ClipWrapper(parent, "Clip0", 2.2), ClipWrapper(parent, "Clip1", 10.0)])
 

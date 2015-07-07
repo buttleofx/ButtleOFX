@@ -9,8 +9,8 @@ class ClipWrapper(QtCore.QObject):
     """
 
     def __init__(self, clipName, nodeName, view):
-        # print("ClipWrapper constructor")
-        super(ClipWrapper, self).__init__(view)
+        # logging.debug("ClipWrapper constructor")
+        QtCore.QObject.__init__(self, view)
         self._nodeName = nodeName
         self._clipName = clipName
 
@@ -29,21 +29,21 @@ class ClipWrapper(QtCore.QObject):
         return "{0}.{1}".format(self.getNodeName(), self.getClipName())
 
     def getXCoord(self):
-        # print("ClipWrapper  << getCoord:", self.getFullName(), self._coord.x(), self._coord.y())
+        # logging.debug("ClipWrapper  << getCoord: %s, %s, %s", self.getFullName(), self._coord.x(), self._coord.y())
         return self._xCoord
 
     def getYCoord(self):
-        # print("ClipWrapper  << getCoord:", self.getFullName(), self._coord.x(), self._coord.y())
+        # logging.debug("ClipWrapper  << getCoord: %s, %s, %s", self.getFullName(), self._coord.x(), self._coord.y())
         return self._yCoord
 
     # ## Setters ## #
     def setXCoord(self, x):
-        # print("ClipWrapper  >> setXCoord:", self.getFullName(), x)
+        # logging.debug("ClipWrapper  >> setXCoord: %s, %s", self.getFullName(), x)
         self._xCoord = x
         self.xCoordChanged.emit()
 
     def setYCoord(self, y):
-        # print("ClipWrapper  >> setYCoord:", self.getFullName(), y)
+        # logging.debug("ClipWrapper  >> setYCoord: %s, %s", self.getFullName(), y)
         self._yCoord = y
         self.yCoordChanged.emit()
 

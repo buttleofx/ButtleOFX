@@ -30,23 +30,23 @@ def numpyValueTypeToGlType(valueType):
 
 
 def load_texture(array, width, height):
-    # print('loading texture')
-    # print('shape:', array.shape)
-    # print('array.ndim', array.ndim)
-    # print('array.dtype', array.dtype)
+    # logging.debug('loading texture')
+    # logging.debug('shape: %s', array.shape)
+    # logging.debug('array.ndim %s', array.ndim)
+    # logging.debug('array.dtype %s', array.dtype)
 
     array_type = numpyValueTypeToGlType(array.dtype)
 
     if array.ndim == 2:
         # Linear array of pixels
-        size, channels = array.shape
-        # print('size:%d, channels:%d' % (size, channels))
+        _, channels = array.shape
+        # logging.debug('size:%d, channels:%d', size, channels)
         array_channelGL = nbChannelsToGlPixelType(channels)
         return GL.glTexImage2D(GL.GL_TEXTURE_2D, 0, GL.GL_RGBA, width, height, 0, array_channelGL, array_type, array)
     elif array.ndim == 3:
         # 2D array of pixels
         array_height, array_width, channels = array.shape
-        # print('width:%d, height:%d, channels:%d' % (width, height, channels))
+        # logging.debug('width:%d, height:%d, channels:%d', width, height, channels)
         array_channelGL = nbChannelsToGlPixelType(channels)
         return GL.glTexImage2D(GL.GL_TEXTURE_2D, 0, GL.GL_RGBA, array_width, array_height,
                                0, array_channelGL, array_type, array)
@@ -80,7 +80,7 @@ class GLViewport(QtQuick.QQuickPaintedItem):
     _glGeometry = QtCore.QRect()
 
     def __init__(self, parent=None):
-        super(GLViewport, self).__init__(parent)
+        QtQuick.QQuickPaintedItem.__init__(self, parent)
 
         self.img_data = None
         self.tex = None
@@ -95,12 +95,12 @@ class GLViewport(QtQuick.QQuickPaintedItem):
         GL.glEnable(GL.GL_LINE_SMOOTH)
 
     def updateTextureFromImage(self):
-        # print("updateTextureFromImage begin")
+        # logging.debug("updateTextureFromImage begin")
         if self.img_data is not None:
             self.tex = loadTextureFromImage(self._imageBoundsValue, self.img_data)
         else:
             self.tex = None
-        # print("updateTextureFromImage end")
+        # logging.debug("updateTextureFromImage end")
 
     @QtCore.pyqtSlot()
     def fitImage(self):
@@ -137,9 +137,9 @@ class GLViewport(QtQuick.QQuickPaintedItem):
         GL.glColor3d(1.0, 1.0, 1.0)
 
     def drawImage(self):
-        # print("GLViewport.drawImage")
-        # print("widget size:", self.width(), "x", self.height())
-        # print("image size:", self.getImageBounds().width(), "x", self.getImageBounds().height())
+        # logging.debug("GLViewport.drawImage")
+        # logging.debug("widget size: %sx%s", self.width(), self.height())
+        # logging.debug("image size: %sx%s", self.getImageBounds().width(), self.getImageBounds().height())
 
         if self.img_data is not None and self.tex is None:
             self.updateTextureFromImage()
@@ -147,7 +147,7 @@ class GLViewport(QtQuick.QQuickPaintedItem):
         if self.tex is None:
             return
 
-        # print("GLViewport.drawImage -- OpenGL draw image")
+        # logging.debug("GLViewport.drawImage -- OpenGL draw image")
         GL.glEnable(GL.GL_TEXTURE_2D)
         GL.glBindTexture(GL.GL_TEXTURE_2D, self.tex)
 
@@ -181,14 +181,14 @@ class GLViewport(QtQuick.QQuickPaintedItem):
         # self.tuttleReaderNode
 
     def internPaintGL(self):
-        # print("GLViewport.internPaintGL:", self.img_data)
+        # logging.debug("GLViewport.internPaintGL: %s", self.img_data)
         if self.img_data is not None:
             self.prepareGL()
             self.drawImage()
             self.drawRegions()
 
     def paint(self, painter):
-        # print("GLViewport.paint")
+        # logging.debug("GLViewport.paint")
 
         painter.beginNativePainting()
         self.internPaintGL()
@@ -204,7 +204,7 @@ class GLViewport(QtQuick.QQuickPaintedItem):
         GL.glEnd()
 
     def drawTest(self):
-        # print("GLViewport.drawTest")
+        # logging.debug("GLViewport.drawTest")
 
         GL.glBegin(GL.GL_TRIANGLES)
         GL.glColor3f(1, 0, 0)
@@ -218,9 +218,9 @@ class GLViewport(QtQuick.QQuickPaintedItem):
         GL.glEnd()
 
     def geometryChanged(self, new, old):
-        # print("GLViewport.geometryChanged")
-        # print("new:", new.x(), new.y(), new.width(), new.height())
-        # print("old:", old.x(), old.y(), old.width(), old.height())
+        # logging.debug("GLViewport.geometryChanged")
+        # logging.debug("new: %s, %s, %s, %s", new.x(), new.y(), new.width(), new.height())
+        # logging.debug("old: %s, %s, %s, %s", old.x(), old.y(), old.width(), old.height())
 
         self._localGeometry = new
         self._glGeometry = new  # self.sceneTransform().mapRect(new)
@@ -230,7 +230,7 @@ class GLViewport(QtQuick.QQuickPaintedItem):
         QtQuick.QQuickItem.geometryChanged(self, new, old)
 
     def mousePressEvent(self, event):
-        # print("GLViewport.mousePressEvent")
+        # logging.debug("GLViewport.mousePressEvent")
         QtQuick.QQuickItem.mousePressEvent(self, event)
 
     def getBgColor(self):
@@ -291,7 +291,7 @@ class GLViewport(QtQuick.QQuickPaintedItem):
         return self._offsetValue
 
     def setOffset(self, offset):
-        # print("setOffset:", offset)
+        # logging.debug("setOffset: %s", offset)
         self._offsetValue = offset
         self.update()
         self.offsetChanged.emit()
@@ -307,7 +307,7 @@ class GLViewport(QtQuick.QQuickPaintedItem):
         return self._scaleValue
 
     def setScale(self, scale):
-        # print("setScale:", self._scaleValue, " => ", scale)
+        # logging.debug("setScale: %s => %s", self._scaleValue, scale)
         minValue = 0.001
         self._scaleValue = scale if scale > minValue else minValue
         self.update()

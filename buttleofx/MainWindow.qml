@@ -42,34 +42,36 @@ ApplicationWindow {
     }
 
     function getSetting(key, defaultValue) {
-        var res = undefined;
+        var res = defaultValue;
 
         settingsDatabase.transaction(function(tx) {
             var dbRes = tx.executeSql('SELECT value FROM settings WHERE key=?;', [key]);
-
-            if (dbRes.rows.length > 0) {
-                res = dbRes.rows.item(0).value;
-            } else {
-                res = defaultValue
-            }
+            if (dbRes.rows.length > 0)
+                res = dbRes.rows.item(0).value
         });
-
         return res;
     }
 
+    id: mainWindowQML
+    title:"ButtleOFX"
+    visible: true
+    width: Screen.width
+    height: Screen.height
+
+    minimumWidth: 300
+    minimumHeight: 200
+
+
     property int selectedView: getSetting("view", 3)
 
-    property variant lastSelectedDefaultView: view1
+    property variant lastSelectedView: selectedView == 1 ? view1: (selectedView == 2 ? view2 : (selectedView == 3 ? view3: view4))
     property variant view1: [browser, paramEditor, player, graphEditor]
     property variant view2: [player, paramEditor, browser, graphEditor]
     property variant view3: [player, browser, advancedParamEditor, graphEditor]
+    property variant view4: view2  //just use player and browser (ie index 0&&2)
 
     property string urlOfFileToSave: _buttleData.urlOfFileToSave
 
-    width: 1200
-    height: 800
-    id: mainWindowQML
-    title:"ButtleOFX"
 
     // TopFocusHandler {
     //     anchors.fill: parent
@@ -628,15 +630,12 @@ ApplicationWindow {
                 id: defaultView
                 text: "Default"
                 checkable: true
-                checked: selectedView == 1 ? true : false
+                checked: selectedView == 1
 
                 onTriggered: {
-                    checked = true
-                    browserView.checked = false
-                    advancedView.checked = false
                     selectedView = 1
                     saveSetting("view",selectedView)
-                    lastSelectedDefaultView = view1
+                    lastSelectedView = view1
                     topLeftView.visible = true
                     bottomLeftView.visible = true
                     topRightView.visible = true
@@ -649,15 +648,12 @@ ApplicationWindow {
                 id: browserView
                 text: "Browser Mode"
                 checkable: true
-                checked: selectedView == 2 ? true : false
+                checked: selectedView == 2
 
                 onTriggered: {
-                    checked = true
-                    defaultView.checked = false
-                    advancedView.checked = false
                     selectedView = 2
                     saveSetting("view",selectedView)
-                    lastSelectedDefaultView = view2
+                    lastSelectedView = view2
                     topLeftView.visible = true
                     bottomLeftView.visible = true
                     topRightView.visible = true
@@ -670,15 +666,11 @@ ApplicationWindow {
                 id: advancedView
                 text: "Quick Mode"
                 checkable: true
-                checked: selectedView == 3 ? true : false
-
+                checked: selectedView == 3
                 onTriggered: {
-                    checked = true
-                    defaultView.checked = false
-                    browserView.checked = false
                     selectedView = 3
                     saveSetting("view",selectedView)
-                    lastSelectedDefaultView = view3
+                    lastSelectedView = view3
                     topLeftView.visible=true
                     bottomLeftView.visible = true
                     topRightView.visible = true
@@ -686,6 +678,25 @@ ApplicationWindow {
                     rightColumn.width = 0.3 * mainWindowQML.width
                 }
             }
+
+            MenuItem {
+                id: simpleView
+                text: "Simple view"
+                checkable: true
+                checked: selectedView == 4
+
+                onTriggered: {
+                    selectedView = 4
+                    saveSetting("view",selectedView)
+                    lastSelectedView = view4
+                    topLeftView.visible=true
+                    topRightView.visible = true
+                    bottomLeftView.visible = false
+                    bottomRightView.visible = false
+                    rightColumn.width = 0.7 * mainWindowQML.width
+                }
+            }
+
 
             /*
             MenuSeparator { }
@@ -759,22 +770,7 @@ ApplicationWindow {
                     Layout.minimumHeight: visible ? 200 : 0
                     Layout.fillHeight: true
                     implicitWidth: parent.width
-
-                    children:
-                    switch (selectedView) {
-                    case 1:
-                        view1[0]
-                        break
-                    case 2:
-                        view2[0]
-                        break
-                    case 3:
-                        view3[0]
-                        break
-                    default:
-                        lastSelectedDefaultView[0]
-                        break
-                    }
+                    children: lastSelectedView[0]
                 }
 
                 Rectangle {
@@ -786,25 +782,8 @@ ApplicationWindow {
                     implicitWidth: parent.width
                     implicitHeight: topLeftView.visible ? 0.5 * parent.height : parent.height
                     z: -1
-
-                    children:
-                    switch (selectedView) {
-                    case 1:
-                        view1[1]
-                        break
-                    case 2:
-                        view2[1]
-                        break
-                    case 3:
-                        if(advancedParamEditor.displayGraph)
-                            view3[3]
-                        else
-                            view3[1]
-                        break
-                    default:
-                        lastSelectedDefaultView[1]
-                        break
-                    }
+                    children: selectedView != 3 ? lastSelectedView[1]: (advancedParamEditor.displayGraph? view3[3] : view3[1])
+                    visible: selectedView != 4
                 }
             }
 
@@ -823,22 +802,7 @@ ApplicationWindow {
                     Layout.minimumHeight: visible ? 200 : 0
                     Layout.fillHeight: true
                     implicitWidth: parent.width
-
-                    children:
-                    switch (selectedView) {
-                    case 1:
-                        view1[2]
-                        break
-                    case 2:
-                        view2[2]
-                        break
-                    case 3:
-                        view3[2]
-                        break
-                    default:
-                        lastSelectedDefaultView[2]
-                        break
-                    }
+                    children: lastSelectedView[2]
                 }
 
                 Rectangle {
@@ -850,23 +814,8 @@ ApplicationWindow {
                     implicitWidth: parent.width
                     implicitHeight: topRightView.visible ? 0.5 * parent.height : parent.height
                     z: -1
-                    visible: selectedView ==3 ? false : true
-
-                    children:
-                    switch (selectedView) {
-                    case 1:
-                        view1[3]
-                        break
-                    case 2:
-                        view2[3]
-                        break
-                    case 3:
-                        view3[3]
-                        break
-                    default:
-                        lastSelectedDefaultView[3]
-                        break
-                    }
+                    visible: selectedView == 1 || selectedView == 2
+                    children: lastSelectedView[3]
                 }
             }
         }
@@ -885,7 +834,6 @@ ApplicationWindow {
 
             onButtonCloseClicked: {
                 if (parent != fullscreenContent) {
-                    selectedView =- 1
                     parent.visible = false
                 } else {
                     fullscreenWindow.visibility = Window.Hidden
@@ -906,7 +854,6 @@ ApplicationWindow {
 
             onButtonCloseClicked: {
                 if (parent!=fullscreenContent) {
-                    selectedView=-1
                     parent.visible = false
                 } else {
                     fullscreenWindow.visibility = Window.Hidden
@@ -929,7 +876,6 @@ ApplicationWindow {
 
             onButtonCloseClicked: {
                 if (parent!=fullscreenContent) {
-                    selectedView =- 1
                     parent.visible = false
                 } else {
                     fullscreenWindow.visibility = Window.Hidden
@@ -950,7 +896,6 @@ ApplicationWindow {
 
             onButtonCloseClicked: {
                 if (parent != fullscreenContent) {
-                    selectedView =- 1
                     parent.visible = false
                 } else {
                     fullscreenWindow.visibility = Window.Hidden

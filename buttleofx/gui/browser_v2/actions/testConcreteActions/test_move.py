@@ -39,8 +39,8 @@ class TestMove(unittest.TestCase):
                                           dest_folder_path)
             sp_file = sequenceParser.Item(sequenceParser.eTypeFile,
                                           src_file_path)
-            dest = BrowserItem(sp_dest, True)
-            file = BrowserItem(sp_file, True)
+            dest = BrowserItem(sp_dest)
+            file = BrowserItem(sp_file)
 
             # Move file
             mv = Move(file)
@@ -77,8 +77,8 @@ class TestMove(unittest.TestCase):
                                           dest_folder_path)
             sp_file = sequenceParser.Item(sequenceParser.eTypeFile,
                                           src_file_path)
-            dest = BrowserItem(sp_dest, True)
-            file = BrowserItem(sp_file, True)
+            dest = BrowserItem(sp_dest)
+            file = BrowserItem(sp_file)
 
             # Move file
             mv = Move(file)
@@ -126,8 +126,8 @@ class TestMove(unittest.TestCase):
                                                  dest_folder_path)
             sp_src_folder = sequenceParser.Item(sequenceParser.eTypeFolder,
                                                 src_folder_path)
-            dest_folder = BrowserItem(sp_dest_folder, True)
-            src_folder = BrowserItem(sp_src_folder, True)
+            dest_folder = BrowserItem(sp_dest_folder)
+            src_folder = BrowserItem(sp_src_folder)
 
             # Move folder
             mv = Move(src_folder)
@@ -167,8 +167,8 @@ class TestMove(unittest.TestCase):
                                                  dest_folder_path)
             sp_src_folder = sequenceParser.Item(sequenceParser.eTypeFolder,
                                                 src_folder_path)
-            dest_folder = BrowserItem(sp_dest_folder, True)
-            src_folder = BrowserItem(sp_src_folder, True)
+            dest_folder = BrowserItem(sp_dest_folder)
+            src_folder = BrowserItem(sp_src_folder)
 
             # Move folder
             mv = Move(src_folder)

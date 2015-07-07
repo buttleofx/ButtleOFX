@@ -1,4 +1,5 @@
 import os
+import logging
 
 from pyTuttle import tuttle
 
@@ -83,7 +84,7 @@ class FileItem(QtCore.QObject):
     @QtCore.pyqtSlot(result=QtCore.QSizeF)
     def getImageSize(self):
         g = tuttle.Graph()
-        node = g.createNode(tuttle.getBestReader(self._fileExtension), self._fileImg).asImageEffectNode()
+        node = g.createNode(tuttle.getReaders(self._fileExtension)[0], self._fileImg).asImageEffectNode()
         g.setup()
         timeMin = self.getFileTime().min
         g.setupAtTime(timeMin)
@@ -111,7 +112,7 @@ class FileItem(QtCore.QObject):
 
     def getFileTime(self):
         g = tuttle.Graph()
-        node = g.createNode(tuttle.getBestReader(self._fileExtension), self._filepath).asImageEffectNode()
+        node = g.createNode(tuttle.getReaders(self._fileExtension)[0], self._filepath).asImageEffectNode()
         g.setup()
         time = node.getTimeDomain()
         return time
@@ -277,6 +278,7 @@ class FileModelBrowser(QtQuick.QQuickItem):
 
     @QtCore.pyqtSlot(str)
     def updateFileItems(self, folder):
+        logging.debug('updateFileItems: %s' % folder)
         if not folder:
             return
 
@@ -306,6 +308,7 @@ class FileModelBrowser(QtQuick.QQuickItem):
                     # TODO: need an option for that
                     continue
                 readers = tuttle.getReaders(sPath)
+                logging.debug('SEQ readers: %s' % readers)
                 supported = bool(readers)
                 if not supported and self._nameFilter != "*":
                     continue
@@ -317,6 +320,7 @@ class FileModelBrowser(QtQuick.QQuickItem):
                 # TODO: need an option for that
                 continue
             readers = tuttle.getReaders(f)
+            logging.debug('FILE readers: %s' % readers)
             supported = bool(readers)
             if not supported and self._nameFilter != "*":
                 continue
@@ -359,6 +363,7 @@ class FileModelBrowser(QtQuick.QQuickItem):
         self.nameFilterChange.emit()
 
     def setFolder(self, folder):
+        logging.debug('fileModelBrowser.setFolder("%s")' % folder)
         self._folder = folder
         self.updateFileItems(folder)
         self.folderChanged.emit()
@@ -382,11 +387,3 @@ class FileModelBrowser(QtQuick.QQuickItem):
     showSeqChanged = QtCore.pyqtSignal()
     showSeq = QtCore.pyqtProperty(bool, getShowSeq, setShowSeq, notify=showSeqChanged)
 
-
-# This class exists just because there are problems when a class extends 2 other classes (Singleton and QObject)
-class FileModelBrowserSingleton(Singleton):
-
-    _fileModelBrowser = FileModelBrowser()
-
-    def get(self):
-        return self._fileModelBrowser

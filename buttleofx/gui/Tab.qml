@@ -8,7 +8,6 @@ Item {
     width: parent.width
     implicitWidth: 100
 
-    property color tabColor: "#141414"
     property string name: "New tab"
     signal closeClicked(bool clicked)
     signal fullscreenClicked(bool clicked)
@@ -22,7 +21,7 @@ Item {
             width: parent.width
             implicitWidth: 100
             implicitHeight: 25
-            color: tabBar.tabColor
+            color: "transparent"
 
             Text {
                 id: tabLabel

@@ -1,5 +1,5 @@
 from buttleofx.core.params import Param
-from buttleofx.core.undo_redo.manageTools import CommandManager
+from buttleofx.core.undo_redo.manageTools import globalCommandManager
 from buttleofx.core.undo_redo.commands.params import CmdSetParamChoice
 
 
@@ -15,12 +15,12 @@ class ParamChoice(Param):
     def __init__(self, tuttleParam):
         Param.__init__(self, tuttleParam)
 
-        self._oldValue = self.getValue()
-
         self._listValue = []
         for choice in range(tuttleParam.getProperties().fetchProperty("OfxParamPropChoiceOption").getDimension()):
             self._listValue.append(tuttleParam.getProperties().fetchProperty("OfxParamPropChoiceOption").
                                    getStringValueAt(choice))
+
+        self._oldValue = self.getValue()
 
         self._hasChanged = False
 
@@ -51,6 +51,8 @@ class ParamChoice(Param):
         return "ParamChoice"
 
     def getValue(self):
+        if not self.getListValue():
+            return ""
         return self._tuttleParam.getStringValue()
 
     # ## Setters ## #
@@ -72,5 +74,5 @@ class ParamChoice(Param):
         if value != self.getOldValue():
             # Push the command
             cmdUpdate = CmdSetParamChoice(self, str(value))
-            cmdManager = CommandManager()
+            cmdManager = globalCommandManager
             cmdManager.push(cmdUpdate)

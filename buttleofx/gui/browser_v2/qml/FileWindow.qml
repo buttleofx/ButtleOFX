@@ -28,7 +28,7 @@ Rectangle {
         _buttleData.currentViewerIndex = 10 // We assign to the viewer the 10th view
         _buttleEvent.emitViewerChangedSignal()
     }
-    function handleGraphViewerDoubleClick(pathImg){
+    function handleGraphViewerDoubleClick(browserItem){
         _buttleData.currentGraphWrapper = _buttleData.graphWrapper
         _buttleData.currentGraphIsGraph()
 
@@ -40,7 +40,7 @@ Rectangle {
                 _buttleData.currentViewerNodeWrapper = player.lastNodeWrapper
             player.changeViewer(player.lastView)
         }
-        _buttleManager.nodeManager.dropFile(pathImg, 10, 10)
+          _buttleManager.nodeManager.dropFile(browserItem.path, 10, 10)
     }
 
     signal pushVisitedFolder(string path)
@@ -104,6 +104,7 @@ Rectangle {
             shortcut: StandardKey.New
             onTriggered: {
                 _browserAction.handleNew("Folder")
+                _browser.refresh()
             }
         }
         MenuItem{
@@ -113,6 +114,7 @@ Rectangle {
             shortcut: StandardKey.UnknownKey
             onTriggered: {
                 _browserAction.handleNew("File")
+                _browser.refresh()
             }
         }
         MenuSeparator{}
@@ -145,6 +147,8 @@ Rectangle {
                     destination = _browser.selectedItems.get(0).path
 
                 _browserAction.handlePaste(destination)
+                _browser.refresh()
+
             }
         }
         MenuItem{
@@ -238,7 +242,7 @@ Rectangle {
 
                     fillMode: Image.Pad
 
-                    visible: !(model.object.type === 1) && icon.status === Image.Loading
+                    visible: !model.object.folder && model.object.thumbnailState === "loading"
 
                     NumberAnimation on rotation {
                         from: 0
@@ -320,8 +324,9 @@ Rectangle {
 
                     else if(mouse.button == Qt.LeftButton){
                         if(!model.object.isFolder()){
-                            if (model.object.isSupported())
+                            if (model.object.isSupported()){
                                 handleGraphViewerClick(model.object.path)
+                            }
                         }
 
                         if ((mouse.modifiers & Qt.ShiftModifier))
@@ -340,7 +345,7 @@ Rectangle {
 
                     // If it's an image, we create a node
                     else if (model.object.isSupported())
-                        handleGraphViewerDoubleClick(model.object.path)
+                        handleGraphViewerDoubleClick(model.object)
                 }
             }
 

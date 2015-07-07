@@ -6,7 +6,7 @@ from pySequenceParser import sequenceParser
 class SequenceWrapper(QtCore.QObject):
 
     def __init__(self, sequenceParserItem, absPath, parent=None):
-        super(SequenceWrapper, self).__init__(parent)
+        QtCore.QObject.__init__(self, parent)
         self._sequence = sequenceParserItem.getSequence().clone()  # copy object
         self._firstFilePath = os.path.join(os.path.dirname(absPath), self._sequence.getFirstFilename())
         self._weight = sequenceParser.ItemStat(sequenceParserItem).sizeOnDisk

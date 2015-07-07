@@ -28,7 +28,7 @@ class TestRename(unittest.TestCase):
 
             sp_file = sequenceParser.Item(sequenceParser.eTypeFile,
                                           old_file_path)
-            bi = BrowserItem(sp_file, True)
+            bi = BrowserItem(sp_file)
 
             # New file should not exists
             self.assertFalse(os.path.exists(new_file_path))
@@ -59,7 +59,7 @@ class TestRename(unittest.TestCase):
 
             sp_file = sequenceParser.Item(sequenceParser.eTypeFile,
                                           old_file_path)
-            bi = BrowserItem(sp_file, True)
+            bi = BrowserItem(sp_file)
 
             # New file should not exists
             self.assertFalse(os.path.exists(new_file_path))
@@ -99,7 +99,7 @@ class TestRename(unittest.TestCase):
             open(os.path.join(path, old_filename), 'a').close()
             sp_file = sequenceParser.Item(sequenceParser.eTypeFile,
                                           old_file_path)
-            bi = BrowserItem(sp_file, True)
+            bi = BrowserItem(sp_file)
 
             # Rename file
             re = Rename(bi, new_filename)
@@ -126,7 +126,7 @@ class TestRename(unittest.TestCase):
             open(os.path.join(path, old_filename), 'a').close()
             sp_file = sequenceParser.Item(sequenceParser.eTypeFile,
                                           old_file_path)
-            bi = BrowserItem(sp_file, True)
+            bi = BrowserItem(sp_file)
 
             # Rename file
             re = Rename(bi, new_filename)
@@ -165,7 +165,7 @@ class TestRename(unittest.TestCase):
 
             sp_folder = sequenceParser.Item(sequenceParser.eTypeFolder,
                                             old_folder_path)
-            bi = BrowserItem(sp_folder, True)
+            bi = BrowserItem(sp_folder)
 
             # Rename folder
             re = Rename(bi, new_folder_name)
@@ -193,7 +193,7 @@ class TestRename(unittest.TestCase):
 
             sp_folder = sequenceParser.Item(sequenceParser.eTypeFolder,
                                             old_folder_path)
-            bi = BrowserItem(sp_folder, True)
+            bi = BrowserItem(sp_folder)
 
             # Rename folder
             re = Rename(bi, new_folder_name)
@@ -228,13 +228,13 @@ class TestRename(unittest.TestCase):
             # Create BrowserItem sequence
             sp_seq = sequenceParser.browse(path)[0]
 
-            bi = BrowserItem(sp_seq, True)
+            bi = BrowserItem(sp_seq)
             self.assertIsNotNone(bi.getName())
             # Delete sequence
             re = Rename(bi, new_sequence_name)
             re.process()
 
-            bi = BrowserItem(sequenceParser.browse(path)[0], True)
+            bi = BrowserItem(sequenceParser.browse(path)[0])
             # Sequence should be renamed
             self.assertEqual(bi.getSequence().getSequenceParsed().getPrefix(), new_sequence_name)
 
@@ -247,18 +247,18 @@ class TestRename(unittest.TestCase):
             # Create BrowserItem sequence
             sp_seq = sequenceParser.browse(path)[0]
 
-            bi = BrowserItem(sp_seq, True)
+            bi = BrowserItem(sp_seq)
             self.assertIsNotNone(bi.getName())
             # Delete sequence
             re = Rename(bi, new_sequence_name)
             re.process()
 
-            bi = BrowserItem(sequenceParser.browse(path)[0], True)
+            bi = BrowserItem(sequenceParser.browse(path)[0])
             # Sequence should be renamed
             self.assertEqual(bi.getSequence().getSequenceParsed().getPrefix(), new_sequence_name)
 
             re.revert()
-            bi = BrowserItem(sequenceParser.browse(path)[0], True)
+            bi = BrowserItem(sequenceParser.browse(path)[0])
             # Sequence should be renamed
             self.assertEqual(bi.getSequence().getSequenceParsed().getPrefix(), 'seq_')
 

@@ -11,7 +11,7 @@ from buttleofx.gui.paramEditor.wrappers import (IntWrapper, Int2DWrapper, Int3DW
 class ParamEditorWrapper(QtCore.QObject):
 
     def __init__(self, parent, paramList):
-        super(ParamEditorWrapper, self).__init__(parent)
+        QtCore.QObject.__init__(self, parent)
 
         # The QObjectListModel
         self._paramElmts = QObjectListModel(self)

@@ -40,8 +40,8 @@ class TestCopy(unittest.TestCase):
                                           src_file_path)
             sp_dest = sequenceParser.Item(sequenceParser.eTypeFolder,
                                           dest_folder_path)
-            file = BrowserItem(sp_file, True)
-            dest = BrowserItem(sp_dest, True)
+            file = BrowserItem(sp_file)
+            dest = BrowserItem(sp_dest)
 
             # Copy file
             cpy = Copy(file)
@@ -81,8 +81,8 @@ class TestCopy(unittest.TestCase):
                                           src_file_path)
             sp_dest = sequenceParser.Item(sequenceParser.eTypeFolder,
                                           dest_folder_path)
-            file = BrowserItem(sp_file, True)
-            dest = BrowserItem(sp_dest, True)
+            file = BrowserItem(sp_file)
+            dest = BrowserItem(sp_dest)
 
             # Copy file
             cpy = Copy(file)
@@ -122,8 +122,8 @@ class TestCopy(unittest.TestCase):
                                          src_folder_path)
             sp_dest = sequenceParser.Item(sequenceParser.eTypeFolder,
                                           dest_folder_path)
-            src = BrowserItem(sp_src, True)
-            dest = BrowserItem(sp_dest, True)
+            src = BrowserItem(sp_src)
+            dest = BrowserItem(sp_dest)
 
             # Copy folder
             cpy = Copy(src)
@@ -157,8 +157,8 @@ class TestCopy(unittest.TestCase):
                                          src_folder_path)
             sp_dest = sequenceParser.Item(sequenceParser.eTypeFolder,
                                           dest_folder_path)
-            src = BrowserItem(sp_src, True)
-            dest = BrowserItem(sp_dest, True)
+            src = BrowserItem(sp_src)
+            dest = BrowserItem(sp_dest)
 
             # Copy folder
             cpy = Copy(src)
@@ -195,8 +195,8 @@ class TestCopy(unittest.TestCase):
             sp_seq = sequenceParser.browse(path)[1]
             sp_dest = sequenceParser.browse(path)[0]
 
-            src_seq = BrowserItem(sp_seq, True)
-            dest_folder = BrowserItem(sp_dest, True)
+            src_seq = BrowserItem(sp_seq)
+            dest_folder = BrowserItem(sp_dest)
 
             self.assertIsNotNone(src_seq.getName())
             self.assertEqual(dest_folder.getName(), dest_folder_name)
@@ -207,7 +207,7 @@ class TestCopy(unittest.TestCase):
             cpy.process()
 
             sp_dest_seq = sequenceParser.browse(dest_folder_path)[0]
-            dest_seq = BrowserItem(sp_dest_seq, True)
+            dest_seq = BrowserItem(sp_dest_seq)
 
             self.assertEqual(dest_seq.getParentPath(), dest_folder_path)
             self.assertEqual(dest_seq.getName(), src_seq.getName())
@@ -225,8 +225,8 @@ class TestCopy(unittest.TestCase):
             sp_seq = sequenceParser.browse(path)[1]
             sp_dest = sequenceParser.browse(path)[0]
 
-            src_seq = BrowserItem(sp_seq, True)
-            dest_folder = BrowserItem(sp_dest, True)
+            src_seq = BrowserItem(sp_seq)
+            dest_folder = BrowserItem(sp_dest)
 
             self.assertIsNotNone(src_seq.getName())
             self.assertEqual(dest_folder.getName(), dest_folder_name)
@@ -237,7 +237,7 @@ class TestCopy(unittest.TestCase):
             cpy.process()
 
             sp_dest_seq = sequenceParser.browse(dest_folder_path)[0]
-            dest_seq = BrowserItem(sp_dest_seq, True)
+            dest_seq = BrowserItem(sp_dest_seq)
 
             self.assertEqual(dest_seq.getParentPath(), dest_folder_path)
             self.assertEqual(dest_seq.getName(), src_seq.getName())

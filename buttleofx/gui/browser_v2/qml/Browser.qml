@@ -28,6 +28,9 @@ Rectangle {
     }
 
     ColumnLayout {
+        anchors.fill: parent
+        spacing: 0
+
         Tab {
             Layout.fillWidth: true
             id: tabBar
@@ -35,12 +38,12 @@ Rectangle {
             onCloseClicked: root.buttonCloseClicked(true)
             onFullscreenClicked: root.buttonFullscreenClicked(true)
         }
-        anchors.fill: parent
-        spacing: 0
 
         NavBar {
             id: navBar
             Layout.fillWidth: true
+            Layout.preferredHeight: childrenRect.height
+
             property var model: _browser
             property alias visitedFolderList: visitedFolderList
             property alias visitedFolderListIndex: root.visitedFolderListIndex

@@ -2,7 +2,7 @@ import logging
 from pyTuttle import tuttle
 from PyQt5 import QtCore
 from quickmamba.patterns import Signal
-from buttleofx.data import ButtleDataSingleton
+from buttleofx.data import globalButtleData
 
 
 class ViewerManager(QtCore.QObject):
@@ -11,7 +11,7 @@ class ViewerManager(QtCore.QObject):
     """
 
     def __init__(self):
-        super(ViewerManager, self).__init__()
+        QtCore.QObject.__init__(self)
 
         self._tuttleImageCache = None
         self._computedImage = None
@@ -40,7 +40,7 @@ class ViewerManager(QtCore.QObject):
     #    drag.setMimeData(mimeData)
     #
     #    # sets the image of the mosquito in the pixmap
-    #    filePath = ButtleDataSingleton().get().getButtlePath()
+    #    filePath = globalButtleData.getButtlePath()
     #    imgPath = filePath + "/gui/img/mosquito/mosquito.png"
     #    drag.setPixmap(QtGui.QPixmap(imgPath))
     #
@@ -73,14 +73,13 @@ class ViewerManager(QtCore.QObject):
         """
             Computes the node (displayed in the viewer) at the frame indicated.
         """
-        buttleData = ButtleDataSingleton().get()
-        graphTuttle = buttleData.getCurrentGraph().getGraphTuttle()
+        graphTuttle = globalButtleData.getCurrentGraph().getGraphTuttle()
 
         # Get the output where we save the result
         self._tuttleImageCache = tuttle.MemoryCache()
 
-        if buttleData.getVideoIsPlaying():  # If a video is playing
-            processGraph = buttleData.getProcessGraph()
+        if globalButtleData.getVideoIsPlaying():  # If a video is playing
+            processGraph = globalButtleData.getProcessGraph()
             processGraph.setupAtTime(frame)
             processGraph.processAtTime(self._tuttleImageCache, frame)
         else:  # If it's an image only
@@ -88,7 +87,7 @@ class ViewerManager(QtCore.QObject):
             logging.debug("computeNode: Start compute - frame: {0}, node: {1}".format(frame, node))
             processGraph = tuttle.ProcessGraph(processOptions, graphTuttle, [node], tuttle.core().getMemoryCache())
             processGraph.setup()
-            timeRange = tuttle.TimeRange(frame, frame, 1)  # buttleData.getTimeRange()
+            timeRange = tuttle.TimeRange(frame, frame, 1)  # globalButtleData.getTimeRange()
             processGraph.beginSequence(timeRange)
             processGraph.setupAtTime(frame)
             processGraph.processAtTime(self._tuttleImageCache, frame)
@@ -103,14 +102,14 @@ class ViewerManager(QtCore.QObject):
         hasCode = hashMap.getHash(node, frame)
 
         # Max 15 computedImages saved in memory
-        if (hasCode not in buttleData._mapNodeNameToComputedImage.keys() and
-                len(buttleData._mapNodeNameToComputedImage) < 15):
-            buttleData._mapNodeNameToComputedImage.update({hasCode: self._computedImage})
-        elif (hasCode not in buttleData._mapNodeNameToComputedImage.keys() and
-                len(buttleData._mapNodeNameToComputedImage) >= 15):
+        if (hasCode not in globalButtleData._mapNodeNameToComputedImage.keys() and
+                len(globalButtleData._mapNodeNameToComputedImage) < 15):
+            globalButtleData._mapNodeNameToComputedImage.update({hasCode: self._computedImage})
+        elif (hasCode not in globalButtleData._mapNodeNameToComputedImage.keys() and
+                len(globalButtleData._mapNodeNameToComputedImage) >= 15):
             # Delete a computed image from the memory (random)
-            buttleData._mapNodeNameToComputedImage.popitem()
-            buttleData._mapNodeNameToComputedImage.update({hasCode: self._computedImage})
+            globalButtleData._mapNodeNameToComputedImage.popitem()
+            globalButtleData._mapNodeNameToComputedImage.update({hasCode: self._computedImage})
 
         return self._computedImage
 
@@ -118,27 +117,26 @@ class ViewerManager(QtCore.QObject):
         """
             Computes the node at the frame indicated if the frame has changed (if the time has changed).
         """
-        buttleData = ButtleDataSingleton().get()
         # Get the name of the currentNode of the viewer
-        node = buttleData.getCurrentViewerNodeName()
+        node = globalButtleData.getCurrentViewerNodeName()
 
         try:
             # Get the global node hash ID
             if node is not None:
                 hashMap = tuttle.NodeHashContainer()
-                buttleData.getCurrentGraph().getGraphTuttle().computeGlobalHashAtTime(hashMap, frame, [node])
+                globalButtleData.getCurrentGraph().getGraphTuttle().computeGlobalHashAtTime(hashMap, frame, [node])
                 node_hashCode = hashMap.getHash(node, frame)
             # Get the buttle latest images map
-            mapNodeToImage = buttleData.getMapNodeNameToComputedImage()
+            mapNodeToImage = globalButtleData.getMapNodeNameToComputedImage()
 
             self.setNodeError("")
             for key in mapNodeToImage.keys():
                 # If the image is already calculated
                 if node_hashCode == key and frameChanged is False:
-                    # print("**************************Image already calculated**********************")
+                    # logging.debug("**************************Image already calculated**********************")
                     return mapNodeToImage.get(node_hashCode)
             # If it is not
-            # print("**************************Image is not already calculated**********************")
+            # logging.debug("**************************Image is not already calculated**********************")
             return self.computeNode(node, frame)
         except Exception as e:
             logging.debug("Can't display node : " + node)

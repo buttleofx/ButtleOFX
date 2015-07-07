@@ -1,3 +1,5 @@
+import time
+
 from PyQt5 import QtCore
 
 
@@ -9,15 +11,32 @@ class ActionWrapper(QtCore.QObject):
     nbProcessedChanged = QtCore.pyqtSignal()
     abortNotified = QtCore.pyqtSignal()
     progressChanged = QtCore.pyqtSignal()
+    timeProcessChanged = QtCore.pyqtSignal()
 
     def __init__(self, actions):
-        super(ActionWrapper, self).__init__()
+        QtCore.QObject.__init__(self)
         self._actions = actions  # actionInterface list objects
         self._nbProcessed = 0    # nb of actions processed from self._actions
         self._progress = 0
         self._nbActions = len(actions)
         self._abortFlag = False
+        self._timeProcess = ""
+        self.updateTimeProcess()
         self.connectProgressionToActions()
+
+    def getTimeProcess(self):
+        return self._timeProcess
+
+    def updateTimeProcess(self):
+        self._timeProcess = time.strftime("%X", time.localtime())
+        self.timeProcessChanged.emit()
+
+    def executeActions(self):
+        self.updateTimeProcess()
+        for action in self._actions:
+            action.process()
+            self.updateTimeProcess()
+            self.upProcessed()
 
     def abort(self):
         for action in self._actions:
@@ -35,6 +54,10 @@ class ActionWrapper(QtCore.QObject):
 
     def getNbProcessed(self):
         return self._nbProcessed
+
+    @QtCore.pyqtSlot(result=str)
+    def getName(self):
+        return self._actions[0].__class__.__name__ if self._actions and len(self._actions) > 0 else "Action"
 
     @QtCore.pyqtSlot()
     def emitProgressChanged(self):
@@ -63,8 +86,16 @@ class ActionWrapper(QtCore.QObject):
         for action in self._actions:
             action.getProgressSignal().connect(self.emitProgressChanged)
 
+    def getNbTotalActions(self):
+        return len(self._actions)
+
+    def getIdObject(self):
+        return id(self)
+
     # ################################## Data exposed to QML ###################################### #
 
     aborted = QtCore.pyqtProperty(bool, isAborted, setAbort, notify=abortNotified)
     progress = QtCore.pyqtProperty(float, getProgress, notify=progressChanged)
     nbProcessed = QtCore.pyqtProperty(int, getNbProcessed, notify=nbProcessedChanged)
+    nbTotalActions = QtCore.pyqtProperty(int, getNbTotalActions, constant=True)
+    timeProcess = QtCore.pyqtProperty(str, getTimeProcess, notify=timeProcessChanged)

@@ -1,5 +1,6 @@
 import os
 import logging
+
 from PyQt5 import QtCore, QtWidgets, QtQuick, QtQml, QtOpenGL
 
 tuttleofx_installed = False
@@ -7,8 +8,10 @@ try:
     import pyTuttle  # noqa
     tuttleofx_installed = True
     logging.debug('Use TuttleOFX.')
-except:
+except Exception as e:
+    logging.debug(str(e))
     logging.debug('TuttleFX not installed, use Python Image Library instead.')
+
 if tuttleofx_installed:
     from glviewport_tuttleofx import GLViewport_tuttleofx
 else:
@@ -20,14 +23,14 @@ currentFilePath = os.path.dirname(os.path.abspath(__file__))
 
 class ButtleApp(QtWidgets.QApplication):
     def __init__(self, argv):
-        super(ButtleApp, self).__init__(argv)
+        QtWidgets.QApplication.__init__(self, argv)
 
     def notify(self, receiver, event):
         try:
-            # print("QApp notify")
+            # logging.debug("QApp notify")
             return QtWidgets.QApplication.notify(self, receiver, event)
         except Exception as e:
-            print("QApp notify exception: " + str(e))
+            logging.warning("QApp notify exception: %s", str(e))
             import traceback
             traceback.print_exc()
             return False

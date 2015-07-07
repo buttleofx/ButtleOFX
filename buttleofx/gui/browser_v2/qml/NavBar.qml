@@ -7,21 +7,28 @@ import QtQuick.Controls.Styles 1.0
 Rectangle {
     id: root
     color: "#2E2E2E"
+
     clip: true
-    Layout.preferredHeight: searchLayoutRectangle.height+ navBarContainer.height
+
     signal pushVisitedFolder(string path)
     property alias searchLayout: searchLayoutRectangle
 
-    ColumnLayout{
-        anchors.fill: parent
-        spacing: 0
+    QtObject {
+        id: m;
+        property bool searchEnabled: false
+    }
+
+    Column{
+        height: childrenRect.height
 
         Rectangle{
             id: navBarContainer
-            Layout.alignment: Qt.AlignTop
-            Layout.fillWidth: true
+
+            width: root.width
+            height: 40
+
             color: "transparent"
-            Layout.preferredHeight: 40
+
 
             RowLayout {
                 anchors.fill: parent
@@ -98,19 +105,15 @@ Rectangle {
 
                     tooltip: "Parent folder"
 
-                    iconSource:
-                    if (hovered)
-                        "img/parent_hover.png"
-                    else
-                        "img/parent.png"
+                    iconSource: hovered ? "img/parent_hover.png" : "img/parent.png"
 
                     style:
-                    ButtonStyle {
-                        background: Rectangle {
-                            anchors.fill: parent
-                            color: "transparent"
+                        ButtonStyle {
+                            background: Rectangle {
+                                anchors.fill: parent
+                                color: "transparent"
+                            }
                         }
-                    }
 
                     onClicked: {
                         if(model.currentPath !== "/" && model.currentPath.trim() !== ""){
@@ -120,30 +123,39 @@ Rectangle {
                     }
                 }
 
-                Button {
+                Rectangle {
                     id: refresh
 
-                    Layout.preferredWidth: 20
-                    Layout.preferredHeight: 20
+                    Layout.preferredWidth: 14
+                    Layout.preferredHeight: 14
                     Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
-                    tooltip: "Refresh"
+                    color: 'transparent'
 
-                    iconSource:
-                    if (hovered)
-                        "img/refresh_hover.png"
-                    else
-                        "img/refresh.png"
+                    MouseArea{
+                        id: refreshMouse
+                        anchors.fill: parent
+                        hoverEnabled: true
+                        onClicked: root.model.refresh()
+                    }
 
-                    style:
-                    ButtonStyle {
-                        background: Rectangle {
-                            anchors.fill: parent
-                            color: "transparent"
+                    Image {
+                        id: modelLoading
+                        anchors.fill: parent
+                        source: refreshMouse.containsMouse || refreshRotation.running ? "img/refresh_hover.png" : 'img/refresh.png'
+                        asynchronous: true
+
+                        NumberAnimation on rotation {
+                            id: refreshRotation
+                            from: 0
+                            to: 360
+                            running: root.model.loading
+                            loops: Animation.Infinite
+                            duration: 1000
+                            alwaysRunToEnd: true
                         }
                     }
-                    onClicked: root.model.refresh()
-                }
 
+                }
 
                 Rectangle {
                     id: textEditContainer
@@ -189,7 +201,6 @@ Rectangle {
                                 var filter=root.model.currentPath.substr(lastSlash+1)
                                 root.model.currentPath = root.model.currentPath.substr(0,lastSlash)
                                 root.model.filter =  filter
-                                root.model.currentPath += "/" + filter
                             }
                             else
                                 root.model.filter = "*"
@@ -204,7 +215,7 @@ Rectangle {
                             Behavior on x {
                                 PropertyAnimation {
                                     easing.type: Easing.InOutQuad;
-                                    duration: (graySuggestion.text.length)? 1 : 300
+                                    duration: (graySuggestion.text.length)? 10:500
                                 }
                             }
 
@@ -219,7 +230,7 @@ Rectangle {
                             function fill(){
                                 this.clear()
                                 if(root.model.listFolderNavBar.count === 1 && texteditPath.text.trim())
-                                    this.setFormatted(root.model.listFolderNavBar.get(0).name)
+                                    this.setFormatted(root.model.listFolderNavBar.get(0)[0])
 
                             }
 
@@ -249,14 +260,16 @@ Rectangle {
                         }
 
                         Keys.onReleased: {
+                            if(event.key === Qt.Key_Shift || event.key === Qt.Key_Alt)
+                                return
                             root.model.currentPath = texteditPath.text
                             graySuggestion.fill()
 
-                            if(event.key == Qt.Key_Enter || event.key == Qt.Key_Return || event.key == Qt.Key_Down){
+                            if(event.key === Qt.Key_Enter || event.key === Qt.Key_Return)
                                 texteditPath.handleFilter()
-                                if(autoCompleteList.items.length > 1)
-                                    autoCompleteList.show()
-                            }
+
+                            if(event.key == Qt.Key_Down)
+                                autoCompleteList.handleInteraction()
                         }
 
                         onFocusChanged: {
@@ -268,15 +281,17 @@ Rectangle {
 
                         Menu {
                             id: autoCompleteList
-                            __visualItem: textEditContainer       //simulate container for popup
+                            __visualItem: texteditPath
+                            __xOffset: texteditPath.positionToRectangle(root.model.currentPath.length).x
+                            __yOffset: texteditPath.height-8
 
                             Instantiator{
                                 model:root.model.listFolderNavBar
 
                                 MenuItem {
                                     id: textComponent
-                                    text: model.object.name
-                                    property var path: model.object.path
+                                    text: model.object[0]
+                                    property var path: model.object[1]
 
                                     onTriggered: {
                                         pushVisitedFolder(textComponent.path)
@@ -296,14 +311,11 @@ Rectangle {
                             }
 
                             function show() {
+                                console.log(root.model.listFolderNavBar.count)
                                 if(!root.model.listFolderNavBar.count)
                                     return
-
-                                var indexPosition = root.model.currentPath.length
-                                var positionToShow = Qt.vector2d(0, texteditPath.height)
-                                positionToShow.x = texteditPath.positionToRectangle(indexPosition).x
-                                this.__popup(positionToShow.x+12, positionToShow.y) //12 magic
-                                }
+                                this.__popup(0, 0)
+                            }
                         }
                     }
                 }
@@ -334,48 +346,84 @@ Rectangle {
                 }
 
                 Button {
-                    id: search
+                    id: show_seq
+
                     Layout.preferredWidth: 20
                     Layout.preferredHeight: 20
                     Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+                    implicitHeight: 20
+                    implicitWidth: 20
+
+                    tooltip: "Toggle sequence mode"
+                    iconSource: root.model.showSequence ? "img/gridview.png" : "img/gridview_hover.png"
+
+                    style:
+                    ButtonStyle {
+                        background: Rectangle {
+                            anchors.fill: parent
+                            color: "transparent"
+                        }
+                    }
+
+                    onClicked: {
+                        root.model.setShowSequence(!root.model.showSequence)
+                    }
+                }
+
+
+                Button {
+                    id: action_button
+                    property bool isOpen: false
+
+                    Layout.preferredWidth: 20
+                    Layout.preferredHeight: 20
+                    Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+
+                    tooltip: "Actions"
+
+                    iconSource: hovered ? "img/listview_hover.png" : "img/listview.png"
+
+                    style:
+                    ButtonStyle {
+                        background: Rectangle {
+                            anchors.fill: parent
+                            color: "transparent"
+                        }
+                    }
+
+                    onClicked: {
+                        if (!isOpen) {
+                            var component = Qt.createComponent("ActionManager.qml")
+                            var window    = component.createObject(root)
+                            window.show()
+                            isOpen = true
+                        }
+                    }
+                }
+
+                Button {
+                    id: search
+                    Layout.preferredWidth: 30
+                    Layout.preferredHeight: 30
+
+                    Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+
                     tooltip: "Search recursively"
                     iconSource: hovered ?"img/find_hover.png" : "img/find.png"
+
                     style:
                         ButtonStyle {
                             background: Rectangle {
                                 anchors.fill: parent
-                                color: "transparent"
+                                radius: 2
+                                color: m.searchEnabled ? "#222222" : "transparent"
                             }
                         }
                     onClicked: {
-                        searchLayoutRectangle.enabled = !searchLayoutRectangle.enabled
+                        m.searchEnabled = !m.searchEnabled
                         searchEdit.forceActiveFocus()
                     }
 
-                }
-
-                Image {
-                    id: modelLoading
-
-                    anchors.horizontalCenter: parent.horizontalCenter
-                    height: 50
-                    width: parent.width
-
-                    source: "img/refresh_hover.png"
-                    sourceSize.width: 20
-                    sourceSize.height: 20
-                    asynchronous: true
-
-                    fillMode: Image.Pad
-                    visible: model.loading
-
-                    NumberAnimation on rotation {
-                        from: 0
-                        to: 360
-                        running: modelLoading.visible
-                        loops: Animation.Infinite
-                        duration: 1000
-                    }
                 }
 
 //                Button {
@@ -435,18 +483,20 @@ Rectangle {
         Rectangle{
             id: searchLayoutRectangle
 
-            property bool enabled: true
+            width: root.width
+            height: m.searchEnabled ? 30 : 0
 
-            Layout.fillWidth: true
-            height: enabled ? 30 : 0
+            visible: m.searchEnabled
+
             color: "transparent"
 
             function show(){
-                this.enabled = true
+                m.searchEnabled = true
                 searchEdit.forceActiveFocus()
             }
 
-            Behavior on height { PropertyAnimation { easing.type: Easing.InOutQuad ; duration: 300 } }
+            Behavior on height { PropertyAnimation { easing.type: Easing.InOutQuad ; duration: 100 } }
+            Behavior on visible { PropertyAnimation { easing.type: Easing.InOutQuad ; duration: 50 } }
 
             RowLayout{
                 id: searchLayout
@@ -480,12 +530,11 @@ Rectangle {
 
                         onFocusChanged: {
                             if(!focus)
-                                searchLayoutRectangle.enabled = false
+                                m.searchEnabled = false
                         }
                     }
                 }
             }
-            Component.onCompleted: enabled = false
         }
     }
 

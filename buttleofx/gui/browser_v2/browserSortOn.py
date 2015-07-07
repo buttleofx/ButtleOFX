@@ -11,9 +11,9 @@ class SortOn(QtCore.QObject):
         masks = [onName, onSize, onType]
 
         def __init__(self):
-            super(SortOn, self).__init__()
+            QtCore.QObject.__init__(self)
             self._fieldToSort = self.onName
-            self._reverse = 0
+            self._reverse = False
 
         @QtCore.pyqtSlot(result=str)
         def getFieldToSort(self):
@@ -24,7 +24,7 @@ class SortOn(QtCore.QObject):
             return self._reverse
 
         @QtCore.pyqtSlot(str, int)
-        def setFieldToSort(self, newField, reverse=0):
+        def setFieldToSort(self, newField, reverse=False):
             fieldFound = False
             for field in self.masks:
                 if newField == field:

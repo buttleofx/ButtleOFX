@@ -1,5 +1,5 @@
 from PyQt5 import QtCore
-from quickmamba.patterns import Singleton, Signal
+from quickmamba.patterns import Signal
 
 
 class ButtleEvent(QtCore.QObject):
@@ -33,10 +33,5 @@ class ButtleEvent(QtCore.QObject):
         self.oneParamChangedSignal()
 
 
-# This class exists just because thre are problems when a class extends 2 other class (Singleton and QObject)
-class ButtleEventSingleton(Singleton):
+globalButtleEvent = ButtleEvent()
 
-    _buttleEvent = ButtleEvent()
-
-    def get(self):
-        return self._buttleEvent

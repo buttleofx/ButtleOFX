@@ -1,13 +1,17 @@
+import logging
+
 import Image
-from glviewport import GLViewport
 import numpy
+
 from PyQt5 import QtCore
+
+from glviewport import GLViewport
 
 
 class GLViewport_pil(GLViewport):
 
     def __init__(self, parent=None):
-        super(GLViewport_pil, self).__init__(parent)
+        GLViewport.__init__(self, parent)
 
     # ######################################## Methods private to this class ####################################### #
 
@@ -17,18 +21,18 @@ class GLViewport_pil(GLViewport):
         self.setImageBounds(QtCore.QRect(0, 0, self.img.size[0], self.img.size[1]))
         self.tuttleOverlay = None
         self.recomputeOverlay = False
-        print("image size: ", self._imageBoundsValue.width(), "x", self._imageBoundsValue.height())
+        logging.debug("image size: %sx%s", self._imageBoundsValue.width(), self._imageBoundsValue.height())
 
     def loadImageFile(self, filename):
-        print("loadImageFile: ", filename)
+        logging.debug("loadImageFile: %s", filename)
         self.img_data = None
         self.tex = None
 
         try:
             self.loadImageFile_pil(filename)
-            print('PIL img_data:', self.img_data)
+            logging.debug('PIL img_data: %s' % self.img_data)
         except Exception as e:
-            print('Error while loading image file "%s".\nError: "%s"' % (filename, str(e)))
+            logging.warning('Error while loading image file "%s".\n"%s"', filename, str(e))
             self.img_data = None
             self.setImageBounds(QtCore.QRect())
 

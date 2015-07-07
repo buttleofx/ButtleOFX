@@ -1,55 +1,59 @@
 import os
 import sys
+import logging
+
+DEV_MODE = os.environ.get("BUTTLEOFX_DEV", False)
+
+logFormat = 'Buttle - %(levelname)s - %(message)s'
+if DEV_MODE:
+    # Print in console
+    logging.basicConfig(format=logFormat, level=logging.DEBUG)
+else:
+    # Need to set a global level, to allow to use
+    # multiple log levels in multiple output handlers.
+    logging.getLogger().setLevel(logging.DEBUG)
+
+    streamHandler = logging.StreamHandler()
+    streamHandler.setLevel(logging.WARNING)
+    fileFormatter = logging.Formatter(logFormat)
+    streamHandler.setFormatter(fileFormatter)
+    logging.getLogger().addHandler(streamHandler)
+
+    fileHandler = logging.FileHandler('buttle.log')
+    fileHandler.setLevel(logging.DEBUG)
+    fileFormatter = logging.Formatter('Buttle - %(levelname)s - %(asctime)-15s - %(message)s')
+    fileHandler.setFormatter(fileFormatter)
+    logging.getLogger().addHandler(fileHandler)
+
+
 import numpy
 import signal
-import logging
 import argparse
-
-from pyTuttle import tuttle
 
 from quickmamba.utils import instantcoding
 
 from buttleofx.data import Finder
 from buttleofx.gui.viewer import TimerPlayer
-from buttleofx.data import ButtleDataSingleton
-from buttleofx.event import ButtleEventSingleton
-from buttleofx.manager import ButtleManagerSingleton
-from buttleofx.core.undo_redo.manageTools import CommandManager
-from buttleofx.gui.browser_v2.browserModel import BrowserModel, BrowserModelSingleton
-from buttleofx.gui.browser_v2.actions.browserAction import BrowserActionSingleton
-from buttleofx.gui.browser_v2.actions.browserAction import ActionManagerSingleton
+from buttleofx.data import globalButtleData
+from buttleofx.event import globalButtleEvent
+from buttleofx.manager import globalButtleManager
+from buttleofx.core.undo_redo.manageTools import globalCommandManager
+from buttleofx.gui.browser_v2.browserModel import BrowserModel, globalBrowserModel
+from buttleofx.gui.browser_v2.actions.browserAction import globalBrowserAction
+from buttleofx.gui.browser_v2.actions.browserAction import globalActionManager
 
 from PyQt5 import QtCore, QtGui, QtQml, QtQuick, QtWidgets
-
-# PyCheck
-# import pychecker.checker
-
-# Fix throw to display our info
-# From the lowest to the highest level : DEBUG - INFO - WARNING - ERROR - CRITICAL (default = WARNING)
-# To use it:
-# logging.debug("debug message")
-# logging.info("info message")
-# logging.warning("warning message")
-# logging.error("error message")
-# logging.critical("critical message")
-
-DEV_MODE = os.environ.get("BUTTLEOFX_DEV", False)
-
-if DEV_MODE:
-    # Print in console
-    logging.basicConfig(format='Buttle - %(levelname)s - %(message)s', level=logging.DEBUG)
-else:
-    # Print in a file
-    logging.basicConfig(format='Buttle - %(levelname)s - %(asctime)-15s - %(message)s',
-                        filename='console.log', filemode='w', level=logging.DEBUG)
 
 # For glViewport
 tuttleofx_installed = False
 try:
-    import pyTuttle  # noqa
+    from pyTuttle import tuttle
     tuttleofx_installed = True
     logging.debug('Use TuttleOFX.')
-except:
+    # if DEV_MODE:
+    tuttle.core().getFormatter().setLogLevel_int(0)
+except Exception as e:
+    logging.debug(str(e))
     logging.debug('TuttleFX not installed, use Python Image Library instead.')
 
 if tuttleofx_installed:
@@ -77,18 +81,15 @@ signal.signal(signal.SIGINT, signal.SIG_DFL)
 
 class EventFilter(QtCore.QObject):
     def eventFilter(self, receiver, event):
-        buttleData = ButtleDataSingleton().get()
-        # browser = BrowserModelSingleton.get()
-
         if event.type() == QtCore.QEvent.KeyPress:
             # If alt f4 event ignored
             if event.modifiers() == QtCore.Qt.AltModifier and event.key() == QtCore.Qt.Key_F4:
                 event.ignore()
         if event.type() != QtCore.QEvent.Close:
-            return super(EventFilter, self).eventFilter(receiver, event)
+            return QtCore.QObject.eventFilter(self, receiver, event)
         if not isinstance(receiver, QtQuick.QQuickWindow) or not receiver.title() == "ButtleOFX":
             return False
-        if not buttleData.graphCanBeSaved:
+        if not globalButtleData.graphCanBeSaved:
             return False
 
         msgBox = QtWidgets.QMessageBox()
@@ -102,25 +103,25 @@ class EventFilter(QtCore.QObject):
         ret = msgBox.exec_()
 
         if ret == QtWidgets.QMessageBox.Save:
-            if buttleData.urlOfFileToSave:
+            if globalButtleData.urlOfFileToSave:
                 # Save on the already existing file
-                buttleData.saveData(buttleData.urlOfFileToSave)
+                globalButtleData.saveData(globalButtleData.urlOfFileToSave)
                 # Close the application
-                return super(EventFilter, self).eventFilter(receiver, event)
+                return QtCore.QObject.eventFilter(self, receiver, event)
 
             # This project has never been saved, so ask the user on which file to save.
             dialog = QtWidgets.QFileDialog()
             fileToSave = dialog.getSaveFileName(None, "Save the graph", os.path.expanduser("~"))[0]
             if not (fileToSave.endswith(".bofx")):
                 fileToSave += ".bofx"
-            buttleData.urlOfFileToSave = fileToSave
-            buttleData.saveData(fileToSave)
+            globalButtleData.urlOfFileToSave = fileToSave
+            globalButtleData.saveData(fileToSave)
             # Close the application
-            return super(EventFilter, self).eventFilter(receiver, event)
+            return QtCore.QObject.eventFilter(self, receiver, event)
 
         if ret == QtWidgets.QMessageBox.Discard:
             # Close the application
-            return super(EventFilter, self).eventFilter(receiver, event)
+            return QtCore.QObject.eventFilter(self, receiver, event)
 
         # Don't call the parent class, so we don't close the application
         return True
@@ -128,7 +129,7 @@ class EventFilter(QtCore.QObject):
 
 class ButtleApp(QtWidgets.QApplication):
     def __init__(self, argv):
-        super(ButtleApp, self).__init__(argv)
+        QtWidgets.QApplication.__init__(self, argv)
 
 #    def notify(self, receiver, event):
 #        try:
@@ -159,7 +160,7 @@ def toQImage(im):
                 qim = QtGui.QImage(im.data, im.shape[1], im.shape[0], im.strides[0], QtGui.QImage.Format_RGB888)
                 return qim
             elif im.shape[2] == 4:
-                qim = QtGui.QImage(im.data, im.shape[1], im.shape[0], im.strides[0], QtGui.QImage.Format_ARGB32)
+                qim = QtGui.QImage(im.data, im.shape[1], im.shape[0], im.strides[0], QtGui.QImage.Format_RGBA8888) #Format_RGBA32))
                 return qim
 
     raise ValueError("toQImage: case not implemented.")
@@ -168,20 +169,21 @@ def toQImage(im):
 count_thumbnail = 0
 
 
-class ImageProvider(QtQuick.QQuickImageProvider):
+class TuttleImageProvider(QtQuick.QQuickImageProvider):
     def __init__(self):
+        logging.debug("TuttleImageProvider constructor")
         QtQuick.QQuickImageProvider.__init__(self, QtQuick.QQuickImageProvider.Image)
         self.thumbnailCache = tuttle.ThumbnailDiskCache()
         self.thumbnailCache.setRootDir(os.path.join(tuttle.core().getPreferences().getTuttleHomeStr(),
                                                     "thumbnails_cache"))
 
-    def requestImage(self, id, size):
+    def requestImage(self, idImg, size):
         """
-        Compute the image using TuttleOFX
+        Compute the image using TuttleOFX: old way. Now the thumbnail build is wrapped inside a python process
         """
-        logging.debug("Tuttle ImageProvider: file='%s'" % id)
+        logging.debug("TuttleImageProvider: file='%s'", idImg)
         try:
-            img = self.thumbnailCache.getThumbnail(id)
+            img = self.thumbnailCache.getThumbnail(idImg)
             numpyImage = img.getNumpyArray()
 
             # Convert numpyImage to QImage
@@ -193,9 +195,8 @@ class ImageProvider(QtQuick.QQuickImageProvider):
             # count_thumbnail += 1
 
             return qtImage.copy(), qtImage.size()
-
         except Exception as e:
-            logging.debug("Tuttle ImageProvider: file='%s' => error: {0}".format(id, str(e)))
+            logging.debug("TuttleImageProvider: file='{file}' => error: {error}".format(file=idImg, error=str(e)))
             qtImage = QtGui.QImage()
             return qtImage, qtImage.size()
 
@@ -203,7 +204,8 @@ class ImageProvider(QtQuick.QQuickImageProvider):
 def main(argv, app):
 
     # Preload Tuttle
-    tuttle.core().preload()
+    # Don't use the Plugin cache, to avoid multithreading troubles.
+    tuttle.core().preload(False)
 
     # Give to QML acces to TimerPlayer defined in buttleofx/gui/viewer
     QtQml.qmlRegisterType(TimerPlayer, "TimerPlayer", 1, 0, "TimerPlayer")
@@ -215,24 +217,19 @@ def main(argv, app):
     QtQml.qmlRegisterType(GLViewportImpl, "Viewport", 1, 0, "GLViewport")
 
     # Init undo_redo contexts
-    cmdManager = CommandManager()
+    cmdManager = globalCommandManager
     cmdManager.setActive()
     cmdManager.clean()
 
     # Create the QML engine
     engine = QtQml.QQmlEngine(app)
     engine.quit.connect(app.quit)
-    engine.addImageProvider("buttleofx", ImageProvider())
+    engine.addImageProvider("buttleofx", TuttleImageProvider())
 
     # Data
-    buttleData = ButtleDataSingleton().get().init(engine, currentFilePath)
+    globalButtleData.init(engine, currentFilePath)
     # Manager
-    buttleManager = ButtleManagerSingleton().get().init()
-    # Event
-    buttleEvent = ButtleEventSingleton().get()
-    # browserModel
-    browser = BrowserModelSingleton.get()
-    browserAction = BrowserActionSingleton.get()
+    buttleManager = globalButtleManager.init()
 
     parser = argparse.ArgumentParser(description=('A command line to execute ButtleOFX, an opensource compositing '
                                                   'software. If you pass a folder as an argument, ButtleOFX will '
@@ -240,17 +237,16 @@ def main(argv, app):
     parser.add_argument('folder', nargs='?', help='Folder to browse')
     args = parser.parse_args()
 
-    if args.folder:
-        browser.setCurrentPath(os.path.abspath(args.folder))
-
+    globalBrowserModel.setCurrentPath(os.path.abspath(args.folder) if args.folder else globalBrowserModel.getHomePath())
     # Expose data to QML
     rc = engine.rootContext()
     rc.setContextProperty("_buttleApp", app)
-    rc.setContextProperty("_buttleData", buttleData)
+    rc.setContextProperty("_buttleData", globalButtleData)
     rc.setContextProperty("_buttleManager", buttleManager)
-    rc.setContextProperty("_buttleEvent", buttleEvent)
-    rc.setContextProperty("_browser", browser)
-    rc.setContextProperty("_browserAction", browserAction)
+    rc.setContextProperty("_buttleEvent", globalButtleEvent)
+    rc.setContextProperty("_browser", globalBrowserModel)
+    rc.setContextProperty("_browserAction", globalBrowserAction)
+    rc.setContextProperty("_actionManager", globalActionManager)
 
     iconPath = os.path.join(currentFilePath, "../blackMosquito.png")
     # iconPath = QtCore.QUrl("file:///" + iconPath)
@@ -268,10 +264,10 @@ def main(argv, app):
     # topLevelItem = engine.rootObjects()[0]
 
     if not topLevelItem:
-        print("Errors:")
+        logging.error("Errors while loading QML file:")
 
         for error in component.errors():
-            print(error.toString())
+            logging.error(error.toString())
         return -1
     topLevelItem.setIcon(QtGui.QIcon(iconPath))
 
@@ -285,16 +281,14 @@ def main(argv, app):
 
         # Add any source file (.qml and .js by default) in current working directory
         parentDir = os.path.dirname(currentFilePath)
-        print("Watch directory:", parentDir)
+        logging.debug("Watch directory: %s", parentDir)
         qic.addFilesFromDirectory(parentDir, recursive=True)
 
     aFilter = EventFilter()
     app.installEventFilter(aFilter)
+    globalBrowserModel.loadData()
 
-    topLevelItem.show()
-
-    exitCode = app.exec_()
-    # clean everything
-    ActionManagerSingleton.get().stopWorkers()
-
-    sys.exit(exitCode)
+    with globalActionManager:
+        topLevelItem.show()
+        exitCode = app.exec_()
+        sys.exit(exitCode)

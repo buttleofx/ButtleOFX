@@ -1,6 +1,7 @@
 import os
 import io
 import json
+import logging
 from datetime import datetime
 
 from PyQt5 import QtCore
@@ -8,14 +9,13 @@ from PyQt5 import QtCore
 from pyTuttle import tuttle
 
 from quickmamba.models import QObjectListModel
-from quickmamba.patterns import Singleton
 
 from buttleofx.data import tuttleTools
 from buttleofx.core.graph import Graph
 from buttleofx.gui.shortcut import Shortcut
 from buttleofx.gui.graph import GraphWrapper
 from buttleofx.gui.plugin import PluginWrapper
-from buttleofx.core.undo_redo.manageTools import CommandManager
+from buttleofx.core.undo_redo.manageTools import globalCommandManager
 from buttleofx.gui.graph.node import NodeWrapper
 
 
@@ -86,7 +86,7 @@ class ButtleData(QtCore.QObject):
 
     _urlOfFileToSave = ""
 
-    def init(self, view, filePath):
+    def init(self, view, filePath=''):
         self._graph = Graph()
         self._graphWrapper = GraphWrapper(self._graph, view)
 
@@ -334,7 +334,7 @@ class ButtleData(QtCore.QObject):
             if path.count("/") >= nb:
 
                 # Withdraw one submenu per loop from the path
-                for i in range(nb):
+                for _ in range(nb):
                     listOfPath = path.split("/")
                     path = path.replace(listOfPath[0] + "/", "")
 
@@ -414,7 +414,7 @@ class ButtleData(QtCore.QObject):
             while len(visited) != 0:
                 listOfParents.append(visited.pop())
 
-            for i in range(len(listOfParents)):
+            for _ in range(len(listOfParents)):
                 if len(listOfNodes) > 0:
                     currentNode = listOfNodes[len(listOfNodes) - 1]
                     currentNodeOutputClip = currentNode.getOutputClip()
@@ -561,8 +561,6 @@ class ButtleData(QtCore.QObject):
             #     self.setCurrentViewerFrame(frame)
             # ButtleEvent().emitViewerChangedSignal()
 
-        f.closed
-
         self.urlOfFileToSave = filepath
 
     @QtCore.pyqtSlot()
@@ -571,7 +569,7 @@ class ButtleData(QtCore.QObject):
             Create a new graph
         """
         self.graphWrapper.deleteGraphWrapper()
-        CommandManager().clean()
+        globalCommandManager.clean()
         self.setUrlOfFileToSave("")
         self.setGraphCanBeSaved(False)
 
@@ -700,10 +698,9 @@ class ButtleData(QtCore.QObject):
 
             # Write dictJson in a file
             f.write(str(json.dumps(dictJson, sort_keys=True, indent=2, ensure_ascii=False)))
-        f.closed
 
         # Finally we update the savedGraphIndex of the CommandManager : it must be equal to the current index
-        CommandManager().setSavedGraphIndex(CommandManager().getIndex())
+        globalCommandManager.setSavedGraphIndex(globalCommandManager.getIndex())
 
         self.urlOfFileToSave = filepath
 
@@ -846,7 +843,7 @@ class ButtleData(QtCore.QObject):
         pluginCache = tuttle.core().getImageEffectPluginCache()
         plugins = pluginCache.getPlugins()
         plugins = sorted(plugins, key=lambda plugin: plugin.getIdentifier().upper())
-        print("getPluginsIdentifiers => nb plugins:", len(plugins))
+        logging.debug("getPluginsIdentifiers => nb plugins: %d", len(plugins))
 
         pluginsIds = [plugin.getIdentifier() for plugin in plugins]
         pluginsIdsModel = QObjectListModel(self)
@@ -967,10 +964,10 @@ class ButtleData(QtCore.QObject):
         else:
             self._currentViewerNodeName = nodeWrapper.getName()
         # Emit signal
-        # print ("setCurrentViewerId buttleData.getCurrentGraphWrapper()", self.getCurrentGraphWrapper())
-        # print ("setCurrentViewerId nodeWrapper.getName()", nodeWrapper.getName())
+        # logging.debug("setCurrentViewerId globalButtleData.getCurrentGraphWrapper(): %s",self.getCurrentGraphWrapper())
+        # logging.debug("setCurrentViewerId nodeWrapper.getName(): %s", nodeWrapper.getName())
 
-        # print ("setCurrentViewerId self._graphBrowser._graphTuttle", self._graphBrowser._graphTuttle)
+        # logging.debug("setCurrentViewerId self._graphBrowser._graphTuttle: ", self._graphBrowser._graphTuttle)
 
         self.currentViewerNodeChanged.emit()
 
@@ -1092,13 +1089,7 @@ class ButtleData(QtCore.QObject):
     urlOfFileToSave = QtCore.pyqtProperty(str, getUrlOfFileToSave, setUrlOfFileToSave, notify=urlOfFileToSaveChanged)
 
 
-# This class exists just because there are problems when a class extends 2 other classes (Singleton and QObject)
-class ButtleDataSingleton(Singleton):
-
-    _buttleData = ButtleData()
-
-    def get(self):
-        return self._buttleData
+globalButtleData = ButtleData()
 
 
 def _decode_dict(dict_):

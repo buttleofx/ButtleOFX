@@ -17,8 +17,8 @@ Item {
     property variant params
     property variant currentParamNode
 
-    property color background: "#141414"
-    property color backgroundInput: "#343434"
+    property color background: "#2E2E2E"
+    property color backgroundInput: "#888888"
     property color gradian1: "#010101"
     property color gradian2: "#141414"
     property color borderInput: "#444"

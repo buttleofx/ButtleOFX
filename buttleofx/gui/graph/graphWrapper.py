@@ -1,7 +1,10 @@
 import logging
+
 from PyQt5 import QtCore
 from PyQt5 import QtGui
+
 from quickmamba.models import QObjectListModel
+
 from buttleofx.gui.graph.node import NodeWrapper
 from buttleofx.gui.graph.connection import ConnectionWrapper
 
@@ -21,10 +24,9 @@ class GraphWrapper(QtCore.QObject):
     _resize = False
 
     def __init__(self, graph, view):
-        super(GraphWrapper, self).__init__(view)
+        QtCore.QObject.__init__(self, view)
 
         self._view = view
-        print("view", view)
 
         self._nodeWrappers = QObjectListModel(self)
         self._connectionWrappers = QObjectListModel(self)
@@ -63,8 +65,8 @@ class GraphWrapper(QtCore.QObject):
                 if clipConnected_input and clipConnected_output:
                     clips.append(clipConnected_input)
                     clips.append(clipConnected_output)
-                    print(clipConnected_input.getNodeName())
-                    print(clipConnected_output.getNodeName())
+                    logging.debug(clipConnected_input.getNodeName())
+                    logging.debug(clipConnected_output.getNodeName())
 
                 self._graph.deleteNodes([nodeWrapper.getNode()])
 
@@ -166,32 +168,32 @@ class GraphWrapper(QtCore.QObject):
         """
             Browse all the nodes to calculate a height based on the extreme coordinates
         """
-        max = height
-        min = 0
+        _max = height
+        _min = 0
         for nodeWrapper in self._nodeWrappers:
-            if max < nodeWrapper.yCoord:
-                max = nodeWrapper.yCoord
-            if min > nodeWrapper.yCoord:
-                min = nodeWrapper.yCoord
-        return max - min
+            if _max < nodeWrapper.yCoord:
+                _max = nodeWrapper.yCoord
+            if _min > nodeWrapper.yCoord:
+                _min = nodeWrapper.yCoord
+        return _max - _min
 
     @QtCore.pyqtSlot(int, result=float)
     def maxWidth(self, width):
         """
             Browse all the nodes to calculate a width based on the extreme coordinates
         """
-        max = width
-        min = 0
+        _max = width
+        _min = 0
         for nodeWrapper in self._nodeWrappers:
-            if max < nodeWrapper.xCoord:
-                max = nodeWrapper.xCoord
-            if min > nodeWrapper.xCoord:
-                min = nodeWrapper.xCoord
-        return max - min
+            if _max < nodeWrapper.xCoord:
+                _max = nodeWrapper.xCoord
+            if _min > nodeWrapper.xCoord:
+                _min = nodeWrapper.xCoord
+        return _max - _min
 
     @QtCore.pyqtSlot(result=QtGui.QVector4D)
     def getBBox(self):
-        print("getBBox")
+        logging.debug("getBBox")
         bbox = QtGui.QVector4D()
         if not self._nodeWrappers:
             return bbox

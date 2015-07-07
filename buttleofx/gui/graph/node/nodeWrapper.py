@@ -17,9 +17,8 @@ class NodeWrapper(QtCore.QObject):
     """
 
     def __init__(self, node, view):
-        # print("NodeWrapper constructor")
-
-        super(NodeWrapper, self).__init__(view)
+        # logging.debug("NodeWrapper constructor")
+        QtCore.QObject.__init__(self, view)
 
         self._node = node
         self._view = view
@@ -135,22 +134,20 @@ class NodeWrapper(QtCore.QObject):
             Returns the FPS of this node.
         """
         # Import which needs to be changed in the future
-        from buttleofx.data import ButtleDataSingleton
-        buttleData = ButtleDataSingleton().get()
+        from buttleofx.data import globalButtleData
 
-        graph = buttleData.getCurrentGraph().getGraphTuttle()
+        graph = globalButtleData.getCurrentGraph().getGraphTuttle()
         node = self._node.getTuttleNode().asImageEffectNode()
         try:
             self.setFpsError("")
             graph.setup()
         except Exception as e:
-            logging.debug("Can't get fps of the node" + self._node.getName())
+            logging.debug("Can't get fps of the node %s", self._node.getName())
             self.setFpsError(str(e))
             return 1
-            raise
 
         framerate = node.getOutputFrameRate()
-        # print("framerate: ", framerate)
+        # logging.debug("framerate: ", framerate)
         return framerate
 
     def getFpsError(self):
@@ -164,19 +161,18 @@ class NodeWrapper(QtCore.QObject):
             Returns the number of frames of this node.
         """
         # Import which needs to be changed in the future
-        from buttleofx.data import ButtleDataSingleton
-        buttleData = ButtleDataSingleton().get()
-        graph = buttleData.getCurrentGraph().getGraphTuttle()
+        from buttleofx.data import globalButtleData
+        
+        graph = globalButtleData.getCurrentGraph().getGraphTuttle()
         node = self._node.getTuttleNode().asImageEffectNode()
 
         try:
             self.setFrameError("")
             graph.setup()
         except Exception as e:
-            logging.debug("can't get nbFrames of the node" + self._node.getName())
+            logging.debug("can't get nbFrames of the node %s", self._node.getName())
             self.setFrameError(str(e))
             return 0
-            raise
 
         timeDomain = node.getTimeDomain()  # getTimeDomain() returns the first and last frames
         nbFrames = timeDomain.max - timeDomain.min
@@ -184,7 +180,7 @@ class NodeWrapper(QtCore.QObject):
         # Not very elegant, but allows us to avoid a problem if an image returns a lot of frames
         if nbFrames > 100000000 or nbFrames < 0:
             nbFrames = 1
-        # print("nbFrames: ", nbFrames)
+        # logging.debug("nbFrames: %d", nbFrames)
         return nbFrames
 
     def getFrameError(self):

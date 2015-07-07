@@ -9,6 +9,10 @@ It is built on top of the [TuttleOFX](http://tuttleofx.org) framework which reli
 Website: [http://buttleofx.wordpress.com](http://buttleofx.wordpress.com)
 
 
+Documentation
+-------------
+[http://buttleofx.readthedocs.org/]
+
 Development teams
 -----------------
 

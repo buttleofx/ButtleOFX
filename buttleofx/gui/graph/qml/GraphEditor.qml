@@ -269,6 +269,7 @@ Item {
                 color: "#434343"
                 opacity: 0.7
                 clip: true
+                visible: false
 
                 property real scaleFactor: 0.05
             }

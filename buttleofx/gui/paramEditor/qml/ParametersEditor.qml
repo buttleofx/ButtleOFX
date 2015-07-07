@@ -75,7 +75,7 @@ Item {
         height: parent.height - tabBar.height - addNode.height - 50
         width: parent.width
         y: tabBar.height + 50
-        color: "#141414"
+        color: "#212121"
 
         // Scroll all the paramNodes
         ScrollView {

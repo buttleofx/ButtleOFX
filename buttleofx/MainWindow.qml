@@ -52,24 +52,26 @@ ApplicationWindow {
         return res;
     }
 
+    id: mainWindowQML
+    title:"ButtleOFX"
+    visible: true
+    width: Screen.width
+    height: Screen.height
+
+    minimumWidth: 300
+    minimumHeight: 200
+
+
     property int selectedView: getSetting("view", 3)
 
     property variant lastSelectedView: selectedView == 1 ? view1: (selectedView == 2 ? view2 : (selectedView == 3 ? view3: view4))
     property variant view1: [browser, paramEditor, player, graphEditor]
     property variant view2: [player, paramEditor, browser, graphEditor]
     property variant view3: [player, browser, advancedParamEditor, graphEditor]
-    property variant view4: [player, null, browser, null]
+    property variant view4: view2  //just use player and browser (ie index 0&&2)
 
     property string urlOfFileToSave: _buttleData.urlOfFileToSave
 
-    visible: true
-    id: mainWindowQML
-    width: 1200
-    height: 800
-    title:"ButtleOFX"
-    onAfterRendering: {
-        mainWindowQML.showMaximized()
-    }
 
     // TopFocusHandler {
     //     anchors.fill: parent
@@ -812,7 +814,7 @@ ApplicationWindow {
                     implicitWidth: parent.width
                     implicitHeight: topRightView.visible ? 0.5 * parent.height : parent.height
                     z: -1
-                    visible: selectedView != 4
+                    visible: selectedView == 1 || selectedView == 2
                     children: lastSelectedView[3]
                 }
             }
@@ -832,7 +834,6 @@ ApplicationWindow {
 
             onButtonCloseClicked: {
                 if (parent != fullscreenContent) {
-                    selectedView =- 1
                     parent.visible = false
                 } else {
                     fullscreenWindow.visibility = Window.Hidden
@@ -853,7 +854,6 @@ ApplicationWindow {
 
             onButtonCloseClicked: {
                 if (parent!=fullscreenContent) {
-                    selectedView=-1
                     parent.visible = false
                 } else {
                     fullscreenWindow.visibility = Window.Hidden
@@ -876,7 +876,6 @@ ApplicationWindow {
 
             onButtonCloseClicked: {
                 if (parent!=fullscreenContent) {
-                    selectedView =- 1
                     parent.visible = false
                 } else {
                     fullscreenWindow.visibility = Window.Hidden
@@ -897,7 +896,6 @@ ApplicationWindow {
 
             onButtonCloseClicked: {
                 if (parent != fullscreenContent) {
-                    selectedView =- 1
                     parent.visible = false
                 } else {
                     fullscreenWindow.visibility = Window.Hidden

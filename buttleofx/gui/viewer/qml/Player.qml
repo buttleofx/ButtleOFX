@@ -89,7 +89,7 @@ Item {
         implicitHeight: parent.height - tabBar.height
         implicitWidth: parent.width
         y: tabBar.height
-        color: "#141414"
+        color: "#212121"
 
         ColumnLayout {
             // Viewer

@@ -125,8 +125,6 @@ Rectangle {
             iconName: "edit-copy"
             onTriggered: {
                 _browserAction.handleCopy()
-                _browser.refresh()
-
             }
         }
         MenuItem{
@@ -136,8 +134,6 @@ Rectangle {
             shortcut: StandardKey.Cut
             onTriggered: {
                 _browserAction.handleMove()
-                _browser.refresh()
-
             }
         }
         MenuItem{
@@ -246,14 +242,14 @@ Rectangle {
 
                     fillMode: Image.Pad
 
-                    visible: !model.object.folder && (icon.status === Image.Loading || model.object.thumbnailState === "loading")
+                    visible: !model.object.folder && model.object.thumbnailState === "loading"
 
                     NumberAnimation on rotation {
                         from: 0
                         to: 360
                         running: loading.visible
                         loops: Animation.Infinite
-                        duration: 2000
+                        duration: 1000
                     }
                 }
 

@@ -38,8 +38,8 @@ from buttleofx.data import globalButtleData
 from buttleofx.event import globalButtleEvent
 from buttleofx.manager import globalButtleManager
 from buttleofx.core.undo_redo.manageTools import globalCommandManager
-from buttleofx.gui.browser_v2.browserModel import BrowserModel, globalBrowserModel
-from buttleofx.gui.browser_v2.actions.browserAction import globalBrowserAction
+from buttleofx.gui.browser_v2.browserModel import BrowserModel, globalBrowser, globalBrowserDialog
+from buttleofx.gui.browser_v2.actions.browserAction import globalBrowserAction, globalBrowserActionDialog
 from buttleofx.gui.browser_v2.actions.browserAction import globalActionManager
 
 from PyQt5 import QtCore, QtGui, QtQml, QtQuick, QtWidgets
@@ -80,48 +80,50 @@ signal.signal(signal.SIGINT, signal.SIG_DFL)
 
 
 class EventFilter(QtCore.QObject):
+    def __init__(self, app, engine):
+        self.mainApp = app
+        self.mainEngine = engine
+        self.buttleData = globalButtleData
+        super(EventFilter, self).__init__()
+
+    def onSaveDialogButtonClicked(self, fileToSave):
+        self.buttleData.urlOfFileToSave = fileToSave
+        self.buttleData.saveData(QtCore.QUrl(self.buttleData.urlOfFileToSave))
+        QtCore.QCoreApplication.quit()
+
+    def onExitDialogDiscardButtonClicked(self):
+        QtCore.QCoreApplication.quit()
+
+    def onExitDialogSaveButtonClicked(self):
+        if self.buttleData.urlOfFileToSave:
+            self.buttleData.saveData(self.buttleData.urlOfFileToSave)
+            QtCore.QCoreApplication.quit()
+        else:
+            saveDialogComponent = QtQml.QQmlComponent(self.mainEngine)
+            saveDialogComponent.loadUrl(QtCore.QUrl(os.path.dirname(os.path.abspath(__file__)) + '/gui/dialogs/BrowserSaveDialog.qml'))
+            saveDialog = saveDialogComponent.create()
+            saveDialog.saveButtonClicked.connect(self.onSaveDialogButtonClicked)
+            saveDialog.show()
+
     def eventFilter(self, receiver, event):
         if event.type() == QtCore.QEvent.KeyPress:
-            # If alt f4 event ignored
+            # If Alt F4 event ignored
             if event.modifiers() == QtCore.Qt.AltModifier and event.key() == QtCore.Qt.Key_F4:
                 event.ignore()
         if event.type() != QtCore.QEvent.Close:
             return QtCore.QObject.eventFilter(self, receiver, event)
         if not isinstance(receiver, QtQuick.QQuickWindow) or not receiver.title() == "ButtleOFX":
             return False
-        if not globalButtleData.graphCanBeSaved:
+
+        if not self.buttleData.graphCanBeSaved:
             return False
 
-        msgBox = QtWidgets.QMessageBox()
-        msgBox.setText("Save graph changes before closing ?")
-        msgBox.setModal(True)
-        msgBox.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint)
-        msgBox.setInformativeText("If you don't save the graph, unsaved modifications will be lost.")
-        msgBox.setStandardButtons(
-            QtWidgets.QMessageBox.Save | QtWidgets.QMessageBox.Discard | QtWidgets.QMessageBox.Abort)
-        msgBox.setDefaultButton(QtWidgets.QMessageBox.Save)
-        ret = msgBox.exec_()
-
-        if ret == QtWidgets.QMessageBox.Save:
-            if globalButtleData.urlOfFileToSave:
-                # Save on the already existing file
-                globalButtleData.saveData(globalButtleData.urlOfFileToSave)
-                # Close the application
-                return QtCore.QObject.eventFilter(self, receiver, event)
-
-            # This project has never been saved, so ask the user on which file to save.
-            dialog = QtWidgets.QFileDialog()
-            fileToSave = dialog.getSaveFileName(None, "Save the graph", os.path.expanduser("~"))[0]
-            if not (fileToSave.endswith(".bofx")):
-                fileToSave += ".bofx"
-            globalButtleData.urlOfFileToSave = fileToSave
-            globalButtleData.saveData(fileToSave)
-            # Close the application
-            return QtCore.QObject.eventFilter(self, receiver, event)
-
-        if ret == QtWidgets.QMessageBox.Discard:
-            # Close the application
-            return QtCore.QObject.eventFilter(self, receiver, event)
+        exitDialogComponent = QtQml.QQmlComponent(self.mainEngine)
+        exitDialogComponent.loadUrl(QtCore.QUrl(os.path.dirname(os.path.abspath(__file__)) + '/gui/dialogs/ExitDialog.qml'))
+        exitDialog = exitDialogComponent.create()
+        exitDialog.saveButtonClicked.connect(self.onExitDialogSaveButtonClicked)
+        exitDialog.discardButtonClicked.connect(self.onExitDialogDiscardButtonClicked)
+        exitDialog.show()
 
         # Don't call the parent class, so we don't close the application
         return True
@@ -237,15 +239,17 @@ def main(argv, app):
     parser.add_argument('folder', nargs='?', help='Folder to browse')
     args = parser.parse_args()
 
-    globalBrowserModel.setCurrentPath(os.path.abspath(args.folder) if args.folder else globalBrowserModel.getHomePath())
+    globalBrowser.setCurrentPath(os.path.abspath(args.folder) if args.folder else globalBrowser.getHomePath())
     # Expose data to QML
     rc = engine.rootContext()
     rc.setContextProperty("_buttleApp", app)
     rc.setContextProperty("_buttleData", globalButtleData)
     rc.setContextProperty("_buttleManager", buttleManager)
     rc.setContextProperty("_buttleEvent", globalButtleEvent)
-    rc.setContextProperty("_browser", globalBrowserModel)
+    rc.setContextProperty("_browser", globalBrowser)
+    rc.setContextProperty("_browserDialog", globalBrowserDialog)
     rc.setContextProperty("_browserAction", globalBrowserAction)
+    rc.setContextProperty("_browserActionDialog", globalBrowserActionDialog)
     rc.setContextProperty("_actionManager", globalActionManager)
 
     iconPath = os.path.join(currentFilePath, "../blackMosquito.png")
@@ -284,9 +288,11 @@ def main(argv, app):
         logging.debug("Watch directory: %s", parentDir)
         qic.addFilesFromDirectory(parentDir, recursive=True)
 
-    aFilter = EventFilter()
+    aFilter = EventFilter(app, engine)
     app.installEventFilter(aFilter)
-    globalBrowserModel.loadData()
+
+    globalBrowser.loadData()
+    globalBrowserDialog.loadData()
 
     with globalActionManager:
         topLevelItem.show()

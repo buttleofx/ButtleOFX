@@ -7,11 +7,21 @@ import QtQuick.Controls.Styles 1.0
 Rectangle {
     id: root
     color: "#2E2E2E"
-
     clip: true
 
     signal pushVisitedFolder(string path)
     property alias searchLayout: searchLayoutRectangle
+
+    function toggleUrlEdit(visibility){
+        visibility = visibility !== undefined ? visibility : breadCrum.visible
+        breadCrum.visible = !visibility
+        textEditContainer.visible = visibility
+
+        if(visibility)
+            texteditPath.forceActiveFocus()
+    }
+
+    Component.onCompleted: toggleUrlEdit(true)
 
     QtObject {
         id: m;
@@ -43,26 +53,17 @@ Rectangle {
                     Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
 
                     tooltip: "Previous"
-                    iconSource:
-                    if (hovered)
-                        "img/previous_hover.png"
-                    else
-                        "img/previous.png"
+                    iconSource: hovered ? "img/previous_hover.png" : "img/previous.png"
 
                     style:
-                    ButtonStyle {
-                        background: Rectangle {
-                            anchors.fill: parent
-                            color: "transparent"
+                        ButtonStyle {
+                            background: Rectangle {
+                                anchors.fill: parent
+                                color: "transparent"
+                            }
                         }
-                    }
 
-                    onClicked: {
-                        if (visitedFolderList.count > 0 && visitedFolderListIndex > 0) {
-                            -- visitedFolderListIndex
-                            model.currentPath = visitedFolderList.get(visitedFolderListIndex).url
-                        }
-                    }
+                    onClicked: popVisitedFolder()
                 }
 
                 Button {
@@ -260,7 +261,8 @@ Rectangle {
                         }
 
                         Keys.onReleased: {
-                            if(event.key === Qt.Key_Shift || event.key === Qt.Key_Alt)
+                            if(event.key === Qt.Key_Shift || event.key === Qt.Key_Alt || event.key === Qt.Key_Control
+                               || (event.key === Qt.Key_Control && event.key === Qt.Key_L))
                                 return
                             root.model.currentPath = texteditPath.text
                             graySuggestion.fill()
@@ -311,7 +313,6 @@ Rectangle {
                             }
 
                             function show() {
-                                console.log(root.model.listFolderNavBar.count)
                                 if(!root.model.listFolderNavBar.count)
                                     return
                                 this.__popup(0, 0)
@@ -330,16 +331,10 @@ Rectangle {
                    clip: true
 
                    MouseArea {
-                       anchors.fill: parent
-                       propagateComposedEvents: true
-                       onDoubleClicked: {
-                           if (breadCrum.visible)
-                                breadCrum.visible = false
-
-                           if (!textEditContainer.visible){
-                               textEditContainer.visible = true
-                               texteditPath.forceActiveFocus()
-                           }
+                        anchors.fill: parent
+                        propagateComposedEvents: true
+                        onDoubleClicked: {
+                            root.toggleUrlEdit()
                        }
                    }
                    delegate: component
@@ -513,7 +508,7 @@ Rectangle {
 
                         anchors.fill: parent
                         anchors.margins: 2
-                        placeholderText: "Enter your search ..."
+                        placeholderText: "Search ..."
 
                         style: TextFieldStyle {
                                 selectionColor: "#00b2a1"
@@ -525,7 +520,7 @@ Rectangle {
                                 }
                             }
                         onAccepted: {
-                            _browser.loadData(text.trim())
+                            root.model.loadData(text.trim())
                         }
 
                         onFocusChanged: {

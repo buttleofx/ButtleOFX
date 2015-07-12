@@ -1,10 +1,10 @@
-import QtQuick 2.0
-import QtQuick.Controls 1.0
-import QtQuick.Layouts 1.0
 import QtQml 2.1
+import QtQuick 2.0
 import QuickMamba 1.0
-import QtQuick.Dialogs 1.1
 import QtQuick.Window 2.1
+import QtQuick.Dialogs 1.1
+import QtQuick.Layouts 1.0
+import QtQuick.Controls 1.0
 import QtQuick.LocalStorage 2.0
 
 import "gui/graph/qml"
@@ -13,6 +13,7 @@ import "gui/paramEditor/qml"
 import "gui/browser_v2/qml"
 import "gui/plugin/qml"
 import "gui/shortcut/qml"
+import "gui/dialogs"
 
 ApplicationWindow {
     property var settingsDatabase: getInitializedDatabase()
@@ -72,19 +73,16 @@ ApplicationWindow {
 
     property string urlOfFileToSave: _buttleData.urlOfFileToSave
 
-
     // TopFocusHandler {
     //     anchors.fill: parent
     // }
 
     Keys.onPressed: {
-
         // Viewer
         if ((event.key == Qt.Key_1) && (event.modifiers & Qt.KeypadModifier)) {
             player.changeViewer(1)
         }
         if ((event.key == Qt.Key_2) && (event.modifiers & Qt.KeypadModifier)) {
-
             player.changeViewer(2)
         }
         if ((event.key == Qt.Key_3) && (event.modifiers & Qt.KeypadModifier)) {
@@ -119,15 +117,15 @@ ApplicationWindow {
         }
     }
 
-    property bool aNodeIsSelected:true
+    property bool aNodeIsSelected: true
 
     // Window of hint for plugins
     PluginWindow {
         id: doc
         title: "Plugin's Documentation"
-        selectedNodeLabel: _buttleData.currentSelectedNodeWrappers.count!=0 ? _buttleData.currentSelectedNodeWrappers.get(0).name : ""
-        selectedNodeDoc: _buttleData.currentSelectedNodeWrappers.count!=0 ? _buttleData.currentSelectedNodeWrappers.get(0).pluginDoc : ""
-        selectedNodeGroup: _buttleData.currentSelectedNodeWrappers.count!=0 ? _buttleData.currentSelectedNodeWrappers.get(0).pluginGroup : ""
+        selectedNodeLabel: _buttleData.currentSelectedNodeWrappers.count != 0 ? _buttleData.currentSelectedNodeWrappers.get(0).name : ""
+        selectedNodeDoc: _buttleData.currentSelectedNodeWrappers.count != 0 ? _buttleData.currentSelectedNodeWrappers.get(0).pluginDoc : ""
+        selectedNodeGroup: _buttleData.currentSelectedNodeWrappers.count != 0 ? _buttleData.currentSelectedNodeWrappers.get(0).pluginGroup : ""
     }
 
     // Window of shortcuts
@@ -136,103 +134,58 @@ ApplicationWindow {
         title: "Shortcuts"
     }
 
-    FileDialog {
+    BrowserOpenDialog{
         id: finderLoadGraph
-        title: "Open a graph"
-        nameFilters: [ "All files (*)" ]
-        selectedNameFilter: "All files (*)"
-
-        onAccepted: {
-            if (finderLoadGraph.fileUrl) {
-                _buttleData.loadData(finderLoadGraph.fileUrl)
-            }
-        }
     }
 
-    FileDialog {
+    BrowserSaveDialog{
         id: finderSaveGraph
-        title: "Save the graph"
-        nameFilters:  [ "All files (*)" ]
-        selectedNameFilter: "All files (*)"
-
-        onAccepted: {
-            if (finderSaveGraph.fileUrl) {
-                _buttleData.saveData(finderSaveGraph.fileUrl)
-            }
-        }
-
-        selectExisting: false
     }
 
-    MessageDialog {
+    ExitDialog {
         id: openGraph
-        title:"Save the graph?"
-        icon: StandardIcon.Warning
-        modality: Qt.WindowStaysOnTopHint && Qt.WindowModal
-        text: urlOfFileToSave == "" ? "Save graph changes before closing ?" : "Save " + _buttleData.getFileName(urlOfFileToSave) + " changes before closing ?"
-        detailedText: "If you don't save the graph, unsaved modifications will be lost. "
-        standardButtons: StandardButton.Yes | StandardButton.No | StandardButton.Abort
-        Component.onCompleted: visible = false
+        visible: false
+        dialogText: "Do you want to save before closing this file?<br>If you don't, all unsaved changes will be lost"
 
-        onYes: {
-            if(urlOfFileToSave!="") {
+        onSaveButtonClicked: {
+            if (urlOfFileToSave != "") {
                 _buttleData.saveData(urlOfFileToSave)
-            } else{
-                finderSaveGraph.open()
+            } else {
+                finderSaveGraph.show("open")
             }
         }
-        onNo: {
-            finderLoadGraph.open()
+        onDiscardButtonClicked: {
+            finderLoadGraph.visible = true
         }
-        onRejected: {}
     }
 
-    MessageDialog {
+    ExitDialog {
         id: newGraph
-        title: "Save the graph?"
-        icon: StandardIcon.Warning
-        modality: Qt.WindowStaysOnTopHint && Qt.WindowModal
-        text: urlOfFileToSave == "" ? "Save graph changes before closing ?" : "Save " + _buttleData.getFileName(urlOfFileToSave) + " changes before closing ?"
-        detailedText: "If you don't save the graph, unsaved modifications will be lost. "
-        standardButtons: StandardButton.Yes | StandardButton.No | StandardButton.Abort
-        Component.onCompleted: visible = false
+        visible: false
+        dialogText: "Do you want to save before closing this file?<br>If you don't, all unsaved changes will be lost"
 
-        onYes: {
-            if (urlOfFileToSave!="") {
+        onSaveButtonClicked: {
+            if (urlOfFileToSave != "") {
                 _buttleData.saveData(urlOfFileToSave)
-                _buttleData.newData()
             } else {
-                finderSaveGraph.open()
-                _buttleData.newData()
+                finderSaveGraph.show("new")
             }
         }
-        onNo: {
-            _buttleData.newData()
-        }
+        onDiscardButtonClicked: _buttleData.newData()
     }
 
-    MessageDialog {
+    ExitDialog {
         id: closeButtle
-        title: "Save the graph?"
-        icon: StandardIcon.Warning
-        modality: Qt.WindowStaysOnTopHint && Qt.WindowModal
-        text: urlOfFileToSave == "" ? "Save graph changes before closing ?" : "Save " + _buttleData.getFileName(urlOfFileToSave) + " changes before closing ?"
-        detailedText: "If you don't save the graph, unsaved modifications will be lost. "
-        standardButtons: StandardButton.Yes | StandardButton.No | StandardButton.Abort
-        Component.onCompleted: visible = false
+        visible: false
 
-        onYes: {
-            if(urlOfFileToSave!="") {
+        onSaveButtonClicked: {
+            if (urlOfFileToSave != "") {
                 _buttleData.saveData(urlOfFileToSave)
             } else {
-                finderSaveGraph.open()
-                finderSaveGraph.close()
-                finderSaveGraph.open()
+                finderSaveGraph.show("close")
             }
         }
-        onNo: {
-            Qt.quit()
-        }
+        onDiscardButtonClicked: Qt.quit()
     }
 
     menuBar: MenuBar {
@@ -247,7 +200,7 @@ ApplicationWindow {
                     if (!_buttleData.graphCanBeSaved) {
                         _buttleData.newData()
                     } else {
-                        newGraph.open()
+                        newGraph.visible = true
                     }
                 }
             }
@@ -258,11 +211,9 @@ ApplicationWindow {
 
                 onTriggered: {
                     if (!_buttleData.graphCanBeSaved) {
-                        finderLoadGraph.open()
+                        finderLoadGraph.visible = true
                     } else {
-                        openGraph.open()
-                        openGraph.close()
-                        openGraph.open()
+                        openGraph.visible = true
                     }
                 }
             }
@@ -270,14 +221,14 @@ ApplicationWindow {
             MenuItem {
                 text: "Save"
                 shortcut: "Ctrl+S"
-                enabled: _buttleData.graphCanBeSaved && urlOfFileToSave != "" ? true : false
+                enabled: _buttleData.graphCanBeSaved && urlOfFileToSave != ""
                 onTriggered: _buttleData.saveData(urlOfFileToSave)
             }
 
             MenuItem {
                 text: "Save As"
                 shortcut: "Ctrl+Shift+S"
-                onTriggered: finderSaveGraph.open()
+                onTriggered: finderSaveGraph.visible = true
             }
 
             MenuSeparator { }
@@ -290,7 +241,7 @@ ApplicationWindow {
                     if (!_buttleData.graphCanBeSaved) {
                         Qt.quit()
                     } else {
-                        closeButtle.open()
+                        closeButtle.visible = true
                     }
                 }
             }
@@ -303,7 +254,7 @@ ApplicationWindow {
                 id: undoRedoStack
                 title: "Undo/Redo stack"
 
-                property variant undoRedoList:_buttleData.graphCanBeSaved ? _buttleManager.undoRedoStack:_buttleManager.undoRedoStack
+                property variant undoRedoList: _buttleData.graphCanBeSaved ? _buttleManager.undoRedoStack : _buttleManager.undoRedoStack
 
                 Instantiator {
                     model: undoRedoStack.undoRedoList
@@ -414,10 +365,11 @@ ApplicationWindow {
             title: "Nodes"
 
             Instantiator {
-                model: _buttleData.getMenu(1,"")
+                model: _buttleData.getMenu(1, "")
+
                 Menu {
                     id: firstMenu
-                    title:object
+                    title: object
                     __parentContentItem: nodesMenu.__contentItem  // To remove warning
 
                     Instantiator {
@@ -447,11 +399,11 @@ ApplicationWindow {
                     }
 
                     Instantiator {
-                        model: _buttleData.getMenu(2,firstMenu.title)
+                        model: _buttleData.getMenu(2, firstMenu.title)
 
                         Menu {
                             id: secondMenu
-                            title:object
+                            title: object
                             __parentContentItem: nodesMenu.__contentItem  // To remove warning
 
                             Instantiator {
@@ -481,11 +433,11 @@ ApplicationWindow {
                             }
 
                             Instantiator {
-                                model: _buttleData.getMenu(3,secondMenu.title)
+                                model: _buttleData.getMenu(3, secondMenu.title)
 
                                 Menu {
                                     id: thirdMenu
-                                    title:object
+                                    title: object
                                     __parentContentItem: nodesMenu.__contentItem  // To remove warning
 
                                     Instantiator {
@@ -515,10 +467,10 @@ ApplicationWindow {
                                     }
 
                                     Instantiator {
-                                        model: _buttleData.getMenu(4,thirdMenu.title)
+                                        model: _buttleData.getMenu(4, thirdMenu.title)
 
                                         Menu {
-                                            id:fourthMenu
+                                            id: fourthMenu
                                             title: object
                                             __parentContentItem: nodesMenu.__contentItem  // To remove warning
 
@@ -549,7 +501,7 @@ ApplicationWindow {
                                             }
 
                                             Instantiator {
-                                                model: _buttleData.getMenu(5,fourthMenu.title)
+                                                model: _buttleData.getMenu(5, fourthMenu.title)
 
                                                 Menu {
                                                     id: fifthMenu
@@ -621,7 +573,6 @@ ApplicationWindow {
                 onTriggered: doc.show()
             }
         }
-
 
         Menu {
             title: "View"
@@ -704,29 +655,41 @@ ApplicationWindow {
             MenuItem {
                 text: "Browser"
                 checkable: true
-                checked: browser.parent.visible==true ? true : false
-                onTriggered: browser.parent.visible == false ? browser.parent.visible=true : browser.parent.visible=false
+                checked: browser.parent.visible
+
+                onTriggered: {
+                    browser.parent.visible = !browser.parent.visible
+                }
             }
 
             MenuItem {
                 text: "Viewer"
                 checkable: true
-                checked: player.parent.visible==true ? true : false
-                onTriggered: player.parent.visible == false ? player.parent.visible=true : player.parent.visible=false
+                checked: player.parent.visible
+
+                onTriggered: {
+                    player.parent.visible = !player.parent.visible
+                }
             }
 
             MenuItem {
                 text: "Graph"
                 checkable: true
-                checked: graphEditor.parent.visible==true ? true : false
-                onTriggered: graphEditor.parent.visible == false ? graphEditor.parent.visible=true : graphEditor.parent.visible=false
+                checked: graphEditor.parent.visible
+
+                onTriggered: {
+                    graphEditor.parent.visible = !graphEditor.parent.visible
+                }
             }
 
             MenuItem {
                 text: "Parameters"
                 checkable: true
-                checked: paramEditor.parent.visible==true ? true : false
-                onTriggered: paramEditor.parent.visible == false ? paramEditor.parent.visible=true : paramEditor.parent.visible=false
+                checked: paramEditor.parent.visible
+
+                onTriggered: {
+                    paramEditor.parent.visible = !paramEditor.parent.visible
+                }
             }
             */
         }
@@ -742,7 +705,6 @@ ApplicationWindow {
         }
     }
     */
-
 
     // This rectangle represents the zone under the menu, it allows to define the anchors.fill and margins for the SplitterRow
     Rectangle {
@@ -816,6 +778,7 @@ ApplicationWindow {
                     z: -1
                     visible: selectedView == 1 || selectedView == 2
                     children: lastSelectedView[3]
+
                 }
             }
         }
@@ -825,7 +788,7 @@ ApplicationWindow {
         id: subviews
         visible: false
 
-        property variant parentBeforeFullscreen : null
+        property variant parentBeforeFullscreen: null
 
         Player {
             id: player
@@ -841,7 +804,7 @@ ApplicationWindow {
                 }
             }
             onButtonFullscreenClicked:
-            if (parent != fullscreenContent){
+            if (parent != fullscreenContent) {
                 subviews.parentBeforeFullscreen = parent
                 fullscreenWindow.visibility = Window.FullScreen
                 fullscreenContent.children = player
@@ -861,7 +824,7 @@ ApplicationWindow {
                 }
             }
             onButtonFullscreenClicked:
-            if (parent != fullscreenContent){
+            if (parent != fullscreenContent) {
                 subviews.parentBeforeFullscreen = parent
                 fullscreenWindow.visibility = Window.FullScreen
                 fullscreenContent.children = graphEditor
@@ -883,7 +846,7 @@ ApplicationWindow {
                 }
             }
             onButtonFullscreenClicked:
-            if (parent != fullscreenContent){
+            if (parent != fullscreenContent) {
                 subviews.parentBeforeFullscreen = parent
                 fullscreenWindow.visibility = Window.FullScreen
                 fullscreenContent.children = paramEditor
@@ -903,7 +866,7 @@ ApplicationWindow {
                 }
             }
             onButtonFullscreenClicked:
-            if (parent != fullscreenContent){
+            if (parent != fullscreenContent) {
                 subviews.parentBeforeFullscreen = parent
                 fullscreenWindow.visibility = Window.FullScreen
                 fullscreenContent.children = advancedParamEditor
@@ -929,6 +892,12 @@ ApplicationWindow {
                     fullscreenWindow.visibility = Window.FullScreen
                     fullscreenContent.children = browser
                 }
+            }
+
+            Connections{
+                target: browser.fileWindow
+                onItemClicked: isSupported ? browser.fileWindow.onItemClickedSlot(pathImg) : 0
+                onItemDoubleClicked: isSupported ? browser.fileWindow.onItemDoubleClickedSlot(absolutePath) : 0
             }
         }
 

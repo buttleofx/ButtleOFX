@@ -73,11 +73,6 @@ ApplicationWindow {
 
     property string urlOfFileToSave: _buttleData.urlOfFileToSave
 
-    width: 1200
-    height: 800
-    id: mainWindowQML
-    title: "ButtleOFX"
-
     // TopFocusHandler {
     //     anchors.fill: parent
     // }
@@ -139,56 +134,12 @@ ApplicationWindow {
         title: "Shortcuts"
     }
 
-    FileViewerDialog {
+    BrowserOpenDialog{
         id: finderLoadGraph
-        visible: false
-        title: "Open a graph"
-        buttonText: "Open"
-        folderModelFolder: _buttleData.homeDir
-
-        onButtonClicked: {
-            if (finderLoadGraph.entryBarText != "") {
-                _buttleData.newData()
-                _buttleData.loadData(currentFile)
-                finderLoadGraph.visible = false
-            }
-        }
     }
 
-    FileViewerDialog {
+    BrowserSaveDialog{
         id: finderSaveGraph
-        visible: false
-        title: "Save the graph"
-        buttonText: "Save"
-        folderModelFolder: _buttleData.homeDir
-
-        // Acceptable values are the verb parts of the callers ID's, i.e. 'open',
-        // 'new', and 'close'
-        property string action
-
-        // This initializer function takes in the action being done by the user so we know
-        // what to do when called.
-        function show(doAction) {
-            action = doAction
-            finderSaveGraph.visible = true
-        }
-
-        onButtonClicked: {
-            if (finderSaveGraph.entryBarText != "") {
-                _buttleData.urlOfFileToSave = currentFile
-                _buttleData.saveData(_buttleData.urlOfFileToSave)
-
-                finderSaveGraph.visible = false
-
-                if (action == "open") {
-                    finderLoadGraph.visible = true
-                } else if (action == "new") {
-                    _buttleData.newData()
-                } else if (action == "close") {
-                    Qt.quit()
-                }
-            }
-        }
     }
 
     ExitDialog {
@@ -270,7 +221,7 @@ ApplicationWindow {
             MenuItem {
                 text: "Save"
                 shortcut: "Ctrl+S"
-                enabled: _buttleData.graphCanBeSaved && urlOfFileToSave != "" ? true : false
+                enabled: _buttleData.graphCanBeSaved && urlOfFileToSave != ""
                 onTriggered: _buttleData.saveData(urlOfFileToSave)
             }
 
@@ -634,8 +585,8 @@ ApplicationWindow {
 
                 onTriggered: {
                     selectedView = 1
-                    saveSetting("view", selectedView)
-                    lastSelectedDefaultView = view1
+                    saveSetting("view",selectedView)
+                    lastSelectedView = view1
                     topLeftView.visible = true
                     bottomLeftView.visible = true
                     topRightView.visible = true
@@ -652,8 +603,8 @@ ApplicationWindow {
 
                 onTriggered: {
                     selectedView = 2
-                    saveSetting("view", selectedView)
-                    lastSelectedDefaultView = view2
+                    saveSetting("view",selectedView)
+                    lastSelectedView = view2
                     topLeftView.visible = true
                     bottomLeftView.visible = true
                     topRightView.visible = true
@@ -669,9 +620,9 @@ ApplicationWindow {
                 checked: selectedView == 3
                 onTriggered: {
                     selectedView = 3
-                    saveSetting("view", selectedView)
-                    lastSelectedDefaultView = view3
-                    topLeftView.visible = true
+                    saveSetting("view",selectedView)
+                    lastSelectedView = view3
+                    topLeftView.visible=true
                     bottomLeftView.visible = true
                     topRightView.visible = true
                     bottomRightView.visible = false
@@ -700,42 +651,34 @@ ApplicationWindow {
 
             /*
             MenuSeparator { }
-
             MenuItem {
                 text: "Browser"
                 checkable: true
                 checked: browser.parent.visible
-
                 onTriggered: {
                     browser.parent.visible = !browser.parent.visible
                 }
             }
-
             MenuItem {
                 text: "Viewer"
                 checkable: true
                 checked: player.parent.visible
-
                 onTriggered: {
                     player.parent.visible = !player.parent.visible
                 }
             }
-
             MenuItem {
                 text: "Graph"
                 checkable: true
                 checked: graphEditor.parent.visible
-
                 onTriggered: {
                     graphEditor.parent.visible = !graphEditor.parent.visible
                 }
             }
-
             MenuItem {
                 text: "Parameters"
                 checkable: true
                 checked: paramEditor.parent.visible
-
                 onTriggered: {
                     paramEditor.parent.visible = !paramEditor.parent.visible
                 }
@@ -747,7 +690,6 @@ ApplicationWindow {
     /*
     Menu {
         title: "Add"
-
         MenuItem {
             text: "New Node"
             onTriggered: _addMenu.showMenu(parent.x, mainMenu.height)
@@ -827,6 +769,7 @@ ApplicationWindow {
                     z: -1
                     visible: selectedView == 1 || selectedView == 2
                     children: lastSelectedView[3]
+
                 }
             }
         }
@@ -864,8 +807,7 @@ ApplicationWindow {
             anchors.fill: parent
 
             onButtonCloseClicked: {
-                if (parent != fullscreenContent) {
-                    selectedView = -1
+                if (parent!=fullscreenContent) {
                     parent.visible = false
                 } else {
                     fullscreenWindow.visibility = Window.Hidden
@@ -887,8 +829,7 @@ ApplicationWindow {
             currentParamNode: _buttleData.currentParamNodeWrapper ? _buttleData.currentParamNodeWrapper : null
 
             onButtonCloseClicked: {
-                if (parent != fullscreenContent) {
-                    selectedView =- 1
+                if (parent!=fullscreenContent) {
                     parent.visible = false
                 } else {
                     fullscreenWindow.visibility = Window.Hidden
@@ -942,7 +883,12 @@ ApplicationWindow {
                     fullscreenWindow.visibility = Window.FullScreen
                     fullscreenContent.children = browser
                 }
-                fullscreenContent.children = browser
+            }
+
+            Connections{
+                target: browser.fileWindow
+                onItemClicked: isSupported ? browser.fileWindow.onItemClickedSlot(pathImg) : 0
+                onItemDoubleClicked: isSupported ? browser.fileWindow.onItemDoubleClickedSlot(absolutePath) : 0
             }
         }
 

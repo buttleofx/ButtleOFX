@@ -6,11 +6,12 @@ import QtQuick.Controls.Styles 1.0
 
 Window {
     id: exitDialog
-    width: 425
-    height: 100
+    width: 470
+    height: 120
     title: "Save Changes?"
-    color: "#141414"
+    color: "#272727"
     flags: Qt.Dialog
+    modality: "ApplicationModal"
 
     property string dialogText: "Do you want to save before exiting?<br>If you don't, all unsaved changes will be lost."
 
@@ -22,17 +23,36 @@ Window {
 
         ButtonStyle {
             background: Rectangle {
+                id: buttonRectangle
                 radius: 6
                 implicitWidth: 100
                 implicitHeight: 25
 
-                border.color: control.hovered ? "#00B2A1" : "#9F9C99"
-                border.width: control.hovered ? 3 : 2
+                border.color: "#9F9C99";
+                border.width: 1;
+                opacity: 0.7
 
                 gradient: Gradient {
                     GradientStop { position: 0; color: control.pressed ? "#EFEBE7" : "#EFEBE7" }
                     GradientStop { position: .5; color: control.pressed ? "#D9D9D9" : "#EFEBE7" }
                     GradientStop { position: 0; color: control.pressed ? "#EFEBE7" : "#EFEBE7" }
+                }
+
+                states:
+                    State {
+                        name: "mouse-over";
+                        when: control.hovered
+                        PropertyChanges {
+                            target: buttonRectangle;
+                            border.color: "#00B2A1";
+                            opacity: 1}
+                    }
+                transitions: Transition {
+                    NumberAnimation {
+                        properties: "opacity, border.width";
+                        easing.type: Easing.InOutQuad;
+                        duration: 200
+                    }
                 }
             }
         }
@@ -45,7 +65,7 @@ Window {
         RowLayout {
             spacing: 20
 
-            Image { source: "../img/icons/logo_icon.png" }
+            Image { source: "../img/icons/cropped-buttle.png" }
 
             Text {
                 text: dialogText
@@ -61,6 +81,7 @@ Window {
                 id: saveButton
                 text: "Save"
                 style: buttonStyle
+                isDefault: true
 
                 onClicked: {
                     exitDialog.saveButtonClicked()

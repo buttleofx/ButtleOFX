@@ -417,4 +417,5 @@ class BrowserModel(QtCore.QObject):
     loading = QtCore.pyqtProperty(bool, isLoading, notify=loadingChanged)
 
 
-globalBrowserModel = BrowserModel()
+globalBrowser = BrowserModel()
+globalBrowserDialog = BrowserModel()

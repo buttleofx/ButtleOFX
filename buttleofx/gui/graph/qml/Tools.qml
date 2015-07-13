@@ -13,52 +13,12 @@ Rectangle {
 
     signal clickCreationNode(string nodeType)
 
-    FileViewerDialog {
+    BrowserOpenDialog{
         id: finderLoadGraph
-        visible: false
-        title: "Open a graph"
-        buttonText: "Open"
-        folderModelFolder: _buttleData.homeDir
-
-        onButtonClicked: {
-            if (finderLoadGraph.entryBarText != "") {
-                _buttleData.newData()
-                _buttleData.loadData(currentFile)
-                finderLoadGraph.visible = false
-            }
-        }
     }
 
-    FileViewerDialog {
+    BrowserSaveDialog{
         id: finderSaveGraph
-        visible: false
-        title: "Save the graph"
-        buttonText: "Save"
-        folderModelFolder: _buttleData.homeDir
-
-        // Acceptable values are the verb parts of the callers ID's, i.e. 'open'
-        // and 'save' (in which case we do no additional work).
-        property string action
-
-        // This initializer function takes in the action being done by the user so we know
-        // what to do when called.
-        function show(doAction) {
-            action = doAction
-            finderSaveGraph.visible = true
-        }
-
-        onButtonClicked: {
-            if (finderSaveGraph.entryBarText != "") {
-                _buttleData.urlOfFileToSave = currentFile
-                _buttleData.saveData(_buttleData.urlOfFileToSave)
-
-                finderSaveGraph.visible = false
-
-                if (action == "open") {
-                    finderLoadGraph.visible = true
-                }
-            }
-        }
     }
 
     ExitDialog {

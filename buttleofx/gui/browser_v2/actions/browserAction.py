@@ -7,12 +7,12 @@ from pySequenceParser import sequenceParser
 
 from buttleofx.gui.browser_v2.actions.actionManager import globalActionManager
 from buttleofx.gui.browser_v2.actions.actionWrapper import ActionWrapper
-from buttleofx.gui.browser_v2.browserModel import globalBrowserModel
 from buttleofx.gui.browser_v2.browserItem import BrowserItem
 from buttleofx.gui.browser_v2.actions.concreteActions.copy import Copy
 from buttleofx.gui.browser_v2.actions.concreteActions.move import Move
 from buttleofx.gui.browser_v2.actions.concreteActions.create import Create
 from buttleofx.gui.browser_v2.actions.concreteActions.delete import Delete
+from buttleofx.gui.browser_v2.browserModel import globalBrowserDialog, globalBrowser
 
 
 class BrowserAction(QtCore.QObject):
@@ -21,11 +21,11 @@ class BrowserAction(QtCore.QObject):
     """
     cacheChanged = QtCore.pyqtSignal()
 
-    def __init__(self):
+    def __init__(self, bModel):
         logging.debug('BrowserAction begin constructor')
         QtCore.QObject.__init__(self)
         self._cacheActions = None  # for copy, move actions
-        self._browserModel = globalBrowserModel
+        self._browserModel = bModel
         logging.debug('BrowserAction end constructor')
 
     def pushCache(self, listActions):
@@ -99,4 +99,5 @@ class BrowserAction(QtCore.QObject):
     isCache = QtCore.pyqtProperty(bool, isEmptyCache, notify=cacheChanged)
 
 
-globalBrowserAction = BrowserAction()
+globalBrowserAction = BrowserAction(globalBrowser)
+globalBrowserActionDialog = BrowserAction(globalBrowserDialog)

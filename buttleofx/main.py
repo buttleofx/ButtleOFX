@@ -38,8 +38,8 @@ from buttleofx.data import globalButtleData
 from buttleofx.event import globalButtleEvent
 from buttleofx.manager import globalButtleManager
 from buttleofx.core.undo_redo.manageTools import globalCommandManager
-from buttleofx.gui.browser_v2.browserModel import BrowserModel, globalBrowserModel
-from buttleofx.gui.browser_v2.actions.browserAction import globalBrowserAction
+from buttleofx.gui.browser_v2.browserModel import BrowserModel, globalBrowser, globalBrowserDialog
+from buttleofx.gui.browser_v2.actions.browserAction import globalBrowserAction, globalBrowserActionDialog
 from buttleofx.gui.browser_v2.actions.browserAction import globalActionManager
 
 from PyQt5 import QtCore, QtGui, QtQml, QtQuick, QtWidgets
@@ -100,14 +100,9 @@ class EventFilter(QtCore.QObject):
             QtCore.QCoreApplication.quit()
         else:
             saveDialogComponent = QtQml.QQmlComponent(self.mainEngine)
-            saveDialogComponent.loadUrl(QtCore.QUrl("ButtleOFX/buttleofx/gui/dialogs/FileViewerDialog.qml"))
-
+            saveDialogComponent.loadUrl(QtCore.QUrl(os.path.dirname(os.path.abspath(__file__)) + '/gui/dialogs/BrowserSaveDialog.qml'))
             saveDialog = saveDialogComponent.create()
-            QtQml.QQmlProperty.write(saveDialog, "title", "Save the graph")
-            QtQml.QQmlProperty.write(saveDialog, "buttonText", "Save")
-            QtQml.QQmlProperty.write(saveDialog, "folderModelFolder", self.buttleData.getHomeDir())
-
-            saveDialog.buttonClicked.connect(self.onSaveDialogButtonClicked)
+            saveDialog.saveButtonClicked.connect(self.onSaveDialogButtonClicked)
             saveDialog.show()
 
     def eventFilter(self, receiver, event):
@@ -124,10 +119,7 @@ class EventFilter(QtCore.QObject):
             return False
 
         exitDialogComponent = QtQml.QQmlComponent(self.mainEngine)
-        # Note that we give the path relative to run_buttleofx.sh, because that becomes the PWD when this is run.
-        # We also do this for the saveDialogComponent in self.onExitDialogSaveButtonClicked().
-        exitDialogComponent.loadUrl(QtCore.QUrl("ButtleOFX/buttleofx/gui/dialogs/ExitDialog.qml"))
-
+        exitDialogComponent.loadUrl(QtCore.QUrl(os.path.dirname(os.path.abspath(__file__)) + '/gui/dialogs/ExitDialog.qml'))
         exitDialog = exitDialogComponent.create()
         exitDialog.saveButtonClicked.connect(self.onExitDialogSaveButtonClicked)
         exitDialog.discardButtonClicked.connect(self.onExitDialogDiscardButtonClicked)
@@ -247,15 +239,17 @@ def main(argv, app):
     parser.add_argument('folder', nargs='?', help='Folder to browse')
     args = parser.parse_args()
 
-    globalBrowserModel.setCurrentPath(os.path.abspath(args.folder) if args.folder else globalBrowserModel.getHomePath())
+    globalBrowser.setCurrentPath(os.path.abspath(args.folder) if args.folder else globalBrowser.getHomePath())
     # Expose data to QML
     rc = engine.rootContext()
     rc.setContextProperty("_buttleApp", app)
     rc.setContextProperty("_buttleData", globalButtleData)
     rc.setContextProperty("_buttleManager", buttleManager)
     rc.setContextProperty("_buttleEvent", globalButtleEvent)
-    rc.setContextProperty("_browser", globalBrowserModel)
+    rc.setContextProperty("_browser", globalBrowser)
+    rc.setContextProperty("_browserDialog", globalBrowserDialog)
     rc.setContextProperty("_browserAction", globalBrowserAction)
+    rc.setContextProperty("_browserActionDialog", globalBrowserActionDialog)
     rc.setContextProperty("_actionManager", globalActionManager)
 
     iconPath = os.path.join(currentFilePath, "../blackMosquito.png")
@@ -296,7 +290,9 @@ def main(argv, app):
 
     aFilter = EventFilter(app, engine)
     app.installEventFilter(aFilter)
-    globalBrowserModel.loadData()
+
+    globalBrowser.loadData()
+    globalBrowserDialog.loadData()
 
     with globalActionManager:
         topLevelItem.show()

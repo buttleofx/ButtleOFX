@@ -42,6 +42,7 @@ class BrowserModel(QtCore.QObject):
         """
         QtCore.QObject.__init__(self, parent)
         self._currentPath = path
+        self._bufferBrowserItems = []  # used when recursive process: fix async signal connection when add object
         self._browserItems = []  # used only in python side
         self._browserItemsModel = QObjectListModel(self)  # used for UI
         self._filter = filterFiles
@@ -98,6 +99,7 @@ class BrowserModel(QtCore.QObject):
                     return
 
             self.clearItemsSync.emit()
+            self._bufferBrowserItems.clear()
             detectOption = sequenceParser.eDetectionDefaultWithDotFile
             if self._hideDotFiles:
                 detectOption = sequenceParser.eDetectionDefault
@@ -146,6 +148,7 @@ class BrowserModel(QtCore.QObject):
                 if not self._isSync:
                     itemToAdd.moveToThread(self.thread())
                 self.addItemSync.emit(itemToAdd, toModel)
+                self._bufferBrowserItems.append(itemToAdd)
 
     @QtCore.pyqtSlot(object, bool)
     def onAddItemSync(self, bItem, toModel=True):
@@ -174,9 +177,8 @@ class BrowserModel(QtCore.QObject):
         if modelRequester.getParallelThread().isStopped():
             return
 
-        listToBrowse = self._browserItems
+        listToBrowse = self._bufferBrowserItems
         if self == modelRequester:
-            listToBrowse = self._browserItems.copy()  # copy: _browserItems deleted line after
             modelRequester.clearItemsSync.emit()
 
         for bItem in listToBrowse:  # 1st pass, all files in current dir

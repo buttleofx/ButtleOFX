@@ -80,48 +80,58 @@ signal.signal(signal.SIGINT, signal.SIG_DFL)
 
 
 class EventFilter(QtCore.QObject):
+    def __init__(self, app, engine):
+        self.mainApp = app
+        self.mainEngine = engine
+        self.buttleData = globalButtleData
+        super(EventFilter, self).__init__()
+
+    def onSaveDialogButtonClicked(self, fileToSave):
+        self.buttleData.urlOfFileToSave = fileToSave
+        self.buttleData.saveData(QtCore.QUrl(self.buttleData.urlOfFileToSave))
+        QtCore.QCoreApplication.quit()
+
+    def onExitDialogDiscardButtonClicked(self):
+        QtCore.QCoreApplication.quit()
+
+    def onExitDialogSaveButtonClicked(self):
+        if self.buttleData.urlOfFileToSave:
+            self.buttleData.saveData(self.buttleData.urlOfFileToSave)
+            QtCore.QCoreApplication.quit()
+        else:
+            saveDialogComponent = QtQml.QQmlComponent(self.mainEngine)
+            saveDialogComponent.loadUrl(QtCore.QUrl("ButtleOFX/buttleofx/gui/dialogs/FileViewerDialog.qml"))
+
+            saveDialog = saveDialogComponent.create()
+            QtQml.QQmlProperty.write(saveDialog, "title", "Save the graph")
+            QtQml.QQmlProperty.write(saveDialog, "buttonText", "Save")
+            QtQml.QQmlProperty.write(saveDialog, "folderModelFolder", self.buttleData.getHomeDir())
+
+            saveDialog.buttonClicked.connect(self.onSaveDialogButtonClicked)
+            saveDialog.show()
+
     def eventFilter(self, receiver, event):
         if event.type() == QtCore.QEvent.KeyPress:
-            # If alt f4 event ignored
+            # If Alt F4 event ignored
             if event.modifiers() == QtCore.Qt.AltModifier and event.key() == QtCore.Qt.Key_F4:
                 event.ignore()
         if event.type() != QtCore.QEvent.Close:
             return QtCore.QObject.eventFilter(self, receiver, event)
         if not isinstance(receiver, QtQuick.QQuickWindow) or not receiver.title() == "ButtleOFX":
             return False
-        if not globalButtleData.graphCanBeSaved:
+
+        if not self.buttleData.graphCanBeSaved:
             return False
 
-        msgBox = QtWidgets.QMessageBox()
-        msgBox.setText("Save graph changes before closing ?")
-        msgBox.setModal(True)
-        msgBox.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint)
-        msgBox.setInformativeText("If you don't save the graph, unsaved modifications will be lost.")
-        msgBox.setStandardButtons(
-            QtWidgets.QMessageBox.Save | QtWidgets.QMessageBox.Discard | QtWidgets.QMessageBox.Abort)
-        msgBox.setDefaultButton(QtWidgets.QMessageBox.Save)
-        ret = msgBox.exec_()
+        exitDialogComponent = QtQml.QQmlComponent(self.mainEngine)
+        # Note that we give the path relative to run_buttleofx.sh, because that becomes the PWD when this is run.
+        # We also do this for the saveDialogComponent in self.onExitDialogSaveButtonClicked().
+        exitDialogComponent.loadUrl(QtCore.QUrl("ButtleOFX/buttleofx/gui/dialogs/ExitDialog.qml"))
 
-        if ret == QtWidgets.QMessageBox.Save:
-            if globalButtleData.urlOfFileToSave:
-                # Save on the already existing file
-                globalButtleData.saveData(globalButtleData.urlOfFileToSave)
-                # Close the application
-                return QtCore.QObject.eventFilter(self, receiver, event)
-
-            # This project has never been saved, so ask the user on which file to save.
-            dialog = QtWidgets.QFileDialog()
-            fileToSave = dialog.getSaveFileName(None, "Save the graph", os.path.expanduser("~"))[0]
-            if not (fileToSave.endswith(".bofx")):
-                fileToSave += ".bofx"
-            globalButtleData.urlOfFileToSave = fileToSave
-            globalButtleData.saveData(fileToSave)
-            # Close the application
-            return QtCore.QObject.eventFilter(self, receiver, event)
-
-        if ret == QtWidgets.QMessageBox.Discard:
-            # Close the application
-            return QtCore.QObject.eventFilter(self, receiver, event)
+        exitDialog = exitDialogComponent.create()
+        exitDialog.saveButtonClicked.connect(self.onExitDialogSaveButtonClicked)
+        exitDialog.discardButtonClicked.connect(self.onExitDialogDiscardButtonClicked)
+        exitDialog.show()
 
         # Don't call the parent class, so we don't close the application
         return True
@@ -284,7 +294,7 @@ def main(argv, app):
         logging.debug("Watch directory: %s", parentDir)
         qic.addFilesFromDirectory(parentDir, recursive=True)
 
-    aFilter = EventFilter()
+    aFilter = EventFilter(app, engine)
     app.installEventFilter(aFilter)
     globalBrowserModel.loadData()
 

@@ -524,9 +524,7 @@ class ButtleData(QtCore.QObject):
         """
             Loads all data from a Json file (the default Json file if no url is given)
         """
-
         filepath = QtCore.QUrl(url).toLocalFile()
-
         self.newData()
 
         with open(filepath, 'r') as f:
@@ -647,11 +645,11 @@ class ButtleData(QtCore.QObject):
         """
             Saves all data in a json file
         """
+        # If called from Python, it could be a str or a QUrl
         if isinstance(url, str):
-            # If called from Python, it could be a str or a QUrl.
-            filepath = QtCore.QUrl.fromLocalFile(url).toLocalFile()
+            filepath = url
         else:
-            filepath = QtCore.QUrl(url).toLocalFile()
+            filepath = url.toLocalFile()
 
         if not filepath.lower().endswith(".bofx"):
             filepath = filepath + ".bofx"
@@ -735,6 +733,9 @@ class ButtleData(QtCore.QObject):
 
     def getButtlePath(self):
         return self._buttlePath
+
+    def getHomeDir(self):
+        return os.path.expanduser("~")
 
     def getCurrentConnectionWrapper(self):
         """
@@ -1036,6 +1037,7 @@ class ButtleData(QtCore.QObject):
 
     # filePath
     buttlePath = QtCore.pyqtProperty(str, getButtlePath, constant=True)
+    homeDir = QtCore.pyqtProperty(str, getHomeDir, constant=True)
 
     # Current param, view, and selected node
     currentParamNodeChanged = QtCore.pyqtSignal()

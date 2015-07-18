@@ -81,7 +81,7 @@ signal.signal(signal.SIGINT, signal.SIG_DFL)
 
 class EventFilter(QtCore.QObject):
     def __init__(self, app, engine):
-        QtCore.QObject.__init(self)
+        QtCore.QObject.__init__(self)
         self.mainApp = app
         self.mainEngine = engine
         self.buttleData = globalButtleData

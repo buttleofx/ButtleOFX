@@ -66,9 +66,12 @@ ApplicationWindow {
     property int selectedView: getSetting("view", 3)
 
     property variant lastSelectedView: selectedView == 1 ? browserView: (selectedView == 2 ? quickGraphView: graphView )
-    property variant browserView: [browser, null, player, null]                             //mapped to 1 in sql table
-    property variant quickGraphView: [player, browser, advancedParamEditor, graphEditor]    //mapped to 2 in sql table
-    property variant graphView: [player, paramEditor, browser, graphEditor]                 //mapped to 3 in sql table
+
+    // mapped to int in save settings sql table (i.e selectedView)
+    // the order follows the layout (topLeft, bottomLeft, topRight, bottomRight)
+    property variant browserView: [browser, null, player, null]                             //mapped to 1
+    property variant quickGraphView: [player, browser, advancedParamEditor, graphEditor]    //mapped to 2
+    property variant graphView: [player, paramEditor, browser, graphEditor]                 //mapped to 3
 
     property string urlOfFileToSave: _buttleData.urlOfFileToSave
 

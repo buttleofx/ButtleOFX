@@ -34,19 +34,11 @@ Item {
         graphEditor: true
         x: leftColumn.width
         y: topLeftView.height + mainWindowQML.y + 74
+        Component.onCompleted: console.log(x)
 
         StateGroup {
             id: statesBrowser
             states: [
-                State {
-                    name: "view1&2"
-                    when: selectedView == 3
-
-                    PropertyChanges {
-                        target: pluginBrowser
-                        x: mainWindowQML.x + 13
-                    }
-                },
                 State {
                     name: "view3"
                     when: selectedView != 3

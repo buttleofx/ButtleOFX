@@ -249,7 +249,7 @@ Rectangle {
         anchors.centerIn: parent
         anchors.fill: parent
         anchors.margins: 4 * graph.zoomCoeff
-        color: "#bbbbbb"
+        color: nodeText.isSelected ? "#33333b": "#bbbbbb"
         radius: 8
         clip: !nodeText.isSelected
 
@@ -261,7 +261,7 @@ Rectangle {
             color: "#212121"
             opacity: 0.6
             radius: 2
-            visible: nodeText.isSelected ? (miniatureState ? false : true) : false
+            visible: nodeText.isSelected ? !miniatureState : false
         }
 
         Text {

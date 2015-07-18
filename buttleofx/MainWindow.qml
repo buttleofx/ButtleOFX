@@ -65,11 +65,10 @@ ApplicationWindow {
 
     property int selectedView: getSetting("view", 3)
 
-    property variant lastSelectedView: selectedView == 1 ? view1: (selectedView == 2 ? view2 : (selectedView == 3 ? view3: view4))
-    property variant view1: [browser, paramEditor, player, graphEditor]
-    property variant view2: [player, paramEditor, browser, graphEditor]
-    property variant view3: [player, browser, advancedParamEditor, graphEditor]
-    property variant view4: view2  //just use player and browser (ie index 0&&2)
+    property variant lastSelectedView: selectedView == 1 ? browserView: (selectedView == 2 ? quickGraphView: graphView )
+    property variant browserView: [browser, null, player, null]                             //mapped to 1 in sql table
+    property variant quickGraphView: [player, browser, advancedParamEditor, graphEditor]    //mapped to 2 in sql table
+    property variant graphView: [player, paramEditor, browser, graphEditor]                 //mapped to 3 in sql table
 
     property string urlOfFileToSave: _buttleData.urlOfFileToSave
 
@@ -578,50 +577,32 @@ ApplicationWindow {
             title: "View"
 
             MenuItem {
-                id: defaultView
-                text: "Default"
+                id: browserViewMenu
+                text: "Browser Mode"
                 checkable: true
-                checked: selectedView == 1
+                checked: lastSelectedView === browserView
 
                 onTriggered: {
                     selectedView = 1
-                    saveSetting("view",selectedView)
-                    lastSelectedView = view1
+                    saveSetting("view", selectedView)
+                    lastSelectedView = browserView
                     topLeftView.visible = true
-                    bottomLeftView.visible = true
+                    bottomLeftView.visible = false
                     topRightView.visible = true
-                    bottomRightView.visible = true
-                    rightColumn.width = 0.7 * mainWindowQML.width
+                    bottomRightView.visible = false
+                    rightColumn.width = 0.5 * mainWindowQML.width
                 }
             }
 
             MenuItem {
-                id: browserView
-                text: "Browser Mode"
+                id: quickGraphViewMenu
+                text: "Quick Graph"
                 checkable: true
-                checked: selectedView == 2
-
+                checked: lastSelectedView === quickGraphView
                 onTriggered: {
                     selectedView = 2
-                    saveSetting("view",selectedView)
-                    lastSelectedView = view2
-                    topLeftView.visible = true
-                    bottomLeftView.visible = true
-                    topRightView.visible = true
-                    bottomRightView.visible = true
-                    rightColumn.width = 0.7 * mainWindowQML.width
-                }
-            }
-
-            MenuItem {
-                id: advancedView
-                text: "Quick Mode"
-                checkable: true
-                checked: selectedView == 3
-                onTriggered: {
-                    selectedView = 3
-                    saveSetting("view",selectedView)
-                    lastSelectedView = view3
+                    saveSetting("view", selectedView)
+                    lastSelectedView = quickGraphView
                     topLeftView.visible=true
                     bottomLeftView.visible = true
                     topRightView.visible = true
@@ -631,19 +612,19 @@ ApplicationWindow {
             }
 
             MenuItem {
-                id: simpleView
-                text: "Simple view"
+                id: graphViewMenu
+                text: "Graph"
                 checkable: true
-                checked: selectedView == 4
+                checked: lastSelectedView === graphView
 
                 onTriggered: {
-                    selectedView = 4
-                    saveSetting("view",selectedView)
-                    lastSelectedView = view4
+                    selectedView = 3
+                    saveSetting("view", selectedView)
+                    lastSelectedView = graphView
                     topLeftView.visible=true
                     topRightView.visible = true
-                    bottomLeftView.visible = false
-                    bottomRightView.visible = false
+                    bottomLeftView.visible = true
+                    bottomRightView.visible = true
                     rightColumn.width = 0.7 * mainWindowQML.width
                 }
             }
@@ -716,6 +697,7 @@ ApplicationWindow {
                 orientation: Qt.Vertical
                 Layout.fillWidth: true
                 Layout.minimumWidth: (topRightView.visible == true || bottomRightView.visible == true) ? 0 : parent.width
+                width: mainWindowQML.width // will be overrided by right column width
 
                 Rectangle {
                     id: topLeftView
@@ -735,8 +717,8 @@ ApplicationWindow {
                     implicitWidth: parent.width
                     implicitHeight: topLeftView.visible ? 0.5 * parent.height : parent.height
                     z: -1
-                    children: selectedView != 3 ? lastSelectedView[1]: (advancedParamEditor.displayGraph? view3[3] : view3[1])
-                    visible: selectedView != 4
+                    children: lastSelectedView !== quickGraphView ? lastSelectedView[1]: (advancedParamEditor.displayGraph? quickGraphView[3] : quickGraphView[1])
+                    visible: lastSelectedView !== browserView  // not visible if browserView selected
                 }
             }
 
@@ -747,7 +729,13 @@ ApplicationWindow {
                 orientation: Qt.Vertical
                 Layout.fillWidth: true
                 Layout.minimumWidth: (topLeftView.visible == true || bottomLeftView.visible == true) ? 0 : parent.width
-                width: selectedView == 3 ? 0.3 * mainWindowQML.width : 0.7 * mainWindowQML.width
+
+                width: if(lastSelectedView === browserView)
+                           0.5 * mainWindowQML.width
+                       else if(lastSelectedView === quickGraphView)
+                           0.3 * mainWindowQML.width
+                       else
+                           0.7 * mainWindowQML.width
 
                 Rectangle {
                     id: topRightView
@@ -767,9 +755,8 @@ ApplicationWindow {
                     implicitWidth: parent.width
                     implicitHeight: topRightView.visible ? 0.5 * parent.height : parent.height
                     z: -1
-                    visible: selectedView == 1 || selectedView == 2
                     children: lastSelectedView[3]
-
+                    visible: lastSelectedView !== browserView  // not visible if browserView selected
                 }
             }
         }

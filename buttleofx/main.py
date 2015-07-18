@@ -81,10 +81,10 @@ signal.signal(signal.SIGINT, signal.SIG_DFL)
 
 class EventFilter(QtCore.QObject):
     def __init__(self, app, engine):
+        QtCore.QObject.__init(self)
         self.mainApp = app
         self.mainEngine = engine
         self.buttleData = globalButtleData
-        super(EventFilter, self).__init__()
 
     def onSaveDialogButtonClicked(self, fileToSave):
         self.buttleData.urlOfFileToSave = fileToSave

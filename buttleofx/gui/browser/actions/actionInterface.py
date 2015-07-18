@@ -15,12 +15,12 @@ class ActionInterface(QtCore.QObject):
         self._browserItem = browserItem
 
         # required for abort processing
-        self._abortFlag = False      # if action have been aborted
-        self._progress = 0.0         # progression of action between 0 and 1,will be used with Tuttle process in execute
+        self._abortFlag = False      # if action has been aborted
+        self._progress = 0.0         # progression of action between 0 and 1 will be used with Tuttle process in execute
+        self._failed = False
 
     def __del__(self):
         logging.debug("Action destroyed")
-        pass
 
     def begin(self):
         if self._browserItem:
@@ -34,11 +34,12 @@ class ActionInterface(QtCore.QObject):
         """
             Process revert() if action processed
         """
-        if self._browserItem:
-            self._abortFlag = True
-            if self.isProcessed():
-                self.revert()
-                self._browserItem.notifyRemoveAction()
+        if not self._browserItem or self._failed:
+            return
+
+        self._abortFlag = True
+        if self.isProcessed():
+            self.revert()
 
     def execute(self):
         raise NotImplementedError("ActionInterface::execute() must be implemented")
@@ -49,10 +50,17 @@ class ActionInterface(QtCore.QObject):
     def process(self):
         if self._abortFlag:
             return
+
         self.begin()
-        self.execute()
+
+        try:
+            self.execute()
+        except Exception as e:
+            print(str(e))
+            self._failed = True
+
         self.end()
-        self._progress = 1
+        self._progress = 0 if self._failed else 1
         self.progressChanged.emit()
 
     def getBrowserItem(self):

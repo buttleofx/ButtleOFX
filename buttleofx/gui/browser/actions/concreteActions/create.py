@@ -17,7 +17,7 @@ class Create(ActionInterface):
 
     def execute(self):
         # TODO: Check parent's permission in try catch
-
+        # TODO: find elegant way to find next: sort, find next if match then extract version number
         parent = self.getBrowserItem()
         newBrowserItem = self._newBrowserItem
         parentPath = parent.getPath()

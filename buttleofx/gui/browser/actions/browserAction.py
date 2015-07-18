@@ -40,11 +40,14 @@ class BrowserAction(QtCore.QObject):
 
     @QtCore.pyqtSlot(QtCore.QObject)
     def pushToActionManager(self, actionWrapper=None):
+        """
+        Will process the action automatically by pushing to actionManager
+        """
         if actionWrapper:
             globalActionManager.push(actionWrapper)
-        else:
-            if self._cacheActions:
-                globalActionManager.push(self._cacheActions)
+            return
+        if self._cacheActions:
+            globalActionManager.push(self._cacheActions)
 
     @QtCore.pyqtSlot()
     def handleCopy(self):
@@ -75,6 +78,8 @@ class BrowserAction(QtCore.QObject):
         for action in self._cacheActions.getActions():
             action.setDestinationPath(destination)
         self.pushToActionManager()
+        self._cacheActions = None
+        self.cacheChanged.emit()
 
     @QtCore.pyqtSlot()
     def handleDelete(self):

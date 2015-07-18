@@ -1,5 +1,6 @@
 import os
 import shutil
+import os.path as op
 
 from buttleofx.gui.browser.actions.actionInterface import ActionInterface
 
@@ -7,63 +8,58 @@ from buttleofx.gui.browser.actions.actionInterface import ActionInterface
 class Copy(ActionInterface):
 
     def __init__(self, browserItem):
-        # destination must be a directory
-        # if not destination.isFolder():
-        #     raise TypeError
         ActionInterface.__init__(self, browserItem)
         self._srcPath = browserItem.getParentPath()
-        self._destPath = ""
-        self._framesPaths = []
+        self._destPath = ''
+        self._framesPaths = []  # files sequences path copied
+        self._successCopy = True
 
     def setDestinationPath(self, newPath):
+        if not op.isdir(newPath):
+            raise TypeError
         self._destPath = newPath.strip()
 
     def execute(self):
         browserItem = self._browserItem
         destPath = self._destPath
 
-        # Copy file
+        # avoid recurse copy
+        if not op.exists(destPath) or browserItem.getPath() in destPath:
+            self._failed = True
+            print('%s already in %s: fail to copy' % (destPath, browserItem.getPath()))
+            return
+
         if browserItem.isFile():
-            # TODO: Check destination permission in try catch
-            if os.path.exists(destPath):
-                shutil.copy2(browserItem.getPath(), destPath)
-                # filename = browserItem.getName()
-                # browserItem.updatePath(os.path.join(destPath, filename))
-                # self.processed = True or browserItem.processed = True
+            shutil.copy2(browserItem.getPath(), destPath)
 
-        # Copy Folder
-        if browserItem.isFolder():
-            # TODO: Check destination permission in try catch
-            shutil.copytree(browserItem.getPath(), os.path.join(destPath, browserItem.getName()))
-            # browserItem.updatePath(destPath)
+        elif browserItem.isFolder():
+            shutil.copytree(browserItem.getPath(), op.join(destPath, browserItem.getName()))
 
-        if browserItem.isSequence():
+        elif browserItem.isSequence():
             seqParsed = browserItem.getSequence().getSequenceParsed()
             frames = seqParsed.getFramesIterable()
 
             for f in frames:
-                # logging.debug(f)
                 filename = seqParsed.getFilenameAt(f)
-                # logging.debug(filename)
-                filePath = os.path.join(browserItem.getParentPath(), filename)
-                # logging.debug(file_path)
-                if os.path.exists(destPath):
+                filePath = op.join(browserItem.getParentPath(), filename)
+                try:
                     shutil.copy2(filePath, destPath)
-                    self._framesPaths.append(os.path.join(destPath, filename))
-
-            # browserItem.
+                    self._framesPaths.append(op.join(destPath, filename))
+                except Exception as e:
+                    print(str(e))
+                    pass
 
     def revert(self):
         browserItem = self.getBrowserItem()
-        browserItemName = browserItem.getName()
-        destPath = self._destPath
+        copiedPath = op.join(self._destPath, browserItem.getName())
 
-        if browserItem.isFile():
-            os.remove(os.path.join(destPath, browserItemName))
+        if browserItem.isFile() and op.exists(copiedPath):
+            os.remove(copiedPath)
 
-        if browserItem.isFolder():
-            shutil.rmtree(os.path.join(destPath, browserItemName))
+        if browserItem.isFolder() and op.exists(copiedPath):
+            shutil.rmtree(copiedPath)
 
         if browserItem.isSequence():
             for f in self._framesPaths:
-                os.remove(f)
+                if op.exists(f):
+                    os.remove(f)

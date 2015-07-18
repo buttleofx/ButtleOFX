@@ -1,7 +1,7 @@
 import QtQuick 2.0
-import QtQuick.Dialogs 1.0
 
 import "../../plugin/qml"
+import "../../dialogs"
 
 Rectangle {
     id: tools
@@ -12,6 +12,32 @@ Rectangle {
     property color gradian2: "#212121"
 
     signal clickCreationNode(string nodeType)
+
+    BrowserOpenDialog{
+        id: finderLoadGraph
+    }
+
+    BrowserSaveDialog{
+        id: finderSaveGraph
+    }
+
+    ExitDialog {
+        id: openGraph
+        visible: false
+        dialogText: "Do you want to save before closing this file?<br>If you don't, all unsaved changes will be lost"
+
+        onSaveButtonClicked: {
+            if (urlOfFileToSave != "") {
+                _buttleData.saveData(urlOfFileToSave)
+                finderLoadGraph.visible = true
+            } else {
+                finderSaveGraph.show("open")
+            }
+        }
+        onDiscardButtonClicked: {
+            finderLoadGraph.visible = true
+        }
+    }
 
     gradient: Gradient {
         GradientStop { position: 0.0; color: gradian2 }
@@ -39,13 +65,13 @@ Rectangle {
                 locked: false
 
                 onClicked: {
-                    if (pluginVisible==true){
-                        pluginVisible=false
+                    if (pluginVisible == true){
+                        pluginVisible = false
                     } else {
-                        pluginVisible=true
+                        pluginVisible = true
                     }
 
-                    editNode=false
+                    editNode = false
                 }
             }
 
@@ -62,11 +88,9 @@ Rectangle {
                     editNode = false
 
                     if (!_buttleData.graphCanBeSaved) {
-                        finderLoadGraph.open()
+                        finderLoadGraph.visible = true
                     } else {
-                        openGraph.open()
-                        openGraph.close()
-                        openGraph.open()
+                        openGraph.visible = true
                     }
                 }
             }
@@ -82,10 +106,11 @@ Rectangle {
                 onClicked: {
                     pluginVisible = false
                     editNode = false
+
                     if (urlOfFileToSave != "") {
                         _buttleData.saveData(urlOfFileToSave)
                     } else {
-                        finderSaveGraph.open()
+                        finderSaveGraph.show("save")
                     }
                 }
             }

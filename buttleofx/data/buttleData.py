@@ -524,9 +524,8 @@ class ButtleData(QtCore.QObject):
         """
             Loads all data from a Json file (the default Json file if no url is given)
         """
-
-        filepath = QtCore.QUrl(url).toLocalFile()
-
+        Qurl = QtCore.QUrl(url)
+        filepath = (Qurl.isLocalFile() and Qurl.toLocalFile()) or url
         self.newData()
 
         with open(filepath, 'r') as f:
@@ -647,14 +646,21 @@ class ButtleData(QtCore.QObject):
         """
             Saves all data in a json file
         """
+        # If called from Python, it could be a str or a QUrl
         if isinstance(url, str):
-            # If called from Python, it could be a str or a QUrl.
-            filepath = QtCore.QUrl.fromLocalFile(url).toLocalFile()
+            filepath = url
         else:
-            filepath = QtCore.QUrl(url).toLocalFile()
+            filepath = url.toLocalFile() if url.isLocalFile() else url.toString()
 
-        if not filepath.lower().endswith(".bofx"):
-            filepath = filepath + ".bofx"
+        if filepath.endswith('buttleSave_now.bofx'):
+            filepath = os.path.dirname(filepath)
+
+        # if destination path is a folder, we create a file name containing date and time of now
+        if os.path.isdir(filepath):
+            filepath = os.path.join(filepath, 'buttleSave%s' % datetime.today().strftime('%m_%d_%y_%I_%M'))
+
+        if not filepath.lower().endswith('.bofx'):
+            filepath += '.bofx'
 
         with io.open(filepath, 'w', encoding='utf-8') as f:
             dictJson = {
@@ -675,8 +681,8 @@ class ButtleData(QtCore.QObject):
             # Graph
             dictJson["graph"] = self.getGraph().object_to_dict()
 
-            # Graph : currentSeletedNodes
-            for node in self.getGraph().getNodes():
+            # Graph : currentSelectedNodes
+            for node in self._graph.getNodes():
                 if node.getName() in self.getCurrentSelectedNodeNames():
                     dictJson["graph"]["currentSelectedNodes"].append(node.getName())
 
@@ -735,6 +741,9 @@ class ButtleData(QtCore.QObject):
 
     def getButtlePath(self):
         return self._buttlePath
+
+    def getHomeDir(self):
+        return os.path.expanduser("~")
 
     def getCurrentConnectionWrapper(self):
         """
@@ -1036,6 +1045,7 @@ class ButtleData(QtCore.QObject):
 
     # filePath
     buttlePath = QtCore.pyqtProperty(str, getButtlePath, constant=True)
+    homeDir = QtCore.pyqtProperty(str, getHomeDir, constant=True)
 
     # Current param, view, and selected node
     currentParamNodeChanged = QtCore.pyqtSignal()
@@ -1092,12 +1102,12 @@ class ButtleData(QtCore.QObject):
 globalButtleData = ButtleData()
 
 
-def _decode_dict(dict_):
+def _decode_dict(_dict):
     """
         This function will recursively pass in nested dicts, and will convert
         all str elements into string (essential for some Tuttle functions).
     """
-    for key in dict_:
-        if isinstance(dict_[key], str):
-            dict_[key] = str(dict_[key])
-    return dict_
+    for key in _dict:
+        if isinstance(_dict[key], str):
+            _dict[key] = str(_dict[key])
+    return _dict

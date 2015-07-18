@@ -5,10 +5,10 @@ import shutil
 
 # from OpenGL import GL
 
-from buttleofx.gui.browser_v2.browserItem import BrowserItem
-from buttleofx.gui.browser_v2.actions.concreteActions.delete import Delete
+from buttleofx.gui.browser.browserItem import BrowserItem
+from buttleofx.gui.browser.actions.concreteActions.delete import Delete
 from pySequenceParser import sequenceParser
-import buttleofx.gui.browser_v2.actions.testConcreteActions.helper as h
+import buttleofx.gui.browser.actions.testConcreteActions.helper as h
 
 
 class TestDelete(unittest.TestCase):

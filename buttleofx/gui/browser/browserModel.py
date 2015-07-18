@@ -11,10 +11,10 @@ from pySequenceParser import sequenceParser
 
 from quickmamba.models import QObjectListModel
 
-from buttleofx.gui.browser_v2.browserItem import BrowserItem, ItemType
-from buttleofx.gui.browser_v2.browserSortOn import SortOn
-from buttleofx.gui.browser_v2.parallelThread import ParallelThread, WithMutex, WithBool
-from buttleofx.gui.browser_v2.actions.actionManager import globalActionManager
+from buttleofx.gui.browser.browserItem import BrowserItem, ItemType
+from buttleofx.gui.browser.browserSortOn import SortOn
+from buttleofx.gui.browser.parallelThread import ParallelThread, WithMutex, WithBool
+from buttleofx.gui.browser.actions.actionManager import globalActionManager
 
 
 class BrowserModel(QtCore.QObject):

@@ -38,9 +38,9 @@ from buttleofx.data import globalButtleData
 from buttleofx.event import globalButtleEvent
 from buttleofx.manager import globalButtleManager
 from buttleofx.core.undo_redo.manageTools import globalCommandManager
-from buttleofx.gui.browser_v2.browserModel import BrowserModel, globalBrowser, globalBrowserDialog
-from buttleofx.gui.browser_v2.actions.browserAction import globalBrowserAction, globalBrowserActionDialog
-from buttleofx.gui.browser_v2.actions.browserAction import globalActionManager
+from buttleofx.gui.browser.browserModel import BrowserModel, globalBrowser, globalBrowserDialog
+from buttleofx.gui.browser.actions.browserAction import globalBrowserAction, globalBrowserActionDialog
+from buttleofx.gui.browser.actions.browserAction import globalActionManager
 
 from PyQt5 import QtCore, QtGui, QtQml, QtQuick, QtWidgets
 

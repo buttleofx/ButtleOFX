@@ -1,7 +1,7 @@
 import os
 import shutil
 import tempfile
-from buttleofx.gui.browser_v2.actions.actionInterface import ActionInterface
+from buttleofx.gui.browser.actions.actionInterface import ActionInterface
 
 
 class Delete(ActionInterface):

@@ -1,56 +1,29 @@
 import os
-
 from PyQt5 import QtCore
+from pySequenceParser import sequenceParser
 
 
 class SequenceWrapper(QtCore.QObject):
-    """
-        Class SequenceWrapper defined by :
-            - _sequence : a sequence of images
-    """
 
-    def __init__(self, sequence):
-        super(SequenceWrapper, self).__init__()
+    def __init__(self, sequenceParserItem, absPath, parent=None):
+        QtCore.QObject.__init__(self, parent)
+        self._sequence = sequenceParserItem.getSequence().clone()  # copy object
+        self._firstFilePath = os.path.join(os.path.dirname(absPath), self._sequence.getFirstFilename())
+        self._weight = sequenceParser.ItemStat(sequenceParserItem).sizeOnDisk
 
-        self._sequence = sequence
-
-    # ############################################ Methods exposed to QML ############################################ #
-
-    @QtCore.pyqtSlot(result=int)
     def getNbFiles(self):
         return self._sequence.getNbFiles()
 
-    # ######################################## Methods private to this class ####################################### #
-
-    # ## Getters ## #
-
-    def getFirstFileName(self):
-        return self._sequence.getFirstFilename()
-
     def getFirstFilePath(self):
-        return self._sequence.getAbsoluteFirstFilename()
+        return self._firstFilePath
+
+    def getSequenceParsed(self):
+        return self._sequence
 
     def getWeight(self):
-        res = 0
-        for i in range(self._sequence.getFirstTime(), self._sequence.getLastTime() + self._sequence.getStep(),
-                       self._sequence.getStep()):
-            fullpath = self._sequence.getAbsoluteFilenameAt(i)
-            if os.path.exists(fullpath):
-                res = res + os.stat(fullpath).st_size
-        return (res) / self._sequence.getNbFiles()
+        return self._weight
 
-    def getTime(self):
-        return self._sequence.getDuration()
-
-    # ## Others ## #
-
-    def __str__(self):
-        return 'Test'
-
-    # ############################################# Data exposed to QML ############################################# #
-
-    firstFilePath = QtCore.pyqtProperty(str, getFirstFilePath, constant=True)
-    firstFileName = QtCore.pyqtProperty(str, getFirstFileName, constant=True)
-    nbFiles = QtCore.pyqtProperty(int, getNbFiles, constant=True)
-    weight = QtCore.pyqtProperty(float, getWeight, constant=True)
-    time = QtCore.pyqtProperty(float, getTime, constant=True)
+    # ################################### Data exposed to QML #################################### #
+    weight = QtCore.pyqtProperty(int, getWeight)
+    firstFilePath = QtCore.pyqtProperty(str, getFirstFilePath)
+    nbFiles = QtCore.pyqtProperty(int, getNbFiles)

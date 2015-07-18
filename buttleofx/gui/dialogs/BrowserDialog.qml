@@ -8,7 +8,7 @@ import QtQuick.Controls 1.0
 import QtQuick.Controls.Styles 1.0
 
 
-import "../browser_v2/qml/"
+import "../browser/qml/"
 
 // common part of open and save browserDialog (Abstract behavior)
 // the connecitons are done in 'subclasses'

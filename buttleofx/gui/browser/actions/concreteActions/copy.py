@@ -1,7 +1,7 @@
 import os
 import shutil
 
-from buttleofx.gui.browser_v2.actions.actionInterface import ActionInterface
+from buttleofx.gui.browser.actions.actionInterface import ActionInterface
 
 
 class Copy(ActionInterface):

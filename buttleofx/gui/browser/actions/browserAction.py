@@ -5,14 +5,14 @@ from PyQt5 import QtCore
 
 from pySequenceParser import sequenceParser
 
-from buttleofx.gui.browser_v2.actions.actionManager import globalActionManager
-from buttleofx.gui.browser_v2.actions.actionWrapper import ActionWrapper
-from buttleofx.gui.browser_v2.browserItem import BrowserItem
-from buttleofx.gui.browser_v2.actions.concreteActions.copy import Copy
-from buttleofx.gui.browser_v2.actions.concreteActions.move import Move
-from buttleofx.gui.browser_v2.actions.concreteActions.create import Create
-from buttleofx.gui.browser_v2.actions.concreteActions.delete import Delete
-from buttleofx.gui.browser_v2.browserModel import globalBrowserDialog, globalBrowser
+from buttleofx.gui.browser.actions.actionManager import globalActionManager
+from buttleofx.gui.browser.actions.actionWrapper import ActionWrapper
+from buttleofx.gui.browser.browserItem import BrowserItem
+from buttleofx.gui.browser.actions.concreteActions.copy import Copy
+from buttleofx.gui.browser.actions.concreteActions.move import Move
+from buttleofx.gui.browser.actions.concreteActions.create import Create
+from buttleofx.gui.browser.actions.concreteActions.delete import Delete
+from buttleofx.gui.browser.browserModel import globalBrowserDialog, globalBrowser
 
 
 class BrowserAction(QtCore.QObject):

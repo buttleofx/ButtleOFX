@@ -2,8 +2,8 @@ import unittest
 import tempfile
 import os
 
-from buttleofx.gui.browser_v2.browserItem import BrowserItem
-from buttleofx.gui.browser_v2.actions.concreteActions.create import Create
+from buttleofx.gui.browser.browserItem import BrowserItem
+from buttleofx.gui.browser.actions.concreteActions.create import Create
 from pySequenceParser import sequenceParser
 
 

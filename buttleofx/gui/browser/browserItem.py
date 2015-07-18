@@ -12,8 +12,8 @@ from pySequenceParser import sequenceParser
 
 from pyTuttle import tuttle
 
-from buttleofx.gui.browser_v2.sequenceWrapper import SequenceWrapper
-from buttleofx.gui.browser_v2.thumbnailUtil import ThumbnailUtil, thumbnailPool
+from buttleofx.gui.browser.sequenceWrapper import SequenceWrapper
+from buttleofx.gui.browser.thumbnailUtil import ThumbnailUtil, thumbnailPool
 
 
 class ItemType(object):

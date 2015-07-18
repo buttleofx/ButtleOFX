@@ -1,5 +1,5 @@
 from PyQt5 import QtCore
-from buttleofx.gui.browser_v2.browserModel import BrowserModel
+from buttleofx.gui.browser.browserModel import BrowserModel
 
 
 class BrowserTree(QtCore.QObject):

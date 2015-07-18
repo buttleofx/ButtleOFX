@@ -4,8 +4,8 @@ import os
 
 # from OpenGL import GL
 
-from buttleofx.gui.browser_v2.browserItem import BrowserItem
-from buttleofx.gui.browser_v2.actions.concreteActions.move import Move
+from buttleofx.gui.browser.browserItem import BrowserItem
+from buttleofx.gui.browser.actions.concreteActions.move import Move
 from pySequenceParser import sequenceParser
 
 

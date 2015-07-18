@@ -756,7 +756,7 @@ ApplicationWindow {
                     implicitHeight: topRightView.visible ? 0.5 * parent.height : parent.height
                     z: -1
                     children: lastSelectedView[3]
-                    visible: lastSelectedView !== browserView  // not visible if browserView selected
+                    visible: lastSelectedView !== browserView  && lastSelectedView !== quickGraphView // not visible if browserView or quickGraphView selected
                 }
             }
         }

@@ -378,55 +378,57 @@ class ButtleData(QtCore.QObject):
     @QtCore.pyqtSlot(result=QtCore.QObject)
     def getSortedNodesWrapper(self):
         """
-            Returns the total of sorted param nodeWrapper for the parametersEditor.
+            Returns all nodeWrapper for the ParametersEditor.
         """
         listOfNodes = QObjectListModel(self)
-        if len(self._graphWrapper.getNodeWrappers()) != 0:
-            for nodes in self._graphWrapper.getNodeWrappers():
-                if nodes.pluginContext == "OfxImageEffectContextReader":
-                    listOfNodes.append(nodes)
-                    firstNode = nodes
-                else:
-                    firstNode = self._graphWrapper.getNodeWrappers()[0]
-
-            toVisit = set()
-            visited = set()
-            toVisit.add(firstNode)
-            while len(toVisit) != 0:
-                currentNodeWrapper = toVisit.pop()
-
-                # If the node has not already been visited
-                if currentNodeWrapper not in visited:
-                    # If the node has inputs
-                    currentNodeOutputClip = currentNodeWrapper.getOutputClip()
-
-                    # If the input is connected to a parent
-                    if self.getGraphWrapper().getConnectedClipWrapper_Output(currentNodeOutputClip) is not None:
-                        parentNodeWrapper = self.getGraphWrapper().getNodeWrapper(
-                            self.getGraphWrapper().getConnectedClipWrapper_Output(currentNodeOutputClip).getNodeName())
-                        toVisit.add(parentNodeWrapper)
-
-                    visited.add(currentNodeWrapper)
-
-            listOfParents = QObjectListModel(self)
-            listOfParents.append(firstNode)
-            visited.remove(firstNode)
-            while len(visited) != 0:
-                listOfParents.append(visited.pop())
-
-            for _ in range(len(listOfParents)):
-                if len(listOfNodes) > 0:
-                    currentNode = listOfNodes[len(listOfNodes) - 1]
-                    currentNodeOutputClip = currentNode.getOutputClip()
-
-                    # If the input is connected to a parent
-                    if self.getGraphWrapper().getConnectedClipWrapper_Output(currentNodeOutputClip) is not None:
-                        parentNode = self.getGraphWrapper().getNodeWrapper(
-                            self.getGraphWrapper().getConnectedClipWrapper_Output(currentNodeOutputClip).getNodeName())
-                        listOfNodes.append(parentNode)
-            return listOfNodes
-        else:
+        if not self._graphWrapper.getNodeWrappers():
             return None
+
+        for nodes in self._graphWrapper.getNodeWrappers():
+            if nodes.pluginContext == "OfxImageEffectContextReader":
+                listOfNodes.append(nodes)
+                firstNode = nodes
+            else:
+                firstNode = self._graphWrapper.getNodeWrappers()[0]
+
+        toVisit = set()
+        visited = set()
+        toVisit.add(firstNode)
+        while len(toVisit) != 0:
+            currentNodeWrapper = toVisit.pop()
+
+            # If the node has not already been visited
+            if currentNodeWrapper not in visited:
+                # If the node has inputs
+                currentNodeOutputClip = currentNodeWrapper.getOutputClip()
+
+                # If the input is connected to a parent
+                if self.getGraphWrapper().getConnectedClipWrapper_Output(currentNodeOutputClip) is not None:
+                    parentNodeWrapper = self.getGraphWrapper().getNodeWrapper(
+                        self.getGraphWrapper().getConnectedClipWrapper_Output(currentNodeOutputClip).getNodeName())
+                    toVisit.add(parentNodeWrapper)
+
+                visited.add(currentNodeWrapper)
+
+        listOfParents = QObjectListModel(self)
+        listOfParents.append(firstNode)
+        visited.remove(firstNode)
+        while len(visited) != 0:
+            listOfParents.append(visited.pop())
+
+        # TODO faca
+        for _ in range(len(listOfParents)):
+            if len(listOfNodes) > 0:
+                currentNode = listOfNodes[len(listOfNodes) - 1]
+                currentNodeOutputClip = currentNode.getOutputClip()
+
+                # If the input is connected to a parent
+                if self.getGraphWrapper().getConnectedClipWrapper_Output(currentNodeOutputClip) is not None:
+                    parentNode = self.getGraphWrapper().getNodeWrapper(
+                        self.getGraphWrapper().getConnectedClipWrapper_Output(currentNodeOutputClip).getNodeName())
+                    listOfNodes.append(parentNode)
+
+        return listOfNodes
 
     # ## Others ## #
 

@@ -9,21 +9,24 @@ Rectangle {
     id: root
     color: "transparent"
 
-    //TODO: think about standalone
-    function handleGraphViewerClick(pathImg){
+    // defaults slots
+    function onItemClickedSlot(pathImg){
         console.debug("handleGraphViewerClick")
         _buttleData.setActiveBrowserFile(pathImg)
         _buttleEvent.emitViewerChangedSignal()
     }
-    function handleGraphViewerDoubleClick(browserItem){
+
+    function onItemDoubleClickedSlot(absolutePath){
         console.debug("handleGraphViewerDoubleClick")
         _buttleData.setActiveGraphId("graphEditor")
-        _buttleManager.nodeManager.dropFile(browserItem.path, 10, 10)
+        _buttleManager.nodeManager.dropFile(absolutePath, 10, 10)
     }
 
+    signal itemClicked(string absolutePath, string pathImg, bool isFolder, bool isSupported)
+    signal itemDoubleClicked(string absolutePath, string pathImg, bool isFolder, bool isSupported)
     signal pushVisitedFolder(string path)
-    Keys.onEscapePressed: root.model.unselectAllItems()
 
+    Keys.onEscapePressed: root.model.unselectAllItems()
     MouseArea {
         anchors.fill: parent
         acceptedButtons: Qt.LeftButton | Qt.RightButton
@@ -54,7 +57,7 @@ Rectangle {
             iconName: "edit-select-all"
             shortcut: StandardKey.SelectAll
             onTriggered: {
-                _browser.selectAllItems()
+                root.model.selectAllItems()
             }
         }
 
@@ -63,7 +66,7 @@ Rectangle {
             iconName: "reload"
             shortcut: StandardKey.Refresh
             onTriggered: {
-                _browser.refresh()
+                root.model.refresh()
             }
         }
         MenuSeparator{}
@@ -81,8 +84,8 @@ Rectangle {
             iconName: "folder-new"
             shortcut: StandardKey.New
             onTriggered: {
-                _browserAction.handleNew("Folder")
-                _browser.refresh()
+                root.bAction.handleNew("Folder")
+                root.model.refresh()
             }
         }
         MenuItem{
@@ -91,8 +94,8 @@ Rectangle {
             iconName: "document-new"
             shortcut: StandardKey.UnknownKey
             onTriggered: {
-                _browserAction.handleNew("File")
-                _browser.refresh()
+                root.bAction.handleNew("File")
+                root.model.refresh()
             }
         }
         MenuSeparator{}
@@ -102,7 +105,7 @@ Rectangle {
             shortcut: StandardKey.Copy
             iconName: "edit-copy"
             onTriggered: {
-                _browserAction.handleCopy()
+                root.bAction.handleCopy()
             }
         }
         MenuItem{
@@ -111,21 +114,21 @@ Rectangle {
             iconName: "edit-cut"
             shortcut: StandardKey.Cut
             onTriggered: {
-                _browserAction.handleMove()
+                root.bAction.handleMove()
             }
         }
         MenuItem{
             text:"Paste"
             iconName: "edit-paste"
             shortcut: StandardKey.Paste
-            enabled: _browserAction.isCache
+            enabled: root.bAction.isCache
             onTriggered: {
                 var destination=""
-                if(_browser.selectedItems.count == 1 && _browser.selectedItems.get(0).isFolder())
-                    destination = _browser.selectedItems.get(0).path
+                if(root.model.selectedItems.count == 1 && root.model.selectedItems.get(0).isFolder())
+                    destination = root.model.selectedItems.get(0).path
 
-                _browserAction.handlePaste(destination)
-                _browser.refresh()
+                root.bAction.handlePaste(destination)
+                root.model.refresh()
 
             }
         }
@@ -135,8 +138,8 @@ Rectangle {
             iconName: "edit-delete"
             shortcut: StandardKey.Deletes
             onTriggered: {
-                _browserAction.handleDelete()
-                _browser.refresh()
+                root.bAction.handleDelete()
+                root.model.refresh()
             }
         }
 
@@ -301,12 +304,7 @@ Rectangle {
                     }
 
                     else if(mouse.button == Qt.LeftButton){
-                        if(!model.object.isFolder()){
-                            if (model.object.isSupported()){
-                                handleGraphViewerClick(model.object.path)
-                            }
-                        }
-
+                        root.itemClicked(model.object.path, model.object.path, model.object.isFolder(), model.object.isSupported())
                         if ((mouse.modifiers & Qt.ShiftModifier))
                             root.model.selectItemTo(index)
                         else if ((mouse.modifiers & Qt.ControlModifier))
@@ -316,17 +314,15 @@ Rectangle {
                     }
                 }
                 onDoubleClicked: {
+                    root.itemDoubleClicked(model.object.path, model.object.path, model.object.isFolder(), model.object.isSupported())
+
+                    // we ensure this behavior by default
                     if (model.object.isFolder()) {
                         pushVisitedFolder(model.object.path)
                         root.model.currentPath = model.object.path
                     }
-
-                    // If it's an image, we create a node
-                    else if (model.object.isSupported())
-                        handleGraphViewerDoubleClick(model.object)
                 }
             }
-
         }
     }
 
@@ -442,4 +438,3 @@ Rectangle {
 //        }
 //    }
 }
-

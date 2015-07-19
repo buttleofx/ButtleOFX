@@ -42,6 +42,7 @@ class BrowserModel(QtCore.QObject):
         """
         QtCore.QObject.__init__(self, parent)
         self._currentPath = path
+        self._bufferBrowserItems = []  # used when recursive process: fix async signal connection when add object
         self._browserItems = []  # used only in python side
         self._browserItemsModel = QObjectListModel(self)  # used for UI
         self._filter = filterFiles
@@ -98,6 +99,7 @@ class BrowserModel(QtCore.QObject):
                     return
 
             self.clearItemsSync.emit()
+            self._bufferBrowserItems.clear()
             detectOption = sequenceParser.eDetectionDefaultWithDotFile
             if self._hideDotFiles:
                 detectOption = sequenceParser.eDetectionDefault
@@ -146,6 +148,7 @@ class BrowserModel(QtCore.QObject):
                 if not self._isSync:
                     itemToAdd.moveToThread(self.thread())
                 self.addItemSync.emit(itemToAdd, toModel)
+                self._bufferBrowserItems.append(itemToAdd)
 
     @QtCore.pyqtSlot(object, bool)
     def onAddItemSync(self, bItem, toModel=True):
@@ -168,21 +171,25 @@ class BrowserModel(QtCore.QObject):
     @QtCore.pyqtSlot(str, object)
     def searchRecursively(self, pattern, modelRequester):
         """
-        Process a recursive search. Disable thumbnail build for sub BrowserModel
+        Process a recursive search. Disable thumbnail build for sub BrowserModel.
+
+        :param pattern: user input search pattern
+        :param modelRequester: main model which starts the recursive search
         """
         logging.debug("Start recursive search: %s", self._currentPath)
         if modelRequester.getParallelThread().isStopped():
             return
 
-        listToBrowse = self._browserItems
+        listToBrowse = self._bufferBrowserItems
+        # Clear on the first level
         if self == modelRequester:
-            listToBrowse = self._browserItems.copy()  # copy: _browserItems deleted line after
             modelRequester.clearItemsSync.emit()
 
         for bItem in listToBrowse:  # 1st pass, all files in current dir
             logging.debug("processing %s" % bItem.getPath())
             if pattern.lower() in bItem.getName().lower():
                 bItem.moveToThread(modelRequester.thread())
+                # Build thumbnails manually only on matching files
                 bItem.startBuildThumbnail()
                 modelRequester.addItemSync.emit(bItem, True)
 
@@ -190,8 +197,11 @@ class BrowserModel(QtCore.QObject):
             if not modelRequester._isSync and modelRequester.getParallelThread().isStopped():
                 return
             if bItem.isFolder():
+                # Do not compute thumbnails on all elements, but only manually on matching files.
                 recursiveModel = BrowserModel(bItem.getPath(), True, self._showSeq, self._hideDotFiles, self._filter, buildThumbnail=False)
+                # Browse items for this folder and fill model
                 recursiveModel.loadData()
+                # Launch a search on all sub directories
                 recursiveModel.searchRecursively(pattern.lower(), modelRequester)
 
     def getFilter(self):
@@ -250,7 +260,7 @@ class BrowserModel(QtCore.QObject):
             self._browserItems.sort(key=lambda it: (it.getType(), it.getWeight()), reverse=rev)
 
         # sort by folder, file
-        self._browserItems.sort(key=lambda it: (it.getType()))
+        self._browserItems.sort(key=lambda it: (it.getType()))  # TODO: check needed
 
     def searchIndexItem(self, bItem):
         """
@@ -417,4 +427,5 @@ class BrowserModel(QtCore.QObject):
     loading = QtCore.pyqtProperty(bool, isLoading, notify=loadingChanged)
 
 
-globalBrowserModel = BrowserModel()
+globalBrowser = BrowserModel()
+globalBrowserDialog = BrowserModel()

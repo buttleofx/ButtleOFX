@@ -97,7 +97,7 @@ class Graph(object):
 
     def createNode(self, nodeType, x=20, y=20):
         """
-            Adds a node from the node list when a node is created.
+            Add a node from the node list when a node is created.
         """
         cmdCreateNode = CmdCreateNode(self, nodeType, x, y)
         cmdManager = globalCommandManager
@@ -105,14 +105,14 @@ class Graph(object):
 
     def createReaderNode(self, url, x, y):
         """
-            Creates a reader node when an image has been dropped in the graph.
+            Create a reader node from an image url to specific coordinates.
         """
         (_, extension) = os.path.splitext(url)
         try:
             nodeType = tuttle.getBestReader(extension)
         except Exception:
             logging.debug("Unknown format. Can't create the reader node for extension '%s'.", extension)
-            return
+            return None
 
         # We create the node.
         # We can't use a group of commands because we need the tuttle node to set the value, and this tuttle node is
@@ -120,8 +120,7 @@ class Graph(object):
         # creates a new node and set its value with the correct url.
         # See the definition of the class CmdCreateReaderNode.
         cmdCreateReaderNode = CmdCreateReaderNode(self, nodeType, x, y, url)
-        cmdManager = globalCommandManager
-        return cmdManager.push(cmdCreateReaderNode)
+        return globalCommandManager.push(cmdCreateReaderNode)
 
     def deleteConnection(self, connection):
         """
@@ -129,8 +128,7 @@ class Graph(object):
             Pushes a command in the CommandManager.
         """
         cmdDeleteConnection = CmdDeleteConnection(self, connection)
-        cmdManager = globalCommandManager
-        cmdManager.push(cmdDeleteConnection)
+        globalCommandManager.push(cmdDeleteConnection)
 
     def deleteNodeConnections(self, nodeName):
         """
@@ -147,8 +145,7 @@ class Graph(object):
             Pushes a command in the CommandManager.
         """
         cmdDeleteNodes = CmdDeleteNodes(self, nodes)
-        cmdManager = globalCommandManager
-        cmdManager.push(cmdDeleteNodes)
+        globalCommandManager.push(cmdDeleteNodes)
 
     # ## Others ## #
 
@@ -258,7 +255,7 @@ class Graph(object):
     def __str__(self):
         """
             Displays on terminal some data.
-            Usefull to debug the class.
+            Useful to debug the class.
         """
         str_list = []
 

@@ -171,43 +171,58 @@ class Graph(object):
                 return True
         return False
 
-    def nodeMoved(self, nodeName, newX, newY):
+    def moveSelectedNodes(self, offsetX, offsetY):
         """
-            This function pushes a cmdMoved in the globalCommandManager.
+            Move all selected nodes with an offset.
         """
         from buttleofx.data import globalButtleData
-        node = globalButtleData.getCurrentGraph().getNode(nodeName)
-        if not node:
-            logging.debug("no nodes nodeMoved -- graph : %s", globalButtleData.getCurrentGraph())
-
-        # What is the value of the movement (compared to the old position)?
-        oldX, oldY = node.getOldCoord()
-        xMovement = newX - oldX
-        yMovement = newY - oldY
-
-        print(oldX, oldY)
-        print(newX, newY)
 
         # If the node didn't really move, nothing is done
-        if (xMovement, xMovement) == (0, 0):
+        if (offsetX, offsetY) == (0, 0):
             return
 
         commands = []
-
         # We create a GroupUndoableCommands of CmdSetCoord for each selected node
         for selectedNodeWrapper in globalButtleData.getCurrentSelectedNodeWrappers():
-            # We get the needed informations for this node
+            # We get the needed information for this node
             selectedNode = selectedNodeWrapper.getNode()
             selectedNodeName = selectedNode.getName()
             oldX, oldY = selectedNode.getOldCoord()
 
             # We set the new coordinates of the node (each selected node is doing the same movement)
-            cmdMoved = CmdSetCoord(self, selectedNodeName, (oldX + xMovement, oldY + yMovement))
+            cmdMoved = CmdSetCoord(self, selectedNodeName, (oldX + offsetX, oldY + offsetY))
 
             commands.append(cmdMoved)
 
         # Then we push the group of commands
         globalCommandManager.push(GroupUndoableCommands(commands, "Move nodes"))
+
+    def moveNode(self, nodeName, newX, newY):
+        """
+            Move all selected nodes to get nodeName at a specific position.
+        """
+        from buttleofx.data import globalButtleData
+        node = globalButtleData.getActiveGraph().getNode(nodeName)
+        if not node:
+            logging.debug("no nodes moveNode -- graph : %s", globalButtleData.getActiveGraph())
+            return
+
+        # What is the value of the movement (compared to the old position)?
+        oldX, oldY = node.getOldCoord()
+
+        logging.debug("Move node from (%s, %s) to (%s, %s)", oldX, oldY, newX, newY)
+
+        self.moveSelectedNodes(newX - oldX, newY - oldY)
+
+    def hardClear(self):
+        """
+        Clear all nodes and connections.
+        Also remove all the nodes from the TuttleGraph.
+        :warning: that can break the undo stack.
+        """
+        self._graphTuttle.clear()
+        self._nodes = []
+        self._connections = []
 
     def object_to_dict(self):
         """

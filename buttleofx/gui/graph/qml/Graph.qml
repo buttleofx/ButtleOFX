@@ -58,9 +58,7 @@ Rectangle {
             // We assign the mosquito only if there is only one node selected
             if (selectedNodes.count == 1) {
                 var node = selectedNodes.get(0)
-                _buttleData.currentViewerNodeWrapper = node
-                _buttleData.currentViewerFrame = 0
-                _buttleData.assignNodeToViewerIndex(node, 0)
+                _buttleData.setActiveNode("graphEditor", node)
                 _buttleEvent.emitViewerChangedSignal()
             }
         }
@@ -150,15 +148,7 @@ Rectangle {
                 return
             }
 
-            _buttleData.currentGraphWrapper = _buttleData.graphWrapper
-            _buttleData.currentGraphIsGraph()
-            // If before the viewer was showing an image from the brower, we change the currentView
-            if (_buttleData.currentViewerIndex > 9) {
-                _buttleData.currentViewerIndex = player.lastView
-                if (player.lastNodeWrapper != undefined)
-                    _buttleData.currentViewerNodeWrapper = player.lastNodeWrapper
-                player.changeViewer(player.lastView)
-            }
+            _buttleData.setActiveGraphId("graphEditor")
 
             for (var urlIndex in drop.urls) {
                 // TODO: screenToScene to take scale into account
@@ -178,16 +168,7 @@ Rectangle {
         keys: "internFileDrag"
 
         onDropped: {
-            _buttleData.currentGraphWrapper = _buttleData.graphWrapper
-            _buttleData.currentGraphIsGraph()
-            // If before the viewer was showing an image from the brower, we change the currentView
-            if (_buttleData.currentViewerIndex > 9) {
-                _buttleData.currentViewerIndex = player.lastView
-                if (player.lastNodeWrapper != undefined)
-                    _buttleData.currentViewerNodeWrapper = player.lastNodeWrapper
-                player.changeViewer(player.lastView)
-            }
-
+            _buttleData.setActiveGraphId("graphEditor")
             for (var urlIndex in drag.source.selectedFiles) {
                 _buttleManager.nodeManager.dropFile(drag.source.selectedFiles[urlIndex], drag.x - m.graphRoot.originX + 10*urlIndex,
                                                     drag.y - m.graphRoot.originY + 10*urlIndex)

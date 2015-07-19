@@ -12,10 +12,9 @@ class TimerPlayer(QtQuick.QQuickItem):
     def __init__(self, parent=None):
         QtQuick.QQuickItem.__init__(self, parent)
         self._timer = QtCore.QTimer()
-        self._timer.timeout.connect(self.nextFrame)  # Initialize the timer
+        self._timer.timeout.connect(self.playNextFrame)  # Initialize the timer
         self._fps = 25
-        self._speed = 1000/self._fps  # Delay between frames in milliseconds
-        self._frame = 0
+        self._frame = 11
         self._fps = 25
         self._nbFrames = 1
         self._processGraph = None
@@ -32,11 +31,12 @@ class TimerPlayer(QtQuick.QQuickItem):
         # Get the name of the currentNode of the viewer
         node = globalButtleData.getCurrentViewerNodeName()
         # Initialization of the process graph
-        graph = globalButtleData.getCurrentGraph().getGraphTuttle()
+        graph = globalButtleData.getActiveGraph().getGraphTuttle()
 
         # timeRange between the frames of beginning and end (first frame, last frame, step)
-        timeRange = tuttle.TimeRange(self._frame, self._nbFrames, 1)
-        self._processOptions = tuttle.ComputeOptions(self._frame, self._nbFrames, 1)
+        # TODO: faca
+        timeRange = tuttle.TimeRange(self.getFrame(), self.getFrame() + self.getNbFrames(), 1)
+        self._processOptions = tuttle.ComputeOptions(self.getFrame(), self.getNbFrames(), 1)
 
         processGraph = tuttle.ProcessGraph(self._processOptions, graph, [node], tuttle.core().getMemoryCache())
         processGraph.setup()
@@ -66,11 +66,11 @@ class TimerPlayer(QtQuick.QQuickItem):
         # Get the name of the currentNode of the viewer
         node = globalButtleData.getCurrentViewerNodeName()
         # Initialization of the process graph
-        graph = globalButtleData.getCurrentGraph().getGraphTuttle()
+        graph = globalButtleData.getActiveGraph().getGraphTuttle()
 
         # timeRange between the frames of beginning and end (first frame, last frame, step)
-        timeRange = tuttle.TimeRange(self._frame, self._nbFrames, 1)
-        self._processOptions = tuttle.ComputeOptions(self._frame, self._nbFrames, 1)
+        timeRange = tuttle.TimeRange(self.getFrame(), self.getNbFrames(), 1)
+        self._processOptions = tuttle.ComputeOptions(self.getFrame(), self.getNbFrames(), 1)
 
         processGraph = tuttle.ProcessGraph(self._processOptions, graph, [node], tuttle.core().getMemoryCache())
         processGraph.setup()
@@ -80,16 +80,11 @@ class TimerPlayer(QtQuick.QQuickItem):
         globalButtleData.setProcessGraph(processGraph)
         globalButtleData.setVideoIsPlaying(True)
 
-        self._speed = 1000 / self._fps
-        self._timer.start(self._speed)
+        self._timer.start(self.getOneFrameDuration())
 
     @QtCore.pyqtSlot()
     def previousFrame(self):
-        if self._frame > 0:
-            self._frame = self._frame - 1
-        else:
-            return
-        self.framePlayerChanged.emit()
+        self.setFrame(self.getFrame() - 1)
 
     @QtCore.pyqtSlot()
     def stop(self):
@@ -104,50 +99,58 @@ class TimerPlayer(QtQuick.QQuickItem):
             globalButtleData.setProcessGraph(None)
 
         # Return to the beginning of the video
-        self._frame = 0
-        self.framePlayerChanged.emit()
+        self.setFrame(0)
 
     # ######################################## Methods private to this class ######################################## #
 
     # ## Getters ## #
 
+    @QtCore.pyqtSlot(result=int)
     def getFrame(self):
         return self._frame
 
+    @QtCore.pyqtSlot(result=float)
+    def getOneFrameDuration(self):
+        """
+        :return: Duration between frames in milliseconds
+        """
+        return 1000.0 / self._fps
+
+    @QtCore.pyqtSlot(result=float)
     def getFPS(self):
         return self._fps
 
+    @QtCore.pyqtSlot(result=int)
     def getNbFrames(self):
-        return self.nbFrames
+        return self._nbFrames
 
     # ## Setters ## #
 
+    @QtCore.pyqtSlot(float)
     def setFrame(self, frame):
-        if int(frame) >= self._nbFrames:
-            logging.debug('setFrame, ignore: frame outside bounds')
-            self.pause()
-            return
-
-        if int(frame) == self._nbFrames - 1:
-            self.pause()
-
-        self._frame = int(frame)
+        self._frame = frame
         self.framePlayerChanged.emit()
 
+    @QtCore.pyqtSlot(float)
     def setFPS(self, fps):
         self._fps = fps
         self.fpsVideoChanged.emit()
 
+    @QtCore.pyqtSlot(int)
     def setNbFrames(self, nbFrames):
         self._nbFrames = nbFrames
         self.nbFramesChanged.emit()
 
+    # DO NOT declare this function as pyqtSlot, else the Qt connection doesn't work and breaks everything.
+    # @QtCore.pyqtSlot()
+    def playNextFrame(self):
+        # TODO: faca
+        # If time outside timeDomain self.pause()
+        self.nextFrame()
+
+    @QtCore.pyqtSlot()
     def nextFrame(self):
-        if self._frame < self._nbFrames - 1:
-            self._frame = self._frame + 1
-        else:
-            return
-        self.framePlayerChanged.emit()
+        self.setFrame(self.getFrame() + 1)
 
     # ############################################# Data exposed to QML ############################################# #
 
@@ -155,6 +158,6 @@ class TimerPlayer(QtQuick.QQuickItem):
     fpsVideoChanged = QtCore.pyqtSignal()
     nbFramesChanged = QtCore.pyqtSignal()
 
-    frame = QtCore.pyqtProperty(float, getFrame, setFrame, notify=framePlayerChanged)
+    frame = QtCore.pyqtProperty(int, getFrame, setFrame, notify=framePlayerChanged)
     fps = QtCore.pyqtProperty(float, getFPS, setFPS, notify=fpsVideoChanged)
     nbFrames = QtCore.pyqtProperty(int, getNbFrames, setNbFrames, notify=nbFramesChanged)

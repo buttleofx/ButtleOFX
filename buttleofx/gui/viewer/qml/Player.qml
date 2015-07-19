@@ -12,9 +12,6 @@ Item {
 
     // Remark: in python if there are ten frames, they are numbered from 0 to 9 so we need some time to add 1 for display
     property variant node
-    property real nodeFps: node ? node.fps : 25
-    property int nodeNbFrames: node ? node.nbFrames : 1
-    property real nodeDurationSeconds: node ? node.nbFrames/node.fps : 0
     property bool isPlaying: false
 
     property int lastView: 1 // The last view where the user was
@@ -22,48 +19,44 @@ Item {
 
     TimerPlayer {
         //Class Timer defined in python
-        // property associated: frame, acces with timer.frame
-        id: timer
-        fps: nodeFps
-        nbFrames: nodeNbFrames
+        // property associated: frame, access with timer.frame
+        id: timerPlayer
+        fps: node ? node.fps : 25
+        nbFrames: node ? node.nbFrames : 1
     }
 
-    property variant timer: timer
+    property variant timer: timerPlayer
 
-    // Displays an integer with 2 digits
+    // Displays an integer with a padding of 2 digits
     function with2digits(n) {
         return n > 9 ? "" + n: "0" + n;
     }
 
-    // Returns the string displayed under the viewer. It's the current time.
-    function getTimePosition() {
-        var totalHours = Math.floor(nodeDurationSeconds / 3600)
-        var totalMinutes = Math.floor((nodeDurationSeconds - totalHours*3600) / 60)
-        var totalSeconds = Math.floor(nodeDurationSeconds - totalHours*3600 - totalMinutes*60)
+    function frameToTimecode(frames, fps) {
+        return frames
+        var seconds = frames / fps
 
-        var durationElapsedSeconds = timer ? Math.floor((timer.frame + 1) / timer.fps) : 0
-        var elapsedHours = Math.floor(durationElapsedSeconds / 3600)
-        var elapsedMinutes = Math.floor((durationElapsedSeconds - elapsedHours*3600) / 60)
-        var elapsedSeconds = Math.floor(durationElapsedSeconds - elapsedHours*3600 - elapsedMinutes*60)
-
-        return with2digits(elapsedHours) + ":" + with2digits(elapsedMinutes) + ":" + with2digits(elapsedSeconds) + " / " + with2digits(totalHours) + ":" + with2digits(totalMinutes) + ":" + with2digits(totalSeconds)
+        var _hours = Math.floor(seconds / 3600)
+        var _minutes = Math.floor((seconds - _hours*3600) / 60)
+        var _seconds = Math.floor(seconds - _hours*3600 - _minutes*60)
+        var _frames = frames - Math.floor((_hours*3600 - _minutes*60 - _seconds))*fps
+        return with2digits(_hours) + ":" + with2digits(_minutes) + ":" + with2digits(_seconds) + "." + with2digits(_frames)
     }
 
-    // Changes the viewer: displays the vew n°indexViewer.
-    // It updates in ButtleData all informations of the current viewer: the nodeWrapper, the viewerIndex, the frame, and it sets the right frame on the timeline.
+    // Returns the string displayed under the viewer. It's the current time.
+    function getTimePosition() {
+        if(node == undefined) {
+            return frameToTimecode(timer.frame, timer.fps)
+        }
+
+        // First / Current / Last Time
+        return frameToTimecode(node.firstFrame, timer.fps) + " / " + frameToTimecode(timer.frame, timer.fps) + " / " + frameToTimecode(node.lastFrame, timer.fps)
+    }
+
+    // Change viewer index (for the GraphEditor)
     function changeViewer(indexViewer) {
-        // First we save the frame for the current node, to be able to retrieve the frame later
-        if (_buttleData.currentViewerNodeWrapper != null)
-            _buttleData.assignNodeToViewerIndex(_buttleData.currentViewerNodeWrapper, timer.frame)
-
-        // Then we change the viewer
-        _buttleData.currentViewerIndex = indexViewer
-        _buttleData.currentViewerNodeWrapper = _buttleData.getNodeWrapperByViewerIndex(indexViewer)
-
-        // And we change the frame of the viewer (if there isn't a node in this view, returns 0)
-        var frame = _buttleData.getFrameByViewerIndex(indexViewer)
-        _buttleData.currentViewerFrame = frame
-        timer.frame = frame
+        // _buttleData.currentViewerIndex = indexViewer
+        // _buttleData.currentViewerNodeWrapper = _buttleData.getNodeWrapperByViewerIndex(indexViewer)
 
         _buttleEvent.emitViewerChangedSignal()
     }
@@ -73,7 +66,9 @@ Item {
     }
 
     onNodeChanged: {
-        // console.log("Node Changed: ", node)
+        if(node) {
+            timerPlayer.frame = node.firstFrame
+        }
     }
 
     Tab {
@@ -222,7 +217,7 @@ Item {
                         TimelineTools {
                             id: timelineTools
                             timer: timer
-                            nbFrames: player.nodeNbFrames
+                            nbFrames: timerPlayer.nbFrames
                         }
                     }
 
@@ -385,15 +380,15 @@ Item {
                                 // -10 because of margins
 
                                 //cursorTimeline.x = mouse.x - 10 - cursorTimeline.width/2
-                                //timer.frame = (cursorTimeline.x + cursorTimeline.width/2) * nodeNbFrames /barTimeline.width;
+                                //timer.frame = (cursorTimeline.x + cursorTimeline.width/2) * timerPlayer.nbFrames /barTimeline.width;
 
-                                timer.frame = (mouse.x - 10) * nodeNbFrames /barTimeline.width;
+                                timer.frame = (mouse.x - 10) * timerPlayer.nbFrames /barTimeline.width;
                                 //timer.pause()
                             }
                         }
                         /* blocks the cursor even if window isn't resize...
                            onWidthChanged: {
-                           cursorTimeline.x = timer.frame * (barTimeline.width - cursorTimeline.width/2) / nodeNbFrames;
+                           cursorTimeline.x = timer.frame * (barTimeline.width - cursorTimeline.width/2) / timerPlayer.nbFrames;
                            }
                         */
                     }
@@ -404,7 +399,7 @@ Item {
                         anchors.verticalCenter: parent.verticalCenter
 
                         property int frame: timer ? timer.frame : 0
-                        x: barTimeline.x + (frame * barTimeline.width / nodeNbFrames) - cursorTimeline.width/2
+                        x: barTimeline.x + (frame * barTimeline.width / timerPlayer.nbFrames) - cursorTimeline.width/2
                         height: 10
                         width: 5
                         radius: 1
@@ -424,7 +419,7 @@ Item {
                                 timer.launchProcessGraph()  // used this to use the processGraph (should be faster)
                             }
                             onPositionChanged: {
-                                timer.frame = (cursorTimeline.x + cursorTimeline.width/2) * nodeNbFrames / barTimeline.width
+                                timer.frame = (cursorTimeline.x + cursorTimeline.width/2) * timerPlayer.nbFrames / barTimeline.width
                             }
                             onReleased: {
                                 timer.pause()  // to close the processGraph launch with onPressed

@@ -12,7 +12,7 @@ from buttleofx.gui.graph.connection import ConnectionWrapper
 class GraphWrapper(QtCore.QObject):
     """
         Class GraphWrapper defined by:
-            - _view : to have the view object
+            - _parent : the parent Qt object
             - _nodeWrappers : list of node wrappers (the python objects we use to communicate with the QML)
             - _connectionWrappers : list of connections wrappers (the python objects we use to communicate with the QML)
             - _zMax : to manage the depth of the graph (in QML)
@@ -21,12 +21,10 @@ class GraphWrapper(QtCore.QObject):
         This class is a view (= a map) of a graph.
     """
 
-    _resize = False
+    def __init__(self, graph, parent):
+        QtCore.QObject.__init__(self, parent)
 
-    def __init__(self, graph, view):
-        QtCore.QObject.__init__(self, view)
-
-        self._view = view
+        self._parent = parent
 
         self._nodeWrappers = QObjectListModel(self)
         self._connectionWrappers = QObjectListModel(self)
@@ -234,17 +232,17 @@ class GraphWrapper(QtCore.QObject):
         # we search the right node in the node list
         node = self._graph.getNode(nodeName)
         if node:
-            nodeWrapper = NodeWrapper(node, self._view)
+            nodeWrapper = NodeWrapper(node, self._parent)
             self._nodeWrappers.append(nodeWrapper)
 
     def createConnectionWrapper(self, connection):
         """
             Creates a connection wrapper and add it to the connectionWrappers list.
         """
-        conWrapper = ConnectionWrapper(connection, self._view)
+        conWrapper = ConnectionWrapper(connection, self._parent)
         self._connectionWrappers.append(conWrapper)
 
-    def getGraphMapped(self):
+    def getGraph(self):
         """
             Returns the graph (the node list and the connection list), mapped by this graphWrapper.
         """
@@ -276,13 +274,6 @@ class GraphWrapper(QtCore.QObject):
             Returns the depth of the QML graph
         """
         return self._zMax
-
-    def resize(self):
-        return self._resize
-
-    def setResize(self, value):
-        self._resize = value
-        self.currentSizeChanged.emit()
 
     def setTmpMoveNodeX(self, value):
         self.tmpMoveNode[0] = value
@@ -340,7 +331,7 @@ class GraphWrapper(QtCore.QObject):
             str_list.append(con.__str__())
             str_list.append("\n")
 
-        str_list.append((self.getGraphMapped()).__str__())
+        str_list.append((self.getGraph()).__str__())
 
         return ''.join(str_list)
 
@@ -356,6 +347,3 @@ class GraphWrapper(QtCore.QObject):
 
     bboxChanged = QtCore.pyqtSignal()
     bbox = QtCore.pyqtProperty(QtGui.QVector4D, getBBox, notify=bboxChanged)
-
-    currentSizeChanged = QtCore.pyqtSignal()
-    resize = QtCore.pyqtProperty(bool, resize, notify=currentSizeChanged)

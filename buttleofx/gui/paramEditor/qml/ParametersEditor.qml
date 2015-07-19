@@ -255,11 +255,8 @@ Item {
                                     tuttleParamContent.visible = true
                                 }
                             } else if (mouse.button == Qt.MidButton) {
-                                _buttleData.currentGraphWrapper = _buttleData.graphWrapper
-                                _buttleData.currentViewerNodeWrapper = paramNode.currentParamNode
-                                _buttleData.currentViewerFrame = 0
                                 // We assign the node to the viewer, at the frame 0
-                                _buttleData.assignNodeToViewerIndex(paramNode.currentParamNode, 0)
+                                _buttleData.setActiveNode("graphEditor", paramNode.currentParamNode)
                                 _buttleEvent.emitViewerChangedSignal()
                             }
                         }
@@ -270,11 +267,7 @@ Item {
                         keys: "mosquitoMouseArea"
 
                         onDropped: {
-                            _buttleData.currentGraphWrapper = _buttleData.graphWrapper
-                            _buttleData.currentViewerNodeWrapper = paramNode.currentParamNode
-                            _buttleData.currentViewerFrame = 0
-                            // We assign the node to the viewer, at the frame 0
-                            _buttleData.assignNodeToViewerIndex(paramNode.currentParamNode, 0)
+                            _buttleData.setActiveNode("graphEditor", paramNode.currentParamNode)
                             _buttleEvent.emitViewerChangedSignal()
                         }
                     }
@@ -581,9 +574,9 @@ Item {
 
                     _buttleData.currentGraphWrapper = _buttleData.graphWrapper
                     if (previousNode == undefined)
-                        _buttleManager.nodeManager.creationNode("_buttleData.graph", object, 0, 0)
+                        _buttleManager.nodeManager.creationNode("graphEditor", object, 0, 0)
                     else
-                        _buttleManager.nodeManager.creationNode("_buttleData.graph", object, previousNode.xCoord+140, previousNode.yCoord)
+                        _buttleManager.nodeManager.creationNode("graphEditor", object, previousNode.xCoord+140, previousNode.yCoord)
 
                     // If there is only one node, we don't connect it
                     if (previousNode != undefined){

@@ -76,16 +76,22 @@ Rectangle {
         var selectedItem = null
 
         // enter inside folder on enter: change model current path
-        // use clicked signals: behavior wanted
+        // use clicked signals: wanted behavior
         if(k === Qt.Key_Enter || k === Qt.Key_Return){
             var indexSelected = grid.currentIndex
             selectedItem = root.model.fileItems.get(indexSelected)
 
-            if(selectedItem.isFolder())
+            if(selectedItem.isFolder()){
                 root.model.currentPath = selectedItem.path
+                return
+            }
+
             root.model.selectItem(indexSelected)
             root.itemDoubleClicked(selectedItem.path, selectedItem.path, selectedItem.isFolder(), selectedItem.isSupported())
             root.itemClicked(selectedItem.path, selectedItem.path, selectedItem.isFolder(), selectedItem.isSupported())
+
+            if(!selectedItem.isSupported())
+                selectedItem.launchDefaultApplication()
         }
 
         if(k === Qt.Key_Up)
@@ -99,7 +105,12 @@ Rectangle {
         else
             return
 
-        root.model.selectItem(grid.currentIndex)
+        if(event.modifiers & Qt.ShiftModifier)
+            root.model.selectItemTo(grid.currentIndex)
+        else
+            root.model.selectItem(grid.currentIndex)
+
+
     }
 
     MouseArea {
@@ -117,10 +128,40 @@ Rectangle {
         }
     }
 
+    MessageDialog {
+        id: defaultApplicationFail
+        title: "Error while opening file whith system"
+        text: ""
+    }
+
     Menu{
-        //TODO: REDO architecture
         id:actionsMenu
         property bool showActionOnItem: false
+
+        MenuItem{
+            id: defaultApplication
+            text:"Open system application"
+            iconName: "document-open"
+            shortcut: StandardKey.Open
+            visible:actionsMenu.showActionOnItem
+
+            onTriggered: {
+                var itemsSelected = root.model.selectedItems
+                var failedFiles = []
+
+                for(var i=0; i<itemsSelected.count; ++i){
+                    if(!itemsSelected.get(i).launchDefaultApplication())
+                        failedFiles.push(itemsSelected.get(i).path)
+                }
+
+                if(failedFiles.length){
+                    defaultApplicationFail.text = 'Problem occured while opening: \n ' + failedFiles.join() + ' file' + (failedFiles.length > 1 ? 's' : '') + '.'
+                    defaultApplicationFail.visible = true
+                }
+
+            }
+        }
+
 
         MenuItem{
             id: select

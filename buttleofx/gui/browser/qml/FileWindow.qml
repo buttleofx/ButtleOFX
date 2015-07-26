@@ -130,7 +130,7 @@ Rectangle {
 
     MessageDialog {
         id: defaultApplicationFail
-        title: "Error while opening file whith system"
+        title: "Error while opening file with system"
         text: ""
     }
 

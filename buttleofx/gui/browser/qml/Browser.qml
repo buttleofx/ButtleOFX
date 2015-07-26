@@ -91,13 +91,9 @@ Rectangle {
          }
     }
 
-    Keys.onPressed: {
+    Keys.onReleased: {
         if ((event.modifiers & Qt.ControlModifier) && (event.key == Qt.Key_L)){
             navBar.toggleUrlEdit()
-        }
-
-        if (event.key == Qt.Key_Backspace){
-            popVisitedFolder()
         }
     }
 }

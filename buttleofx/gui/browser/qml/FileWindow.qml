@@ -7,7 +7,7 @@ import QtQuick.Dialogs 1.1
 
 Rectangle {
     id: root
-    color: "transparent"
+    color: 'transparent'
 
     // defaults slots
     function onItemClickedSlot(pathImg){
@@ -51,6 +51,57 @@ Rectangle {
     signal pushVisitedFolder(string path)
 
     Keys.onEscapePressed: root.model.unselectAllItems()
+
+
+    Keys.onPressed: {
+        if(event.key === Qt.Key_F5){
+            root.model.loadData('')
+        }
+    }
+
+    // key navigation between browser items
+    Keys.onReleased: {
+        var k = event.key
+        if(k === Qt.Key_Backspace && (event.modifiers & Qt.ShiftModifier)){
+            popVisitedFolder()
+        }
+
+        else if(k === Qt.Key_Backspace){
+            if(model.currentPath !== "/" && model.currentPath.trim() !== ""){
+                pushVisitedFolder(model.parentFolder)
+                root.model.currentPath = root.model.parentFolder
+            }
+        }
+
+        var selectedItem = null
+
+        // enter inside folder on enter: change model current path
+        // use clicked signals: behavior wanted
+        if(k === Qt.Key_Enter || k === Qt.Key_Return){
+            var indexSelected = grid.currentIndex
+            selectedItem = root.model.fileItems.get(indexSelected)
+
+            if(selectedItem.isFolder())
+                root.model.currentPath = selectedItem.path
+            root.model.selectItem(indexSelected)
+            root.itemDoubleClicked(selectedItem.path, selectedItem.path, selectedItem.isFolder(), selectedItem.isSupported())
+            root.itemClicked(selectedItem.path, selectedItem.path, selectedItem.isFolder(), selectedItem.isSupported())
+        }
+
+        if(k === Qt.Key_Up)
+            grid.moveCurrentIndexUp()
+        else if (k === Qt.Key_Down)
+            grid.moveCurrentIndexDown()
+        else if (k === Qt.Key_Left)
+            grid.moveCurrentIndexLeft()
+        else if (k === Qt.Key_Right)
+            grid.moveCurrentIndexRight()
+        else
+            return
+
+        root.model.selectItem(grid.currentIndex)
+    }
+
     MouseArea {
         anchors.fill: parent
         acceptedButtons: Qt.LeftButton | Qt.RightButton
@@ -64,10 +115,6 @@ Rectangle {
             if(mouse.button == Qt.LeftButton)
                 root.model.unselectAllItems()
         }
-    }
-
-    Keys.onPressed: {
-        //TODO: temporary shortcut menu: overload ambiguous
     }
 
     Menu{
@@ -147,7 +194,7 @@ Rectangle {
             shortcut: StandardKey.Paste
             enabled: root.bAction.isCache
             onTriggered: {
-                var destination=""
+                var destination = ""
                 if(root.model.selectedItems.count == 1 && root.model.selectedItems.get(0).isFolder())
                     destination = root.model.selectedItems.get(0).path
 
@@ -213,8 +260,17 @@ Rectangle {
             model: root.model.fileItems
             delegate: component
 
+            keyNavigationWraps: true
             boundsBehavior: Flickable.StopAtBounds
-            focus: true
+
+            // set the properly current selected when model ends loading
+            Connections{
+                target: root.model
+                onLoadingChanged: {
+                    if(!root.model.loading)
+                        grid.currentIndex = -1
+                }
+            }
         }
     }
 
@@ -227,7 +283,7 @@ Rectangle {
             width: grid.cellWidth - 20
             height: icon.height + fileName.height
 
-            color: (model.object.isSelected) ? "#666666" : "transparent"
+            color: model.object.isSelected ? "#666666" : "transparent"
             radius: 2
 
             Column {
@@ -329,6 +385,8 @@ Rectangle {
 
                     else if(mouse.button == Qt.LeftButton){
                         root.itemClicked(model.object.path, model.object.path, model.object.isFolder(), model.object.isSupported())
+                        grid.currentIndex = index
+
                         if ((mouse.modifiers & Qt.ShiftModifier))
                             root.model.selectItemTo(index)
                         else if ((mouse.modifiers & Qt.ControlModifier))

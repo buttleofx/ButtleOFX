@@ -311,7 +311,7 @@ class BrowserModel(QtCore.QObject):
 
     @QtCore.pyqtSlot(result=str)
     def getParentPath(self):
-        parent = op.dirname(self.currentPath.rstrip('/'))
+        parent = op.dirname(self._currentPath.rstrip('/'))
         return parent + ("/" if not parent else '')
 
     @QtCore.pyqtSlot(result=QObjectListModel)

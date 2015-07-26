@@ -21,7 +21,6 @@ Rectangle {
             texteditPath.forceActiveFocus()
     }
 
-    Component.onCompleted: toggleUrlEdit(true)
 
     QtObject {
         id: m;

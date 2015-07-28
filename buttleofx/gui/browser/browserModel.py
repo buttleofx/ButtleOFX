@@ -35,7 +35,7 @@ class BrowserModel(QtCore.QObject):
     loadingChanged = QtCore.pyqtSignal()
 
     def __init__(self, path=op.expanduser("~/"), sync=False, showSeq=True, hideDotFiles=True, filterFiles="*",
-                 parent=None, buildThumbnail=True):
+                 parent=None, buildThumbnail=True, watchCurrentDir=False):
         """
             Engine of browser user interaction with browserUI
             :param parent: Qt parent
@@ -55,6 +55,8 @@ class BrowserModel(QtCore.QObject):
         self._buildThumbnails = buildThumbnail
         self._listFolderNavBar = QObjectListModel(self)
         self._isSync = sync
+        self._fileWatcher = QtCore.QFileSystemWatcher(self)
+        self._watchCurrentDir = watchCurrentDir
         self.initSlotConnection(sync)
 
     def initSlotConnection(self, isSync):
@@ -68,12 +70,14 @@ class BrowserModel(QtCore.QObject):
             self.sortBrowserItems.connect(self.onSortBrowserItems, QtCore.Qt.DirectConnection)  # sort only if async
         self.addItemSync.connect(self.onAddItemSync, typeConnection)
         self.clearItemsSync.connect(self.onClearItemsSync, typeConnection)
+        self._fileWatcher.directoryChanged.connect(lambda: self.loadData())
 
     def getParallelThread(self):
         return self._parallelThread
 
     @QtCore.pyqtSlot(str)
     def loadData(self, recursivePattern=''):
+        self.attachWatcher(self._currentPath)
         if self._isSync:
             self.updateItems(recursivePattern)
         else:
@@ -214,6 +218,20 @@ class BrowserModel(QtCore.QObject):
 
     def getCurrentPath(self):
         return self._currentPath
+
+    def attachWatcher(self, path):
+        """
+        Auto refresh: change the watched path
+        """
+        if not self._watchCurrentDir:
+            return
+        if self._fileWatcher.directories():
+            self._fileWatcher.removePaths(self._fileWatcher.directories())
+
+        if not op.exists(path):
+            # don't attach watcher if path doesn't exist
+            return
+        self._fileWatcher.addPath(path)
 
     @QtCore.pyqtSlot(str)
     def setCurrentPath(self, newCurrentPath):
@@ -425,7 +443,3 @@ class BrowserModel(QtCore.QObject):
     sortOn = QtCore.pyqtProperty(str, getFieldToSort, notify=sortOnChanged)
     selectedItems = QtCore.pyqtProperty(QObjectListModel, getSelectedItems, notify=modelChanged)
     loading = QtCore.pyqtProperty(bool, isLoading, notify=loadingChanged)
-
-
-globalBrowser = BrowserModel()
-globalBrowserDialog = BrowserModel()

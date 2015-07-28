@@ -12,7 +12,6 @@ from buttleofx.gui.browser.actions.concreteActions.copy import Copy
 from buttleofx.gui.browser.actions.concreteActions.move import Move
 from buttleofx.gui.browser.actions.concreteActions.create import Create
 from buttleofx.gui.browser.actions.concreteActions.delete import Delete
-from buttleofx.gui.browser.browserModel import globalBrowserDialog, globalBrowser
 
 
 class BrowserAction(QtCore.QObject):
@@ -102,7 +101,3 @@ class BrowserAction(QtCore.QObject):
 
     # cache empty ?
     isCache = QtCore.pyqtProperty(bool, isEmptyCache, notify=cacheChanged)
-
-
-globalBrowserAction = BrowserAction(globalBrowser)
-globalBrowserActionDialog = BrowserAction(globalBrowserDialog)

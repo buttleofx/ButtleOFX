@@ -38,8 +38,8 @@ from buttleofx.data import globalButtleData
 from buttleofx.event import globalButtleEvent
 from buttleofx.manager import globalButtleManager
 from buttleofx.core.undo_redo.manageTools import globalCommandManager
-from buttleofx.gui.browser.browserModel import BrowserModel, globalBrowser, globalBrowserDialog
-from buttleofx.gui.browser.actions.browserAction import globalBrowserAction, globalBrowserActionDialog
+from buttleofx.gui.browser.browserModel import BrowserModel
+from buttleofx.gui.browser.actions.browserAction import BrowserAction
 from buttleofx.gui.browser.actions.browserAction import globalActionManager
 
 from PyQt5 import QtCore, QtGui, QtQml, QtQuick, QtWidgets
@@ -215,7 +215,6 @@ def main(argv, app):
     QtQml.qmlRegisterType(BrowserModel, "BrowserModel", 1, 0, "BrowserModel")
     # Add new QML type
     QtQml.qmlRegisterType(Finder, "FolderListViewItem", 1, 0, "FolderListView")
-
     QtQml.qmlRegisterType(GLViewportImpl, "Viewport", 1, 0, "GLViewport")
 
     # Init undo_redo contexts
@@ -232,6 +231,12 @@ def main(argv, app):
     globalButtleData.init(engine, currentFilePath)
     # Manager
     buttleManager = globalButtleManager.init()
+    # Browser: need to be initialized into main app, QFileSystemWatcher needs to be init into QThread
+    browser = BrowserModel(watchCurrentDir=True)
+    browserDialog = BrowserModel(watchCurrentDir=True)  # open, save
+    # browser actions
+    browserAction = BrowserAction(browser)
+    browserActionDialog = BrowserAction(browserDialog)
 
     parser = argparse.ArgumentParser(description=('A command line to execute ButtleOFX, an opensource compositing '
                                                   'software. If you pass a folder as an argument, ButtleOFX will '
@@ -239,17 +244,17 @@ def main(argv, app):
     parser.add_argument('folder', nargs='?', help='Folder to browse')
     args = parser.parse_args()
 
-    globalBrowser.setCurrentPath(os.path.abspath(args.folder) if args.folder else globalBrowser.getHomePath())
+    browser.setCurrentPath(os.path.abspath(args.folder) if args.folder else browser.getHomePath())
     # Expose data to QML
     rc = engine.rootContext()
     rc.setContextProperty("_buttleApp", app)
     rc.setContextProperty("_buttleData", globalButtleData)
     rc.setContextProperty("_buttleManager", buttleManager)
     rc.setContextProperty("_buttleEvent", globalButtleEvent)
-    rc.setContextProperty("_browser", globalBrowser)
-    rc.setContextProperty("_browserDialog", globalBrowserDialog)
-    rc.setContextProperty("_browserAction", globalBrowserAction)
-    rc.setContextProperty("_browserActionDialog", globalBrowserActionDialog)
+    rc.setContextProperty("_browser", browser)
+    rc.setContextProperty("_browserDialog", browserDialog)
+    rc.setContextProperty("_browserAction", browserAction)
+    rc.setContextProperty("_browserActionDialog", browserActionDialog)
     rc.setContextProperty("_actionManager", globalActionManager)
 
     iconPath = os.path.join(currentFilePath, "../blackMosquito.png")
@@ -291,8 +296,8 @@ def main(argv, app):
     aFilter = EventFilter(app, engine)
     app.installEventFilter(aFilter)
 
-    globalBrowser.loadData()
-    globalBrowserDialog.loadData()
+    browser.loadData()
+    browserDialog.loadData()
 
     with globalActionManager:
         topLevelItem.show()

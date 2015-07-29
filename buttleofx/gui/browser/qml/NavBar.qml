@@ -519,7 +519,7 @@ Rectangle {
                                 }
                             }
                         onAccepted: {
-                            root.model.loadData(text.trim())
+                            root.model.load(text.trim())
                         }
 
                         onFocusChanged: {

@@ -8,6 +8,7 @@ import QtQuick.Dialogs 1.1
 Rectangle {
     id: root
     color: 'transparent'
+    focus: true
 
     // defaults slots
     function onItemClickedSlot(pathImg){
@@ -55,7 +56,7 @@ Rectangle {
 
     Keys.onPressed: {
         if(event.key === Qt.Key_F5){
-            root.model.loadData('')
+            root.model.load('')
         }
     }
 
@@ -65,7 +66,6 @@ Rectangle {
         if(k === Qt.Key_Backspace && (event.modifiers & Qt.ShiftModifier)){
             popVisitedFolder()
         }
-
         else if(k === Qt.Key_Backspace){
             if(model.currentPath !== "/" && model.currentPath.trim() !== ""){
                 pushVisitedFolder(model.parentFolder)

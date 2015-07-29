@@ -296,8 +296,8 @@ def main(argv, app):
     aFilter = EventFilter(app, engine)
     app.installEventFilter(aFilter)
 
-    browser.loadData()
-    browserDialog.loadData()
+    browser.load()
+    browserDialog.load()
 
     with globalActionManager:
         topLevelItem.show()

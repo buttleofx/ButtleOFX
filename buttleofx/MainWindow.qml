@@ -880,6 +880,8 @@ ApplicationWindow {
                 onItemClicked: isSupported ? browser.fileWindow.onItemClickedSlot(pathImg) : 0
                 onItemDoubleClicked: isSupported ? browser.fileWindow.onItemDoubleClickedSlot(absolutePath) : 0
             }
+
+            Component.onCompleted: browser.fileWindow.forceActiveFocus()
         }
 
         Item {

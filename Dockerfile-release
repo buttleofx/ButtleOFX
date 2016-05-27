@@ -1,0 +1,9 @@
+FROM buttleofx/buttleofx-env
+
+MAINTAINER ButtleOFX <buttleofx-dev@googlegroups.com>
+
+ENV BUTTLEOFX_DEV=/opt/ButtleOFX_git
+
+COPY . $BUTTLEOFX_DEV
+WORKDIR $BUTTLEOFX_DEV
+ENTRYPOINT python3 ${BUTTLEOFX_DEV}/buttleApp.py

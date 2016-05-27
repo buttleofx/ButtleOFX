@@ -11,64 +11,35 @@ More informations on the official website: [http://buttleofx.wordpress.com](http
 
 ## Install - Docker
 
+The docker image was built with `uid=1000 and gid=1000` to easily handle the GUI transaction between host and docker.
+
+If your uid and gid are different you should modify the `Dockerfile`.
+
+Then build the image with `docker build -t buttleofx/buttleofx`.
+
 ### Release
 
-To run the application, you just need to run these docker commands.
+To run the application, you just need to run these docker commands
 
 ```
-docker pull buttleofx/buttleofx-env
-
-xhost +
+docker pull buttleofx/buttleofx
 
 XSOCK=/tmp/.X11-unix
-XAUTH=/tmp/.docker.xauth
-BUTTLEOFX_DEV=/opt/ButtleOFX_git
-touch $XAUTH
-
-docker run \
+docker run \ 
 	-it \
 	--rm \
-	--device=/dev/dri/card0:/dev/dri/card0 \
 	-v $XSOCK:$XSOCK:rw \
-	-v $XAUTH:$XAUTH:rw \
 	-e DISPLAY=$DISPLAY \
-	-e XAUTHORITY=$XAUTH \
-	buttleofx/buttleofx-release
-
-xhost -
-
+	buttleofx/buttleofx
 ```
 
 ### Development
 
-This will mount your development files inside the docker container
+You need to mount the development files into the docker container when runing the image
+- `BUTTLEOFX_DEV=/opt/ButtleOFX_git`(from Dockerfile)
 
-```
-docker pull buttleofx/buttleofx-env
+- `-v "$(pwd)":$BUTTLEOFX_DEV:ro`
 
-xhost +
-
-XSOCK=/tmp/.X11-unix
-XAUTH=/tmp/.docker.xauth
-BUTTLEOFX_DEV=/opt/ButtleOFX_git
-touch $XAUTH
-
-docker run \
-	-it \
-	--rm \
-	--device=/dev/dri/card0:/dev/dri/card0 \
-	-v $XSOCK:$XSOCK:rw \
-	-v $XAUTH:$XAUTH:rw \
-	-v "$(pwd)":$BUTTLEOFX_DEV:ro \
-	-e BUTTLEOFX_DEV=$BUTTLEOFX_DEV \
-	-e DISPLAY=$DISPLAY \
-	-e XAUTHORITY=$XAUTH \
-	-w $BUTTLEOFX_DEV \
-	buttleofx/buttleofx-env python3 $BUTTLEOFX_DEV/buttleApp.py
-
-xhost -
-
-```
 
 See [Docker hub](http://hub.docker.com/buttleofx/buttleofx)
 

@@ -79,45 +79,50 @@ ApplicationWindow {
     //     anchors.fill: parent
     // }
 
-    Keys.onPressed: {
-        // Viewer
-        if ((event.key == Qt.Key_1) && (event.modifiers & Qt.KeypadModifier)) {
-            player.changeViewer(1)
-        }
-        if ((event.key == Qt.Key_2) && (event.modifiers & Qt.KeypadModifier)) {
-            player.changeViewer(2)
-        }
-        if ((event.key == Qt.Key_3) && (event.modifiers & Qt.KeypadModifier)) {
-            player.changeViewer(3)
-        }
-        if ((event.key == Qt.Key_4) && (event.modifiers & Qt.KeypadModifier)) {
-            player.changeViewer(4)
-        }
-        if ((event.key == Qt.Key_5) && (event.modifiers & Qt.KeypadModifier)) {
-            player.changeViewer(5)
-        }
-        if ((event.key == Qt.Key_6) && (event.modifiers & Qt.KeypadModifier)) {
-            player.changeViewer(6)
-        }
-        if ((event.key == Qt.Key_7) && (event.modifiers & Qt.KeypadModifier)) {
-            player.changeViewer(7)
-        }
-        if ((event.key == Qt.Key_8) && (event.modifiers & Qt.KeypadModifier)) {
-            player.changeViewer(8)
-        }
-        if ((event.key == Qt.Key_9) && (event.modifiers & Qt.KeypadModifier)) {
-            player.changeViewer(9)
-        }
+    Item{
+        focus: true
+        Keys.onPressed: {
+            // Viewer
+            if ((event.key == Qt.Key_1) && (event.modifiers & Qt.KeypadModifier)) {
+                player.changeViewer(1)
+            }
+            if ((event.key == Qt.Key_2) && (event.modifiers & Qt.KeypadModifier)) {
+                player.changeViewer(2)
+            }
+            if ((event.key == Qt.Key_3) && (event.modifiers & Qt.KeypadModifier)) {
+                player.changeViewer(3)
+            }
+            if ((event.key == Qt.Key_4) && (event.modifiers & Qt.KeypadModifier)) {
+                player.changeViewer(4)
+            }
+            if ((event.key == Qt.Key_5) && (event.modifiers & Qt.KeypadModifier)) {
+                player.changeViewer(5)
+            }
+            if ((event.key == Qt.Key_6) && (event.modifiers & Qt.KeypadModifier)) {
+                player.changeViewer(6)
+            }
+            if ((event.key == Qt.Key_7) && (event.modifiers & Qt.KeypadModifier)) {
+                player.changeViewer(7)
+            }
+            if ((event.key == Qt.Key_8) && (event.modifiers & Qt.KeypadModifier)) {
+                player.changeViewer(8)
+            }
+            if ((event.key == Qt.Key_9) && (event.modifiers & Qt.KeypadModifier)) {
+                player.changeViewer(9)
+            }
 
-        // Player
-        if (event.key == Qt.Key_Space && player.node != null) {
-            if (player.isPlaying) {
-                player.doAction("pause");
-            } else {
-                player.doAction("play");
+            // Player
+            if (event.key == Qt.Key_Space && player.node != null) {
+                if (player.isPlaying) {
+                    player.doAction("pause");
+                } else {
+                    player.doAction("play");
+                }
             }
         }
     }
+
+
 
     property bool aNodeIsSelected: true
 
@@ -880,6 +885,7 @@ ApplicationWindow {
                 onItemClicked: isSupported ? browser.fileWindow.onItemClickedSlot(pathImg) : 0
                 onItemDoubleClicked: isSupported ? browser.fileWindow.onItemDoubleClickedSlot(absolutePath) : 0
             }
+
         }
 
         Item {

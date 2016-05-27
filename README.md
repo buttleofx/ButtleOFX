@@ -18,6 +18,8 @@ To run the application, you just need to run these docker commands.
 ```
 docker pull buttleofx/buttleofx-env
 
+xhost +
+
 XSOCK=/tmp/.X11-unix
 XAUTH=/tmp/.docker.xauth
 BUTTLEOFX_DEV=/opt/ButtleOFX_git
@@ -32,6 +34,9 @@ docker run \
 	-e DISPLAY=$DISPLAY \
 	-e XAUTHORITY=$XAUTH \
 	buttleofx/buttleofx-release
+
+xhost -
+
 ```
 
 ### Development
@@ -40,6 +45,8 @@ This will mount your development files inside the docker container
 
 ```
 docker pull buttleofx/buttleofx-env
+
+xhost +
 
 XSOCK=/tmp/.X11-unix
 XAUTH=/tmp/.docker.xauth
@@ -58,6 +65,8 @@ docker run \
 	-e XAUTHORITY=$XAUTH \
 	-w $BUTTLEOFX_DEV \
 	buttleofx/buttleofx-env python3 $BUTTLEOFX_DEV/buttleApp.py
+
+xhost -
 
 ```
 

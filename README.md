@@ -1,85 +1,76 @@
-![ButtleOFX](https://raw.github.com/buttleofx/ButtleOFX/develop/blackMosquito.png "ButtleOFX")ButtleOFX
-========================
+# ButtleOFX
+[![Stories in Ready](https://badge.waffle.io/buttleofx/ButtleOFX.png?label=ready &title=Ready)](http://waffle.io/buttleofx/ButtleOFX)
+
 **Project under early development.**
 
-[ButtleOFX](http://buttleofx.wordpress.com) is an open source compositing software.
+ButtleOFX is an open source compositing software based on [TuttleOFX](https://github.com/tuttleofx/TuttleOFX) framework.
 
-It is built on top of the [TuttleOFX](http://tuttleofx.org) framework which relies on the [OpenFX plugin standard](http://openeffects.org).
+More informations on the official website: [http://buttleofx.wordpress.com](http://buttleofx.wordpress.com) 
 
-Website: [http://buttleofx.wordpress.com](http://buttleofx.wordpress.com)
+[Documentation](http://buttleofx.readthedocs.org/)
 
+## Install - Docker
 
-Documentation
--------------
-http://buttleofx.readthedocs.org/
+### Release
 
-Development teams
------------------
+To run the application, you just need to run these docker commands.
 
-ButtleOFX is developped within student projects at [IMAC Engineering school](http://imac.alwaysdata.net).
+```
+docker pull buttleofx/buttleofx-env
 
-###Team 3.0
+XSOCK=/tmp/.X11-unix
+XAUTH=/tmp/.docker.xauth
+BUTTLEOFX_DEV=/opt/ButtleOFX_git
+touch $XAUTH
 
-Version 3.0 (2014-2015) is currently in progress.   
+docker run \
+	-it \
+	--rm \
+	--device=/dev/dri/card0:/dev/dri/card0 \
+	-v $XSOCK:$XSOCK:rw \
+	-v $XAUTH:$XAUTH:rw \
+	-e DISPLAY=$DISPLAY \
+	-e XAUTHORITY=$XAUTH \
+	buttleofx/buttleofx-release
+```
 
-Tutor :   
->- [Fabien CASTAN](https://github.com/fabiencastan)   
->- [Clément CHAMPETIER](https://github.com/cchampet)
+### Development
 
-Students :   
->- [Jordi BASTIDE](https://github.com/Jordinaire)
->- [Maxime ENGEL](https://github.com/MaximeEngel)
->- [Maxime GILBERT](https://github.com/mxmgilbert)
->- [Mathias GOYHENECHE](https://github.com/MGoyheneche)
->- [Alexis OBLET](https://github.com/aoblet)
+This will mount your development files inside the docker container
 
-###Team 2.0 (2013-2014)
+```
+docker pull buttleofx/buttleofx-env
 
-Release an alpha version of the software with a new Browser module and a new Quick Parameter Editor.
+XSOCK=/tmp/.X11-unix
+XAUTH=/tmp/.docker.xauth
+BUTTLEOFX_DEV=/opt/ButtleOFX_git
+touch $XAUTH
 
-Tutor :   
->- [Fabien CASTAN](https://github.com/fabiencastan)   
+docker run \
+	-it \
+	--rm \
+	--device=/dev/dri/card0:/dev/dri/card0 \
+	-v $XSOCK:$XSOCK:rw \
+	-v $XAUTH:$XAUTH:rw \
+	-v "$(pwd)":$BUTTLEOFX_DEV:ro \
+	-e BUTTLEOFX_DEV=$BUTTLEOFX_DEV \
+	-e DISPLAY=$DISPLAY \
+	-e XAUTHORITY=$XAUTH \
+	-w $BUTTLEOFX_DEV \
+	buttleofx/buttleofx-env python3 $BUTTLEOFX_DEV/buttleApp.py
 
-Students :   
->- [Lucie DELAIRE](https://github.com/Lucie2lr)
->- [Jonathan DOUET](https://github.com/jon92)
->- [Anthony GUIOT](https://github.com/aguiot)
->- [Virginie LALANDE](https://github.com/vilal)
->- [Baptiste MOIZARD](https://github.com/Bazard)
+```
 
-###Team 1.0 (2012-2013)
+See [Docker hub](http://hub.docker.com/buttleofx/buttleofx)
 
-Creation of a basic compositing software with a Graph Editor, a Parameter Editor and a Viewer.
+## License
 
-Tutor :   
->- [Fabien CASTAN](https://github.com/fabiencastan)   
-
-Students :   
->- [Clément CHAMPETIER](https://github.com/cchampet)
->- [Xochitl FLORIMONT](https://github.com/Xochitl)
->- [Aurélien GRAFFARD](https://github.com/agreffard)
->- [Elisa PRANA](https://github.com/eprana)
->- [Arthur TOURNERET](https://github.com/artourn)
-
-
-Install/Run
----
-
->see [INSTALL.md](./INSTALL.md)
-
-License
--------
-
-Follows the TuttleOFX license.
->see [**TuttleOFX/COPYING.md**]((https://raw.github.com/tuttleofx/TuttleOFX/develop/COPYING.md)
+Follows the TuttleOFX license [**TuttleOFX/COPYING.md**](https://raw.github.com/tuttleofx/TuttleOFX/develop/COPYING.md)
 
 
-More information 
-----------------
+## More information 
 
-**ButtleOFX**
->- website: [http://buttleofx.wordpress.com](http://buttleofx.wordpress.com)
->- github: [https://github.com/buttleofx/ButtleOFX](https://github.com/buttleofx/ButtleOFX)
+[Development teams](AUTHORS.md)
 
 **TuttleOFX**
 >- website: [http://tuttleofx.org](http://tuttleofx.org)
@@ -89,13 +80,5 @@ More information
 >- website: [http://openeffects.org](http://openeffects.org)
 >- github: [http://github.com/ofxa/openfx](http://github.com/ofxa/openfx)
 
-QuickMamba
-
-QtQuick tools
-
-
-Links
------
-[google style guide](http://google-styleguide.googlecode.com/svn/trunk/pyguide.html)
-
-
+**QuickMamba**
+>- github: [http://github.com/buttleofx/QuickMamba](http://github.com/buttleofx/QuickMamba)

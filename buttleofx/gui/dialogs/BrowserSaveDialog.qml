@@ -8,7 +8,7 @@ import QtQuick.Controls 1.0
 import QtQuick.Controls.Styles 1.0
 
 
-import "../browser_v2/qml/"
+import "../browser/qml/"
 
 // BrowserSave dialog: used to save a comp.
 // the connecitons are done MainWindow.qml (i.e the Component which use this dialog)

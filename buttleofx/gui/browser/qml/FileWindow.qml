@@ -7,7 +7,8 @@ import QtQuick.Dialogs 1.1
 
 Rectangle {
     id: root
-    color: "transparent"
+    color: 'transparent'
+    focus: true
 
     // defaults slots
     function onItemClickedSlot(pathImg){
@@ -51,6 +52,67 @@ Rectangle {
     signal pushVisitedFolder(string path)
 
     Keys.onEscapePressed: root.model.unselectAllItems()
+
+
+    Keys.onPressed: {
+        if(event.key === Qt.Key_F5){
+            root.model.load('')
+        }
+    }
+
+    // key navigation between browser items
+    Keys.onReleased: {
+        var k = event.key
+        if(k === Qt.Key_Backspace && (event.modifiers & Qt.ShiftModifier)){
+            popVisitedFolder()
+        }
+        else if(k === Qt.Key_Backspace){
+            if(model.currentPath !== "/" && model.currentPath.trim() !== ""){
+                pushVisitedFolder(model.parentFolder)
+                root.model.currentPath = root.model.parentFolder
+            }
+        }
+
+        var selectedItem = null
+
+        // enter inside folder on enter: change model current path
+        // use clicked signals: wanted behavior
+        if(k === Qt.Key_Enter || k === Qt.Key_Return){
+            var indexSelected = grid.currentIndex
+            selectedItem = root.model.fileItems.get(indexSelected)
+
+            if(selectedItem.isFolder()){
+                root.model.currentPath = selectedItem.path
+                return
+            }
+
+            root.model.selectItem(indexSelected)
+            root.itemDoubleClicked(selectedItem.path, selectedItem.path, selectedItem.isFolder(), selectedItem.isSupported())
+            root.itemClicked(selectedItem.path, selectedItem.path, selectedItem.isFolder(), selectedItem.isSupported())
+
+            if(!selectedItem.isSupported())
+                selectedItem.launchDefaultApplication()
+        }
+
+        if(k === Qt.Key_Up)
+            grid.moveCurrentIndexUp()
+        else if (k === Qt.Key_Down)
+            grid.moveCurrentIndexDown()
+        else if (k === Qt.Key_Left)
+            grid.moveCurrentIndexLeft()
+        else if (k === Qt.Key_Right)
+            grid.moveCurrentIndexRight()
+        else
+            return
+
+        if(event.modifiers & Qt.ShiftModifier)
+            root.model.selectItemTo(grid.currentIndex)
+        else
+            root.model.selectItem(grid.currentIndex)
+
+
+    }
+
     MouseArea {
         anchors.fill: parent
         acceptedButtons: Qt.LeftButton | Qt.RightButton
@@ -66,14 +128,40 @@ Rectangle {
         }
     }
 
-    Keys.onPressed: {
-        //TODO: temporary shortcut menu: overload ambiguous
+    MessageDialog {
+        id: defaultApplicationFail
+        title: "Error while opening file with system"
+        text: ""
     }
 
     Menu{
-        //TODO: REDO architecture
         id:actionsMenu
         property bool showActionOnItem: false
+
+        MenuItem{
+            id: defaultApplication
+            text:"Open system application"
+            iconName: "document-open"
+            shortcut: StandardKey.Open
+            visible:actionsMenu.showActionOnItem
+
+            onTriggered: {
+                var itemsSelected = root.model.selectedItems
+                var failedFiles = []
+
+                for(var i=0; i<itemsSelected.count; ++i){
+                    if(!itemsSelected.get(i).launchDefaultApplication())
+                        failedFiles.push(itemsSelected.get(i).path)
+                }
+
+                if(failedFiles.length){
+                    defaultApplicationFail.text = 'Problem occured while opening: \n ' + failedFiles.join() + ' file' + (failedFiles.length > 1 ? 's' : '') + '.'
+                    defaultApplicationFail.visible = true
+                }
+
+            }
+        }
+
 
         MenuItem{
             id: select
@@ -147,7 +235,7 @@ Rectangle {
             shortcut: StandardKey.Paste
             enabled: root.bAction.isCache
             onTriggered: {
-                var destination=""
+                var destination = ""
                 if(root.model.selectedItems.count == 1 && root.model.selectedItems.get(0).isFolder())
                     destination = root.model.selectedItems.get(0).path
 
@@ -213,8 +301,17 @@ Rectangle {
             model: root.model.fileItems
             delegate: component
 
+            keyNavigationWraps: true
             boundsBehavior: Flickable.StopAtBounds
-            focus: true
+
+            // set the properly current selected when model ends loading
+            Connections{
+                target: root.model
+                onLoadingChanged: {
+                    if(!root.model.loading)
+                        grid.currentIndex = -1
+                }
+            }
         }
     }
 
@@ -227,7 +324,7 @@ Rectangle {
             width: grid.cellWidth - 20
             height: icon.height + fileName.height
 
-            color: (model.object.isSelected) ? "#666666" : "transparent"
+            color: model.object.isSelected ? "#666666" : "transparent"
             radius: 2
 
             Column {
@@ -329,6 +426,8 @@ Rectangle {
 
                     else if(mouse.button == Qt.LeftButton){
                         root.itemClicked(model.object.path, model.object.path, model.object.isFolder(), model.object.isSupported())
+                        grid.currentIndex = index
+
                         if ((mouse.modifiers & Qt.ShiftModifier))
                             root.model.selectItemTo(index)
                         else if ((mouse.modifiers & Qt.ControlModifier))

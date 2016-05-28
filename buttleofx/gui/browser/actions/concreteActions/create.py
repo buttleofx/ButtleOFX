@@ -2,7 +2,7 @@ import os
 import shutil
 import logging
 
-from buttleofx.gui.browser_v2.actions.actionInterface import ActionInterface
+from buttleofx.gui.browser.actions.actionInterface import ActionInterface
 
 
 class Create(ActionInterface):
@@ -17,7 +17,7 @@ class Create(ActionInterface):
 
     def execute(self):
         # TODO: Check parent's permission in try catch
-
+        # TODO: find elegant way to find next: sort, find next if match then extract version number
         parent = self.getBrowserItem()
         newBrowserItem = self._newBrowserItem
         parentPath = parent.getPath()

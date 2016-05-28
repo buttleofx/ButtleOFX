@@ -7,7 +7,6 @@ class ActionWrapper(QtCore.QObject):
     """
         Expose useful data for qml such as nbActions and progression
     """
-    # signals for qml
     nbProcessedChanged = QtCore.pyqtSignal()
     abortNotified = QtCore.pyqtSignal()
     progressChanged = QtCore.pyqtSignal()

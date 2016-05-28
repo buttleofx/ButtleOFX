@@ -6,14 +6,14 @@ from stat import filemode
 from multiprocessing import Process, ProcessError
 from threading import Lock
 
-from PyQt5 import QtCore
+from PyQt5 import QtCore, QtGui
 
 from pySequenceParser import sequenceParser
 
 from pyTuttle import tuttle
 
-from buttleofx.gui.browser_v2.sequenceWrapper import SequenceWrapper
-from buttleofx.gui.browser_v2.thumbnailUtil import ThumbnailUtil, thumbnailPool
+from buttleofx.gui.browser.sequenceWrapper import SequenceWrapper
+from buttleofx.gui.browser.thumbnailUtil import ThumbnailUtil, thumbnailPool
 
 
 class ItemType(object):
@@ -331,6 +331,12 @@ class BrowserItem(QtCore.QObject):
             logging.debug("Thumbnail built for %s", self.path)
         except Exception as e:
             logging.debug(str(e))
+
+    @QtCore.pyqtSlot(result=bool)
+    def launchDefaultApplication(self):
+        if not self._path:
+            raise ValueError
+        return QtGui.QDesktopServices.openUrl(QtCore.QUrl(self._path))
 
     # ################################### Data exposed to QML #################################### #
 

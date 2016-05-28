@@ -10,7 +10,7 @@ import QtQuick.LocalStorage 2.0
 import "gui/graph/qml"
 import "gui/viewer/qml"
 import "gui/paramEditor/qml"
-import "gui/browser_v2/qml"
+import "gui/browser/qml"
 import "gui/plugin/qml"
 import "gui/shortcut/qml"
 import "gui/dialogs"
@@ -880,6 +880,8 @@ ApplicationWindow {
                 onItemClicked: isSupported ? browser.fileWindow.onItemClickedSlot(pathImg) : 0
                 onItemDoubleClicked: isSupported ? browser.fileWindow.onItemDoubleClickedSlot(absolutePath) : 0
             }
+
+            Component.onCompleted: browser.fileWindow.forceActiveFocus()
         }
 
         Item {

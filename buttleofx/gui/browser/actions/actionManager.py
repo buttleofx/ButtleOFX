@@ -5,7 +5,7 @@ from PyQt5 import QtCore
 
 from quickmamba.models import QObjectListModel
 
-from buttleofx.gui.browser_v2.actions.actionWorker import ActionWorker
+from buttleofx.gui.browser.actions.actionWorker import ActionWorker
 
 
 class ActionManager(QtCore.QObject):

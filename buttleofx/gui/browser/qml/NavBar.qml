@@ -21,7 +21,6 @@ Rectangle {
             texteditPath.forceActiveFocus()
     }
 
-    Component.onCompleted: toggleUrlEdit(true)
 
     QtObject {
         id: m;
@@ -520,7 +519,7 @@ Rectangle {
                                 }
                             }
                         onAccepted: {
-                            root.model.loadData(text.trim())
+                            root.model.load(text.trim())
                         }
 
                         onFocusChanged: {

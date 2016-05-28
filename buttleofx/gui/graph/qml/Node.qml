@@ -79,8 +79,7 @@ Rectangle {
                 }
 
                 // Param buttle
-                // TODO showNodeInfo()
-                _buttleData.currentParamNodeWrapper = m.nodeWrapper
+                _buttleData.setActiveNode("graphEditor", m.nodeWrapper)
             }
 
             // Take the focus
@@ -99,18 +98,12 @@ Rectangle {
 
             if (mouse.button == Qt.LeftButton) {
 
-                _buttleManager.nodeManager.nodeMoved(m.nodeWrapper.name, qml_nodeRoot.x / graph.zoomCoeff,
+                _buttleManager.nodeManager.moveNode(m.nodeWrapper.name, qml_nodeRoot.x / graph.zoomCoeff,
                                                      qml_nodeRoot.y / graph.zoomCoeff)
 
             } else if (mouse.button == Qt.MidButton) { // Middle button: assign the node to the viewer
-                _buttleData.currentGraphIsGraph()
-                _buttleData.currentGraphWrapper = _buttleData.graphWrapper
-                _buttleData.currentViewerNodeWrapper = m.nodeWrapper
-                _buttleData.currentViewerFrame = 0
-                // We assign the node to the viewer, at the frame 0
-                _buttleData.assignNodeToViewerIndex(m.nodeWrapper, 0)
+                _buttleData.setActiveNode("graphEditor", m.nodeWrapper)
                 _buttleEvent.emitViewerChangedSignal()
-                player.lastNodeWrapper = _buttleData.currentViewerNodeWrapper
             }
         }
 
@@ -126,14 +119,8 @@ Rectangle {
         keys: "mosquitoMouseArea"
 
         onDropped: {
-            _buttleData.currentGraphIsGraph()
-            _buttleData.currentGraphWrapper = _buttleData.graphWrapper
-            _buttleData.currentViewerNodeWrapper = m.nodeWrapper
-            _buttleData.currentViewerFrame = 0
-            // We assign the node to the viewer, at the frame 0
-            _buttleData.assignNodeToViewerIndex(m.nodeWrapper, 0)
+            _buttleData.setActiveNode("graphEditor", m.nodeWrapper)
             _buttleEvent.emitViewerChangedSignal()
-            player.lastNodeWrapper = _buttleData.currentViewerNodeWrapper
         }
     }
 

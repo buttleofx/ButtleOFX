@@ -11,39 +11,15 @@ Rectangle {
 
     // defaults slots
     function onItemClickedSlot(pathImg){
-        // handleGraphViewerClick
-        // We come to the temporary viewer
-        player.changeViewer(11)
-
-        // We save the last node wrapper of the last view
-        var nodeWrapper
-        player.lastNodeWrapper = _buttleData.getNodeWrapperByViewerIndex(player.lastView)
-        nodeWrapper = _buttleData.nodeReaderWrapperForBrowser(pathImg)
-        _buttleData.currentGraphIsGraphBrowser()
-        _buttleData.currentGraphWrapper = _buttleData.graphBrowserWrapper
-        _buttleData.currentViewerNodeWrapper = nodeWrapper
-        _buttleData.currentViewerFrame = 0
-
-        // We assign the node to the viewer, at the frame 0
-        _buttleData.assignNodeToViewerIndex(nodeWrapper, 10)
-        _buttleData.currentViewerIndex = 10 // We assign to the viewer the 10th view
+        console.debug("handleGraphViewerClick")
+        _buttleData.setActiveBrowserFile(pathImg)
         _buttleEvent.emitViewerChangedSignal()
     }
 
     function onItemDoubleClickedSlot(absolutePath){
-        // handleGraphViewerDoubleClick
-        _buttleData.currentGraphWrapper = _buttleData.graphWrapper
-        _buttleData.currentGraphIsGraph()
-
-        // If before the viewer was showing an image from the browser, we change the currentView
-        if (_buttleData.currentViewerIndex > 9){
-            _buttleData.currentViewerIndex = player.lastView
-
-            if (player.lastNodeWrapper != undefined)
-                _buttleData.currentViewerNodeWrapper = player.lastNodeWrapper
-            player.changeViewer(player.lastView)
-        }
-          _buttleManager.nodeManager.dropFile(absolutePath, 10, 10)
+        console.debug("handleGraphViewerDoubleClick")
+        _buttleData.setActiveGraphId("graphEditor")
+        _buttleManager.nodeManager.dropFile(absolutePath, 10, 10)
     }
 
     signal itemClicked(string absolutePath, string pathImg, bool isFolder, bool isSupported)

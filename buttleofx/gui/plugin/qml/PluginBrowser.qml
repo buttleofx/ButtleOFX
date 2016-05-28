@@ -197,9 +197,9 @@ ApplicationWindow {
 
                         _buttleData.currentGraphWrapper = _buttleData.graphWrapper
                         if (previousNode == undefined) {
-                            _buttleManager.nodeManager.creationNode("_buttleData.graph", currentObject.pluginType, 0, 0)
+                            _buttleManager.nodeManager.creationNode("graphEditor", currentObject.pluginType, 0, 0)
                         } else {
-                            _buttleManager.nodeManager.creationNode("_buttleData.graph", currentObject.pluginType,
+                            _buttleManager.nodeManager.creationNode("graphEditor", currentObject.pluginType,
                                                                     previousNode.xCoord+140, previousNode.yCoord)
 
                             // If there is no input clip, no auto-connection
@@ -210,13 +210,13 @@ ApplicationWindow {
                     } else {
                         if (_buttleData.currentSelectedNodeWrappers.count == 1) {
                             var selectedNode = _buttleData.currentSelectedNodeWrappers.get(0)
-                            _buttleManager.nodeManager.creationNode("_buttleData.graph", currentObject.pluginType,
+                            _buttleManager.nodeManager.creationNode("graphEditor", currentObject.pluginType,
                                                                     selectedNode.xCoord+140, selectedNode.yCoord)
                             var createdNode = _buttleData.lastNode()
                             if (createdNode.nbInput != 0)
                                 _buttleManager.connectionManager.connectWrappers(selectedNode.outputClip, createdNode.srcClips.get(0))
                         } else {
-                            _buttleManager.nodeManager.creationNode("_buttleData.graph", currentObject.pluginType, 0, 0)
+                            _buttleManager.nodeManager.creationNode("graphEditor", currentObject.pluginType, 0, 0)
                         }
                     }
 

@@ -73,7 +73,7 @@ class ViewerManager(QtCore.QObject):
         """
             Computes the node (displayed in the viewer) at the frame indicated.
         """
-        graphTuttle = globalButtleData.getCurrentGraph().getGraphTuttle()
+        graphTuttle = globalButtleData.getActiveGraph().getGraphTuttle()
 
         # Get the output where we save the result
         self._tuttleImageCache = tuttle.MemoryCache()
@@ -124,7 +124,7 @@ class ViewerManager(QtCore.QObject):
             # Get the global node hash ID
             if node is not None:
                 hashMap = tuttle.NodeHashContainer()
-                globalButtleData.getCurrentGraph().getGraphTuttle().computeGlobalHashAtTime(hashMap, frame, [node])
+                globalButtleData.getActiveGraph().getGraphTuttle().computeGlobalHashAtTime(hashMap, frame, [node])
                 node_hashCode = hashMap.getHash(node, frame)
             # Get the buttle latest images map
             mapNodeToImage = globalButtleData.getMapNodeNameToComputedImage()

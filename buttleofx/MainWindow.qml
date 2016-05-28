@@ -381,18 +381,8 @@ ApplicationWindow {
                             text: object.pluginLabel
 
                             onTriggered: {
-                                _buttleData.currentGraphIsGraph()
-                                _buttleData.currentGraphWrapper = _buttleData.graphWrapper
-
-                                // If before the viewer was showing an image from the brower, we change the currentView
-                                if (_buttleData.currentViewerIndex > 9) {
-                                    _buttleData.currentViewerIndex = player.lastView
-                                    if (player.lastNodeWrapper != undefined)
-                                        _buttleData.currentViewerNodeWrapper = player.lastNodeWrapper
-                                    player.changeViewer(player.lastView)
-                                }
-
-                                _buttleManager.nodeManager.creationNode("_buttleData.graph", object.pluginType, 0, 0)
+                                _buttleData.setActiveGraphId("graphEditor")
+                                _buttleManager.nodeManager.creationNode("graphEditor", object.pluginType, 0, 0)
                             }
                         }
 
@@ -415,18 +405,8 @@ ApplicationWindow {
                                     text: object.pluginLabel
 
                                     onTriggered: {
-                                        _buttleData.currentGraphIsGraph()
-                                        _buttleData.currentGraphWrapper = _buttleData.graphWrapper
-
-                                        // If before the viewer was showing an image from the brower, we change the currentView
-                                        if (_buttleData.currentViewerIndex > 9) {
-                                            _buttleData.currentViewerIndex = player.lastView
-                                            if (player.lastNodeWrapper != undefined)
-                                                _buttleData.currentViewerNodeWrapper = player.lastNodeWrapper
-                                            player.changeViewer(player.lastView)
-                                        }
-
-                                        _buttleManager.nodeManager.creationNode("_buttleData.graph", object.pluginType, 0, 0)
+                                        _buttleData.setActiveGraphId("graphEditor")
+                                        _buttleManager.nodeManager.creationNode("graphEditor", object.pluginType, 0, 0)
                                     }
                                 }
 
@@ -449,18 +429,8 @@ ApplicationWindow {
                                             text: object.pluginLabel
 
                                             onTriggered: {
-                                                _buttleData.currentGraphIsGraph()
-                                                _buttleData.currentGraphWrapper = _buttleData.graphWrapper
-
-                                                // If before the viewer was showing an image from the brower, we change the currentView
-                                                if (_buttleData.currentViewerIndex > 9) {
-                                                    _buttleData.currentViewerIndex = player.lastView
-                                                    if (player.lastNodeWrapper != undefined)
-                                                        _buttleData.currentViewerNodeWrapper = player.lastNodeWrapper
-                                                    player.changeViewer(player.lastView)
-                                                }
-
-                                                _buttleManager.nodeManager.creationNode("_buttleData.graph", object.pluginType, 0, 0)
+                                                _buttleData.setActiveGraphId("graphEditor")
+                                                _buttleManager.nodeManager.creationNode("graphEditor", object.pluginType, 0, 0)
                                             }
                                         }
 
@@ -483,18 +453,8 @@ ApplicationWindow {
                                                     text: object.pluginLabel
 
                                                     onTriggered: {
-                                                        _buttleData.currentGraphIsGraph()
-                                                        _buttleData.currentGraphWrapper = _buttleData.graphWrapper
-
-                                                        // If before the viewer was showing an image from the brower, we change the currentView
-                                                        if (_buttleData.currentViewerIndex > 9) {
-                                                            _buttleData.currentViewerIndex = player.lastView
-                                                            if (player.lastNodeWrapper != undefined)
-                                                                _buttleData.currentViewerNodeWrapper = player.lastNodeWrapper
-                                                            player.changeViewer(player.lastView)
-                                                        }
-
-                                                        _buttleManager.nodeManager.creationNode("_buttleData.graph", object.pluginType, 0, 0)
+                                                        _buttleData.setActiveGraphId("graphEditor")
+                                                        _buttleManager.nodeManager.creationNode("graphEditor", object.pluginType, 0, 0)
                                                     }
                                                 }
 
@@ -517,18 +477,8 @@ ApplicationWindow {
                                                             text: object.pluginLabel
 
                                                             onTriggered: {
-                                                                _buttleData.currentGraphIsGraph()
-                                                                _buttleData.currentGraphWrapper = _buttleData.graphWrapper
-
-                                                                // If before the viewer was showing an image from the brower, we change the currentView
-                                                                if (_buttleData.currentViewerIndex > 9) {
-                                                                    _buttleData.currentViewerIndex = player.lastView
-                                                                    if (player.lastNodeWrapper != undefined)
-                                                                        _buttleData.currentViewerNodeWrapper = player.lastNodeWrapper
-                                                                    player.changeViewer(player.lastView)
-                                                                }
-
-                                                                _buttleManager.nodeManager.creationNode("_buttleData.graph", object.pluginType, 0, 0)
+                                                                _buttleData.setActiveGraphId("graphEditor")
+                                                                _buttleManager.nodeManager.creationNode("graphEditor", object.pluginType, 0, 0)
                                                             }
                                                         }
 

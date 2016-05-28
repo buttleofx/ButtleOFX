@@ -16,16 +16,15 @@ class NodeWrapper(QtCore.QObject):
             - _fpsError, _frameError : potential errors that we need to displayed.
     """
 
-    def __init__(self, node, view):
+    def __init__(self, node, parent):
         # logging.debug("NodeWrapper constructor")
-        QtCore.QObject.__init__(self, view)
+        QtCore.QObject.__init__(self, parent)
 
         self._node = node
-        self._view = view
         self._isHighlighted = False
 
         # paramWrappers
-        self._paramWrappers = ParamEditorWrapper(self._view, self._node.getParams())
+        self._paramWrappers = ParamEditorWrapper(parent, self._node.getParams())
 
         # Potential errors
         self._fpsError = ""
@@ -36,7 +35,7 @@ class NodeWrapper(QtCore.QObject):
         self._node.nodePositionChanged.connect(self.emitNodePositionChanged)
         self._node.nodeContentChanged.connect(self.emitNodeContentChanged)
 
-        self._clipWrappers = [ClipWrapper(clip, self.getName(), self._view) for clip in self._node.getClips()]
+        self._clipWrappers = [ClipWrapper(clip, self.getName(), parent) for clip in self._node.getClips()]
         self._srcClips = QObjectListModel(self)
 
         logging.info("Gui : NodeWrapper created")
@@ -136,7 +135,7 @@ class NodeWrapper(QtCore.QObject):
         # Import which needs to be changed in the future
         from buttleofx.data import globalButtleData
 
-        graph = globalButtleData.getCurrentGraph().getGraphTuttle()
+        graph = globalButtleData.getActiveGraph().getGraphTuttle()
         node = self._node.getTuttleNode().asImageEffectNode()
         try:
             self.setFpsError("")
@@ -160,21 +159,7 @@ class NodeWrapper(QtCore.QObject):
         """
             Returns the number of frames of this node.
         """
-        # Import which needs to be changed in the future
-        from buttleofx.data import globalButtleData
-        
-        graph = globalButtleData.getCurrentGraph().getGraphTuttle()
-        node = self._node.getTuttleNode().asImageEffectNode()
-
-        try:
-            self.setFrameError("")
-            graph.setup()
-        except Exception as e:
-            logging.debug("can't get nbFrames of the node %s", self._node.getName())
-            self.setFrameError(str(e))
-            return 0
-
-        timeDomain = node.getTimeDomain()  # getTimeDomain() returns the first and last frames
+        timeDomain = self.getTimeDomain()  # getTimeDomain() returns the first and last frames
         nbFrames = timeDomain.max - timeDomain.min
 
         # Not very elegant, but allows us to avoid a problem if an image returns a lot of frames
@@ -182,6 +167,41 @@ class NodeWrapper(QtCore.QObject):
             nbFrames = 1
         # logging.debug("nbFrames: %d", nbFrames)
         return nbFrames
+
+    def getTimeDomain(self):
+        """
+            Returns the number of frames of this node.
+        """
+        # Import which needs to be changed in the future
+        from buttleofx.data import globalButtleData
+        from pyTuttle import tuttle
+
+        graph = globalButtleData.getActiveGraph().getGraphTuttle()
+        node = self._node.getTuttleNode().asImageEffectNode()
+
+        try:
+            processOptions = tuttle.ComputeOptions(0)
+            processGraph = tuttle.ProcessGraph(processOptions, graph, [node.getName()], tuttle.core().getMemoryCache())
+            processGraph.setup()
+            return node.getTimeDomain()
+
+            self.setFrameError("")
+            graph.setup()
+        except Exception as e:
+            logging.debug("Can't get the time domain of the node '%s'.", self._node.getName())
+            logging.debug(str(e))
+            self.setFrameError(str(e))
+            r = tuttle.OfxRangeD()
+            r.min = 0
+            r.max = 0
+            return r
+
+
+    def getFirstFrame(self):
+        return self.getTimeDomain().min
+
+    def getLastFrame(self):
+        return self.getTimeDomain().max
 
     def getFrameError(self):
         return self._frameError
@@ -261,6 +281,8 @@ class NodeWrapper(QtCore.QObject):
     # Video
     fps = QtCore.pyqtProperty(float, getFPS, constant=True)
     nbFrames = QtCore.pyqtProperty(int, getNbFrames, constant=True)
+    firstFrame = QtCore.pyqtProperty(int, getFirstFrame, constant=True)
+    lastFrame = QtCore.pyqtProperty(int, getLastFrame, constant=True)
 
     # For a clean display of  connections
     srcClips = QtCore.pyqtProperty(QtCore.QObject, getSrcClips, constant=True)

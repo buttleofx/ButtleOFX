@@ -97,7 +97,7 @@ class Graph(object):
 
     def createNode(self, nodeType, x=20, y=20):
         """
-            Adds a node from the node list when a node is created.
+            Add a node from the node list when a node is created.
         """
         cmdCreateNode = CmdCreateNode(self, nodeType, x, y)
         cmdManager = globalCommandManager
@@ -105,14 +105,14 @@ class Graph(object):
 
     def createReaderNode(self, url, x, y):
         """
-            Creates a reader node when an image has been dropped in the graph.
+            Create a reader node from an image url to specific coordinates.
         """
         (_, extension) = os.path.splitext(url)
         try:
             nodeType = tuttle.getBestReader(extension)
         except Exception:
             logging.debug("Unknown format. Can't create the reader node for extension '%s'.", extension)
-            return
+            return None
 
         # We create the node.
         # We can't use a group of commands because we need the tuttle node to set the value, and this tuttle node is
@@ -120,8 +120,7 @@ class Graph(object):
         # creates a new node and set its value with the correct url.
         # See the definition of the class CmdCreateReaderNode.
         cmdCreateReaderNode = CmdCreateReaderNode(self, nodeType, x, y, url)
-        cmdManager = globalCommandManager
-        return cmdManager.push(cmdCreateReaderNode)
+        return globalCommandManager.push(cmdCreateReaderNode)
 
     def deleteConnection(self, connection):
         """
@@ -129,8 +128,7 @@ class Graph(object):
             Pushes a command in the CommandManager.
         """
         cmdDeleteConnection = CmdDeleteConnection(self, connection)
-        cmdManager = globalCommandManager
-        cmdManager.push(cmdDeleteConnection)
+        globalCommandManager.push(cmdDeleteConnection)
 
     def deleteNodeConnections(self, nodeName):
         """
@@ -147,8 +145,7 @@ class Graph(object):
             Pushes a command in the CommandManager.
         """
         cmdDeleteNodes = CmdDeleteNodes(self, nodes)
-        cmdManager = globalCommandManager
-        cmdManager.push(cmdDeleteNodes)
+        globalCommandManager.push(cmdDeleteNodes)
 
     # ## Others ## #
 
@@ -174,43 +171,58 @@ class Graph(object):
                 return True
         return False
 
-    def nodeMoved(self, nodeName, newX, newY):
+    def moveSelectedNodes(self, offsetX, offsetY):
         """
-            This function pushes a cmdMoved in the globalCommandManager.
+            Move all selected nodes with an offset.
         """
         from buttleofx.data import globalButtleData
-        node = globalButtleData.getCurrentGraph().getNode(nodeName)
-        if not node:
-            logging.debug("no nodes nodeMoved -- graph : %s", globalButtleData.getCurrentGraph())
-
-        # What is the value of the movement (compared to the old position)?
-        oldX, oldY = node.getOldCoord()
-        xMovement = newX - oldX
-        yMovement = newY - oldY
-
-        print(oldX, oldY)
-        print(newX, newY)
 
         # If the node didn't really move, nothing is done
-        if (xMovement, xMovement) == (0, 0):
+        if (offsetX, offsetY) == (0, 0):
             return
 
         commands = []
-
         # We create a GroupUndoableCommands of CmdSetCoord for each selected node
         for selectedNodeWrapper in globalButtleData.getCurrentSelectedNodeWrappers():
-            # We get the needed informations for this node
+            # We get the needed information for this node
             selectedNode = selectedNodeWrapper.getNode()
             selectedNodeName = selectedNode.getName()
             oldX, oldY = selectedNode.getOldCoord()
 
             # We set the new coordinates of the node (each selected node is doing the same movement)
-            cmdMoved = CmdSetCoord(self, selectedNodeName, (oldX + xMovement, oldY + yMovement))
+            cmdMoved = CmdSetCoord(self, selectedNodeName, (oldX + offsetX, oldY + offsetY))
 
             commands.append(cmdMoved)
 
         # Then we push the group of commands
         globalCommandManager.push(GroupUndoableCommands(commands, "Move nodes"))
+
+    def moveNode(self, nodeName, newX, newY):
+        """
+            Move all selected nodes to get nodeName at a specific position.
+        """
+        from buttleofx.data import globalButtleData
+        node = globalButtleData.getActiveGraph().getNode(nodeName)
+        if not node:
+            logging.debug("no nodes moveNode -- graph : %s", globalButtleData.getActiveGraph())
+            return
+
+        # What is the value of the movement (compared to the old position)?
+        oldX, oldY = node.getOldCoord()
+
+        logging.debug("Move node from (%s, %s) to (%s, %s)", oldX, oldY, newX, newY)
+
+        self.moveSelectedNodes(newX - oldX, newY - oldY)
+
+    def hardClear(self):
+        """
+        Clear all nodes and connections.
+        Also remove all the nodes from the TuttleGraph.
+        :warning: that can break the undo stack.
+        """
+        self._graphTuttle.clear()
+        self._nodes = []
+        self._connections = []
 
     def object_to_dict(self):
         """
@@ -258,7 +270,7 @@ class Graph(object):
     def __str__(self):
         """
             Displays on terminal some data.
-            Usefull to debug the class.
+            Useful to debug the class.
         """
         str_list = []
 

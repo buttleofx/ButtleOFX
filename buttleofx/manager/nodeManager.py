@@ -20,16 +20,15 @@ class NodeManager(QtCore.QObject):
         """
             Creates a node.
         """
-        # globalButtleData.getGraph().createNode(nodeType, x, y)
+        # globalButtleData.getActiveGraph().createNode(nodeType, x, y)
         # graph.createNode(nodeType, x, y)
 
-        if graph == "_buttleData.graph":
-            globalButtleData.getGraph().createNode(nodeType, x, y)
-        elif graph == "_buttleData.graphBrowser":
+        if graph == "graphEditor":
+            globalButtleData.getActiveGraph().createNode(nodeType, x, y)
+        elif graph == "graphBrowser":
             globalButtleData.getGraphBrowser().createNode(nodeType, x, y)
-        # By default creation is on the graph in grapheditor
         else:
-            globalButtleData.getGraph().createNode(nodeType, x, y)
+            raise KeyError("Graph type '%s' is unknown" % graph)
 
         # Update undo/redo display
         self.undoRedoChanged()
@@ -37,24 +36,26 @@ class NodeManager(QtCore.QObject):
     @QtCore.pyqtSlot()
     def copyNode(self):
         """
-            Copies the current node(s).
+            Copy selected node(s).
         """
         # Clear the info saved in currentCopiedNodesInfo
         globalButtleData.clearCurrentCopiedNodesInfo()
         # Save new data in currentCopiedNodesInfo for each selected node
-        if globalButtleData.getCurrentSelectedNodeWrappers() != []:
-            for node in globalButtleData.getCurrentSelectedNodeWrappers():
-                copyNode = {}
-                copyNode.update({"nodeType": node.getNode().getType()})
-                copyNode.update({"nameUser": node.getNode().getNameUser()})
-                copyNode.update({"color": node.getNode().getColor()})
-                copyNode.update({"params": node.getNode().getTuttleNode().getParamSet()})
-                copyNode.update({"mode": "_copy"})
-                copyNode.update({"x": node.getNode().getCoord()[0]})
-                copyNode.update({"y": node.getNode().getCoord()[1]})
-                globalButtleData.getCurrentCopiedNodesInfo()[node.getName()] = copyNode
-                # Emit the change for the toolbar
-                globalButtleData.pastePossibilityChanged.emit()
+        if not globalButtleData.getCurrentSelectedNodeWrappers():
+            return
+
+        for node in globalButtleData.getCurrentSelectedNodeWrappers():
+            copyNode = {}
+            copyNode.update({"nodeType": node.getNode().getType()})
+            copyNode.update({"nameUser": node.getNode().getNameUser()})
+            copyNode.update({"color": node.getNode().getColor()})
+            copyNode.update({"params": node.getNode().getTuttleNode().getParamSet()})
+            copyNode.update({"mode": "_copy"})
+            copyNode.update({"x": node.getNode().getCoord()[0]})
+            copyNode.update({"y": node.getNode().getCoord()[1]})
+            globalButtleData.getCurrentCopiedNodesInfo()[node.getName()] = copyNode
+            # Emit the change for the toolbar
+            globalButtleData.pastePossibilityChanged.emit()
 
     @QtCore.pyqtSlot()
     def cutNode(self):
@@ -94,10 +95,10 @@ class NodeManager(QtCore.QObject):
         # If the viewer displays a node affected by the destruction
         # need something from Tuttle
         # if at least one node in the graph
-        if len(globalButtleData.getGraphWrapper().getNodeWrappers()) > 0 and len(globalButtleData.getGraph().getNodes()) > 0:
+        if len(globalButtleData.getGraphWrapper().getNodeWrappers()) > 0 and len(globalButtleData.getActiveGraph().getNodes()) > 0:
             # If a node is selected
             if globalButtleData.getCurrentSelectedNodeNames() != []:
-                globalButtleData.getGraph().deleteNodes([nodeWrapper.getNode() for nodeWrapper in
+                globalButtleData.getActiveGraph().deleteNodes([nodeWrapper.getNode() for nodeWrapper in
                                                    globalButtleData.getCurrentSelectedNodeWrappers()])
                 globalButtleData.clearCurrentSelectedNodeNames()
 
@@ -122,7 +123,7 @@ class NodeManager(QtCore.QObject):
         if extension == 'bofx':
             globalButtleData.loadData(url)  # Also need to verify the json format
         else:
-            globalButtleData.getGraph().createReaderNode(url, x, y)
+            globalButtleData.getActiveGraph().createReaderNode(url, x, y)
 
         # Update undo/redo display
         self.undoRedoChanged()
@@ -137,8 +138,8 @@ class NodeManager(QtCore.QObject):
                 # Create a node giving the current selected node's type, x and y
                 nodeType = node.getNode().getType()
                 coord = node.getNode().getCoord()
-                globalButtleData.getGraph().createNode(nodeType, coord[0], coord[1])
-                newNode = globalButtleData.getGraph().getNodes()[-1]
+                globalButtleData.getActiveGraph().createNode(nodeType, coord[0], coord[1])
+                newNode = globalButtleData.getActiveGraph().getNodes()[-1]
 
                 # Get the current selected node's properties
                 nameUser = node.getNameUser() + "_duplicate"
@@ -155,13 +156,12 @@ class NodeManager(QtCore.QObject):
         self.undoRedoChanged()
 
     @QtCore.pyqtSlot(str, int, int)
-    def nodeMoved(self, nodeName, x, y):
+    def moveNode(self, nodeName, x, y):
         """
-            This function pushes a cmdMoved in the CommandManager.
+            Move a node to an absolute position.
         """
-        globalButtleData.getGraph().nodeMoved(nodeName, x, y)
-        globalButtleData.getGraph().nodesChanged()
-        globalButtleData.getGraphWrapper().setResize(True)
+        globalButtleData.getActiveGraph().moveNode(nodeName, x, y)
+        globalButtleData.getActiveGraph().nodesChanged()
         # Update undo/redo display
         self.undoRedoChanged()
 
@@ -201,17 +201,17 @@ class NodeManager(QtCore.QObject):
             i = 0
 
             for node in globalButtleData.getCurrentCopiedNodesInfo():
-                globalButtleData.getGraph().createNode(globalButtleData.getCurrentCopiedNodesInfo()[node]["nodeType"],
+                globalButtleData.getActiveGraph().createNode(globalButtleData.getCurrentCopiedNodesInfo()[node]["nodeType"],
                                                  globalButtleData.getCurrentCopiedNodesInfo()[node]["x"] + 20,
                                                  globalButtleData.getCurrentCopiedNodesInfo()[node]["y"] + 20)
-                newNode = globalButtleData.getGraph().getNodes()[-1]
+                newNode = globalButtleData.getActiveGraph().getNodes()[-1]
                 globalButtleData.appendToCurrentSelectedNodeNames(newNode._name)
                 newNode.setColor(globalButtleData.getCurrentCopiedNodesInfo()[node]["color"])
                 newNode.setNameUser(globalButtleData.getCurrentCopiedNodesInfo()[node]["nameUser"] +
                                     globalButtleData.getCurrentCopiedNodesInfo()[node]["mode"])
                 newNode.getTuttleNode().getParamSet().copyParamsValues(globalButtleData.getCurrentCopiedNodesInfo()[node]
                                                                        ["params"])
-                globalButtleData.getGraph().nodesChanged()
+                globalButtleData.getActiveGraph().nodesChanged()
                 globalButtleData.getCurrentCopiedNodesInfo()[node].update({node: newNode._name})
                 i = i + 1
 

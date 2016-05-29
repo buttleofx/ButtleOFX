@@ -11,37 +11,47 @@ More informations on the official website: [http://buttleofx.wordpress.com](http
 
 ## Install - Docker
 
-The docker image was built with `uid=1000 and gid=1000` to easily handle the GUI transaction between host and docker.
-
-If your uid and gid are different you should modify the `Dockerfile`.
-
-Then build the image with `docker build -t buttleofx/buttleofx`.
-
 ### Release
 
-To run the application, you just need to run these docker commands
+To run the application, you just need to execute these docker commands
 
-```
+```bash
 docker pull buttleofx/buttleofx
 
 XSOCK=/tmp/.X11-unix
-docker run \ 
-	-it \
+ARGUMENT_USER_GROUPS=$(for i in $(id -G); do echo -n "--group-add $i "; done)
+
+docker run \
 	--rm \
+	-it \
 	-v $XSOCK:$XSOCK:rw \
+	-v $HOME:$HOME \
+	-v /etc/passwd:/etc/passwd:ro \
+	-v /etc/group:/etc/group:ro \
 	-e DISPLAY=$DISPLAY \
+	-u $(id -u):$(id -g) \
+	-w $HOME \
+	$ARGUMENT_USER_GROUPS \
 	buttleofx/buttleofx
+
 ```
+This will run the image with the host `user and user groups`.
+
+The `home` user folder is mounted with `read-write` permissions.
+
+`/etc/passwd and /etc/group` are mounted to provide to the container host users and groups informations (`read-only`)
+
 
 ### Development
 
 You need to mount the development files into the docker container when runing the image
+
 - `BUTTLEOFX_DEV=/opt/ButtleOFX_git`(from Dockerfile)
 
 - `-v "$(pwd)":$BUTTLEOFX_DEV:ro`
 
 
-See [Docker hub](http://hub.docker.com/buttleofx/buttleofx)
+See [Docker hub](http://hub.docker.com/r/buttleofx/buttleofx)
 
 ## License
 

@@ -3,6 +3,8 @@ FROM tuttleofx/tuttleofx:python3-latest
 MAINTAINER ButtleOFX <buttleofx-dev@googlegroups.com>
 
 ENV BUTTLEOFX_DEV=/opt/ButtleOFX_git
+ENV QUICKMAMBA_DEV=${BUTTLEOFX_DEV}/QuickMamba
+ENV PYTHONPATH=${PYTHONPATH}:${BUTTLEOFX_DEV}:${QUICKMAMBA_DEV}
 
 RUN apt-get update && apt-get install -y \
     python3 \

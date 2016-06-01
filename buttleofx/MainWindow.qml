@@ -81,6 +81,8 @@ ApplicationWindow {
 
     Item{
         focus: true
+        anchors.fill: parent
+
         Keys.onPressed: {
             // Viewer
             if ((event.key == Qt.Key_1) && (event.modifiers & Qt.KeypadModifier)) {
@@ -113,11 +115,7 @@ ApplicationWindow {
 
             // Player
             if (event.key == Qt.Key_Space && player.node != null) {
-                if (player.isPlaying) {
-                    player.doAction("pause");
-                } else {
-                    player.doAction("play");
-                }
+                player.doAction(player.isPlaying ? "pause" : "play")
             }
         }
     }

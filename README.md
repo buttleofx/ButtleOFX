@@ -13,7 +13,9 @@ More informations on the official website: [http://buttleofx.wordpress.com](http
 
 ### Release
 
-To run the application, you just need to execute these docker commands
+`Docker 1.11.1` minimum is required. [See docker install procedure](https://docs.docker.com/engine/installation/linux/).
+
+To run the application, you just need to execute these docker commands:
 
 ```bash
 docker pull buttleofx/buttleofx
@@ -35,11 +37,11 @@ docker run \
 	buttleofx/buttleofx
 
 ```
-This will run the image with the host `user and user groups`.
+ButtleOFX image is executed with the host user and groups.
 
-The `home` user folder is mounted with `read-write` permissions.
+The `home` folder is mounted with read-write permissions.
 
-`/etc/passwd and /etc/group` are mounted to provide to the container host users and groups informations (`read-only`)
+`/etc/passwd and /etc/group` are also mounted to provide host users and groups informations to the container (read-only).
 
 
 ### Development

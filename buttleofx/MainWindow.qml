@@ -884,6 +884,7 @@ ApplicationWindow {
                 onItemDoubleClicked: isSupported ? browser.fileWindow.onItemDoubleClickedSlot(absolutePath) : 0
             }
 
+            Component.onCompleted: browser.fileWindow.forceActiveFocus()
         }
 
         Item {

@@ -1,85 +1,68 @@
-![ButtleOFX](https://raw.github.com/buttleofx/ButtleOFX/develop/blackMosquito.png "ButtleOFX")ButtleOFX
-========================
+# ButtleOFX
+[![Stories in Ready](https://badge.waffle.io/buttleofx/ButtleOFX.png?label=ready &title=Ready)](http://waffle.io/buttleofx/ButtleOFX)
+
 **Project under early development.**
 
-[ButtleOFX](http://buttleofx.wordpress.com) is an open source compositing software.
+ButtleOFX is an open source compositing software based on [TuttleOFX](https://github.com/tuttleofx/TuttleOFX) framework.
 
-It is built on top of the [TuttleOFX](http://tuttleofx.org) framework which relies on the [OpenFX plugin standard](http://openeffects.org).
+More informations on the official website: [http://buttleofx.wordpress.com](http://buttleofx.wordpress.com) 
 
-Website: [http://buttleofx.wordpress.com](http://buttleofx.wordpress.com)
+[Documentation](http://buttleofx.readthedocs.org/)
 
+## Install - Docker
 
-Documentation
--------------
-http://buttleofx.readthedocs.org/
+### Release
 
-Development teams
------------------
+`Docker 1.11.1` minimum is required. [See docker install procedure](https://docs.docker.com/engine/installation/linux/).
 
-ButtleOFX is developped within student projects at [IMAC Engineering school](http://imac.alwaysdata.net).
+To run the application, you just need to execute these docker commands:
 
-###Team 3.0
+```bash
+docker pull buttleofx/buttleofx
 
-Version 3.0 (2014-2015) is currently in progress.   
+XSOCK=/tmp/.X11-unix
+ARGUMENT_USER_GROUPS=$(for i in $(id -G); do echo -n "--group-add $i "; done)
 
-Tutor :   
->- [Fabien CASTAN](https://github.com/fabiencastan)   
->- [Clément CHAMPETIER](https://github.com/cchampet)
+docker run \
+	--rm \
+	-it \
+	-v $XSOCK:$XSOCK:rw \
+	-v $HOME:$HOME \
+	-v /etc/passwd:/etc/passwd:ro \
+	-v /etc/group:/etc/group:ro \
+	-e DISPLAY=$DISPLAY \
+	-u $(id -u):$(id -g) \
+	-w $HOME \
+	$ARGUMENT_USER_GROUPS \
+	buttleofx/buttleofx
 
-Students :   
->- [Jordi BASTIDE](https://github.com/Jordinaire)
->- [Maxime ENGEL](https://github.com/MaximeEngel)
->- [Maxime GILBERT](https://github.com/mxmgilbert)
->- [Mathias GOYHENECHE](https://github.com/MGoyheneche)
->- [Alexis OBLET](https://github.com/aoblet)
+```
+ButtleOFX image is executed with the host user and groups.
 
-###Team 2.0 (2013-2014)
+The `home` folder is mounted with read-write permissions.
 
-Release an alpha version of the software with a new Browser module and a new Quick Parameter Editor.
-
-Tutor :   
->- [Fabien CASTAN](https://github.com/fabiencastan)   
-
-Students :   
->- [Lucie DELAIRE](https://github.com/Lucie2lr)
->- [Jonathan DOUET](https://github.com/jon92)
->- [Anthony GUIOT](https://github.com/aguiot)
->- [Virginie LALANDE](https://github.com/vilal)
->- [Baptiste MOIZARD](https://github.com/Bazard)
-
-###Team 1.0 (2012-2013)
-
-Creation of a basic compositing software with a Graph Editor, a Parameter Editor and a Viewer.
-
-Tutor :   
->- [Fabien CASTAN](https://github.com/fabiencastan)   
-
-Students :   
->- [Clément CHAMPETIER](https://github.com/cchampet)
->- [Xochitl FLORIMONT](https://github.com/Xochitl)
->- [Aurélien GRAFFARD](https://github.com/agreffard)
->- [Elisa PRANA](https://github.com/eprana)
->- [Arthur TOURNERET](https://github.com/artourn)
+`/etc/passwd and /etc/group` are also mounted to provide host users and groups informations to the container (read-only).
 
 
-Install/Run
----
+### Development
 
->see [INSTALL.md](./INSTALL.md)
+You need to mount the development files into the docker container when runing the image
 
-License
--------
+- `BUTTLEOFX_DEV=/opt/ButtleOFX_git`(from Dockerfile)
 
-Follows the TuttleOFX license.
->see [**TuttleOFX/COPYING.md**]((https://raw.github.com/tuttleofx/TuttleOFX/develop/COPYING.md)
+- `-v "$(pwd)":$BUTTLEOFX_DEV:ro`
 
 
-More information 
-----------------
+See [Docker hub](http://hub.docker.com/r/buttleofx/buttleofx)
 
-**ButtleOFX**
->- website: [http://buttleofx.wordpress.com](http://buttleofx.wordpress.com)
->- github: [https://github.com/buttleofx/ButtleOFX](https://github.com/buttleofx/ButtleOFX)
+## License
+
+Follows the TuttleOFX license [**TuttleOFX/COPYING.md**](https://raw.github.com/tuttleofx/TuttleOFX/develop/COPYING.md)
+
+
+## More information 
+
+[Development teams](AUTHORS.md)
 
 **TuttleOFX**
 >- website: [http://tuttleofx.org](http://tuttleofx.org)
@@ -89,13 +72,5 @@ More information
 >- website: [http://openeffects.org](http://openeffects.org)
 >- github: [http://github.com/ofxa/openfx](http://github.com/ofxa/openfx)
 
-QuickMamba
-
-QtQuick tools
-
-
-Links
------
-[google style guide](http://google-styleguide.googlecode.com/svn/trunk/pyguide.html)
-
-
+**QuickMamba**
+>- github: [http://github.com/buttleofx/QuickMamba](http://github.com/buttleofx/QuickMamba)

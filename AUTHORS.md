@@ -3,7 +3,7 @@ Development teams
 
 ButtleOFX is developped within student projects at [IMAC Engineering school](http://imac.alwaysdata.net).
 
-###Team 3.0
+### Team 3.0
 
 Version 3.0 (2014-2015)
 
@@ -18,7 +18,7 @@ Students :
 >- [Mathias GOYHENECHE](https://github.com/MGoyheneche)
 >- [Alexis OBLET](https://github.com/aoblet)
 
-###Team 2.0 (2013-2014)
+### Team 2.0 (2013-2014)
 
 Release an alpha version of the software with a new Browser module and a new Quick Parameter Editor.
 
@@ -32,7 +32,7 @@ Students :
 >- [Virginie LALANDE](https://github.com/vilal)
 >- [Baptiste MOIZARD](https://github.com/Bazard)
 
-###Team 1.0 (2012-2013)
+### Team 1.0 (2012-2013)
 
 Creation of a basic compositing software with a Graph Editor, a Parameter Editor and a Viewer.
 

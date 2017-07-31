@@ -1,7 +1,7 @@
 # ButtleOFX
 [![Stories in Ready](https://badge.waffle.io/buttleofx/ButtleOFX.png?label=ready &title=Ready)](http://waffle.io/buttleofx/ButtleOFX)
 
-**Project under early development.**
+**Unfortunately, this project is no more developed and maintained. You can still contact us if you need help to take over.**
 
 ButtleOFX is an open source compositing software based on [TuttleOFX](https://github.com/tuttleofx/TuttleOFX) framework.
 
